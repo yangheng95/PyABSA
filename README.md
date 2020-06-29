@@ -17,9 +17,9 @@ If you like this repository you can star or share this repository to others.
 
 ### Tips
 * Download the [GloVe](https://github.com/stanfordnlp/GloVe#download-pre-trained-word-vectors) before use the GloVe-based models.
-* Download the [domain-adapted BERT](https://github.com/deepopinion/domain-adapted-atsc) if you wang improve model performance.
+* Download the [domain-adapted BERT](https://github.com/deepopinion/domain-adapted-atsc) if you want to improve model performance.
 * Set `use_bert_spc=True` to employ BERT-SPC input format and improve model performance.
-* Set `use_dual_bert=True` to use independent BERT for local context and gloabl context
+* Set `use_dual_bert=True` to use independent BERT for local context and global context
 and improve performance with consuming more resources, e.g. system memory.
 
 
@@ -44,9 +44,9 @@ especially the those based on the local context focus mechanisms, including:
 - [BERT-SPC](models/lc_absa/bert_spc.py)
 - [LCF-GloVe](models/lc_absa/lcf_glove.py)
 - [LCF-BERT](models/lc_absa/lcf_bert.py)  
-- [LCE-LSTM](models/lc_absa/LCE_lstm.py) 
-- [LCE-GloVe](models/lc_absa/LCE_glove.py) 
-- [LCE-BERT](models/lc_absa/LCE_bert.py)
+- [LCE-LSTM](models/lc_absa/lce_lstm.py) 
+- [LCE-GloVe](models/lc_absa/lce_glove.py) 
+- [LCE-BERT](models/lc_absa/lce_bert.py)
 - [LCF-ATEPC](models/lc_absa/lcf_atepc.py)
 - HLCF-GloVe (pending release)
 - HLCF-BERT (pending release)

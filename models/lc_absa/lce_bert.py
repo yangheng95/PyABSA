@@ -49,9 +49,10 @@ class LCE_BERT(nn.Module):
         bert_segments_ids = inputs[2]
         lce_ids = inputs[3]
         lcf_matrix = inputs[4]
+
         bert_global_out, _ = self.bert4global(text_global_indices, token_type_ids=bert_segments_ids)
         bert_local_out, _ = self.bert4local(text_local_indices)
-        if self.opt.lce and 'lca' in self.opt.model_name:
+        if self.opt.lce and 'lce' in self.opt.model_name:
             lc_embedding = self.lc_embed(lce_ids)
             bert_global_out = torch.mul(bert_global_out, lc_embedding)
 
