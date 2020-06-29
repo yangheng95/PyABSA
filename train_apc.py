@@ -143,7 +143,7 @@ class Instructor:
                             save_path = 'saved_models/{0}_{1}_acc{2}'.format(self.opt.model_name, self.opt.dataset,
                                                                              round(test_acc * 100, 2))
                             # uncomment follow lines to save model during training
-                            # self._save_model(self.bert, save_path)  # save pytorch-transformers pre-trained model
+                            self._save_model(self.bert, save_path)  # save pytorch-transformers pre-trained model
                             torch.save(self.model.state_dict(), save_path)  # save the state dict
                             logging.info('saved: {}'.format(save_path))
                             logging.info('max_acc:{}, f1:{}'.format(round(test_acc * 100, 2), round(f1 * 100, 2)))
@@ -284,6 +284,7 @@ def single_train(opt):
         'xavier_normal_': torch.nn.init.xavier_normal,
         'orthogonal_': torch.nn.init.orthogonal_
     }
+
     optimizers = {
         'adadelta': torch.optim.Adadelta,  # default lr=1.0
         'adagrad': torch.optim.Adagrad,  # default lr=0.01

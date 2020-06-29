@@ -76,11 +76,8 @@ def build_tokenizer_for_inferring(fnames, max_seq_len, dat_fname=None):
         pickle.dump(tokenizer, open(dat_fname, 'wb'))
     return tokenizer
 
+
 def build_tokenizer(fnames, max_seq_len, dat_fname=None):
-    # if dat_fname is not None and os.path.exists(dat_fname):
-    #     print('loading tokenizer:', dat_fname)
-    #     tokenizer = pickle.load(open(dat_fname, 'rb'))
-    # else:
     text = ''
     for fname in fnames:
         fin = open(fname, 'r', encoding='utf-8', newline='\n', errors='ignore')
@@ -94,7 +91,6 @@ def build_tokenizer(fnames, max_seq_len, dat_fname=None):
 
     tokenizer = Tokenizer(max_seq_len)
     tokenizer.fit_on_text(text)
-    # pickle.dump(tokenizer, open(dat_fname, 'wb'))
     return tokenizer
 
 
