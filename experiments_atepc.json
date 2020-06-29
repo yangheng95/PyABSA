@@ -1,0 +1,26 @@
+{
+  "config1": {
+    "dataset": "laptop",
+    "output_dir": "output",
+    "use_bert_spc": true,
+    "SRD": 5,
+    "learning_rate": 3e-5,
+    "dropout": 0,
+    "num_train_epochs": 5,
+    "train_batch_size": 16,
+    "max_seq_length": 80,
+    "local_context_focus": "fusion"
+  },
+  "config2": {
+    "dataset": "restaurant",
+    "output_dir": "output",
+    "use_bert_spc": true,
+    "SRD": 5,
+    "learning_rate": 3e-5,
+    "dropout": 0,
+    "num_train_epochs": 5,
+    "train_batch_size": 16,
+    "max_seq_length": 80,
+    "local_context_focus": "fusion"
+  }
+}
