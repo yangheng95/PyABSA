@@ -1,1 +1,1 @@
-It is recommended to put the inferring dataset and model config in this path.
+It is recommended to put the inferring dataset and model-config and saved state-dicts in this path.
