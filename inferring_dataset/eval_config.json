@@ -1,0 +1,23 @@
+{
+ "config0": {
+    "model_name": "lce_glove",
+    "dataset": "laptop",
+    "optimizer": "adam",
+    "learning_rate": 0.002,
+    "dropout": 0,
+    "l2reg": 0.0001,
+    "num_epoch": 5,
+    "batch_size": 32,
+    "logdir": "logs",
+    "pretrained_bert_name": "bert_pretrained_laptop",
+    "use_dual_bert": false,
+    "use_bert_spc": true,
+    "max_seq_len": 80,
+    "SRD": 5,
+    "sigma": 0.5,
+    "lcf": "cdm",
+    "lce": true,
+    "lcp": true,
+    "exp_rounds": 10
+  }
+}
