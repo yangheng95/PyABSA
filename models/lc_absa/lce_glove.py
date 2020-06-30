@@ -82,6 +82,7 @@ class LCE_GLOVE(nn.Module):
         pooled_out = self.pool(cat_features)
         sen_logits = self.dense(pooled_out)
 
-        return sen_logits, lce_logits, lce_ids
-
-
+        if self.opt.lcp:
+            return sen_logits, lce_logits, lce_ids
+        else:
+            return sen_logits

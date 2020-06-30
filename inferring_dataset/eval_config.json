@@ -1,23 +1,23 @@
 {
- "config0": {
-    "model_name": "lce_glove",
-    "dataset": "laptop",
+    "config2": {
+    "model_name": "lce_bert",
+    "dataset": "restaurant",
     "optimizer": "adam",
-    "learning_rate": 0.002,
+    "learning_rate": 0.00002,
     "dropout": 0,
-    "l2reg": 0.0001,
+    "l2reg": 0.00001,
     "num_epoch": 5,
-    "batch_size": 32,
+    "batch_size": 16,
     "logdir": "logs",
-    "pretrained_bert_name": "bert_pretrained_laptop",
+    "pretrained_bert_name": "bert_pretrained_restaurant",
     "use_dual_bert": false,
     "use_bert_spc": true,
     "max_seq_len": 80,
-    "SRD": 5,
+    "SRD": 3,
     "sigma": 0.5,
     "lcf": "cdm",
     "lce": true,
     "lcp": true,
-    "exp_rounds": 10
+    "exp_rounds": 1
   }
 }

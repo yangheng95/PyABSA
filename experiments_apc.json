@@ -1,15 +1,15 @@
 {
   "config1": {
-    "model_name": "lce_bert",
+    "model_name": "lcf_bert",
     "dataset": "laptop",
     "optimizer": "adam",
     "learning_rate": 0.00002,
-    "dropout": 0,
+    "dropout": 0.1,
     "l2reg": 0.00001,
     "num_epoch": 5,
     "batch_size": 16,
     "logdir": "logs",
-    "pretrained_bert_name": "bert_pretrained_laptop",
+    "pretrained_bert_name": "bert-base-uncased",
     "use_dual_bert": false,
     "use_bert_spc": true,
     "max_seq_len": 80,
@@ -18,19 +18,19 @@
     "lcf": "cdm",
     "lce": true,
     "lcp": true,
-    "exp_rounds": 3
+    "exp_rounds": 1
   },
   "config2": {
-    "model_name": "lce_bert",
+    "model_name": "lcf_bert",
     "dataset": "restaurant",
     "optimizer": "adam",
     "learning_rate": 0.00002,
-    "dropout": 0,
+    "dropout": 0.1,
     "l2reg": 0.00001,
     "num_epoch": 5,
     "batch_size": 16,
     "logdir": "logs",
-    "pretrained_bert_name": "bert_pretrained_restaurant",
+    "pretrained_bert_name": "bert-base-uncased",
     "use_dual_bert": false,
     "use_bert_spc": true,
     "max_seq_len": 80,
@@ -39,10 +39,10 @@
     "lcf": "cdm",
     "lce": true,
     "lcp": true,
-    "exp_rounds": 3
+    "exp_rounds": 1
   },
   "config3": {
-    "model_name": "lce_bert",
+    "model_name": "lcf_bert",
     "dataset": "twitter",
     "optimizer": "adam",
     "learning_rate": 0.00002,
@@ -51,7 +51,7 @@
     "num_epoch": 5,
     "batch_size": 16,
     "logdir": "logs",
-    "pretrained_bert_name": "bert_pretrained_restaurant",
+    "pretrained_bert_name": "bert-base-uncased",
     "use_dual_bert": false,
     "use_bert_spc": true,
     "max_seq_len": 80,
@@ -60,6 +60,6 @@
     "lcf": "cdm",
     "lce": true,
     "lcp": true,
-    "exp_rounds": 3
+    "exp_rounds": 1
   }
 }

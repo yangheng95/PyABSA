@@ -82,20 +82,23 @@ class Instructor:
                             stdv = 1. / math.sqrt(p.shape[0])
                             torch.nn.init.uniform_(p, a=-stdv, b=stdv)
 
-    def _save_model(self, model, save_path):
+    def _save_model(self, model, save_path, mode=0):
         # Save a trained model, configuration and tokenizer
         model_to_save = model.module if hasattr(model, 'module') else model  # Only save the model it-self
 
         # If we save using the predefined names, we can load using `from_pretrained`
-        model_output_dir = save_path
-        if not os.path.exists(model_output_dir):
-            os.makedirs(model_output_dir)
-        output_model_file = os.path.join(model_output_dir, 'pytorch_model.bin')
-        output_config_file = os.path.join(model_output_dir, 'bert_config.json')
+        model_output_dir = save_path+'_fine-tuned'
+        if mode == 0:
+            torch.save(self.model.state_dict(), save_path+'.state_dict')  # save the state dict
+        else:
+            if not os.path.exists(model_output_dir):
+                os.makedirs(model_output_dir)
+            output_model_file = os.path.join(model_output_dir, 'pytorch_model.bin')
+            output_config_file = os.path.join(model_output_dir, 'bert_config.json')
 
-        torch.save(model_to_save.state_dict(), output_model_file)
-        model_to_save.config.to_json_file(output_config_file)
-        self.bert_tokenizer.save_vocabulary(model_output_dir)
+            torch.save(model_to_save.state_dict(), output_model_file)
+            model_to_save.config.to_json_file(output_config_file)
+            self.bert_tokenizer.save_vocabulary(model_output_dir)
 
     def _train(self, criterion, lce_criterion, optimizer, max_test_acc_overall=0):
         max_test_acc = 0
@@ -140,11 +143,10 @@ class Instructor:
                         if test_acc > max_test_acc_overall:
                             if not os.path.exists('saved_models'):
                                 os.mkdir('saved_models')
-                            save_path = 'saved_models/{0}_{1}_acc{2}'.format(self.opt.model_name, self.opt.dataset,
-                                                                             round(test_acc * 100, 2))
+                            save_path = 'saved_models/{0}_{1}_acc{2}_seed{3}seed'.format(self.opt.model_name,
+                                                        self.opt.dataset, round(test_acc * 100, 2), self.opt.seed)
                             # uncomment follow lines to save model during training
-                            self._save_model(self.bert, save_path)  # save pytorch-transformers pre-trained model
-                            torch.save(self.model.state_dict(), save_path)  # save the state dict
+                            self._save_model(self.bert, save_path, mode=0)
                             logging.info('saved: {}'.format(save_path))
                             logging.info('max_acc:{}, f1:{}'.format(round(test_acc * 100, 2), round(f1 * 100, 2)))
                     if f1 > max_f1:
@@ -342,13 +344,14 @@ def multi_train(config, n):
 
 if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--config', default='experiments_apc.json', type=str)
+    config_parser = argparse.ArgumentParser()
+    config_parser.add_argument('--config', default='experiments_apc.json',
+                        help='path of the experiments configuration', type=str)
 
-    args = parser.parse_args()
-    exp_config_path = args.config
+    args = config_parser.parse_args()
+
     configs = parse_experiments(args.config)
-    log_file = 'logs/{}.{}.log'.format(exp_config_path, strftime("%y%m%d.%H%M", localtime()))
+    log_file = 'logs/{}.{}.log'.format(args.config, strftime("%y%m%d.%H%M", localtime()))
     logger.addHandler(logging.FileHandler(log_file))
 
     from utils.Pytorch_GPUManager import GPUManager
