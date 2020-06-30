@@ -46,7 +46,7 @@ class Instructor:
         with torch.no_grad():
             self.model.eval()
             for _, sample in enumerate(self.train_data_loader):
-
+                print(sample['sentence'][0])
                 if 'hlcf' not in self.opt.model_name:
                     inputs = [sample[col].to(self.opt.device) for col in self.opt.inputs_cols]
                 else:
@@ -55,12 +55,12 @@ class Instructor:
                 outputs = self.model(inputs)
                 if self.opt.lcp and 'lce' in self.opt.model_name:
                     sen_logits, _, _ = outputs
+
                 else:
                     sen_logits = outputs
-
                 t_probs = torch.softmax(sen_logits, dim=-1).cpu().numpy()
                 sentiment = t_probs.argmax(axis=-1) - 1
-                print(sample['sentence'][0])
+
                 print('polarity of {} = {}'.format(sample['aspect'], sentiment))
 
     def run(self):
@@ -130,7 +130,6 @@ if __name__ == '__main__':
     gpu = GM.auto_choice()
 
     opt = configs[0]
-    opt.seed = 1995
     opt.device = 'cuda:' + str(gpu)
     # config.device = 'cpu'  # Uncomment this line to use CPU
 
@@ -147,9 +146,9 @@ if __name__ == '__main__':
     parser.add_argument('--state_dict_path', default='saved_models/lce_glove_laptop_acc74.76', type=str)
 
     print('*'*80)
-    print('Warning: Be sure the eval-config and eval-dataset and save_models are compatible! ')
+    print('Warning: Be sure the eval-config, eval-dataset, save_models, seed are compatible! ')
     print('*' * 80)
-
+    opt.seed = int(opt.state_dict_path.split('seed')[1])
     init_and_infer(opt)
 
 

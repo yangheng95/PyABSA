@@ -43,4 +43,7 @@ class LCE_LSTM(nn.Module):
         x_len = torch.sum(text_global_indices != 0, dim=-1)
         _, (h_n, _) = self.lstm(x, x_len)
         out = self.dense(h_n[0])
-        return out, lce_logits, lce_ids
+        if self.opt.lcp:
+            return out, lce_logits, lce_ids
+        else:
+            return out

@@ -54,6 +54,10 @@ def parse_experiments(path):
                             type=bool)
         parser.add_argument('--sigma', default=1 if 'sigma' not in config else config['sigma'], type=float)
         parser.add_argument('--repeat', default=config['exp_rounds'], type=bool)
+
+        # The following lines are useless, do not care
+        parser.add_argument('--config', default=None, type=str)
+        parser.add_argument('--inferring_dataset', default=None, type=str)
         configs.append(parser.parse_args())
     return configs
 
@@ -477,7 +481,10 @@ class ABSAInferDataset(Dataset):
             return cdw_vec3, cdw_vec5, cdw_vec10
 
         for i in range(len(lines)):
-            text_left, aspect, text_right = lines[i].split('$')
+            try:
+                text_left, aspect, text_right = lines[i].split('$')
+            except:
+                continue
             aspect_indices = tokenizer.text_to_sequence(aspect)
             aspect_len = np.sum(aspect_indices != 0)
 

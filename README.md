@@ -54,7 +54,7 @@ especially the those based on the local context focus mechanisms, including:
 
 ### General ABSA models
   The following models are forked from [ABSA-PyTorch](https://github.com/songyouwei/ABSA-PyTorch).
-- [AEN-BERT](models/absa/aen.py)
+- [AEN-BERT](models/absa/aen.py) 
 - [MGAN](models/absa/mgan.py)
 - [AOA](models/absa/aoa.py)  
 - [TNet ](models/absa/tnet_lf.py) 
@@ -94,29 +94,33 @@ We list the valid parameters for each model for reference.
 ## Performance of BERT-based Models
 
 The state-of-the-art benchmarks of the ABSA task can be found at [NLP-progress](https://nlpprogress.com) (See Section of SemEval-2014 subtask4)
-"D", "S" and "A" denote dual-BERT, single-BERT and adapted-BERT, respectively. 
+"D", "S" and "A" denote dual-BERT, single-BERT and adapted-BERT, respectively. "N/A" means waiting to test.
 
-|      Models          | Restaurant (acc) |  Laptop (acc) | Twitter(acc) | Memory Usage |
-| :------------------: | :--------------: | :-----------: |:------------:|:------------:|
-|  LCF-BERT-CDM (D+A)  |      89.11       |     82.92     |    77.89     |      10 G    | 
-|  LCF-BERT-CDW (D+A)  |      89.38       |     82.76     |    77.17     |      10 G    |
-|  LCF-BERT-CDM (S+A)  |      89.22       |     80.72     |    75.72     |      6 G     |
-|  LCF-BERT-CDW (S+A)  |      88.57       |     80.88     |    75.58     |      6 G     |
-|   LCF-BERT-CDM (S)   |      -           |      -        |    -         |      6 G     |
-|   LCF-BERT-CDW (S)   |      -           |     -         |    -         |      6 G     |
-|   LCE-BERT (S+A)     |      88.93       |     82.45     |    77.46     |      6 G     |
-|    LCE-BERT (S)      |      86.07       |     81.66     |    76.59     |      6 G     |
-|      HLCF-BERT       |      N/A         |     N/A       |    N/A       |      N/A     |
-|      AEN-BERT        |      83.12       |     79.93     |    74.71     |      6 G     |
+|      Models          | Laptop14 (acc) |  Restaurant14 (acc) | Twitter(acc) | Memory Usage |
+| :------------------: | :------------: | :-----------------: |:------------:|:------------:|
+|  LCF-BERT-CDM (D+A)  |      82.92     |        89.11        |    77.89     |      < 10 G    | 
+|  LCF-BERT-CDW (D+A)  |      82.76     |        89.38        |    77.17     |      < 10 G    |
+|  LCF-BERT-CDM (S+A)  |      80.72     |        89.22        |    75.72     |      < 6 G     |
+|  LCF-BERT-CDW (S+A)  |      80.88     |        88.57        |    75.58     |      < 6 G      |
+|   LCF-BERT-CDM (S)   |      80.56     |        85.45        |    -         |      < 6 G      |
+|   LCF-BERT-CDW (S)   |       -        |          -          |    -         |      < 6 G      |
+|   LCE-BERT (S+A)     |      82.45     |        88.93        |    77.46     |      < 6 G     |
+|    LCE-BERT (S)      |      81.66     |        86.07        |    76.59     |      < 6 G     |
+|      HLCF-BERT       |       N/A      |         N/A         |    N/A       |      N/A     |
+|      AEN-BERT        |      79.93     |        83.12        |    74.71     |      < 6 G     |
 
 We provides a training [log](logs/train.log.dat) of LCF-BERT based on [domain-adapted BERT](https://arxiv.org/pdf/1908.11860.pdf) to guide reproductions.
-The results in the above table are the best of five training processes (random seed 0, 1, 2, 3, 4), Try to set other random seeds to explore different results.
+Try to set other random seeds to explore different results.
 Learn to train the domain adapted BERT pretrained models from [domain-adapted-atsc](https://github.com/deepopinion/domain-adapted-atsc), and place the pre-trained models in bert_pretrained_models. 
 
 ## Training
 
 Train the model with cmd:
 
+```
+python train_apc.py
+```
+or 
 ```
 python train_apc.py --config experiments_apc.json
 ```
