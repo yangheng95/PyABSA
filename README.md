@@ -40,31 +40,74 @@ This repository provides a variety of ABSA models,
 especially the those based on the local context focus mechanisms, including:
  
 ### LC-based ABSA models
-- [BERT-BASE](models/lc_absa/bert_base.py)
-- [BERT-SPC](models/lc_absa/bert_spc.py)
-- [LCF-GloVe](models/lc_absa/lcf_glove.py)
-- [LCF-BERT](models/lc_absa/lcf_bert.py)  
-- [LCE-LSTM](models/lc_absa/lce_lstm.py) 
-- [LCE-GloVe](models/lc_absa/lce_glove.py) 
-- [LCE-BERT](models/lc_absa/lce_bert.py)
-- [LCF-ATEPC](models/lc_absa/lcf_atepc.py)
+- **[BERT-BASE](models/lc_apc/bert_base.py)** 
+
+- **[BERT-SPC](models/lc_apc/bert_spc.py)**
+
+- **[LCF-GloVe](models/lc_apc/lcf_glove.py)**
+
+Zeng B, Yang H, Xu R, et al. [LCF: A local context focus mechanism for aspect-based sentiment classification](https://www.mdpi.com/2076-3417/9/16/3389)[J]. Applied Sciences, 2019, 9(16): 3389.. 
+
+- **[LCF-BERT](models/lc_apc/lcf_bert.py)**
+
+Zeng B, Yang H, Xu R, et al. [LCF: A local context focus mechanism for aspect-based sentiment classification](https://www.mdpi.com/2076-3417/9/16/3389)[J]. Applied Sciences, 2019, 9(16): 3389.. 
+
+- **[LCE-LSTM](models/lc_apc/lce_lstm.py)** 
+
+- **[LCE-GloVe](models/lc_apc/lce_glove.py)**
+
+- **[LCE-BERT](models/lc_apc/lce_bert.py)**
+
+- **[LCF-ATEPC](models/lc_atepc/lcf_atepc.py)**
+
 - HLCF-GloVe (pending release)
 - HLCF-BERT (pending release)
 - Developing Models
 
 ### General ABSA models
   The following models are forked from [ABSA-PyTorch](https://github.com/songyouwei/ABSA-PyTorch).
-- [AEN-BERT](models/absa/aen.py) 
-- [MGAN](models/absa/mgan.py)
-- [AOA](models/absa/aoa.py)  
-- [TNet ](models/absa/tnet_lf.py) 
-- [Cabasc](models/absa/cabasc.py) 
-- [RAM](models/absa/ram.py)
-- [MemNet](models/absa/memnet.py)
-- [IAN](models/absa/ian.py) 
-- [ATAE-LSTM](models/absa/atae_lstm.py)
-- [TD-LSTM](models/absa/td_lstm.py)
-- [LSTM](models/absa/lstm.py)
+
+- **[AEN-BERT](models/apc/aen.py)** 
+
+Song Y, Wang J, Jiang T, et al. [Attentional encoder network for targeted sentiment classification](https://arxiv.org/pdf/1902.09314.pdf)[J]. arXiv preprint arXiv:1902.09314, 2019.
+
+- **[MGAN](models/apc/mgan.py)** 
+
+Fan F, Feng Y, Zhao D. [Multi-grained attention network for aspect-level sentiment classification](https://www.aclweb.org/anthology/D18-1380.pdf)[C]//Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing. 2018: 3433-3442.
+
+- **[AOA](models/apc/aoa.py)** 
+
+Huang B, Ou Y, Carley K M. [Aspect level sentiment classification with attention-over-attention neural networks](https://arxiv.org/pdf/1804.06536.pdf)[C]//International Conference on Social Computing, Behavioral-Cultural Modeling and Prediction and Behavior Representation in Modeling and Simulation. Springer, Cham, 2018: 197-206.
+
+- **[TNet ](models/apc/tnet_lf.py)** 
+
+Li X, Bing L, Lam W, et al. [ Transformation Networks for Target-Oriented Sentiment Classification](https://www.aclweb.org/anthology/P18-1087.pdf)[C]//Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers). 2018: 946-956.
+
+- **[Cabasc](models/apc/cabasc.py)** 
+
+Liu Q, Zhang H, Zeng Y, et al. [Content attention model for aspect based sentiment analysis](https://dl.acm.org/doi/abs/10.1145/3178876.3186001)[C]//Proceedings of the 2018 World Wide Web Conference. 2018: 1023-1032.
+
+- **[RAM](models/apc/ram.py)** 
+
+Chen P, Sun Z, Bing L, et al. [Recurrent attention network on memory for aspect sentiment analysis](https://www.aclweb.org/anthology/D17-1047.pdf)[C]//Proceedings of the 2017 conference on empirical methods in natural language processing. 2017: 452-461.
+
+- **[MemNet](models/apc/memnet.py)** 
+
+Tang D, Qin B, Liu T. [Aspect Level Sentiment Classification with Deep Memory Network](https://www.aclweb.org/anthology/D16-1021.pdf)[C]//Proceedings of the 2016 Conference on Empirical Methods in Natural Language Processing. 2016: 214-224.
+
+- **[IAN](models/apc/ian.py)**
+ 
+ Ma D, Li S, Zhang X, et al. [Interactive attention networks for aspect-level sentiment classification](https://dl.acm.org/doi/abs/10.5555/3171837.3171854)[C]//Proceedings of the 26th International Joint Conference on Artificial Intelligence. 2017: 4068-4074.
+
+- **[ATAE-LSTM](models/apc/atae_lstm.py)** 
+
+Wang Y, Huang M, Zhu X, et al. [Attention-based LSTM for aspect-level sentiment classification](https://www.aclweb.org/anthology/D16-1058.pdf)[C]//Proceedings of the 2016 conference on empirical methods in natural language processing. 2016: 606-615.
+
+- **[TD-LSTM](models/apc/td_lstm.py)** 
+
+Tang D, Qin B, Feng X, et al. [Effective LSTMs for Target-Dependent Sentiment Classification](https://www.aclweb.org/anthology/C16-1311.pdf)[C]//Proceedings of COLING 2016, the 26th International Conference on Computational Linguistics: Technical Papers. 2016: 3298-3307.
+
+- **[LSTM](models/apc/lstm.py)** 
 
 
 ### Extra Parameters
@@ -98,16 +141,16 @@ The state-of-the-art benchmarks of the ABSA task can be found at [NLP-progress](
 
 |      Models          | Laptop14 (acc) |  Restaurant14 (acc) | Twitter(acc) | Memory Usage |
 | :------------------: | :------------: | :-----------------: |:------------:|:------------:|
-|  LCF-BERT-CDM (D+A)  |      82.92     |        89.11        |    77.89     |      < 10 G    | 
-|  LCF-BERT-CDW (D+A)  |      82.76     |        89.38        |    77.17     |      < 10 G    |
-|  LCF-BERT-CDM (S+A)  |      80.72     |        89.22        |    75.72     |      < 6 G     |
-|  LCF-BERT-CDW (S+A)  |      80.88     |        88.57        |    75.58     |      < 6 G      |
-|   LCF-BERT-CDM (S)   |      80.56     |        85.45        |    -         |      < 6 G      |
-|   LCF-BERT-CDW (S)   |       -        |          -          |    -         |      < 6 G      |
-|   LCE-BERT (S+A)     |      82.45     |        88.93        |    77.46     |      < 6 G     |
-|    LCE-BERT (S)      |      81.66     |        86.07        |    76.59     |      < 6 G     |
-|      HLCF-BERT       |       N/A      |         N/A         |    N/A       |      N/A     |
-|      AEN-BERT        |      79.93     |        83.12        |    74.71     |      < 6 G     |
+|  LCF-BERT-CDM (D+A)  |      82.92     |        89.11        |    77.89     |    < 8 G     | 
+|  LCF-BERT-CDW (D+A)  |      82.76     |        89.38        |    77.17     |    < 8 G     |
+|  LCF-BERT-CDM (S+A)  |      80.72     |        89.22        |    75.72     |    < 5.5 G   |
+|  LCF-BERT-CDW (S+A)  |      80.88     |        88.57        |    75.58     |    < 5.5 G   |
+|   LCF-BERT-CDM (S)   |      80.56     |        85.45        |    75.29     |    < 5.5 G   |
+|   LCF-BERT-CDW (S)   |      80.25     |        85.54        |    76.59     |    < 5.5 G   |
+|   LCE-BERT (S+A)     |      82.45     |        88.93        |    77.46     |    < 5.5 G   |
+|    LCE-BERT (S)      |      81.66     |        86.07        |    76.59     |    < 5.5 G   |
+|      HLCF-BERT       |       N/A      |         N/A         |    N/A       |    N/A       |
+|      AEN-BERT        |      79.93     |        83.12        |    74.71     |    < 6 G     |
 
 We provides a training [log](logs/train.log.dat) of LCF-BERT based on [domain-adapted BERT](https://arxiv.org/pdf/1908.11860.pdf) to guide reproductions.
 Try to set other random seeds to explore different results.

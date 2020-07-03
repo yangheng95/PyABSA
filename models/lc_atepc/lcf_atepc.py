@@ -33,27 +33,27 @@ class LCF_ATEPC(BertForTokenClassification):
     def __init__(self, bert_base_model, args):
         super(LCF_ATEPC, self).__init__(config=bert_base_model.config)
         config = bert_base_model.config
-        self.bert_for_global_context = bert_base_model
+        self.bert4global = bert_base_model
         self.args = args
         # do not init lcf layer if BERT-SPC or BERT-BASE specified
-        # if self.args.local_context_focus in {'cdw', 'cdm', 'fusion'}:
-        if not self.args.use_bert_spc:
-            self.bert_for_local_context = copy.deepcopy(self.bert_for_global_context)
+        # if not self.args.use_bert_spc:
+        if not self.args.use_dual_bert:
+            self.bert4local = copy.deepcopy(self.bert4global)
         else:
-            self.bert_for_local_context = self.bert_for_global_context
+            self.bert4local = self.bert4global
         self.pooler = BertPooler(config)
         if args.dataset in {'camera', 'car', 'phone', 'notebook'}:
             self.dense = torch.nn.Linear(768, 2)
         else:
             self.dense = torch.nn.Linear(768, 3)
-        self.bert_global_focus = self.bert_for_global_context
+        self.bert_global_focus = self.bert4global
         self.dropout = nn.Dropout(self.args.dropout)
         self.SA1 = SelfAttention(config, args)
         self.SA2 = SelfAttention(config, args)
         self.linear_double = nn.Linear(768 * 2, 768)
         self.linear_triple = nn.Linear(768 * 3, 768)
 
-    def get_batch_token_labels_bert_base_indices(self, labels):
+    def get_ate_labels(self, labels):
         if labels is None:
             return
         # convert tags of BERT-SPC input to BERT-BASE format
@@ -63,7 +63,7 @@ class LCF_ATEPC(BertForTokenClassification):
             labels[text_i][sep_index + 1:] = 0
         return torch.tensor(labels).to(self.args.device)
 
-    def get_batch_polarities(self, b_polarities):
+    def get_apc_polarities(self, b_polarities):
         b_polarities = b_polarities.detach().cpu().numpy()
         shape = b_polarities.shape
         polarities = np.zeros((shape[0]))
@@ -78,8 +78,7 @@ class LCF_ATEPC(BertForTokenClassification):
         polarities = torch.from_numpy(polarities).long().to(self.args.device)
         return polarities
 
-    # We are request for efficient lcf implementations.
-    def feature_dynamic_weighted(self, text_local_indices, polarities):
+    def get_cdw_vecs(self, text_local_indices, polarities):
         text_ids = text_local_indices.detach().cpu().numpy()
         asp_ids = polarities.detach().cpu().numpy()
         weighted_text_raw_indices = np.ones((text_local_indices.size(0), text_local_indices.size(1), 768),
@@ -107,7 +106,7 @@ class LCF_ATEPC(BertForTokenClassification):
         weighted_text_raw_indices = torch.from_numpy(weighted_text_raw_indices)
         return weighted_text_raw_indices.to(self.args.device)
 
-    def feature_dynamic_mask(self, text_local_indices, polarities):
+    def get_cdm_vecs(self, text_local_indices, polarities):
         text_ids = text_local_indices.detach().cpu().numpy()
         asp_ids = polarities.detach().cpu().numpy()
         SRD = self.args.SRD
@@ -131,7 +130,7 @@ class LCF_ATEPC(BertForTokenClassification):
         masked_text_raw_indices = torch.from_numpy(masked_text_raw_indices)
         return masked_text_raw_indices.to(self.args.device)
 
-    def get_ids_for_local_context_extractor(self, text_indices):
+    def get_bert_base_ids(self, text_indices):
         # convert BERT-SPC input to BERT-BASE format
         text_ids = text_indices.detach().cpu().numpy()
         for text_i in range(len(text_ids)):
@@ -139,14 +138,13 @@ class LCF_ATEPC(BertForTokenClassification):
             text_ids[text_i][sep_index + 1:] = 0
         return torch.tensor(text_ids).to(self.args.device)
 
-    def forward(self, input_ids_spc, token_type_ids=None, attention_mask=None, labels=None, polarities=None,
-                valid_ids=None,
-                attention_mask_label=None):
+    def forward(self, bert_spc_ids, token_type_ids=None, attention_mask=None, ate_labels=None, polarities=None,
+                valid_ids=None, attention_mask_label=None):
         if not self.args.use_bert_spc:
-            input_ids_spc = self.get_ids_for_local_context_extractor(input_ids_spc)
-            labels = self.get_batch_token_labels_bert_base_indices(labels)
-        global_context_out, _ = self.bert_for_global_context(input_ids_spc, token_type_ids, attention_mask)
-        polarity_labels = self.get_batch_polarities(polarities)
+            bert_spc_ids = self.get_bert_base_ids(bert_spc_ids)
+            ate_labels = self.get_ate_labels(ate_labels)
+        global_context_out, _ = self.bert4global(bert_spc_ids, token_type_ids, attention_mask)
+        apc_polarities = self.get_apc_polarities(polarities)
 
         batch_size, max_len, feat_dim = global_context_out.shape
         global_valid_output = torch.zeros(batch_size, max_len, feat_dim, dtype=torch.float32).to(self.args.device)
@@ -159,55 +157,55 @@ class LCF_ATEPC(BertForTokenClassification):
         global_context_out = self.dropout(global_valid_output)
         ate_logits = self.classifier(global_context_out)
 
-        if self.args.local_context_focus is not None:
+        if self.args.lcf is not None:
 
             if self.args.use_bert_spc:
-                local_context_ids = self.get_ids_for_local_context_extractor(input_ids_spc)
+                local_context_ids = self.get_bert_base_ids(bert_spc_ids)
             else:
-                local_context_ids = input_ids_spc
+                local_context_ids = bert_spc_ids
 
-            local_context_out, _ = self.bert_for_local_context(input_ids_spc)
+            local_context_out, _ = self.bert4local(bert_spc_ids)
             batch_size, max_len, feat_dim = local_context_out.shape
             local_valid_output = torch.zeros(batch_size, max_len, feat_dim, dtype=torch.float32).to(self.args.device)
-            for i in range(batch_size):
-                jj = -1
-                for j in range(max_len):
-                    if valid_ids[i][j].item() == 1:
-                        jj += 1
-                        local_valid_output[i][jj] = local_context_out[i][j]
+            # for i in range(batch_size):
+            #     jj = -1
+            #     for j in range(max_len):
+            #         if valid_ids[i][j].item() == 1:
+            #             jj += 1
+            #             local_valid_output[i][jj] = local_context_out[i][j]
             local_context_out = self.dropout(local_valid_output)
 
-            if 'cdm' in self.args.local_context_focus:
-                cdm_vec = self.feature_dynamic_mask(local_context_ids, polarities)
+            if 'cdm' in self.args.lcf:
+                cdm_vec = self.get_cdm_vecs(local_context_ids, polarities)
                 cdm_context_out = torch.mul(local_context_out, cdm_vec)
                 cdm_context_out = self.SA1(cdm_context_out)
                 cat_out = torch.cat((global_context_out, cdm_context_out), dim=-1)
                 cat_out = self.linear_double(cat_out)
-            elif 'cdw' in self.args.local_context_focus:
-                cdw_vec = self.feature_dynamic_weighted(local_context_ids, polarities)
+            elif 'cdw' in self.args.lcf:
+                cdw_vec = self.get_cdw_vecs(local_context_ids, polarities)
                 cdw_context_out = torch.mul(local_context_out, cdw_vec)
                 cdw_context_out = self.SA1(cdw_context_out)
                 cat_out = torch.cat((global_context_out, cdw_context_out), dim=-1)
                 cat_out = self.linear_double(cat_out)
-            elif 'fusion' in self.args.local_context_focus:
-                cdm_vec = self.feature_dynamic_mask(local_context_ids, polarities)
+            elif 'fusion' in self.args.lcf:
+                cdm_vec = self.get_cdm_vecs(local_context_ids, polarities)
                 cdm_context_out = torch.mul(local_context_out, cdm_vec)
-                cdw_vec = self.feature_dynamic_weighted(local_context_ids, polarities)
+                cdw_vec = self.get_cdw_vecs(local_context_ids, polarities)
                 cdw_context_out = torch.mul(local_context_out, cdw_vec)
                 cat_out = torch.cat((global_context_out, cdw_context_out, cdm_context_out), dim=-1)
                 cat_out = self.linear_triple(cat_out)
-            sa_out = self.SA2(cat_out)
-            pooled_out = self.pooler(sa_out)
+            # sa_out = self.SA2(cat_out)
+            pooled_out = self.pooler(cat_out)
         else:
             pooled_out = self.pooler(global_context_out)
         pooled_out = self.dropout(pooled_out)
         apc_logits = self.dense(pooled_out)
 
-        if labels is not None:
+        if ate_labels is not None:
             loss_fct = CrossEntropyLoss(ignore_index=0)
             loss_sen = CrossEntropyLoss()
-            loss_ate = loss_fct(ate_logits.view(-1, self.num_labels), labels.view(-1))
-            loss_apc = loss_sen(apc_logits, polarity_labels)
+            loss_ate = loss_fct(ate_logits.view(-1, self.num_labels), ate_labels.view(-1))
+            loss_apc = loss_sen(apc_logits, apc_polarities)
 
             return loss_ate, loss_apc
         else:

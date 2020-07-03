@@ -21,18 +21,11 @@ from seqeval.metrics import classification_report
 from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler, TensorDataset)
 
 from utils.data_utils_atepc import ATEPCProcessor, convert_examples_to_features
-from models.lc_absa.lcf_atepc import LCF_ATEPC
+from models.lc_atepc.lcf_atepc import LCF_ATEPC
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler(sys.stdout))
-
-os.makedirs('logs', exist_ok=True)
-time = '{}'.format(strftime("%y%m%d-%H%M%S", localtime()))
-log_file = 'logs/{}.log'.format(time)
-logger.addHandler(logging.FileHandler(log_file))
-logger.info('log file: {}'.format(log_file))
-
 
 def main(config):
     args = config
@@ -71,7 +64,7 @@ def main(config):
         'notebook': "bert-base-chinese",
         'laptop': "bert-base-uncased",
         'restaurant': "bert-base-uncased",
-        # for loading domain-adapted BERT
+        # e.g. for loading domain-adapted BERT
         # 'restaurant': "../bert_pretrained_restaurant",
         'twitter': "bert-base-uncased",
         'mixed': "bert-base-multilingual-uncased",
@@ -143,49 +136,49 @@ def main(config):
         test_apc_logits_all, test_polarities_all = None, None
         model.eval()
         label_map = {i: label for i, label in enumerate(label_list, 1)}
-        for input_ids_spc, input_mask, segment_ids, label_ids, polarities, valid_ids, l_mask in eval_dataloader:
+        for input_ids_spc, input_mask, segment_ids, ate_label_ids, apc_polarities, valid_ids, l_mask in eval_dataloader:
             input_ids_spc = input_ids_spc.to(device)
             input_mask = input_mask.to(device)
             segment_ids = segment_ids.to(device)
             valid_ids = valid_ids.to(device)
-            label_ids = label_ids.to(device)
-            polarities = polarities.to(device)
+            ate_label_ids = ate_label_ids.to(device)
+            apc_polarities = apc_polarities.to(device)
             l_mask = l_mask.to(device)
 
             with torch.no_grad():
                 ate_logits, apc_logits = model(input_ids_spc, segment_ids, input_mask,
-                                               valid_ids=valid_ids, polarities=polarities, attention_mask_label=l_mask)
+                                               valid_ids=valid_ids, polarities=apc_polarities, attention_mask_label=l_mask)
             if eval_APC:
-                polarities = model.get_batch_polarities(polarities)
-                n_test_correct += (torch.argmax(apc_logits, -1) == polarities).sum().item()
-                n_test_total += len(polarities)
+                apc_polarities = model.get_apc_polarities(apc_polarities)
+                n_test_correct += (torch.argmax(apc_logits, -1) == apc_polarities).sum().item()
+                n_test_total += len(apc_polarities)
 
                 if test_polarities_all is None:
-                    test_polarities_all = polarities
+                    test_polarities_all = apc_polarities
                     test_apc_logits_all = apc_logits
                 else:
-                    test_polarities_all = torch.cat((test_polarities_all, polarities), dim=0)
+                    test_polarities_all = torch.cat((test_polarities_all, apc_polarities), dim=0)
                     test_apc_logits_all = torch.cat((test_apc_logits_all, apc_logits), dim=0)
 
             if eval_ATE:
                 if not args.use_bert_spc:
-                    label_ids = model.get_batch_token_labels_bert_base_indices(label_ids)
+                    ate_label_ids = model.get_ate_labels(ate_label_ids)
                 ate_logits = torch.argmax(F.log_softmax(ate_logits, dim=2), dim=2)
                 ate_logits = ate_logits.detach().cpu().numpy()
-                label_ids = label_ids.to('cpu').numpy()
+                ate_label_ids = ate_label_ids.to('cpu').numpy()
                 input_mask = input_mask.to('cpu').numpy()
-                for i, label in enumerate(label_ids):
+                for i, label in enumerate(ate_label_ids):
                     temp_1 = []
                     temp_2 = []
                     for j, m in enumerate(label):
                         if j == 0:
                             continue
-                        elif label_ids[i][j] == len(label_list):
+                        elif ate_label_ids[i][j] == len(label_list):
                             y_true.append(temp_1)
                             y_pred.append(temp_2)
                             break
                         else:
-                            temp_1.append(label_map.get(label_ids[i][j], 'O'))
+                            temp_1.append(label_map.get(ate_label_ids[i][j], 'O'))
                             temp_2.append(label_map.get(ate_logits[i][j], 'O'))
         if eval_APC:
             test_acc = n_test_correct / n_test_total
@@ -320,7 +313,8 @@ def parse_experiments(path):
         parser.add_argument("--learning_rate", default=float(config['learning_rate']), type=float,
                             help="The initial learning rate for Adam.")
         parser.add_argument("--use_bert_spc", default=bool(config['use_bert_spc']), type=bool)
-        parser.add_argument("--local_context_focus", default=config['local_context_focus'], type=str)
+        parser.add_argument("--use_dual_bert", default=bool(config['use_dual_bert']), type=bool)
+        parser.add_argument("--lcf", default=config['lcf'], type=str)
         parser.add_argument("--num_train_epochs", default=float(config['num_train_epochs']), type=float,
                             help="Total number of training epochs to perform.")
         parser.add_argument("--train_batch_size", default=int(config['train_batch_size']), type=int,
@@ -342,6 +336,11 @@ if __name__ == "__main__":
     experiments.add_argument('--config_path', default='experiments_atepc.json', type=str,
                              help='Path of experiments config file')
     experiments = experiments.parse_args()
+
+    os.makedirs('logs', exist_ok=True)
+    log_file = 'logs/{}.{}.log'.format(experiments.config_path, strftime("%y%m%d.%H%M", localtime()))
+    logger.addHandler(logging.FileHandler(log_file))
+    logger.info('log file: {}'.format(log_file))
 
     from utils.Pytorch_GPUManager import GPUManager
 

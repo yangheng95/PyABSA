@@ -11,11 +11,11 @@ import numpy, random
 
 from utils.data_utils_apc import Tokenizer4Bert, ABSADataset, ABSAInferDataset, build_embedding_matrix,\
     build_tokenizer_for_inferring, parse_experiments
-from models.lc_absa import LCE_BERT, LCE_GLOVE, LCE_LSTM
-from models.lc_absa import LCF_GLOVE, LCF_BERT
-from models.lc_absa import HLCF_GLOVE, HLCF_BERT
-from models.lc_absa import BERT_BASE, BERT_SPC
-from models.absa import LSTM, IAN, MemNet, RAM, TD_LSTM, TC_LSTM, Cabasc, ATAE_LSTM, TNet_LF, AOA, MGAN, AEN_BERT
+from models.lc_apc import LCE_BERT, LCE_GLOVE, LCE_LSTM
+from models.lc_apc import LCF_GLOVE, LCF_BERT
+from models.lc_apc import HLCF_GLOVE, HLCF_BERT
+from models.lc_apc import BERT_BASE, BERT_SPC
+from models.apc import LSTM, IAN, MemNet, RAM, TD_LSTM, TC_LSTM, Cabasc, ATAE_LSTM, TNet_LF, AOA, MGAN, AEN_BERT
 import sys
 
 class Instructor:
@@ -30,16 +30,18 @@ class Instructor:
         else:
             # opt.learning_rate = 0.002
             tokenizer = build_tokenizer_for_inferring(
-                fnames=[opt.infer_data_path],
+                fnames=[opt.infer_data],
                 max_seq_len=opt.max_seq_len,
-                dat_fname='{0}_tokenizer.dat'.format(opt.infer_data_path))
+                dat_fname=args.inferring_dataset + "/" + opt.tokenizer
+            )
             embedding_matrix = build_embedding_matrix(
                 word2idx=tokenizer.word2idx,
                 embed_dim=opt.embed_dim,
-                dat_fname='eval_{}_embedding_matrix.dat'.format(opt.infer_data_path))
+                dat_fname=args.inferring_dataset + "/" + opt.embedding
+            )
             self.model = opt.model_class(embedding_matrix, opt).to(opt.device)
 
-        infer_set = ABSAInferDataset(opt.infer_data_path, tokenizer, opt)
+        infer_set = ABSAInferDataset(args.inferring_dataset+"/"+opt.infer_data, tokenizer, opt)
         self.train_data_loader = DataLoader(dataset=infer_set, batch_size=1, shuffle=False)
 
     def _infer(self):
@@ -138,15 +140,17 @@ if __name__ == '__main__':
     for file in os.listdir('inferring_dataset'):
         if 'acc' in file:
             opt.state_dict_path = file
-
-    opt.infer_data_path = 'inferring_dataset/infer_data.dat'
-
-    parser.add_argument('--config', default='inferring_dataset/eval_config.json', type=str)
-    parser.add_argument('--infer_data_path', default='inferring_dataset/infer_data.dat', type=str)
-    parser.add_argument('--state_dict_path', default='saved_models/lce_glove_laptop_acc74.76', type=str)
+        if 'infer' in file:
+            opt.infer_data = file
+        if 'config' in file:
+            opt.config = file
+        if 'embedding' in file:
+            opt.embedding = file.split('/')[-1]
+        if 'tokenizer' in file:
+            opt.tokenizer = file.split('/')[-1]
 
     print('*'*80)
-    print('Warning: Be sure the eval-config, eval-dataset, save_models, seed are compatible! ')
+    print('Warning: Be sure the eval-config, eval-dataset, saved_models, seed are compatible! ')
     print('*' * 80)
     opt.seed = int(opt.state_dict_path.split('seed')[1])
     init_and_infer(opt)

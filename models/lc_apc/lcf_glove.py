@@ -30,7 +30,7 @@ class LCF_GLOVE(nn.Module):
 
     def __init__(self, embedding_matrix, opt):
         super(LCF_GLOVE, self).__init__()
-        self.config = BertConfig.from_json_file("bert_config.json")
+        self.config = BertConfig.from_json_file("utils/bert_config.json")
         self.opt = opt
         self.embed = nn.Embedding.from_pretrained(torch.tensor(embedding_matrix, dtype=torch.float))
         self.mha_global = SelfAttention(self.config, opt)
@@ -39,13 +39,10 @@ class LCF_GLOVE(nn.Module):
         self.ffn_local = PositionwiseFeedForward(self.opt.embed_dim, dropout=self.opt.dropout)
         self.mha_local_SA = SelfAttention(self.config, opt)
         self.mha_global_SA = SelfAttention(self.config, opt)
-        self.mha_SA_single = SelfAttention(self.config, opt)
-        self.bert_pooler = BertPooler(self.config)
+        self.pool = BertPooler(self.config)
         self.dropout = nn.Dropout(opt.dropout)
-        self.linear_triple = nn.Linear(opt.embed_dim * 3, opt.embed_dim)
         self.linear = nn.Linear(opt.embed_dim * 2, opt.embed_dim)
         self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
-        self.linear1 = nn.Linear(opt.embed_dim * 3, opt.embed_dim)
 
     def forward(self, inputs):
         text_global_indices = inputs[0]
@@ -74,9 +71,8 @@ class LCF_GLOVE(nn.Module):
         # FIL layer
         cat_out = torch.cat((lcf_features, global_context_features), dim=-1)
         cat_out = self.linear(cat_out)
-        # cat_out = self.mha_SA_single(cat_out)
 
         # output layer
-        pooled_out = self.bert_pooler(cat_out)
+        pooled_out = self.pool(cat_out)
         dense_out = self.dense(pooled_out)
         return dense_out

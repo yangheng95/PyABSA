@@ -85,7 +85,7 @@ class DataProcessor(object):
         raise NotImplementedError()
 
     def get_labels(self):
-        """Gets the list of labels for this data set."""
+        """Gets the list of ate_labels for this data set."""
         raise NotImplementedError()
 
     @classmethod
@@ -101,28 +101,28 @@ class ATEPCProcessor(DataProcessor):
         """See base class."""
         if 'laptop' in data_dir:
             return self._create_examples(
-                self._read_tsv(os.path.join(data_dir, "Laptops.atepc.train.log.dat")), "train")
+                self._read_tsv(os.path.join(data_dir, "Laptops.atepc.train.dat")), "train")
         elif 'rest' in data_dir:
             return self._create_examples(
-                self._read_tsv(os.path.join(data_dir, "Restaurants.atepc.train.log.dat")), "train")
+                self._read_tsv(os.path.join(data_dir, "Restaurants.atepc.train.dat")), "train")
         elif 'twitter' in data_dir:
             return self._create_examples(
-                self._read_tsv(os.path.join(data_dir, "twitter.atepc.train.log.dat")), "train")
+                self._read_tsv(os.path.join(data_dir, "twitter.atepc.train.dat")), "train")
         elif 'car' in data_dir:
             return self._create_examples(
-                self._read_tsv(os.path.join(data_dir, "car.atepc.train.log.dat")), "train")
+                self._read_tsv(os.path.join(data_dir, "car.atepc.train.dat")), "train")
         elif 'phone' in data_dir:
             return self._create_examples(
-                self._read_tsv(os.path.join(data_dir, "phone.atepc.train.log.dat")), "train")
+                self._read_tsv(os.path.join(data_dir, "phone.atepc.train.dat")), "train")
         elif 'camera' in data_dir:
             return self._create_examples(
-                self._read_tsv(os.path.join(data_dir, "camera.atepc.train.log.dat")), "train")
+                self._read_tsv(os.path.join(data_dir, "camera.atepc.train.dat")), "train")
         elif 'notebook' in data_dir:
             return self._create_examples(
-                self._read_tsv(os.path.join(data_dir, "notebook.atepc.train.log.dat")), "train")
+                self._read_tsv(os.path.join(data_dir, "notebook.atepc.train.dat")), "train")
         elif 'mixed' in data_dir:
             return self._create_examples(
-                self._read_tsv(os.path.join(data_dir, "mixed.atepc.train.log.dat")), "train")
+                self._read_tsv(os.path.join(data_dir, "mixed.atepc.train.dat")), "train")
 
     # def get_dev_examples(self, data_dir):
     #     """See base class."""
@@ -283,14 +283,14 @@ def convert_examples_to_features(examples, label_list, max_seq_length, tokenizer
         #     print("guid: %s" % (example.guid))
         #     print("tokens: %s" % " ".join(
         #             [str(x) for x in ntokens]))
-        #     print("input_ids: %s" % " ".join([str(x) for x in input_ids_spc]))
+        #     print("input_ids: %s" % " ".join([str(x) for x in bert_spc_ids]))
         #     print("input_mask: %s" % " ".join([str(x) for x in input_mask]))
         #     print("segment_ids: %s" % " ".join([str(x) for x in segment_ids]))
         #     # print("label: %s (id = %d)" % (example.label, label_ids))
         #
-        # input_ids_spc = np.array(input_ids_spc)
+        # bert_spc_ids = np.array(bert_spc_ids)
         # label_ids = np.array(label_ids)
-        # labels = np.array(labels)
+        # ate_labels = np.array(ate_labels)
         # valid = np.array(valid)
 
         features.append(

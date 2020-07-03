@@ -28,7 +28,7 @@ class LCE_GLOVE(nn.Module):
     def __init__(self, embedding_matrix, opt):
         super(LCE_GLOVE, self).__init__()
         # Only few of the parameters are necessary in the config.json, such as hidden_size, num_attention_heads
-        self.config = BertConfig.from_json_file("bert_config.json")
+        self.config = BertConfig.from_json_file("utils/bert_config.json")
         self.opt = opt
         self.embed = nn.Embedding.from_pretrained(torch.tensor(embedding_matrix, dtype=torch.float))
         self.lc_embed = nn.Embedding(2, opt.embed_dim)
