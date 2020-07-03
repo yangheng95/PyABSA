@@ -15,11 +15,11 @@ import numpy, random
 from time import strftime, localtime
 
 from utils.data_utils_apc import Tokenizer4Bert, ABSADataset, build_embedding_matrix, build_tokenizer, parse_experiments
-from models.lc_absa import LCE_BERT, LCE_GLOVE, LCE_LSTM
-from models.lc_absa import LCF_GLOVE, LCF_BERT
-from models.lc_absa import HLCF_GLOVE, HLCF_BERT
-from models.lc_absa import BERT_BASE, BERT_SPC
-from models.absa import LSTM, IAN, MemNet, RAM, TD_LSTM, TC_LSTM, Cabasc, ATAE_LSTM, TNet_LF, AOA, MGAN, AEN_BERT
+from models.lc_apc import LCE_BERT, LCE_GLOVE, LCE_LSTM
+from models.lc_apc import LCF_GLOVE, LCF_BERT
+from models.lc_apc import HLCF_GLOVE, HLCF_BERT
+from models.lc_apc import BERT_BASE, BERT_SPC
+from models.apc import LSTM, IAN, MemNet, RAM, TD_LSTM, TC_LSTM, Cabasc, ATAE_LSTM, TNet_LF, AOA, MGAN, AEN_BERT
 import logging, sys
 
 logger = logging.getLogger()
@@ -88,7 +88,7 @@ class Instructor:
 
         # If we save using the predefined names, we can load using `from_pretrained`
         model_output_dir = save_path+'_fine-tuned'
-        if mode == 0:
+        if mode == 0 or 'bert' not in self.opt.model_name:
             torch.save(self.model.state_dict(), save_path+'.state_dict')  # save the state dict
         else:
             if not os.path.exists(model_output_dir):
@@ -146,7 +146,7 @@ class Instructor:
                             save_path = 'saved_models/{0}_{1}_acc{2}_seed{3}seed'.format(self.opt.model_name,
                                                         self.opt.dataset, round(test_acc * 100, 2), self.opt.seed)
                             # uncomment follow lines to save model during training
-                            self._save_model(self.bert, save_path, mode=0)
+                            self._save_model(self.model, save_path, mode=0)
                             logging.info('saved: {}'.format(save_path))
                             logging.info('max_acc:{}, f1:{}'.format(round(test_acc * 100, 2), round(f1 * 100, 2)))
                     if f1 > max_f1:
