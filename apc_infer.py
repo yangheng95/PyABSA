@@ -62,8 +62,15 @@ class Instructor:
                     sen_logits = outputs
                 t_probs = torch.softmax(sen_logits, dim=-1).cpu().numpy()
                 sentiment = t_probs.argmax(axis=-1) - 1
-
-                print('polarity of {} = {}'.format(sample['aspect'], sentiment))
+                if self.opt.dataset in {'camera', 'notebook', 'car', 'phone'}:
+                    print('polarity of {} = {}'.format(sample['aspect'], 'Negative' if sentiment == 1 else 'Positive'))
+                # for English datasets
+                elif sentiment == 0:
+                    print('polarity of {} = Negative'.format(sample['aspect']))
+                elif sentiment == 1:
+                    print('polarity of {} = Neutral'.format(sample['aspect']))
+                elif sentiment == 2:
+                    print('polarity of {} = Positive'.format(sample['aspect']))
 
     def run(self):
 

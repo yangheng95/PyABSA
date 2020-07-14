@@ -121,8 +121,8 @@ We list the valid parameters for each model for reference.
 |  LCF-GloVe  |  √  |  √  |  X  |  X  |    X   |        X        |   X  |
 |  LCF-BERT   |  √  |  √  |  X  |  X  |    X   |        √        |   X  |
 |  LCE-LSTM   |  √  |  √  |  √  |  X  |    √   |        X        |   X  |
-|  LCE-Glove  |  √  |  √  |  √  |  X  |    √   |        X        |   X  |
-|  LCE-BERT   |  √  |  √  |  √  |  X  |    √   |        √        |   X  |
+|  LCE-Glove  |  √  |  √  |  √  |  √  |    √   |        X        |   X  |
+|  LCE-BERT   |  √  |  √  |  √  |  √  |    √   |        √        |   X  |
 |  LCF-ATEPC  |  √  |  √  |  X  |  X  |    X   |   √ (for APC)   |   X  |
 |  HLCF-GloVe |  √  |  √  |  X  |  X  |    X   |        X        |   √  |
 |  HLCF-BERT  |  √  |  √  |  X  |  X  |    X   |        √        |   √  |
