@@ -1,15 +1,15 @@
 {
-"config1": {
-    "model_name": "lcf_glove",
-    "dataset": "laptop",
+  "config1": {
+    "model_name": "lce_bert",
+    "dataset": "phone",
     "optimizer": "adam",
-    "learning_rate": 0.002,
+    "learning_rate": 0.00002,
     "dropout": 0.1,
     "l2reg": 0.00001,
     "num_epoch": 5,
-    "batch_size": 32,
+    "batch_size": 16,
     "logdir": "logs",
-    "pretrained_bert_name": "bert-base-uncased",
+    "pretrained_bert_name": "bert-base-chinese",
     "use_dual_bert": false,
     "use_bert_spc": true,
     "max_seq_len": 80,
