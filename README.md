@@ -26,7 +26,7 @@ and improve performance with consuming more resources, e.g. system memory.
 Codes for our paper(s): 
 - [LCF: A Local Context Focus Mechanism for Aspect-Based Sentiment Classification](https://www.mdpi.com/2076-3417/9/16/3389). 
 
-- [Enhancing Fine-grained Sentiment Classification Exploiting Local Context Embedding](https://arxiv.org/abs/2010.00767)
+- [Enhancing Fine-grained Sentiment Classification Exploiting Local Context Embedding](https://arxiv.org/abs/2010.00767).
 
 ## Requirement
 * Python 3.7 + (recommended)
@@ -46,7 +46,7 @@ especially the those based on the local context focus mechanisms, including:
 
 - **[LCF-GloVe](models/lc_apc/lcf_glove.py)**
 
-- **[LCF-BERT](models/lc_apc/lcf_bert.py)**
+- **[LCF-BERT](models/lc_apc/lcf_bert.py)** (Set 'lcfs = True' to use [LCFS-BERT](https://www.aclweb.org/anthology/2020.acl-main.293))
 
 - **[LCA-LSTM](models/lc_apc/lca_lstm.py)** 
 
@@ -212,3 +212,5 @@ If this repository is helpful to you, please cite our papers:
 [ABSA-PyTorch](https://github.com/songyouwei/ABSA-PyTorch)
 
 [domain-adapted-atsc](https://github.com/deepopinion/domain-adapted-atsc)
+
+[LCFS-BERT](https://github.com/HieuPhan33/LCFS-BERT)
