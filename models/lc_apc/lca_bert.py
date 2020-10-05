@@ -35,10 +35,12 @@ class LCE_BERT(nn.Module):
         self.opt = opt
         self.dropout = nn.Dropout(opt.dropout)
         self.bert_SA_L = SelfAttention(bert.config, opt)
+        self.bert_SA_G = SelfAttention(bert.config, opt)
         self.linear = nn.Linear(opt.embed_dim * 2, opt.embed_dim)
         self.pool = BertPooler(bert.config)
         self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
         self.classifier = nn.Linear(opt.embed_dim, 2)
+        self.sigma_gate = torch.sigmoid
 
     def forward(self, inputs):
         if self.opt.use_bert_spc:
