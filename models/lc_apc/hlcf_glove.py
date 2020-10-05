@@ -29,7 +29,7 @@ class HLCF_GLOVE(nn.Module):
 
     def __init__(self, embedding_matrix, opt):
         super(HLCF_GLOVE, self).__init__()
-        pass
+        raise NotImplementedError()
 
     def forward(self, inputs):
-        pass
+        raise NotImplementedError()
