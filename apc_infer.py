@@ -9,9 +9,9 @@ from torch.utils.data import DataLoader
 import argparse
 import numpy, random
 
-from utils.data_utils_apc import Tokenizer4Bert, ABSADataset, ABSAInferDataset, build_embedding_matrix,\
+from utils.data_utils_apc import Tokenizer4Bert, ABSADataset, build_embedding_matrix,\
     build_tokenizer_for_inferring, parse_experiments
-from models.lc_apc import LCE_BERT, LCE_GLOVE, LCE_LSTM
+from models.lc_apc import LCA_BERT, LCA_GLOVE, LCA_LSTM
 from models.lc_apc import LCF_GLOVE, LCF_BERT
 from models.lc_apc import HLCF_GLOVE, HLCF_BERT
 from models.lc_apc import BERT_BASE, BERT_SPC
@@ -27,6 +27,7 @@ class Instructor:
             self.bert_tokenizer = BertTokenizer.from_pretrained(opt.pretrained_bert_name, do_lower_case=True)
             tokenizer = Tokenizer4Bert(self.bert_tokenizer, opt.max_seq_len)
             self.model = opt.model_class(self.bert, opt).to(opt.device)
+            self.model.load_state_dict(torch.load('inferring_dataset/'+opt.state_dict_path))
         else:
             # opt.learning_rate = 0.002
             tokenizer = build_tokenizer_for_inferring(
@@ -41,29 +42,28 @@ class Instructor:
             )
             self.model = opt.model_class(embedding_matrix, opt).to(opt.device)
 
-        infer_set = ABSAInferDataset(args.inferring_dataset+"/"+opt.infer_data, tokenizer, opt)
+        infer_set = ABSADataset(args.inferring_dataset+"/"+opt.infer_data, tokenizer, opt)
         self.train_data_loader = DataLoader(dataset=infer_set, batch_size=1, shuffle=False)
 
     def _infer(self):
         with torch.no_grad():
             self.model.eval()
             for _, sample in enumerate(self.train_data_loader):
-                print(sample['sentence'][0])
+                print(sample['text_raw'])
                 if 'hlcf' not in self.opt.model_name:
                     inputs = [sample[col].to(self.opt.device) for col in self.opt.inputs_cols]
                 else:
                     inputs = [sample[col] for col in self.opt.inputs_cols]
                 self.model.eval()
                 outputs = self.model(inputs)
-                if self.opt.lcp and 'lce' in self.opt.model_name:
+                if self.opt.lcp and 'lca' in self.opt.model_name:
                     sen_logits, _, _ = outputs
-
                 else:
                     sen_logits = outputs
                 t_probs = torch.softmax(sen_logits, dim=-1).cpu().numpy()
-                sentiment = t_probs.argmax(axis=-1) - 1
+                sentiment = t_probs.argmax(axis=-1)
                 if self.opt.dataset in {'camera', 'notebook', 'car', 'phone'}:
-                    print('polarity of {} = {}'.format(sample['aspect'], 'Negative' if sentiment == 1 else 'Positive'))
+                    print('polarity of {} = {}'.format(sample['aspect'], 'Negative' if sentiment == 0 else 'Positive'))
                 # for English datasets
                 elif sentiment == 0:
                     print('polarity of {} = Negative'.format(sample['aspect']))
@@ -91,9 +91,9 @@ def init_and_infer(opt):
     model_classes = {
         'bert_base': BERT_BASE,
         'bert_spc': BERT_SPC,
-        'lce_glove': LCE_GLOVE,
-        'lce_bert': LCE_BERT,
-        'lce_lstm': LCE_LSTM,
+        'lca_glove': LCA_GLOVE,
+        'lca_bert': LCA_BERT,
+        'lca_lstm': LCA_LSTM,
         'lcf_glove': LCF_GLOVE,
         'lcf_bert': LCF_BERT,
         'hlcf_glove': HLCF_GLOVE,

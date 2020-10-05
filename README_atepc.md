@@ -63,13 +63,16 @@ Due to the busy schedule, some module may not update for long term, such as savi
 
 If this repository is helpful to you, please cite our paper:
 
-    @misc{yang2019multitask,
-        title={A Multi-task Learning Model for Chinese-oriented Aspect Polarity Classification and Aspect Term Extraction},
-        author={Heng Yang and Biqing Zeng and JianHao Yang and Youwei Song and Ruyang Xu},
-        year={2019},
-        eprint={1912.07976},
-        archivePrefix={arXiv},
-        primaryClass={cs.CL}
+    @article{YANG2021344,
+    title = "A multi-task learning model for Chinese-oriented aspect polarity classification and aspect term extraction",
+    journal = "Neurocomputing",
+    volume = "419",
+    pages = "344 - 356",
+    year = "2021",
+    issn = "0925-2312",
+    doi = "https://doi.org/10.1016/j.neucom.2020.08.001",
+    url = "http://www.sciencedirect.com/science/article/pii/S0925231220312534",
+    author = "Heng Yang and Biqing Zeng and Jianhao Yang and Youwei Song and Ruyang Xu"
     }
 
 ## Licence

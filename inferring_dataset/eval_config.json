@@ -1,6 +1,6 @@
 {
-  "config1": {
-    "model_name": "lce_bert",
+ "config1": {
+    "model_name": "lca_bert",
     "dataset": "phone",
     "optimizer": "adam",
     "learning_rate": 0.00002,
@@ -14,10 +14,11 @@
     "use_bert_spc": true,
     "max_seq_len": 80,
     "SRD": 5,
-    "sigma": 0.5,
+    "sigma": 0.3,
     "lcf": "cdm",
-    "lce": true,
+    "lcfs": false,
+    "lca": true,
     "lcp": true,
-    "exp_rounds": 1
+    "exp_rounds": 3
   }
 }

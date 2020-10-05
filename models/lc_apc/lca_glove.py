@@ -23,10 +23,10 @@ class SelfAttention(nn.Module):
         SA_out = self.SA(inputs, zero_tensor)
         return self.tanh(SA_out[0])
 
-class LCE_GLOVE(nn.Module):
+class LCA_GLOVE(nn.Module):
 
     def __init__(self, embedding_matrix, opt):
-        super(LCE_GLOVE, self).__init__()
+        super(LCA_GLOVE, self).__init__()
         # Only few of the parameters are necessary in the config.json, such as hidden_size, num_attention_heads
         self.config = BertConfig.from_json_file("utils/bert_config.json")
         self.opt = opt
@@ -45,7 +45,7 @@ class LCE_GLOVE(nn.Module):
     def forward(self, inputs):
         text_global_indices = inputs[0]
         text_local_indices = inputs[1]
-        lce_ids = inputs[2]
+        lca_ids = inputs[2]
         mask_matrix = inputs[3]
 
         # embedding layer
@@ -54,8 +54,8 @@ class LCE_GLOVE(nn.Module):
 
         global_out = self.global_encoder1(global_out)
 
-        if self.opt.lce:
-            lc_embedding = self.lc_embed(lce_ids)
+        if self.opt.lca:
+            lc_embedding = self.lc_embed(lca_ids)
             global_out = torch.mul(lc_embedding, global_out)
         local_out = self.local_encoder1(local_out)
 
@@ -74,15 +74,15 @@ class LCE_GLOVE(nn.Module):
         cat_features = torch.cat((local_out, global_out), dim=-1)
         cat_features = self.linear(cat_features)
 
-        lce_logits = self.classifier(cat_features)
-        lce_logits = lce_logits.view(-1, 2)
-        lce_ids = lce_ids.view(-1)
+        lca_logits = self.classifier(cat_features)
+        lca_logits = lca_logits.view(-1, 2)
+        lca_ids = lca_ids.view(-1)
 
         # output layer
         pooled_out = self.pool(cat_features)
         sen_logits = self.dense(pooled_out)
 
         if self.opt.lcp:
-            return sen_logits, lce_logits, lce_ids
+            return sen_logits, lca_logits, lca_ids
         else:
             return sen_logits

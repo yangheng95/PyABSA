@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: lce_bert.py
+# file: lca_bert.py
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # Copyright (C) 2020. All Rights Reserved.
 
@@ -26,9 +26,9 @@ class SelfAttention(nn.Module):
         return self.tanh(SA_out[0])
 
 
-class LCE_BERT(nn.Module):
+class LCA_BERT(nn.Module):
     def __init__(self, bert, opt):
-        super(LCE_BERT, self).__init__()
+        super(LCA_BERT, self).__init__()
         self.bert4global = bert
         self.bert4local = copy.deepcopy(bert) if opt.use_dual_bert else self.bert4global
         self.lc_embed = nn.Embedding(opt.max_seq_len, opt.embed_dim)
@@ -38,9 +38,11 @@ class LCE_BERT(nn.Module):
         self.bert_SA_G = SelfAttention(bert.config, opt)
         self.linear = nn.Linear(opt.embed_dim * 2, opt.embed_dim)
         self.pool = BertPooler(bert.config)
-        self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
+        if self.opt.dataset in {'camera', 'notebook', 'car', 'phone'}:
+            self.dense = nn.Linear(opt.embed_dim, 2)
+        else:
+            self.dense = nn.Linear(opt.embed_dim, 3)
         self.classifier = nn.Linear(opt.embed_dim, 2)
-        self.sigma_gate = torch.sigmoid
 
     def forward(self, inputs):
         if self.opt.use_bert_spc:
@@ -49,13 +51,13 @@ class LCE_BERT(nn.Module):
             text_global_indices = inputs[1]
         text_local_indices = inputs[1]
         bert_segments_ids = inputs[2]
-        lce_ids = inputs[3]
+        lca_ids = inputs[3]
         lcf_matrix = inputs[4]
 
         bert_global_out, _ = self.bert4global(text_global_indices, token_type_ids=bert_segments_ids)
         bert_local_out, _ = self.bert4local(text_local_indices)
-        if self.opt.lce and 'lce' in self.opt.model_name:
-            lc_embedding = self.lc_embed(lce_ids)
+        if self.opt.lca and 'lca' in self.opt.model_name:
+            lc_embedding = self.lc_embed(lca_ids)
             bert_global_out = torch.mul(bert_global_out, lc_embedding)
 
         # # LCF-layer
@@ -65,15 +67,15 @@ class LCE_BERT(nn.Module):
         cat_features = torch.cat((bert_local_out, bert_global_out), dim=-1)
         cat_features = self.linear(cat_features)
 
-        lce_logits = self.classifier(cat_features)
-        lce_logits = lce_logits.view(-1, 2)
-        lce_ids = lce_ids.view(-1)
+        lca_logits = self.classifier(cat_features)
+        lca_logits = lca_logits.view(-1, 2)
+        lca_ids = lca_ids.view(-1)
 
         cat_features = self.dropout(cat_features)
 
         pooled_out = self.pool(cat_features)
         dense_out = self.dense(pooled_out)
         if self.opt.lcp:
-            return dense_out, lce_logits, lce_ids
+            return dense_out, lca_logits, lca_ids
         else:
             return dense_out

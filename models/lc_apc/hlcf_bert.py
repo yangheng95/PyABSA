@@ -29,7 +29,7 @@ class SelfAttention(nn.Module):
 class HLCF_BERT(nn.Module):
     def __init__(self, bert, opt):
         super(HLCF_BERT, self).__init__()
-        pass
+        raise NotImplementedError()
 
     def forward(self, inputs):
-        pass
+        raise NotImplementedError()

@@ -15,7 +15,7 @@ import numpy, random
 from time import strftime, localtime
 
 from utils.data_utils_apc import Tokenizer4Bert, ABSADataset, build_embedding_matrix, build_tokenizer, parse_experiments
-from models.lc_apc import LCE_BERT, LCE_GLOVE, LCE_LSTM
+from models.lc_apc import LCA_BERT, LCA_GLOVE, LCA_LSTM
 from models.lc_apc import LCF_GLOVE, LCF_BERT
 from models.lc_apc import HLCF_GLOVE, HLCF_BERT
 from models.lc_apc import BERT_BASE, BERT_SPC
@@ -50,8 +50,8 @@ class Instructor:
 
         trainset = ABSADataset(opt.dataset_file['train'], tokenizer, opt)
         testset = ABSADataset(opt.dataset_file['test'], tokenizer, opt)
-        self.train_data_loader = DataLoader(dataset=trainset, batch_size=opt.batch_size, shuffle=True)
-        self.test_data_loader = DataLoader(dataset=testset, batch_size=opt.batch_size, shuffle=False)
+        self.train_data_loader = DataLoader(dataset=trainset, batch_size=opt.batch_size, shuffle=True, pin_memory=True)
+        self.test_data_loader = DataLoader(dataset=testset, batch_size=opt.batch_size, shuffle=False, pin_memory=True)
 
         if opt.device.type == 'cuda':
             logging.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=opt.device.index)))
@@ -100,7 +100,7 @@ class Instructor:
             model_to_save.config.to_json_file(output_config_file)
             self.bert_tokenizer.save_vocabulary(model_output_dir)
 
-    def _train(self, criterion, lce_criterion, optimizer, max_test_acc_overall=0):
+    def _train(self, criterion, lca_criterion, optimizer, max_test_acc_overall=0):
         max_test_acc = 0
         max_f1 = 0
         global_step = 0
@@ -122,11 +122,11 @@ class Instructor:
 
                 outputs = self.model(inputs)
                 targets = sample_batched['polarity'].to(self.opt.device)
-                if self.opt.lcp and 'lce' in self.opt.model_name:
-                    sen_logits, lce_logits, lce_ids = outputs
+                if self.opt.lcp and 'lca' in self.opt.model_name:
+                    sen_logits, lca_logits, lca_ids = outputs
                     sen_loss = criterion(sen_logits, targets)
-                    lcp_loss = lce_criterion(lce_logits, lce_ids)
-                    loss = 2 * (1 - self.opt.sigma) * sen_loss + self.opt.sigma * lcp_loss
+                    lcp_loss = lca_criterion(lca_logits, lca_ids)
+                    loss = (1 - self.opt.sigma) * sen_loss + self.opt.sigma * lcp_loss
                 else:
                     sen_logits = outputs
                     loss = criterion(sen_logits, targets)
@@ -168,9 +168,10 @@ class Instructor:
                     t_inputs = [t_sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
                 else:
                     t_inputs = [t_sample_batched[col] for col in self.opt.inputs_cols]
+
                 t_targets = t_sample_batched['polarity'].to(self.opt.device)
 
-                if self.opt.lcp and 'lce' in self.opt.model_name:
+                if self.opt.lcp and 'lca' in self.opt.model_name:
                     sen_outputs, _, _ = self.model(t_inputs)
                 else:
                     sen_outputs = self.model(t_inputs)
@@ -187,18 +188,18 @@ class Instructor:
 
         test_acc = n_test_correct / n_test_total
         if self.opt.dataset in {'camera', 'notebook', 'car', 'phone'}:
-            f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(), labels=[1, 2],
-                                  average='macro')
+            f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
+                                  labels=[0, 1], average='macro')
         else:
-            f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(), labels=[0, 1, 2],
-                                  average='macro')
+            f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
+                                  labels=[0, 1, 2], average='macro')
         return test_acc, f1
 
     def run(self, repeats=1):
 
         # Loss and Optimizer
         criterion = nn.CrossEntropyLoss()
-        lce_criterion = nn.CrossEntropyLoss()
+        lca_criterion = nn.CrossEntropyLoss()
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
         optimizer = self.opt.optimizer(_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
@@ -207,7 +208,7 @@ class Instructor:
         for i in range(repeats):
             logging.info('repeat: {}'.format(i))
             self._reset_params()
-            max_test_acc, max_f1 = self._train(criterion, lce_criterion, optimizer,
+            max_test_acc, max_f1 = self._train(criterion, lca_criterion, optimizer,
                                                max_test_acc_overall=max_test_acc_overall)
             max_test_acc_overall = max(max_test_acc, max_test_acc_overall)
             max_f1_overall = max(max_f1, max_f1_overall)
@@ -233,9 +234,9 @@ def single_train(opt):
     model_classes = {
         'bert_base': BERT_BASE,
         'bert_spc': BERT_SPC,
-        'lce_glove': LCE_GLOVE,
-        'lce_bert': LCE_BERT,
-        'lce_lstm': LCE_LSTM,
+        'lca_glove': LCA_GLOVE,
+        'lca_bert': LCA_BERT,
+        'lca_lstm': LCA_LSTM,
         'lcf_glove': LCF_GLOVE,
         'lcf_bert': LCF_BERT,
         'hlcf_glove': HLCF_GLOVE,

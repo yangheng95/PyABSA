@@ -25,14 +25,14 @@ and improve performance with consuming more resources, e.g. system memory.
 
 Codes for our paper(s): 
 - [LCF: A Local Context Focus Mechanism for Aspect-Based Sentiment Classification](https://www.mdpi.com/2076-3417/9/16/3389). 
-- Unreleased Paper(s)
+
+- [Enhancing Fine-grained Sentiment Classification Exploiting Local Context Embedding](https://arxiv.org/abs/2010.00767)
 
 ## Requirement
-* Python 3.7 (recommended)
+* Python 3.7 + (recommended)
 * PyTorch >= 1.0
 * [pytorch-transformers](https://github.com/huggingface/pytorch-transformers) 
 ```pip install pytorch-transformers==1.2.0```
-* To unleash the performance of LCF-BERT models, a GPU equipped with a large memory (>=11GB) is recommended. 
 * Try to set ```batch_size=8``` or ```max_seq_len=40``` while out-of-memory error occurs.
 
 ## Model Introduction 
@@ -46,17 +46,13 @@ especially the those based on the local context focus mechanisms, including:
 
 - **[LCF-GloVe](models/lc_apc/lcf_glove.py)**
 
-Zeng B, Yang H, Xu R, et al. [LCF: A local context focus mechanism for aspect-based sentiment classification](https://www.mdpi.com/2076-3417/9/16/3389)[J]. Applied Sciences, 2019, 9(16): 3389.. 
-
 - **[LCF-BERT](models/lc_apc/lcf_bert.py)**
 
-Zeng B, Yang H, Xu R, et al. [LCF: A local context focus mechanism for aspect-based sentiment classification](https://www.mdpi.com/2076-3417/9/16/3389)[J]. Applied Sciences, 2019, 9(16): 3389.. 
+- **[LCA-LSTM](models/lc_apc/lca_lstm.py)** 
 
-- **[LCE-LSTM](models/lc_apc/lce_lstm.py)** 
+- **[LCA-GloVe](models/lc_apc/lca_glove.py)**
 
-- **[LCE-GloVe](models/lc_apc/lce_glove.py)**
-
-- **[LCE-BERT](models/lc_apc/lce_bert.py)**
+- **[LCA-BERT](models/lc_apc/lca_bert.py)**
 
 - **[LCF-ATEPC](models/lc_atepc/lcf_atepc.py)**
 
@@ -114,15 +110,15 @@ Tang D, Qin B, Feng X, et al. [Effective LSTMs for Target-Dependent Sentiment Cl
 
 We list the valid parameters for each model for reference.
 
-|    Models   | srd | lcf | lce | lcp |sigma(σ)|   use_bert_spc  | hlcf |  
+|    Models   | srd | lcf | LCA | lcp |sigma(σ)|   use_bert_spc  | hlcf |  
 |:-----------:|:---:|:---:|:---:|:---:| :----: | :-------------: |:----:|
 |  BERT-BASE  |  X  |  X  |  X  |  X  |    X   |        X        |   X  |
 |  BERT-SPC   |  X  |  X  |  X  |  X  |    X   |        X        |   X  |
 |  LCF-GloVe  |  √  |  √  |  X  |  X  |    X   |        X        |   X  |
 |  LCF-BERT   |  √  |  √  |  X  |  X  |    X   |        √        |   X  |
-|  LCE-LSTM   |  √  |  √  |  √  |  X  |    √   |        X        |   X  |
-|  LCE-Glove  |  √  |  √  |  √  |  √  |    √   |        X        |   X  |
-|  LCE-BERT   |  √  |  √  |  √  |  √  |    √   |        √        |   X  |
+|  LCA-LSTM   |  √  |  √  |  √  |  X  |    √   |        X        |   X  |
+|  LCA-Glove  |  √  |  √  |  √  |  √  |    √   |        X        |   X  |
+|  LCA-BERT   |  √  |  √  |  √  |  √  |    √   |        √        |   X  |
 |  LCF-ATEPC  |  √  |  √  |  X  |  X  |    X   |   √ (for APC)   |   X  |
 |  HLCF-GloVe |  √  |  √  |  X  |  X  |    X   |        X        |   √  |
 |  HLCF-BERT  |  √  |  √  |  X  |  X  |    X   |        √        |   √  |
@@ -147,8 +143,8 @@ The state-of-the-art benchmarks of the ABSA task can be found at [NLP-progress](
 |  LCF-BERT-CDW (S+A)  |      80.88     |        88.57        |    75.58     |    < 5.5 G   |
 |   LCF-BERT-CDM (S)   |      80.56     |        85.45        |    75.29     |    < 5.5 G   |
 |   LCF-BERT-CDW (S)   |      80.25     |        85.54        |    76.59     |    < 5.5 G   |
-|   LCE-BERT (S+A)     |      82.45     |        88.93        |    77.46     |    < 5.5 G   |
-|    LCE-BERT (S)      |      81.66     |        86.07        |    76.59     |    < 5.5 G   |
+|   LCA-BERT (S+A)     |      82.45     |        88.93        |    77.46     |    < 5.5 G   |
+|    LCA-BERT (S)      |      81.66     |        86.07        |    76.59     |    < 5.5 G   |
 |      HLCF-BERT       |       N/A      |         N/A         |    N/A       |    N/A       |
 |      AEN-BERT        |      79.93     |        83.12        |    74.71     |    < 6 G     |
 
@@ -188,7 +184,7 @@ Feel free to report any bug or discussing with us.
 This Repository is under development. There may be unknown problems in the code. We hope to get your help to make it easier to use and stable.
 
 ## Citation
-If this repository is helpful to you, please cite our paper:
+If this repository is helpful to you, please cite our papers:
 
     @article{zeng2019lcf,
         title={LCF: A Local Context Focus Mechanism for Aspect-Based Sentiment Classification},
@@ -199,6 +195,15 @@ If this repository is helpful to you, please cite our paper:
         pages={3389},
         year={2019},
         publisher={Multidisciplinary Digital Publishing Institute}
+    }
+
+    @misc{yang2020enhancing,
+        title={Enhancing Fine-grained Sentiment Classification Exploiting Local Context Embedding}, 
+        author={Heng Yang and Biqing Zeng},
+        year={2020},
+        eprint={2010.00767},
+        archivePrefix={arXiv},
+        primaryClass={cs.CL}
     }
 
 ## Related Repositories
