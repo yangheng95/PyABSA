@@ -256,12 +256,12 @@ def single_train(opt):
             'test': './datasets/semeval14/Restaurants_Test_Gold.xml.seg'
         },
         'rest15': {
-            'train': './datasets/semeval14/Restaurants_Train.xml.seg',
-            'test': './datasets/semeval14/Restaurants_Test_Gold.xml.seg'
+            'train': './datasets/semeval15/restaurant_train.raw',
+            'test': './datasets/semeval15/restaurant_test.raw'
         },
         'rest16': {
-            'train': './datasets/semeval14/Restaurants_Train.xml.seg',
-            'test': './datasets/semeval14/Restaurants_Test_Gold.xml.seg'
+            'train': './datasets/semeval16/restaurant_train.raw',
+            'test': './datasets/semeval17/restaurant_test.raw'
         },
         'laptop': {
             'train': './datasets/semeval14/Laptops_Train.xml.seg',
