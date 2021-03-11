@@ -1,7 +1,0 @@
-It is recommended to put the inferring files in this path:
-1. experiments config
-2. inferring dataset
-3. saved state dict
-4. embedding_matrix (if necessary)
-5. tokenizer (if necessary)
-6. every case followed with 2 '\n'
