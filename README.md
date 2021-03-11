@@ -1,135 +1,137 @@
-# Local Context-based ABSA
+# LCF-based Aspect Polarity Classification
 
-
-# [APC](README.md) | [ATEPC](README_atepc.md)
-
-> PyTorch Implementations.
-
-> PyTorch-transformers.
+> Training & Inferring & Reproducing SOTA models of ABSA
 
 > Aspect-based Sentiment Analysis (GloVe/BERT).
 
->Chinese Aspect-based Sentiment Analysis
->> 中文方面级情感分析（中文ABSA）
+> Chinese Aspect-based Sentiment Analysis (中文方面级情感分类)
+
+> PyTorch Implementations.
 
 We hope this repository will help you and sincerely request bug reports and Suggestions.
 If you like this repository you can star or share this repository to others. 
 
-### Tips
-* Download the [GloVe](https://github.com/stanfordnlp/GloVe#download-pre-trained-word-vectors) before use the GloVe-based models.
-* Download the [domain-adapted BERT](https://github.com/deepopinion/domain-adapted-atsc) if you want to improve model performance.
+### Before Training
+* Download the [GloVe](https://github.com/stanfordnlp/GloVe#download-pre-trained-word-vectors) if you want to use the GloVe-based models.
+* Download the [domain-adapted BERT](https://github.com/deepopinion/domain-adapted-atsc) if you want to use state-of-the-art bert-based models.
 * Set `use_bert_spc=True` to employ BERT-SPC input format and improve model performance.
-* Set `use_dual_bert=True` to use independent BERT for local context and global context
-and improve performance with consuming more resources, e.g. system memory.
+* Set `use_dual_bert=True` to use dual BERTs for modeling local context and global context, respectively.
+Bert-based models need more computational resources, e.g. system memory.
 
 
 Codes for our paper(s): 
-- [LCF: A Local Context Focus Mechanism for Aspect-Based Sentiment Classification](https://www.mdpi.com/2076-3417/9/16/3389). 
 
-- [Enhancing Fine-grained Sentiment Classification Exploiting Local Context Embedding](https://arxiv.org/abs/2010.00767).
+- Yang H, Zeng B. [Enhancing Fine-grained Sentiment Classification Exploiting Local Context Embedding[J]](https://arxiv.org/abs/2010.00767). arXiv preprint arXiv:2010.00767, 2020.
+
+- Yang H, Zeng B, Yang J, et al. [A multi-task learning model for Chinese-oriented aspect polarity classification and aspect term extraction[J]](https://www.sciencedirect.com/science/article/abs/pii/S0925231220312534). Neurocomputing, 419: 344-356.
+
+- Zeng B, Yang H, Xu R, et al. [Lcf: A local context focus mechanism for aspect-based sentiment classification[J]](https://www.mdpi.com/2076-3417/9/16/3389).  Applied Sciences, 2019, 9(16): 3389.
 
 ## Requirement
 * Python 3.7 + (recommended)
 * PyTorch >= 1.0
-* [pytorch-transformers](https://github.com/huggingface/pytorch-transformers) 
-```pip install pytorch-transformers==1.2.0```
+* [transformers](https://github.com/huggingface/transformers) 
+```pip install transformers or conda install transformers```
 * Try to set ```batch_size=8``` or ```max_seq_len=40``` while out-of-memory error occurs.
 
 ## Model Introduction 
-This repository provides a variety of ABSA models, 
+This repository provides a variety of APC models, 
 especially the those based on the local context focus mechanisms, including:
  
-### LC-based ABSA models
-- **[BERT-BASE](models/lc_apc/bert_base.py)** 
+### LCF-based APC models
 
-- **[BERT-SPC](models/lc_apc/bert_spc.py)**
+- **[LCA-LSTM](modules/models/lca_lstm.py)** 
 
-- **[LCF-GloVe](models/lc_apc/lcf_glove.py)**
+- **[LCA-GloVe](modules/models/lca_glove.py)**
 
-- **[LCF-BERT](models/lc_apc/lcf_bert.py)** (Set 'lcfs = True' to use [LCFS-BERT](https://www.aclweb.org/anthology/2020.acl-main.293))
+- **[LCA-BERT](modules/models/lca_bert.py)**
 
-- **[LCA-LSTM](models/lc_apc/lca_lstm.py)** 
+- **[LCF-GloVe](modules/models/lcf_glove.py)**
 
-- **[LCA-GloVe](models/lc_apc/lca_glove.py)**
+- **[LCF-BERT](modules/models/lcf_bert.py)** 
 
-- **[LCA-BERT](models/lc_apc/lca_bert.py)**
+- **[LCFS-BERT](modules/models/lcf_bert.py)** 
 
-- **[LCF-ATEPC](models/lc_atepc/lcf_atepc.py)**
+- **[BERT-BASE](modules/models/bert_base.py)** 
 
-- HLCF-GloVe (pending release)
-- HLCF-BERT (pending release)
-- Developing Models
+- **[BERT-SPC](modules/models/bert_spc.py)**
 
-### General ABSA models
+
+### Other famous APC models
+**[LCFS-BERT](modules/models/lcf-bert.py)** 
+
+Phan M H, Ogunbona P O. [Modelling context and syntactical features for aspect-based sentiment analysis[C]](https://www.aclweb.org/anthology/2020.acl-main.293/)//Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics. 2020: 3211-3220.
+
   The following models are forked from [ABSA-PyTorch](https://github.com/songyouwei/ABSA-PyTorch).
 
-- **[AEN-BERT](models/apc/aen.py)** 
+- **[AEN-BERT](modules/models/aen.py)** 
 
 Song Y, Wang J, Jiang T, et al. [Attentional encoder network for targeted sentiment classification](https://arxiv.org/pdf/1902.09314.pdf)[J]. arXiv preprint arXiv:1902.09314, 2019.
 
-- **[MGAN](models/apc/mgan.py)** 
+- **[MGAN](modules/models/mgan.py)** 
 
 Fan F, Feng Y, Zhao D. [Multi-grained attention network for aspect-level sentiment classification](https://www.aclweb.org/anthology/D18-1380.pdf)[C]//Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing. 2018: 3433-3442.
 
-- **[AOA](models/apc/aoa.py)** 
+- **[AOA](modules/models/aoa.py)** 
 
 Huang B, Ou Y, Carley K M. [Aspect level sentiment classification with attention-over-attention neural networks](https://arxiv.org/pdf/1804.06536.pdf)[C]//International Conference on Social Computing, Behavioral-Cultural Modeling and Prediction and Behavior Representation in Modeling and Simulation. Springer, Cham, 2018: 197-206.
 
-- **[TNet ](models/apc/tnet_lf.py)** 
+- **[TNet ](modules/models/tnet_lf.py)** 
 
 Li X, Bing L, Lam W, et al. [ Transformation Networks for Target-Oriented Sentiment Classification](https://www.aclweb.org/anthology/P18-1087.pdf)[C]//Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers). 2018: 946-956.
 
-- **[Cabasc](models/apc/cabasc.py)** 
+- **[Cabasc](modules/models/cabasc.py)** 
 
 Liu Q, Zhang H, Zeng Y, et al. [Content attention model for aspect based sentiment analysis](https://dl.acm.org/doi/abs/10.1145/3178876.3186001)[C]//Proceedings of the 2018 World Wide Web Conference. 2018: 1023-1032.
 
-- **[RAM](models/apc/ram.py)** 
+- **[RAM](modules/models/ram.py)** 
 
 Chen P, Sun Z, Bing L, et al. [Recurrent attention network on memory for aspect sentiment analysis](https://www.aclweb.org/anthology/D17-1047.pdf)[C]//Proceedings of the 2017 conference on empirical methods in natural language processing. 2017: 452-461.
 
-- **[MemNet](models/apc/memnet.py)** 
+- **[MemNet](modules/models/memnet.py)** 
 
 Tang D, Qin B, Liu T. [Aspect Level Sentiment Classification with Deep Memory Network](https://www.aclweb.org/anthology/D16-1021.pdf)[C]//Proceedings of the 2016 Conference on Empirical Methods in Natural Language Processing. 2016: 214-224.
 
-- **[IAN](models/apc/ian.py)**
+- **[IAN](modules/models/ian.py)**
  
  Ma D, Li S, Zhang X, et al. [Interactive attention networks for aspect-level sentiment classification](https://dl.acm.org/doi/abs/10.5555/3171837.3171854)[C]//Proceedings of the 26th International Joint Conference on Artificial Intelligence. 2017: 4068-4074.
 
-- **[ATAE-LSTM](models/apc/atae_lstm.py)** 
+- **[ATAE-LSTM](modules/models/atae_lstm.py)** 
 
 Wang Y, Huang M, Zhu X, et al. [Attention-based LSTM for aspect-level sentiment classification](https://www.aclweb.org/anthology/D16-1058.pdf)[C]//Proceedings of the 2016 conference on empirical methods in natural language processing. 2016: 606-615.
 
-- **[TD-LSTM](models/apc/td_lstm.py)** 
+- **[TD-LSTM](modules/models/td_lstm.py)** 
 
 Tang D, Qin B, Feng X, et al. [Effective LSTMs for Target-Dependent Sentiment Classification](https://www.aclweb.org/anthology/C16-1311.pdf)[C]//Proceedings of COLING 2016, the 26th International Conference on Computational Linguistics: Technical Papers. 2016: 3298-3307.
 
-- **[LSTM](models/apc/lstm.py)** 
+- **[LSTM](modules/models/lstm.py)** 
 
 
 ### Extra Parameters
 
 We list the valid parameters for each model for reference.
 
-|    Models   | srd | lcf | LCA | lcp |sigma(σ)|   use_bert_spc  | hlcf |  
-|:-----------:|:---:|:---:|:---:|:---:| :----: | :-------------: |:----:|
-|  BERT-BASE  |  X  |  X  |  X  |  X  |    X   |        X        |   X  |
-|  BERT-SPC   |  X  |  X  |  X  |  X  |    X   |        X        |   X  |
-|  LCF-GloVe  |  √  |  √  |  X  |  X  |    X   |        X        |   X  |
-|  LCF-BERT   |  √  |  √  |  X  |  X  |    X   |        √        |   X  |
-|  LCA-LSTM   |  √  |  √  |  √  |  X  |    √   |        X        |   X  |
-|  LCA-Glove  |  √  |  √  |  √  |  √  |    √   |        X        |   X  |
-|  LCA-BERT   |  √  |  √  |  √  |  √  |    √   |        √        |   X  |
-|  LCF-ATEPC  |  √  |  √  |  X  |  X  |    X   |   √ (for APC)   |   X  |
-|  HLCF-GloVe |  √  |  √  |  X  |  X  |    X   |        X        |   √  |
-|  HLCF-BERT  |  √  |  √  |  X  |  X  |    X   |        √        |   √  |
+|    Models   | srd | lcf | LCA | lcp |sigma(σ)|   use_bert_spc  |
+|:-----------:|:---:|:---:|:---:|:---:| :----: | :-------------: |
+|  BERT-BASE  |  X  |  X  |  X  |  X  |    X   |        X        | 
+|  BERT-SPC   |  X  |  X  |  X  |  X  |    X   |        X        | 
+|  LCF-GloVe  |  √  |  √  |  X  |  X  |    X   |        X        |   
+|  LCF-BERT   |  √  |  √  |  X  |  X  |    X   |        √        |  
+|  LCA-LSTM   |  √  |  √  |  √  |  X  |    √   |        X        |  
+|  LCA-Glove  |  √  |  √  |  √  |  √  |    √   |        X        | 
+|  LCA-BERT   |  √  |  √  |  √  |  √  |    √   |        √        |  
 
 
 ## Datasets
 
-* SemEval-2014 task4(Restaurant and Laptop datasets) 
 * ACL Twitter dataset
-* Chinese Review Datasets (Temporarily Untested)
+* Chinese Review Datasets 
+* Multilingual dataset (combining of above datasets)
+* SemEval-2014 
+* SemEval-2015 (From [ASGAN](https://github.com/GeneZC/ASGCN)) 
+* SemEval-2016 (From [ASGAN](https://github.com/GeneZC/ASGCN)) 
 
+Although datasets and models and be combined in most scenarios, some combinations are not recommended. Such Chinese dataset and BERT-base-uncased (English), Chinese and LCFS-BERT.
 ## Performance of BERT-based Models
 
 The state-of-the-art benchmarks of the ABSA task can be found at [NLP-progress](https://nlpprogress.com) (See Section of SemEval-2014 subtask4)
@@ -145,34 +147,28 @@ The state-of-the-art benchmarks of the ABSA task can be found at [NLP-progress](
 |   LCF-BERT-CDW (S)   |      80.25     |        85.54        |    76.59     |    < 5.5 G   |
 |   LCA-BERT (S+A)     |      82.45     |        88.93        |    77.46     |    < 5.5 G   |
 |    LCA-BERT (S)      |      81.66     |        86.07        |    76.59     |    < 5.5 G   |
-|      HLCF-BERT       |       N/A      |         N/A         |    N/A       |    N/A       |
 |      AEN-BERT        |      79.93     |        83.12        |    74.71     |    < 6 G     |
 
-We provides a training [log](logs/train.log.dat) of LCF-BERT based on [domain-adapted BERT](https://arxiv.org/pdf/1908.11860.pdf) to guide reproductions.
+We provides a training [log](training_logs/train.log.dat) of LCF-BERT based on [domain-adapted BERT](https://arxiv.org/pdf/1908.11860.pdf) to guide reproductions.
 Try to set other random seeds to explore different results.
 Learn to train the domain adapted BERT pretrained models from [domain-adapted-atsc](https://github.com/deepopinion/domain-adapted-atsc), and place the pre-trained models in bert_pretrained_models. 
 
-## Training
+## [Training](./training.py)
 
-Train the model with cmd:
+Training single model with cmd:
 
 ```
 python train_apc.py
 ```
-or 
+or running multiple experiments using config file 
 ```
 python train_apc.py --config experiments_apc.json
 ```
 
-## Inferring
+## [Inferring](./batch_inferring/README.md)
 
-Now, we release the universal batch inferring of aspect polarity for all listed ABSA models! 
-(Although it is not automatic enough and unstable but may help you)
-Put the saved state-dicts, inferring model-config, and the inferring dataset in the [infer_dataset](inferring_dataset) directory.
-Then, run the batch inferring script:
-```
-python apc_infer.py --infer_dataset infer_dataset
-```
+Now, we release the universal batch inferring of aspect polarity for all listed APC models! 
+Check [here](./batch_inferring/README.md) see the instructions of batch inferring
 
 ## Acknowledgement
 
