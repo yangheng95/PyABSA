@@ -152,22 +152,22 @@ We provides a training [log](training_logs/train.log.dat) of LCF-BERT based on [
 Try to set other random seeds to explore different results.
 Learn to train the domain adapted BERT pretrained models from [domain-adapted-atsc](https://github.com/deepopinion/domain-adapted-atsc), and place the pre-trained models in bert_pretrained_models. 
 
-## [Training](./training.py)
+## Training
 
 Training single model with cmd:
 
 ```
-python train_apc.py
+python train.py
 ```
 or running multiple experiments using config file 
 ```
-python train_apc.py --config experiments_apc.json
+python train.py --config experiments_apc.json
 ```
 
 ## [Inferring](./batch_inferring/README.md)
 
-Now, we release the universal batch inferring of aspect polarity for all listed APC models! 
-Check [here](./batch_inferring/README.md) see the instructions of batch inferring
+We release the universal batch inferring of aspect polarity for all listed APC models! 
+Check [here](./batch_inferring/README.md) and follow the instructions to do batch inferring.
 
 ## Acknowledgement
 
