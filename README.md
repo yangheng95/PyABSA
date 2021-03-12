@@ -1,8 +1,8 @@
-# LCF-based Aspect Polarity Classification
+# LCF-based Aspect Polarity Classification (基于局部上下文专注机制的方面级情感分类模型库)
 
 > Training & Inferring & Reproducing SOTA models of ABSA
 
-> Aspect-based Sentiment Analysis (GloVe/BERT).
+> Aspect-based Sentiment Analysis (GloVe / BERT).
 
 > Chinese Aspect-based Sentiment Analysis (中文方面级情感分类)
 
@@ -10,13 +10,6 @@
 
 We hope this repository will help you and sincerely request bug reports and Suggestions.
 If you like this repository you can star or share this repository to others. 
-
-### Before Training
-* Download the [GloVe](https://github.com/stanfordnlp/GloVe#download-pre-trained-word-vectors) if you want to use the GloVe-based models.
-* Download the [domain-adapted BERT](https://github.com/deepopinion/domain-adapted-atsc) if you want to use state-of-the-art bert-based models.
-* Set `use_bert_spc=True` to employ BERT-SPC input format and improve model performance.
-* Set `use_dual_bert=True` to use dual BERTs for modeling local context and global context, respectively.
-Bert-based models need more computational resources, e.g. system memory.
 
 
 Codes for our paper(s): 
@@ -27,6 +20,7 @@ Codes for our paper(s):
 
 - Zeng B, Yang H, Xu R, et al. [Lcf: A local context focus mechanism for aspect-based sentiment classification[J]](https://www.mdpi.com/2076-3417/9/16/3389).  Applied Sciences, 2019, 9(16): 3389.
 
+
 ## Requirement
 * Python 3.7 + (recommended)
 * PyTorch >= 1.0
@@ -34,11 +28,19 @@ Codes for our paper(s):
 ```pip install transformers or conda install transformers```
 * Try to set ```batch_size=8``` or ```max_seq_len=40``` while out-of-memory error occurs.
 
+
+## Before Training
+* Download the [GloVe](https://github.com/stanfordnlp/GloVe#download-pre-trained-word-vectors) if you want to use the GloVe-based models.
+* Download the [domain-adapted BERT](https://github.com/deepopinion/domain-adapted-atsc) if you want to use state-of-the-art bert-based models.
+* Set `use_bert_spc=True` to employ BERT-SPC input format and improve model performance.
+* Set `use_dual_bert=True` to use dual BERTs for modeling local context and global context, respectively.
+Bert-based models need more computational resources, e.g. system memory.
+
 ## Model Introduction 
 This repository provides a variety of APC models, 
 especially the those based on the local context focus mechanisms, including:
  
-### LCF-based APC models
+### Our LCF-based APC models
 
 - **[LCA-LSTM](modules/models/lca_lstm.py)** 
 
@@ -48,23 +50,18 @@ especially the those based on the local context focus mechanisms, including:
 
 - **[LCF-GloVe](modules/models/lcf_glove.py)**
 
-- **[LCF-BERT](modules/models/lcf_bert.py)** 
-
-- **[LCFS-BERT](modules/models/lcf_bert.py)** 
-
-- **[BERT-BASE](modules/models/bert_base.py)** 
-
-- **[BERT-SPC](modules/models/bert_spc.py)**
+- **[LCF-BERT](modules/models/lcf_bert.py)**
 
 
 ### Other famous APC models
-**[LCFS-BERT](modules/models/lcf-bert.py)** 
+
+- **[LCFS-BERT](modules/models/lcf-bert.py)** 
 
 Phan M H, Ogunbona P O. [Modelling context and syntactical features for aspect-based sentiment analysis[C]](https://www.aclweb.org/anthology/2020.acl-main.293/)//Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics. 2020: 3211-3220.
 
   The following models are forked from [ABSA-PyTorch](https://github.com/songyouwei/ABSA-PyTorch).
 
-- **[AEN-BERT](modules/models/aen.py)** 
+- **[AEN-BERT](modules/models/aen.py)** | **[BERT-BASE](modules/models/bert_base.py)** | **[BERT-SPC](modules/models/bert_spc.py)**
 
 Song Y, Wang J, Jiang T, et al. [Attentional encoder network for targeted sentiment classification](https://arxiv.org/pdf/1902.09314.pdf)[J]. arXiv preprint arXiv:1902.09314, 2019.
 
@@ -107,7 +104,18 @@ Tang D, Qin B, Feng X, et al. [Effective LSTMs for Target-Dependent Sentiment Cl
 - **[LSTM](modules/models/lstm.py)** 
 
 
-### Extra Parameters
+
+## Datasets
+
+* ACL Twitter dataset
+* Chinese Review Datasets 
+* Multilingual dataset (combining of above datasets)
+* SemEval-2014 
+* SemEval-2015 (From [ASGAN](https://github.com/GeneZC/ASGCN)) 
+* SemEval-2016 (From [ASGAN](https://github.com/GeneZC/ASGCN)) 
+
+
+## Extra Hyperparameters
 
 We list the valid parameters for each model for reference.
 
@@ -121,15 +129,6 @@ We list the valid parameters for each model for reference.
 |  LCA-Glove  |  √  |  √  |  √  |  √  |    √   |        X        | 
 |  LCA-BERT   |  √  |  √  |  √  |  √  |    √   |        √        |  
 
-
-## Datasets
-
-* ACL Twitter dataset
-* Chinese Review Datasets 
-* Multilingual dataset (combining of above datasets)
-* SemEval-2014 
-* SemEval-2015 (From [ASGAN](https://github.com/GeneZC/ASGCN)) 
-* SemEval-2016 (From [ASGAN](https://github.com/GeneZC/ASGCN)) 
 
 Although datasets and models and be combined in most scenarios, some combinations are not recommended. Such Chinese dataset and BERT-base-uncased (English), Chinese and LCFS-BERT.
 ## Performance of BERT-based Models
@@ -175,13 +174,22 @@ Check [here](./batch_inferring/README.md) see the instructions of batch inferrin
 This work is based on the repositories of [ABSA-PyTorch](https://github.com/songyouwei/ABSA-PyTorch) and the [pytorch-transformers](https://github.com/huggingface/transformers). Thanks to the authors for their devotion and Thanks to everyone who offered assistance.
 Feel free to report any bug or discussing with us. 
 
-## Contributions & Bug reports are welcomed.
+## Contributions & Bug Reports.
 
 This Repository is under development. There may be unknown problems in the code. We hope to get your help to make it easier to use and stable.
 
 ## Citation
 If this repository is helpful to you, please cite our papers:
 
+    @article{yang2021multi,
+        title={A multi-task learning model for chinese-oriented aspect polarity classification and aspect term extraction},
+        author={Yang, Heng and Zeng, Biqing and Yang, JianHao and Song, Youwei and Xu, Ruyang},
+        journal={Neurocomputing},
+        volume={419},
+        pages={344--356},
+        year={2021},
+        publisher={Elsevier}
+    }
     @article{zeng2019lcf,
         title={LCF: A Local Context Focus Mechanism for Aspect-Based Sentiment Classification},
         author={Zeng, Biqing and Yang, Heng and Xu, Ruyang and Zhou, Wu and Han, Xuli},
@@ -192,7 +200,6 @@ If this repository is helpful to you, please cite our papers:
         year={2019},
         publisher={Multidisciplinary Digital Publishing Institute}
     }
-
     @misc{yang2020enhancing,
         title={Enhancing Fine-grained Sentiment Classification Exploiting Local Context Embedding}, 
         author={Heng Yang and Biqing Zeng},
