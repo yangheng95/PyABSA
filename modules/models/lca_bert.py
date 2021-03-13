@@ -75,7 +75,11 @@ class LCA_BERT(nn.Module):
 
         pooled_out = self.pool(cat_features)
         dense_out = self.dense(pooled_out)
-        if self.opt.lcp:
-            return dense_out, lca_logits, lca_ids
-        else:
-            return dense_out
+        # if self.opt.lcp:
+        #     return dense_out, lca_logits, lca_ids
+        # else:
+        #     return dense_out
+
+        return dense_out, lca_logits, lca_ids
+
+

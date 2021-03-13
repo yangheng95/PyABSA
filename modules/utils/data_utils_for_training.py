@@ -48,18 +48,17 @@ def parse_experiments(path):
         parser.add_argument('--hops', default=3, type=int)
         parser.add_argument('--SRD', default=config['SRD'], type=int)
         parser.add_argument('--lcf', default=config['lcf'], type=str)
-        parser.add_argument('--lcfs', default=False if 'lcfs' not in config else config['lcfs'], choices=[True, False],
-                            type=bool)
-        parser.add_argument('--lca', default=False if 'lca' not in config else config['lca'], choices=[True, False],
-                            type=bool)
-        parser.add_argument('--lcp', default=False if 'lcp' not in config else config['lcp'], choices=[True, False],
-                            type=bool)
+        # parser.add_argument('--lcfs', default=False if 'lcfs' not in config else config['lcfs'], choices=[True, False],
+        #                     type=bool)
+        # parser.add_argument('--lca', default=False if 'lca' not in config else config['lca'], choices=[True, False],
+        #                     type=bool)
+        # parser.add_argument('--lcp', default=False if 'lcp' not in config else config['lcp'], choices=[True, False],
+        #                     type=bool)
         parser.add_argument('--sigma', default=1 if 'sigma' not in config else config['sigma'], type=float)
         parser.add_argument('--repeat', default=config['exp_rounds'], type=bool)
 
         # The following lines are useless, do not care
         parser.add_argument('--config', default=None, type=str)
-        parser.add_argument('--batch_inferring', default=None, type=str)
         configs.append(parser.parse_args())
     return configs
 

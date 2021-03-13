@@ -3,18 +3,18 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # Copyright (C) 2020. All Rights Reserved.
 
-from transformers import BertModel, BertTokenizer
+import random
+
+import numpy
 import torch
 from torch.utils.data import DataLoader
-import pickle
-import numpy, random
+from transformers import BertModel, BertTokenizer
 
+from modules.models import BERT_BASE, BERT_SPC
+from modules.models import LCA_BERT, LCA_GLOVE, LCA_LSTM, LCF_GLOVE, LCF_BERT
+from modules.models import LSTM, IAN, MemNet, RAM, TD_LSTM, TC_LSTM, Cabasc, ATAE_LSTM, TNet_LF, AOA, MGAN, AEN_BERT
 from modules.utils.data_utils_for_inferring import Tokenizer4Bert, build_tokenizer, \
     ABSADataset, load_embedding_matrix, parse_experiments
-
-from modules.models import LCA_BERT, LCA_GLOVE, LCA_LSTM, LCF_GLOVE, LCF_BERT
-from modules.models import BERT_BASE, BERT_SPC
-from modules.models import LSTM, IAN, MemNet, RAM, TD_LSTM, TC_LSTM, Cabasc, ATAE_LSTM, TNet_LF, AOA, MGAN, AEN_BERT
 
 
 class Instructor:
@@ -48,34 +48,40 @@ class Instructor:
         self.train_data_loader = DataLoader(dataset=infer_set, batch_size=1, shuffle=False)
 
     def _infer(self):
+        sentiments = {0: 'Negative', 1: "Neutral", 2: 'Positive', -999: ''}
+        Correct = {True: 'Correct', False: 'Wrong'}
         with torch.no_grad():
             self.model.eval()
             for _, sample in enumerate(self.train_data_loader):
-                print(sample['text_raw'])
+                print(sample['text_raw'][0])
 
                 inputs = [sample[col].to(self.opt.device) for col in self.opt.inputs_cols]
                 self.model.eval()
                 outputs = self.model(inputs)
-                if self.opt.lcp and 'lca' in self.opt.model_name:
+                # if self.opt.lcp and 'lca' in self.opt.model_name:
+                #     sen_logits, _, _ = outputs
+                # else:
+                #     sen_logits = outputs
+                if 'lca' in self.opt.model_name:
                     sen_logits, _, _ = outputs
                 else:
                     sen_logits = outputs
                 t_probs = torch.softmax(sen_logits, dim=-1).cpu().numpy()
-                sentiment = t_probs.argmax(axis=-1)
-                if sentiment == 0:
-                    print('polarity of {} = Negative'.format(sample['aspect']))
-                elif sentiment == 1:
-                    print('polarity of {} = Neutral'.format(sample['aspect']))
-                elif sentiment == 2:
-                    print('polarity of {} = Positive'.format(sample['aspect']))
+                sent = int(t_probs.argmax(axis=-1))
+                real_sent = int(sample['polarity'])
+                aspect = sample['aspect'][0]
+
+                print('{} --> {}'.format(aspect, sentiments[sent])) if real_sent == -999 \
+                    else print('{} --> {}  Real Polarity: {} ({})'.format(aspect, sentiments[sent],
+                            sentiments[real_sent], Correct[sent == real_sent]))
 
     def run(self):
 
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
         return self._infer()
 
-def init_and_infer(opt):
 
+def init_and_infer(opt):
     if opt.seed is not None:
         random.seed(opt.seed)
         numpy.random.seed(opt.seed)
@@ -83,7 +89,6 @@ def init_and_infer(opt):
         torch.cuda.manual_seed(opt.seed)
         torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.benchmark = False
-
 
     model_classes = {
         'bert_base': BERT_BASE,
@@ -121,11 +126,10 @@ def init_and_infer(opt):
     ins = Instructor(opt)
     return ins.run()  # _reset_params in every repeat
 
+
 if __name__ == '__main__':
 
-    # inferring_path = 'batch_inferring'
-    # configs = parse_experiments(inferring_path+'/eval_config.json')
-    configs = parse_experiments('eval_config.json')
+    configs = parse_experiments('inferringl_config.json')
 
     from modules.utils.Pytorch_GPUManager import GPUManager
 
@@ -140,21 +144,19 @@ if __name__ == '__main__':
     import os
 
     for file in os.listdir():
-        if 'acc' in file:
+        if 'state_dict' in file:
             opt.state_dict_path = file
-        if 'infer' in file:
+        if 'inferring.dat' in file:
             opt.infer_data = file
-        if 'config' in file:
+        if 'config.json' in file:
             opt.config = file
         if 'embedding' in file:
             opt.embedding = file.split('/')[-1]
         if 'tokenizer' in file:
             opt.tokenizer = file.split('/')[-1]
 
-    print('*'*80)
+    print('*' * 80)
     print('Warning: Be sure the eval-config, eval-dataset, saved_state_dict, seed are compatible! ')
     print('*' * 80)
     opt.seed = int(opt.state_dict_path.split('seed')[1])
     init_and_infer(opt)
-
-

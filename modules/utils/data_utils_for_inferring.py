@@ -45,21 +45,18 @@ def parse_experiments(path):
         parser.add_argument('--polarities_dim', default=3, type=int)
         parser.add_argument('--hops', default=3, type=int)
         parser.add_argument('--SRD', default=config['SRD'], type=int)
-        parser.add_argument('--hlcf', default='parallel' if 'hlcf' not in config else config['hlcf'],
-                            choices=['cascade', 'parallel'], type=str)
         parser.add_argument('--lcf', default=config['lcf'], type=str)
-        parser.add_argument('--lcfs', default=False if 'lcfs' not in config else config['lcfs'], choices=[True, False],
-                            type=bool)
-        parser.add_argument('--lca', default=False if 'lca' not in config else config['lca'], choices=[True, False],
-                            type=bool)
-        parser.add_argument('--lcp', default=False if 'lcp' not in config else config['lcp'], choices=[True, False],
-                            type=bool)
+        # parser.add_argument('--lcfs', default=False if 'lcfs' not in config else config['lcfs'], choices=[True, False],
+        #                     type=bool)
+        # parser.add_argument('--lca', default=False if 'lca' not in config else config['lca'], choices=[True, False],
+        #                     type=bool)
+        # parser.add_argument('--lcp', default=False if 'lcp' not in config else config['lcp'], choices=[True, False],
+        #                     type=bool)
         parser.add_argument('--sigma', default=1 if 'sigma' not in config else config['sigma'], type=float)
         parser.add_argument('--repeat', default=config['exp_rounds'], type=bool)
 
         # The following lines are useless, do not care
         parser.add_argument('--config', default=None, type=str)
-        parser.add_argument('--batch_inferring', default=None, type=str)
         configs.append(parser.parse_args())
     return configs
 
@@ -265,12 +262,19 @@ class ABSADataset(Dataset):
         for i in range(0, len(lines)):
 
             # handle for empty lines in inferring dataset
-            if lines[i] is None or lines[i].strip() == '':
+            if lines[i] is None or '' == lines[i]:
                 continue
+
+            # check for given polarity
+            if '!sent!' in lines[i]:
+                lines[i], polarity = lines[i].split('!sent!')[0].strip(), lines[i].split('!sent!')[1].strip()
+                polarity = int(polarity) + 1 if polarity else -999
+            else:
+                polarity = -999
 
             text_left = lines[i].replace('$', '').strip()
             text_right = ''
-            polarity = 0
+
             aspect = lines[i][lines[i].find('$')+1:]
             aspect = aspect[:aspect.find('$')].strip()
 
