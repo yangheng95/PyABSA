@@ -120,7 +120,8 @@ class Instructor:
 
                 outputs = self.model(inputs)
                 targets = sample_batched['polarity'].to(self.opt.device)
-                if self.opt.lcp and 'lca' in self.opt.model_name:
+                # if self.opt.lcp and 'lca' in self.opt.model_name:
+                if 'lca' in self.opt.model_name:
                     sen_logits, lca_logits, lca_ids = outputs
                     sen_loss = criterion(sen_logits, targets)
                     lcp_loss = lca_criterion(lca_logits, lca_ids)
@@ -150,8 +151,8 @@ class Instructor:
                     if f1 > max_f1:
                         max_f1 = f1
                     # # uncomment next line to monitor the training process
-                    # logging.info('loss: {:.4f}, acc: {:.2f}, test_acc: {:.2f}, f1: {:.2f}'.
-                    #              format(loss.item(), train_acc*100, test_acc*100, f1*100))
+                    logging.info('loss: {:.4f}, acc: {:.2f}, test_acc: {:.2f}, f1: {:.2f}'.
+                                 format(loss.item(), train_acc*100, test_acc*100, f1*100))
 
         return max_test_acc, max_f1
 
@@ -167,7 +168,8 @@ class Instructor:
 
                 t_targets = t_sample_batched['polarity'].to(self.opt.device)
 
-                if self.opt.lcp and 'lca' in self.opt.model_name:
+                # if self.opt.lcp and 'lca' in self.opt.model_name:
+                if 'lca' in self.opt.model_name:
                     sen_outputs, _, _ = self.model(t_inputs)
                 else:
                     sen_outputs = self.model(t_inputs)
@@ -354,7 +356,7 @@ def multi_train(config, n):
 if __name__ == '__main__':
 
     config_parser = argparse.ArgumentParser()
-    config_parser.add_argument('--config', default='experiment_configs.json',
+    config_parser.add_argument('--config', default='training_configs.json',
                         help='path of the experiments configuration', type=str)
 
     args = config_parser.parse_args()

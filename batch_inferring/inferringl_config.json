@@ -1,7 +1,7 @@
 {
   "config1": {
     "model_name": "lca_bert",
-    "dataset": "multilingual",
+    "dataset": "rest14",
     "optimizer": "adam",
     "learning_rate": 0.00002,
     "dropout": 0.1,
@@ -9,7 +9,7 @@
     "num_epoch": 5,
     "batch_size": 16,
     "logdir": "logs",
-    "pretrained_bert_name": "bert_base_multilingual_uncased",
+    "pretrained_bert_name": "bert-base-uncased",
     "use_dual_bert": false,
     "use_bert_spc": true,
     "max_seq_len": 80,
