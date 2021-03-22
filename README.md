@@ -55,6 +55,8 @@ especially the those based on the local context focus mechanisms, including:
 
 ### Other famous APC models
 
+There may be some problems in using following models, I will remove some of them in the future.
+
 - **[LCFS-BERT](modules/models/lcf-bert.py)** 
 
 Phan M H, Ogunbona P O. [Modelling context and syntactical features for aspect-based sentiment analysis[C]](https://www.aclweb.org/anthology/2020.acl-main.293/)//Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics. 2020: 3211-3220.
@@ -161,7 +163,7 @@ python train.py
 ```
 or running multiple experiments using config file 
 ```
-python train.py --config experiments_apc.json
+python train.py --config training_configs.json
 ```
 
 ## [Inferring](./batch_inferring/README.md)

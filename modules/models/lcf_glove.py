@@ -8,7 +8,7 @@ import torch.nn as nn
 
 import numpy as np
 from modules.layers.point_wise_feed_forward import PositionwiseFeedForward
-from pytorch_transformers.modeling_bert import BertPooler, BertSelfAttention, BertConfig
+from transformers.models.bert.modeling_bert import BertPooler, BertSelfAttention, BertConfig
 
 
 class SelfAttention(nn.Module):
