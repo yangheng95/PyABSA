@@ -4,7 +4,7 @@
 # Copyright (C) 2020. All Rights Reserved.
 
 import torch.nn as nn
-from pytorch_transformers.modeling_bert import BertPooler
+from transformers.models.bert.modeling_bert import BertPooler
 
 
 class BERT_BASE(nn.Module):

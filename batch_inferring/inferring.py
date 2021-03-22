@@ -24,8 +24,7 @@ class Instructor:
             # opt.learning_rate = 2e-5
             # Use any type of BERT to initialize your model.
             # The weights of loaded BERT will be covered after loading state_dict
-            self.bert = BertModel.from_pretrained('bert-base-uncased')
-            # self.bert = BertModel.from_pretrained(opt.pretrained_bert_name)
+            self.bert = BertModel.from_pretrained(opt.pretrained_bert_name)
             self.bert_tokenizer = BertTokenizer.from_pretrained(opt.pretrained_bert_name, do_lower_case=True)
             tokenizer = Tokenizer4Bert(self.bert_tokenizer, opt.max_seq_len)
             self.model = opt.model_class(self.bert, opt).to(opt.device)

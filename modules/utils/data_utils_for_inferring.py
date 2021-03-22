@@ -210,12 +210,6 @@ class ABSADataset(Dataset):
             aspect_len = np.count_nonzero(aspect_indices) - 2
             aspect_begin = np.argwhere(text_ids == aspect_indices[1])[0]
             mask_begin = aspect_begin - opt.SRD if aspect_begin >= opt.SRD else 0
-            # mask_begin = aspect_begin
-            for i in range(opt.max_seq_len):
-                # if i < mask_begin or i > aspect_begin + aspect_len - 1:
-                if i < mask_begin or i > aspect_begin + aspect_len + opt.SRD - 1:
-                    lca_ids[i] = 0
-                    cdm_vec[i] = np.zeros((opt.embed_dim), dtype=np.float32)
             if 'lcfs' in opt.model_name:
                 # Find distance in dependency parsing tree
                 raw_tokens, dist = calculate_dep_dist(text_raw, aspect)
@@ -228,6 +222,13 @@ class ABSADataset(Dataset):
                     if syntactical_dist[i] < opt.SRD:
                         lca_ids[i] = 1
                         cdm_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
+            else:
+                for i in range(opt.max_seq_len):
+                    # if i < mask_begin or i > aspect_begin + aspect_len - 1:
+                    if i < mask_begin or i > aspect_begin + aspect_len + opt.SRD - 1:
+                        lca_ids[i] = 0
+                        cdm_vec[i] = np.zeros((opt.embed_dim), dtype=np.float32)
+
             return lca_ids, cdm_vec
 
         def get_cdw_vec(text_ids, aspect_indices, syntactical_dist=None):
@@ -262,21 +263,17 @@ class ABSADataset(Dataset):
         for i in range(0, len(lines)):
 
             # handle for empty lines in inferring dataset
-            if lines[i] is None or '' == lines[i]:
+            if lines[i] is None or '' == lines[i].strip():
                 continue
 
-            # check for given polarity
+            # given polarity behind '!sent!' is optional for check prediction
             if '!sent!' in lines[i]:
                 lines[i], polarity = lines[i].split('!sent!')[0].strip(), lines[i].split('!sent!')[1].strip()
                 polarity = int(polarity) + 1 if polarity else -999
             else:
                 polarity = -999
 
-            text_left = lines[i].replace('$', '').strip()
-            text_right = ''
-
-            aspect = lines[i][lines[i].find('$')+1:]
-            aspect = aspect[:aspect.find('$')].strip()
+            text_left, aspect, text_right = lines[i].strip().split('$')
 
             aspect_indices = tokenizer.text_to_sequence(aspect)
             aspect_len = np.sum(aspect_indices != 0)
