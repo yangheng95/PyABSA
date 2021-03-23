@@ -238,7 +238,7 @@ class ABSADataset(Dataset):
             if 'lcfs' in opt.model_name:
                 # Find distance in dependency parsing tree
                 raw_tokens, dist = calculate_dep_dist(text_raw, aspect)
-                if aspect is '':
+                if aspect == '':
                     pass
                 raw_tokens.insert(0, tokenizer.cls_token)
                 dist.insert(0, 0)

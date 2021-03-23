@@ -266,14 +266,18 @@ class ABSADataset(Dataset):
             if lines[i] is None or '' == lines[i].strip():
                 continue
 
-            # given polarity behind '!sent!' is optional for check prediction
+            # given polarity behind '$sent$' is optional for prediction check
             if '!sent!' in lines[i]:
                 lines[i], polarity = lines[i].split('!sent!')[0].strip(), lines[i].split('!sent!')[1].strip()
                 polarity = int(polarity) + 1 if polarity else -999
             else:
                 polarity = -999
 
-            text_left, aspect, text_right = lines[i].strip().split('$')
+            # simply add padding in case of some aspect is at the beginning or ending of a sentence
+            text_left, aspect, text_right = ('padding ' + lines[i].strip() + ' padding').split('$')
+            text_left = text_left.replace('padding ', '')
+            text_right = text_right.replace(' padding', '')
+
 
             aspect_indices = tokenizer.text_to_sequence(aspect)
             aspect_len = np.sum(aspect_indices != 0)
