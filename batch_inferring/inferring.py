@@ -10,37 +10,22 @@ import torch
 from torch.utils.data import DataLoader
 from transformers import BertModel, BertTokenizer
 
+from modules.models import LCA_BERT, SLIDE_LCF_BERT, LCF_BERT
 from modules.models import BERT_BASE, BERT_SPC
-from modules.models import LCA_BERT, LCA_GLOVE, LCA_LSTM, LCF_GLOVE, LCF_BERT
-from modules.models import LSTM, IAN, MemNet, RAM, TD_LSTM, TC_LSTM, Cabasc, ATAE_LSTM, TNet_LF, AOA, MGAN, AEN_BERT
-from modules.utils.data_utils_for_inferring import Tokenizer4Bert, build_tokenizer, \
-    ABSADataset, load_embedding_matrix, parse_experiments
+from modules.utils.data_utils_for_inferring import Tokenizer4Bert, ABSADataset, parse_experiments
 
 
 class Instructor:
     def __init__(self, opt):
         self.opt = opt
-        if 'bert' in opt.model_name:
-            # opt.learning_rate = 2e-5
-            # Use any type of BERT to initialize your model.
-            # The weights of loaded BERT will be covered after loading state_dict
-            self.bert = BertModel.from_pretrained(opt.pretrained_bert_name)
-            self.bert_tokenizer = BertTokenizer.from_pretrained(opt.pretrained_bert_name, do_lower_case=True)
-            tokenizer = Tokenizer4Bert(self.bert_tokenizer, opt.max_seq_len)
-            self.model = opt.model_class(self.bert, opt).to(opt.device)
-        else:
-            # opt.learning_rate = 0.002
-            tokenizer = build_tokenizer(
-                fnames=[opt.infer_data],
-                max_seq_len=opt.max_seq_len,
-                dat_fname='{0}_tokenizer.dat'.format(opt.dataset))
-            embedding_matrix = load_embedding_matrix(
-                dat_fname=opt.embedding
-            )
-            # change working path to locate modules/utils/bert_config.json while initializing MHSA ()
-            os.chdir('..')
-            self.model = opt.model_class(embedding_matrix, opt).to(opt.device)
-            os.chdir('batch_inferring')
+        # opt.learning_rate = 2e-5
+        # Use any type of BERT to initialize your model.
+        # The weights of loaded BERT will be covered after loading state_dict
+        # self.bert = BertModel.from_pretrained('bert-base-uncased')
+        self.bert = BertModel.from_pretrained(opt.pretrained_bert_name)
+        self.bert_tokenizer = BertTokenizer.from_pretrained(opt.pretrained_bert_name, do_lower_case=True)
+        tokenizer = Tokenizer4Bert(self.bert_tokenizer, opt.max_seq_len)
+        self.model = opt.model_class(self.bert, opt).to(opt.device)
 
         self.model.load_state_dict(torch.load(opt.state_dict_path))
         infer_set = ABSADataset(opt.infer_data, tokenizer, opt)
@@ -57,10 +42,6 @@ class Instructor:
                 inputs = [sample[col].to(self.opt.device) for col in self.opt.inputs_cols]
                 self.model.eval()
                 outputs = self.model(inputs)
-                # if self.opt.lcp and 'lca' in self.opt.model_name:
-                #     sen_logits, _, _ = outputs
-                # else:
-                #     sen_logits = outputs
                 if 'lca' in self.opt.model_name:
                     sen_logits, _, _ = outputs
                 else:
@@ -72,7 +53,8 @@ class Instructor:
 
                 print('{} --> {}'.format(aspect, sentiments[sent])) if real_sent == -999 \
                     else print('{} --> {}  Real Polarity: {} ({})'.format(aspect, sentiments[sent],
-                            sentiments[real_sent], Correct[sent == real_sent]))
+                                                                          sentiments[real_sent],
+                                                                          Correct[sent == real_sent]))
 
     def run(self):
 
@@ -92,24 +74,11 @@ def init_and_infer(opt):
     model_classes = {
         'bert_base': BERT_BASE,
         'bert_spc': BERT_SPC,
-        'lca_glove': LCA_GLOVE,
         'lca_bert': LCA_BERT,
-        'lca_lstm': LCA_LSTM,
-        'lcf_glove': LCF_GLOVE,
         'lcf_bert': LCF_BERT,
         'lcfs_bert': LCF_BERT,
-        'lstm': LSTM,
-        'td_lstm': TD_LSTM,
-        'tc_lstm': TC_LSTM,
-        'atae_lstm': ATAE_LSTM,
-        'ian': IAN,
-        'memnet': MemNet,
-        'ram': RAM,
-        'cabasc': Cabasc,
-        'tnet_lf': TNet_LF,
-        'aoa': AOA,
-        'mgan': MGAN,
-        'aen_bert': AEN_BERT,
+        'slide_lcf_bert': SLIDE_LCF_BERT,
+        'slide_lcfs_bert': SLIDE_LCF_BERT,
     }
 
     initializers = {
@@ -128,7 +97,7 @@ def init_and_infer(opt):
 
 if __name__ == '__main__':
 
-    configs = parse_experiments('inferringl_config.json')
+    configs = parse_experiments('inferring_config.json')
 
     from modules.utils.Pytorch_GPUManager import GPUManager
 

@@ -2,7 +2,7 @@
 
 > Training & Inferring & Reproducing SOTA models of ABSA
 
-> Aspect-based Sentiment Analysis (GloVe / BERT).
+> Aspect-based Sentiment Analysis (BERT).
 
 > Chinese Aspect-based Sentiment Analysis (中文方面级情感分类)
 
@@ -25,12 +25,11 @@ Codes for our paper(s):
 * Python 3.7 + (recommended)
 * PyTorch >= 1.0
 * [transformers](https://github.com/huggingface/transformers) 
-```pip install transformers or conda install transformers```
+```pip install transformers==4.4.2 or conda install transformers==4.4.2```
 * Try to set ```batch_size=8``` or ```max_seq_len=40``` while out-of-memory error occurs.
 
 
 ## Before Training
-* Download the [GloVe](https://github.com/stanfordnlp/GloVe#download-pre-trained-word-vectors) if you want to use the GloVe-based models.
 * Download the [domain-adapted BERT](https://github.com/deepopinion/domain-adapted-atsc) if you want to use state-of-the-art bert-based models.
 * Set `use_bert_spc=True` to employ BERT-SPC input format and improve model performance.
 * Set `use_dual_bert=True` to use dual BERTs for modeling local context and global context, respectively.
@@ -42,20 +41,19 @@ especially the those based on the local context focus mechanisms, including:
  
 ### Our LCF-based APC models
 
-- **[LCA-LSTM](modules/models/lca_lstm.py)** 
+Try our best models `SLIDE-LCFS-BERT` and `SLIDE-LCF-BERT`
 
-- **[LCA-GloVe](modules/models/lca_glove.py)**
+- **[SLIDE-LCF-BERT](modules/models/slide_lcf_bert.py)** 
+  
+- **[SLIDE-LCFS-BERT](modules/models/slide_lcf_bert.py)** 
 
 - **[LCA-BERT](modules/models/lca_bert.py)**
 
-- **[LCF-GloVe](modules/models/lcf_glove.py)**
-
 - **[LCF-BERT](modules/models/lcf_bert.py)**
 
+Note that GloVe-based models have been removed.
 
 ### Other famous APC models
-
-There may be some problems in using following models, I will remove some of them in the future.
 
 - **[LCFS-BERT](modules/models/lcf-bert.py)** 
 
@@ -63,48 +61,8 @@ Phan M H, Ogunbona P O. [Modelling context and syntactical features for aspect-b
 
   The following models are forked from [ABSA-PyTorch](https://github.com/songyouwei/ABSA-PyTorch).
 
-- **[AEN-BERT](modules/models/aen.py)** | **[BERT-BASE](modules/models/bert_base.py)** | **[BERT-SPC](modules/models/bert_spc.py)**
-
-Song Y, Wang J, Jiang T, et al. [Attentional encoder network for targeted sentiment classification](https://arxiv.org/pdf/1902.09314.pdf)[J]. arXiv preprint arXiv:1902.09314, 2019.
-
-- **[MGAN](modules/models/mgan.py)** 
-
-Fan F, Feng Y, Zhao D. [Multi-grained attention network for aspect-level sentiment classification](https://www.aclweb.org/anthology/D18-1380.pdf)[C]//Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing. 2018: 3433-3442.
-
-- **[AOA](modules/models/aoa.py)** 
-
-Huang B, Ou Y, Carley K M. [Aspect level sentiment classification with attention-over-attention neural networks](https://arxiv.org/pdf/1804.06536.pdf)[C]//International Conference on Social Computing, Behavioral-Cultural Modeling and Prediction and Behavior Representation in Modeling and Simulation. Springer, Cham, 2018: 197-206.
-
-- **[TNet ](modules/models/tnet_lf.py)** 
-
-Li X, Bing L, Lam W, et al. [ Transformation Networks for Target-Oriented Sentiment Classification](https://www.aclweb.org/anthology/P18-1087.pdf)[C]//Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers). 2018: 946-956.
-
-- **[Cabasc](modules/models/cabasc.py)** 
-
-Liu Q, Zhang H, Zeng Y, et al. [Content attention model for aspect based sentiment analysis](https://dl.acm.org/doi/abs/10.1145/3178876.3186001)[C]//Proceedings of the 2018 World Wide Web Conference. 2018: 1023-1032.
-
-- **[RAM](modules/models/ram.py)** 
-
-Chen P, Sun Z, Bing L, et al. [Recurrent attention network on memory for aspect sentiment analysis](https://www.aclweb.org/anthology/D17-1047.pdf)[C]//Proceedings of the 2017 conference on empirical methods in natural language processing. 2017: 452-461.
-
-- **[MemNet](modules/models/memnet.py)** 
-
-Tang D, Qin B, Liu T. [Aspect Level Sentiment Classification with Deep Memory Network](https://www.aclweb.org/anthology/D16-1021.pdf)[C]//Proceedings of the 2016 Conference on Empirical Methods in Natural Language Processing. 2016: 214-224.
-
-- **[IAN](modules/models/ian.py)**
- 
- Ma D, Li S, Zhang X, et al. [Interactive attention networks for aspect-level sentiment classification](https://dl.acm.org/doi/abs/10.5555/3171837.3171854)[C]//Proceedings of the 26th International Joint Conference on Artificial Intelligence. 2017: 4068-4074.
-
-- **[ATAE-LSTM](modules/models/atae_lstm.py)** 
-
-Wang Y, Huang M, Zhu X, et al. [Attention-based LSTM for aspect-level sentiment classification](https://www.aclweb.org/anthology/D16-1058.pdf)[C]//Proceedings of the 2016 conference on empirical methods in natural language processing. 2016: 606-615.
-
-- **[TD-LSTM](modules/models/td_lstm.py)** 
-
-Tang D, Qin B, Feng X, et al. [Effective LSTMs for Target-Dependent Sentiment Classification](https://www.aclweb.org/anthology/C16-1311.pdf)[C]//Proceedings of COLING 2016, the 26th International Conference on Computational Linguistics: Technical Papers. 2016: 3298-3307.
-
-- **[LSTM](modules/models/lstm.py)** 
-
+-  **[BERT-BASE](modules/models/bert_base.py)** 
+-  **[BERT-SPC](modules/models/bert_spc.py)**
 
 
 ## Datasets
@@ -125,12 +83,12 @@ We list the valid parameters for each model for reference.
 |:-----------:|:---:|:---:|:---:|:---:| :----: | :-------------: |
 |  BERT-BASE  |  X  |  X  |  X  |  X  |    X   |        X        | 
 |  BERT-SPC   |  X  |  X  |  X  |  X  |    X   |        X        | 
-|  LCF-GloVe  |  √  |  √  |  X  |  X  |    X   |        X        |   
 |  LCF-BERT   |  √  |  √  |  X  |  X  |    X   |        √        |  
-|  LCA-LSTM   |  √  |  √  |  √  |  X  |    √   |        X        |  
-|  LCA-Glove  |  √  |  √  |  √  |  √  |    √   |        X        | 
 |  LCA-BERT   |  √  |  √  |  √  |  √  |    √   |        √        |  
-
+|  LCFS-BERT  |  √  |  √  |  X  |  X  |    X   |        √        |  
+|  SLIDE-LCF-BERT   |  √  |  √  |  X  |  X  |    X   |        √        | 
+|  SLIDE-LCFS-BERT   |  √  |  √  |  X  |  X  |    X   |        √        |  
+|  AEN-BERT   |  X  |  X  |  X  |  X  |    X   |        √        |  
 
 Although datasets and models and be combined in most scenarios, some combinations are not recommended. Such Chinese dataset and BERT-base-uncased (English), Chinese and LCFS-BERT.
 ## Performance of BERT-based Models
@@ -163,7 +121,7 @@ python train.py
 ```
 or running multiple experiments using config file 
 ```
-python train.py --config training_configs.json
+python train.py --config experiments_apc.json
 ```
 
 ## [Inferring](./batch_inferring/README.md)
@@ -178,8 +136,7 @@ Feel free to report any bug or discussing with us.
 
 ## Contributions & Bug Reports.
 
-This Repository is under development. There may be unknown problems in the code. We hope to get your help to make it easier to use and stable.
-
+This Repository is under development. There may be unknown problems in the code. Please do feel free to report any problem, and PRs are welcome.
 ## Citation
 If this repository is helpful to you, please cite our papers:
 

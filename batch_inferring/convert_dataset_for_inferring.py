@@ -6,20 +6,20 @@
 
 dataset_files = {
     'twitter': {
-        'train': '../datasets/acl-14-short-data/train.raw',
-        'test': '../datasets/acl-14-short-data/test.raw'
+        'train': '../datasets/acl-14-short-data/train.MAMS',
+        'test': '../datasets/acl-14-short-data/test.MAMS'
     },
     'rest14': {
         'train': '../datasets/semeval14/Restaurants_Train.xml.seg',
         'test': '../datasets/semeval14/Restaurants_Test_Gold.xml.seg'
     },
     'rest15': {
-        'train': '../datasets/semeval15/restaurant_train.raw',
-        'test': '../datasets/semeval15/restaurant_test.raw'
+        'train': '../datasets/semeval15/restaurant_train.MAMS',
+        'test': '../datasets/semeval15/restaurant_test.MAMS'
     },
     'rest16': {
-        'train': '../datasets/semeval16/restaurant_train.raw',
-        'test': '../datasets/semeval17/restaurant_test.raw'
+        'train': '../datasets/semeval16/restaurant_train.MAMS',
+        'test': '../datasets/semeval16/restaurant_test.MAMS'
     },
     'laptop': {
         'train': '../datasets/semeval14/Laptops_Train.xml.seg',
@@ -42,8 +42,8 @@ dataset_files = {
         'test': '../datasets/Chinese/phone/phone.test.txt'
     },
     'multilingual': {
-        'train': '../datasets/multilingual/multilingual_train.raw',
-        'test': '../datasets/multilingual/multilingual_test.raw'
+        'train': '../datasets/multilingual/multilingual_train.MAMS',
+        'test': '../datasets/multilingual/multilingual_test.MAMS'
     }
 }
 

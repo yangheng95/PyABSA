@@ -3,24 +3,24 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # Copyright (C) 2020. All Rights Reserved.
 
-# from pytorch_transformers import BertModel, BertTokenizer
-from transformers import BertModel, BertTokenizer
-from sklearn import metrics
-import torch
-import torch.nn as nn
-from torch.utils.data import DataLoader
 import argparse
+import logging
 import math
 import os
-import numpy, random
+import random
+import sys
 from time import strftime, localtime
 
-from modules.utils.data_utils_for_training import Tokenizer4Bert, ABSADataset, build_embedding_matrix, build_tokenizer, parse_experiments
-from modules.models import LCA_BERT, LCA_GLOVE, LCA_LSTM
-from modules.models import LCF_GLOVE, LCF_BERT
+import numpy
+import torch
+import torch.nn as nn
+from sklearn import metrics
+from torch.utils.data import DataLoader
+from transformers import BertModel, BertTokenizer
+
 from modules.models import BERT_BASE, BERT_SPC
-from modules.models import LSTM, IAN, MemNet, RAM, TD_LSTM, TC_LSTM, Cabasc, ATAE_LSTM, TNet_LF, AOA, MGAN, AEN_BERT
-import logging, sys
+from modules.models import LCA_BERT, LCF_BERT, SLIDE_LCF_BERT
+from modules.utils.data_utils_for_training import Tokenizer4Bert, ABSADataset, parse_experiments
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -30,28 +30,16 @@ logger.addHandler(logging.StreamHandler(sys.stdout))
 class Instructor:
     def __init__(self, opt):
         self.opt = opt
-        if 'bert' in opt.model_name:
-            # opt.learning_rate = 2e-5
-            self.bert = BertModel.from_pretrained(opt.pretrained_bert_name)
-            self.bert_tokenizer = BertTokenizer.from_pretrained(opt.pretrained_bert_name, do_lower_case=True)
-            tokenizer = Tokenizer4Bert(self.bert_tokenizer, opt.max_seq_len)
-            self.model = opt.model_class(self.bert, opt).to(opt.device)
-        else:
-            # opt.learning_rate = 0.002
-            tokenizer = build_tokenizer(
-                fnames=[opt.dataset_file['train'], opt.dataset_file['test']],
-                max_seq_len=opt.max_seq_len,
-                dat_fname='{0}_tokenizer.dat'.format(opt.dataset))
-            embedding_matrix = build_embedding_matrix(
-                word2idx=tokenizer.word2idx,
-                embed_dim=opt.embed_dim,
-                dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(opt.embed_dim), opt.dataset))
-            self.model = opt.model_class(embedding_matrix, opt).to(opt.device)
+        # opt.learning_rate = 2e-5
+        self.bert = BertModel.from_pretrained(opt.pretrained_bert_name)
+        self.bert_tokenizer = BertTokenizer.from_pretrained(opt.pretrained_bert_name, do_lower_case=True)
+        tokenizer = Tokenizer4Bert(self.bert_tokenizer, opt.max_seq_len)
+        self.model = opt.model_class(self.bert, opt).to(opt.device)
 
         trainset = ABSADataset(opt.dataset_file['train'], tokenizer, opt)
         testset = ABSADataset(opt.dataset_file['test'], tokenizer, opt)
         self.train_data_loader = DataLoader(dataset=trainset, batch_size=opt.batch_size, shuffle=True, pin_memory=True)
-        self.test_data_loader = DataLoader(dataset=testset, batch_size=opt.batch_size, shuffle=False, pin_memory=True)
+        self.test_data_loader = DataLoader(dataset=testset, batch_size=opt.batch_size*32, shuffle=False, pin_memory=True)
 
         if opt.device.type == 'cuda':
             logging.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=opt.device.index)))
@@ -87,7 +75,7 @@ class Instructor:
         model_to_save = model.module if hasattr(model, 'module') else model  # Only save the model it-self
 
         if mode == 0 or 'bert' not in self.opt.model_name:
-            torch.save(self.model.state_dict(), save_path+'.state_dict')  # save the state dict
+            torch.save(self.model.state_dict(), save_path + '.state_dict')  # save the state dict
         else:
             # save the fine-tuned bert model
             model_output_dir = save_path + '_fine-tuned'
@@ -104,10 +92,11 @@ class Instructor:
         max_test_acc = 0
         max_f1 = 0
         global_step = 0
-        loss, train_acc, test_acc, test_f1 = torch.tensor(0), 0, 0, 0
+        evaluate_begin = 0
+
         for epoch in range(self.opt.num_epoch):
-            logging.info('>' * 100)
-            logging.info('epoch: {}'.format(epoch))
+            print('>' * 100)
+            print('epoch: {}'.format(epoch))
             n_correct, n_total = 0, 0
             for i_batch, sample_batched in enumerate(self.train_data_loader):
 
@@ -117,10 +106,8 @@ class Instructor:
                 optimizer.zero_grad()
 
                 inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
-
                 outputs = self.model(inputs)
                 targets = sample_batched['polarity'].to(self.opt.device)
-                # if self.opt.lcp and 'lca' in self.opt.model_name:
                 if 'lca' in self.opt.model_name:
                     sen_logits, lca_logits, lca_ids = outputs
                     sen_loss = criterion(sen_logits, targets)
@@ -129,30 +116,36 @@ class Instructor:
                 else:
                     sen_logits = outputs
                     loss = criterion(sen_logits, targets)
+
                 loss.backward()
                 optimizer.step()
-
-                if global_step % self.opt.log_step == 0:
-                    n_correct += (torch.argmax(sen_logits, -1) == targets).sum().item()
-                    n_total += len(sen_logits)
-                    train_acc = n_correct / n_total
-                    test_acc, f1 = self._evaluate_acc_f1()
-                    if test_acc > max_test_acc:
-                        max_test_acc = test_acc
-                        if test_acc > max_test_acc_overall:
-                            if not os.path.exists('saved_state_dict'):
-                                os.mkdir('saved_state_dict')
-                            save_path = 'saved_state_dict/{0}_{1}_acc{2}_seed{3}seed'.format(self.opt.model_name,
-                                                        self.opt.dataset, round(test_acc * 100, 2), self.opt.seed)
-                            # uncomment follow lines to save model during training
-                            self._save_model(self.model, save_path, mode=0)
-                            logging.info('saved: {}'.format(save_path))
-                            logging.info('max_acc:{}, f1:{}'.format(round(test_acc * 100, 2), round(f1 * 100, 2)))
-                    if f1 > max_f1:
-                        max_f1 = f1
-                    # # uncomment next line to monitor the training process
-                    logging.info('loss: {:.4f}, acc: {:.2f}, test_acc: {:.2f}, f1: {:.2f}'.
-                                 format(loss.item(), train_acc*100, test_acc*100, f1*100))
+                if global_step % self.opt.log_step == 0 and epoch == self.opt.num_epoch - 1:
+                        # if global_step % log_setp[epoch] == 0 and epoch > 0:
+                        n_correct += (torch.argmax(sen_logits, -1) == targets).sum().item()
+                        n_total += len(sen_logits)
+                        train_acc = n_correct / n_total
+                        test_acc, f1 = self._evaluate_acc_f1()
+                        if test_acc > max_test_acc:
+                            max_test_acc = test_acc
+                            if test_acc > max_test_acc_overall:
+                                if not os.path.exists('saved_state_dict'):
+                                    os.mkdir('saved_state_dict')
+                                save_path = 'saved_state_dict/{0}_{1}_acc{2}_seed{3}seed'.format(self.opt.model_name,
+                                                                                                 self.opt.dataset,
+                                                                                                 round(test_acc * 100, 2),
+                                                                                                 self.opt.seed)
+                                # uncomment follow lines to save model during training
+                                self._save_model(self.model, save_path, mode=0)
+                                print('saved: {}'.format(save_path))
+                                print('max_acc:{}, f1:{}'.format(round(test_acc * 100, 2), round(f1 * 100, 2)))
+                        if f1 > max_f1:
+                            max_f1 = f1
+                        # uncomment next line to monitor the training process
+                        print('loss: {:.4f}, acc: {:.2f}, test_acc: {:.2f}, f1: {:.2f}'.format(loss.item(),
+                                                                                               train_acc * 100,
+                                                                                               test_acc * 100,
+                                                                                               f1 * 100
+                                                                                               ))
 
         return max_test_acc, max_f1
 
@@ -165,10 +158,8 @@ class Instructor:
             for t_batch, t_sample_batched in enumerate(self.test_data_loader):
 
                 t_inputs = [t_sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
-
                 t_targets = t_sample_batched['polarity'].to(self.opt.device)
 
-                # if self.opt.lcp and 'lca' in self.opt.model_name:
                 if 'lca' in self.opt.model_name:
                     sen_outputs, _, _ = self.model(t_inputs)
                 else:
@@ -186,7 +177,7 @@ class Instructor:
 
         test_acc = n_test_correct / n_test_total
         f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
-                                  labels=[0, 1, 2], average='macro')
+                              labels=[0, 1, 2], average='macro')
         return test_acc, f1
 
     def run(self, repeats=1):
@@ -194,6 +185,16 @@ class Instructor:
         # Loss and Optimizer
         criterion = nn.CrossEntropyLoss()
         lca_criterion = nn.CrossEntropyLoss()
+        # # ---------------------------------------------------------------- #
+        # abandoned code block
+        # bert_paprams = list(map(id, self.model.bert4global.parameters()))
+        # _params = filter(lambda p: id(p) not in bert_paprams, self.model.parameters())
+        # bert_params = filter(lambda p: p.requires_grad, self.model.bert4global.parameters())
+        # params = [{'params': _params, 'lr': 0.0001},
+        #           {'params': bert_params, 'lr': self.opt.learning_rate}
+        #           ]
+        # optimizer = self.opt.optimizer(params, weight_decay=self.opt.l2reg)
+        # # ---------------------------------------------------------------- #
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
         optimizer = self.opt.optimizer(_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
@@ -213,7 +214,7 @@ class Instructor:
         return max_test_acc_overall * 100, max_f1_overall * 100
 
 
-def single_train(opt):
+def train_for_single_config(opt):
     if 'glove' in opt.model_name:
         logger.warning('Caution: The Chinese datasets are not available for GLoVe-based models.')
 
@@ -228,24 +229,11 @@ def single_train(opt):
     model_classes = {
         'bert_base': BERT_BASE,
         'bert_spc': BERT_SPC,
-        'lca_glove': LCA_GLOVE,
         'lca_bert': LCA_BERT,
-        'lca_lstm': LCA_LSTM,
-        'lcf_glove': LCF_GLOVE,
         'lcf_bert': LCF_BERT,
+        'slide_lcf_bert': SLIDE_LCF_BERT,
+        'slide_lcfs_bert': SLIDE_LCF_BERT,
         'lcfs_bert': LCF_BERT,
-        'lstm': LSTM,
-        'td_lstm': TD_LSTM,
-        'tc_lstm': TC_LSTM,
-        'atae_lstm': ATAE_LSTM,
-        'ian': IAN,
-        'memnet': MemNet,
-        'ram': RAM,
-        'cabasc': Cabasc,
-        'tnet_lf': TNet_LF,
-        'aoa': AOA,
-        'mgan': MGAN,
-        'aen_bert': AEN_BERT,
     }
 
     dataset_files = {
@@ -263,7 +251,7 @@ def single_train(opt):
         },
         'rest16': {
             'train': './datasets/semeval16/restaurant_train.raw',
-            'test': './datasets/semeval17/restaurant_test.raw'
+            'test': './datasets/semeval16/restaurant_test.raw'
         },
         'laptop': {
             'train': './datasets/semeval14/Laptops_Train.xml.seg',
@@ -288,7 +276,28 @@ def single_train(opt):
         'multilingual': {
             'train': './datasets/multilingual/multilingual_train.raw',
             'test': './datasets/multilingual/multilingual_test.raw'
+        },
+        'mams': {
+            'train': './datasets/MAMS/train.xml.dat',
+            'test': './datasets/MAMS/test.xml.dat'
+        },
+        'rest14_arts': {
+            'train': './datasets/semeval14/Restaurants_Train.xml.seg',
+            'test': './datasets/arts_testset/rest_arts_test.dat'
+        },
+        'laptop_arts': {
+            'train': './datasets/semeval14/Laptops_Train.xml.seg',
+            'test': './datasets/arts_testset/laptop_arts_test.dat'
+        },
+        'rest14_to_laptop': {
+            'train': './datasets/semeval14/Restaurants_Train.xml.seg',
+            'test': './datasets/semeval14/Laptops_Test_Gold.xml.seg'
+        },
+        'laptop_to_rest14': {
+            'train': './datasets/semeval14/Laptops_Train.xml.seg',
+            'test': './datasets/semeval14/Restaurants_Test_Gold.xml.seg'
         }
+
     }
 
     initializers = {
@@ -315,12 +324,12 @@ def single_train(opt):
 
     opt.device = torch.device(opt.device if 'cuda' in opt.device else 'cpu') \
         if opt.device is None else torch.device(opt.device)
-
+    # opt.device = torch.device('cpu')
     ins = Instructor(opt)
     return ins.run()  # _reset_params in every repeat
 
 
-def multi_train(config, n):
+def training_for_configs(config, n):
     import copy
     mean_test_acc_overall = 0
     mean_f1_overall = 0
@@ -331,9 +340,10 @@ def multi_train(config, n):
     scores = []
     for t in range(n):
         logging.info('{} - {} - {} - No.{} in {}'.format(config.model_name, config.dataset, config.lcf, t + 1, n))
-        # config.seed = t
-        config.seed = random.randint(0,1000)
-        test_acc_overall, f1_overall = single_train(copy.deepcopy(config))
+        config.seed = t
+        # config.seed = random.randint(0,1000)
+
+        test_acc_overall, f1_overall = train_for_single_config(copy.deepcopy(config))
         scores.append([test_acc_overall, f1_overall])
         temp_test_acc_overall += test_acc_overall
         temp_f1_overall += f1_overall
@@ -354,15 +364,15 @@ def multi_train(config, n):
 
 
 if __name__ == '__main__':
-
+    # ----------------------------------------------------------------------------------------- #
     config_parser = argparse.ArgumentParser()
     config_parser.add_argument('--config', default='training_configs.json',
-                        help='path of the experiments configuration', type=str)
-
+                               help='path of the experiments configuration', type=str)
     args = config_parser.parse_args()
-
     configs = parse_experiments(args.config)
     log_file = 'training_logs/{}.{}.log'.format(args.config, strftime("%y%m%d.%H%M", localtime()))
+    # ----------------------------------------------------------------------------------------- #
+
     logger.addHandler(logging.FileHandler(log_file))
 
     from modules.utils.Pytorch_GPUManager import GPUManager
@@ -373,4 +383,5 @@ if __name__ == '__main__':
     for config in configs:
         config.device = 'cuda:' + str(gpu)
         # config.device = 'cpu'  # Uncomment this line to use CPU
-        multi_train(config=config, n=config.repeat)
+
+        training_for_configs(config=config, n=config.repeat)

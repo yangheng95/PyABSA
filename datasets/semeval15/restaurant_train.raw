@@ -238,7 +238,7 @@ cheese
 the $T$ is overpriced and soggy .
 pizza
 -1
-yes , they use fancy $T$ , but even fancy $ t$ do n't make for good pizza unless someone knows how to get the crust right .
+yes , they use fancy $T$ , but even fancy ingredients do n't make for good pizza unless someone knows how to get the crust right .
 ingredients
 1
 yes , they use fancy ingredients , but even fancy ingredients do n't make for good $T$ unless someone knows how to get the crust right .
@@ -604,7 +604,7 @@ service
 great service , great $T$ .
 food
 1
-the $T$ is delicious - they use fresh mozzarella instead of the cheap , frozen , shredded cheese common to most $ t$ria 's .
+the $T$ is delicious - they use fresh mozzarella instead of the cheap , frozen , shredded cheese common to most pizzaria 's .
 pizza
 1
 the pizza is delicious - they use $T$ instead of the cheap , frozen , shredded cheese common to most pizzaria 's .
@@ -724,7 +724,7 @@ restaurant
 the $T$ is cute but not upscale .
 restaurant
 0
-the $T$ is a diamond in rough -- the $ t$ is delicious and homemade with the perfect balance of herbs and tomatoes .
+the $T$ is a diamond in rough -- the food is delicious and homemade with the perfect balance of herbs and tomatoes .
 food
 1
 the food is a diamond in rough -- the food is delicious and homemade with the perfect $T$ .
@@ -784,7 +784,7 @@ service
 i have to highly recommend the $T$ - not to much mayo ; you can tell it was a fresh lobster .
 lobster roll
 1
-i have to highly recommend the $T$ roll - not to much mayo ; you can tell it was a fresh $ t$.
+i have to highly recommend the $T$ roll - not to much mayo ; you can tell it was a fresh lobster.
 lobster
 1
 other guests enjoyed $T$ , santa fe chopped salad and fish and chips .
@@ -955,10 +955,10 @@ service
 sometimes i get bad $T$ and bad service , sometimes i get good good and bad service .
 food
 -1
-sometimes i get bad food and bad $T$ , sometimes i get good good and bad $ t$.
+sometimes i get bad food and bad $T$ , sometimes i get good good and bad service.
 service
 -1
-sometimes i get bad food and bad service , sometimes i get $T$ $ t$ and bad service .
+sometimes i get bad food and bad service , sometimes i get $T$ good and bad service .
 good
 1
 the place is a bistro which means : simple $T$ and wine served efficiently in a bustling atmosphere .
@@ -1255,7 +1255,7 @@ service
 the $T$ is small and intimate and you may feel a little crowded , but the service is excellent and it 's great for friends out , a romantic date , or a special occassion .
 place
 -1
-the $T$ can get pricey but the prixe fixe tasting menu is the greatest $ t$ for a good price and they cater the $ t$ to any $ t$ allergies or $ t$ you do n't like .
+the $T$ can get pricey but the prixe fixe tasting menu is the greatest food for a good price and they cater the food to any food allergies or food you do n't like .
 food
 -1
 the food can get pricey but the $T$ is the greatest food for a good price and they cater the food to any food allergies or food you do n't like .
@@ -1870,7 +1870,7 @@ cafe noir
 the $T$ was terrible , we had to wait for everything and ask several of different people for the same thing before we were allowed to be served .
 service
 -1
-the $T$ , seems to be more concerned of looking good than actually $ t$ing .
+the $T$ , seems to be more concerned of looking good than actually waitressing .
 waitress
 -1
 after dinner the $T$ grabbed my boyfriend , asked him : where are you from ... maybe you do nt know how things work in america ... and in the end stormed away almost teareyed yelling that tips are the only thing they survive on .
@@ -2146,7 +2146,7 @@ service
 the service was excellent and the $T$ was delicious .
 food
 1
-we are very particular about $T$ and were both please with every choice which included : ceviche mix ( special ) , crab dumplings , assorted sashimi , $ t$ and rolls , two types of sake , and the banana tempura .
+we are very particular about $T$ and were both please with every choice which included : ceviche mix ( special ) , crab dumplings , assorted sashimi , sushi and rolls , two types of sake , and the banana tempura .
 sushi
 1
 we are very particular about sushi and were both please with every choice which included : $T$ , crab dumplings , assorted sashimi , sushi and rolls , two types of sake , and the banana tempura .
@@ -2158,7 +2158,7 @@ crab dumplings
 we are very particular about sushi and were both please with every choice which included : ceviche mix ( special ) , crab dumplings , $T$ , sushi and rolls , two types of sake , and the banana tempura .
 assorted sashimi
 1
-we are very particular about $T$ and were both please with every choice which included : ceviche mix ( special ) , crab dumplings , assorted sashimi , $ t$ and rolls , two types of sake , and the banana tempura .
+we are very particular about $T$ and were both please with every choice which included : ceviche mix ( special ) , crab dumplings , assorted sashimi , sushi and rolls , two types of sake , and the banana tempura .
 sushi
 1
 we are very particular about sushi and were both please with every choice which included : ceviche mix ( special ) , crab dumplings , assorted sashimi , sushi and $T$ , two types of sake , and the banana tempura .
@@ -2215,7 +2215,7 @@ food
 $T$ was really great , we both had the filet , very good , did n't much like the frites that came with , but the filet was so good , neither of us cared .
 guacamole+shrimp appetizer
 1
-guacamole+shrimp appetizer was really great , we both had the $T$ , very good , did n't much like the frites that came with , but the $ t$ was so good , neither of us cared .
+guacamole+shrimp appetizer was really great , we both had the $T$ , very good , did n't much like the frites that came with , but the filet was so good , neither of us cared .
 filet
 1
 guacamole+shrimp appetizer was really great , we both had the filet , very good , did n't much like the $T$ that came with , but the filet was so good , neither of us cared .
@@ -2803,7 +2803,7 @@ indian food
 i really loved the different and inovated touch that 's the $T$ gives to the food .
 cheff
 1
-also it 's great to have dinner in a very romantic and confortable $T$ , the service it 's just perfect ... they're so frendly that we never want to live the $ t$ !
+also it 's great to have dinner in a very romantic and confortable $T$ , the service it 's just perfect ... they're so frendly that we never want to live the place !
 place
 1
 also it 's great to have dinner in a very romantic and confortable place , the $T$ it 's just perfect ... they're so frendly that we never want to live the place !
@@ -3094,7 +3094,7 @@ reuben sandwich
 do n't miss $T$ on your next trip to manhatten .
 bloom 's
 1
-it was the first $T$ we ate on our first trip to new york , and it will be the last $ t$ we stop as we head out of town on our next trip to new york .
+it was the first $T$ we ate on our first trip to new york , and it will be the last place we stop as we head out of town on our next trip to new york .
 place
 1
 thanks $T$ for a lovely trip .
@@ -3600,13 +3600,4 @@ meal
 1
 we could have made a meal of the yummy $T$ from the dumpling menu .
 dumplings
-1
-luckily we saved room for the $T$ , sea bass and crispy duck .
-bbq salmon
-1
-luckily we saved room for the bbq salmon , $T$ and crispy duck .
-sea bass
-1
-luckily we saved room for the bbq salmon , sea bass and $T$ .
-crispy duck
 1

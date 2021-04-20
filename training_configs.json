@@ -1,21 +1,23 @@
 {
   "config1": {
-    "model_name": "lca_bert",
-    "dataset": "rest14",
+    "model_name": "bert_spc",
+    "dataset": "laptop",
     "optimizer": "adam",
     "learning_rate": 0.00002,
-    "dropout": 0.1,
-    "l2reg": 0.00001,
-    "num_epoch": 5,
-    "batch_size": 16,
-    "logdir": "logs",
     "pretrained_bert_name": "bert-base-uncased",
     "use_dual_bert": false,
     "use_bert_spc": true,
     "max_seq_len": 80,
-    "SRD": 5,
+    "SRD": 3,
     "sigma": 0.3,
     "lcf": "cdm",
+    "window": "lr",
+    "distance_aware_window": true,
+    "dropout": 0.1,
+    "l2reg": 0.00001,
+    "num_epoch": 6,
+    "batch_size": 16,
+    "logdir": "logs",
     "exp_rounds": 3
   }
 }
