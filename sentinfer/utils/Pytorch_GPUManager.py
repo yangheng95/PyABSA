@@ -148,8 +148,8 @@ if check_gpus():
                 chosen_gpu = self._sort_by_memory(unspecified_gpus)[0]
             chosen_gpu['specified'] = True
             index = chosen_gpu['index']
-            print('Using GPU {i}:\n{info}'.format(i=index, info='\n'.join(
-                [str(k) + ':' + str(v) for k, v in chosen_gpu.items()])))
+            # print('Using GPU {i}:\n{info}'.format(i=index, info='\n'.join(
+            #     [str(k) + ':' + str(v) for k, v in chosen_gpu.items()])))
             return int(index)
 else:
     raise ImportError('GPU available check failed')

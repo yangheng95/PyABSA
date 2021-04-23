@@ -124,6 +124,7 @@ def init_training_config(config_dict):
 
 
 def train(parameter_dict=None, train_dataset_path=None, model_path_to_save=None):
+    print('Be sure this path is clean and do not have other saved state dict.')
     if not train_dataset_path:
         train_dataset_path = os.getcwd()
         print('Try to load dataset in current path.')
@@ -133,7 +134,7 @@ def train(parameter_dict=None, train_dataset_path=None, model_path_to_save=None)
     config = init_training_config(parameter_dict)
     config.train_dataset_path = train_dataset_path
     config.model_path_to_save = model_path_to_save + '/' + config.model_name
-    train_by_single_config(config)
+    return INFER_MODEL(trainer=train_by_single_config(config))
 
 
 def load_trained_model(parameter_dict=None, trained_model_path=None):
@@ -146,3 +147,28 @@ def load_trained_model(parameter_dict=None, trained_model_path=None):
     config = init_training_config(parameter_dict)
     InferModel = INFER_MODEL(config, trained_model_path)
     return InferModel
+
+
+def print_usages():
+    usages = '1. Use your data to train the model, please build a custom data set according ' \
+             'to the format of the data set provided by the reference\n' \
+             '利用你的数据训练模型，请根据参考提供的数据集的格式构建自定义数据集\n' \
+             'infer_model = train(param_dict, train_set_path, model_path_to_save)\n' \
+                \
+             '2. Load the trained model\n' \
+             '加载已训练并保存的模型\n' \
+             'infermodel = load_trained_model(param_dict, model_path_to_save)\n' \
+                \
+             '3. Batch reasoning about emotional polarity based on files\n' \
+             '根据文件批量推理情感极性\n' \
+             'result = infermodel.batch_infer(test_set_path)\n' \
+                \
+             '4. Input a single text to infer sentiment\n' \
+             '输入单条文本推理情感\n' \
+             'infermodel.infer(text)\n' \
+                \
+             '5. Convert the provided dataset into a dataset for inference\n' \
+             '将提供的数据集转换为推理用的数据集\n' \
+             'convert_dataset_for_inferring(dataset_path)\n'
+
+    print(usages)

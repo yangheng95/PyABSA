@@ -1,8 +1,8 @@
 # Aspect & Target Sentiment Classification Tool (Based on Local Context Focus Mechanism)
+
 > 方面级/目标级情感分类工具 (基于局部上下文专注机制的方面级情感分类模型库)
 
 > PyTorch Implementations.
-
 
 ## Requirement
 
@@ -11,13 +11,14 @@
 
 ## Introduction
 
-This repository provides a simple aspect/target sentiment classification methods based a variety of APC models, especially the those based on the local context focus mechanisms.
+This repository provides a simple aspect/target sentiment classification methods based a variety of APC models,
+especially the those based on the local context focus mechanisms.
 
 # Quick Start
 
-Install this repo by `pip install sentinfer`
+Install this repo by `pip install sentinfer`.
 
-
+1. Train our model your in your dataset:
 
 ```
 from sentinfer.main.functional import train, load_trained_model
@@ -26,10 +27,16 @@ param_dict = {'model_name':'lcf_bert', 'lcf':'cdw', 'batch_size': 16}
 # public datasets can be found in the other branch
 train_set_path = 'restaurant_train.raw'  
 model_path_to_save = './'
-train(param_dict, train_set_path, model_path_to_save)
+infermodel = train(param_dict, train_set_path, model_path_to_save)
 
-infermodel = load_trained_model(param_dict, model_path_to_save)
+```
+2. Load the trained model:
 
+```infermodel = load_trained_model(param_dict, model_path_to_save)```
+
+
+3. Infer on inferring set:
+```
 # infer a formatted text, the reference sentiment begins with !sent! is optional
 text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent ,' \
        ' the [ASP]decor[ASP] cool and understated . !sent! 1 1'
@@ -41,18 +48,37 @@ infermodel.infer(text)
 test_set_path = './rest16_test_inferring.dat'
 infermodel.batch_infer(test_set_path)
 ```
+4. Convert datasets for inferring
 
 ```
+from sentinfer import convert_dataset_for_inferring
+convert_dataset_for_inferring('datasets/semeval16')
+```
+
+5. Get usage introductions and samples:
+
+```
+from sentinfer import print_usages, samples
+print_usages()
+samples = get_samples()
+for sample in samples:
+    infer_model.infer(sample)
+```
+
+How to set hyper-parameters:
+
+```
+param_dict = {'model_name':'lcf_bert', 'lcf':'cdw', 'batch_size': 16}
+
 #  default hyper-parameters:
 # model_name = "slide_lcfs_bert", # optional: lcf_bert, lcfs_bert, bert_spc, bert_base
-# dataset = "laptop"
 # optimizer = "adam"
 # learning_rate = 0.00002
 # pretrained_bert_name = "bert-base-uncased"
 # use_dual_bert = False
 # use_bert_spc = True
 # max_seq_len = 80
-# SRD = 2
+# SRD = 3
 # lcf = "cdw"
 # window = "lr"
 # distance_aware_window = True
@@ -149,9 +175,10 @@ If this repository is helpful to you, please cite our papers:
 
 This work is based on the repositories of [ABSA-PyTorch](https://github.com/songyouwei/ABSA-PyTorch) and
 the [pytorch-transformers](https://github.com/huggingface/transformers). Thanks to the authors for their devotion and
-Thanks to everyone who offered assistance. Feel free to report any bug or discussing with us. 
+Thanks to everyone who offered assistance. Feel free to report any bug or discussing with us.
 
 ## To Do
+
 1. Add more bert-based models
 2. Add more APIs
 3. Optimize codes and add comments
