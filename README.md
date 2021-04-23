@@ -60,7 +60,7 @@ text = 'everything is always cooked to perfection , the [ASP]service[ASP] is exc
 # or infer a formatted text
 # text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent ,' \
        ' the [ASP]decor[ASP] cool and understated .'
-infermodel.batch_infer(text)
+infermodel.infer(text)
 
 # batch infer from prepared dataset
 test_set_path = './rest16_test_inferring.dat'
