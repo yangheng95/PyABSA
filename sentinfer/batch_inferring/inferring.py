@@ -18,20 +18,12 @@ from ..utils.data_utils_for_inferring import Tokenizer4Bert, ABSADataset
 
 
 class INFER_MODEL:
-    def __init__(self, opt, trained_model_path):
+    def __init__(self, opt=None, trained_model_path=None, trainer=None):
         self.opt = opt
         # opt.learning_rate = 2e-5
         # Use any type of BERT to initialize your model.
         # The weights of loaded BERT will be covered after loading state_dict
         # self.bert = BertModel.from_pretrained('bert-base-uncased')
-
-        if opt.seed is not None:
-            random.seed(opt.seed)
-            numpy.random.seed(opt.seed)
-            torch.manual_seed(opt.seed)
-            torch.cuda.manual_seed(opt.seed)
-            torch.backends.cudnn.deterministic = True
-            torch.backends.cudnn.benchmark = False
 
         self.model_class = {
             'bert_base': BERT_BASE,
@@ -48,14 +40,28 @@ class INFER_MODEL:
             'orthogonal_': torch.nn.init.orthogonal_
         }
 
-        self.bert_tokenizer = BertTokenizer.from_pretrained(opt.pretrained_bert_name, do_lower_case=True)
-        self.tokenizer = Tokenizer4Bert(self.bert_tokenizer, opt.max_seq_len)
+        if trainer:
+            self.model = trainer[0]
+            self.opt = trainer[1]
+        else:
+            self.bert = BertModel.from_pretrained(opt.pretrained_bert_name)
+            self.model = self.model_class[opt.model_name](self.bert, opt).to(opt.device)
+            self.model.load_state_dict(torch.load(trained_model_path))
+
+        self.bert_tokenizer = BertTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
+        self.tokenizer = Tokenizer4Bert(self.bert_tokenizer, self.opt.max_seq_len)
         self.dataset = ABSADataset(tokenizer=self.tokenizer, opt=opt)
+
+        if self.opt.seed is not None:
+            random.seed(self.opt.seed)
+            numpy.random.seed(self.opt.seed)
+            torch.manual_seed(self.opt.seed)
+            torch.cuda.manual_seed(self.opt.seed)
+            torch.backends.cudnn.deterministic = True
+            torch.backends.cudnn.benchmark = False
+
         self.opt.inputs_cols = self.dataset.input_colses[self.opt.model_name]
-        self.opt.initializer = self.initializers[self.opt.initializer]
-        self.bert = BertModel.from_pretrained(opt.pretrained_bert_name)
-        self.model = self.model_class[opt.model_name](self.bert, opt).to(opt.device)
-        self.model.load_state_dict(torch.load(trained_model_path))
+        self.opt.initializer = self.opt.initializer
 
     def batch_infer(self, test_dataset_path=None):
         if test_dataset_path:
@@ -97,7 +103,7 @@ class INFER_MODEL:
 
         return results
 
-    def infer(self, text=None):
+    def infer(self, text: str = None):
         if text:
             self.dataset.prepare_infer_sample(text)
         else:

@@ -126,6 +126,8 @@ class Instructor:
             self._reset_params()
             self._train(criterion, lca_criterion, optimizer)
 
+        return self.model, self.opt
+
 
 def train_by_single_config(opt):
     if opt.seed is not None:

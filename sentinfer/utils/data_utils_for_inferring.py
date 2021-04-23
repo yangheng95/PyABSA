@@ -214,7 +214,7 @@ class ABSADataset(Dataset):
     def process_data(self, samples):
         all_data = []
 
-        for text in tqdm(samples):
+        for text in samples:
             try:
                 # handle for empty lines in inferring dataset
                 if text is None or '' == text.strip():
