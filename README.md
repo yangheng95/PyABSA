@@ -8,6 +8,18 @@
 
 > PyTorch Implementations.
 
+
+## Requirement
+
+* Python 3.7 + (recommended)
+* PyTorch >= 1.0
+
+## Model Introduction
+
+This repository provides a variety of APC models, especially the those based on the local context focus mechanisms,
+including:
+
+
 # Quick Start
 
 Install this repo by `pip install sentinfer`
@@ -17,7 +29,7 @@ from sentinfer.main.functional import train, load_trained_model
 param_dict = {'model_name':'lcf_bert', 'lcf':'cdw', 'batch_size': 16}
 
 #  default hyper-parameters:
-# model_name = "slide_lcfs_bert"
+# model_name = "slide_lcfs_bert", # optional: lcf_bert, lcfs_bert, bert_spc, bert_base
 # dataset = "laptop"
 # optimizer = "adam"
 # learning_rate = 0.00002
@@ -49,7 +61,7 @@ infermodel = load_trained_model(param_dict, model_path_to_save)
 # the reference sentiment begins from !sent! is optional
 text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent ,' \
        ' the [ASP]decor[ASP] cool and understated . !sent! 1 1'
-# or 
+# or infer a formatted text
 # text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent ,' \
        ' the [ASP]decor[ASP] cool and understated .'
 infermodel.batch_infer(text)
@@ -58,8 +70,6 @@ infermodel.batch_infer(text)
 test_set_path = './rest16_test_inferring.dat'
 infermodel.batch_infer(test_set_path)
 ```
-
-infermodel.batch_infer(test_set_path)
 
 We hope this repository will help you and sincerely request bug reports and Suggestions. If you like this repository you
 can star or share this repository to others.
@@ -77,16 +87,6 @@ Codes for our paper(s):
 - Zeng B, Yang H, Xu R, et
   al. [Lcf: A local context focus mechanism for aspect-based sentiment classification[J]](https://www.mdpi.com/2076-3417/9/16/3389)
   . Applied Sciences, 2019, 9(16): 3389.
-
-## Requirement
-
-* Python 3.7 + (recommended)
-* PyTorch >= 1.0
-
-## Model Introduction
-
-This repository provides a variety of APC models, especially the those based on the local context focus mechanisms,
-including:
 
 ### Our LCF-based APC models
 
