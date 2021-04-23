@@ -16,9 +16,9 @@ especially the those based on the local context focus mechanisms.
 
 # Quick Start
 
-Install this repo by `pip install sentinfer`.
+Install this repo by `pip install sentinfer`. 
 
-1. Train our model your in your dataset:
+1. Train our model your in your custom dataset:
 
 ```
 from sentinfer.main.functional import train, load_trained_model
@@ -30,6 +30,11 @@ model_path_to_save = './'
 infermodel = train(param_dict, train_set_path, model_path_to_save)
 
 ```
+The trained models are available [here](https://pan.baidu.com/s/1u5q8EqahXexKi2-hw_CUYg) (access code: bert), download them if necessary, 
+note that the provided models are best benchmared. If you want train a best benchmared model,
+refer to the master branch.
+
+
 2. Load the trained model:
 
 ```infermodel = load_trained_model(param_dict, model_path_to_save)```
@@ -62,7 +67,7 @@ from sentinfer import print_usages, samples
 print_usages()
 samples = get_samples()
 for sample in samples:
-    infer_model.infer(sample)
+    infermodel.infer(sample)
 ```
 
 How to set hyper-parameters:
