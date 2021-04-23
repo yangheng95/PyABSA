@@ -156,9 +156,9 @@ class ABSADataset(Dataset):
             'lca_bert': ['text_bert_indices', 'text_raw_bert_indices', 'bert_segments_ids', 'lca_ids', 'lcf_vec'],
             'lcf_bert': ['text_bert_indices', 'text_raw_bert_indices', 'bert_segments_ids', 'lcf_vec'],
             'slide_lcf_bert': ['text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec',
-                               'left_asp_dist_w', 'left_asp_dist_w'],
+                               'left_asp_dist_w', 'right_asp_dist_w'],
             'slide_lcfs_bert': ['text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec',
-                                'left_asp_dist_w', 'left_asp_dist_w'],
+                                'left_asp_dist_w', 'right_asp_dist_w'],
             'lcfs_bert': ['text_bert_indices', 'text_raw_bert_indices', 'bert_segments_ids', 'lcf_vec'],
         }
         self.tokenizer = tokenizer
