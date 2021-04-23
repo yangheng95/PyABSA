@@ -108,7 +108,7 @@ def init_training_config(config_dict):
         config.device = config_dict['device']
     else:
         try:
-            from ..utils.Pytorch_GPUManager import GPUManager
+            from sentinfer.utils.Pytorch_GPUManager import GPUManager
             choice = GPUManager().auto_choice()
             config.device = 'cuda:' + str(choice)
         except:
