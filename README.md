@@ -1,10 +1,5 @@
-# LCF-based Aspect Polarity Classification (基于局部上下文专注机制的方面级情感分类模型库)
-
-> Training & Inferring & Reproducing SOTA models of ABSA
-
-> Aspect-based Sentiment Analysis (BERT).
-
-> Chinese Aspect-based Sentiment Analysis (中文方面级情感分类)
+# Aspect & Target Sentiment Classification Tool (Based on Local Context Focus Mechanism)
+> 方面级/目标级情感分类工具 (基于局部上下文专注机制的方面级情感分类模型库)
 
 > PyTorch Implementations.
 
@@ -22,10 +17,32 @@ This repository provides a simple aspect/target sentiment classification methods
 
 Install this repo by `pip install sentinfer`
 
+
+
 ```
 from sentinfer.main.functional import train, load_trained_model
 param_dict = {'model_name':'lcf_bert', 'lcf':'cdw', 'batch_size': 16}
 
+# public datasets can be found in the other branch
+train_set_path = 'restaurant_train.raw'  
+model_path_to_save = './'
+train(param_dict, train_set_path, model_path_to_save)
+
+infermodel = load_trained_model(param_dict, model_path_to_save)
+
+# infer a formatted text, the reference sentiment begins with !sent! is optional
+text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent ,' \
+       ' the [ASP]decor[ASP] cool and understated . !sent! 1 1'
+# text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent ,' \
+       ' the [ASP]decor[ASP] cool and understated .'
+infermodel.infer(text)
+
+# batch infer from prepared dataset
+test_set_path = './rest16_test_inferring.dat'
+infermodel.batch_infer(test_set_path)
+```
+
+```
 #  default hyper-parameters:
 # model_name = "slide_lcfs_bert", # optional: lcf_bert, lcfs_bert, bert_spc, bert_base
 # dataset = "laptop"
@@ -45,26 +62,6 @@ param_dict = {'model_name':'lcf_bert', 'lcf':'cdw', 'batch_size': 16}
 
 # parameters only for training:
 # num_epoch = 3
-
-# public datasets can be found in the other branch
-train_set_path = 'restaurant_train.raw'  
-model_path_to_save = './'
-train(param_dict, train_set_path, model_path_to_save)
-
-
-infermodel = load_trained_model(param_dict, model_path_to_save)
-
-# the reference sentiment begins from !sent! is optional
-text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent ,' \
-       ' the [ASP]decor[ASP] cool and understated . !sent! 1 1'
-# or infer a formatted text
-# text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent ,' \
-       ' the [ASP]decor[ASP] cool and understated .'
-infermodel.infer(text)
-
-# batch infer from prepared dataset
-test_set_path = './rest16_test_inferring.dat'
-infermodel.batch_infer(test_set_path)
 ```
 
 We hope this repository will help you and sincerely request bug reports and Suggestions. If you like this repository you
@@ -148,17 +145,15 @@ If this repository is helpful to you, please cite our papers:
         primaryClass={cs.CL}
     }
 
-## Related Repositories
-
-[ABSA-PyTorch](https://github.com/songyouwei/ABSA-PyTorch)
-
-[domain-adapted-atsc](https://github.com/deepopinion/domain-adapted-atsc)
-
-[LCFS-BERT](https://github.com/HieuPhan33/LCFS-BERT)
-
 ## Acknowledgement
 
 This work is based on the repositories of [ABSA-PyTorch](https://github.com/songyouwei/ABSA-PyTorch) and
 the [pytorch-transformers](https://github.com/huggingface/transformers). Thanks to the authors for their devotion and
 Thanks to everyone who offered assistance. Feel free to report any bug or discussing with us. 
+
+## To Do
+1. Add more bert-based models
+2. Add more APIs
+3. Optimize codes and add comments
+
 
