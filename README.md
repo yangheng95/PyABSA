@@ -14,11 +14,9 @@
 * Python 3.7 + (recommended)
 * PyTorch >= 1.0
 
-## Model Introduction
+## Introduction
 
-This repository provides a variety of APC models, especially the those based on the local context focus mechanisms,
-including:
-
+This repository provides a simple aspect/target sentiment classification methods based a variety of APC models, especially the those based on the local context focus mechanisms.
 
 # Quick Start
 
@@ -38,17 +36,15 @@ param_dict = {'model_name':'lcf_bert', 'lcf':'cdw', 'batch_size': 16}
 # use_bert_spc = True
 # max_seq_len = 80
 # SRD = 2
-# sigma = 0.3
 # lcf = "cdw"
 # window = "lr"
 # distance_aware_window = True
 # dropout = 0.1
 # l2reg = 0.00001
-# num_epoch = 3
 # batch_size = 16
-# logdir = "logs"
-# exp_rounds = 1
 
+# parameters only for training:
+# num_epoch = 3
 
 # public datasets can be found in the other branch
 train_set_path = 'restaurant_train.raw'  
