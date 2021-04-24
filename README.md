@@ -8,6 +8,7 @@
 
 * Python 3.7 + (recommended)
 * PyTorch >= 1.0
+* transformers >= 4.4.2
 
 ## Introduction
 
@@ -18,15 +19,15 @@ especially those models based on the local context focus mechanisms.
 
 Install this repo by `pip install pyabsa`. 
 
-To use our models, you may need download `en_core_web_sm` by using
+To use our models, you may need download `en_core_web_sm` by
 
 `python -m spacy download en_core_web_sm`
 
-1. Train our model your in your custom dataset:
+1. Train our model on your custom dataset:
 
 ```
 from pyabsa import train, load_trained_model
-param_dict = {'model_name':'lcf_bert', 'lcf':'cdw', 'batch_size': 16}
+param_dict = {'model_name':'lcf_bert', 'lcf':'cdw', 'batch_size': 16, 'SRD': 3}
 
 # public datasets can be found in the other branch
 train_set_path = 'restaurant_train.raw'  
@@ -35,8 +36,7 @@ infermodel = train(param_dict, train_set_path, model_path_to_save)
 
 ```
 The trained models are available [here](https://pan.baidu.com/s/1u5q8EqahXexKi2-hw_CUYg) (access code: bert), download them if necessary, 
-note that the provided models are best benchmarked. If you want train a best benchmarked model,
-refer to the master branch.
+note that the provided models are best benchmarked. If you want train a best benchmarked model, refer to the master branch.
 
 
 2. Load the trained model:
@@ -44,7 +44,7 @@ refer to the master branch.
 ```infermodel = load_trained_model(trained_model_path)```
 
 
-3. Infer on inference set:
+3. Infer on a inference set:
 ```
 # infer a formatted text, the reference sentiment begins with !sent! is optional
 text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated . !sent! 1 1'
@@ -89,7 +89,7 @@ param_dict = {'model_name':'lcf_bert', 'lcf':'cdw', 'batch_size': 16}
 # max_seq_len = 80
 # SRD = 3
 # lcf = "cdw"
-# window = "lr"
+# window = "lr"  # optional 'l', 'r'
 # distance_aware_window = True
 # dropout = 0.1
 # l2reg = 0.00001
@@ -99,7 +99,7 @@ param_dict = {'model_name':'lcf_bert', 'lcf':'cdw', 'batch_size': 16}
 # num_epoch = 3
 ```
 
-We hope this repository will help you and sincerely request bug reports and Suggestions. If you like this repository you
+We hope this repository will help you and sincerely request bug reports and suggestions. If you like this repository you
 can star or share this repository to your friends.
 
 Codes for our paper(s):
@@ -145,7 +145,7 @@ The following models are forked from [ABSA-PyTorch](https://github.com/songyouwe
 
 ## Contributions & Bug Reports.
 
-This Repository is under development. There may be unknown problems in the code. Please do feel free to report any
+This repository is under development. There may be unknown problems remain. Please do feel free to report any
 problem, and PRs are welcome.
 
 ## Citation
@@ -186,7 +186,7 @@ If this repository is helpful to you, please cite our papers:
 
 This work is based on the repositories of [ABSA-PyTorch](https://github.com/songyouwei/ABSA-PyTorch) and
 the [pytorch-transformers](https://github.com/huggingface/transformers). Thanks to the authors for their devotion and
-Thanks to everyone who offered assistance. Feel free to report any bug or discussing with us.
+Thanks to everyone who offered assistance. 
 
 ## To Do
 
