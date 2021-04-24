@@ -11,8 +11,8 @@
 
 ## Introduction
 
-This repository provides a simple aspect/target sentiment classification methods based a variety of APC models,
-especially the those based on the local context focus mechanisms.
+This repository provides tools aspect/target sentiment classification methods based a variety of APC models,
+especially those models based on the local context focus mechanisms.
 
 # Quick Start
 
@@ -44,7 +44,7 @@ refer to the master branch.
 ```infermodel = load_trained_model(trained_model_path)```
 
 
-3. Infer on inferring set:
+3. Infer on inference set:
 ```
 # infer a formatted text, the reference sentiment begins with !sent! is optional
 text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated . !sent! 1 1'
@@ -57,7 +57,7 @@ test_set_path = './rest16_test_inferring.dat'
 infermodel.batch_infer(test_set_path, save_result=True)
 ```
 
-4. Convert datasets for inferring
+4. Convert datasets for inference
 
 ```
 from pyabsa import convert_dataset_for_inference
@@ -100,7 +100,7 @@ param_dict = {'model_name':'lcf_bert', 'lcf':'cdw', 'batch_size': 16}
 ```
 
 We hope this repository will help you and sincerely request bug reports and Suggestions. If you like this repository you
-can star or share this repository to others.
+can star or share this repository to your friends.
 
 Codes for our paper(s):
 
