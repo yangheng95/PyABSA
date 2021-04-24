@@ -8,15 +8,11 @@
 
 import argparse
 import json
-import os
-import pickle
-
 import networkx as nx
 import numpy as np
 import spacy
 import torch
 from torch.utils.data import Dataset
-from tqdm import tqdm
 
 
 def parse_experiments(path):
@@ -60,36 +56,6 @@ def parse_experiments(path):
         parser.add_argument('--config', default=None, type=str)
         configs.append(parser.parse_args())
     return configs
-
-
-def _load_word_vec(path, word2idx=None, embed_dim=300):
-    fin = open(path, 'r', encoding='utf-8', newline='\n', errors='ignore')
-    word_vec = {}
-    for line in fin:
-        tokens = line.rstrip().split()
-        if word2idx is None or tokens[0] in word2idx.keys():
-            word_vec[tokens[0]] = np.asarray(tokens[len(tokens) - embed_dim:len(tokens)], dtype='float32')
-    return word_vec
-
-
-def build_embedding_matrix(word2idx, embed_dim, dat_fname):
-    if os.path.exists(dat_fname):
-        print('loading embedding:', dat_fname)
-        embedding_matrix = pickle.load(open(dat_fname, 'rb'))
-    else:
-        print('loading word vectors...')
-        embedding_matrix = np.zeros((len(word2idx) + 2, embed_dim))  # idx 0 and len(word2idx)+1 are all-zeros
-        fname = './glove.twitter.27B/glove.twitter.27B.' + str(embed_dim) + 'd.txt' \
-            if embed_dim != 300 else './glove.840B.300d.txt'
-
-        word_vec = _load_word_vec(fname, word2idx=word2idx)
-        print('building embedding:', dat_fname)
-        for word, i in word2idx.items():
-            vec = word_vec.get(word)
-            if vec is not None:
-                embedding_matrix[i] = vec
-        pickle.dump(embedding_matrix, open(dat_fname, 'wb'))
-    return embedding_matrix
 
 
 def pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating='post', value=0):
@@ -449,8 +415,12 @@ def is_similar(s1, s2):
         return False
 
 
-# Note that this function is not available for Chinese currently.
-nlp = spacy.load("en_core_web_sm")
+try:
+    # Note that this function is not available for Chinese currently.
+    nlp = spacy.load("en_core_web_sm")
+except:
+    raise RuntimeError('Can not load en_core_web_sm from spacy, maybe you need to download it using:'
+                       '\n python -m spacy download en_core_web_sm')
 
 
 def spacy_tokenize(text):

@@ -13,7 +13,7 @@ convert_dataset_for_inferring('datasets/semeval16')
 param_dict = {'model_name': 'lcf_bert', 'batch_size': 16, 'device': 'cuda'}
 train_set_path = 'restaurant_train.raw'
 model_path_to_save = './'
-# infermodel = train(param_dict, train_set_path, model_path_to_save)
+infermodel = train(param_dict, train_set_path, model_path_to_save)
 
 test_set_path = '.'
 infermodel = load_trained_model(param_dict, model_path_to_save)

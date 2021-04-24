@@ -12,7 +12,7 @@ from setuptools import setup, find_packages
 here = path.abspath(path.dirname(__file__))
 setup(
     name='sentinfer',
-    version='0.1.2alpha',
+    version='0.1.2alpha1',
     description='Train & infer for aspect-based sentiment using state-of-the-art models',
     # long_description=str(open(path.join(here, "README.md"), encoding='utf8').read()),
     # The project's main homepage.
@@ -23,5 +23,5 @@ setup(
     packages=find_packages(),
     # Choose your license
     license='MIT',
-    install_requires=['transformers>=4.4.2', 'spacy'],
+    install_requires=['transformers>=4.4.2', 'spacy', 'networkx'],
 )

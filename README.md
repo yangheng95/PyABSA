@@ -18,7 +18,7 @@ especially the those based on the local context focus mechanisms.
 
 Install this repo by `pip install sentinfer`. 
 
-To use lcfs-based models, you may need download `en_core_web_sm` by using
+To use our models, you may need download `en_core_web_sm` by using
 `python -m spacy download en_core_web_sm`
 
 1. Train our model your in your custom dataset:
@@ -34,7 +34,7 @@ infermodel = train(param_dict, train_set_path, model_path_to_save)
 
 ```
 The trained models are available [here](https://pan.baidu.com/s/1u5q8EqahXexKi2-hw_CUYg) (access code: bert), download them if necessary, 
-note that the provided models are best benchmared. If you want train a best benchmared model,
+note that the provided models are best benchmarked. If you want train a best benchmarked model,
 refer to the master branch.
 
 
@@ -79,7 +79,7 @@ How to set hyper-parameters:
 param_dict = {'model_name':'lcf_bert', 'lcf':'cdw', 'batch_size': 16}
 
 #  default hyper-parameters:
-# model_name = "slide_lcfs_bert", # optional: lcf_bert, lcfs_bert, bert_spc, bert_base
+# model_name = "slide_lcfs_bert", # optional: slide_lcf_bert, lcf_bert, lcfs_bert, bert_spc, bert_base
 # optimizer = "adam"
 # learning_rate = 0.00002
 # pretrained_bert_name = "bert-base-uncased"

@@ -350,8 +350,12 @@ class ABSADataset(Dataset):
         return len(self.data)
 
 
-# Note that this function is not available for Chinese currently.
-nlp = spacy.load("en_core_web_sm")
+try:
+    # Note that this function is not available for Chinese currently.
+    nlp = spacy.load("en_core_web_sm")
+except:
+    raise RuntimeError('Can not load en_core_web_sm from spacy, maybe you need to download it using:'
+                       '\n python -m spacy download en_core_web_sm')
 
 
 def spacy_tokenize(text):
