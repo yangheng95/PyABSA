@@ -18,6 +18,9 @@ especially the those based on the local context focus mechanisms.
 
 Install this repo by `pip install sentinfer`. 
 
+To use lcfs-based models, you may need download `en_core_web_sm` by using
+`python -m spacy download en_core_web_sm`
+
 1. Train our model your in your custom dataset:
 
 ```
