@@ -7,7 +7,7 @@ import os
 
 
 # convert datasets in this repo for inferring
-def convert_dataset_for_inferring(dataset_path):
+def convert_dataset_for_inference(dataset_path):
     if os.path.isdir(dataset_path + '/'):
         files = os.listdir(dataset_path)
     else:

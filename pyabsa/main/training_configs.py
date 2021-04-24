@@ -14,3 +14,10 @@ dropout = 0.1
 l2reg = 0.00001
 num_epoch = 3
 batch_size = 16
+initializer = 'xavier_uniform_'
+seed = 996
+embed_dim = 768
+hidden_dim = 768
+polarities_dim = 3
+
+

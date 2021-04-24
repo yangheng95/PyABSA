@@ -16,15 +16,16 @@ especially the those based on the local context focus mechanisms.
 
 # Quick Start
 
-Install this repo by `pip install sentinfer`. 
+Install this repo by `pip install pyabsa`. 
 
 To use our models, you may need download `en_core_web_sm` by using
+
 `python -m spacy download en_core_web_sm`
 
 1. Train our model your in your custom dataset:
 
 ```
-from sentinfer import train, load_trained_model
+from pyabsa import train, load_trained_model
 param_dict = {'model_name':'lcf_bert', 'lcf':'cdw', 'batch_size': 16}
 
 # public datasets can be found in the other branch
@@ -40,33 +41,33 @@ refer to the master branch.
 
 2. Load the trained model:
 
-```infermodel = load_trained_model(param_dict, model_path_to_save)```
+```infermodel = load_trained_model(trained_model_path)```
 
 
 3. Infer on inferring set:
 ```
 # infer a formatted text, the reference sentiment begins with !sent! is optional
-text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent ,' \
-       ' the [ASP]decor[ASP] cool and understated . !sent! 1 1'
-# text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent ,' \
-       ' the [ASP]decor[ASP] cool and understated .'
+text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated . !sent! 1 1'
+# or text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated .'
+
 infermodel.infer(text)
 
-# batch infer from prepared dataset
-test_set_path = './rest16_test_inferring.dat'
-infermodel.batch_infer(test_set_path)
+# batch infer from prepared datasetm
+test_set_path = './rest16_test_inferring.dat' 
+infermodel.batch_infer(test_set_path, save_result=True)
 ```
+
 4. Convert datasets for inferring
 
 ```
-from sentinfer import convert_dataset_for_inferring
-convert_dataset_for_inferring('datasets/semeval16')
+from pyabsa import convert_dataset_for_inference
+convert_dataset_for_inference('datasets/semeval16')
 ```
 
 5. Get usage introductions and samples:
 
 ```
-from sentinfer import print_usages, samples
+from pyabsa import print_usages, samples
 print_usages()
 samples = get_samples()
 for sample in samples:
@@ -160,6 +161,7 @@ If this repository is helpful to you, please cite our papers:
         year={2021},
         publisher={Elsevier}
     }
+
     @article{zeng2019lcf,
         title={LCF: A Local Context Focus Mechanism for Aspect-Based Sentiment Classification},
         author={Zeng, Biqing and Yang, Heng and Xu, Ruyang and Zhou, Wu and Han, Xuli},
@@ -170,6 +172,7 @@ If this repository is helpful to you, please cite our papers:
         year={2019},
         publisher={Multidisciplinary Digital Publishing Institute}
     }
+
     @misc{yang2020enhancing,
         title={Enhancing Fine-grained Sentiment Classification Exploiting Local Context Embedding}, 
         author={Heng Yang and Biqing Zeng},

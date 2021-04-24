@@ -227,15 +227,15 @@ class ABSADataset(Dataset):
             aspect_bert_indices = tokenizer.text_to_sequence("[CLS] " + aspect + " [SEP]")
 
             text_raw_indices = tokenizer.text_to_sequence(text_raw)
-            text_raw_without_aspect_indices = tokenizer.text_to_sequence(text_left + " " + text_right)
-            text_left_indices = tokenizer.text_to_sequence(text_left)
-            text_left_with_aspect_indices = tokenizer.text_to_sequence(text_left + " " + aspect)
-            text_right_indices = tokenizer.text_to_sequence(text_right, reverse=True)
-            text_right_with_aspect_indices = tokenizer.text_to_sequence(" " + aspect + " " + text_right, reverse=True)
+            # text_raw_without_aspect_indices = tokenizer.text_to_sequence(text_left + " " + text_right)
+            # text_left_indices = tokenizer.text_to_sequence(text_left)
+            # text_left_with_aspect_indices = tokenizer.text_to_sequence(text_left + " " + aspect)
+            # text_right_indices = tokenizer.text_to_sequence(text_right, reverse=True)
+            # text_right_with_aspect_indices = tokenizer.text_to_sequence(" " + aspect + " " + text_right, reverse=True)
             aspect_indices = tokenizer.text_to_sequence(aspect)
-            left_context_len = np.sum(text_left_indices != 0)
+            # left_context_len = np.sum(text_left_indices != 0)
             aspect_len = np.sum(aspect_indices != 0)
-            aspect_in_text = torch.tensor([left_context_len.item(), (left_context_len + aspect_len - 1).item()])
+            # aspect_in_text = torch.tensor([left_context_len.item(), (left_context_len + aspect_len - 1).item()])
             bert_segments_ids = np.asarray([0] * (np.sum(text_raw_indices != 0) + 2) + [1] * (aspect_len + 1))
             bert_segments_ids = pad_and_truncate(bert_segments_ids, tokenizer.max_seq_len)
 
@@ -259,7 +259,7 @@ class ABSADataset(Dataset):
                 'text_raw': text_raw,
                 'aspect': aspect,
                 'asp_index': get_asp_index(text_bert_indices, aspect_bert_indices),
-                'lca_ids': lca_ids if 'lca_ids' in ABSADataset.input_colses[opt.model_name] else 0,
+                # 'lca_ids': lca_ids if 'lca_ids' in ABSADataset.input_colses[opt.model_name] else 0,
                 'lcf_vec': lcf_vec if 'lcf_vec' in ABSADataset.input_colses[opt.model_name] else 0,
                 'spc_mask_vec': build_spc_mask_vec(text_raw_bert_indices) if 'spc_mask_vec' in ABSADataset.input_colses[
                     opt.model_name] else 0,
@@ -273,21 +273,9 @@ class ABSADataset(Dataset):
                 'text_raw_indices': text_raw_indices if 'text_raw_indices' in ABSADataset.input_colses[
                     opt.model_name] else 0,
                 'aspect_indices': aspect_indices if 'aspect_indices' in ABSADataset.input_colses[opt.model_name] else 0,
-                'text_left_indices': text_left_indices if 'text_left_indices' in ABSADataset.input_colses[
-                    opt.model_name] else 0,
-                'aspect_in_text': aspect_in_text if 'aspect_in_text' in ABSADataset.input_colses[opt.model_name] else 0,
-
-                'text_raw_without_aspect_indices': text_raw_without_aspect_indices
-                if 'text_raw_without_aspect_indices' in ABSADataset.input_colses[opt.model_name] else 0,
-
-                'text_left_with_aspect_indices': text_left_with_aspect_indices
-                if 'text_left_with_aspect_indices' in ABSADataset.input_colses[opt.model_name] else 0,
-
-                'text_right_indices': text_right_indices
-                if 'text_right_indices' in ABSADataset.input_colses[opt.model_name] else 0,
-
-                'text_right_with_aspect_indices': text_right_with_aspect_indices
-                if 'text_right_with_aspect_indices' in ABSADataset.input_colses[opt.model_name] else 0,
+                # 'text_left_indices': text_left_indices if 'text_left_indices' in ABSADataset.input_colses[
+                #     opt.model_name] else 0,
+                # 'aspect_in_text': aspect_in_text if 'aspect_in_text' in ABSADataset.input_colses[opt.model_name] else 0,
 
                 'text_raw_bert_indices': text_raw_bert_indices
                 if 'text_raw_bert_indices' in ABSADataset.input_colses[opt.model_name] else 0,

@@ -5,7 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from .convert_dataset_for_inferring import convert_dataset_for_inferring
+from .convert_dataset_for_inferring import convert_dataset_for_inference
 from .functional import train, load_trained_model
 from .functional import print_usages
 from .batch_inferring.samples import get_samples
