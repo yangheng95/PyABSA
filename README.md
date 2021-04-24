@@ -21,7 +21,7 @@ Install this repo by `pip install sentinfer`.
 1. Train our model your in your custom dataset:
 
 ```
-from sentinfer.main.functional import train, load_trained_model
+from sentinfer import train, load_trained_model
 param_dict = {'model_name':'lcf_bert', 'lcf':'cdw', 'batch_size': 16}
 
 # public datasets can be found in the other branch
