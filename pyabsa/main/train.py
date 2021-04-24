@@ -19,6 +19,7 @@ from ..models.bert_spc import BERT_SPC
 from ..models.lcf_bert import LCF_BERT
 from ..models.slide_lcf_bert import SLIDE_LCF_BERT
 from ..utils.data_utils_for_training import Tokenizer4Bert, ABSADataset
+import pickle
 
 
 class Instructor:
@@ -67,7 +68,11 @@ class Instructor:
         model_to_save = model.module if hasattr(model, 'module') else model  # Only save the model it-self
 
         if mode == 0 or 'bert' not in self.opt.model_name:
-            torch.save(self.model.state_dict(), save_path + '.state_dict')  # save the state dict
+            save_path = save_path + '/' + self.opt.model_name + '_trained/'
+            if not os.path.exists(save_path):
+                os.makedirs(save_path)
+            torch.save(self.model.state_dict(), save_path + self.opt.model_name + '.state_dict')  # save the state dict
+            pickle.dump(self.opt, open(save_path + 'model.config', 'wb'))
         else:
             # save the fine-tuned bert model
             model_output_dir = save_path + '_fine-tuned'
@@ -80,10 +85,13 @@ class Instructor:
             model_to_save.config.to_json_file(output_config_file)
             self.bert_tokenizer.save_vocabulary(model_output_dir)
 
-    def _train(self, criterion, lca_criterion, optimizer, max_test_acc_overall=0):
+    def _train(self, criterion, lca_criterion, optimizer):
         global_step = 0
         for epoch in range(self.opt.num_epoch):
-            for i_batch, sample_batched in tqdm(enumerate(self.train_data_loader), postfix='epoch ' + str(epoch)):
+            for i_batch, sample_batched in tqdm(enumerate(self.train_data_loader),
+                                                postfix='training... epoch:'
+                                                + str(epoch)
+                                                ):
 
                 global_step += 1
                 # switch model to training mode, clear gradient accumulators
@@ -106,9 +114,9 @@ class Instructor:
                 optimizer.step()
 
         self._save_model(self.model, self.opt.model_path_to_save, mode=0)
-        print('saved: {}'.format(self.opt.model_path_to_save))
+        print('trained model saved in: {}'.format(self.opt.model_path_to_save))
 
-    def run(self, repeats=1):
+    def run(self):
 
         # Loss and Optimizer
         criterion = nn.CrossEntropyLoss()
@@ -116,11 +124,8 @@ class Instructor:
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
         optimizer = self.opt.optimizer(_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
-        max_test_acc_overall = 0
-        for i in range(repeats):
-            print('repeat: {}'.format(i))
-            self._reset_params()
-            self._train(criterion, lca_criterion, optimizer)
+        self._reset_params()
+        self._train(criterion, lca_criterion, optimizer)
 
         return self.model, self.opt
 

@@ -166,7 +166,7 @@ class ABSADataset(Dataset):
     def prepare_infer_sample(self, text: str):
         self.process_data(self.parse_sample(text))
 
-    def prepare_infer_dataset(self, infer_data_path):
+    def prepare_infer_dataset(self, infer_data_path, ignore_error):
         print('buliding word indices...')
 
         fin = open(infer_data_path, 'r', encoding='utf-8', newline='\n', errors='ignore')
@@ -175,9 +175,9 @@ class ABSADataset(Dataset):
         for sample in lines:
             if sample:
                 samples.extend(self.parse_sample(sample))
-        self.process_data(samples)
+        self.process_data(samples, ignore_error)
 
-    def process_data(self, samples):
+    def process_data(self, samples, ignore_error=True):
         all_data = []
 
         for text in samples:
@@ -301,7 +301,11 @@ class ABSADataset(Dataset):
                             self.copy_side_aspect('left', all_data[idx], all_data[idx])
                     self.copy_side_aspect('right', all_data[-1], all_data[-1])
             except:
-                print('Error while processing:', text)
+                if ignore_error:
+                    print('Ignore error while processing:', text)
+                else:
+                    raise RuntimeError('Error while processing:', text)
+
             self.all_data = all_data
         return all_data
 
@@ -393,10 +397,7 @@ class ABSADataset(Dataset):
         target[direct + '_asp_dist_w'] = np.ones((target['lcf_vec'].shape[0], target['lcf_vec'].shape[1]),
                                                  dtype=np.float32)
         for i in range(len(target[direct + '_asp_dist_w'])):
-            if self.opt.distance_aware_windows:
-                target[direct + '_asp_dist_w'][i] = c * np.ones((target['lcf_vec'].shape[1]), dtype=np.float32)
-            else:
-                target[direct + '_asp_dist_w'][i] = np.ones((target['lcf_vec'].shape[1]), dtype=np.float32)
+            target[direct + '_asp_dist_w'][i] = c * np.ones((target['lcf_vec'].shape[1]), dtype=np.float32)
 
 
 def is_similar(s1, s2):
