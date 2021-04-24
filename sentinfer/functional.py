@@ -25,11 +25,6 @@ def init_training_config(config_dict):
     else:
         config.batch_size = batch_size
 
-    if 'dataset' in config_dict:
-        config.dataset = config_dict['dataset']
-    else:
-        config.dataset = dataset
-
     if 'distance_aware_window' in config_dict:
         config.distance_aware_window = config_dict['distance_aware_window']
     else:
@@ -124,13 +119,15 @@ def init_training_config(config_dict):
 
 
 def train(parameter_dict=None, train_dataset_path=None, model_path_to_save=None):
-    print('Be sure this path is clean and do not have other saved state dict.')
     if not train_dataset_path:
         train_dataset_path = os.getcwd()
         print('Try to load dataset in current path.')
     # load training set
-    if os.path.isdir(train_dataset_path):
-        train_dataset_path += '/' + [p for p in os.listdir(train_dataset_path) if 'train' in p.lower()][0]
+    try:
+        if os.path.isdir(train_dataset_path):
+            train_dataset_path += '/' + [p for p in os.listdir(train_dataset_path) if 'train' in p.lower()][0]
+    except:
+        raise RuntimeError('Can not find path of train dataset!')
     config = init_training_config(parameter_dict)
     config.train_dataset_path = train_dataset_path
     config.model_path_to_save = model_path_to_save + '/' + config.model_name
@@ -138,12 +135,17 @@ def train(parameter_dict=None, train_dataset_path=None, model_path_to_save=None)
 
 
 def load_trained_model(parameter_dict=None, trained_model_path=None):
+    print('Be sure this path has only one saved state dict.')
+
     if not trained_model_path:
         trained_model_path = os.getcwd()
         print('Try to load dataset in current path.')
-    if os.path.isdir(trained_model_path):
-        # load training set
-        trained_model_path += '/' + [p for p in os.listdir(trained_model_path) if '.state_dict' in p.lower()][0]
+    try:
+        if os.path.isdir(trained_model_path):
+            # load training set
+            trained_model_path += '/' + [p for p in os.listdir(trained_model_path) if '.state_dict' in p.lower()][0]
+    except:
+        raise RuntimeError('Can not find path of trained model!')
     config = init_training_config(parameter_dict)
     InferModel = INFER_MODEL(config, trained_model_path)
     return InferModel

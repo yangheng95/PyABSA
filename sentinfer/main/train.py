@@ -31,11 +31,7 @@ class Instructor:
         self.model = opt.model_class(self.bert, opt).to(opt.device)
 
         trainset = ABSADataset(opt.train_dataset_path, tokenizer, opt)
-        # trainset = ABSADataset(opt.dataset_file['main'], tokenizer, opt)
-        # testset = ABSADataset(opt.dataset_file['test'], tokenizer, opt)
         self.train_data_loader = DataLoader(dataset=trainset, batch_size=opt.batch_size, shuffle=True, pin_memory=True)
-        # self.test_data_loader = DataLoader(dataset=testset, batch_size=opt.batch_size * 32, shuffle=False,
-        #                                    pin_memory=True)
 
         if opt.device.type == 'cuda':
             print("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=opt.device.index)))
@@ -147,70 +143,6 @@ def train_by_single_config(opt):
         'lcfs_bert': LCF_BERT,
     }
 
-    dataset_files = {
-        'twitter': {
-            'main': './datasets/acl-14-short-data/main.raw',
-            'test': './datasets/acl-14-short-data/test.raw'
-        },
-        'rest14': {
-            'main': './datasets/semeval14/Restaurants_Train.xml.seg',
-            'test': './datasets/semeval14/Restaurants_Test_Gold.xml.seg'
-        },
-        'rest15': {
-            'main': './datasets/semeval15/restaurant_train.raw',
-            'test': './datasets/semeval15/restaurant_test.raw'
-        },
-        'rest16': {
-            'main': './datasets/semeval16/restaurant_train.raw',
-            'test': './datasets/semeval16/restaurant_test.raw'
-        },
-        'laptop': {
-            'main': './datasets/semeval14/Laptops_Train.xml.seg',
-            'test': './datasets/semeval14/Laptops_Test_Gold.xml.seg'
-        },
-        'car': {
-            'main': './datasets/Chinese/car/car.main.txt',
-            'test': './datasets/Chinese/car/car.test.txt'
-        },
-        'phone': {
-            'main': './datasets/Chinese/camera/camera.main.txt',
-            'test': './datasets/Chinese/camera/camera.test.txt'
-        },
-        'notebook': {
-            'main': './datasets/Chinese/notebook/notebook.main.txt',
-            'test': './datasets/Chinese/notebook/notebook.test.txt'
-        },
-        'camera': {
-            'main': './datasets/Chinese/phone/phone.main.txt',
-            'test': './datasets/Chinese/phone/phone.test.txt'
-        },
-        'multilingual': {
-            'main': './datasets/multilingual/multilingual_train.raw',
-            'test': './datasets/multilingual/multilingual_test.raw'
-        },
-        'mams': {
-            'main': './datasets/MAMS/main.xml.dat',
-            'test': './datasets/MAMS/test.xml.dat'
-        },
-        'rest14_arts': {
-            'main': './datasets/semeval14/Restaurants_Train.xml.seg',
-            'test': './datasets/arts_testset/rest_arts_test.dat'
-        },
-        'laptop_arts': {
-            'main': './datasets/semeval14/Laptops_Train.xml.seg',
-            'test': './datasets/arts_testset/laptop_arts_test.dat'
-        },
-        'rest14_to_laptop': {
-            'main': './datasets/semeval14/Restaurants_Train.xml.seg',
-            'test': './datasets/semeval14/Laptops_Test_Gold.xml.seg'
-        },
-        'laptop_to_rest14': {
-            'main': './datasets/semeval14/Laptops_Train.xml.seg',
-            'test': './datasets/semeval14/Restaurants_Test_Gold.xml.seg'
-        }
-
-    }
-
     initializers = {
         'xavier_uniform_': torch.nn.init.xavier_uniform_,
         'xavier_normal_': torch.nn.init.xavier_normal,
@@ -228,13 +160,10 @@ def train_by_single_config(opt):
     }
 
     opt.model_class = model_classes[opt.model_name]
-    opt.dataset_file = dataset_files[opt.dataset]
     opt.inputs_cols = ABSADataset.input_colses[opt.model_name]
     opt.initializer = initializers[opt.initializer]
     opt.optimizer = optimizers[opt.optimizer]
 
-    # opt.device = torch.device(opt.device if 'cuda' in opt.device else 'cpu') \
-    #     if opt.device is None else torch.device(opt.device)
     opt.device = torch.device(opt.device)
     ins = Instructor(opt)
     return ins.run()  # _reset_params in every repeat
