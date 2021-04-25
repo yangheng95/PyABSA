@@ -42,8 +42,8 @@ We provide the [models](https://mscnueducn-my.sharepoint.com/:f:/g/personal/yang
 4. LCFS-BERT
 5. SLIDE_LCF_BERT
 6. SLIDE_LCFS_BERT
-available at [Onedrive](https://mscnueducn-my.sharepoint.com/:f:/g/personal/yangheng_m_scnu_edu_cn/EpH49JcrMANAiWgesAk8-m0BKrtmor85hRQDG3OJF5qrfw?e=TcYH0V), download them if necessary, 
-note that the provided models are best benchmarked. If you want train a best benchmarked model, refer to the master branch.
+
+download them if necessary, note that the provided models are best benchmarked. If you want train a best benchmarked model, refer to the master branch.
 
 2. Load the trained model:
 
@@ -51,7 +51,6 @@ Load a trained model will also load the training parameters, however the inferen
 ```
 infermodel = load_trained_model(trained_model_path)
 ```
-
 
 3. Infer on a inference set:
 ```
