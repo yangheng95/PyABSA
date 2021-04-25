@@ -35,13 +35,22 @@ model_path_to_save = './'
 infermodel = train(param_dict, train_set_path, model_path_to_save)
 
 ```
-The trained models are available [here](https://pan.baidu.com/s/1u5q8EqahXexKi2-hw_CUYg) (access code: bert), download them if necessary, 
+We provide the [models](https://mscnueducn-my.sharepoint.com/:f:/g/personal/yangheng_m_scnu_edu_cn/EpH49JcrMANAiWgesAk8-m0BKrtmor85hRQDG3OJF5qrfw?e=TcYH0V) trained on a large assembled ABSA [dataset](./sum_train.dat) based on BERT-BASE-UNCASED model,
+1. BERT-BASE
+2. BERT-SPC
+3. LCF-BERT
+4. LCFS-BERT
+5. SLIDE_LCF_BERT
+6. SLIDE_LCFS_BERT
+available at [Onedrive](https://mscnueducn-my.sharepoint.com/:f:/g/personal/yangheng_m_scnu_edu_cn/EpH49JcrMANAiWgesAk8-m0BKrtmor85hRQDG3OJF5qrfw?e=TcYH0V), download them if necessary, 
 note that the provided models are best benchmarked. If you want train a best benchmarked model, refer to the master branch.
-
 
 2. Load the trained model:
 
-```infermodel = load_trained_model(trained_model_path)```
+Load a trained model will also load the training parameters, however the inference batch size will always be 1.
+```
+infermodel = load_trained_model(trained_model_path)
+```
 
 
 3. Infer on a inference set:
@@ -55,6 +64,7 @@ infermodel.infer(text)
 # batch infer from prepared datasetm
 test_set_path = './rest16_test_inferring.dat' 
 infermodel.batch_infer(test_set_path, save_result=True)
+
 ```
 
 4. Convert datasets for inference
@@ -99,6 +109,10 @@ param_dict = {'model_name':'lcf_bert', 'lcf':'cdw', 'batch_size': 16}
 # num_epoch = 3
 ```
 
+
+
+# Our LCF-based APC models
+
 We hope this repository will help you and sincerely request bug reports and suggestions. If you like this repository you
 can star or share this repository to your friends.
 
@@ -116,8 +130,6 @@ Codes for our paper(s):
   al. [Lcf: A local context focus mechanism for aspect-based sentiment classification[J]](https://www.mdpi.com/2076-3417/9/16/3389)
   . Applied Sciences, 2019, 9(16): 3389.
 
-### Our LCF-based APC models
-
 Please try our best models `SLIDE-LCFS-BERT` and `SLIDE-LCF-BERT`.
 
 - **[SLIDE-LCF-BERT](modules/models/slide_lcf_bert.py)**
@@ -130,7 +142,7 @@ Please try our best models `SLIDE-LCFS-BERT` and `SLIDE-LCF-BERT`.
 
 Note that GloVe-based models have been removed.
 
-### Other famous APC models
+## Other famous APC models
 
 - **[LCFS-BERT](modules/models/lcf-bert.py)**
 
@@ -143,12 +155,12 @@ The following models are forked from [ABSA-PyTorch](https://github.com/songyouwe
 - **[BERT-BASE](modules/models/bert_base.py)**
 - **[BERT-SPC](modules/models/bert_spc.py)**
 
-## Contributions & Bug Reports.
+# Contributions & Bug Reports.
 
 This repository is under development. There may be unknown problems remain. Please do feel free to report any
 problem, and PRs are welcome.
 
-## Citation
+# Citation
 
 If this repository is helpful to you, please cite our papers:
 
