@@ -11,6 +11,10 @@
 We hope this repository will help you and sincerely request bug reports and Suggestions.
 If you like this repository you can star or share this repository to others. 
 
+## Want a packaged aspect polarity infer tool using BERT?
+
+You can try [pyabsa which](https://github.com/yangheng95/pyabsa), which provides the integrated training and inferring interfaces based on BERT.
+
 
 Codes for our paper(s): 
 
