@@ -7,13 +7,13 @@
 > Chinese Aspect-based Sentiment Analysis (中文方面级情感分类)
 
 > PyTorch Implementations.
-
-We hope this repository will help you and sincerely request bug reports and Suggestions.
-If you like this repository you can star or share this repository to others. 
+> 
 
 ## Want a packaged aspect polarity infer tool using BERT?
 
-You can try [pyabsa](https://github.com/yangheng95/pyabsa), which provides the integrated training and inferring interfaces based on BERT.
+If you only want to train on your on dataset or predict aspect sentiments, and never mind of the implementation of the models, you can use the packaged tool [**pyabsa**](https://github.com/yangheng95/pyabsa) which is more convenient.
+
+如果你只需要训练和预测方面情感，不关注模型的实现方式，可以使用提供的开箱即用的方面级情感分类工具 [**pyabsa**](https://github.com/yangheng95/pyabsa)
 
 
 Codes for our paper(s): 
