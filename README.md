@@ -1,6 +1,8 @@
-# Aspect & Target Sentiment Classification Tool (Based on Local Context Focus Mechanism)
+# Aspect & Target Sentiment Classification Tool
 
-> 方面级/目标级情感分类工具 (基于局部上下文专注机制的方面级情感分类模型库)
+> 本仓库提供易于使用的方面级情感分类的模型，只需简单几步即可分类方面级情感。
+
+> 基于BERT / LCF机制的方面级情感分类模型库 (CPU & CUDA supported)
 
 > PyTorch Implementations.
 
@@ -12,30 +14,71 @@
 
 ## Introduction
 
-This repository provides tools aspect/target sentiment classification methods based a variety of APC models,
-especially those models based on the local context focus mechanisms.
+This repository provides aspect/target sentiment classification APC models, especially those models based on the local
+context focus mechanisms.
+
+# Usages
+
+Check the detailed usages in [examples](./examples) directory.
+
+详细使用方式请见[examples](./examples)目录
 
 # Quick Start
 
-Install this repo by `pip install pyabsa`. 
+Install this repo by `pip install pyabsa`.
 
 To use our models, you may need download `en_core_web_sm` by
 
 `python -m spacy download en_core_web_sm`
 
-1. Train our model on your custom dataset:
+0. Instant train and infer on the provided datasets:
 
 ```
-from pyabsa import train, load_trained_model
-param_dict = {'model_name':'lcf_bert', 'lcf':'cdw', 'batch_size': 16, 'SRD': 3}
-
-# public datasets can be found in the other branch
-train_set_path = 'restaurant_train.raw'  
-model_path_to_save = './'
-infermodel = train(param_dict, train_set_path, model_path_to_save)
+from pyabsa import train, train_and_evaluate, load_trained_model
+dataset_path = 'datasets/laptop14'
+sent_classifier = train_and_evaluate(parameter_dict=None,
+                                dataset_path=dataset_path,
+                                model_path_to_save=None
+                                )
+text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent ,' \
+       ' the [ASP]decor[ASP] cool and understated . !sent! 1 1'
+sent_classifier.infer(text)
 
 ```
-We provide the [models](https://mscnueducn-my.sharepoint.com/:f:/g/personal/yangheng_m_scnu_edu_cn/EpH49JcrMANAiWgesAk8-m0BKrtmor85hRQDG3OJF5qrfw?e=TcYH0V) trained on a large assembled ABSA [dataset](./sum_train.dat) based on BERT-BASE-UNCASED model,
+
+1. Train our models on your custom dataset:
+
+```
+from pyabsa import train, train_and_evaluate, load_trained_model
+# see hyper-parameters in pyabsa/main/training_configs.py
+param_dict = {'model_name': 'bert_base', 'batch_size': 16, 'device': 'cuda', 'num_epoch': 1}
+# train_set_path = 'datasets/restaurant15'
+train_set_path = 'sum_train.dat'
+model_path_to_save = 'state_dict'
+
+sent_classifier = train_apc(parameter_dict=param_dict,    # set param_dict=None to use default model
+                            dataset_path=train_set_path,  # file or dir, datasets will be automatically detected
+                            model_path_to_save=model_path_to_save,  # set model_path_to_save=None to avoid save model
+                            auto_evaluate=False,   # evaluate model while training if test set is available
+                            auto_device=True  # Auto choose CUDA or CPU
+                            )
+
+# Or, use both train and test set to train a bset benchmarked model, train_config_path refer a base config file whose same name paramters will be replaced by those in param_dict.
+# this fucntion need both train and test set
+
+datasets_path = 'datasets/restaurant15'  # file or dir are accepted
+sent_classifier = train_apc(parameter_dict=param_dict,    # set param_dict=None to use default model
+                            dataset_path=datasets_path,   # train set and test set will be automatically detected
+                            model_path_to_save=model_path_to_save,  # set model_path_to_save=None to avoid save model
+                            auto_evaluate=True,   # evaluate model while training if test set is available
+                            auto_device=True  # Auto choose CUDA or CPU
+                            )
+```
+
+We provide the pretrained models
+on [Google Drive](https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing) trained on a
+large assembled ABSA [dataset](examples/sum_train.dat) based on BERT-BASE-UNCASED model,
+
 1. BERT-BASE
 2. BERT-SPC
 3. LCF-BERT
@@ -43,26 +86,47 @@ We provide the [models](https://mscnueducn-my.sharepoint.com/:f:/g/personal/yang
 5. SLIDE_LCF_BERT
 6. SLIDE_LCFS_BERT
 
-download them if necessary, note that the provided models are best benchmarked. If you want train a best benchmarked model, refer to the master branch.
+download them if necessary, note that the provided models are best benchmarked. If you want train a best benchmarked
+model, refer to the master branch.
 
 2. Load the trained model:
 
 Load a trained model will also load the training parameters, however the inference batch size will always be 1.
+
 ```
-infermodel = load_trained_model(trained_model_path)
+from pyabsa import load_trained_model
+
+# The trained_model_path should be a dir containing the state_dict and config file
+sent_classifier = load_trained_model(trained_model_path='state_dict')
+
 ```
 
-3. Infer on a inference set:
+3. Infer on an inference set:
+
 ```
 # infer a formatted text, the reference sentiment begins with !sent! is optional
 text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated . !sent! 1 1'
 # or text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated .'
 
-infermodel.infer(text)
+# The trained_model_path should be a dir containing the state_dict and config file
+sent_classifier = load_trained_model(trained_model_path='../state_dict/slide_lcfs_bert_trained')
+
+# The default device is CPU, do specify a valid device in case of successful working
+
+# load the model to CPU
+# sent_classifier.cpu()
+
+# load the model to CUDA (0)
+# sent_classifier.cuda()
+
+# load the model to CPU or CUDA, like cpu, cuda:0, cuda:1, etc.
+sent_classifier.to('cuda:0')
+
+sent_classifier.infer(text)
 
 # batch infer from prepared datasetm
 test_set_path = './rest16_test_inferring.dat' 
-infermodel.batch_infer(test_set_path, save_result=True)
+results = sent_classifier.batch_infer(test_set_path, save_result=True)
 
 ```
 
@@ -80,35 +144,35 @@ from pyabsa import print_usages, samples
 print_usages()
 samples = get_samples()
 for sample in samples:
-    infermodel.infer(sample)
+    sent_classifier.infer(sample)
 ```
 
 How to set hyper-parameters:
 
 ```
-param_dict = {'model_name':'lcf_bert', 'lcf':'cdw', 'batch_size': 16}
-
-#  default hyper-parameters:
-# model_name = "slide_lcfs_bert", # optional: slide_lcf_bert, lcf_bert, lcfs_bert, bert_spc, bert_base
-# optimizer = "adam"
-# learning_rate = 0.00002
-# pretrained_bert_name = "bert-base-uncased"
-# use_dual_bert = False
-# use_bert_spc = True
-# max_seq_len = 80
-# SRD = 3
-# lcf = "cdw"
-# window = "lr"  # optional 'l', 'r'
-# distance_aware_window = True
-# dropout = 0.1
-# l2reg = 0.00001
-# batch_size = 16
-
-# parameters only for training:
-# num_epoch = 3
+param_dict = {'model_name': 'slide_lcfs_bert',  # optional: lcf_bert, lcfs_bert, bert_spc, bert_base
+              'batch_size': 16,
+              # you can use a set of random seeds in train_and_evaluate function to train multiple rounds
+              'seed': {0, 1, 2},
+              # 'seed': 996,  # or use one seed only
+              'device': 'cuda',
+              'num_epoch': 6,
+              'optimizer': "adam",
+              'learning_rate': 0.00002,
+              'pretrained_bert_name': "bert-base-uncased",
+              'use_dual_bert': False,
+              'use_bert_spc': True,
+              'max_seq_len': 80,
+              'log_step': 3,  # evaluate per steps
+              'SRD': 3,
+              'eta': -1,
+              'sigma': 0.3,
+              'lcf': "cdw",
+              'window': "lr",
+              'dropout': 0,
+              'l2reg': 0.00001,
+              }
 ```
-
-
 
 # Our LCF-based APC models
 
@@ -154,11 +218,6 @@ The following models are forked from [ABSA-PyTorch](https://github.com/songyouwe
 - **[BERT-BASE](modules/models/bert_base.py)**
 - **[BERT-SPC](modules/models/bert_spc.py)**
 
-# Contributions & Bug Reports.
-
-This repository is under development. There may be unknown problems remain. Please do feel free to report any
-problem, and PRs are welcome.
-
 # Citation
 
 If this repository is helpful to you, please cite our papers:
@@ -196,8 +255,9 @@ If this repository is helpful to you, please cite our papers:
 ## Acknowledgement
 
 This work is based on the repositories of [ABSA-PyTorch](https://github.com/songyouwei/ABSA-PyTorch) and
-the [pytorch-transformers](https://github.com/huggingface/transformers). Thanks to the authors for their devotion and
-Thanks to everyone who offered assistance. 
+the [transformers](https://github.com/huggingface/transformers). Thanks to the authors for their devotion and Thanks to
+everyone who offered assistance. Feel free to help us optimize code or add new features!
+欢迎提出疑问、意见和建议，或者帮助完善仓库，谢谢！
 
 ## To Do
 

@@ -6,19 +6,23 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 import os
+import copy
 from argparse import Namespace
 
-from pyabsa.batch_inferring.inferring import INFER_MODEL
-from pyabsa.main.train import train_by_single_config
-from pyabsa.main.training_configs import *
+from pyabsa.apc.prediction.prediction import SentimentClassifier
+from pyabsa.apc.training.apc_trainer import apc_trainer
+from pyabsa.apc.training.training_configs import *
+from pyabsa.pyabsa_utils import find_target_file, get_auto_device
+from pyabsa.apc.dataset_utils.apc_utils import parse_experiments
+
+choice = get_auto_device()
 
 
-def init_training_config(config_dict):
+def init_training_config(config_dict, auto_device=True):
     config = dict()
-
     config['SRD'] = SRD
     config['batch_size'] = batch_size
-    config['distance_aware_window'] = distance_aware_window
+    config['eta'] = eta
     config['dropout'] = dropout
     config['l2reg'] = l2reg
     config['lcf'] = lcf
@@ -36,71 +40,77 @@ def init_training_config(config_dict):
     config['embed_dim'] = embed_dim
     config['hidden_dim'] = hidden_dim
     config['polarities_dim'] = polarities_dim
+    config['sigma'] = sigma
+    config['log_step'] = log_step
 
-    if 'device' in config_dict:
-        config['device'] = config_dict['device']
-    else:
-        try:
-            from pyabsa.utils.Pytorch_GPUManager import GPUManager
-            choice = GPUManager().auto_choice()
-            config['device'] = 'cuda:' + str(choice)
-        except:
-            config['device'] = 'cpu'
+    # reload hyper-parameter from training config
+    path = os.path.abspath(__file__)
+    folder = os.path.dirname(path)
+    config_path = os.path.join(folder, 'apc/training/training_configs.json')
+    _config = vars(parse_experiments(config_path)[0])
+    for key in config:
+        _config[key] = config[key]
 
-    for param in config_dict:
-        config[param] = config_dict[param]
-    config = Namespace(**config)
-    return config
+    if not config_dict:
+        config_dict = dict()
+    # reload hyper-parameter from parameter dict
+    for key in config_dict:
+        _config[key] = config_dict[key]
+
+    if auto_device and 'device' not in _config:
+        if choice >= 0:
+            _config['device'] = 'cuda:' + str(choice)
+        else:
+            _config['device'] = 'cpu'
+
+    _config = Namespace(**_config)
+
+    return _config
 
 
-def train(parameter_dict=None, train_dataset_path=None, model_path_to_save=None):
-    if not train_dataset_path:
-        train_dataset_path = os.getcwd()
-        print('Try to load dataset in current path.')
+def train_apc(parameter_dict=None,
+              dataset_path=None,
+              model_path_to_save=None,
+              auto_evaluate=True,
+              auto_device=True):
+    '''
+    evaluate model performance while training model in order to obtain best benchmarked model
+    '''
     # load training set
     try:
-        if os.path.isdir(train_dataset_path):
-            train_dataset_path += '/' + [p for p in os.listdir(train_dataset_path) if 'train' in p.lower()][0]
+        dataset_file = dict()
+        dataset_file['train'] = find_target_file(dataset_path, 'train', exclude_key='infer')
+        if auto_evaluate and find_target_file(dataset_path, 'test', exclude_key='infer'):
+            dataset_file['test'] = find_target_file(dataset_path, 'test', exclude_key='infer')
+        if auto_evaluate and not find_target_file(dataset_path, 'test', exclude_key='infer'):
+            print('Cna not find test set using for evaluating!')
     except:
-        raise RuntimeError('Can not find path of train dataset!')
-    config = init_training_config(parameter_dict)
-    config.train_dataset_path = train_dataset_path
+        raise RuntimeError('Can not load train set or test set! '
+                           'Make sure there are (only) one train set and one test set in the path:', dataset_path)
+
+    config = init_training_config(parameter_dict, auto_device)
+    config.dataset_path = dataset_path
     config.model_path_to_save = model_path_to_save
-    return INFER_MODEL(from_train_model=train_by_single_config(config))
+    config.dataset_file = dataset_file
+    model_path = []
+
+    if not isinstance(config.seed, int) and 'test' in dataset_file:
+        for _, s in enumerate(config.seed):
+            t_config = copy.deepcopy(config)
+            t_config.seed = s
+            model_path.append(apc_trainer(t_config))
+        return SentimentClassifier(from_model_path=max(model_path))
+    elif 'test' in dataset_file:  # Avoid multiple training without evaluating
+        return SentimentClassifier(from_model_path=apc_trainer(config))
+    else:  # Avoid evaluating without test set
+        return SentimentClassifier(from_training=apc_trainer(config))
 
 
-def load_trained_model(trained_model_path=None):
-    print('Load trained model from', trained_model_path)
-
-    if not trained_model_path:
-        trained_model_path = os.getcwd()
-        print('Try to load dataset in current path.')
-
-        raise RuntimeError('Can not find path of trained model!')
-    InferModel = INFER_MODEL(trained_model_path)
-    return InferModel
-
-
-def print_usages():
-    usages = '1. Use your data to train the model, please build a custom data set according ' \
-             'to the format of the data set provided by the reference\n' \
-             '利用你的数据训练模型，请根据参考提供的数据集的格式构建自定义数据集\n' \
-             'infer_model = train(param_dict, train_set_path, model_path_to_save)\n' \
-                \
-             '2. Load the trained model\n' \
-             '加载已训练并保存的模型\n' \
-             'infermodel = load_trained_model(param_dict, model_path_to_save)\n' \
-                \
-             '3. Batch reasoning about emotional polarity based on files\n' \
-             '根据文件批量推理情感极性\n' \
-             'result = infermodel.batch_infer(test_set_path)\n' \
-                \
-             '4. Input a single text to infer sentiment\n' \
-             '输入单条文本推理情感\n' \
-             'infermodel.infer(text)\n' \
-                \
-             '5. Convert the provided dataset into a dataset for inference\n' \
-             '将提供的数据集转换为推理用的数据集\n' \
-             'convert_dataset_for_inferring(dataset_path)\n'
-
-    print(usages)
+def load_trained_model(trained_model_path=None,
+                       auto_device=False):
+    if trained_model_path and os.path.isdir(trained_model_path):
+        infer_model = SentimentClassifier(trained_model_path)
+        infer_model.to('cuda:' + str(choice)) if auto_device and choice >= 0 else infer_model.cpu()
+        return infer_model
+    else:
+        raise RuntimeError('Not a valid model path!')

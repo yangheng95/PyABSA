@@ -1,0 +1,23 @@
+{
+  "config": {
+    "model_name": "slide_lcf_bert",
+    "optimizer": "adam",
+    "learning_rate": 0.00002,
+    "pretrained_bert_name": "bert-base-uncased",
+    "use_dual_bert": false,
+    "use_bert_spc": true,
+    "max_seq_len": 80,
+    "SRD": 3,
+    "eta": -1,
+    "sigma": 0.3,
+    "lcf": "cdw",
+    "window": "lr",
+    "dropout": 0.1,
+    "l2reg": 0.00001,
+    "num_epoch": 5,
+    "batch_size": 16,
+    "logdir": "logs",
+    "exp_rounds": 3,
+    "log_step": 3
+  }
+}
