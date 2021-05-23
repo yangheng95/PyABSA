@@ -16,8 +16,7 @@ class BERT_SPC(nn.Module):
 
     def forward(self, inputs):
         text_bert_indices = inputs[0]
-        bert_segments_ids = inputs[1]
-        pooled_output = self.bert(text_bert_indices, token_type_ids=bert_segments_ids)['pooler_output']
+        pooled_output = self.bert(text_bert_indices)['pooler_output']
         pooled_output = self.dropout(pooled_output)
         logits = self.dense(pooled_output)
         return logits

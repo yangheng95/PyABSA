@@ -12,15 +12,17 @@ import torch
 from torch.utils.data import DataLoader
 from transformers import BertModel, BertTokenizer
 
-from ..models.bert_base import BERT_BASE
-from ..models.bert_spc import BERT_SPC
-from ..models.lcf_bert import LCF_BERT
-from ..models.slide_lcf_bert import SLIDE_LCF_BERT
-from ..utils.data_utils_for_inferring import Tokenizer4Bert, ABSADataset
+from pyabsa.apc.models.bert_base import BERT_BASE
+from pyabsa.apc.models.bert_spc import BERT_SPC
+from pyabsa.apc.models.lcf_bert import LCF_BERT
+from pyabsa.apc.models.slide_lcf_bert import SLIDE_LCF_BERT
+from pyabsa.apc.dataset_utils.data_utils_for_inferring import ABSADataset
+from pyabsa.apc.dataset_utils.apc_utils import Tokenizer4Bert
+from pyabsa.pyabsa_utils import find_target_file
 
 
-class INFER_MODEL:
-    def __init__(self, trained_model_path=None, from_train_model=None):
+class SentimentClassifier:
+    def __init__(self, from_model_path=None, from_training=None):
         '''
             from_train_model: load inferring model from trained model
         '''
@@ -40,25 +42,31 @@ class INFER_MODEL:
             'orthogonal_': torch.nn.init.orthogonal_
         }
 
-        if from_train_model:
-            self.model = from_train_model[0]
-            self.opt = from_train_model[1]
+        if from_training:
+            self.model = from_training[0]
+            self.opt = from_training[1]
         else:
             try:
-                state_dict_path = trained_model_path + '/' + \
-                                  [p for p in os.listdir(trained_model_path) if '.state_dict' in p.lower()][0]
-                config_path = trained_model_path + '/' + \
-                              [p for p in os.listdir(trained_model_path) if '.config' in p.lower()][0]
+                print('Try to load trained model and config from', from_model_path)
+                state_dict_path = find_target_file(from_model_path, 'state_dict')
+                config_path = find_target_file(from_model_path, 'config')
                 self.opt = pickle.load(open(config_path, 'rb'))
-            except:
-                raise FileNotFoundError('Can not find model from ' + trained_model_path)
-            self.bert = BertModel.from_pretrained(self.opt.pretrained_bert_name)
-            self.model = self.model_class[self.opt.model_name](self.bert, self.opt).to(self.opt.device)
-            self.model.load_state_dict(torch.load(state_dict_path))
+                self.bert = BertModel.from_pretrained(self.opt.pretrained_bert_name)
+                self.model = self.model_class[self.opt.model_name](self.bert, self.opt)
+                self.model.load_state_dict(torch.load(state_dict_path))
+
+                print('Config used in Training:')
+                self._log_write_args()
+
+            except Exception as e:
+                print(e)
+                raise RuntimeError('Fail to load the model, please download our latest models at Google Drive: '
+                                   'https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing')
 
         self.bert_tokenizer = BertTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
         self.tokenizer = Tokenizer4Bert(self.bert_tokenizer, self.opt.max_seq_len)
         self.dataset = ABSADataset(tokenizer=self.tokenizer, opt=self.opt)
+        self.infer_dataloader = None
 
         if self.opt.seed is not None:
             random.seed(self.opt.seed)
@@ -71,18 +79,42 @@ class INFER_MODEL:
         self.opt.inputs_cols = self.dataset.input_colses[self.opt.model_name]
         self.opt.initializer = self.opt.initializer
 
-    def batch_infer(self, test_dataset_path=None, save_result=True, clear_input_samples=True, ignore_error=True):
-        try:
-            test_dataset_path += [p for p in os.listdir(test_dataset_path) if 'infer' in p.lower()][0]
-        except:
-            raise RuntimeError('Can not find inference dataset!')
+    def to(self, device=None):
+        self.opt.device = device
+        self.model.to(device)
+
+    def cpu(self):
+        self.opt.device = 'cpu'
+        self.model.to('cpu')
+
+    def cuda(self, device='cuda:0'):
+        self.opt.device = device
+        self.model.to(device)
+
+    def _log_write_args(self):
+        n_trainable_params, n_nontrainable_params = 0, 0
+        for p in self.model.parameters():
+            n_params = torch.prod(torch.tensor(p.shape))
+            if p.requires_grad:
+                n_trainable_params += n_params
+            else:
+                n_nontrainable_params += n_params
+        print(
+            'n_trainable_params: {0}, n_nontrainable_params: {1}'.format(n_trainable_params, n_nontrainable_params))
+        for arg in vars(self.opt):
+            print('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
+
+    def batch_infer(self, test_dataset_path=None, save_result=False, clear_input_samples=True, ignore_error=True):
         if clear_input_samples:
             self.clear_input_samples()
-        if test_dataset_path:
+
+        if os.path.isdir(test_dataset_path):
+            try:
+                test_dataset_path = find_target_file(test_dataset_path, 'infer')
+            except Exception as e:
+                raise FileNotFoundError('Can not find inference dataset!')
             self.dataset.prepare_infer_dataset(test_dataset_path, ignore_error=ignore_error)
-        else:
-            raise RuntimeError('Please specify your dataset path!')
-        # load training set
+        self.dataset.prepare_infer_dataset(test_dataset_path, ignore_error=ignore_error)
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=1, shuffle=False)
         return self._infer(save_path=test_dataset_path if save_result else None)
 
@@ -93,7 +125,6 @@ class INFER_MODEL:
             self.dataset.prepare_infer_sample(text)
         else:
             raise RuntimeError('Please specify your dataset path!')
-            # load training set
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=1, shuffle=False)
         return self._infer(print_result=True)
 
@@ -104,9 +135,12 @@ class INFER_MODEL:
         Correct = {True: 'Correct', False: 'Wrong'}
         results = []
         if save_path:
-            fout = open(save_path + '.infer.results', 'w', encoding='utf8')
+            fout = open(save_path + '.results', 'w', encoding='utf8')
         with torch.no_grad():
             self.model.eval()
+            n_correct = 0
+            n_labeled = 0
+            n_total = 0
             for _, sample in enumerate(self.infer_dataloader):
                 result = {}
                 inputs = [sample[col].to(self.opt.device) for col in self.opt.inputs_cols]
@@ -128,17 +162,41 @@ class INFER_MODEL:
                 if real_sent == -999:
                     line2 = '{} --> {}'.format(aspect, sentiments[sent])
                 else:
+                    n_labeled += 1
+                    if sent == real_sent:
+                        n_correct += 1
                     line2 = '{} --> {}  Real Polarity: {} ({})'.format(aspect,
                                                                        sentiments[sent],
                                                                        sentiments[real_sent],
                                                                        Correct[sent == real_sent]
                                                                        )
+                n_total += 1
+                try:
+                    if save_path:
+                        fout.write(line1 + '\n')
+                        fout.write(line2 + '\n')
+                except:
+                    raise IOError('Can not save result!')
+                try:
+                    if print_result:
+                        print(line1)
+                        print(line2)
+                except:
+                    raise RuntimeError('Fail to print the result!')
+
+            print('Total samples:{}'.format(n_total))
+            print('Labeled samples:{}'.format(n_labeled))
+            print('Prediction Accuracy:{}%'.format(100 * n_correct / n_labeled if n_labeled else 'N.A.'))
+
+            try:
                 if save_path:
-                    fout.write(line1 + '\n')
-                    fout.write(line2 + '\n')
-                if print_result:
-                    print(line1)
-                    print(line2)
+                    fout.write('Total samples:{}\n'.format(n_total))
+                    fout.write('Labeled samples:{}\n'.format(n_labeled))
+                    fout.write('Prediction Accuracy:{}%\n'.format(100 * n_correct / n_labeled))
+            except:
+                pass
+        if save_path:
+            fout.close()
         return results
 
     def clear_input_samples(self):

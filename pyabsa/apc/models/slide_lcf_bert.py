@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: slide_lcf_bert.py
-# time: 2021/4/22 0022
 # author: yangheng <yangheng@m.scnu.edu.cn>
-# github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-
 
 import copy
 
@@ -21,7 +18,6 @@ class Encoder(nn.Module):
         self.config = config
         self.encoder = nn.ModuleList([SelfAttention(config, opt) for _ in range(layer_num)])
         self.tanh = torch.nn.Tanh()
-        self.gelu = nn.GELU()
 
     def forward(self, x):
         for i, enc in enumerate(self.encoder):
@@ -47,18 +43,14 @@ class SLIDE_LCF_BERT(nn.Module):
     def __init__(self, bert, opt):
         super(SLIDE_LCF_BERT, self).__init__()
         self.bert4global = bert
-        self.bert4local = copy.deepcopy(bert) if opt.use_dual_bert else self.bert4global
         self.opt = opt
         self.dropout = nn.Dropout(opt.dropout)
 
         self.encoder = Encoder(bert.config, opt)
         self.encoder_left = Encoder(bert.config, opt)
-        self.encoder_left_ = Encoder(bert.config, opt)
         self.encoder_right = Encoder(bert.config, opt)
-        self.encoder_right_ = Encoder(bert.config, opt)
 
         self.post_linear = nn.Linear(opt.embed_dim * 2, opt.embed_dim)
-
         self.linear_window_3h = nn.Linear(opt.embed_dim * 3, opt.embed_dim)
         self.linear_window_2h = nn.Linear(opt.embed_dim * 2, opt.embed_dim)
 
@@ -73,8 +65,6 @@ class SLIDE_LCF_BERT(nn.Module):
         lcf_matrix = inputs[2]
         left_lcf_matrix = inputs[3]
         right_lcf_matrix = inputs[4]
-        left_asp_dist_w = inputs[5]
-        right_asp_dist_w = inputs[6]
 
         global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
         masked_global_context_features = torch.mul(spc_mask_vec, global_context_features)
@@ -90,25 +80,24 @@ class SLIDE_LCF_BERT(nn.Module):
         right_lcf_features = self.encoder_right(right_lcf_features)
         # # --------------------------------------------------- #
 
-        if self.opt.distance_aware_window:
-            left_lcf_features = torch.mul(left_asp_dist_w, left_lcf_features)
-            left_lcf_features = self.encoder_left_(left_lcf_features)
-            right_lcf_features = torch.mul(right_asp_dist_w, right_lcf_features)
-            right_lcf_features = self.encoder_right_(right_lcf_features)
-
         if 'lr' == self.opt.window or 'rl' == self.opt.window:
-            sent_out = self.linear_window_3h(
-                torch.cat((lcf_features, left_lcf_features, right_lcf_features), -1))
+            if self.opt.eta >= 0:
+                sent_out = self.linear_window_3h(
+                    torch.cat(
+                        (self.opt.eta * left_lcf_features, lcf_features, (1 - self.opt.eta) * right_lcf_features), -1))
+            else:
+                sent_out = self.linear_window_3h(
+                    torch.cat((left_lcf_features, lcf_features, right_lcf_features), -1))
         elif 'l' == self.opt.window:
-            sent_out = self.linear_window_2h(torch.cat((lcf_features, left_lcf_features), -1))
+            sent_out = self.linear_window_2h(torch.cat((left_lcf_features, lcf_features), -1))
         elif 'r' == self.opt.window:
             sent_out = self.linear_window_2h(torch.cat((lcf_features, right_lcf_features), -1))
         else:
             raise KeyError('Invalid parameter:', self.opt.window)
 
-        sent_out = self.post_encoder(sent_out)
         sent_out = torch.cat((global_context_features, sent_out), -1)
         sent_out = self.post_linear(sent_out)
+        sent_out = self.dropout(sent_out)
         sent_out = self.post_encoder_(sent_out)
         dense_out = self.dense(self.bert_pooler(sent_out))
 

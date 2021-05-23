@@ -12,15 +12,17 @@ from setuptools import setup, find_packages
 here = path.abspath(path.dirname(__file__))
 setup(
     name='pyabsa',
-    version='0.1.3alpha',
+    version='0.3.0a0',
     description='Train & infer aspect-based sentiment analysis using state-of-the-art models',
     # long_description=str(open(path.join(here, "README.md"), encoding='utf8').read()),
     # The project's main homepage.
-    url='https://github.com/yangheng95',
+    url='https://github.com/yangheng95/LC-ABSA',
     # Author details
     author='Yang Heng',
     python_requires=">=3.6",
     packages=find_packages(),
+    include_package_data=True,
+    data_files=[('config', ['pyabsa/apc/training/training_configs.json'])],
     # Choose your license
     license='MIT',
     install_requires=['transformers>=4.4.2', 'spacy', 'networkx'],

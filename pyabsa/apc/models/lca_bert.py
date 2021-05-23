@@ -47,11 +47,10 @@ class LCA_BERT(nn.Module):
         else:
             text_global_indices = inputs[1]
         text_local_indices = inputs[1]
-        bert_segments_ids = inputs[2]
-        lca_ids = inputs[3]
-        lcf_matrix = inputs[4]
+        lca_ids = inputs[2]
+        lcf_matrix = inputs[3]
 
-        bert_global_out = self.bert4global(text_global_indices, token_type_ids=bert_segments_ids)['last_hidden_state']
+        bert_global_out = self.bert4global(text_global_indices)['last_hidden_state']
         bert_local_out = self.bert4local(text_local_indices)['last_hidden_state']
         # if self.opt.lca and 'lca' in self.opt.model_name:
         #     lc_embedding = self.lc_embed(lca_ids)

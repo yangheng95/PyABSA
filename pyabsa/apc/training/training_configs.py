@@ -9,8 +9,8 @@ SRD = 3
 sigma = 0.3
 lcf = "cdw"
 window = "lr"
-distance_aware_window = True
-dropout = 0.1
+eta = -1
+dropout = 0
 l2reg = 0.00001
 num_epoch = 3
 batch_size = 16
@@ -19,5 +19,4 @@ seed = 996
 embed_dim = 768
 hidden_dim = 768
 polarities_dim = 3
-
-
+log_step = 3
