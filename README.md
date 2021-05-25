@@ -6,6 +6,8 @@
 
 > PyTorch Implementations.
 
+if you are looking for the original code in the papers, please go to the [master](https://github.com/yangheng95/LC-ABSA/tree/master) branch.
+
 ## Requirement
 
 * Python 3.7 + (recommended)
