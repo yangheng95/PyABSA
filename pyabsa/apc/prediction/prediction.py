@@ -22,7 +22,7 @@ from pyabsa.pyabsa_utils import find_target_file
 
 
 class SentimentClassifier:
-    def __init__(self, from_model_path=None, from_training=None):
+    def __init__(self, model_arg=None):
         '''
             from_train_model: load inferring model from trained model
         '''
@@ -42,14 +42,17 @@ class SentimentClassifier:
             'orthogonal_': torch.nn.init.orthogonal_
         }
 
-        if from_training:
-            self.model = from_training[0]
-            self.opt = from_training[1]
+        # load from a model path
+        if not isinstance(model_arg, str):
+            print('Try to load trained model from training')
+            self.model = model_arg[0]
+            self.opt = model_arg[1]
         else:
+            # load from a trained model
             try:
-                print('Try to load trained model and config from', from_model_path)
-                state_dict_path = find_target_file(from_model_path, 'state_dict')
-                config_path = find_target_file(from_model_path, 'config')
+                print('Try to load trained model and config from', model_arg)
+                state_dict_path = find_target_file(model_arg, 'state_dict')
+                config_path = find_target_file(model_arg, 'config')
                 self.opt = pickle.load(open(config_path, 'rb'))
                 self.bert = BertModel.from_pretrained(self.opt.pretrained_bert_name)
                 self.model = self.model_class[self.opt.model_name](self.bert, self.opt)

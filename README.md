@@ -76,7 +76,8 @@ sent_classifier = train_apc(parameter_dict=param_dict,    # set param_dict=None 
 ```
 
 We provide the pretrained models
-on [Google Drive](https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing) trained on a
+on [Google Drive](https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing)
+or [百度网盘（提取码：absa）](https://pan.baidu.com/s/1FSgaSP4ubGWy0BjBQdct5w) trained on a
 large assembled ABSA [dataset](examples/sum_train.dat) based on BERT-BASE-UNCASED model,
 
 1. BERT-BASE

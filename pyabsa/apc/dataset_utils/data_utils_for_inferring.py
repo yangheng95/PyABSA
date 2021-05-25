@@ -64,7 +64,6 @@ class ABSADataset(Dataset):
         self.process_data(self.parse_sample(text))
 
     def prepare_infer_dataset(self, infer_data_path, ignore_error):
-        print('buliding word indices...')
 
         fin = open(infer_data_path, 'r', encoding='utf-8', newline='\n', errors='ignore')
         lines = fin.readlines()
@@ -77,7 +76,7 @@ class ABSADataset(Dataset):
     def process_data(self, samples, ignore_error=True):
         all_data = []
 
-        for text in tqdm(samples):
+        for text in tqdm(samples, postfix='building word indices...'):
             try:
                 # handle for empty lines in inferring dataset
                 if text is None or '' == text.strip():

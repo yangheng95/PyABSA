@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-# file: train.py
+# file: apc_trainer.py
+# time: 2021/4/22 0022
 # author: yangheng <yangheng@m.scnu.edu.cn>
-# Copyright (C) 2020. All Rights Reserved.
+# github: https://github.com/yangheng95
+# Copyright (C) 2021. All Rights Reserved.
 
 import math
 import os
@@ -91,44 +93,8 @@ class Instructor:
             model_to_save.config.to_json_file(output_config_file)
             self.bert_tokenizer.save_vocabulary(model_output_dir)
 
-        print('trained model saved in: {}'.format(save_path))
+        # print('trained model saved in: {}'.format(save_path))
         self.model.to(self.opt.device)
-
-    def _train(self, criterion, lca_criterion, optimizer):
-        global_step = 0
-        for epoch in range(self.opt.num_epoch):
-            for i_batch, sample_batched in enumerate(tqdm(self.train_data_loader,
-                                                          postfix='training... epoch:'
-                                                                  + str(epoch)
-                                                          )):
-
-                global_step += 1
-                # switch model to training mode, clear gradient accumulators
-                self.model.train()
-                optimizer.zero_grad()
-
-                inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
-                outputs = self.model(inputs)
-                targets = sample_batched['polarity'].to(self.opt.device)
-                if 'lca' in self.opt.model_name:
-                    sen_logits, lca_logits, lca_ids = outputs
-                    sen_loss = criterion(sen_logits, targets)
-                    lcp_loss = lca_criterion(lca_logits, lca_ids)
-                    loss = (1 - self.opt.sigma) * sen_loss + self.opt.sigma * lcp_loss
-                else:
-                    sen_logits = outputs
-                    loss = criterion(sen_logits, targets)
-
-                loss.backward()
-                optimizer.step()
-
-        if self.opt.model_path_to_save:
-            save_path = '{0}/{1}_{2}_seed{3}seed/'.format(self.opt.model_path_to_save,
-                                                          self.opt.model_name,
-                                                          self.opt.lcf,
-                                                          self.opt.seed)
-            self._save_model(self.model, save_path, mode=0)
-        return self.model, self.opt
 
     def _train_and_evaluate(self, criterion, lca_criterion, optimizer):
         max_test_acc = 0
@@ -136,16 +102,14 @@ class Instructor:
         global_step = 0
         save_path = ''
         for epoch in range(self.opt.num_epoch):
-            print('>' * 100)
-            print('epoch: {}'.format(epoch))
             n_correct, n_total = 0, 0
-            for i_batch, sample_batched in enumerate(self.train_data_loader):
-
+            iterator = tqdm(self.train_data_loader)
+            for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
+
                 # switch model to training mode, clear gradient accumulators
                 self.model.train()
                 optimizer.zero_grad()
-
                 inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
                 outputs = self.model(inputs)
                 targets = sample_batched['polarity'].to(self.opt.device)
@@ -160,7 +124,9 @@ class Instructor:
 
                 loss.backward()
                 optimizer.step()
-                if global_step % self.opt.log_step == 0:
+
+                # evaluate if test set is available
+                if 'test' in self.opt.dataset_file and global_step % self.opt.log_step == 0:
                     n_correct += (torch.argmax(sen_logits, -1) == targets).sum().item()
                     n_total += len(sen_logits)
                     train_acc = n_correct / n_total
@@ -174,7 +140,7 @@ class Instructor:
                             if save_path:
                                 try:
                                     shutil.rmtree(save_path)
-                                    print('Remove sub-optimal trained model:', save_path)
+                                    # print('Remove sub-optimal trained model:', save_path)
                                 except:
                                     print('Can not remove sub-optimal trained model:', save_path)
                             save_path = '{0}/{1}_{2}_acc{3}_seed{4}seed/'.format(self.opt.model_path_to_save,
@@ -182,20 +148,34 @@ class Instructor:
                                                                                  self.opt.lcf,
                                                                                  round(test_acc * 100, 2),
                                                                                  self.opt.seed)
-                            # uncomment follow lines to save model during training
                             self._save_model(self.model, save_path, mode=0)
-                        print('max_acc:{}, f1:{}'.format(round(test_acc * 100, 2), round(f1 * 100, 2)))
+                        # print('max_acc:{}, f1:{}'.format(round(test_acc * 100, 2), round(f1 * 100, 2)))
                     if f1 > max_f1:
                         max_f1 = f1
                     # uncomment next line to monitor the training process
-                    print('loss: {:.4f}, acc: {:.2f}, test_acc: {:.2f}, f1: {:.2f}'.format(loss.item(),
-                                                                                           train_acc * 100,
-                                                                                           test_acc * 100,
-                                                                                           f1 * 100)
-                          )
-        print('----------------------Training Summary----------------------')
-        print('Accuracy: {} F1: {}'.format(max_f1, max_test_acc))
-        return save_path
+                    # print('loss: {:.4f}, acc: {:.2f}, test_acc: {:.2f}, f1: {:.2f}'.format(loss.item(),
+                    #                                                                        train_acc * 100,
+                    #                                                                        test_acc * 100,
+                    #                                                                        f1 * 100)
+                    #       )
+                iterator.postfix = ('Loss:{:.4f} | Max Test Acc:{:.2f} | Max Test F1:{:.2f}'.format(loss.item(),
+                                                                                                    max_test_acc * 100,
+                                                                                                    max_f1 * 100))
+                iterator.refresh()
+        # return the model paths of multiple training in case of loading the best model after training
+        if save_path:
+            print('----------------------Training Summary----------------------')
+            print('Max Accuracy: {} Max F1: {}'.format(max_test_acc, max_f1))
+            return save_path
+        else:
+            # direct return model if do not evaluate
+            if self.opt.model_path_to_save:
+                save_path = '{0}/{1}_{2}_seed{3}seed/'.format(self.opt.model_path_to_save,
+                                                              self.opt.model_name,
+                                                              self.opt.lcf,
+                                                              self.opt.seed)
+                self._save_model(self.model, save_path, mode=0)
+            return self.model, self.opt
 
     def _evaluate_acc_f1(self):
         # switch model to evaluation mode
@@ -245,22 +225,19 @@ class Instructor:
         optimizer = self.opt.optimizer(_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
         self._reset_params()
-        if 'test' in self.opt.dataset_file:
-            return self._train_and_evaluate(criterion, lca_criterion, optimizer)
-        else:
-            return self._train(criterion, lca_criterion, optimizer)
+        return self._train_and_evaluate(criterion, lca_criterion, optimizer)
 
 
 def apc_trainer(opt):
     if not isinstance(opt.seed, int):
         print('Please do not use multiple random seeds without evaluating.')
         opt.seed = list(opt.seed)[0]
-        random.seed(opt.seed)
-        numpy.random.seed(opt.seed)
-        torch.manual_seed(opt.seed)
-        torch.cuda.manual_seed(opt.seed)
-        torch.backends.cudnn.deterministic = True
-        torch.backends.cudnn.benchmark = False
+    random.seed(opt.seed)
+    numpy.random.seed(opt.seed)
+    torch.manual_seed(opt.seed)
+    torch.cuda.manual_seed(opt.seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
     model_classes = {
         'bert_base': BERT_BASE,
