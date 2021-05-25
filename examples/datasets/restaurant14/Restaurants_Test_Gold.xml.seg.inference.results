@@ -5,9 +5,9 @@ delivery times --> Positive  Real Polarity: Positive (Correct)
  Food  is always fresh and hot - ready to eat ! 
 Food --> Positive  Real Polarity: Positive (Correct)
 Did I mention that the  coffee  is OUTSTANDING ? 
-coffee --> Neutral  Real Polarity: Positive (Wrong)
+coffee --> Positive  Real Polarity: Positive (Correct)
 Certainly not the best sushi in New York , however , it is always fresh , and the  place  is very clean , sterile . 
-place --> Positive  Real Polarity: Positive (Correct)
+place --> Negative  Real Polarity: Positive (Wrong)
 I trust the  people  at Go Sushi , it never disappoints . 
 people --> Positive  Real Polarity: Positive (Correct)
 Straight-forward , no surprises , very decent  Japanese food  . 
@@ -55,7 +55,7 @@ food --> Negative  Real Polarity: Positive (Wrong)
 Great food but the  service  was dreadful ! 
 service --> Negative  Real Polarity: Negative (Correct)
 The  portions of the food  that came out were mediocre . 
-portions of the food --> Neutral  Real Polarity: Neutral (Correct)
+portions of the food --> Negative  Real Polarity: Neutral (Wrong)
 the two  waitress's  looked like they had been sucking on lemons . 
 waitress's --> Negative  Real Polarity: Negative (Correct)
 From the beginning , we were met by friendly  staff memebers  , and the convienent parking at Chelsea Piers made it easy for us to get to the boat . 
@@ -109,7 +109,7 @@ dinners --> Negative  Real Polarity: Negative (Correct)
 Two wasted  steaks  -- what a crime ! 
 steaks --> Negative  Real Polarity: Negative (Correct)
 The  staff  should be a bit more friendly . 
-staff --> Negative  Real Polarity: Negative (Correct)
+staff --> Positive  Real Polarity: Negative (Wrong)
 I think the  meatball parm  is good . 
 meatball parm --> Positive  Real Polarity: Positive (Correct)
 If you want good tasting , well seasoned  latin food  eat at Cabana and you ca n't go wrong . 
@@ -119,7 +119,7 @@ taglierini with truffles --> Positive  Real Polarity: Positive (Correct)
 Also , the  staff  is very attentive and really personable . 
 staff --> Positive  Real Polarity: Positive (Correct)
 The  gnocchi  literally melts in your mouth ! 
-gnocchi --> Positive  Real Polarity: Positive (Correct)
+gnocchi --> Negative  Real Polarity: Positive (Wrong)
 Had a great experience at Trio ...  staff  was pleasant ; food was tasty and large in portion size - I would highly recommend the portobello/gorgonzola/sausage appetizer and the lobster risotto . 
 staff --> Positive  Real Polarity: Positive (Correct)
 Had a great experience at Trio ... staff was pleasant ;  food  was tasty and large in portion size - I would highly recommend the portobello/gorgonzola/sausage appetizer and the lobster risotto . 
@@ -131,13 +131,13 @@ portobello/gorgonzola/sausage appetizer --> Positive  Real Polarity: Positive (C
 Had a great experience at Trio ... staff was pleasant ; food was tasty and large in portion size - I would highly recommend the portobello/gorgonzola/sausage appetizer and the  lobster risotto  . 
 lobster risotto --> Positive  Real Polarity: Positive (Correct)
  Entrees  include classics like lasagna , fettuccine Alfredo and chicken parmigiana . 
-Entrees --> Neutral  Real Polarity: Neutral (Correct)
+Entrees --> Positive  Real Polarity: Neutral (Wrong)
 Entrees include classics like  lasagna  , fettuccine Alfredo and chicken parmigiana . 
-lasagna --> Neutral  Real Polarity: Neutral (Correct)
+lasagna --> Positive  Real Polarity: Neutral (Wrong)
 Entrees include classics like lasagna ,  fettuccine Alfredo  and chicken parmigiana . 
-fettuccine Alfredo --> Neutral  Real Polarity: Neutral (Correct)
+fettuccine Alfredo --> Positive  Real Polarity: Neutral (Wrong)
 Entrees include classics like lasagna , fettuccine Alfredo and  chicken parmigiana  . 
-chicken parmigiana --> Neutral  Real Polarity: Neutral (Correct)
+chicken parmigiana --> Positive  Real Polarity: Neutral (Wrong)
 The  food  is good , the teriyaki I recommend . 
 food --> Positive  Real Polarity: Positive (Correct)
 The food is good , the  teriyaki  I recommend . 
@@ -227,13 +227,13 @@ curried casseroles --> Negative  Real Polarity: Negative (Correct)
 The  food  was almost always EXCELLENT . 
 food --> Positive  Real Polarity: Positive (Correct)
 I was pleasently surprised at the  taste  . 
-taste --> Positive  Real Polarity: Positive (Correct)
+taste --> Negative  Real Polarity: Positive (Wrong)
 A nice space , as long as it does n't get too crowded and a singleminded devotion to its chosen cuisine make Mare a great choice for  seafood  lovers . 
 seafood --> Positive  Real Polarity: Positive (Correct)
 A nice space , as long as it does n't get too crowded and a singleminded devotion to its chosen  cuisine  make Mare a great choice for seafood lovers . 
 cuisine --> Positive  Real Polarity: Positive (Correct)
 I never had an  orange donut  before so I gave it a shot . 
-orange donut --> Neutral  Real Polarity: Neutral (Correct)
+orange donut --> Positive  Real Polarity: Neutral (Wrong)
 they really provide a relaxing , laid-back  atmosphere  . 
 atmosphere --> Positive  Real Polarity: Positive (Correct)
 This particular location certainly uses substandard  meats  . 
@@ -283,11 +283,11 @@ prices --> Positive  Real Polarity: Positive (Correct)
 The food is great -LRB- big selection , reasonable prices -RRB- and the  drinks  are really good . 
 drinks --> Positive  Real Polarity: Positive (Correct)
 The  steak  melted in my mouth . 
-steak --> Positive  Real Polarity: Positive (Correct)
+steak --> Negative  Real Polarity: Positive (Wrong)
 The food did take a few extra minutes to come , but the cute  waiters  ' jokes and friendliness made up for it . 
-waiters --> Positive  Real Polarity: Positive (Correct)
+waiters --> Negative  Real Polarity: Positive (Wrong)
 The  food  did take a few extra minutes to come , but the cute waiters ' jokes and friendliness made up for it . 
-food --> Positive  Real Polarity: Neutral (Wrong)
+food --> Negative  Real Polarity: Neutral (Wrong)
 Most importantly , it is reasonably  priced  . 
 priced --> Positive  Real Polarity: Positive (Correct)
 The  selection of food  is excellent -LRB- I 'm not used to having much choice at restaurants -RRB- , and the atmosphere is great . 
@@ -299,7 +299,7 @@ dessert --> Negative  Real Polarity: Negative (Correct)
 Only suggestion is that you skip the dessert , it was overpriced and fell short on  taste  . 
 taste --> Negative  Real Polarity: Negative (Correct)
  Food  was decent , but not great . 
-Food --> Neutral  Real Polarity: Positive (Wrong)
+Food --> Negative  Real Polarity: Positive (Wrong)
 i dont know what some people who rave about this  hot dog  are talking about . 
 hot dog --> Negative  Real Polarity: Negative (Correct)
 it is a hidden delight complete with a quaint  bar  and good food . 
@@ -311,7 +311,7 @@ waiters --> Negative  Real Polarity: Negative (Correct)
 the  atmosphere  is very nice , and a welcome escape from the rest of the SI mall . 
 atmosphere --> Positive  Real Polarity: Positive (Correct)
 Yes , they 're a bit more expensive then typical , but then again , so is their  food  . 
-food --> Positive  Real Polarity: Positive (Correct)
+food --> Negative  Real Polarity: Positive (Wrong)
 I can say that the  wraps  , burgers and salads were all fresh , tasty and the mango margareta at $ 9 was WELL WORTH the money . 
 wraps --> Positive  Real Polarity: Positive (Correct)
 I can say that the wraps ,  burgers  and salads were all fresh , tasty and the mango margareta at $ 9 was WELL WORTH the money . 
@@ -321,13 +321,13 @@ salads --> Positive  Real Polarity: Positive (Correct)
 I can say that the wraps , burgers and salads were all fresh , tasty and the  mango margareta  at $ 9 was WELL WORTH the money . 
 mango margareta --> Positive  Real Polarity: Positive (Correct)
 Anywhere else , the  prices  would be 3x as high ! 
-prices --> Positive  Real Polarity: Positive (Correct)
+prices --> Negative  Real Polarity: Positive (Wrong)
 The  service  we experienced was friendly and good . 
 service --> Positive  Real Polarity: Positive (Correct)
 Our  waiter  was friendly and it is a shame that he didnt have a supportive staff to work with . 
-waiter --> Negative  Real Polarity: Positive (Wrong)
+waiter --> Positive  Real Polarity: Positive (Correct)
 Our waiter was friendly and it is a shame that he didnt have a supportive  staff  to work with . 
-staff --> Negative  Real Polarity: Negative (Correct)
+staff --> Positive  Real Polarity: Negative (Wrong)
 The  folding chair  I was seated at was uncomfortable . 
 folding chair --> Negative  Real Polarity: Negative (Correct)
  Service  was among the best I have ever had in NYC . 
@@ -365,9 +365,9 @@ hamburger --> Positive  Real Polarity: Positive (Correct)
 The  waiters  were very professional , courteous and attentive . 
 waiters --> Positive  Real Polarity: Positive (Correct)
 The  falafal  was rather over cooked and dried but the chicken was fine . 
-falafal --> Positive  Real Polarity: Negative (Wrong)
+falafal --> Negative  Real Polarity: Negative (Correct)
 The falafal was rather over cooked and dried but the  chicken  was fine . 
-chicken --> Positive  Real Polarity: Positive (Correct)
+chicken --> Negative  Real Polarity: Positive (Wrong)
 I highly reccomend the  grand marnier shrimp  , it 's insanely good . 
 grand marnier shrimp --> Positive  Real Polarity: Positive (Correct)
 We been there and we really enjoy the  food  , was areally great food , and the service was really good . 
@@ -377,11 +377,11 @@ food --> Positive  Real Polarity: Positive (Correct)
 We been there and we really enjoy the food , was areally great food , and the  service  was really good . 
 service --> Positive  Real Polarity: Positive (Correct)
  Desserts  include flan and sopaipillas . 
-Desserts --> Neutral  Real Polarity: Neutral (Correct)
+Desserts --> Positive  Real Polarity: Neutral (Wrong)
 Desserts include  flan  and sopaipillas . 
-flan --> Neutral  Real Polarity: Neutral (Correct)
+flan --> Positive  Real Polarity: Neutral (Wrong)
 Desserts include flan and  sopaipillas  . 
-sopaipillas --> Neutral  Real Polarity: Neutral (Correct)
+sopaipillas --> Positive  Real Polarity: Neutral (Wrong)
 I was starving and the small  portions  were driving me crazy ! 
 portions --> Negative  Real Polarity: Negative (Correct)
 The  wait staff  was loud and inconsiderate . 
@@ -465,17 +465,17 @@ food --> Positive  Real Polarity: Positive (Correct)
 What a difference , the service was very comforting and the food was better than average , but what really standed out was such a dynamic and extensive  beer list  . 
 beer list --> Positive  Real Polarity: Positive (Correct)
 Frankly , the  chinese food  here is something I can make better at home . 
-chinese food --> Negative  Real Polarity: Negative (Correct)
+chinese food --> Positive  Real Polarity: Negative (Wrong)
 There was only one  waiter  for the whole restaurant upstairs . 
-waiter --> Neutral  Real Polarity: Neutral (Correct)
+waiter --> Negative  Real Polarity: Neutral (Wrong)
 We started with the  scallops  and asparagus and also had the soft shell crab as well as the cheese plate . 
-scallops --> Neutral  Real Polarity: Neutral (Correct)
+scallops --> Positive  Real Polarity: Neutral (Wrong)
 We started with the scallops and  asparagus  and also had the soft shell crab as well as the cheese plate . 
-asparagus --> Neutral  Real Polarity: Neutral (Correct)
+asparagus --> Positive  Real Polarity: Neutral (Wrong)
 We started with the scallops and asparagus and also had the  soft shell crab  as well as the cheese plate . 
-soft shell crab --> Neutral  Real Polarity: Neutral (Correct)
+soft shell crab --> Positive  Real Polarity: Neutral (Wrong)
 We started with the scallops and asparagus and also had the soft shell crab as well as the  cheese plate  . 
-cheese plate --> Neutral  Real Polarity: Neutral (Correct)
+cheese plate --> Positive  Real Polarity: Neutral (Wrong)
 Not to be overlooked , the  service  is excellent . 
 service --> Positive  Real Polarity: Positive (Correct)
 this without question is one of the worst  hotdogs  i have ever had . 
@@ -517,9 +517,9 @@ drinks --> Positive  Real Polarity: Positive (Correct)
 Great food , great drinks , nice  dining atmosphere  . 
 dining atmosphere --> Positive  Real Polarity: Positive (Correct)
 For the  price  you pay for the food here , you 'd expect it to be at least on par with other Japanese restaurants . 
-price --> Negative  Real Polarity: Negative (Correct)
+price --> Positive  Real Polarity: Negative (Wrong)
 For the price you pay for the  food  here , you 'd expect it to be at least on par with other Japanese restaurants . 
-food --> Negative  Real Polarity: Negative (Correct)
+food --> Positive  Real Polarity: Negative (Wrong)
  Food portion  was SMALL and below average . 
 Food portion --> Negative  Real Polarity: Negative (Correct)
 Sit back in one of those comfortable  chairs  . 
@@ -619,11 +619,11 @@ food --> Negative  Real Polarity: Negative (Correct)
 The absolute worst service I 've ever experienced and the food was below average -LRB- when they actually gave people the  meals  they ordered -RRB- . 
 meals --> Negative  Real Polarity: Neutral (Wrong)
 It 's about $ 7 for  lunch  and they have take-out or dine-in . 
-lunch --> Neutral  Real Polarity: Neutral (Correct)
+lunch --> Positive  Real Polarity: Neutral (Wrong)
 It 's about $ 7 for lunch and they have  take-out  or dine-in . 
-take-out --> Neutral  Real Polarity: Neutral (Correct)
+take-out --> Positive  Real Polarity: Neutral (Wrong)
 It 's about $ 7 for lunch and they have take-out or  dine-in  . 
-dine-in --> Neutral  Real Polarity: Neutral (Correct)
+dine-in --> Positive  Real Polarity: Neutral (Wrong)
 Be sure to accompany your  food  with one of their fresh juice concoctions . 
 food --> Positive  Real Polarity: Neutral (Wrong)
 Be sure to accompany your food with one of their  fresh juice concoctions  . 
@@ -637,9 +637,9 @@ place --> Positive  Real Polarity: Positive (Correct)
 The place is clean , and if you like  soul food  , then this is the place to be ! 
 soul food --> Positive  Real Polarity: Positive (Correct)
 I had  roast chicken  and a salad . 
-roast chicken --> Neutral  Real Polarity: Neutral (Correct)
+roast chicken --> Positive  Real Polarity: Neutral (Wrong)
 I had roast chicken and a  salad  . 
-salad --> Neutral  Real Polarity: Neutral (Correct)
+salad --> Positive  Real Polarity: Neutral (Wrong)
 They have a very good  chicken with avocado  and good tuna as well . 
 chicken with avocado --> Positive  Real Polarity: Positive (Correct)
 They have a very good chicken with avocado and good  tuna  as well . 
@@ -651,7 +651,7 @@ chicken --> Negative  Real Polarity: Negative (Correct)
 My chicken was completely dried out and on the cold side and the  sauce  was not very flavorful . 
 sauce --> Negative  Real Polarity: Negative (Correct)
  Malted Milk Ball Gelato  - have you ever in your life heard of anything so ridiculously wonderful ? 
-Malted Milk Ball Gelato --> Positive  Real Polarity: Positive (Correct)
+Malted Milk Ball Gelato --> Negative  Real Polarity: Positive (Wrong)
 Way too much money for such a terrible  meal  . 
 meal --> Negative  Real Polarity: Negative (Correct)
 However , the  service  is absolutely horrible . 
@@ -663,9 +663,9 @@ Dessert --> Positive  Real Polarity: Positive (Correct)
 BTW , the  service  is very good . 
 service --> Positive  Real Polarity: Positive (Correct)
 It 's eaten with  black vinegar  and shredded ginger . 
-black vinegar --> Neutral  Real Polarity: Neutral (Correct)
+black vinegar --> Negative  Real Polarity: Neutral (Wrong)
 It 's eaten with black vinegar and  shredded ginger  . 
-shredded ginger --> Neutral  Real Polarity: Neutral (Correct)
+shredded ginger --> Negative  Real Polarity: Neutral (Wrong)
 The unattractive  lighting  made me want to gag , the food was overpriced , there was the most awful disco pop duo performing-and my escargot looked like it might crawl off the plate . 
 lighting --> Negative  Real Polarity: Negative (Correct)
 The unattractive lighting made me want to gag , the  food  was overpriced , there was the most awful disco pop duo performing-and my escargot looked like it might crawl off the plate . 
@@ -685,15 +685,15 @@ waiters --> Negative  Real Polarity: Negative (Correct)
 the  food  is delicious and highly recommended . 
 food --> Positive  Real Polarity: Positive (Correct)
 When it came time to take the order the  waiter  gave us a hard time , walked away then came back with a paper and pen for us to write down what we wanted ... excuse me but is n't that his job ??? 
-waiter --> Neutral  Real Polarity: Negative (Wrong)
+waiter --> Negative  Real Polarity: Negative (Correct)
 Dieters stick to  salads  or indulge in vegetarian platters . 
-salads --> Positive  Real Polarity: Positive (Correct)
+salads --> Negative  Real Polarity: Positive (Wrong)
 Dieters stick to salads or indulge in  vegetarian platters  . 
-vegetarian platters --> Positive  Real Polarity: Positive (Correct)
+vegetarian platters --> Negative  Real Polarity: Positive (Wrong)
 So for a filling and healthy  meal  give it a go . 
 meal --> Positive  Real Polarity: Positive (Correct)
 Since I cook for a living , I 'm very fussy about the  food  I eat in restaurants . 
-food --> Neutral  Real Polarity: Neutral (Correct)
+food --> Negative  Real Polarity: Neutral (Wrong)
 The  service  was outstanding . 
 service --> Positive  Real Polarity: Positive (Correct)
 My friends and I stop here for  pizza  before hitting the Kips Bay movie theater . 
@@ -721,7 +721,7 @@ food --> Positive  Real Polarity: Positive (Correct)
 The food is very good and the  service  is great . 
 service --> Positive  Real Polarity: Positive (Correct)
 I usually get one the  Vietnamese Beef Noodle Soup  . 
-Vietnamese Beef Noodle Soup --> Neutral  Real Polarity: Neutral (Correct)
+Vietnamese Beef Noodle Soup --> Positive  Real Polarity: Neutral (Wrong)
 We were wondering why they were there to make our  dining experience  miserable ? 
 dining experience --> Negative  Real Polarity: Negative (Correct)
 This place has the best  Indian food  in New York , hands down . 
@@ -763,7 +763,7 @@ potato spinach gnocchi --> Positive  Real Polarity: Positive (Correct)
 Favourites include : potato spinach gnocchi and the  lamb  . 
 lamb --> Positive  Real Polarity: Positive (Correct)
 Unfortunately , we chose this spot for  lunch  as we had done a lot of walking and ended up at the South St Seaport . 
-lunch --> Neutral  Real Polarity: Neutral (Correct)
+lunch --> Negative  Real Polarity: Neutral (Wrong)
 But regulars know that the  sandwiches  are the real star here . 
 sandwiches --> Positive  Real Polarity: Positive (Correct)
 The skillfully chosen Portuguese cheese cart paired with quality  port  provides the perfect Iberian ending . 
@@ -819,9 +819,9 @@ place --> Positive  Real Polarity: Positive (Correct)
 First walking in the place seemed to have great  ambience  . 
 ambience --> Positive  Real Polarity: Positive (Correct)
 I went to Kitchenette this weekend for  brunch  . 
-brunch --> Neutral  Real Polarity: Neutral (Correct)
+brunch --> Positive  Real Polarity: Neutral (Wrong)
 Even for two very hungry people there is plenty of  food  left to be taken home -LRB- it reheats really well also -RRB- . 
-food --> Positive  Real Polarity: Positive (Correct)
+food --> Negative  Real Polarity: Positive (Wrong)
 Then they somehow made a dry and burnt  crust  , around a raw and cold inside . 
 crust --> Negative  Real Polarity: Negative (Correct)
 It 's just good  food  , nothing more and that 's all we want ! 
@@ -835,13 +835,13 @@ SERVICE --> Positive  Real Polarity: Positive (Correct)
 The $ 72  Delmonico steak  had to be sent back because it was not cooked to order . 
 Delmonico steak --> Negative  Real Polarity: Negative (Correct)
 Everytime I go there I ca n't pick anything to eat and not because the  menu  is filled with great things to eat . 
-menu --> Negative  Real Polarity: Negative (Correct)
+menu --> Positive  Real Polarity: Negative (Wrong)
 Half a chicken with a mountain of  rice  and beans for $ 6.25 . 
-rice --> Neutral  Real Polarity: Neutral (Correct)
+rice --> Positive  Real Polarity: Neutral (Wrong)
 Half a chicken with a mountain of rice and  beans  for $ 6.25 . 
-beans --> Neutral  Real Polarity: Neutral (Correct)
+beans --> Positive  Real Polarity: Neutral (Wrong)
 Half a  chicken  with a mountain of rice and beans for $ 6.25 . 
-chicken --> Neutral  Real Polarity: Neutral (Correct)
+chicken --> Positive  Real Polarity: Neutral (Wrong)
 The  service  is really fast and friendly , and the value is great . 
 service --> Positive  Real Polarity: Positive (Correct)
 The service is really fast and friendly , and the  value  is great . 
@@ -899,7 +899,7 @@ salmon dishes --> Positive  Real Polarity: Positive (Correct)
 The  foie gras  was sweet and luscious . 
 foie gras --> Positive  Real Polarity: Positive (Correct)
 The  menu  , which changes seasonally , shows both regional and international influences . 
-menu --> Neutral  Real Polarity: Neutral (Correct)
+menu --> Positive  Real Polarity: Neutral (Wrong)
 but their  mac cheese  was YUMMY ! 
 mac cheese --> Positive  Real Polarity: Positive (Correct)
 their  brunch menu  had something for everyone . 
@@ -909,15 +909,15 @@ jazz singer --> Positive  Real Polarity: Positive (Correct)
 They have very quick  service  which is great when you do n't have much time . 
 service --> Positive  Real Polarity: Positive (Correct)
 The  food  is average : breakfast food , soups , salads , sandwiches , etc. . 
-food --> Neutral  Real Polarity: Neutral (Correct)
+food --> Positive  Real Polarity: Neutral (Wrong)
 The food is average :  breakfast food  , soups , salads , sandwiches , etc. . 
-breakfast food --> Neutral  Real Polarity: Neutral (Correct)
+breakfast food --> Positive  Real Polarity: Neutral (Wrong)
 The food is average : breakfast food ,  soups  , salads , sandwiches , etc. . 
-soups --> Neutral  Real Polarity: Neutral (Correct)
+soups --> Positive  Real Polarity: Neutral (Wrong)
 The food is average : breakfast food , soups ,  salads  , sandwiches , etc. . 
-salads --> Neutral  Real Polarity: Neutral (Correct)
+salads --> Positive  Real Polarity: Neutral (Wrong)
 The food is average : breakfast food , soups , salads ,  sandwiches  , etc. . 
-sandwiches --> Neutral  Real Polarity: Neutral (Correct)
+sandwiches --> Positive  Real Polarity: Neutral (Wrong)
 I WAS HIGHLY DISAPPOINTED BY THE  FOOD  . 
 FOOD --> Negative  Real Polarity: Negative (Correct)
 THE  BANANA PUDDING  THEY SERVE HAS NEVER SEEN AN OVEN , THE CRABCAKES ARE WAY OVER SALTED AND DO N'T GET ME STARTED ON THE VERY GREASY MAC AND CHEESE . 
@@ -937,21 +937,21 @@ food --> Positive  Real Polarity: Positive (Correct)
 The  downstairs bar scene  is very cool and chill ... 
 downstairs bar scene --> Positive  Real Polarity: Positive (Correct)
 The  food  was definitely good , but when all was said and done , I just could n't justify it for the price -LRB- including 2 drinks , $ 100/person -RRB- ... 
-food --> Negative  Real Polarity: Positive (Wrong)
+food --> Positive  Real Polarity: Positive (Correct)
 The food was definitely good , but when all was said and done , I just could n't justify it for the  price  -LRB- including 2 drinks , $ 100/person -RRB- ... 
-price --> Negative  Real Polarity: Negative (Correct)
+price --> Positive  Real Polarity: Negative (Wrong)
 The food was definitely good , but when all was said and done , I just could n't justify it for the price -LRB- including 2  drinks  , $ 100/person -RRB- ... 
-drinks --> Negative  Real Polarity: Neutral (Wrong)
+drinks --> Positive  Real Polarity: Neutral (Wrong)
 I 've come here for  casual lunches  as well as for a friend 's birthday and I always enjoy myself . 
-casual lunches --> Neutral  Real Polarity: Neutral (Correct)
+casual lunches --> Positive  Real Polarity: Neutral (Wrong)
 If you are a  Tequila  fan you will not be disappointed . 
 Tequila --> Positive  Real Polarity: Positive (Correct)
 Great  beer selection  too , something like 50 beers . 
-beer selection --> Neutral  Real Polarity: Positive (Wrong)
+beer selection --> Positive  Real Polarity: Positive (Correct)
 Great beer selection too , something like 50  beers  . 
-beers --> Neutral  Real Polarity: Neutral (Correct)
+beers --> Positive  Real Polarity: Neutral (Wrong)
 Not to sound too negative but be wary of the  delivary  . 
-delivary --> Negative  Real Polarity: Negative (Correct)
+delivary --> Positive  Real Polarity: Negative (Wrong)
 I found the  food  to be just as good as its owner , Da Silvano , just much less expensive . 
 food --> Positive  Real Polarity: Positive (Correct)
 I found the food to be just as good as its  owner  , Da Silvano , just much less expensive . 
@@ -967,11 +967,11 @@ flavor --> Negative  Real Polarity: Negative (Correct)
 The main draw of this place is the  price  . 
 price --> Positive  Real Polarity: Positive (Correct)
 How can hope to stay in business with  service  like this ? 
-service --> Negative  Real Polarity: Negative (Correct)
+service --> Positive  Real Polarity: Negative (Wrong)
 But  dinner  here is never disappointing , even if the prices are a bit over the top . 
-dinner --> Positive  Real Polarity: Positive (Correct)
+dinner --> Negative  Real Polarity: Positive (Wrong)
 But dinner here is never disappointing , even if the  prices  are a bit over the top . 
-prices --> Positive  Real Polarity: Negative (Wrong)
+prices --> Negative  Real Polarity: Negative (Correct)
 Not only did they have amazing ,  sandwiches  , soup , pizza etc , but their homemade sorbets are out of this world ! 
 sandwiches --> Positive  Real Polarity: Positive (Correct)
 Not only did they have amazing , sandwiches ,  soup  , pizza etc , but their homemade sorbets are out of this world ! 
@@ -1009,25 +1009,25 @@ iced blended mocha --> Positive  Real Polarity: Positive (Correct)
 Whether your choose the iced blended mocha or the  hot white mocha  you are sure to be extremely happy . 
 hot white mocha --> Positive  Real Polarity: Positive (Correct)
 last Tuesday for a  late lunch  with a friend . 
-late lunch --> Neutral  Real Polarity: Neutral (Correct)
+late lunch --> Positive  Real Polarity: Neutral (Wrong)
 Another friend had to ask 3 times for  parmesan cheese  . 
-parmesan cheese --> Neutral  Real Polarity: Neutral (Correct)
+parmesan cheese --> Negative  Real Polarity: Neutral (Wrong)
 Our  waitress  had apparently never tried any of the food , and there was no one to recommend any wine . 
-waitress --> Neutral  Real Polarity: Negative (Wrong)
+waitress --> Negative  Real Polarity: Negative (Correct)
 Our waitress had apparently never tried any of the  food  , and there was no one to recommend any wine . 
-food --> Neutral  Real Polarity: Neutral (Correct)
+food --> Negative  Real Polarity: Neutral (Wrong)
 Our waitress had apparently never tried any of the food , and there was no one to recommend any  wine  . 
-wine --> Neutral  Real Polarity: Neutral (Correct)
+wine --> Negative  Real Polarity: Neutral (Wrong)
 The  service  was a bit slow and the portions are a bit small so if you are hungry and in a rush , this is not the place for you . 
 service --> Negative  Real Polarity: Negative (Correct)
 The service was a bit slow and the  portions  are a bit small so if you are hungry and in a rush , this is not the place for you . 
 portions --> Negative  Real Polarity: Negative (Correct)
 The unfortunate lady next to us thought she had ordered a  salad  -LRB- including asking for salad dressing -RRB- and was instead given a quesedilla . 
-salad --> Neutral  Real Polarity: Neutral (Correct)
+salad --> Negative  Real Polarity: Neutral (Wrong)
 The unfortunate lady next to us thought she had ordered a salad -LRB- including asking for  salad dressing  -RRB- and was instead given a quesedilla . 
-salad dressing --> Neutral  Real Polarity: Neutral (Correct)
+salad dressing --> Negative  Real Polarity: Neutral (Wrong)
 The unfortunate lady next to us thought she had ordered a salad -LRB- including asking for salad dressing -RRB- and was instead given a  quesedilla  . 
-quesedilla --> Neutral  Real Polarity: Neutral (Correct)
+quesedilla --> Negative  Real Polarity: Neutral (Wrong)
 El Nidos one of the best restaurants in New York which I 've ever been to , has a great variety of tasty , mouth watering  pizza's  . 
 pizza's --> Positive  Real Polarity: Positive (Correct)
 The  service  was pretty poor all around , the food was well below average relative to the cost , and outside there is a crazy bum who harasses every customer who leaves the place . 
@@ -1059,9 +1059,9 @@ kompot --> Positive  Real Polarity: Positive (Correct)
 My daughter and I left feeling satisfied -LRB- not stuffed -RRB- and it felt good to know we had a healthy  lunch  . 
 lunch --> Positive  Real Polarity: Positive (Correct)
 When she complained , the  waitress  said , Sorry . 
-waitress --> Neutral  Real Polarity: Neutral (Correct)
+waitress --> Negative  Real Polarity: Neutral (Wrong)
 The  quality of the meat  was on par with your local grocery store . 
-quality of the meat --> Negative  Real Polarity: Negative (Correct)
+quality of the meat --> Positive  Real Polarity: Negative (Wrong)
 They specialize in  smoothies  and fresh juices . 
 smoothies --> Positive  Real Polarity: Positive (Correct)
 They specialize in smoothies and  fresh juices  . 
@@ -1071,21 +1071,21 @@ black roasted codfish --> Positive  Real Polarity: Positive (Correct)
 I recommend the black roasted codfish , it was the best  dish  of the evening . 
 dish --> Positive  Real Polarity: Positive (Correct)
 The manager then told us we could order from whatever menu we wanted but by that time we were so annoyed with the  waiter  and the resturant that we let and went some place else . 
-waiter --> Neutral  Real Polarity: Negative (Wrong)
+waiter --> Negative  Real Polarity: Negative (Correct)
 The manager then told us we could order from whatever  menu  we wanted but by that time we were so annoyed with the waiter and the resturant that we let and went some place else . 
-menu --> Neutral  Real Polarity: Neutral (Correct)
+menu --> Negative  Real Polarity: Neutral (Wrong)
 The  manager  then told us we could order from whatever menu we wanted but by that time we were so annoyed with the waiter and the resturant that we let and went some place else . 
-manager --> Neutral  Real Polarity: Neutral (Correct)
+manager --> Negative  Real Polarity: Neutral (Wrong)
 In mi burrito , here was nothing but dark chicken that had that cooked last week and just warmed up in a microwave  taste  . 
 taste --> Negative  Real Polarity: Negative (Correct)
 In mi burrito , here was nothing but dark  chicken  that had that cooked last week and just warmed up in a microwave taste . 
 chicken --> Negative  Real Polarity: Negative (Correct)
 during busy hrs , i recommend that you make a  reservation  . 
-reservation --> Neutral  Real Polarity: Neutral (Correct)
+reservation --> Positive  Real Polarity: Neutral (Wrong)
 I went to Common Stock for  brunch  and I was so impressed . 
 brunch --> Positive  Real Polarity: Neutral (Wrong)
 now called nikki sushi ,  sushi  is OK . 
-sushi --> Neutral  Real Polarity: Neutral (Correct)
+sushi --> Negative  Real Polarity: Neutral (Wrong)
 The  food  is also outstanding and is served quite quickly . 
 food --> Positive  Real Polarity: Positive (Correct)
 The food is also outstanding and is  served  quite quickly . 
@@ -1103,9 +1103,9 @@ bar --> Positive  Real Polarity: Positive (Correct)
 The food is delicious and the bar has a great  vibe  . 
 vibe --> Positive  Real Polarity: Positive (Correct)
 There 's  candlelight  and music . 
-candlelight --> Neutral  Real Polarity: Neutral (Correct)
+candlelight --> Positive  Real Polarity: Neutral (Wrong)
 There 's candlelight and  music  . 
-music --> Neutral  Real Polarity: Neutral (Correct)
+music --> Positive  Real Polarity: Neutral (Wrong)
 Simple healthy unglamorous  food  cheap . 
 food --> Positive  Real Polarity: Positive (Correct)
 It was such a fantastic  dining experience  , that I returned again the same week . 
@@ -1119,17 +1119,17 @@ place --> Positive  Real Polarity: Positive (Correct)
 The place is absolutely adorable and the  food  is delicious . 
 food --> Positive  Real Polarity: Positive (Correct)
 I ordered the  Chicken Teriyaki  and my husband got Garlic Shrimp . 
-Chicken Teriyaki --> Neutral  Real Polarity: Neutral (Correct)
+Chicken Teriyaki --> Positive  Real Polarity: Neutral (Wrong)
 I ordered the Chicken Teriyaki and my husband got  Garlic Shrimp  . 
-Garlic Shrimp --> Neutral  Real Polarity: Neutral (Correct)
+Garlic Shrimp --> Positive  Real Polarity: Neutral (Wrong)
 I 've had better  Japanese food  at a mall food court . 
-Japanese food --> Negative  Real Polarity: Negative (Correct)
+Japanese food --> Positive  Real Polarity: Negative (Wrong)
 The  staff members  are extremely friendly and even replaced my drink once when I dropped it outside . 
 staff members --> Positive  Real Polarity: Positive (Correct)
 The staff members are extremely friendly and even replaced my  drink  once when I dropped it outside . 
 drink --> Positive  Real Polarity: Neutral (Wrong)
 Cool  atmosphere  but such a let down . 
-atmosphere --> Negative  Real Polarity: Positive (Wrong)
+atmosphere --> Positive  Real Polarity: Positive (Correct)
 The  Sashimi portion  are big enough to appease most people , but I did n't like the fact they used artifical lobster meat . 
 Sashimi portion --> Negative  Real Polarity: Positive (Wrong)
 The Sashimi portion are big enough to appease most people , but I did n't like the fact they used  artifical lobster meat  . 
@@ -1145,7 +1145,7 @@ food --> Positive  Real Polarity: Positive (Correct)
 Had a lovely dinner in this dedicated seafood joint , food was well-prepared and - presented and the  service  was pleasant and prompt . 
 service --> Positive  Real Polarity: Positive (Correct)
 the icing MADE this  cake  , it was fluffy , not ultra sweet , creamy and light . 
-cake --> Neutral  Real Polarity: Positive (Wrong)
+cake --> Negative  Real Polarity: Positive (Wrong)
 Finally let into the store 5 at a time , to buy expensive slices from a harried  staff  . 
 staff --> Negative  Real Polarity: Negative (Correct)
 Finally let into the store 5 at a time , to buy expensive  slices  from a harried staff . 
@@ -1157,7 +1157,7 @@ wine list --> Positive  Real Polarity: Positive (Correct)
 The wine list is extensive , well  priced  and covers alot of regions . 
 priced --> Positive  Real Polarity: Positive (Correct)
 Go here if you want fresh and tasty  salads  of any type you can imagine . 
-salads --> Neutral  Real Polarity: Positive (Wrong)
+salads --> Positive  Real Polarity: Positive (Correct)
 Everything about this place is adorable - even the  bathroom  ! 
 bathroom --> Positive  Real Polarity: Positive (Correct)
 Speedy  delivers  , great food , decent prices , and friendly service combine to ensure an enjoyable repast . 
@@ -1171,13 +1171,13 @@ service --> Positive  Real Polarity: Positive (Correct)
 Speedy delivers , great food , decent prices , and friendly service combine to ensure an enjoyable  repast  . 
 repast --> Positive  Real Polarity: Positive (Correct)
 THEY HAVE  WAITERS  ON THE SIDEWALK TRYING TO PULL YOU IN WHICH MADE US SUSPICIOUS . 
-WAITERS --> Neutral  Real Polarity: Neutral (Correct)
+WAITERS --> Negative  Real Polarity: Neutral (Wrong)
 IT WAS OUR ONLY OPPORTUNITY TO VISIT AND WANTED AN AUTHENTIC  ITALIAN MEAL  . 
-ITALIAN MEAL --> Neutral  Real Polarity: Neutral (Correct)
+ITALIAN MEAL --> Positive  Real Polarity: Neutral (Wrong)
 It took 100 years for Parisi to get around to making  pizza  -LRB- at least I do n't think they ever made it before this year -RRB- ... but it was worth the wait . 
 pizza --> Positive  Real Polarity: Positive (Correct)
 I asked for a simple medium rare  steak  . 
-steak --> Neutral  Real Polarity: Neutral (Correct)
+steak --> Positive  Real Polarity: Neutral (Wrong)
 Generously garnished ,  organic grilled burgers  are the most popular dish , but the Jerusalem market-style falafel wraps and Mediterranean salads -- layered with beets , goat cheese and walnuts -- are equally scrumptious . 
 organic grilled burgers --> Positive  Real Polarity: Positive (Correct)
 Generously garnished , organic grilled burgers are the most popular  dish  , but the Jerusalem market-style falafel wraps and Mediterranean salads -- layered with beets , goat cheese and walnuts -- are equally scrumptious . 
@@ -1203,9 +1203,9 @@ twist on pizza --> Positive  Real Polarity: Positive (Correct)
 The lack of  AC  and the fact that there are a million swarming bodies -LRB- although everyone is polite and no one is pushing -RRB- is a slight turn off . 
 AC --> Negative  Real Polarity: Negative (Correct)
 I love the Little Pie Company as much as anyone else who has written reviews , but must discourage anyone from visiting the Grand Central location due to their RUDE  service  from two sales people . 
-service --> Positive  Real Polarity: Negative (Wrong)
+service --> Negative  Real Polarity: Negative (Correct)
 I love the Little Pie Company as much as anyone else who has written reviews , but must discourage anyone from visiting the Grand Central location due to their RUDE service from two  sales people  . 
-sales people --> Positive  Real Polarity: Negative (Wrong)
+sales people --> Negative  Real Polarity: Negative (Correct)
 Unfortunately , unless you live in the neighborhood , it 's not in a convenient  location  but is more like a hidden treasure . 
 location --> Negative  Real Polarity: Negative (Correct)
 Did n't seem like any effort was made to the  display and quality of the food  . 
@@ -1213,7 +1213,7 @@ display and quality of the food --> Negative  Real Polarity: Negative (Correct)
 The  food  -- though mostly deep-fried -- is simple and satisfying . 
 food --> Positive  Real Polarity: Positive (Correct)
 Glechik might be way too tiny for a restaurant by Russian standards , but it is cozy and the  food  is simply GREAT . 
-food --> Negative  Real Polarity: Positive (Wrong)
+food --> Positive  Real Polarity: Positive (Correct)
 The  food  was excellent - authentic Italian cuisine made absolutely fresh . 
 food --> Positive  Real Polarity: Positive (Correct)
 The food was excellent - authentic  Italian cuisine  made absolutely fresh . 
@@ -1251,9 +1251,9 @@ sauce --> Positive  Real Polarity: Neutral (Wrong)
 Perfectly al dente pasta , not drowned in sauce -- generous  portions  . 
 portions --> Positive  Real Polarity: Positive (Correct)
 I can understand the  prices  if it served better food , like some Chinese restaurants in midtown/uptown area . 
-prices --> Negative  Real Polarity: Negative (Correct)
+prices --> Positive  Real Polarity: Negative (Wrong)
 I can understand the prices if it served better  food  , like some Chinese restaurants in midtown/uptown area . 
-food --> Negative  Real Polarity: Negative (Correct)
+food --> Positive  Real Polarity: Negative (Wrong)
  Service  was awful - mostly because staff were overwhelmed on a Saturday night . 
 Service --> Negative  Real Polarity: Negative (Correct)
 Service was awful - mostly because  staff  were overwhelmed on a Saturday night . 
@@ -1291,11 +1291,11 @@ meal --> Positive  Real Polarity: Positive (Correct)
 I went this past Saturday and had a excellent meal of consisting of a  braised lamb shank with mashed potatoes  . 
 braised lamb shank with mashed potatoes --> Positive  Real Polarity: Positive (Correct)
 The  waitress  came by to pick up the soy sauce WHILE we were eating our lunch !!!!! 
-waitress --> Neutral  Real Polarity: Negative (Wrong)
+waitress --> Positive  Real Polarity: Negative (Wrong)
 The waitress came by to pick up the  soy sauce  WHILE we were eating our lunch !!!!! 
-soy sauce --> Neutral  Real Polarity: Neutral (Correct)
+soy sauce --> Positive  Real Polarity: Neutral (Wrong)
 The waitress came by to pick up the soy sauce WHILE we were eating our  lunch  !!!!! 
-lunch --> Neutral  Real Polarity: Neutral (Correct)
+lunch --> Positive  Real Polarity: Neutral (Wrong)
 So we sat at the  bar  , the bartender did n't seem like he wanted to be there . 
 bar --> Negative  Real Polarity: Neutral (Wrong)
 So we sat at the bar , the  bartender  did n't seem like he wanted to be there . 
@@ -1319,11 +1319,11 @@ bartender --> Negative  Real Polarity: Neutral (Wrong)
 Would you ever believe that when you complain about over an hour wait , when they tell you it will be 20-30 minutes , the manager tells the bartender to spill the  drinks  you just paid for ? 
 drinks --> Negative  Real Polarity: Neutral (Wrong)
 The  boutique selection of wines  covers a wide variety without being imposeing . 
-boutique selection of wines --> Neutral  Real Polarity: Neutral (Correct)
+boutique selection of wines --> Positive  Real Polarity: Neutral (Wrong)
 They also have a great  assortment of wraps  if your not in the mood for traditional Mediterranean fare . 
-assortment of wraps --> Neutral  Real Polarity: Positive (Wrong)
+assortment of wraps --> Positive  Real Polarity: Positive (Correct)
 They also have a great assortment of wraps if your not in the mood for  traditional Mediterranean fare  . 
-traditional Mediterranean fare --> Neutral  Real Polarity: Neutral (Correct)
+traditional Mediterranean fare --> Positive  Real Polarity: Neutral (Wrong)
  Fresh veggies  , all sorts of middle eastern spreads , cheese and falafel , soup , fish , rice , root vegetables , a rice medley , some spinach thing , lamb kebabs , cheese baclava ... soooo much fooood ,
 Fresh veggies --> Positive  Real Polarity: Positive (Correct)
 Fresh veggies , all sorts of  middle eastern spreads  , cheese and falafel , soup , fish , rice , root vegetables , a rice medley , some spinach thing , lamb kebabs , cheese baclava ... soooo much fooood , and all of it delicious .
@@ -1355,13 +1355,13 @@ Saketini --> Negative  Real Polarity: Positive (Wrong)
 Disappointingly , their wonderful Saketini has been taken off the  bar menu  . 
 bar menu --> Negative  Real Polarity: Negative (Correct)
 In Short The Black Sheep distinguishes itself from the Midtown pub herd with a  look  that 's a mix of sports-bar butch and ornate kitsch . 
-look --> Negative  Real Polarity: Negative (Correct)
+look --> Positive  Real Polarity: Negative (Wrong)
 I would definitely go back -- if only for some of those exotic  martinis  on the blackboard . 
 martinis --> Positive  Real Polarity: Positive (Correct)
 then she made a fuss about not being able to add 1 or 2  chairs  on either end of the table for additional people . 
-chairs --> Neutral  Real Polarity: Neutral (Correct)
+chairs --> Negative  Real Polarity: Neutral (Wrong)
 then she made a fuss about not being able to add 1 or 2 chairs on either end of the  table  for additional people . 
-table --> Neutral  Real Polarity: Neutral (Correct)
+table --> Negative  Real Polarity: Neutral (Wrong)
 The  happy hour  is so cheap , but that does not reflect the service or the atmosphere . 
 happy hour --> Positive  Real Polarity: Positive (Correct)
 The happy hour is so cheap , but that does not reflect the  service  or the atmosphere . 
@@ -1379,25 +1379,25 @@ quaility --> Positive  Real Polarity: Positive (Correct)
 With all the mundane or mediocre places on 8th avenue it is nice to have one that is a step above in quaility and  atmosphere  . 
 atmosphere --> Positive  Real Polarity: Positive (Correct)
 A mix of students and area residents crowd into this narrow , barely there  space  for its quick , tasty treats at dirt-cheap prices . 
-space --> Positive  Real Polarity: Negative (Wrong)
+space --> Negative  Real Polarity: Negative (Correct)
 A mix of students and area residents crowd into this narrow , barely there space for its quick , tasty treats at dirt-cheap  prices  . 
-prices --> Positive  Real Polarity: Positive (Correct)
+prices --> Negative  Real Polarity: Positive (Wrong)
 A mix of students and area residents crowd into this narrow , barely there space for its quick , tasty  treats  at dirt-cheap prices . 
-treats --> Positive  Real Polarity: Positive (Correct)
+treats --> Negative  Real Polarity: Positive (Wrong)
 Give it a try ,  menu  is typical French but varied . 
-menu --> Neutral  Real Polarity: Neutral (Correct)
+menu --> Positive  Real Polarity: Neutral (Wrong)
 It gets crowded at lunchtime but there are lots of  seats  in back and everyone who works there is so nice . 
 seats --> Positive  Real Polarity: Positive (Correct)
 but for the  value  , it was a great affordable spot to enjoy a fun night out with small group . 
 value --> Positive  Real Polarity: Positive (Correct)
 the negative reviews on city search are probably from jealous competing restaurants who realize they ca n't compete with Temple 's entire positive attitude about the proper way to treat their customers and deliver top quality  food  . 
-food --> Positive  Real Polarity: Positive (Correct)
+food --> Negative  Real Polarity: Positive (Wrong)
 the negative reviews on city search are probably from jealous competing restaurants who realize they ca n't compete with Temple 's entire positive  attitude  about the proper way to treat their customers and deliver top quality food . 
-attitude --> Positive  Real Polarity: Positive (Correct)
+attitude --> Negative  Real Polarity: Positive (Wrong)
 We ordered a  glass of wine  and were finished eating and paying before the wine came . 
-glass of wine --> Neutral  Real Polarity: Neutral (Correct)
+glass of wine --> Negative  Real Polarity: Neutral (Wrong)
 It was good , but none of the  flavors  WOW . 
-flavors --> Neutral  Real Polarity: Neutral (Correct)
+flavors --> Positive  Real Polarity: Neutral (Wrong)
 Overall , this is a nice  place  to take a few friends to hang out at and the service is excellent . 
 place --> Positive  Real Polarity: Positive (Correct)
 Overall , this is a nice place to take a few friends to hang out at and the  service  is excellent . 
@@ -1417,7 +1417,7 @@ dessert --> Positive  Real Polarity: Neutral (Wrong)
 The  space  is traditional in feel . 
 space --> Positive  Real Polarity: Neutral (Wrong)
 the restaurant was completely empty , but she gave me a dirty look and asked , no  reservations  ? 
-reservations --> Neutral  Real Polarity: Neutral (Correct)
+reservations --> Negative  Real Polarity: Neutral (Wrong)
 the  food  was mediocre to be kind - the interior is small and average - the owners are a tag-team of unpleasantries - so rude and snotty i actually let out a hearty guffaw whilst dining . 
 food --> Negative  Real Polarity: Negative (Correct)
 the food was mediocre to be kind - the  interior  is small and average - the owners are a tag-team of unpleasantries - so rude and snotty i actually let out a hearty guffaw whilst dining . 
@@ -1435,15 +1435,15 @@ value --> Positive  Real Polarity: Positive (Correct)
 Good service , great food , good value , and never have to  wait  in line ! 
 wait --> Positive  Real Polarity: Positive (Correct)
 Offerings like hot cakes and the  Egg McMuffin sandwich  are available for breakfast . 
-Egg McMuffin sandwich --> Neutral  Real Polarity: Neutral (Correct)
+Egg McMuffin sandwich --> Positive  Real Polarity: Neutral (Wrong)
 Offerings like  hot cakes  and the Egg McMuffin sandwich are available for breakfast . 
-hot cakes --> Neutral  Real Polarity: Neutral (Correct)
+hot cakes --> Positive  Real Polarity: Neutral (Wrong)
 Offerings like hot cakes and the Egg McMuffin sandwich are available for  breakfast  . 
-breakfast --> Neutral  Real Polarity: Neutral (Correct)
+breakfast --> Positive  Real Polarity: Neutral (Wrong)
 I have been going to this restaurant for years , in the past the  service  was average and the food inconsistant . 
-service --> Positive  Real Polarity: Neutral (Wrong)
+service --> Negative  Real Polarity: Neutral (Wrong)
 I have been going to this restaurant for years , in the past the service was average and the  food  inconsistant . 
-food --> Positive  Real Polarity: Negative (Wrong)
+food --> Negative  Real Polarity: Negative (Correct)
 The  music  was fascinating , but left room for conversation , and the bartender made superb drinks . 
 music --> Positive  Real Polarity: Positive (Correct)
 The music was fascinating , but left room for conversation , and the  bartender  made superb drinks . 
@@ -1465,25 +1465,25 @@ asian fusion --> Negative  Real Polarity: Neutral (Wrong)
 Cuisine is  billed  as asian fusion - does n't meet the bill . 
 billed --> Negative  Real Polarity: Negative (Correct)
 Creative  dishes  like king crab salad with passion fruit vinaigrette and fettuccine with grilled seafood in a rosemary-orange sauce are unexpected elements on an otherwise predictable bistro menu . 
-dishes --> Positive  Real Polarity: Positive (Correct)
+dishes --> Negative  Real Polarity: Positive (Wrong)
 Creative dishes like  king crab salad with passion fruit vinaigrette  and fettuccine with grilled seafood in a rosemary-orange sauce are unexpected elements on an otherwise predictable bistro menu . 
-king crab salad with passion fruit vinaigrette --> Positive  Real Polarity: Positive (Correct)
+king crab salad with passion fruit vinaigrette --> Negative  Real Polarity: Positive (Wrong)
 Creative dishes like king crab salad with passion fruit vinaigrette and  fettuccine with grilled seafood in a rosemary-orange sauce  are unexpected elements on an otherwise predictable bistro menu . 
-fettuccine with grilled seafood in a rosemary-orange sauce --> Positive  Real Polarity: Positive (Correct)
+fettuccine with grilled seafood in a rosemary-orange sauce --> Negative  Real Polarity: Positive (Wrong)
 Creative dishes like king crab salad with passion fruit vinaigrette and fettuccine with grilled seafood in a rosemary-orange sauce are unexpected elements on an otherwise predictable  bistro menu  . 
-bistro menu --> Positive  Real Polarity: Neutral (Wrong)
+bistro menu --> Negative  Real Polarity: Neutral (Wrong)
  Dishes  denoted as `` Roy 's Classics '' -LRB- marked on the menu with asterisks -RRB- are tried-and-true recipes , such as macadamia-crusted mahi mahi , or subtly sweet honey-mustard beef short ribs . 
-Dishes --> Positive  Real Polarity: Positive (Correct)
+Dishes --> Negative  Real Polarity: Positive (Wrong)
 Dishes denoted as  "Roy's Classics"  -LRB- marked on the menu with asterisks -RRB- are tried-and-true recipes , such as macadamia-crusted mahi mahi , or subtly sweet honey-mustard beef short ribs . 
-"Roy's Classics" --> Positive  Real Polarity: Positive (Correct)
+"Roy's Classics" --> Negative  Real Polarity: Positive (Wrong)
 Dishes denoted as `` Roy 's Classics '' -LRB- marked on the  menu  with asterisks -RRB- are tried-and-true recipes , such as macadamia-crusted mahi mahi , or subtly sweet honey-mustard beef short ribs . 
-menu --> Positive  Real Polarity: Neutral (Wrong)
+menu --> Negative  Real Polarity: Neutral (Wrong)
 Dishes denoted as `` Roy 's Classics '' -LRB- marked on the menu with asterisks -RRB- are tried-and-true  recipes  , such as macadamia-crusted mahi mahi , or subtly sweet honey-mustard beef short ribs . 
-recipes --> Positive  Real Polarity: Positive (Correct)
+recipes --> Negative  Real Polarity: Positive (Wrong)
 Dishes denoted as `` Roy 's Classics '' -LRB- marked on the menu with asterisks -RRB- are tried-and-true recipes , such as  macadamia-crusted mahi mahi  , or subtly sweet honey-mustard beef short ribs . 
-macadamia-crusted mahi mahi --> Positive  Real Polarity: Positive (Correct)
+macadamia-crusted mahi mahi --> Negative  Real Polarity: Positive (Wrong)
 Dishes denoted as `` Roy 's Classics '' -LRB- marked on the menu with asterisks -RRB- are tried-and-true recipes , such as macadamia-crusted mahi mahi , or subtly  sweet honey-mustard beef short ribs  . 
-sweet honey-mustard beef short ribs --> Positive  Real Polarity: Positive (Correct)
+sweet honey-mustard beef short ribs --> Negative  Real Polarity: Positive (Wrong)
 The  cold sesame noodles  , which are a freebie when you order $ 10 + , are delectable . 
 cold sesame noodles --> Positive  Real Polarity: Positive (Correct)
 I came to fresh expecting a great meal , and all I got was marginally so-so  food  served in a restaurant that was just so freezing we could n't enjoy eating . 
@@ -1493,11 +1493,11 @@ meal --> Negative  Real Polarity: Negative (Correct)
 I came to fresh expecting a great meal , and all I got was marginally so-so food  served  in a restaurant that was just so freezing we could n't enjoy eating . 
 served --> Negative  Real Polarity: Neutral (Wrong)
 The lone  argentine chorizo appetizer  at $ 8.95 was a heavy fennel flavored Italian sausage like the ones that sell for $ 2.99 / lb at the store . 
-argentine chorizo appetizer --> Negative  Real Polarity: Negative (Correct)
+argentine chorizo appetizer --> Positive  Real Polarity: Negative (Wrong)
 The lone argentine chorizo appetizer at $ 8.95 was a heavy  fennel flavored Italian sausage  like the ones that sell for $ 2.99 / lb at the store . 
-fennel flavored Italian sausage --> Negative  Real Polarity: Negative (Correct)
+fennel flavored Italian sausage --> Positive  Real Polarity: Negative (Wrong)
 I went to Swiftys with some friends of the family and we had a very nice  dinner  , but nothing amazing . 
-dinner --> Neutral  Real Polarity: Positive (Wrong)
+dinner --> Positive  Real Polarity: Positive (Correct)
 Best Chinese on the Upper East , prompt  delivery  , good value . 
 delivery --> Positive  Real Polarity: Positive (Correct)
 Best Chinese on the Upper East , prompt delivery , good  value  . 
@@ -1507,9 +1507,9 @@ sandwiches --> Positive  Real Polarity: Positive (Correct)
 Most of the sandwiches are made with  soy mayonaise  which is actually pretty good . 
 soy mayonaise --> Positive  Real Polarity: Positive (Correct)
 i went in one day asking for a table for a group and was greeted by a very rude  hostess  . 
-hostess --> Neutral  Real Polarity: Negative (Wrong)
+hostess --> Negative  Real Polarity: Negative (Correct)
 i went in one day asking for a  table  for a group and was greeted by a very rude hostess . 
-table --> Neutral  Real Polarity: Neutral (Correct)
+table --> Negative  Real Polarity: Neutral (Wrong)
 It 's worthwhile to take a cab to Chelsea just for an awesome  dinner  at My Chelsea . 
 dinner --> Positive  Real Polarity: Positive (Correct)
 Not only is the  food  authentic , but the staff here are practically off-the-boat , they are young and hip and know what they are doing when it comes to food and wine . 
@@ -1543,9 +1543,9 @@ food --> Positive  Real Polarity: Positive (Correct)
 And the food , well the  food  will keep you coming back . 
 food --> Positive  Real Polarity: Positive (Correct)
 Waiting three hours before getting our  entrees  was a treat as well . 
-entrees --> Negative  Real Polarity: Neutral (Wrong)
+entrees --> Positive  Real Polarity: Neutral (Wrong)
  Waiting  three hours before getting our entrees was a treat as well . 
-Waiting --> Negative  Real Polarity: Negative (Correct)
+Waiting --> Positive  Real Polarity: Negative (Wrong)
 It 's the conversations that make this a fun  place  to be . 
 place --> Positive  Real Polarity: Positive (Correct)
 My gf 's  duck confitte  was very solid as well , although i have little base of reference . 
@@ -1557,9 +1557,9 @@ tapas --> Positive  Real Polarity: Positive (Correct)
 The wine list was superb , our tapas delightful , and the quiet  atmosphere  perfect for good conversation . 
 atmosphere --> Positive  Real Polarity: Positive (Correct)
 You can eat gourmet food at a fast food  price  . 
-price --> Neutral  Real Polarity: Positive (Wrong)
+price --> Positive  Real Polarity: Positive (Correct)
 You can eat gourmet  food  at a fast food price . 
-food --> Neutral  Real Polarity: Positive (Wrong)
+food --> Positive  Real Polarity: Positive (Correct)
 I 've eaten at all three locations and I always love , love the  food  , the service is always wonderful and the prices are really reasonable . 
 food --> Positive  Real Polarity: Positive (Correct)
 I 've eaten at all three locations and I always love , love the food , the  service  is always wonderful and the prices are really reasonable . 
@@ -1597,15 +1597,15 @@ food --> Negative  Real Polarity: Negative (Correct)
 the food - not worth the  price  . 
 price --> Negative  Real Polarity: Negative (Correct)
 What can you say about a place where the  waitress  brings out the wrong entree , then verbally assaults your 80 year old grandmother and gives her lip about sending it back -LRB- which she did politely , by the way -RRB- . 
-waitress --> Neutral  Real Polarity: Negative (Wrong)
+waitress --> Negative  Real Polarity: Negative (Correct)
 What can you say about a place where the waitress brings out the wrong  entree  , then verbally assaults your 80 year old grandmother and gives her lip about sending it back -LRB- which she did politely , by the way -RRB- . 
-entree --> Neutral  Real Polarity: Neutral (Correct)
+entree --> Negative  Real Polarity: Neutral (Wrong)
 The  prices  are not terrible . 
 prices --> Positive  Real Polarity: Positive (Correct)
 15 % gratuity automatically added to the  bill  . 
-bill --> Negative  Real Polarity: Negative (Correct)
+bill --> Positive  Real Polarity: Negative (Wrong)
 15 %  gratuity  automatically added to the bill . 
-gratuity --> Negative  Real Polarity: Negative (Correct)
+gratuity --> Positive  Real Polarity: Negative (Wrong)
 The  halibut cheek appetizer  came with a generous portion of foie gras , but that 's about the only positive thing I can say about the meal . 
 halibut cheek appetizer --> Positive  Real Polarity: Neutral (Wrong)
 The halibut cheek appetizer came with a generous  portion of foie gras  , but that 's about the only positive thing I can say about the meal . 
@@ -1643,7 +1643,7 @@ scene --> Positive  Real Polarity: Positive (Correct)
 Dug the  blue bar area  too . 
 blue bar area --> Positive  Real Polarity: Positive (Correct)
 I got the opportunity to dine at your establishment again a few weeks ago , I was in your  upstrairs dining area  . 
-upstrairs dining area --> Neutral  Real Polarity: Neutral (Correct)
+upstrairs dining area --> Positive  Real Polarity: Neutral (Wrong)
 Meat-phobes are in luck with the extraordinary  veggie burger  , made from a distinctive blend of chickpeas , carrots and other vegetables and spices . 
 veggie burger --> Positive  Real Polarity: Positive (Correct)
 Meat-phobes are in luck with the extraordinary veggie burger , made from a distinctive blend of  chickpeas  , carrots and other vegetables and spices . 
@@ -1659,9 +1659,9 @@ tables --> Negative  Real Polarity: Negative (Correct)
 The  service  was on point - what else you would expect from a Ritz ? 
 service --> Positive  Real Polarity: Positive (Correct)
  Menus  feature seasonal picks , like sweet corn-foie gras brulee . 
-Menus --> Neutral  Real Polarity: Neutral (Correct)
+Menus --> Positive  Real Polarity: Neutral (Wrong)
 Menus feature seasonal picks , like  sweet corn-foie gras brulee  . 
-sweet corn-foie gras brulee --> Neutral  Real Polarity: Neutral (Correct)
+sweet corn-foie gras brulee --> Positive  Real Polarity: Neutral (Wrong)
 Innovations are just as assured , from the simple  Carinthia cheese ravioli with wild mushrooms  to the caviar-topped sturgeon , beautifully matched with a bright green spinach-vodka sauce . 
 Carinthia cheese ravioli with wild mushrooms --> Positive  Real Polarity: Positive (Correct)
 Innovations are just as assured , from the simple Carinthia cheese ravioli with wild mushrooms to the  caviar-topped sturgeon  , beautifully matched with a bright green spinach-vodka sauce . 
@@ -1681,9 +1681,9 @@ quality --> Positive  Real Polarity: Positive (Correct)
 Chinatown definitely has better quality with cheaper  prices  . 
 prices --> Positive  Real Polarity: Positive (Correct)
 I had to flag down a third  staff person  for a fork ... so now it 's goodbye Little RUDE Pie Company . 
-staff person --> Neutral  Real Polarity: Neutral (Correct)
+staff person --> Negative  Real Polarity: Neutral (Wrong)
 I had to flag down a third staff person for a  fork  ... so now it 's goodbye Little RUDE Pie Company . 
-fork --> Neutral  Real Polarity: Neutral (Correct)
+fork --> Negative  Real Polarity: Neutral (Wrong)
 Go with the  specials  , and stay away from the salmon . 
 specials --> Positive  Real Polarity: Positive (Correct)
 Go with the specials , and stay away from the  salmon  . 
@@ -1809,7 +1809,7 @@ ambiance --> Positive  Real Polarity: Positive (Correct)
 Just go in and sample the greatest  french food  west of Daniel . 
 french food --> Positive  Real Polarity: Positive (Correct)
 For someone who used to hate  Indian food  , Baluchi 's has changed my mid . 
-Indian food --> Positive  Real Polarity: Positive (Correct)
+Indian food --> Negative  Real Polarity: Positive (Wrong)
 Finally a  curry  that I can eat , enjoy and not suffer from gastritis from 3 hours later . 
 curry --> Positive  Real Polarity: Positive (Correct)
 All are GREAT -  poori  , naan , paratha all FRESH . 
@@ -1825,7 +1825,7 @@ sushi --> Positive  Real Polarity: Positive (Correct)
 It also has lots of other  Korean dishes  that are affordable and just as yummy . 
 Korean dishes --> Positive  Real Polarity: Positive (Correct)
 I went for restaurant week and ordered off the  prix fixe menu  
-prix fixe menu --> Neutral  Real Polarity: Neutral (Correct)
+prix fixe menu --> Negative  Real Polarity: Neutral (Wrong)
 Not only was the  waiter  efficient and courteous , but also extremely helpful . 
 waiter --> Positive  Real Polarity: Positive (Correct)
 This  place  is classy , chic , the service is warm and hospitable , and the food is outstanding . 
@@ -1849,13 +1849,13 @@ Sushi --> Positive  Real Polarity: Positive (Correct)
 But make sure you have enough room on your credit card as the  bill  will leave a big dent in your wallet . 
 bill --> Negative  Real Polarity: Negative (Correct)
 They bring a sauce cart up to your table and offer you up to 7 or 8 choices of sauces for your  steak  -LRB- I tried them ALL -RRB- . 
-steak --> Neutral  Real Polarity: Neutral (Correct)
+steak --> Positive  Real Polarity: Neutral (Wrong)
 They bring a sauce cart up to your table and offer you up to 7 or 8  choices of sauces  for your steak -LRB- I tried them ALL -RRB- . 
-choices of sauces --> Neutral  Real Polarity: Positive (Wrong)
+choices of sauces --> Positive  Real Polarity: Positive (Correct)
 They bring a  sauce cart  up to your table and offer you up to 7 or 8 choices of sauces for your steak -LRB- I tried them ALL -RRB- . 
-sauce cart --> Neutral  Real Polarity: Neutral (Correct)
+sauce cart --> Positive  Real Polarity: Neutral (Wrong)
 They bring a sauce cart up to your  table  and offer you up to 7 or 8 choices of sauces for your steak -LRB- I tried them ALL -RRB- . 
-table --> Neutral  Real Polarity: Neutral (Correct)
+table --> Positive  Real Polarity: Neutral (Wrong)
 Not only was the  sushi  fresh , they also served other entrees allowed each guest something to choose from and we all left happy -LRB- try the duck ! 
 sushi --> Positive  Real Polarity: Positive (Correct)
 Not only was the sushi fresh , they also served other entrees allowed each guest something to choose from and we all left happy -LRB- try the  duck  ! 
@@ -1863,55 +1863,55 @@ duck --> Positive  Real Polarity: Positive (Correct)
 Not only was the sushi fresh , they also served other  entrees  allowed each guest something to choose from and we all left happy -LRB- try the duck ! 
 entrees --> Positive  Real Polarity: Neutral (Wrong)
 good  variety  but nothing surprising . 
-variety --> Neutral  Real Polarity: Positive (Wrong)
+variety --> Positive  Real Polarity: Positive (Correct)
 After I paid for my purchase , I noticed they had not given me  utensils  so I could eat my pie . 
-utensils --> Neutral  Real Polarity: Neutral (Correct)
+utensils --> Negative  Real Polarity: Neutral (Wrong)
 After I paid for my purchase , I noticed they had not given me utensils so I could eat my  pie  . 
-pie --> Neutral  Real Polarity: Neutral (Correct)
+pie --> Negative  Real Polarity: Neutral (Wrong)
 Likewise if you like really  thin crust  or really big slices then Nick and Joe 's may not be your favorite . 
 thin crust --> Negative  Real Polarity: Negative (Correct)
 Likewise if you like really thin crust or really big  slices  then Nick and Joe 's may not be your favorite . 
 slices --> Negative  Real Polarity: Negative (Correct)
 No  green beans  , no egg , no anchovy dressing , no nicoise olives , no red onion . 
-green beans --> Neutral  Real Polarity: Neutral (Correct)
+green beans --> Negative  Real Polarity: Neutral (Wrong)
 No green beans , no  egg  , no anchovy dressing , no nicoise olives , no red onion . 
-egg --> Neutral  Real Polarity: Neutral (Correct)
+egg --> Negative  Real Polarity: Neutral (Wrong)
 No green beans , no egg , no  anchovy dressing  , no nicoise olives , no red onion . 
-anchovy dressing --> Neutral  Real Polarity: Neutral (Correct)
+anchovy dressing --> Negative  Real Polarity: Neutral (Wrong)
 No green beans , no egg , no anchovy dressing , no  nicoise olives  , no red onion . 
-nicoise olives --> Neutral  Real Polarity: Neutral (Correct)
+nicoise olives --> Negative  Real Polarity: Neutral (Wrong)
 No green beans , no egg , no anchovy dressing , no nicoise olives , no  red onion  . 
-red onion --> Neutral  Real Polarity: Neutral (Correct)
+red onion --> Negative  Real Polarity: Neutral (Wrong)
 Build a  meal  with side orders like Amazin ' Greens salads , Buffalo Chicken Kickers and Cinna Stix . 
-meal --> Neutral  Real Polarity: Neutral (Correct)
+meal --> Positive  Real Polarity: Neutral (Wrong)
 Build a meal with side orders like  Amazin' Greens salads  , Buffalo Chicken Kickers and Cinna Stix . 
-Amazin' Greens salads --> Neutral  Real Polarity: Neutral (Correct)
+Amazin' Greens salads --> Positive  Real Polarity: Neutral (Wrong)
 Build a meal with side orders like Amazin ' Greens salads ,  Buffalo Chicken Kickers  and Cinna Stix . 
-Buffalo Chicken Kickers --> Neutral  Real Polarity: Neutral (Correct)
+Buffalo Chicken Kickers --> Positive  Real Polarity: Neutral (Wrong)
 Build a meal with side orders like Amazin ' Greens salads , Buffalo Chicken Kickers and  Cinna Stix  . 
-Cinna Stix --> Neutral  Real Polarity: Neutral (Correct)
+Cinna Stix --> Positive  Real Polarity: Neutral (Wrong)
 Build a meal with  side orders  like Amazin ' Greens salads , Buffalo Chicken Kickers and Cinna Stix . 
-side orders --> Neutral  Real Polarity: Neutral (Correct)
+side orders --> Positive  Real Polarity: Neutral (Wrong)
 Thick  fries  , meaty chili and stuffed baked potatoes round out a menu that includes a cool , ultra-thick chocolate Frosty . 
-fries --> Neutral  Real Polarity: Neutral (Correct)
+fries --> Positive  Real Polarity: Neutral (Wrong)
 Thick fries ,  meaty chili  and stuffed baked potatoes round out a menu that includes a cool , ultra-thick chocolate Frosty . 
-meaty chili --> Neutral  Real Polarity: Neutral (Correct)
+meaty chili --> Positive  Real Polarity: Neutral (Wrong)
 Thick fries , meaty chili and  stuffed baked potatoes  round out a menu that includes a cool , ultra-thick chocolate Frosty . 
-stuffed baked potatoes --> Neutral  Real Polarity: Neutral (Correct)
+stuffed baked potatoes --> Positive  Real Polarity: Neutral (Wrong)
 Thick fries , meaty chili and stuffed baked potatoes round out a  menu  that includes a cool , ultra-thick chocolate Frosty . 
-menu --> Neutral  Real Polarity: Neutral (Correct)
+menu --> Positive  Real Polarity: Neutral (Wrong)
 Thick fries , meaty chili and stuffed baked potatoes round out a menu that includes a cool , ultra-thick  chocolate Frosty  . 
-chocolate Frosty --> Neutral  Real Polarity: Positive (Wrong)
+chocolate Frosty --> Positive  Real Polarity: Positive (Correct)
 I always find myself asking the  waiter  to make something bland and different than what is on the menu . 
-waiter --> Neutral  Real Polarity: Neutral (Correct)
+waiter --> Negative  Real Polarity: Neutral (Wrong)
 I always find myself asking the waiter to make something bland and different than what is on the  menu  . 
-menu --> Neutral  Real Polarity: Neutral (Correct)
+menu --> Negative  Real Polarity: Neutral (Wrong)
 Good cake BUT : it was not the best  cake  i 've ever had , and definately not worth standing outside on the sidewalk being herded like cattle by indifferent and overworked employees . 
 cake --> Negative  Real Polarity: Negative (Correct)
 Good cake BUT : it was not the best cake i 've ever had , and definately not worth standing outside on the sidewalk being herded like cattle by indifferent and overworked  employees  . 
 employees --> Negative  Real Polarity: Negative (Correct)
 The closest that I got was the  Cherry Marscapone  , but they were out of it that day . 
-Cherry Marscapone --> Neutral  Real Polarity: Neutral (Correct)
+Cherry Marscapone --> Negative  Real Polarity: Neutral (Wrong)
 The homage to India is most evident in the delectable  roti canai appetizer  , a fried pancake served with pungent curry dipping sauce , while the mango chicken offers a surprisingly sophisticated , fresh take on sweet-and-sour . 
 roti canai appetizer --> Positive  Real Polarity: Positive (Correct)
 The homage to India is most evident in the delectable roti canai appetizer , a fried pancake served with pungent curry dipping sauce , while the  mango chicken  offers a surprisingly sophisticated , fresh take on sweet-and-sour . 
@@ -1919,9 +1919,9 @@ mango chicken --> Positive  Real Polarity: Positive (Correct)
 The homage to India is most evident in the delectable roti canai appetizer , a  fried pancake served with pungent curry dipping sauce  , while the mango chicken offers a surprisingly sophisticated , fresh take on sweet-and-sour . 
 fried pancake served with pungent curry dipping sauce --> Positive  Real Polarity: Positive (Correct)
 It does n't look like much on the  outside  , but the minute you walk inside , it 's a whole other atmosphere . 
-outside --> Negative  Real Polarity: Negative (Correct)
+outside --> Positive  Real Polarity: Negative (Wrong)
 It does n't look like much on the outside , but the minute you walk inside , it 's a whole other  atmosphere  . 
-atmosphere --> Negative  Real Polarity: Positive (Wrong)
+atmosphere --> Positive  Real Polarity: Positive (Correct)
 The  ground chickpea soup  we sampled as a starter tasted somewhat thin . 
 ground chickpea soup --> Negative  Real Polarity: Negative (Correct)
 The ground chickpea soup we sampled as a  starter  tasted somewhat thin . 
@@ -1929,7 +1929,7 @@ starter --> Negative  Real Polarity: Neutral (Wrong)
 We requested they re-slice the  sushi  , and it was returned to us in small cheese-like cubes . 
 sushi --> Negative  Real Polarity: Negative (Correct)
 The  service  , however , is a peg or two below the quality of food -LRB- horrible bartenders -RRB- , and the clientele , for the most part , are rowdy , loud-mouthed commuters -LRB- this could explain the bad attitudes
-service --> Positive  Real Polarity: Negative (Wrong)
+service --> Negative  Real Polarity: Negative (Correct)
 The service , however , is a peg or two below the  quality of food  -LRB- horrible bartenders -RRB- , and the clientele , for the most part , are rowdy , loud-mouthed commuters -LRB- this could explain the bad attitudes from the staff -RRB- getting loaded for an AC/DC concert or a
 quality of food --> Negative  Real Polarity: Positive (Wrong)
 The service , however , is a peg or two below the quality of food -LRB- horrible  bartenders  -RRB- , and the clientele , for the most part , are rowdy , loud-mouthed commuters -LRB- this could explain the bad attitudes from the staff -RRB- getting loaded for an AC/DC concert or a Knicks game . 
@@ -1943,9 +1943,9 @@ meal --> Positive  Real Polarity: Positive (Correct)
 Unfortunately , with our show tickets , we did n't have time to sample any  desserts  . 
 desserts --> Negative  Real Polarity: Neutral (Wrong)
 Make more  tables  - perhaps a rooftop bar ? 
-tables --> Negative  Real Polarity: Negative (Correct)
+tables --> Positive  Real Polarity: Negative (Wrong)
 Make more tables - perhaps a  rooftop bar  ? 
-rooftop bar --> Negative  Real Polarity: Neutral (Wrong)
+rooftop bar --> Positive  Real Polarity: Neutral (Wrong)
 The  decoration  was feeling like we was on the Cairo , actually the street is part of that adventure . 
 decoration --> Positive  Real Polarity: Positive (Correct)
 Although small , it has beautiful  ambience  , excellent food -LRB- the catfish is delicious - if ya do n't mind it a lil salty -RRB- and attentive service . 
@@ -1957,35 +1957,35 @@ catfish --> Positive  Real Polarity: Positive (Correct)
 Although small , it has beautiful ambience , excellent food -LRB- the catfish is delicious - if ya do n't mind it a lil salty -RRB- and attentive  service  . 
 service --> Positive  Real Polarity: Positive (Correct)
 I did n't go there for  food  so I ca n't comment . 
-food --> Neutral  Real Polarity: Neutral (Correct)
+food --> Negative  Real Polarity: Neutral (Wrong)
 Stick to the items the place does best ,  brisket  , ribs , wings , cajun shrimp is good , not great . 
-brisket --> Positive  Real Polarity: Positive (Correct)
+brisket --> Negative  Real Polarity: Positive (Wrong)
 Stick to the items the place does best , brisket ,  ribs  , wings , cajun shrimp is good , not great . 
-ribs --> Positive  Real Polarity: Positive (Correct)
+ribs --> Negative  Real Polarity: Positive (Wrong)
 Stick to the items the place does best , brisket , ribs ,  wings  , cajun shrimp is good , not great . 
-wings --> Positive  Real Polarity: Positive (Correct)
+wings --> Negative  Real Polarity: Positive (Wrong)
 Stick to the items the place does best , brisket , ribs , wings ,  cajun shrimp  is good , not great . 
-cajun shrimp --> Positive  Real Polarity: Neutral (Wrong)
+cajun shrimp --> Negative  Real Polarity: Neutral (Wrong)
 Hip boutiques and bars on Ludlow add to the artsy , laid-back  atmosphere  at this Israeli-style takeout and eat-in burger joint . 
 atmosphere --> Positive  Real Polarity: Positive (Correct)
 Young neighborhood trendies graze at the  counter  during the day , while chic , art-house drinkers with heavy doses of the munchies pile in late at night . 
 counter --> Positive  Real Polarity: Neutral (Wrong)
 Bring your date and a  bottle of wine  ! 
-bottle of wine --> Neutral  Real Polarity: Neutral (Correct)
+bottle of wine --> Positive  Real Polarity: Neutral (Wrong)
 My Chelsea 's impressive and creative  menu  includes modern , Westernized Japanese dishes such as Foie Gras Unagi Napolean , Jap style hamburger steak , spicy cod roe spaghetti , black cod with miso base , and rack of lamb in black truffle sauce , to
-menu --> Neutral  Real Polarity: Positive (Wrong)
+menu --> Positive  Real Polarity: Positive (Correct)
 My Chelsea 's impressive and creative menu includes modern , Westernized  Japanese dishes  such as Foie Gras Unagi Napolean , Jap style hamburger steak , spicy cod roe spaghetti , black cod with miso base , and rack of lamb in black truffle sauce , to name a few . 
-Japanese dishes --> Neutral  Real Polarity: Neutral (Correct)
+Japanese dishes --> Positive  Real Polarity: Neutral (Wrong)
 My Chelsea 's impressive and creative menu includes modern , Westernized Japanese dishes such as  Foie Gras Unagi Napolean  , Jap style hamburger steak , spicy cod roe spaghetti , black cod with miso base , and rack of lamb in black truffle sauce , to name a few . 
-Foie Gras Unagi Napolean --> Neutral  Real Polarity: Neutral (Correct)
+Foie Gras Unagi Napolean --> Positive  Real Polarity: Neutral (Wrong)
 My Chelsea 's impressive and creative menu includes modern , Westernized Japanese dishes such as Foie Gras Unagi Napolean ,  Jap style hamburger steak  , spicy cod roe spaghetti , black cod with miso base , and rack of lamb in black truffle sauce , to name a few . 
-Jap style hamburger steak --> Neutral  Real Polarity: Neutral (Correct)
+Jap style hamburger steak --> Positive  Real Polarity: Neutral (Wrong)
 My Chelsea 's impressive and creative menu includes modern , Westernized Japanese dishes such as Foie Gras Unagi Napolean , Jap style hamburger steak ,  spicy cod roe spaghetti  , black cod with miso base , and rack of lamb in black truffle sauce , to name a few . 
-spicy cod roe spaghetti --> Neutral  Real Polarity: Neutral (Correct)
+spicy cod roe spaghetti --> Positive  Real Polarity: Neutral (Wrong)
 My Chelsea 's impressive and creative menu includes modern , Westernized Japanese dishes such as Foie Gras Unagi Napolean , Jap style hamburger steak , spicy cod roe spaghetti ,  black cod with miso base  , and rack of lamb in black truffle sauce , to name a few . 
-black cod with miso base --> Neutral  Real Polarity: Neutral (Correct)
+black cod with miso base --> Positive  Real Polarity: Neutral (Wrong)
 Chelsea 's impressive and creative menu includes modern , Westernized Japanese dishes such as Foie Gras Unagi Napolean , Jap style hamburger steak , spicy cod roe spaghetti , black cod with miso base , and  rack of lamb in black truffle sauce  , to name a few . 
-rack of lamb in black truffle sauce --> Neutral  Real Polarity: Neutral (Correct)
+rack of lamb in black truffle sauce --> Positive  Real Polarity: Neutral (Wrong)
 His  food  is excellent -LRB- and not expensive by NYC standards - no entrees over $ 30 , most appetizers $ 12 to 14 -RRB- . 
 food --> Positive  Real Polarity: Positive (Correct)
 His food is excellent -LRB- and not expensive by NYC standards - no entrees over $ 30 , most  appetizers  $ 12 to 14 -RRB- . 
@@ -1999,41 +1999,41 @@ pasta primavera --> Positive  Real Polarity: Positive (Correct)
 The pasta primavera was outstanding as well , lots of  fresh veggies  . 
 fresh veggies --> Positive  Real Polarity: Positive (Correct)
 do n't get me wrong -  sushi  was good , just not fantastic . 
-sushi --> Neutral  Real Polarity: Positive (Wrong)
+sushi --> Negative  Real Polarity: Positive (Wrong)
 Being Puerto Rican I know a thing or two about  flan  and this place serves one of the best -LRB- I hope Mom does n't read this ! -RRB- . 
 flan --> Positive  Real Polarity: Positive (Correct)
 Been to the one in Brooklyn for over 25 years , now I dont have to go over the bridge for the best  pizza  ... Hanx 
-pizza --> Neutral  Real Polarity: Positive (Wrong)
+pizza --> Positive  Real Polarity: Positive (Correct)
 Had  dinner  here on a Friday and the food was great . 
-dinner --> Neutral  Real Polarity: Neutral (Correct)
+dinner --> Positive  Real Polarity: Neutral (Wrong)
 Had dinner here on a Friday and the  food  was great . 
-food --> Neutral  Real Polarity: Positive (Wrong)
+food --> Positive  Real Polarity: Positive (Correct)
 We recently spent New Year 's Eve at the restaurant , and had a great experience , from the  wine  to the dessert menu . 
 wine --> Positive  Real Polarity: Positive (Correct)
 We recently spent New Year 's Eve at the restaurant , and had a great experience , from the wine to the  dessert menu  . 
 dessert menu --> Positive  Real Polarity: Positive (Correct)
 Highly recommended ... As stated , I have n't dined * in * the restaurant but stopped by there to pick up takeout and it seems a very relaxing  place  ; also , the bar looks nice . 
-place --> Negative  Real Polarity: Positive (Wrong)
+place --> Positive  Real Polarity: Positive (Correct)
 Highly recommended ... As stated , I have n't dined * in * the restaurant but stopped by there to pick up takeout and it seems a very relaxing place ; also , the  bar  looks nice . 
-bar --> Negative  Real Polarity: Positive (Wrong)
+bar --> Positive  Real Polarity: Positive (Correct)
 Highly recommended ... As stated , I have n't dined * in * the restaurant but stopped by there to pick up  takeout  and it seems a very relaxing place ; also , the bar looks nice . 
-takeout --> Negative  Real Polarity: Neutral (Wrong)
+takeout --> Positive  Real Polarity: Neutral (Wrong)
 The  ambiance  was fine , a little loud but still nice and romantic . 
 ambiance --> Positive  Real Polarity: Positive (Correct)
 but , the filet mignon was not very good at all  cocktail hour  includes free appetizers -LRB- nice non-sushi selection -RRB- . 
-cocktail hour --> Positive  Real Polarity: Positive (Correct)
+cocktail hour --> Negative  Real Polarity: Positive (Wrong)
 but , the  filet mignon  was not very good at all cocktail hour includes free appetizers -LRB- nice non-sushi selection -RRB- . 
-filet mignon --> Positive  Real Polarity: Negative (Wrong)
+filet mignon --> Negative  Real Polarity: Negative (Correct)
 but , the filet mignon was not very good at all cocktail hour includes free appetizers -LRB- nice  non-sushi selection  -RRB- . 
-non-sushi selection --> Positive  Real Polarity: Positive (Correct)
+non-sushi selection --> Negative  Real Polarity: Positive (Wrong)
 but , the filet mignon was not very good at all cocktail hour includes free  appetizers  -LRB- nice non-sushi selection -RRB- . 
-appetizers --> Positive  Real Polarity: Positive (Correct)
+appetizers --> Negative  Real Polarity: Positive (Wrong)
 It took about 2 1/2 hours to be served our 2  courses  . 
-courses --> Negative  Real Polarity: Neutral (Wrong)
+courses --> Positive  Real Polarity: Neutral (Wrong)
 It took about 2 1/2 hours to be  served  our 2 courses . 
-served --> Negative  Real Polarity: Negative (Correct)
+served --> Positive  Real Polarity: Negative (Wrong)
 Who said go when the  place  is quiet during the day ? 
-place --> Neutral  Real Polarity: Neutral (Correct)
+place --> Positive  Real Polarity: Neutral (Wrong)
 Can be a bit busy around peak times because of the  size  . 
 size --> Negative  Real Polarity: Negative (Correct)
 I was on jury duty , rode my bike up Centre Street on my lunch break and came across this great little place with awesome  chicken tacos  and Hibiscus lemonade . 
@@ -2043,13 +2043,13 @@ Hibiscus lemonade --> Positive  Real Polarity: Positive (Correct)
 I was on jury duty , rode my bike up Centre Street on my lunch break and came across this great little  place  with awesome chicken tacos and Hibiscus lemonade . 
 place --> Positive  Real Polarity: Positive (Correct)
 good  place  to hang out during the day after shopping or to grab a simple soup or classic french dish over a glass of wine . 
-place --> Neutral  Real Polarity: Positive (Wrong)
+place --> Positive  Real Polarity: Positive (Correct)
 good place to hang out during the day after shopping or to grab a simple  soup  or classic french dish over a glass of wine . 
-soup --> Neutral  Real Polarity: Neutral (Correct)
+soup --> Positive  Real Polarity: Neutral (Wrong)
 good place to hang out during the day after shopping or to grab a simple soup or classic  french dish  over a glass of wine . 
-french dish --> Neutral  Real Polarity: Neutral (Correct)
+french dish --> Positive  Real Polarity: Neutral (Wrong)
 good place to hang out during the day after shopping or to grab a simple soup or classic french dish over a  glass of wine  . 
-glass of wine --> Neutral  Real Polarity: Neutral (Correct)
+glass of wine --> Positive  Real Polarity: Neutral (Wrong)
 Very nice touch that very much fits the  place  . 
 place --> Positive  Real Polarity: Positive (Correct)
 However , there is just something so great about being outdoors , in great landscaping , enjoying a  casual drink  that makes going to this place worthwhile . 
@@ -2061,7 +2061,7 @@ place --> Positive  Real Polarity: Positive (Correct)
 We were seated promptly in close proximity to the  dance floor  . 
 dance floor --> Positive  Real Polarity: Neutral (Wrong)
 If you are here as a  pre-show meal  , hop in a cab and take the extra 10 minutes to go to the uptown location . 
-pre-show meal --> Negative  Real Polarity: Neutral (Wrong)
+pre-show meal --> Positive  Real Polarity: Neutral (Wrong)
 The comments about  fried foods  is correct -LRB- below -RRB- but the other dishes , including the lamb entree and many of the salads -LRB- avocado shrimp -RRB- were quite good . 
 fried foods --> Positive  Real Polarity: Negative (Wrong)
 The comments about fried foods is correct -LRB- below -RRB- but the other  dishes  , including the lamb entree and many of the salads -LRB- avocado shrimp -RRB- were quite good . 
@@ -2071,7 +2071,7 @@ lamb entree --> Positive  Real Polarity: Positive (Correct)
 The comments about fried foods is correct -LRB- below -RRB- but the other dishes , including the lamb entree and many of the  salads (avocado shrimp)  were quite good . 
 salads (avocado shrimp) --> Positive  Real Polarity: Positive (Correct)
 Slow  service  , but when you 're hanging around with groups of 10 or 20 , who really notices ? 
-service --> Neutral  Real Polarity: Negative (Wrong)
+service --> Negative  Real Polarity: Negative (Correct)
 The sauce is excellent -LRB- very fresh -RRB- with  dabs of real mozzarella  . 
 dabs of real mozzarella --> Positive  Real Polarity: Neutral (Wrong)
 The  sauce  is excellent -LRB- very fresh -RRB- with dabs of real mozzarella . 
@@ -2095,11 +2095,11 @@ outdoor eating area --> Positive  Real Polarity: Positive (Correct)
 And all the  [female] servers  are cute too , which is always nice . 
 [female] servers --> Positive  Real Polarity: Positive (Correct)
 The best  dessert  , a chocolate and peanut butter tart , is n't particularly Hawaiian , but it 's a small world when it comes to sweets . 
-dessert --> Neutral  Real Polarity: Positive (Wrong)
+dessert --> Positive  Real Polarity: Positive (Correct)
 The best dessert , a  chocolate and peanut butter tart  , is n't particularly Hawaiian , but it 's a small world when it comes to sweets . 
-chocolate and peanut butter tart --> Neutral  Real Polarity: Positive (Wrong)
+chocolate and peanut butter tart --> Positive  Real Polarity: Positive (Correct)
 The best dessert , a chocolate and peanut butter tart , is n't particularly Hawaiian , but it 's a small world when it comes to  sweets  . 
-sweets --> Neutral  Real Polarity: Neutral (Correct)
+sweets --> Positive  Real Polarity: Neutral (Wrong)
 for an  appetizer  , their calamari is a winner . 
 appetizer --> Positive  Real Polarity: Neutral (Wrong)
 for an appetizer , their  calamari  is a winner . 
@@ -2109,11 +2109,11 @@ service --> Positive  Real Polarity: Positive (Correct)
 Satay is one of those favorite haunts on Washington where the service and  food  is always on the money . 
 food --> Positive  Real Polarity: Positive (Correct)
 After  dinner  I heard music playing and discovered that there is a lounge downstairs . 
-dinner --> Neutral  Real Polarity: Neutral (Correct)
+dinner --> Positive  Real Polarity: Neutral (Wrong)
 After dinner I heard  music  playing and discovered that there is a lounge downstairs . 
-music --> Neutral  Real Polarity: Neutral (Correct)
+music --> Positive  Real Polarity: Neutral (Wrong)
 After dinner I heard music playing and discovered that there is a  lounge  downstairs . 
-lounge --> Neutral  Real Polarity: Neutral (Correct)
+lounge --> Positive  Real Polarity: Neutral (Wrong)
 The  room  is a gorgeous , bi-level space and the long bar perfect for a drink . 
 room --> Positive  Real Polarity: Positive (Correct)
 The room is a gorgeous ,  bi-level space  and the long bar perfect for a drink . 
@@ -2133,9 +2133,9 @@ waitstaff --> Positive  Real Polarity: Positive (Correct)
 I was especially impressed during the bday party when the waitstaff went above and beyond in helping me decorate and bring out a bday cake as well as offering prompt and friendly  service  to a 15 person party . 
 service --> Positive  Real Polarity: Positive (Correct)
 The  chicken and falafel platters  were nondescript combinations with fresh leaf salad . 
-chicken and falafel platters --> Neutral  Real Polarity: Neutral (Correct)
+chicken and falafel platters --> Negative  Real Polarity: Neutral (Wrong)
 The chicken and falafel platters were nondescript combinations with  fresh leaf salad  . 
-fresh leaf salad --> Neutral  Real Polarity: Neutral (Correct)
+fresh leaf salad --> Negative  Real Polarity: Neutral (Wrong)
 The  atmosphere  takes you to that place , the place many dream of . 
 atmosphere --> Positive  Real Polarity: Positive (Correct)
 several times and put up with the  waiters  ' bad manners , knowing that their job is n't easy . 
@@ -2145,25 +2145,25 @@ desserts --> Positive  Real Polarity: Positive (Correct)
 The service is great -LRB- maybe even borderline nagging but at least you get attention -RRB- , the desserts are excellent and the  coffee  is so very good ... 
 coffee --> Positive  Real Polarity: Positive (Correct)
 They are  served  on Focacchia bread and are to die for . 
-served --> Neutral  Real Polarity: Neutral (Correct)
+served --> Positive  Real Polarity: Neutral (Wrong)
 They are served on  Focacchia bread  and are to die for . 
-Focacchia bread --> Neutral  Real Polarity: Neutral (Correct)
+Focacchia bread --> Positive  Real Polarity: Neutral (Wrong)
 While the  smoothies  are a little big for me , the fresh juices are the best I have ever had ! 
-smoothies --> Negative  Real Polarity: Negative (Correct)
+smoothies --> Positive  Real Polarity: Negative (Wrong)
 While the smoothies are a little big for me , the  fresh juices  are the best I have ever had ! 
-fresh juices --> Negative  Real Polarity: Positive (Wrong)
+fresh juices --> Positive  Real Polarity: Positive (Correct)
 The food is just OKAY , and it 's almost not worth going unless you 're getting the  pialla  , which is the only dish that 's really good . 
-pialla --> Positive  Real Polarity: Positive (Correct)
+pialla --> Negative  Real Polarity: Positive (Wrong)
 The food is just OKAY , and it 's almost not worth going unless you 're getting the pialla , which is the only  dish  that 's really good . 
-dish --> Positive  Real Polarity: Positive (Correct)
+dish --> Negative  Real Polarity: Positive (Wrong)
 The guac is fresh , yet lacking flavor , we like to add our  fresh salsa  into it . 
-fresh salsa --> Negative  Real Polarity: Neutral (Wrong)
+fresh salsa --> Positive  Real Polarity: Neutral (Wrong)
 The guac is fresh , yet lacking  flavor  , we like to add our fresh salsa into it . 
-flavor --> Negative  Real Polarity: Negative (Correct)
+flavor --> Positive  Real Polarity: Negative (Wrong)
 The new menu has a few creative items , they were smart enough to keep some of the old favorites -LRB- but they raised the  prices  -RRB- , the staff is friendly most of the time , but I must agree with the person that wrote about their favorite words : No , ca n't , sorry ... , boy , they wo n't bend
-prices --> Negative  Real Polarity: Negative (Correct)
+prices --> Positive  Real Polarity: Negative (Wrong)
 The  new menu  has a few creative items , they were smart enough to keep some of the old favorites -LRB- but they raised the prices -RRB- , the staff is friendly most of the time , but I must agree with
-new menu --> Negative  Real Polarity: Positive (Wrong)
+new menu --> Positive  Real Polarity: Positive (Correct)
 It ' only open for  lunch  but the food is so good ! 
 lunch --> Positive  Real Polarity: Neutral (Wrong)
 It ' only open for lunch but the  food  is so good ! 
@@ -2173,17 +2173,17 @@ seafood --> Positive  Real Polarity: Positive (Correct)
 If you like seafood and/or  Greek food  you will love this place though it is not limited to just these things . 
 Greek food --> Positive  Real Polarity: Positive (Correct)
 '' The  menu  includes pub fare -- burgers , steaks and shepherds pie -- and even a portabella lasagna for those black sheep known as `` vegetarians . 
-menu --> Neutral  Real Polarity: Neutral (Correct)
+menu --> Positive  Real Polarity: Neutral (Wrong)
 '' The menu includes pub fare --  burgers  , steaks and shepherds pie -- and even a portabella lasagna for those black sheep known as `` vegetarians . 
-burgers --> Neutral  Real Polarity: Neutral (Correct)
+burgers --> Positive  Real Polarity: Neutral (Wrong)
 '' The menu includes pub fare -- burgers ,  steaks  and shepherds pie -- and even a portabella lasagna for those black sheep known as `` vegetarians . 
-steaks --> Neutral  Real Polarity: Neutral (Correct)
+steaks --> Positive  Real Polarity: Neutral (Wrong)
 '' The menu includes pub fare -- burgers , steaks and  shepherds pie  -- and even a portabella lasagna for those black sheep known as `` vegetarians . 
-shepherds pie --> Neutral  Real Polarity: Neutral (Correct)
+shepherds pie --> Positive  Real Polarity: Neutral (Wrong)
 '' The menu includes pub fare -- burgers , steaks and shepherds pie -- and even a  portabella lasagna  for those black sheep known as `` vegetarians . 
-portabella lasagna --> Neutral  Real Polarity: Neutral (Correct)
+portabella lasagna --> Positive  Real Polarity: Neutral (Wrong)
 '' The menu includes  pub fare  -- burgers , steaks and shepherds pie -- and even a portabella lasagna for those black sheep known as `` vegetarians . 
-pub fare --> Neutral  Real Polarity: Neutral (Correct)
+pub fare --> Positive  Real Polarity: Neutral (Wrong)
 How can they survive serving mediocre  food  at exorbitant prices ?! 
 food --> Negative  Real Polarity: Neutral (Wrong)
 How can they survive serving mediocre food at exorbitant  prices  ?! 
@@ -2205,11 +2205,11 @@ waiter --> Negative  Real Polarity: Negative (Correct)
 I asked repeatedly what the status of the  meal  was and was pretty much grunted at by the unbelievably rude waiter . 
 meal --> Negative  Real Polarity: Neutral (Wrong)
 I stopped by for some  brunch  today and had the vegan cranberry pancakes and some rice milk . 
-brunch --> Neutral  Real Polarity: Neutral (Correct)
+brunch --> Positive  Real Polarity: Neutral (Wrong)
 I stopped by for some brunch today and had the  vegan cranberry pancakes  and some rice milk . 
-vegan cranberry pancakes --> Neutral  Real Polarity: Neutral (Correct)
+vegan cranberry pancakes --> Positive  Real Polarity: Neutral (Wrong)
 I stopped by for some brunch today and had the vegan cranberry pancakes and some  rice milk  . 
-rice milk --> Neutral  Real Polarity: Neutral (Correct)
+rice milk --> Positive  Real Polarity: Neutral (Wrong)
 Sweet Irish  bartender  is always happy and able to bring a smile to my friends a my face . 
 bartender --> Positive  Real Polarity: Positive (Correct)
 Its good to go there for drinks if you do n't want to get drunk because you 'll be lucky if you can get one drink an hour the  service  is so bad . 
@@ -2240,4 +2240,4 @@ Creamy appetizers -- taramasalata , eggplant salad , and  Greek yogurt (with cuc
 Greek yogurt (with cuccumber, dill, and garlic) --> Positive  Real Polarity: Positive (Correct)
 Total samples:1120
 Labeled samples:1120
-Prediction Accuracy:89.10714285714286%
+Prediction Accuracy:75.89285714285714%

@@ -12,7 +12,7 @@ from setuptools import setup, find_packages
 here = path.abspath(path.dirname(__file__))
 setup(
     name='pyabsa',
-    version='0.3.0a0',
+    version='0.3.0a4',
     description='Train & infer aspect-based sentiment analysis using state-of-the-art models',
     # long_description=str(open(path.join(here, "README.md"), encoding='utf8').read()),
     # The project's main homepage.

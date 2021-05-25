@@ -77,33 +77,42 @@ def train_apc(parameter_dict=None,
     evaluate model performance while training model in order to obtain best benchmarked model
     '''
     # load training set
-    try:
-        dataset_file = dict()
-        dataset_file['train'] = find_target_file(dataset_path, 'train', exclude_key='infer')
-        if auto_evaluate and find_target_file(dataset_path, 'test', exclude_key='infer'):
-            dataset_file['test'] = find_target_file(dataset_path, 'test', exclude_key='infer')
-        if auto_evaluate and not find_target_file(dataset_path, 'test', exclude_key='infer'):
-            print('Cna not find test set using for evaluating!')
-    except:
+
+    dataset_file = dict()
+    dataset_file['train'] = find_target_file(dataset_path, 'train', exclude_key='infer')
+    if auto_evaluate and find_target_file(dataset_path, 'test', exclude_key='infer'):
+        dataset_file['test'] = find_target_file(dataset_path, 'test', exclude_key='infer')
+    if auto_evaluate and not find_target_file(dataset_path, 'test', exclude_key='infer'):
+        print('Cna not find test set using for evaluating!')
+    if len(dataset_file) == 0:
         raise RuntimeError('Can not load train set or test set! '
-                           'Make sure there are (only) one train set and one test set in the path:', dataset_path)
+                           'Make sure there are (only) one trainset and (only) one testset in the path:', dataset_path)
 
     config = init_training_config(parameter_dict, auto_device)
     config.dataset_path = dataset_path
     config.model_path_to_save = model_path_to_save
     config.dataset_file = dataset_file
     model_path = []
+    sent_classifier = None
 
     if not isinstance(config.seed, int) and 'test' in dataset_file:
         for _, s in enumerate(config.seed):
             t_config = copy.deepcopy(config)
             t_config.seed = s
-            model_path.append(apc_trainer(t_config))
-        return SentimentClassifier(from_model_path=max(model_path))
+            if model_path_to_save:
+                model_path.append(apc_trainer(t_config))
+            else:
+                sent_classifier = SentimentClassifier(model_arg=apc_trainer(t_config))
+        # return last trained model if do not save model
+        if model_path_to_save:
+            return SentimentClassifier(model_arg=max(model_path))
+        else:
+            return sent_classifier
+
     elif 'test' in dataset_file:  # Avoid multiple training without evaluating
-        return SentimentClassifier(from_model_path=apc_trainer(config))
+        return SentimentClassifier(model_arg=apc_trainer(config))
     else:  # Avoid evaluating without test set
-        return SentimentClassifier(from_training=apc_trainer(config))
+        return SentimentClassifier(apc_trainer(config))
 
 
 def load_trained_model(trained_model_path=None,

@@ -117,10 +117,9 @@ class ABSADataset(Dataset):
         fin = open(fname, 'r', encoding='utf-8', newline='\n', errors='ignore')
         lines = fin.readlines()
         fin.close()
-        print('building word indices...')
         all_data = []
 
-        for i in tqdm.tqdm(range(0, len(lines), 3)):
+        for i in tqdm.tqdm(range(0, len(lines), 3), postfix='building word indices...'):
             try:
                 text_left, _, text_right = [s.strip() for s in lines[i].partition("$T$")]
                 aspect = lines[i + 1].lower().strip()
