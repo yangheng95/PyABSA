@@ -9,45 +9,50 @@ import os
 import copy
 from argparse import Namespace
 
-from pyabsa.apc.prediction.prediction import SentimentClassifier
-from pyabsa.apc.training.apc_trainer import apc_trainer
-from pyabsa.apc.training.training_configs import *
 from pyabsa.pyabsa_utils import find_target_file, get_auto_device
-from pyabsa.apc.dataset_utils.apc_utils import parse_experiments
+
+from pyabsa.apc.inferring.SentimentClassifier import SentimentClassifier
+from pyabsa.apc.training.apc_trainer import train4apc
+from pyabsa.apc.training import apc_config
+from pyabsa.apc.dataset_utils.apc_utils import parse_apc_params
+
+from pyabsa.atepc.training.atepc_trainer import train4atepc
+from pyabsa.atepc.inferring.AspectExtractor import AspectExtractor
+from pyabsa.atepc.training import atepc_config
 
 choice = get_auto_device()
 
 
-def init_training_config(config_dict, auto_device=True):
+def init_apc_config(config_dict, auto_device=True):
     config = dict()
-    config['SRD'] = SRD
-    config['batch_size'] = batch_size
-    config['eta'] = eta
-    config['dropout'] = dropout
-    config['l2reg'] = l2reg
-    config['lcf'] = lcf
-    config['initializer'] = initializer
-    config['learning_rate'] = learning_rate
-    config['max_seq_len'] = max_seq_len
-    config['model_name'] = model_name
-    config['num_epoch'] = num_epoch
-    config['optimizer'] = optimizer
-    config['pretrained_bert_name'] = pretrained_bert_name
-    config['use_bert_spc'] = use_bert_spc
-    config['use_dual_bert'] = use_dual_bert
-    config['window'] = window
-    config['seed'] = seed
-    config['embed_dim'] = embed_dim
-    config['hidden_dim'] = hidden_dim
-    config['polarities_dim'] = polarities_dim
-    config['sigma'] = sigma
-    config['log_step'] = log_step
+    config['model_name'] = apc_config.model_name
+    config['SRD'] = apc_config.SRD
+    config['batch_size'] = apc_config.batch_size
+    config['eta'] = apc_config.eta
+    config['dropout'] = apc_config.dropout
+    config['l2reg'] = apc_config.l2reg
+    config['lcf'] = apc_config.lcf
+    config['initializer'] = apc_config.initializer
+    config['learning_rate'] = apc_config.learning_rate
+    config['max_seq_len'] = apc_config.max_seq_len
+    config['num_epoch'] = apc_config.num_epoch
+    config['optimizer'] = apc_config.optimizer
+    config['pretrained_bert_name'] = apc_config.pretrained_bert_name
+    config['use_bert_spc'] = apc_config.use_bert_spc
+    config['use_dual_bert'] = apc_config.use_dual_bert
+    config['window'] = apc_config.window
+    config['seed'] = apc_config.seed
+    config['embed_dim'] = apc_config.embed_dim
+    config['hidden_dim'] = apc_config.hidden_dim
+    config['polarities_dim'] = apc_config.polarities_dim
+    config['sigma'] = apc_config.sigma
+    config['log_step'] = apc_config.log_step
 
     # reload hyper-parameter from training config
     path = os.path.abspath(__file__)
     folder = os.path.dirname(path)
     config_path = os.path.join(folder, 'apc/training/training_configs.json')
-    _config = vars(parse_experiments(config_path)[0])
+    _config = vars(parse_apc_params(config_path)[0])
     for key in config:
         _config[key] = config[key]
 
@@ -64,6 +69,53 @@ def init_training_config(config_dict, auto_device=True):
             _config['device'] = 'cpu'
 
     _config = Namespace(**_config)
+
+    return _config
+
+
+def init_atepc_config(config_dict, auto_device=True):
+    config = dict()
+    config['model_name'] = atepc_config.model_name
+    config['SRD'] = atepc_config.SRD
+    config['batch_size'] = atepc_config.batch_size
+    config['dropout'] = atepc_config.dropout
+    config['l2reg'] = atepc_config.l2reg
+    config['lcf'] = atepc_config.lcf
+    config['initializer'] = atepc_config.initializer
+    config['learning_rate'] = atepc_config.learning_rate
+    config['max_seq_len'] = atepc_config.max_seq_len
+    config['num_epoch'] = atepc_config.num_epoch
+    config['optimizer'] = atepc_config.optimizer
+    config['pretrained_bert_name'] = atepc_config.pretrained_bert_name
+    config['use_bert_spc'] = atepc_config.use_bert_spc
+    config['use_dual_bert'] = atepc_config.use_dual_bert
+    config['seed'] = atepc_config.seed
+    config['embed_dim'] = atepc_config.embed_dim
+    config['hidden_dim'] = atepc_config.hidden_dim
+    config['polarities_dim'] = atepc_config.polarities_dim
+    config['log_step'] = atepc_config.log_step
+    config['gradient_accumulation_steps'] = atepc_config.gradient_accumulation_steps
+    # # reload hyper-parameter from training config
+    # path = os.path.abspath(__file__)
+    # folder = os.path.dirname(path)
+    # config_path = os.path.join(folder, 'atepc/training/experiments.json')
+    # _config = vars(parse_apc_params(config_path)[0])
+    # for key in config:
+    #     _config[key] = config[key]
+
+    if not config_dict:
+        config_dict = dict()
+    # reload hyper-parameter from parameter dict
+    for key in config_dict:
+        config[key] = config_dict[key]
+
+    if auto_device and 'device' not in config:
+        if choice >= 0:
+            config['device'] = 'cuda:' + str(choice)
+        else:
+            config['device'] = 'cpu'
+
+    _config = Namespace(**config)
 
     return _config
 
@@ -88,7 +140,7 @@ def train_apc(parameter_dict=None,
         raise RuntimeError('Can not load train set or test set! '
                            'Make sure there are (only) one trainset and (only) one testset in the path:', dataset_path)
 
-    config = init_training_config(parameter_dict, auto_device)
+    config = init_apc_config(parameter_dict, auto_device)
     config.dataset_path = dataset_path
     config.model_path_to_save = model_path_to_save
     config.dataset_file = dataset_file
@@ -100,9 +152,9 @@ def train_apc(parameter_dict=None,
             t_config = copy.deepcopy(config)
             t_config.seed = s
             if model_path_to_save:
-                model_path.append(apc_trainer(t_config))
+                model_path.append(train4apc(t_config))
             else:
-                sent_classifier = SentimentClassifier(model_arg=apc_trainer(t_config))
+                sent_classifier = SentimentClassifier(model_arg=train4apc(t_config))
         # return last trained model if do not save model
         if model_path_to_save:
             return SentimentClassifier(model_arg=max(model_path))
@@ -110,16 +162,61 @@ def train_apc(parameter_dict=None,
             return sent_classifier
 
     elif 'test' in dataset_file:  # Avoid multiple training without evaluating
-        return SentimentClassifier(model_arg=apc_trainer(config))
+        return SentimentClassifier(model_arg=train4apc(config))
     else:  # Avoid evaluating without test set
-        return SentimentClassifier(apc_trainer(config))
+        return SentimentClassifier(train4apc(config))
 
 
-def load_trained_model(trained_model_path=None,
-                       auto_device=False):
+def load_sentiment_classifier(trained_model_path=None,
+                              auto_device=True):
     if trained_model_path and os.path.isdir(trained_model_path):
         infer_model = SentimentClassifier(trained_model_path)
         infer_model.to('cuda:' + str(choice)) if auto_device and choice >= 0 else infer_model.cpu()
         return infer_model
+    else:
+        raise RuntimeError('Not a valid model path!')
+
+
+def train_atepc(parameter_dict=None,
+                dataset_path=None,
+                model_path_to_save=None,
+                auto_evaluate=True,
+                auto_device=True):
+    '''
+    evaluate model performance while training model in order to obtain best benchmarked model
+    '''
+    # load training set
+
+    dataset_file = dict()
+    dataset_file['train'] = find_target_file(dataset_path, 'train', exclude_key='infer')
+    if auto_evaluate and find_target_file(dataset_path, 'test', exclude_key='infer'):
+        dataset_file['test'] = find_target_file(dataset_path, 'test', exclude_key='infer')
+    if auto_evaluate and not find_target_file(dataset_path, 'test', exclude_key='infer'):
+        print('Cna not find test set using for evaluating!')
+    if len(dataset_file) == 0:
+        raise RuntimeError('Can not load train set or test set! '
+                           'Make sure there are (only) one trainset and (only) one testset in the path:',
+                           dataset_path)
+
+    config = init_atepc_config(parameter_dict, auto_device)
+    config.dataset_path = dataset_path
+    config.model_path_to_save = model_path_to_save
+    config.dataset_file = dataset_file
+
+    if not isinstance(config.seed, int):
+        for _, s in enumerate(config.seed):
+            t_config = copy.deepcopy(config)
+            t_config.seed = s
+            train4atepc(config)
+    else:
+        train4atepc(config)
+
+
+def load_aspect_extractor(trained_model_path=None,
+                          auto_device=True):
+    if trained_model_path and os.path.isdir(trained_model_path):
+        aspect_extractor = AspectExtractor(trained_model_path)
+        aspect_extractor.to('cuda:' + str(choice)) if auto_device and choice >= 0 else aspect_extractor.cpu()
+        return aspect_extractor
     else:
         raise RuntimeError('Not a valid model path!')

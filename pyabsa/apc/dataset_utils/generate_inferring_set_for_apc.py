@@ -3,11 +3,11 @@
 # author: yangheng<yangheng@m.scnu.edu.cn>
 # Copyright (C) 2021. All Rights Reserved.
 
-from ..pyabsa_utils import find_target_file
+from pyabsa.pyabsa_utils import find_target_file
 
 
 # convert datasets in this repo for inferring
-def convert_dataset_for_inference(dataset_path):
+def generate_inferring_set_for_apc(dataset_path):
     train_datasets = find_target_file(dataset_path, 'train', exclude_key='infer', find_all=True)
     test_datasets = find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True)
     for file in train_datasets + test_datasets:

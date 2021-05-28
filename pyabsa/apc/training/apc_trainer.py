@@ -60,17 +60,6 @@ class Instructor:
         for arg in vars(self.opt):
             print('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
 
-    def _reset_params(self):
-        for child in self.model.children():
-            if type(child) != BertModel:  # skip bert params (with unfreezed bert)
-                for p in child.parameters():
-                    if p.requires_grad:
-                        if len(p.shape) > 1:
-                            self.opt.initializer(p)
-                        else:
-                            stdv = 1. / math.sqrt(p.shape[0])
-                            torch.nn.init.uniform_(p, a=-stdv, b=stdv)
-
     def _save_model(self, model, save_path, mode=0):
         # Save a trained model, configuration and tokenizer
         model_to_save = model.module if hasattr(model, 'module') else model  # Only save the model it-self
@@ -224,11 +213,10 @@ class Instructor:
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
         optimizer = self.opt.optimizer(_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
-        self._reset_params()
         return self._train_and_evaluate(criterion, lca_criterion, optimizer)
 
 
-def apc_trainer(opt):
+def train4apc(opt):
     if not isinstance(opt.seed, int):
         print('Please do not use multiple random seeds without evaluating.')
         opt.seed = list(opt.seed)[0]
@@ -248,12 +236,6 @@ def apc_trainer(opt):
         'slide_lcfs_bert': SLIDE_LCF_BERT
     }
 
-    initializers = {
-        'xavier_uniform_': torch.nn.init.xavier_uniform_,
-        'xavier_normal_': torch.nn.init.xavier_normal,
-        'orthogonal_': torch.nn.init.orthogonal_
-    }
-
     optimizers = {
         'adadelta': torch.optim.Adadelta,  # default lr=1.0
         'adagrad': torch.optim.Adagrad,  # default lr=0.01
@@ -267,7 +249,6 @@ def apc_trainer(opt):
 
     opt.model_class = model_classes[opt.model_name]
     opt.inputs_cols = ABSADataset.input_colses[opt.model_name]
-    opt.initializer = initializers[opt.initializer]
     opt.optimizer = optimizers[opt.optimizer]
     opt.device = torch.device(opt.device)
     ins = Instructor(opt)

@@ -7,13 +7,13 @@
 # Usage: Evaluate on given text or inference dataset
 
 from pyabsa import find_target_file
-from pyabsa import load_trained_model
+from pyabsa import load_sentiment_classifier
 
 # Assume the sent_classifier is loaded or obtained using train function
 model_path = 'state_dict/bert_base_cdw_acc82.59_seed996seed'
-sent_classifier = load_trained_model(trained_model_path=model_path,
-                                     auto_device=True  # Use CUDA if available
-                                     )
+sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
+                                            auto_device=True  # Use CUDA if available
+                                            )
 # The default loading device is CPU
 # load the model to CPU
 # sent_classifier.cpu()
