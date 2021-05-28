@@ -25,10 +25,11 @@ def find_target_file(dir_path, file_type, exclude_key='', find_all=False):
     elif os.path.isfile(dir_path) and file_type not in dir_path:
         return ''
     elif not find_all:
-        path = os.path.join(dir_path,
-                            [p for p in os.listdir(dir_path)
-                             if file_type in p.lower()
-                             and not (exclude_key and exclude_key in p.lower())][0])
+        tmp_files = [p for p in os.listdir(dir_path)
+                     if file_type in p.lower()
+                     and not (exclude_key and exclude_key in p.lower())]
+        path = os.path.join(dir_path, tmp_files[0])
+
     else:
         path = [os.path.join(dir_path, p)
                 for p in os.listdir(dir_path)
@@ -36,4 +37,3 @@ def find_target_file(dir_path, file_type, exclude_key='', find_all=False):
                 and not (exclude_key and exclude_key in p.lower())]
 
     return path
-

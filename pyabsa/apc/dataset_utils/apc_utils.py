@@ -12,7 +12,7 @@ import numpy as np
 import spacy
 
 
-def parse_experiments(path):
+def parse_apc_params(path):
     configs = []
 
     with open(path, "r", encoding='utf-8') as reader:

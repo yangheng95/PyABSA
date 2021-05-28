@@ -12,8 +12,8 @@ from setuptools import setup, find_packages
 here = path.abspath(path.dirname(__file__))
 setup(
     name='pyabsa',
-    version='0.3.0a4',
-    description='Train & infer aspect-based sentiment analysis using state-of-the-art models',
+    version='0.4.0a2',
+    description='This tool provides the sota models for aspect term extraction and aspect polarity classification',
     # long_description=str(open(path.join(here, "README.md"), encoding='utf8').read()),
     # The project's main homepage.
     url='https://github.com/yangheng95/LC-ABSA',

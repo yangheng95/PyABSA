@@ -1,12 +1,17 @@
-# Aspect & Target Sentiment Classification Tool
+# Aspect Term Extraction & Sentiment Classification Tool
 
-> 本仓库提供易于使用的方面级情感分类的模型，只需简单几步即可分类方面级情感。
+> 本仓库提供易于使用的方面抽取模型和情感分类模型，只需简单几步即可抽取方面或者分类方面级情感。
 
 > 基于BERT / LCF机制的方面级情感分类模型库 (CPU & CUDA supported)
 
 > PyTorch Implementations.
+>
 
-if you are looking for the original code in the papers, please go to the [master](https://github.com/yangheng95/LC-ABSA/tree/master) branch.
+# Notice
+
+if you are looking for the original codes in the LCF-related papers, please go to
+the [master](https://github.com/yangheng95/LC-ABSA/tree/master) (APC) branch 
+and [master](https://github.com/yangheng95/LCF-ATEPC) (ATE and APC).
 
 ## Requirement
 
@@ -19,13 +24,21 @@ if you are looking for the original code in the papers, please go to the [master
 This repository provides aspect/target sentiment classification APC models, especially those models based on the local
 context focus mechanisms.
 
-# Usages
+# Aspect Term Extraction (ATE)
 
-Check the detailed usages in [examples](./examples) directory.
+Check the detailed usages in [ATE examples](./examples/atepc_usages) directory.
 
-详细使用方式请见[examples](./examples)目录
+详细使用方式请见[ATE examples](./examples/atepc_usages)目录
 
-# Quick Start
+## Quick Start
+
+# Aspect Polarity Classification (APC)
+
+Check the detailed usages in [APC examples](./examples/apc_usages) directory.
+
+详细使用方式请见[APC examples](./examples/apc_usages)目录
+
+## Quick Start
 
 Install this repo by `pip install pyabsa`.
 
@@ -79,8 +92,8 @@ sent_classifier = train_apc(parameter_dict=param_dict,    # set param_dict=None 
 
 We provide the pretrained models
 on [Google Drive](https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing)
-or [百度网盘（提取码：absa）](https://pan.baidu.com/s/1FSgaSP4ubGWy0BjBQdct5w) trained on a
-large assembled ABSA [dataset](examples/sum_train.dat) based on BERT-BASE-UNCASED model,
+or [百度网盘（提取码：absa）](https://pan.baidu.com/s/1FSgaSP4ubGWy0BjBQdct5w) trained on a large assembled
+ABSA [dataset](examples/apc_usages/sum_train.dat) based on BERT-BASE-UNCASED model,
 
 1. BERT-BASE
 2. BERT-SPC

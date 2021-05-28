@@ -33,10 +33,9 @@ class ABSADataset(Dataset):
             lca_ids = np.zeros((opt.max_seq_len), dtype=np.float32)
             cdm_vec = np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
             aspect_len = np.count_nonzero(aspect_indices) - 2
-            # text_len = np.count_nonzero(text_ids)
+            text_len = np.count_nonzero(text_ids)
             if 'lcfs' in opt.model_name:
                 # Find distance in dependency parsing tree
-                # raw_tokens, dist = calculate_dep_dist(text_spc, aspect)
                 raw_tokens, dist = calculate_dep_dist(text_raw, aspect)
                 raw_tokens.insert(0, tokenizer.cls_token)
                 dist.insert(0, 0)
@@ -63,7 +62,7 @@ class ABSADataset(Dataset):
             SRD = opt.SRD
             cdw_vec = np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
             aspect_len = np.count_nonzero(aspect_indices) - 2
-            text_len = np.flatnonzero(text_ids)[-1] + 1
+            text_len = np.count_nonzero(text_ids)
             if 'lcfs' in opt.model_name:
                 # Find distance in dependency parsing tree
                 raw_tokens, dist = calculate_dep_dist(text_raw, aspect)
@@ -75,7 +74,6 @@ class ABSADataset(Dataset):
                 for i in range(text_len):
                     if syntactical_dist[i] > SRD:
                         w = 1 - syntactical_dist[i] / text_len
-                        # w = max(0, 1 - syntactical_dist[i] / text_len)
                         cdw_vec[i] = w * np.ones((opt.embed_dim), dtype=np.float32)
                     else:
                         cdw_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
@@ -94,7 +92,6 @@ class ABSADataset(Dataset):
                     elif i > local_context_end:
                         w = 1 - (i - local_context_end) / text_len
                         cdw_vec[i] = w * np.ones((opt.embed_dim), dtype=np.float32)
-
             return cdw_vec
 
         def get_asp_index(text_ids, aspect_indices):
@@ -152,16 +149,22 @@ class ABSADataset(Dataset):
 
                 data = {
                     'text_raw': text_raw,
+
                     'aspect': aspect,
+
                     'lca_ids': lca_ids if 'lca_ids' in ABSADataset.input_colses[opt.model_name] else 0,
+
                     'lcf_vec': lcf_vec if 'lcf_vec' in ABSADataset.input_colses[opt.model_name] else 0,
-                    'spc_mask_vec': build_spc_mask_vec(text_raw_bert_indices) if 'spc_mask_vec' in
-                                                                                 ABSADataset.input_colses[
-                                                                                     opt.model_name] else 0,
-                    'text_bert_indices': text_bert_indices if 'text_bert_indices' in ABSADataset.input_colses[
-                        opt.model_name] else 0,
-                    'aspect_bert_indices': aspect_bert_indices if 'aspect_bert_indices' in ABSADataset.input_colses[
-                        opt.model_name] else 0,
+
+                    'spc_mask_vec': build_spc_mask_vec(text_raw_bert_indices)
+                    if 'spc_mask_vec' in ABSADataset.input_colses[opt.model_name] else 0,
+
+                    'text_bert_indices': text_bert_indices
+                    if 'text_bert_indices' in ABSADataset.input_colses[opt.model_name] else 0,
+
+                    'aspect_bert_indices': aspect_bert_indices
+                    if 'aspect_bert_indices' in ABSADataset.input_colses[opt.model_name] else 0,
+
                     'text_raw_bert_indices': text_raw_bert_indices
                     if 'text_raw_bert_indices' in ABSADataset.input_colses[opt.model_name] else 0,
 
