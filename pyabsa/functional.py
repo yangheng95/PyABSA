@@ -202,14 +202,15 @@ def train_atepc(parameter_dict=None,
     config.dataset_path = dataset_path
     config.model_path_to_save = model_path_to_save
     config.dataset_file = dataset_file
-
+    model_path = []
     if not isinstance(config.seed, int):
         for _, s in enumerate(config.seed):
             t_config = copy.deepcopy(config)
             t_config.seed = s
-            train4atepc(config)
+            model_path.append(train4atepc(config))
+        return AspectExtractor(max(model_path))
     else:
-        train4atepc(config)
+        AspectExtractor(train4atepc(config))
 
 
 def load_aspect_extractor(trained_model_path=None,

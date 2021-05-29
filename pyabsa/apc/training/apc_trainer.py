@@ -132,11 +132,11 @@ class Instructor:
                                     # print('Remove sub-optimal trained model:', save_path)
                                 except:
                                     print('Can not remove sub-optimal trained model:', save_path)
-                            save_path = '{0}/{1}_{2}_acc{3}_seed{4}seed/'.format(self.opt.model_path_to_save,
-                                                                                 self.opt.model_name,
-                                                                                 self.opt.lcf,
-                                                                                 round(test_acc * 100, 2),
-                                                                                 self.opt.seed)
+                            save_path = '{0}/{1}_{2}_acc{3}/'.format(self.opt.model_path_to_save,
+                                                                     self.opt.model_name,
+                                                                     self.opt.lcf,
+                                                                     round(test_acc * 100, 2),
+                                                                     )
                             self._save_model(self.model, save_path, mode=0)
                         # print('max_acc:{}, f1:{}'.format(round(test_acc * 100, 2), round(f1 * 100, 2)))
                     if f1 > max_f1:
@@ -159,10 +159,10 @@ class Instructor:
         else:
             # direct return model if do not evaluate
             if self.opt.model_path_to_save:
-                save_path = '{0}/{1}_{2}_seed{3}seed/'.format(self.opt.model_path_to_save,
-                                                              self.opt.model_name,
-                                                              self.opt.lcf,
-                                                              self.opt.seed)
+                save_path = '{0}/{1}_{2}/'.format(self.opt.model_path_to_save,
+                                                  self.opt.model_name,
+                                                  self.opt.lcf,
+                                                  )
                 self._save_model(self.model, save_path, mode=0)
             return self.model, self.opt
 
