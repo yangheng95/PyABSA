@@ -25,5 +25,5 @@ setup(
     data_files=[('config', ['pyabsa/apc/training/training_configs.json'])],
     # Choose your license
     license='MIT',
-    install_requires=['transformers>=4.4.2', 'spacy', 'networkx'],
+    install_requires=['transformers>=4.4.2', 'spacy', 'networkx', 'seqeval', 'tqdm'],
 )
