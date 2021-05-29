@@ -15,15 +15,19 @@ from pyabsa import load_aspect_extractor
 # only implements the term extraction on single text.
 # There might batch extraction function in the future
 
-text = 'But the staff was so nice to us .'
-# text = 'But the staff was so horrible to us .'
-
+examples = ['But the staff was so nice to us .',
+            'But the staff was so horrible to us .',
+            r'Not only was the food outstanding , but the little ` perks \' were great .',
+            'It took half an hour to get our check , which was perfect since we could sit , have drinks and talk !'
+            ]
 # 从谷歌下载提供的预训练模型
 # Download the provided pre-training model from Google Drive
-model_path = 'state_dict/lcf_atepc_cdw_apcacc_84.27_apcf1_77.77_atef1_82.14_rest14'
+model_path = 'state_dict/lcf_atepc_cdw_rest14_without_spc'
 
 aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
                                          auto_device=True)
 
-atepc_result = aspect_extractor.extract_aspect([text])
+atepc_result = aspect_extractor.extract_aspect(examples,
+                                               print_result=True,
+                                               pred_sentiment=True)
 # print(atepc_result)

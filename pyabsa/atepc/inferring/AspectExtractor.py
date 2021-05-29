@@ -13,7 +13,7 @@ import string
 import numpy as np
 import torch
 import torch.nn.functional as F
-from torch.utils.data import (DataLoader, RandomSampler, TensorDataset)
+from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
 from transformers import BertTokenizer
 from transformers.models.bert.modeling_bert import BertModel
 
@@ -101,14 +101,30 @@ class AspectExtractor:
         self.args.device = device
         self.model.to(device)
 
-    def extract_aspect(self, examples: list):
-        for example in examples:
-            extraction_res = self._extract(example)
-            polarity_res = self._infer(extraction_res)
-            return {'extraction_res': extraction_res, 'polarity_res': polarity_res}
+    def extract_aspect(self, examples, print_result=True, pred_sentiment=True):
+        extraction_res = None
+        polarity_res = None
+        if isinstance(examples, str):
+            if os.path.isdir(examples) or os.path.isfile(examples):
+                raise NotImplementedError('Not implemented yet.')
+            else:
+                extraction_res = self._extract(examples, print_result)
+                if pred_sentiment:
+                    polarity_res = self._infer(extraction_res, print_result)
+                return {'extraction_res': extraction_res, 'polarity_res': polarity_res}
+        elif isinstance(examples, list):
+            results = []
+            for example in examples:
+                extraction_res = self._extract(example, print_result)
+                if pred_sentiment:
+                    polarity_res = self._infer(extraction_res, print_result)
+                results.append({'extraction_res': extraction_res, 'polarity_res': polarity_res})
+            return results
 
     # Temporal code, pending optimization
-    def _extract(self, example):
+    def _extract(self, example, print_result):
+
+        res = []  # extraction result
 
         self.eval_dataloader = None
         example = self.processor.get_examples_for_aspect_extraction(example)
@@ -127,7 +143,7 @@ class AspectExtractor:
         eval_data = TensorDataset(all_spc_input_ids, all_input_mask, all_segment_ids, all_label_ids,
                                   all_polarities, all_valid_ids, all_lmask_ids)
         # Run prediction for full data
-        eval_sampler = RandomSampler(eval_data)
+        eval_sampler = SequentialSampler(eval_data)
         self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=1)
 
         # extract_aspects
@@ -151,33 +167,50 @@ class AspectExtractor:
             ate_logits = ate_logits.detach().cpu().numpy()
             label_ids = label_ids.to('cpu').numpy()
             input_mask = input_mask.to('cpu').numpy()
-            temp_1 = []
-            temp_2 = []
+            pred_iobs = []
             for j, m in enumerate(label_ids[0]):
                 if j == 0:
                     continue
                 elif label_ids[0][j] == len(self.label_list):
                     break
                 else:
-                    temp_1.append(label_map.get(label_ids[0][j], 'O'))
-                    temp_2.append(label_map.get(ate_logits[0][j], 'O'))
+                    pred_iobs.append(label_map.get(ate_logits[0][j], 'O'))
 
-            print('Sentence with predicted labels:')
             ate_result = []
             polarity = []
-            for t, l in zip(all_tokens[0], temp_2):
+            for t, l in zip(all_tokens[0], pred_iobs):
                 ate_result.append('{}({})'.format(t, l))
                 if 'ASP' in l:
                     polarity.append(-SENTIMENT_PADDING)
                 else:
                     polarity.append(SENTIMENT_PADDING)
+            if print_result:
+                print('Sentence with predicted labels:')
+                print(' '.join(ate_result))
+            asp_idx = 0
+            asp_num = pred_iobs.count('B-ASP')
+            IOB_PADDING = ['O'] * len(pred_iobs)
+            POLARITY_PADDING = [SENTIMENT_PADDING] * len(polarity)
+            while asp_idx < asp_num:
+                _pred_iobs = pred_iobs[:]
+                _polarity = polarity[:]
+                for iob_idx in range(len(_pred_iobs) - 1):
+                    if 'B-ASP' == pred_iobs[iob_idx] and 'ASP' not in pred_iobs[iob_idx + 1] \
+                            or 'I-ASP' == pred_iobs[iob_idx] and 'ASP' not in pred_iobs[iob_idx + 1]:
+                        _pred_iobs = _pred_iobs[:iob_idx + 1] + IOB_PADDING[iob_idx + 1:]
+                        pred_iobs = IOB_PADDING[:iob_idx+1] + pred_iobs[iob_idx+1:]
+                        _polarity = _polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
+                        polarity = POLARITY_PADDING[:iob_idx + 1] + polarity[iob_idx + 1:]
+                        break
 
-            print(' '.join(ate_result))
-
-        res = [(all_tokens[0], temp_2, polarity)]
+                res.append((all_tokens[0], _pred_iobs, _polarity))
+                asp_idx += 1
         return res
 
-    def _infer(self, example):
+    def _infer(self, example, print_result):
+
+        res = []  # sentiment classification result
+
         self.eval_dataloader = None
         example = self.processor.get_examples_for_sentiment_classification(example)
         eval_features = convert_examples_to_features(example,
@@ -195,12 +228,11 @@ class AspectExtractor:
         eval_data = TensorDataset(all_spc_input_ids, all_input_mask, all_segment_ids, all_label_ids,
                                   all_polarities, all_valid_ids, all_lmask_ids)
         # Run prediction for full data
-        eval_sampler = RandomSampler(eval_data)
+        eval_sampler = SequentialSampler(eval_data)
         self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=1)
 
         # extract_aspects
         self.model.eval()
-        label_map = {i: label for i, label in enumerate(self.label_list, 1)}
 
         sentiments = {0: 'Negative', 1: "Neutral", 2: 'Positive', -999: ''}
         # Correct = {True: 'Correct', False: 'Wrong'}
@@ -219,13 +251,14 @@ class AspectExtractor:
                                                     valid_ids=valid_ids, polarities=polarities,
                                                     attention_mask_label=l_mask)
 
-            sent = int(torch.argmax(apc_logits, -1))
+                sent = int(torch.argmax(apc_logits, -1))
 
-            result['text'] = ' '.join(all_tokens[0])
-            result['sentiment'] = sentiments[sent]
-
-            print(result)
-            return result
+                result['text'] = ' '.join(all_tokens[0])
+                result['sentiment'] = sentiments[sent]
+                if print_result:
+                    print(result)
+                res.append(result)
+        return res
 
 
 # Assume the original polarity are labeled as 0: negative  2: positive

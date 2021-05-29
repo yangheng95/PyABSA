@@ -93,7 +93,7 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer):
     label_map = {label: i for i, label in enumerate(label_list, 1)}
     features = []
     for (ex_index, example) in enumerate(examples):
-        text_spc_tokens = example.text_a
+        text_tokens = example.text_a
         IOB_label = example.IOB_label
         polaritiylist = example.polarity
         tokens = []
@@ -101,7 +101,7 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer):
         polarities = []
         valid = []
         label_mask = []
-        enum_tokens = text_spc_tokens
+        enum_tokens = text_tokens
         label_lists = IOB_label
         for i, word in enumerate(enum_tokens):
             token = tokenizer.tokenize(word)
@@ -147,7 +147,6 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer):
         input_ids_spc = tokenizer.convert_tokens_to_ids(ntokens)
         input_mask = [1] * len(input_ids_spc)
         label_mask = [1] * len(label_ids)
-        ntokens = ntokens[1:-1]
         while len(input_ids_spc) < max_seq_len:
             input_ids_spc.append(0)
             input_mask.append(0)
@@ -191,5 +190,5 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer):
                           polarities=polarities,
                           valid_ids=valid,
                           label_mask=label_mask,
-                          tokens=ntokens))
+                          tokens=text_tokens))
     return features

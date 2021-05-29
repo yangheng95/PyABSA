@@ -107,7 +107,7 @@ class SentimentClassifier:
         for arg in vars(self.opt):
             print('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
 
-    def batch_infer(self, test_dataset_path=None, save_result=False, clear_input_samples=True, ignore_error=True):
+    def batch_infer(self, test_dataset_path=None, print_result=True, save_result=False, clear_input_samples=True, ignore_error=True):
         if clear_input_samples:
             self.clear_input_samples()
 
@@ -119,9 +119,9 @@ class SentimentClassifier:
             self.dataset.prepare_infer_dataset(test_dataset_path, ignore_error=ignore_error)
         self.dataset.prepare_infer_dataset(test_dataset_path, ignore_error=ignore_error)
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=1, shuffle=False)
-        return self._infer(save_path=test_dataset_path if save_result else None)
+        return self._infer(save_path=test_dataset_path if save_result else None, print_result=print_result)
 
-    def infer(self, text: str = None, clear_input_samples=True):
+    def infer(self, text: str = None, print_result=True, clear_input_samples=True):
         if clear_input_samples:
             self.clear_input_samples()
         if text:
@@ -129,7 +129,7 @@ class SentimentClassifier:
         else:
             raise RuntimeError('Please specify your dataset path!')
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=1, shuffle=False)
-        return self._infer(print_result=True)
+        return self._infer(print_result=print_result)
 
     def _infer(self, save_path=None, print_result=True):
 

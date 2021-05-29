@@ -7,6 +7,7 @@
 
 
 import os
+import shutil
 import random
 import pickle
 import tqdm
@@ -226,12 +227,11 @@ def train4atepc(config):
         max_apc_test_acc = 0
         max_apc_test_f1 = 0
         max_ate_test_f1 = 0
-
         global_step = 0
+        save_path = ''
         for epoch in range(int(args.num_epoch)):
             nb_tr_examples, nb_tr_steps = 0, 0
-            postfix = 'No evaluation until epoch:{}'.format(max(0, args.num_epoch - 2))
-            iterator = tqdm.tqdm(train_dataloader, postfix=postfix)
+            iterator = tqdm.tqdm(train_dataloader)
             for step, batch in enumerate(iterator):
                 postfix = ''
                 model.train()
@@ -246,11 +246,16 @@ def train4atepc(config):
                 optimizer.step()
                 optimizer.zero_grad()
                 global_step += 1
-                if epoch >= args.num_epoch - 2 or args.num_epoch <= 2:
+                if epoch >= 3 or args.num_epoch <= 2:
                     if global_step % args.log_step == 0:
-                        # evaluate in last 2 epochs
                         apc_result, ate_result = evaluate(eval_ATE=not args.use_bert_spc)
-                        path = '{0}/{1}_{2}_apcacc_{3}_apcf1_{4}_atef1_{5}/'.format(
+                        # if save_path:
+                        #     try:
+                        #         shutil.rmtree(save_path)
+                        #         # print('Remove sub-optimal trained model:', save_path)
+                        #     except:
+                        #         print('Can not remove sub-optimal trained model:', save_path)
+                        save_path = '{0}/{1}_{2}_apcacc_{3}_apcf1_{4}_atef1_{5}/'.format(
                             args.model_path_to_save,
                             args.model_name,
                             args.lcf,
@@ -261,7 +266,7 @@ def train4atepc(config):
                         if apc_result['max_apc_test_acc'] > max_apc_test_acc or \
                                 apc_result['max_apc_test_f1'] > max_apc_test_f1 or \
                                 ate_result > max_ate_test_f1:
-                            _save_model(args, model, path, mode=0)
+                            _save_model(args, model, save_path, mode=0)
 
                         if apc_result['max_apc_test_acc'] > max_apc_test_acc:
                             max_apc_test_acc = apc_result['max_apc_test_acc']
@@ -278,14 +283,14 @@ def train4atepc(config):
                                    f'APC_f1: {current_apc_test_f1}(max:{max_apc_test_f1}) '
 
                         if args.use_bert_spc:
-                            postfix += f'ATE_F1: {current_apc_test_f1}(max:{max_apc_test_f1})' \
+                            postfix = f'ATE_F1: {current_apc_test_f1}(max:{max_apc_test_f1})' \
                                        f' (Unreliable since `use_bert_spc` is "True".)'
                         else:
                             postfix += f'ATE_f1: {current_ate_test_f1}(max:{max_ate_test_f1})'
                         iterator.postfix = postfix
                         iterator.refresh()
 
-        return [max_apc_test_acc, max_apc_test_f1, max_ate_test_f1]
+        return save_path
 
     return train()
 
