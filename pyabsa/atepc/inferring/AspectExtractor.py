@@ -252,8 +252,12 @@ class AspectExtractor:
                                                     attention_mask_label=l_mask)
 
                 sent = int(torch.argmax(apc_logits, -1))
-
-                result['text'] = ' '.join(all_tokens[0])
+                aspect_idx = torch.where(polarities[0] > 0)
+                aspect = []
+                for idx in aspect_idx:
+                    aspect.append(all_tokens[0][idx - 1])
+                # result['text'] = ' '.join(all_tokens[0])
+                result['aspect'] = ' '.join(aspect)
                 result['sentiment'] = sentiments[sent]
                 if print_result:
                     print(result)

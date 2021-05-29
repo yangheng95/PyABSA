@@ -26,9 +26,9 @@ context focus mechanisms.
 
 # Aspect Term Extraction (ATE)
 
-Check the detailed usages in [ATE examples](./examples/atepc_usages) directory.
+Check the detailed usages in [ATE examples](examples/Aspect Term Extraction) directory.
 
-详细使用方式请见[ATE examples](./examples/atepc_usages)目录
+详细使用方式请见[ATE examples](examples/Aspect Term Extraction)目录
 
 ## Quick Start
 
@@ -103,9 +103,9 @@ atepc_result = aspect_extractor.extract_aspect(examples,
 
 # Aspect Polarity Classification (APC)
 
-Check the detailed usages in [APC examples](./examples/apc_usages) directory.
+Check the detailed usages in [APC examples](examples/Aspect Polarity Classification) directory.
 
-详细使用方式请见[APC examples](./examples/apc_usages)目录
+详细使用方式请见[APC examples](examples/Aspect Polarity Classification)目录
 
 ## Quick Start
 
@@ -162,7 +162,7 @@ sent_classifier = train_apc(parameter_dict=param_dict,    # set param_dict=None 
 We provide the pretrained models
 on [Google Drive](https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing)
 or [百度网盘（提取码：absa）](https://pan.baidu.com/s/1FSgaSP4ubGWy0BjBQdct5w) trained on a large assembled
-ABSA [dataset](examples/apc_usages/sum_train.dat) based on BERT-BASE-UNCASED model,
+ABSA [dataset](examples/Aspect Polarity Classification/sum_train.dat) based on BERT-BASE-UNCASED model,
 
 1. BERT-BASE
 2. BERT-SPC
