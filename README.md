@@ -1,11 +1,13 @@
-# Aspect Term Extraction & Sentiment Classification Tool
+# Aspect Term Extraction & Sentiment Classification
+# 方面术语抽取及方面情感分类工具
 
-> 本仓库提供易于使用的方面抽取模型和情感分类模型，只需简单几步即可抽取方面或者分类方面级情感。
+>Provide easy to use aspect extraction model and sentiment classification model, just a few simple steps to extract aspects or categorize aspect level emotions.
+>(提供易于使用的方面抽取模型和情感分类模型，只需简单几步即可抽取方面或者分类方面级情感。) 
 
-> 基于BERT / LCF机制的方面级情感分类模型库 (CPU & CUDA supported)
+> Provides the usage interfaces of ATE/APC models based on BERT / LCF
+> (提供基于BERT / LCF的模型使用方法和接口 )
 
-> PyTorch Implementations.
->
+> PyTorch Implementations (CPU & CUDA supported).
 
 # Notice
 
@@ -24,11 +26,17 @@ and [LCF-ATEPC](https://github.com/yangheng95/LCF-ATEPC).
 This repository provides aspect/target sentiment classification APC models, especially those models based on the local
 context focus mechanisms.
 
+Install this repo by `pip install pyabsa`.
+
+To use our models, you may need download `en_core_web_sm` by
+
+`python -m spacy download en_core_web_sm`
+
 # Aspect Term Extraction (ATE)
 
-Check the detailed usages in [ATE examples](examples/Aspect Term Extraction) directory.
+Check the detailed usages in [ATE examples](examples/aspect_term_extraction) directory.
 
-详细使用方式请见[ATE examples](examples/Aspect Term Extraction)目录
+详细使用方式请见[ATE examples](examples/aspect_term_extraction)目录
 
 ## Quick Start
 
@@ -50,7 +58,7 @@ param_dict = {'model_name': 'lcf_atepc',
               'batch_size': 16,
               'seed': 1,
               'device': 'cuda',
-              'num_epoch': 1,
+              'num_epoch': 5,
               'optimizer': "adamw",
               'learning_rate': 0.00002,
               'pretrained_bert_name': "bert-base-uncased",
@@ -103,17 +111,11 @@ atepc_result = aspect_extractor.extract_aspect(examples,
 
 # Aspect Polarity Classification (APC)
 
-Check the detailed usages in [APC examples](examples/Aspect Polarity Classification) directory.
+Check the detailed usages in [APC examples](examples/aspect_polarity_classification) directory.
 
-详细使用方式请见[APC examples](examples/Aspect Polarity Classification)目录
+详细使用方式请见[APC examples](examples/aspect_polarity_classification)目录
 
 ## Quick Start
-
-Install this repo by `pip install pyabsa`.
-
-To use our models, you may need download `en_core_web_sm` by
-
-`python -m spacy download en_core_web_sm`
 
 0. Instant train and infer on the provided datasets:
 
@@ -162,7 +164,7 @@ sent_classifier = train_apc(parameter_dict=param_dict,    # set param_dict=None 
 We provide the pretrained models
 on [Google Drive](https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing)
 or [百度网盘（提取码：absa）](https://pan.baidu.com/s/1FSgaSP4ubGWy0BjBQdct5w) trained on a large assembled
-ABSA [dataset](examples/Aspect Polarity Classification/sum_train.dat) based on BERT-BASE-UNCASED model,
+ABSA [dataset](examples/aspect_polarity_classification/sum_train.dat) based on BERT-BASE-UNCASED model,
 
 1. BERT-BASE
 2. BERT-SPC
