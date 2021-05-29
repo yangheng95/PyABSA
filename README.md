@@ -10,8 +10,8 @@
 # Notice
 
 if you are looking for the original codes in the LCF-related papers, please go to
-the [master](https://github.com/yangheng95/LC-ABSA/tree/master) (APC) branch 
-and [master](https://github.com/yangheng95/LCF-ATEPC) (ATE and APC).
+the [LC-ABSA](https://github.com/yangheng95/LC-ABSA/tree/master)
+and [LCF-ATEPC](https://github.com/yangheng95/LCF-ATEPC).
 
 ## Requirement
 
@@ -32,6 +32,70 @@ Check the detailed usages in [ATE examples](./examples/atepc_usages) directory.
 
 ## Quick Start
 
+1. Convert APC datasets to ATEPC datasets
+
+```
+from pyabsa import convert_apc_set_to_atepc
+
+convert_apc_set_to_atepc(r'../apc_usages/datasets/restaurant16')
+```
+
+2. Training for ATEPC
+
+```
+from pyabsa import train_atepc
+
+# see hyper-parameters in pyabsa/main/training_configs.py
+param_dict = {'model_name': 'lcf_atepc',
+              'batch_size': 16,
+              'seed': 1,
+              'device': 'cuda',
+              'num_epoch': 1,
+              'optimizer': "adamw",
+              'learning_rate': 0.00002,
+              'pretrained_bert_name': "bert-base-uncased",
+              'use_dual_bert': False,
+              'use_bert_spc': False,
+              'max_seq_len': 80,
+              'log_step': 30,
+              'SRD': 3,
+              'lcf': "cdw",
+              'dropout': 0,
+              'l2reg': 0.00001,
+              'polarities_dim': 3
+              }
+
+# Mind that polarities_dim = 2 for Chinese datasets, and the 'train_atepc' function only evaluates in last two epochs
+
+train_set_path = 'atepc_datasets/restaurant14'
+save_path = '../atepc_usages/state_dict'
+sent_classifier = train_atepc(parameter_dict=param_dict,  # set param_dict=None to use default model
+                              dataset_path=train_set_path,  # file or dir, dataset(s) will be automatically detected
+                              model_path_to_save=save_path,
+                              auto_evaluate=True,  # evaluate model while training if test set is available
+                              auto_device=True  # Auto choose CUDA or CPU
+                              )
+
+```
+
+3. Extract aspect terms
+```
+from pyabsa import load_aspect_extractor
+
+text = 'But the staff was so nice to us .'
+# text = 'But the staff was so horrible to us .'
+
+# Download the provided pre-training model from Google Drive
+model_path = 'state_dict/lcf_atepc_cdw_apcacc_84.27_apcf1_77.77_atef1_82.14_rest14'
+
+aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
+                                         auto_device=True)
+
+atepc_result = aspect_extractor.extract_aspect([text])
+# print(atepc_result)
+
+```
+
 # Aspect Polarity Classification (APC)
 
 Check the detailed usages in [APC examples](./examples/apc_usages) directory.
@@ -49,7 +113,7 @@ To use our models, you may need download `en_core_web_sm` by
 0. Instant train and infer on the provided datasets:
 
 ```
-from pyabsa import train, train_and_evaluate, load_trained_model
+from pyabsa import train, train_and_evaluate, load_sentiment_classifier
 dataset_path = 'datasets/laptop14'
 sent_classifier = train_and_evaluate(parameter_dict=None,
                                 dataset_path=dataset_path,
@@ -64,7 +128,7 @@ sent_classifier.infer(text)
 1. Train our models on your custom dataset:
 
 ```
-from pyabsa import train, train_and_evaluate, load_trained_model
+from pyabsa import train, train_and_evaluate, load_sentiment_classifier
 # see hyper-parameters in pyabsa/main/training_configs.py
 param_dict = {'model_name': 'bert_base', 'batch_size': 16, 'device': 'cuda', 'num_epoch': 1}
 # train_set_path = 'datasets/restaurant15'
@@ -110,10 +174,10 @@ model, refer to the master branch.
 Load a trained model will also load the training parameters, however the inference batch size will always be 1.
 
 ```
-from pyabsa import load_trained_model
+from pyabsa import load_sentiment_classifier
 
 # The trained_model_path should be a dir containing the state_dict and config file
-sent_classifier = load_trained_model(trained_model_path='state_dict')
+sent_classifier = load_sentiment_classifier(trained_model_path='state_dict')
 
 ```
 
@@ -125,7 +189,7 @@ text = 'everything is always cooked to perfection , the [ASP]service[ASP] is exc
 # or text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated .'
 
 # The trained_model_path should be a dir containing the state_dict and config file
-sent_classifier = load_trained_model(trained_model_path='../state_dict/slide_lcfs_bert_trained')
+sent_classifier = load_sentiment_classifier(trained_model_path='../state_dict/slide_lcfs_bert_trained')
 
 # The default device is CPU, do specify a valid device in case of successful working
 
