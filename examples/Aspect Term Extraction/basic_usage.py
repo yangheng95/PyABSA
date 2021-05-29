@@ -7,4 +7,4 @@
 
 from pyabsa import convert_apc_set_to_atepc
 
-convert_apc_set_to_atepc(r'../apc_usages/datasets/restaurant16')
+convert_apc_set_to_atepc(r'../Aspect Polarity Classification/datasets/restaurant16')

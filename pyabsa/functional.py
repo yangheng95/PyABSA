@@ -147,24 +147,21 @@ def train_apc(parameter_dict=None,
     model_path = []
     sent_classifier = None
 
-    if not isinstance(config.seed, int) and 'test' in dataset_file:
-        for _, s in enumerate(config.seed):
-            t_config = copy.deepcopy(config)
-            t_config.seed = s
-            if model_path_to_save:
-                model_path.append(train4apc(t_config))
-            else:
-                sent_classifier = SentimentClassifier(model_arg=train4apc(t_config))
-        # return last trained model if do not save model
-        if model_path_to_save:
-            return SentimentClassifier(model_arg=max(model_path))
-        else:
-            return sent_classifier
+    if isinstance(config.seed, int):
+        config.seed = [config.seed]
 
-    elif 'test' in dataset_file:  # Avoid multiple training without evaluating
-        return SentimentClassifier(model_arg=train4apc(config))
-    else:  # Avoid evaluating without test set
-        return SentimentClassifier(train4apc(config))
+    for _, s in enumerate(config.seed):
+        t_config = copy.deepcopy(config)
+        t_config.seed = s
+        if model_path_to_save:
+            model_path.append(train4apc(t_config))
+        else:
+            # always return the last trained model if dont save trained models
+            sent_classifier = SentimentClassifier(model_arg=train4apc(t_config))
+    if model_path_to_save:
+        return SentimentClassifier(model_arg=max(model_path))
+    else:
+        return sent_classifier
 
 
 def load_sentiment_classifier(trained_model_path=None,
@@ -203,14 +200,17 @@ def train_atepc(parameter_dict=None,
     config.model_path_to_save = model_path_to_save
     config.dataset_file = dataset_file
     model_path = []
-    if not isinstance(config.seed, int):
-        for _, s in enumerate(config.seed):
-            t_config = copy.deepcopy(config)
-            t_config.seed = s
-            model_path.append(train4atepc(config))
-        return AspectExtractor(max(model_path))
-    else:
-        AspectExtractor(train4atepc(config))
+
+    if isinstance(config.seed, int):
+        config.seed = [config.seed]
+
+    # always save all trained models in case of obtaining best performance in different metrics among ATE and APC task.
+    for _, s in enumerate(config.seed):
+        t_config = copy.deepcopy(config)
+        t_config.seed = s
+        model_path.append(train4atepc(t_config))
+    
+    return AspectExtractor(max(model_path))
 
 
 def load_aspect_extractor(trained_model_path=None,

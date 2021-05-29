@@ -43,7 +43,7 @@ def train4atepc(config):
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
 
-    if not os.path.exists(args.model_path_to_save):
+    if args.model_path_to_save and not os.path.exists(args.model_path_to_save):
         os.makedirs(args.model_path_to_save)
 
     processor = ATEPCProcessor()
@@ -255,18 +255,19 @@ def train4atepc(config):
                         #         # print('Remove sub-optimal trained model:', save_path)
                         #     except:
                         #         print('Can not remove sub-optimal trained model:', save_path)
-                        save_path = '{0}/{1}_{2}_apcacc_{3}_apcf1_{4}_atef1_{5}/'.format(
-                            args.model_path_to_save,
-                            args.model_name,
-                            args.lcf,
-                            round(apc_result['max_apc_test_acc'], 2),
-                            round(apc_result['max_apc_test_f1'], 2),
-                            round(ate_result, 2)
-                        )
-                        if apc_result['max_apc_test_acc'] > max_apc_test_acc or \
-                                apc_result['max_apc_test_f1'] > max_apc_test_f1 or \
-                                ate_result > max_ate_test_f1:
-                            _save_model(args, model, save_path, mode=0)
+                        if args.model_path_to_save:
+                            save_path = '{0}/{1}_{2}_apcacc_{3}_apcf1_{4}_atef1_{5}/'.format(
+                                args.model_path_to_save,
+                                args.model_name,
+                                args.lcf,
+                                round(apc_result['max_apc_test_acc'], 2),
+                                round(apc_result['max_apc_test_f1'], 2),
+                                round(ate_result, 2)
+                            )
+                            if apc_result['max_apc_test_acc'] > max_apc_test_acc or \
+                                    apc_result['max_apc_test_f1'] > max_apc_test_f1 or \
+                                    ate_result > max_ate_test_f1:
+                                _save_model(args, model, save_path, mode=0)
 
                         if apc_result['max_apc_test_acc'] > max_apc_test_acc:
                             max_apc_test_acc = apc_result['max_apc_test_acc']
@@ -284,7 +285,7 @@ def train4atepc(config):
 
                         if args.use_bert_spc:
                             postfix = f'ATE_F1: {current_apc_test_f1}(max:{max_apc_test_f1})' \
-                                       f' (Unreliable since `use_bert_spc` is "True".)'
+                                      f' (Unreliable since `use_bert_spc` is "True".)'
                         else:
                             postfix += f'ATE_f1: {current_ate_test_f1}(max:{max_ate_test_f1})'
                         iterator.postfix = postfix
