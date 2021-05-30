@@ -1,9 +1,12 @@
+# trained models
+state_dict/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 *.pyc
-.idea
+.idea/
 
 # C extensions
 *.so
