@@ -17,17 +17,26 @@ from pyabsa import load_aspect_extractor
 examples = ['But the staff was so nice to us .',
             'But the staff was so horrible to us .',
             r'Not only was the food outstanding , but the little ` perks \' were great .',
-            'It took half an hour to get our check , which was perfect since we could sit , have drinks and talk !'
+            'It took half an hour to get our check , which was perfect since we could sit , have drinks and talk !',
+            'It was pleasantly uncrowded , the service was delightful , the garden adorable , '
+            'the food -LRB- from appetizers to entrees -RRB- was delectable .',
+            'How pretentious and inappropriate for MJ Grill to claim that it provides power lunch and dinners !'
             ]
 
 # 从Google Drive下载提供的预训练模型
 # Download the provided pre-training model from Google Drive
-model_path = 'state_dict/lcf_atepc_cdw_rest14_without_spc'
+model_path = 'state_dict/lcf_atepc_cdw_apcacc_84.72_apcf1_76.62_atef1_84.99'
 
 aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
-                                         auto_device=True)
+                                         auto_device=True  # False means load model on CPU
+                                         )
 
-atepc_result = aspect_extractor.extract_aspect(examples,
+# You can switch device manually using following functions
+# aspect_extractor.cpu()
+# aspect_extractor.cuda()
+# aspect_extractor.to('cuda:0')
+
+atepc_result = aspect_extractor.extract_aspect(examples,            # list-support only, for now
                                                print_result=True,   # print the result
                                                pred_sentiment=True  # Predict the sentiment of extracted aspect terms
                                                )

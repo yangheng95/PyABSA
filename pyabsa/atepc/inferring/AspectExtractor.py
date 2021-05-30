@@ -254,10 +254,12 @@ class AspectExtractor:
                 sent = int(torch.argmax(apc_logits, -1))
                 aspect_idx = torch.where(polarities[0] > 0)
                 aspect = []
+                positions = []
                 for idx in aspect_idx:
+                    positions.append(str(int(idx)))
                     aspect.append(all_tokens[0][idx - 1])
-                # result['text'] = ' '.join(all_tokens[0])
                 result['aspect'] = ' '.join(aspect)
+                result['position'] = ','.join(positions)
                 result['sentiment'] = sentiments[sent]
                 if print_result:
                     print(result)
