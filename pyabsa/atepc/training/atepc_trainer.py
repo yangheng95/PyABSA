@@ -246,7 +246,7 @@ def train4atepc(config):
                 optimizer.step()
                 optimizer.zero_grad()
                 global_step += 1
-                if epoch >= 3 or args.num_epoch <= 2:
+                if epoch >= 2 or args.num_epoch <= 2:
                     if global_step % args.log_step == 0:
                         apc_result, ate_result = evaluate(eval_ATE=not args.use_bert_spc)
                         # if save_path:
