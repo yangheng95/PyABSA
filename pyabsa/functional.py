@@ -47,6 +47,7 @@ def init_apc_config(config_dict, auto_device=True):
     config['polarities_dim'] = apc_config.polarities_dim
     config['sigma'] = apc_config.sigma
     config['log_step'] = apc_config.log_step
+    config['loss_weight'] = apc_config.loss_weight
 
     # reload hyper-parameter from training config
     path = os.path.abspath(__file__)
@@ -103,17 +104,17 @@ def init_atepc_config(config_dict, auto_device=True):
     # for key in config:
     #     _config[key] = config[key]
 
-    if not config_dict:
-        config_dict = dict()
-    # reload hyper-parameter from parameter dict
-    for key in config_dict:
-        config[key] = config_dict[key]
-
     if auto_device and 'device' not in config:
         if choice >= 0:
             config['device'] = 'cuda:' + str(choice)
         else:
             config['device'] = 'cpu'
+
+    if not config_dict:
+        config_dict = dict()
+    # reload hyper-parameter from parameter dict
+    for key in config_dict:
+        config[key] = config_dict[key]
 
     _config = Namespace(**config)
 

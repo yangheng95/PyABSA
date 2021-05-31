@@ -35,7 +35,7 @@ class LCF_BERT(nn.Module):
         self.dropout = nn.Dropout(opt.dropout)
         self.bert_SA = SelfAttention(bert.config, opt)
         self.linear2 = nn.Linear(opt.embed_dim * 2, opt.embed_dim)
-        self.linear3 = nn.Linear(opt.embed_dim * 3, opt.embed_dim)
+        self.bert_SA_ = SelfAttention(bert.config, opt)
         self.bert_pooler = BertPooler(bert.config)
         self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
 
@@ -56,7 +56,7 @@ class LCF_BERT(nn.Module):
         cat_features = torch.cat((lcf_features, global_context_features), dim=-1)
         cat_features = self.linear2(cat_features)
         cat_features = self.dropout(cat_features)
-
+        cat_features = self.bert_SA_(cat_features)
         pooled_out = self.bert_pooler(cat_features)
         dense_out = self.dense(pooled_out)
         return dense_out

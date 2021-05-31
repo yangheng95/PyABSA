@@ -6,7 +6,18 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 import os
+import sys
+
 import torch
+import logging
+
+
+def get_logger(log_name):
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    logger.addHandler(logging.StreamHandler(sys.stdout))
+    log_file = '{}/training.log'.format(log_name)
+    logger.addHandler(logging.FileHandler(log_file))
 
 
 def get_auto_device():

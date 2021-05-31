@@ -20,3 +20,4 @@ embed_dim = 768
 hidden_dim = 768
 polarities_dim = 3
 log_step = 3
+loss_weight = 1

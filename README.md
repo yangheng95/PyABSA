@@ -3,7 +3,7 @@
 
 > Build from LC-ABSA/LCF-ABSA and LCF-ATEPC.
 
-> Easy to use extract interfaces of aspect term extraction and aspect sentiment classification.
+> Easy to use interfaces of aspect term extraction and aspect sentiment classification.
 
 > Provide the tutorials of using ATE and APC interfaces.
 
@@ -15,7 +15,7 @@ if you are looking for the original codes of the LCF-related papers, please go t
 the [LC-ABSA](https://github.com/yangheng95/LC-ABSA/tree/master)
 or [LCF-ATEPC](https://github.com/yangheng95/LCF-ATEPC).
 
-## Preliminaries
+# Preliminaries
 
 Install this repo by `pip install pyabsa`.
 To use our models, you may need download `en_core_web_sm` by
@@ -312,7 +312,6 @@ This work build from LC-ABSA/LCF-ABSA and LCF-ATEPC. Feel free to help us optimi
 
 
 # Citation
-
 If this repository is helpful, please cite our paper:
 
     @article{yang2021multi,

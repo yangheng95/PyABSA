@@ -107,21 +107,30 @@ class SentimentClassifier:
         for arg in vars(self.opt):
             print('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
 
-    def batch_infer(self, test_dataset_path=None, print_result=True, save_result=False, clear_input_samples=True, ignore_error=True):
+    def batch_infer(self,
+                    inference_set_path=None,
+                    print_result=True,
+                    save_result=False,
+                    clear_input_samples=True,
+                    ignore_error=True):
+
         if clear_input_samples:
             self.clear_input_samples()
 
-        if os.path.isdir(test_dataset_path):
+        if os.path.isdir(inference_set_path):
             try:
-                test_dataset_path = find_target_file(test_dataset_path, 'infer')
+                inference_set_path = find_target_file(inference_set_path, 'infer')
             except Exception as e:
                 raise FileNotFoundError('Can not find inference dataset!')
-            self.dataset.prepare_infer_dataset(test_dataset_path, ignore_error=ignore_error)
-        self.dataset.prepare_infer_dataset(test_dataset_path, ignore_error=ignore_error)
+            self.dataset.prepare_infer_dataset(inference_set_path, ignore_error=ignore_error)
+        self.dataset.prepare_infer_dataset(inference_set_path, ignore_error=ignore_error)
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=1, shuffle=False)
-        return self._infer(save_path=test_dataset_path if save_result else None, print_result=print_result)
+        return self._infer(save_path=inference_set_path if save_result else None, print_result=print_result)
 
-    def infer(self, text: str = None, print_result=True, clear_input_samples=True):
+    def infer(self, text: str = None,
+              print_result=True,
+              clear_input_samples=True):
+
         if clear_input_samples:
             self.clear_input_samples()
         if text:

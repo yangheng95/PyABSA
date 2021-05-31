@@ -80,6 +80,52 @@ class Tokenizer4Bert:
             sequence = sequence[::-1]
         return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
 
+    def syntax_distance_alignment(self, tokens, dist):
+        text = tokens[:]
+        dep_dist = dist[:]
+        bert_tokens = self.tokenizer.tokenize(' '.join(text))
+        _bert_tokens = bert_tokens[:]
+        align_dist = []
+        if bert_tokens != text:
+            while text or bert_tokens:
+                if text[0] == ' ' or text[0] == '\xa0':  # bad case handle
+                    text = text[1:]
+                    dep_dist = dep_dist[1:]
+                elif text[0] == bert_tokens[0]:
+                    text = text[1:]
+                    bert_tokens = bert_tokens[1:]
+                    align_dist.append(dep_dist[0])
+                    dep_dist = dep_dist[1:]
+                elif len(text[0]) < len(bert_tokens[0]):
+                    tmp_str = text[0]
+                    while len(tmp_str) < len(bert_tokens[0]):
+                        text = text[1:]
+                        tmp_str += text[0]
+                        dep_dist = dep_dist[1:]
+                    align_dist.append(dep_dist[0])
+                    dep_dist = dep_dist[1:]
+                    text = text[1:]
+                    bert_tokens = bert_tokens[1:]
+                elif len(text[0]) > len(bert_tokens[0]):
+                    tmp_tokens = self.tokenizer.tokenize(text[0])
+                    for jx, tmp_token in enumerate(tmp_tokens):
+                        align_dist.append(dep_dist[0])
+
+                    text = text[1:]
+                    dep_dist = dep_dist[1:]
+                    bert_tokens = bert_tokens[len(tmp_tokens):]
+                else:
+                    text = text[1:]
+                    bert_tokens = bert_tokens[1:]
+                    align_dist.append(dep_dist[0])
+                    dep_dist = dep_dist[1:]
+
+        else:
+            align_dist = dep_dist
+
+        align_dist = pad_and_truncate(align_dist, self.max_seq_len, value=self.max_seq_len)
+        return align_dist
+
     # Group distance to aspect of an original word to its corresponding subword token
     def tokenize(self, text, dep_dist, reverse=False, padding='post', truncating='post'):
         sequence, distances = [], []
@@ -104,6 +150,92 @@ class Tokenizer4Bert:
 
     def get_bert_tokens(self, text):
         return self.tokenizer.tokenize(text)
+
+
+def get_syntax_distance(text_raw, aspect, tokenizer):
+    # Find distance in dependency parsing tree
+    raw_tokens, dist = calculate_dep_dist(text_raw, aspect)
+    raw_tokens.insert(0, tokenizer.cls_token)
+    dist.insert(0, max(dist))
+    raw_tokens.append(tokenizer.sep_token)
+    dist.append(max(dist))
+    syntactical_dist = tokenizer.tokenize(raw_tokens, dist)[1]
+    # syntactical_dist = tokenizer.syntax_distance_alignment(raw_tokens, dist)
+    return syntactical_dist
+
+
+def get_lca_ids_and_cdm_vec(opt, text_ids, aspect_indices, syntactical_dist):
+    SRD = opt.SRD
+    lca_ids = np.zeros((opt.max_seq_len), dtype=np.float32)
+    cdm_vec = np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
+    aspect_len = np.count_nonzero(aspect_indices) - 2
+    text_len = np.count_nonzero(text_ids) - np.count_nonzero(aspect_indices) + 1
+    if 'lcfs' in opt.model_name:
+
+        for i in range(text_len):
+            if syntactical_dist[i] <= SRD:
+                lca_ids[i] = 1
+                cdm_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
+    else:
+        aspect_begin = get_asp_index(text_ids, aspect_indices)
+        if aspect_begin < 0:
+            return lca_ids, cdm_vec
+        local_context_begin = max(0, aspect_begin - SRD)
+        local_context_end = aspect_begin + aspect_len + SRD - 1
+        for i in range(text_len):
+            if local_context_begin <= i <= local_context_end:
+                lca_ids[i] = 1
+                cdm_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
+    return lca_ids, cdm_vec
+
+
+def get_cdw_vec(opt, text_ids, aspect_indices, syntactical_dist):
+    SRD = opt.SRD
+    cdw_vec = np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
+    aspect_len = np.count_nonzero(aspect_indices)
+    text_len = np.count_nonzero(text_ids) - np.count_nonzero(aspect_indices) + 1
+    if 'lcfs' in opt.model_name:
+        for i in range(text_len):
+            if syntactical_dist[i] > SRD:
+                w = 1 - syntactical_dist[i] / text_len
+                cdw_vec[i] = w * np.ones((opt.embed_dim), dtype=np.float32)
+            else:
+                cdw_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
+    else:
+        aspect_begin = get_asp_index(text_ids, aspect_indices)
+        if aspect_begin < 0:
+            return np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
+        local_context_begin = max(0, aspect_begin - SRD)
+        local_context_end = aspect_begin + aspect_len + SRD - 1
+        for i in range(text_len):
+            if i < local_context_begin:
+                w = 1 - (local_context_begin - i) / text_len
+                cdw_vec[i] = w * np.ones((opt.embed_dim), dtype=np.float32)
+            elif local_context_begin <= i <= local_context_end:
+                cdw_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
+            elif i > local_context_end:
+                w = 1 - (i - local_context_end) / text_len
+                cdw_vec[i] = w * np.ones((opt.embed_dim), dtype=np.float32)
+    return cdw_vec
+
+
+def get_asp_index(text_ids, aspect_indices):
+    aspect_len = np.count_nonzero(aspect_indices) - 2
+    aspect_indices = aspect_indices[1:aspect_len + 1]
+    for i in range(len(text_ids)):
+        for j in range(len(aspect_indices)):
+            if text_ids[i + j] == aspect_indices[j] and j == len(aspect_indices) - 1:
+                return i
+            elif text_ids[i + j] != aspect_indices[j]:
+                break
+
+
+def build_spc_mask_vec(opt, text_ids):
+    spc_mask_vec = np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
+    for i in range(len(text_ids)):
+        if text_ids[i] != 0:
+            spc_mask_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
+    return spc_mask_vec
 
 
 def copy_side_aspect(direct='left', target=None, source=None):
