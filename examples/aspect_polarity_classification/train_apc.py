@@ -11,40 +11,39 @@
 
 from pyabsa import train_apc
 
-param_dict = {'model_name': 'slide_lcf_bert',  # {slide_lcfs_bert, slide_lcf_bert lcf_bert, lcfs_bert, bert_spc, bert_base}
+param_dict = {'model_name': 'lcfs_bert',   # {slide_lcfs_bert, slide_lcf_bert, lcf_bert, lcfs_bert, bert_spc, bert_base}
               'batch_size': 16,
-              'seed': {1, 2, 3},                        # you can use a set of random seeds to train multiple rounds
-              # 'seed': 996,                    # or use one seed only
-              'device': 'cuda',
-              'num_epoch': 6,
-              'optimizer': "adamw",              # {adam, adamw}
+              'seed': {36, 6, 86},         # you can use a set of random seeds to train multiple rounds
+              # 'seed': 996,               # or use one seed only
+              'num_epoch': 10,
+              'optimizer': "adam",         # {adam, adamw}
               'learning_rate': 0.00002,
               'pretrained_bert_name': "bert-base-uncased",
-              'use_dual_bert': False,           # modeling the local and global context using different BERTs
-              'use_bert_spc': True,             # Enable to enhance APC, do not use this parameter in ATE or joint task of APC and APC
+              'use_dual_bert': False,      # modeling the local and global context using different BERTs
+              'use_bert_spc': True,        # Enable to enhance APC, do not use this parameter in ATE
               'max_seq_len': 80,
-              'log_step': 3,                    # Evaluate per steps
-              'SRD': 3,                         # Distance threshold to calculate local context
-              'eta': -1,                        # Eta is valid in [0,1]
-              'sigma': 0.3,                     # Sigma is valid in [0,1]
-              'lcf': "cdw",                     # {cdm, cdw}
-              'window': "lr",                   # {lr, l, r}
-              'dropout': 0.3,
+              'log_step': 3,               # Evaluate per steps
+              'SRD': 3,                    # Distance threshold to calculate local context
+              'eta': -1,                   # Eta is valid in [0,1] slide_lcf_bert/slide_lcfs_bert
+              'sigma': 0.3,                # Sigma is valid in LCA-Net, ranging in [0,1]
+              'lcf': "cdw",                # {cdm, cdw} valid in lcf-bert models
+              'window': "lr",              # {lr, l, r} valid in slide_lcf_bert/slide_lcfs_bert
+              'dropout': 0,
               'l2reg': 0.00001,
               }
 
 save_path = 'state_dict'
-datasets_path = 'datasets/restaurant14'  # file or dir are OK
-# datasets_path = 'sum_train.dat'  # file or dir are OK
-sent_classifier = train_apc(parameter_dict=param_dict,  # set param_dict=None to use default model
+
+
+datasets_path = 'datasets/laptop14'  # file or dir are OK
+sent_classifier = train_apc(parameter_dict=param_dict,  # set param_dict=None to use defau03001 model
                             dataset_path=datasets_path,  # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
                             auto_evaluate=True,  # evaluate model while training if test set is available
                             auto_device=True  # Auto choose CUDA or CPU
                             )
 
-datasets_path = 'datasets/laptop14'  # file or dir are OK
-# datasets_path = 'sum_train.dat'  # file or dir are OK
+datasets_path = 'datasets/restaurant14'  # file or dir are OK
 sent_classifier = train_apc(parameter_dict=param_dict,  # set param_dict=None to use default model
                             dataset_path=datasets_path,  # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
@@ -53,7 +52,6 @@ sent_classifier = train_apc(parameter_dict=param_dict,  # set param_dict=None to
                             )
 
 datasets_path = 'datasets/restaurant15'  # file or dir are OK
-# datasets_path = 'sum_train.dat'  # file or dir are OK
 sent_classifier = train_apc(parameter_dict=param_dict,  # set param_dict=None to use default model
                             dataset_path=datasets_path,  # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
@@ -62,10 +60,10 @@ sent_classifier = train_apc(parameter_dict=param_dict,  # set param_dict=None to
                             )
 
 datasets_path = 'datasets/restaurant16'  # file or dir are OK
-# datasets_path = 'sum_train.dat'  # file or dir are OK
 sent_classifier = train_apc(parameter_dict=param_dict,  # set param_dict=None to use default model
                             dataset_path=datasets_path,  # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
                             auto_evaluate=True,  # evaluate model while training if test set is available
                             auto_device=True  # Auto choose CUDA or CPU
                             )
+

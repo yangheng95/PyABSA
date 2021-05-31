@@ -5,7 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-import math
+
 import os
 import random
 import pickle
@@ -35,11 +35,15 @@ class Instructor:
         self.model = self.opt.model_class(self.bert, self.opt).to(self.opt.device)
 
         trainset = ABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
-        self.train_data_loader = DataLoader(dataset=trainset, batch_size=self.opt.batch_size, shuffle=True,
+        self.train_data_loader = DataLoader(dataset=trainset,
+                                            batch_size=self.opt.batch_size,
+                                            shuffle=True,
                                             pin_memory=True)
         if 'test' in self.opt.dataset_file:
             testset = ABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
-            self.test_data_loader = DataLoader(dataset=testset, batch_size=self.opt.batch_size, shuffle=False,
+            self.test_data_loader = DataLoader(dataset=testset,
+                                               batch_size=self.opt.batch_size,
+                                               shuffle=False,
                                                pin_memory=True)
 
         if self.opt.device.type == 'cuda':
@@ -88,6 +92,8 @@ class Instructor:
     def _train_and_evaluate(self, criterion, lca_criterion, optimizer):
         max_test_acc = 0
         max_f1 = 0
+        test_acc = 0
+        f1 = 0
         global_step = 0
         save_path = ''
         for epoch in range(self.opt.num_epoch):
@@ -109,7 +115,7 @@ class Instructor:
                     loss = (1 - self.opt.sigma) * sen_loss + self.opt.sigma * lcp_loss
                 else:
                     sen_logits = outputs
-                    loss = criterion(sen_logits, targets)
+                    loss = self.opt.loss_weight * criterion(sen_logits, targets)
 
                 loss.backward()
                 optimizer.step()
@@ -131,7 +137,8 @@ class Instructor:
                                     shutil.rmtree(save_path)
                                     # print('Remove sub-optimal trained model:', save_path)
                                 except:
-                                    print('Can not remove sub-optimal trained model:', save_path)
+                                    # print('Can not remove sub-optimal trained model:', save_path)
+                                    pass
                             save_path = '{0}/{1}_{2}_acc{3}/'.format(self.opt.model_path_to_save,
                                                                      self.opt.model_name,
                                                                      self.opt.lcf,
@@ -147,8 +154,11 @@ class Instructor:
                     #                                                                        test_acc * 100,
                     #                                                                        f1 * 100)
                     #       )
-                iterator.postfix = ('Loss:{:.4f} | Max Test Acc:{:.2f} | Max Test F1:{:.2f}'.format(loss.item(),
+                iterator.postfix = (
+                    'Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) | Test F1:{:.2f}(max:{:.2f})'.format(loss.item(),
+                                                                                                    test_acc * 100,
                                                                                                     max_test_acc * 100,
+                                                                                                    f1 * 100,
                                                                                                     max_f1 * 100))
                 iterator.refresh()
         # return the model paths of multiple training in case of loading the best model after training

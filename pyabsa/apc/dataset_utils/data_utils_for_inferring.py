@@ -9,7 +9,8 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 from tqdm import tqdm
-from .apc_utils import copy_side_aspect, is_similar, calculate_dep_dist
+from .apc_utils import copy_side_aspect, is_similar
+from .apc_utils import get_lca_ids_and_cdm_vec, get_cdw_vec, get_syntax_distance, build_spc_mask_vec
 
 
 class ABSADataset(Dataset):
@@ -88,54 +89,59 @@ class ABSADataset(Dataset):
                     polarity = int(polarity) + 1 if polarity else -999
                 else:
                     polarity = -999
+
                 # simply add padding in case of some aspect is at the beginning or ending of a sentence
                 text_left, aspect, text_right = text.split('[ASP]')
                 text_left = text_left.replace('[PADDING] ', '')
                 text_right = text_right.replace(' [PADDING]', '')
 
-                # dynamic truncation on input text
-                text_left = ' '.join(
-                    text_left.split(' ')[int(-(self.tokenizer.max_seq_len - len(aspect.split())) / 2) - 1:])
-                text_right = ' '.join(
-                    text_right.split(' ')[:int((self.tokenizer.max_seq_len - len(aspect.split())) / 2) + 1])
-                text_left = ' '.join(text_left.split(' '))
-                text_right = ' '.join(text_right.split(' '))
-                text_raw = text_left + ' ' + aspect + ' ' + text_right
+                # # dynamic truncation on input text
+                # text_left = ' '.join(
+                #     text_left.split(' ')[int(-(tokenizer.max_seq_len - len(aspect.split())) / 2) - 1:])
+                # text_right = ' '.join(
+                #     text_right.split(' ')[:int((tokenizer.max_seq_len - len(aspect.split())) / 2) + 1])
 
-                text_bert_indices = self.tokenizer.text_to_sequence('[CLS] ' + text_raw + ' [SEP] ' + aspect + " [SEP]")
-                text_raw_bert_indices = self.tokenizer.text_to_sequence("[CLS] " + text_raw + " [SEP]")
-                aspect_bert_indices = self.tokenizer.text_to_sequence("[CLS] " + aspect + " [SEP]")
+                text_raw = text_left + ' ' + aspect + ' ' + text_right
+                text_spc = '[CLS] ' + text_raw + ' [SEP] ' + aspect + ' [SEP]'
+
+                text_spc = text_spc.lower()
+                text_raw = text_raw.lower()
+                aspect = aspect.lower()
+
+                text_bert_indices = self.tokenizer.text_to_sequence(text_spc)
+                text_raw_bert_indices = self.tokenizer.text_to_sequence('[CLS] ' + text_raw + ' [SEP]')
+                aspect_bert_indices = self.tokenizer.text_to_sequence('[CLS] ' + aspect + ' [SEP]')
+
+                syntactical_dist = get_syntax_distance(text_raw, aspect, self.tokenizer)
 
                 if 'lca' in self.opt.model_name:
-                    lca_ids, lcf_vec = self.get_lca_ids_and_cdm_vec(text_bert_indices, aspect_bert_indices, text_raw,
-                                                                    aspect)
+                    lca_ids, lcf_vec = get_lca_ids_and_cdm_vec(self.opt, text_bert_indices,
+                                                               aspect_bert_indices,
+                                                               syntactical_dist)
                     lcf_vec = torch.from_numpy(lcf_vec)
                     lca_ids = torch.from_numpy(lca_ids).long()
                 elif 'lcf' in self.opt.model_name:
                     if 'cdm' in self.opt.lcf:
-                        _, lcf_vec = self.get_lca_ids_and_cdm_vec(text_bert_indices, aspect_bert_indices, text_raw,
-                                                                  aspect)
+                        _, lcf_vec = get_lca_ids_and_cdm_vec(self.opt, text_bert_indices,
+                                                             aspect_bert_indices,
+                                                             syntactical_dist)
                         lcf_vec = torch.from_numpy(lcf_vec)
                     elif 'cdw' in self.opt.lcf:
-                        lcf_vec = self.get_cdw_vec(text_bert_indices, aspect_bert_indices, text_raw, aspect)
+                        lcf_vec = get_cdw_vec(self.opt, text_bert_indices,
+                                              aspect_bert_indices,
+                                              syntactical_dist)
                         lcf_vec = torch.from_numpy(lcf_vec)
                     elif 'fusion' in self.opt.lcf:
                         raise NotImplementedError('LCF-Fusion is not recommended due to its low efficiency!')
                     else:
                         raise KeyError('Invalid LCF Mode!')
 
-                if 'bert_segments_ids' in self.input_colses[self.opt.model_name]:
-                    aspect_indices = self.tokenizer.text_to_sequence(aspect)
-                    aspect_len = np.sum(aspect_indices != 0)
-                    text_raw_indices = self.tokenizer.text_to_sequence(text_raw)
-
                 data = {
                     'text_raw': text_raw,
                     'aspect': aspect,
-                    'asp_index': self.get_asp_index(text_bert_indices, aspect_bert_indices),
                     'lca_ids': lca_ids if 'lca_ids' in self.input_colses[self.opt.model_name] else 0,
                     'lcf_vec': lcf_vec if 'lcf_vec' in self.input_colses[self.opt.model_name] else 0,
-                    'spc_mask_vec': self.build_spc_mask_vec(text_raw_bert_indices)
+                    'spc_mask_vec': build_spc_mask_vec(self.opt, text_raw_bert_indices)
                     if 'spc_mask_vec' in self.input_colses[self.opt.model_name] else 0,
                     'text_bert_indices': text_bert_indices if 'text_bert_indices' in self.input_colses[
                         self.opt.model_name] else 0,
@@ -151,11 +157,10 @@ class ABSADataset(Dataset):
                 all_data.append(data)
 
             except Exception as e:
-                print(e)
-                if ignore_error:
-                    print('Ignore error while processing:', text)
-                else:
-                    raise RuntimeError('Error while processing:', text)
+                # if ignore_error:
+                #     print('Ignore error while processing:', text)
+                # else:
+                    raise e
 
         if all_data and 'slide' in self.opt.model_name:
             copy_side_aspect('left', all_data[0], all_data[0])
@@ -171,88 +176,90 @@ class ABSADataset(Dataset):
         self.all_data = all_data
         return all_data
 
-    def get_lca_ids_and_cdm_vec(self, text_ids, aspect_indices, text_raw, aspect):
-        SRD = self.opt.SRD
-        lca_ids = np.ones((self.opt.max_seq_len), dtype=np.float32)
-        cdm_vec = np.ones((self.opt.max_seq_len, self.opt.embed_dim), dtype=np.float32)
-        aspect_len = np.count_nonzero(aspect_indices) - 2
-
-        if 'lcfs' in self.opt.model_name:
-            # Find distance in dependency parsing tree
-            # raw_tokens, dist = calculate_dep_dist(text_spc, aspect)
-            raw_tokens, dist = calculate_dep_dist(text_raw, aspect)
-            raw_tokens.insert(0, self.tokenizer.cls_token)
-            dist.insert(0, 0)
-            raw_tokens.append(self.tokenizer.sep_token)
-            dist.append(0)
-            syntactical_dist = self.tokenizer.tokenize(raw_tokens, dist)[1]
-            for i in range(self.opt.max_seq_len):
-                if syntactical_dist[i] <= SRD:
-                    lca_ids[i] = 1
-                    cdm_vec[i] = np.ones((self.opt.embed_dim), dtype=np.float32)
-        else:
-            aspect_begin = self.get_asp_index(text_ids, aspect_indices)
-            if aspect_begin < 0:
-                return lca_ids, cdm_vec
-            local_context_begin = max(0, aspect_begin - SRD)
-            local_context_end = aspect_begin + aspect_len + SRD - 1
-            for i in range(self.opt.max_seq_len):
-                if local_context_begin <= i <= local_context_end:
-                    lca_ids[i] = 1
-                    cdm_vec[i] = np.ones((self.opt.embed_dim), dtype=np.float32)
-        return lca_ids, cdm_vec
-
-    def get_cdw_vec(self, text_ids, aspect_indices, text_raw, aspect):
-        SRD = self.opt.SRD
-        cdw_vec = np.zeros((self.opt.max_seq_len, self.opt.embed_dim), dtype=np.float32)
-        aspect_len = np.count_nonzero(aspect_indices) - 2
-        aspect_begin = np.argwhere(text_ids == aspect_indices[1])[0]
-        text_len = np.flatnonzero(text_ids)[-1] + 1
-        if 'lcfs' in self.opt.model_name:
-            # Find distance in dependency parsing tree
-            raw_tokens, dist = calculate_dep_dist(text_raw, aspect)
-            raw_tokens.insert(0, self.tokenizer.cls_token)
-            dist.insert(0, 0)
-            raw_tokens.append(self.tokenizer.sep_token)
-            dist.append(0)
-            syntactical_dist = self.tokenizer.tokenize(raw_tokens, dist)[1]
-            for i in range(text_len):
-                if syntactical_dist[i] > SRD:
-                    w = 1 - syntactical_dist[i] / text_len
-                    cdw_vec[i] = w * np.ones((self.opt.embed_dim), dtype=np.float32)
-                else:
-                    cdw_vec[i] = np.ones((self.opt.embed_dim), dtype=np.float32)
-        else:
-            aspect_begin = self.get_asp_index(text_ids, aspect_indices)
-            if aspect_begin < 0:
-                return np.zeros((self.opt.max_seq_len, self.opt.embed_dim), dtype=np.float32)
-            local_context_begin = max(0, aspect_begin - SRD)
-            local_context_end = aspect_begin + aspect_len + SRD - 1
-            for i in range(text_len):
-                if i < local_context_begin:
-                    w = 1 - (local_context_begin - i) / text_len
-                    cdw_vec[i] = w * np.ones((self.opt.embed_dim), dtype=np.float32)
-                elif local_context_begin <= i <= local_context_end:
-                    cdw_vec[i] = np.ones((self.opt.embed_dim), dtype=np.float32)
-                elif i > local_context_end:
-                    w = 1 - (i - local_context_end) / text_len
-                    cdw_vec[i] = w * np.ones((self.opt.embed_dim), dtype=np.float32)
-
-        return cdw_vec
-
-    def get_asp_index(self, text_ids, aspect_indices):
-        aspect_len = np.count_nonzero(aspect_indices) - 2
-        aspect_begin = np.argwhere(text_ids == aspect_indices[1])[0]
-        asp_avg_index = (aspect_begin * 2 + aspect_len) / 2
-
-        return asp_avg_index
-
-    def build_spc_mask_vec(self, text_ids):
-        spc_mask_vec = np.zeros((self.opt.max_seq_len, self.opt.embed_dim), dtype=np.float32)
-        for i in range(len(text_ids)):
-            if text_ids[i] != 0:
-                spc_mask_vec[i] = np.ones((self.opt.embed_dim), dtype=np.float32)
-        return spc_mask_vec
+    #
+    # def get_lca_ids_and_cdm_vec(self, text_ids, aspect_indices, text_raw, aspect):
+    #     SRD = self.opt.SRD
+    #     lca_ids = np.ones((self.opt.max_seq_len), dtype=np.float32)
+    #     cdm_vec = np.ones((self.opt.max_seq_len, self.opt.embed_dim), dtype=np.float32)
+    #     aspect_len = np.count_nonzero(aspect_indices) - 2
+    #     text_len = np.count_nonzero(text_ids) - aspect_len - 1
+    #     if 'lcfs' in self.opt.model_name:
+    #         # Find distance in dependency parsing tree
+    #         # raw_tokens, dist = calculate_dep_dist(text_spc, aspect)
+    #         raw_tokens, dist = calculate_dep_dist(text_raw, aspect)
+    #         raw_tokens.insert(0, self.tokenizer.cls_token)
+    #         dist.insert(0, 0)
+    #         raw_tokens.append(self.tokenizer.sep_token)
+    #         dist.append(0)
+    #         syntactical_dist = self.tokenizer.tokenize(raw_tokens, dist)[1]
+    #         for i in range(text_len):
+    #             if syntactical_dist[i] <= SRD:
+    #                 lca_ids[i] = 1
+    #                 cdm_vec[i] = np.ones((self.opt.embed_dim), dtype=np.float32)
+    #     else:
+    #         aspect_begin = self.get_asp_index(text_ids, aspect_indices)
+    #         if aspect_begin < 0:
+    #             return lca_ids, cdm_vec
+    #         local_context_begin = max(0, aspect_begin - SRD)
+    #         local_context_end = aspect_begin + aspect_len + SRD - 1
+    #         for i in range(text_len):
+    #             if local_context_begin <= i <= local_context_end:
+    #                 lca_ids[i] = 1
+    #                 cdm_vec[i] = np.ones((self.opt.embed_dim), dtype=np.float32)
+    #     return lca_ids, cdm_vec
+    #
+    # def get_cdw_vec(self, text_ids, aspect_indices, text_raw, aspect):
+    #     SRD = self.opt.SRD
+    #     cdw_vec = np.zeros((self.opt.max_seq_len, self.opt.embed_dim), dtype=np.float32)
+    #     aspect_len = np.count_nonzero(aspect_indices) - 2
+    #     aspect_begin = np.argwhere(text_ids == aspect_indices[1])[0]
+    #     text_len = np.flatnonzero(text_ids)[-1] + 1
+    #     if 'lcfs' in self.opt.model_name:
+    #         # Find distance in dependency parsing tree
+    #         raw_tokens, dist = calculate_dep_dist(text_raw, aspect)
+    #         raw_tokens.insert(0, self.tokenizer.cls_token)
+    #         dist.insert(0, 0)
+    #         raw_tokens.append(self.tokenizer.sep_token)
+    #         dist.append(0)
+    #         syntactical_dist = tokenizer.tokenize(raw_tokens, dist)[1]
+    #         # syntactical_dist = tokenizer.syntax_distance_alignment(raw_tokens, dist)
+    #         for i in range(text_len):
+    #             if syntactical_dist[i] > SRD:
+    #                 w = 1 - syntactical_dist[i] / text_len
+    #                 cdw_vec[i] = w * np.ones((self.opt.embed_dim), dtype=np.float32)
+    #             else:
+    #                 cdw_vec[i] = np.ones((self.opt.embed_dim), dtype=np.float32)
+    #     else:
+    #         aspect_begin = self.get_asp_index(text_ids, aspect_indices)
+    #         if aspect_begin < 0:
+    #             return np.zeros((self.opt.max_seq_len, self.opt.embed_dim), dtype=np.float32)
+    #         local_context_begin = max(0, aspect_begin - SRD)
+    #         local_context_end = aspect_begin + aspect_len + SRD - 1
+    #         for i in range(text_len):
+    #             if i < local_context_begin:
+    #                 w = 1 - (local_context_begin - i) / text_len
+    #                 cdw_vec[i] = w * np.ones((self.opt.embed_dim), dtype=np.float32)
+    #             elif local_context_begin <= i <= local_context_end:
+    #                 cdw_vec[i] = np.ones((self.opt.embed_dim), dtype=np.float32)
+    #             elif i > local_context_end:
+    #                 w = 1 - (i - local_context_end) / text_len
+    #                 cdw_vec[i] = w * np.ones((self.opt.embed_dim), dtype=np.float32)
+    #
+    #     return cdw_vec
+    #
+    # def get_asp_index(self, text_ids, aspect_indices):
+    #     aspect_len = np.count_nonzero(aspect_indices) - 2
+    #     aspect_begin = np.argwhere(text_ids == aspect_indices[1])[0]
+    #     asp_avg_index = (aspect_begin * 2 + aspect_len) / 2
+    #
+    #     return asp_avg_index
+    #
+    # def build_spc_mask_vec(self, text_ids):
+    #     spc_mask_vec = np.zeros((self.opt.max_seq_len, self.opt.embed_dim), dtype=np.float32)
+    #     for i in range(len(text_ids)):
+    #         if text_ids[i] != 0:
+    #             spc_mask_vec[i] = np.ones((self.opt.embed_dim), dtype=np.float32)
+    #     return spc_mask_vec
 
     def __getitem__(self, index):
         return self.all_data[index]

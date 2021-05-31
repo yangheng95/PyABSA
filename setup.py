@@ -12,7 +12,7 @@ from setuptools import setup, find_packages
 here = path.abspath(path.dirname(__file__))
 setup(
     name='pyabsa',
-    version='0.4.0a5',
+    version='0.4.1a0',
     description='This tool provides the sota models for aspect term extraction (ATE) '
                 'and aspect polarity classification (APC)',
     # long_description=str(open(path.join(here, "README.md"), encoding='utf8').read()),

@@ -10,7 +10,7 @@ from pyabsa import find_target_file
 from pyabsa import load_sentiment_classifier
 
 # Assume the sent_classifier is loaded or obtained using train function
-model_path = 'state_dict/slide_lcfs_bert_cdw_acc84.55'
+model_path = 'state_dict/slide_lcfs_bert_cdw_acc87.14'
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
                                             auto_device=True  # Use CUDA if available
                                             )
@@ -31,12 +31,12 @@ text = 'everything is always cooked to perfection , the [ASP]service[ASP] is exc
 sent_classifier.infer(text, print_result=True)
 
 # batch inferring returns the results, save the result if necessary using save_result=True
-# inference_set_path = 'rest16_inferring.dat'  # file or dir
-inference_set_path = 'datasets/restaurant14'  # file or dir
+inference_set_path = 'rest16_inferring.dat'  # file or dir
+# inference_set_path = 'datasets/restaurant14'  # file or dir
 inference_set = find_target_file(inference_set_path, 'infer', exclude_key='result', find_all=True)
 
-for i_set in inference_set:
-    results = sent_classifier.batch_infer(i_set,
+for infer_set in inference_set:
+    results = sent_classifier.batch_infer(inference_set_path=infer_set,
                                           print_result=True,
                                           save_result=True,
                                           ignore_error=True)

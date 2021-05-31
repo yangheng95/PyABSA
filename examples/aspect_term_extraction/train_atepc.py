@@ -13,7 +13,7 @@ from pyabsa import train_atepc
 param_dict = {'model_name': 'lcf_atepc',
               'batch_size': 16,
               'seed': {996, 7, 666},
-              'device': 'cuda',
+              'device': 'cuda',        # overrides auto_device parameter
               'num_epoch': 6,
               'optimizer': "adamw",    # {adam, adamw}
               'learning_rate': 0.00002,
@@ -24,7 +24,7 @@ param_dict = {'model_name': 'lcf_atepc',
               'log_step': 5,           # Evaluate per steps
               'SRD': 3,                # Distance threshold to calculate local context
               'lcf': "cdw",            # {cdw, cdm, fusion}
-              'dropout': 0,
+              'dropout': 0.1,
               'l2reg': 0.00001,
               'polarities_dim': 3      # Categories of sentiment polarity
               }
