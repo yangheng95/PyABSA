@@ -191,13 +191,13 @@ def train4atepc(config):
 
                         postfix = 'loss_apc:{:.4f} | loss_ate:{:.4f} |'.format(loss_apc.item(), loss_ate.item())
 
-                        postfix += f' | APC_ACC: {current_apc_test_acc}(max:{max_apc_test_acc}) | ' \
-                                   f' | APC_f1: {current_apc_test_f1}(max:{max_apc_test_f1}) | '
+                        postfix += f' APC_ACC: {current_apc_test_acc}(max:{max_apc_test_acc}) | ' \
+                                   f' APC_f1: {current_apc_test_f1}(max:{max_apc_test_f1}) | '
                         if opt.use_bert_spc:
-                            postfix += f' | ATE_F1: {current_apc_test_f1}(max:{max_apc_test_f1})' \
-                                      f' (Unreliable since `use_bert_spc` is "True".) | '
+                            postfix += f' ATE_F1: {current_apc_test_f1}(max:{max_apc_test_f1})' \
+                                      f' (Unreliable since `use_bert_spc` is "True".)'
                         else:
-                            postfix += f'| ATE_f1: {current_ate_test_f1}(max:{max_ate_test_f1}) |'
+                            postfix += f'| ATE_f1: {current_ate_test_f1}(max:{max_ate_test_f1})'
                         iterator.postfix = postfix
                         iterator.refresh()
 

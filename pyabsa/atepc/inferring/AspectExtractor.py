@@ -46,59 +46,59 @@ class AspectExtractor:
         # load from a model path
         if not isinstance(model_arg, str):
             # self.model = model_arg[0]
-            # self.args = model_arg[1]
+            # self.opt = model_arg[1]
             raise NotImplementedError('No implemented yet')
 
         else:
             print('Try to load trained model and config from', model_arg)
             state_dict_path = find_target_file(model_arg, 'state_dict')
             config_path = find_target_file(model_arg, 'config')
-            self.args = pickle.load(open(config_path, 'rb'))
-            self.args.bert_model = self.args.pretrained_bert_name
-            bert_base_model = BertModel.from_pretrained(self.args.bert_model)
+            self.opt = pickle.load(open(config_path, 'rb'))
+            self.opt.bert_model = self.opt.pretrained_bert_name
+            bert_base_model = BertModel.from_pretrained(self.opt.bert_model)
             bert_base_model.config.num_labels = self.num_labels
-            self.model = model_classes[self.args.model_name](bert_base_model, args=self.args)
+            self.model = model_classes[self.opt.model_name](bert_base_model, self.opt)
             self.model.load_state_dict(torch.load(state_dict_path))
 
-        self.tokenizer = BertTokenizer.from_pretrained(self.args.bert_model, do_lower_case=True)
+        self.tokenizer = BertTokenizer.from_pretrained(self.opt.bert_model, do_lower_case=True)
 
-        random.seed(self.args.seed)
-        np.random.seed(self.args.seed)
-        torch.manual_seed(self.args.seed)
+        random.seed(self.opt.seed)
+        np.random.seed(self.opt.seed)
+        torch.manual_seed(self.opt.seed)
 
-        for arg in vars(self.args):
-            print('>>> {0}: {1}'.format(arg, getattr(self.args, arg)))
+        for arg in vars(self.opt):
+            print('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
 
-        if self.args.gradient_accumulation_steps < 1:
+        if self.opt.gradient_accumulation_steps < 1:
             raise ValueError("Invalid gradient_accumulation_steps parameter: {}, should be >= 1".format(
-                self.args.gradient_accumulation_steps))
+                self.opt.gradient_accumulation_steps))
 
-        self.args.batch_size = self.args.batch_size // self.args.gradient_accumulation_steps
+        self.opt.batch_size = self.opt.batch_size // self.opt.gradient_accumulation_steps
 
         param_optimizer = list(self.model.named_parameters())
         no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
         optimizer_grouped_parameters = [
             {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)],
-             'weight_decay': self.args.l2reg},
+             'weight_decay': self.opt.l2reg},
             {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)],
-             'weight_decay': self.args.l2reg}
+             'weight_decay': self.opt.l2reg}
         ]
 
-        self.optimizer = optimizers[self.args.optimizer](optimizer_grouped_parameters, lr=self.args.learning_rate,
-                                                         weight_decay=self.args.l2reg)
+        self.optimizer = optimizers[self.opt.optimizer](optimizer_grouped_parameters, lr=self.opt.learning_rate,
+                                                        weight_decay=self.opt.l2reg)
 
         self.eval_dataloader = None
 
     def to(self, device=None):
-        self.args.device = device
+        self.opt.device = device
         self.model.to(device)
 
     def cpu(self):
-        self.args.device = 'cpu'
+        self.opt.device = 'cpu'
         self.model.to('cpu')
 
     def cuda(self, device='cuda:0'):
-        self.args.device = device
+        self.opt.device = device
         self.model.to(device)
 
     def extract_aspect(self, examples, print_result=True, pred_sentiment=True):
@@ -130,7 +130,7 @@ class AspectExtractor:
         example = self.processor.get_examples_for_aspect_extraction(example)
         eval_features = convert_examples_to_features(example,
                                                      self.label_list,
-                                                     self.args.max_seq_len,
+                                                     self.opt.max_seq_len,
                                                      self.tokenizer)
         all_spc_input_ids = torch.tensor([f.input_ids_spc for f in eval_features], dtype=torch.long)
         all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
@@ -150,13 +150,13 @@ class AspectExtractor:
         self.model.eval()
         label_map = {i: label for i, label in enumerate(self.label_list, 1)}
         for input_ids_spc, input_mask, segment_ids, label_ids, polarities, valid_ids, l_mask in self.eval_dataloader:
-            input_ids_spc = input_ids_spc.to(self.args.device)
-            input_mask = input_mask.to(self.args.device)
-            segment_ids = segment_ids.to(self.args.device)
-            valid_ids = valid_ids.to(self.args.device)
-            label_ids = label_ids.to(self.args.device)
-            polarities = polarities.to(self.args.device)
-            l_mask = l_mask.to(self.args.device)
+            input_ids_spc = input_ids_spc.to(self.opt.device)
+            input_mask = input_mask.to(self.opt.device)
+            segment_ids = segment_ids.to(self.opt.device)
+            valid_ids = valid_ids.to(self.opt.device)
+            label_ids = label_ids.to(self.opt.device)
+            polarities = polarities.to(self.opt.device)
+            l_mask = l_mask.to(self.opt.device)
 
             with torch.no_grad():
                 ate_logits, apc_logits = self.model(input_ids_spc, segment_ids, input_mask,
@@ -215,7 +215,7 @@ class AspectExtractor:
         example = self.processor.get_examples_for_sentiment_classification(example)
         eval_features = convert_examples_to_features(example,
                                                      self.label_list,
-                                                     self.args.max_seq_len,
+                                                     self.opt.max_seq_len,
                                                      self.tokenizer)
         all_spc_input_ids = torch.tensor([f.input_ids_spc for f in eval_features], dtype=torch.long)
         all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
@@ -238,13 +238,13 @@ class AspectExtractor:
         # Correct = {True: 'Correct', False: 'Wrong'}
 
         for input_ids_spc, input_mask, segment_ids, label_ids, polarities, valid_ids, l_mask in self.eval_dataloader:
-            input_ids_spc = input_ids_spc.to(self.args.device)
-            input_mask = input_mask.to(self.args.device)
-            segment_ids = segment_ids.to(self.args.device)
-            valid_ids = valid_ids.to(self.args.device)
-            label_ids = label_ids.to(self.args.device)
-            polarities = polarities.to(self.args.device)
-            l_mask = l_mask.to(self.args.device)
+            input_ids_spc = input_ids_spc.to(self.opt.device)
+            input_mask = input_mask.to(self.opt.device)
+            segment_ids = segment_ids.to(self.opt.device)
+            valid_ids = valid_ids.to(self.opt.device)
+            label_ids = label_ids.to(self.opt.device)
+            polarities = polarities.to(self.opt.device)
+            l_mask = l_mask.to(self.opt.device)
             result = {}
             with torch.no_grad():
                 ate_logits, apc_logits = self.model(input_ids_spc, segment_ids, input_mask,

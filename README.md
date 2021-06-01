@@ -17,8 +17,9 @@ or [LCF-ATEPC](https://github.com/yangheng95/LCF-ATEPC).
 
 # Preliminaries
 
-Install the latest version using `pip install pyabsa`, please always update if there is a newer version.
+Please star this repository in case of keeping find new examples and providing your advice.
 
+Install the latest version using `pip install pyabsa`, always update if there is a newer version. 
 To use our (APC) models, you may need download `en_core_web_sm` by
 
 ```
