@@ -9,7 +9,9 @@
 import tqdm
 from torch.utils.data import Dataset
 from .apc_utils import is_similar, copy_side_aspect
-from .apc_utils import get_lca_ids_and_cdm_vec, get_cdw_vec, get_syntax_distance, build_spc_mask_vec
+from .apc_utils import get_lca_ids_and_cdm_vec, get_cdw_vec
+from .apc_utils import get_syntax_distance, build_spc_mask_vec
+from .apc_utils import prepare_input_from_text
 
 
 class ABSADataset(Dataset):
@@ -34,24 +36,21 @@ class ABSADataset(Dataset):
 
         for i in tqdm.tqdm(range(0, len(lines), 3), postfix='building word indices...'):
 
-            text_left, _, text_right = [s.strip().lower() for s in " ".join(lines[i].split()).partition("$T$")]
+            text_left, _, text_right = [s.strip() for s in lines[i].partition("$T$")]
             aspect = lines[i + 1].lower().strip()
             polarity = lines[i + 2].strip()
             polarity = int(polarity) + 1
 
-            # # dynamic truncation on input text
-            # text_left = ' '.join(
-            #     text_left.split(' ')[int(-(tokenizer.max_seq_len - len(aspect.split())) / 2) - 1:])
-            # text_right = ' '.join(
-            #     text_right.split(' ')[:int((tokenizer.max_seq_len - len(aspect.split())) / 2) + 1])
+            prepared_inputs = prepare_input_from_text(opt, tokenizer, text_left, text_right, aspect, polarity)
 
-            text_raw = text_left + ' ' + aspect + ' ' + text_right
-            text_spc = '[CLS] ' + text_raw + ' [SEP] ' + aspect + ' [SEP]'
-            text_bert_indices = tokenizer.text_to_sequence(text_spc)
-            text_raw_bert_indices = tokenizer.text_to_sequence('[CLS] ' + text_raw + ' [SEP]')
-            aspect_bert_indices = tokenizer.text_to_sequence('[CLS] ' + aspect + ' [SEP]')
-
-            syntactical_dist = get_syntax_distance(text_raw, aspect, tokenizer)
+            text_raw = prepared_inputs['text_raw']
+            text_spc = prepared_inputs['text_spc']
+            aspect = prepared_inputs['aspect']
+            text_bert_indices = prepared_inputs['text_bert_indices']
+            text_raw_bert_indices = prepared_inputs['text_raw_bert_indices']
+            aspect_bert_indices = prepared_inputs['aspect_bert_indices']
+            syntactical_dist = get_syntax_distance(text_raw, aspect, tokenizer) \
+                if 'lcfs' in opt.model_name else None
 
             if 'lca' in opt.model_name:
                 lca_ids, lcf_vec = get_lca_ids_and_cdm_vec(opt,
@@ -60,9 +59,15 @@ class ABSADataset(Dataset):
                                                            syntactical_dist)
             elif 'lcf' in opt.model_name:
                 if 'cdm' in opt.lcf:
-                    _, lcf_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices, syntactical_dist)
+                    _, lcf_vec = get_lca_ids_and_cdm_vec(opt,
+                                                         text_bert_indices,
+                                                         aspect_bert_indices,
+                                                         syntactical_dist)
                 elif 'cdw' in opt.lcf:
-                    lcf_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices, syntactical_dist)
+                    lcf_vec = get_cdw_vec(opt,
+                                          text_bert_indices,
+                                          aspect_bert_indices,
+                                          syntactical_dist)
                 elif 'fusion' in opt.lcf:
                     raise NotImplementedError('LCF-Fusion is not recommended due to its low efficiency!')
                 else:

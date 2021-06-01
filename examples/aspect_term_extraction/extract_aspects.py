@@ -28,7 +28,7 @@ examples = ['But the staff was so nice to us .',
 model_path = 'state_dict/lcf_atepc_cdw_apcacc_84.72_apcf1_76.62_atef1_84.99'
 
 aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
-                                         auto_device=True  # False means load model on CPU
+                                         auto_device=True   # False means load model on CPU
                                          )
 
 # You can switch device manually using following functions
@@ -36,7 +36,7 @@ aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
 # aspect_extractor.cuda()
 # aspect_extractor.to('cuda:0')
 
-atepc_result = aspect_extractor.extract_aspect(examples,            # list-support only, for now
+atepc_result = aspect_extractor.extract_aspect(examples=examples,   # list-support only, for now
                                                print_result=True,   # print the result
                                                pred_sentiment=True  # Predict the sentiment of extracted aspect terms
                                                )

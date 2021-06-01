@@ -47,7 +47,7 @@ def init_apc_config(config_dict, auto_device=True):
     config['polarities_dim'] = apc_config.polarities_dim
     config['sigma'] = apc_config.sigma
     config['log_step'] = apc_config.log_step
-    config['loss_weight'] = apc_config.loss_weight
+    config['dynamic_truncate'] = apc_config.dynamic_truncate
 
     # reload hyper-parameter from training config
     path = os.path.abspath(__file__)
@@ -57,17 +57,19 @@ def init_apc_config(config_dict, auto_device=True):
     for key in config:
         _config[key] = config[key]
 
-    if not config_dict:
-        config_dict = dict()
-    # reload hyper-parameter from parameter dict
-    for key in config_dict:
-        _config[key] = config_dict[key]
-
     if auto_device and 'device' not in _config:
         if choice >= 0:
             _config['device'] = 'cuda:' + str(choice)
         else:
             _config['device'] = 'cpu'
+    if not auto_device and 'device' not in _config:
+        _config['device'] = 'cpu'
+
+    if not config_dict:
+        config_dict = dict()
+    # reload hyper-parameter from parameter dict
+    for key in config_dict:
+        _config[key] = config_dict[key]
 
     _config = Namespace(**_config)
 
@@ -109,6 +111,8 @@ def init_atepc_config(config_dict, auto_device=True):
             config['device'] = 'cuda:' + str(choice)
         else:
             config['device'] = 'cpu'
+    if not auto_device and 'device' not in config:
+        config['device'] = 'cpu'
 
     if not config_dict:
         config_dict = dict()
@@ -210,7 +214,7 @@ def train_atepc(parameter_dict=None,
         t_config = copy.deepcopy(config)
         t_config.seed = s
         model_path.append(train4atepc(t_config))
-    
+
     return AspectExtractor(max(model_path))
 
 

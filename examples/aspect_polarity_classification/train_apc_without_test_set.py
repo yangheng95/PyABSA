@@ -36,69 +36,68 @@ param_dict = {'model_name': 'slide_lcfs_bert',  # {slide_lcfs_bert, slide_lcf_be
 
 # see hyper-parameters in pyabsa/main/training_configs.py
 param_dict = {'model_name': 'bert_base', 'batch_size': 16, 'device': 'cuda', 'num_epoch': 5}
-train_set_path = 'sum_train.dat'
+train_set_path = 'example_files/sum_train.dat'
 # train_set_path = 'datasets/restaurant15'
 
 save_path = 'state_dict'
-sent_classifier = train_apc(parameter_dict=param_dict,  # set param_dict=None to use default model
-                            dataset_path=train_set_path,  # file or dir, dataset(s) will be automatically detected
+sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
+                            dataset_path=train_set_path,   # file or dir, dataset(s) will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
-                            auto_evaluate=False,  # evaluate model while training if test set is available
-                            auto_device=True  # Auto choose CUDA or CPU
+                            auto_evaluate=False,           # evaluate model while training if test set is available
+                            auto_device=True               # Auto choose CUDA or CPU
                             )
 
 param_dict = {'model_name': 'bert_spc', 'batch_size': 16, 'device': 'cuda', 'num_epoch': 5}
-train_set_path = 'sum_train.dat'
+train_set_path = 'example_files/sum_train.dat'
 save_path = 'state_dict'
 
-sent_classifier = train_apc(parameter_dict=param_dict,  # set param_dict=None to use default model
-                            dataset_path=train_set_path,  # file or dir, dataset(s) will be automatically detected
+sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
+                            dataset_path=train_set_path,   # file or dir, dataset(s) will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
-                            auto_evaluate=False,  # evaluate model while training if test set is available
-                            auto_device=True  # Auto choose CUDA or CPU
+                            auto_evaluate=False,           # evaluate model while training if test set is available
+                            auto_device=True               # Auto choose CUDA or CPU
                             )
 
 param_dict = {'model_name': 'lcf_bert', 'batch_size': 16, 'device': 'cuda', 'num_epoch': 5}
-train_set_path = 'sum_train.dat'
+train_set_path = 'example_files/sum_train.dat'
 save_path = 'state_dict'
 
-sent_classifier = train_apc(parameter_dict=param_dict,  # set param_dict=None to use default model
-                            dataset_path=train_set_path,  # file or dir, dataset(s) will be automatically detected
+sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
+                            dataset_path=train_set_path,   # file or dir, dataset(s) will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
-                            auto_evaluate=False,  # evaluate model while training if test set is available
-                            auto_device=True  # Auto choose CUDA or CPU
+                            auto_evaluate=False,           # evaluate model while training if test set is available
+                            auto_device=True               # Auto choose CUDA or CPU
                             )
 
 param_dict = {'model_name': 'lcfs_bert', 'batch_size': 16, 'device': 'cuda', 'num_epoch': 5}
-train_set_path = 'sum_train.dat'
+train_set_path = 'example_files/sum_train.dat'
 model_path_to_save = save_path
 
-sent_classifier = train_apc(parameter_dict=param_dict,  # set param_dict=None to use default model
-                            dataset_path=train_set_path,  # file or dir, dataset(s) will be automatically detected
+sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
+                            dataset_path=train_set_path,   # file or dir, dataset(s) will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
-                            auto_evaluate=False,  # evaluate model while training if test set is available
-                            auto_device=True  # Auto choose CUDA or CPU
+                            auto_evaluate=False,           # evaluate model while training if test set is available
+                            auto_device=True               # Auto choose CUDA or CPU
                             )
 
 param_dict = {'model_name': 'slide_lcf_bert', 'batch_size': 16, 'device': 'cuda', 'num_epoch': 5}
-train_set_path = 'sum_train.dat'
+train_set_path = 'example_files/sum_train.dat'
 model_path_to_save = save_path
 
-sent_classifier = train_apc(parameter_dict=param_dict,  # set param_dict=None to use default model
-                            dataset_path=train_set_path,  # file or dir, dataset(s) will be automatically detected
+sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
+                            dataset_path=train_set_path,   # file or dir, dataset(s) will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
-                            auto_evaluate=False,  # evaluate model while training if test set is available
-                            auto_device=True  # Auto choose CUDA or CPU
+                            auto_evaluate=False,           # evaluate model while training if test set is available
+                            auto_device=True               # Auto choose CUDA or CPU
                             )
 
 param_dict = {'model_name': 'slide_lcfs_bert', 'batch_size': 16, 'device': 'cuda', 'num_epoch': 5}
-train_set_path = 'datasets/restaurant15'
-train_set_path = 'sum_train.dat'
+train_set_path = 'example_files/sum_train.dat'
 model_path_to_save = save_path
 
-sent_classifier = train_apc(parameter_dict=param_dict,  # set param_dict=None to use default model
-                            dataset_path=train_set_path,  # file or dir, dataset(s) will be automatically detected
+sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
+                            dataset_path=train_set_path,   # file or dir, dataset(s) will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
-                            auto_evaluate=False,  # evaluate model while training if test set is available
-                            auto_device=True  # Auto choose CUDA or CPU
+                            auto_evaluate=False,           # evaluate model while training if test set is available
+                            auto_device=True               # Auto choose CUDA or CPU
                             )

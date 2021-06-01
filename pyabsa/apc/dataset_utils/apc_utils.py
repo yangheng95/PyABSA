@@ -7,10 +7,15 @@
 
 import argparse
 import json
+import warnings
+
 import networkx as nx
 import numpy as np
 import spacy
 
+
+POLARITY_SET = set()
+SENTIMENT_PADDING = -999
 
 def parse_apc_params(path):
     configs = []
@@ -152,6 +157,40 @@ class Tokenizer4Bert:
         return self.tokenizer.tokenize(text)
 
 
+def prepare_input_from_text(opt, tokenizer, text_left, text_right, aspect, polarity):
+    if opt.dynamic_truncate:
+        # dynamic truncation on input text
+        text_left = ' '.join(text_left.split(' ')[int(-(tokenizer.max_seq_len - len(aspect.split())) / 2) - 1:])
+        text_right = ' '.join(text_right.split(' ')[:int((tokenizer.max_seq_len - len(aspect.split())) / 2) + 1])
+
+    text_raw = text_left + ' ' + aspect + ' ' + text_right
+    text_spc = '[CLS] ' + text_raw + ' [SEP] ' + aspect + ' [SEP]'
+    text_bert_indices = tokenizer.text_to_sequence(text_spc)
+    text_raw_bert_indices = tokenizer.text_to_sequence('[CLS] ' + text_raw + ' [SEP]')
+    aspect_bert_indices = tokenizer.text_to_sequence(aspect)
+
+    POLARITY_SET.add(polarity)
+    get_polarities_dim(opt)
+
+    inputs = {
+        'text_raw': text_raw,
+        'text_spc': text_spc,
+        'aspect': aspect,
+        'polarity': polarity,
+        'text_bert_indices': text_bert_indices,
+        'text_raw_bert_indices': text_raw_bert_indices,
+        'aspect_bert_indices': aspect_bert_indices
+    }
+
+    return inputs
+
+
+def get_polarities_dim(opt=None):
+    if opt:
+        opt.polarities_dim = max(POLARITY_SET) + 1
+    return max(POLARITY_SET) + 1
+
+
 def get_syntax_distance(text_raw, aspect, tokenizer):
     # Find distance in dependency parsing tree
     raw_tokens, dist = calculate_dep_dist(text_raw, aspect)
@@ -164,24 +203,23 @@ def get_syntax_distance(text_raw, aspect, tokenizer):
     return syntactical_dist
 
 
-def get_lca_ids_and_cdm_vec(opt, text_ids, aspect_indices, syntactical_dist):
+def get_lca_ids_and_cdm_vec(opt, bert_spc_indices, aspect_indices, syntactical_dist):
     SRD = opt.SRD
     lca_ids = np.zeros((opt.max_seq_len), dtype=np.float32)
     cdm_vec = np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
-    aspect_len = np.count_nonzero(aspect_indices) - 2
-    text_len = np.count_nonzero(text_ids) - np.count_nonzero(aspect_indices) + 1
+    aspect_len = np.count_nonzero(aspect_indices)
+    text_len = np.count_nonzero(bert_spc_indices) - np.count_nonzero(aspect_indices) -1
     if 'lcfs' in opt.model_name:
-
         for i in range(text_len):
             if syntactical_dist[i] <= SRD:
                 lca_ids[i] = 1
                 cdm_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
     else:
-        aspect_begin = get_asp_index(text_ids, aspect_indices)
+        aspect_begin = get_asp_index(bert_spc_indices, aspect_indices)
         if aspect_begin < 0:
             return lca_ids, cdm_vec
         local_context_begin = max(0, aspect_begin - SRD)
-        local_context_end = aspect_begin + aspect_len + SRD - 1
+        local_context_end = min(aspect_begin + aspect_len + SRD - 1, opt.max_seq_len - 1)
         for i in range(text_len):
             if local_context_begin <= i <= local_context_end:
                 lca_ids[i] = 1
@@ -189,11 +227,11 @@ def get_lca_ids_and_cdm_vec(opt, text_ids, aspect_indices, syntactical_dist):
     return lca_ids, cdm_vec
 
 
-def get_cdw_vec(opt, text_ids, aspect_indices, syntactical_dist):
+def get_cdw_vec(opt, bert_spc_indices, aspect_indices, syntactical_dist):
     SRD = opt.SRD
     cdw_vec = np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
     aspect_len = np.count_nonzero(aspect_indices)
-    text_len = np.count_nonzero(text_ids) - np.count_nonzero(aspect_indices) + 1
+    text_len = np.count_nonzero(bert_spc_indices) - np.count_nonzero(aspect_indices) - 1
     if 'lcfs' in opt.model_name:
         for i in range(text_len):
             if syntactical_dist[i] > SRD:
@@ -202,11 +240,11 @@ def get_cdw_vec(opt, text_ids, aspect_indices, syntactical_dist):
             else:
                 cdw_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
     else:
-        aspect_begin = get_asp_index(text_ids, aspect_indices)
+        aspect_begin = get_asp_index(bert_spc_indices, aspect_indices)
         if aspect_begin < 0:
             return np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
         local_context_begin = max(0, aspect_begin - SRD)
-        local_context_end = aspect_begin + aspect_len + SRD - 1
+        local_context_end = min(aspect_begin + aspect_len + SRD - 1, opt.max_seq_len - 1)
         for i in range(text_len):
             if i < local_context_begin:
                 w = 1 - (local_context_begin - i) / text_len
@@ -220,14 +258,16 @@ def get_cdw_vec(opt, text_ids, aspect_indices, syntactical_dist):
 
 
 def get_asp_index(text_ids, aspect_indices):
-    aspect_len = np.count_nonzero(aspect_indices) - 2
-    aspect_indices = aspect_indices[1:aspect_len + 1]
+    aspect_len = np.count_nonzero(aspect_indices)
+    aspect_indices = aspect_indices[1: aspect_len + 1]
     for i in range(len(text_ids)):
         for j in range(len(aspect_indices)):
             if text_ids[i + j] == aspect_indices[j] and j == len(aspect_indices) - 1:
                 return i
             elif text_ids[i + j] != aspect_indices[j]:
                 break
+
+    return -1
 
 
 def build_spc_mask_vec(opt, text_ids):
@@ -239,7 +279,6 @@ def build_spc_mask_vec(opt, text_ids):
 
 
 def copy_side_aspect(direct='left', target=None, source=None):
-    # for data_item in ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec']:
     for data_item in ['lcf_vec']:
         target[direct + '_' + data_item] = source[data_item]
 
@@ -264,8 +303,8 @@ try:
     # Note that this function is not available for Chinese currently.
     nlp = spacy.load("en_core_web_sm")
 except:
-    raise RuntimeError('Can not load en_core_web_sm from spacy, maybe you need to download it using:'
-                       '\n python -m spacy download en_core_web_sm')
+    warnings.warn('Can not load en_core_web_sm from spacy, download it in order to parse syntax tree:'
+                  '\n python -m spacy download en_core_web_sm')
 
 
 def spacy_tokenize(text):
