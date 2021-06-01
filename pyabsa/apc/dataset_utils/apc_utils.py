@@ -258,16 +258,18 @@ def get_cdw_vec(opt, bert_spc_indices, aspect_indices, syntactical_dist):
 
 
 def get_asp_index(text_ids, aspect_indices):
-    aspect_len = np.count_nonzero(aspect_indices)
-    aspect_indices = aspect_indices[1: aspect_len + 1]
-    for i in range(len(text_ids)):
-        for j in range(len(aspect_indices)):
-            if text_ids[i + j] == aspect_indices[j] and j == len(aspect_indices) - 1:
-                return i
-            elif text_ids[i + j] != aspect_indices[j]:
-                break
-
-    return -1
+    try:
+        aspect_len = np.count_nonzero(aspect_indices)
+        aspect_indices = aspect_indices[0: aspect_len]
+        for i in range(len(text_ids)):
+            for j in range(len(aspect_indices)):
+                if text_ids[i + j] == aspect_indices[j] and j == len(aspect_indices) - 1:
+                    return i
+                elif text_ids[i + j] != aspect_indices[j]:
+                    break
+    except:
+        return -1
+    return  -1
 
 
 def build_spc_mask_vec(opt, text_ids):
