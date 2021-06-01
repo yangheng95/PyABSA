@@ -18,6 +18,8 @@ from pyabsa.apc.models.lcf_bert import LCF_BERT
 from pyabsa.apc.models.slide_lcf_bert import SLIDE_LCF_BERT
 from pyabsa.apc.dataset_utils.data_utils_for_inferring import ABSADataset
 from pyabsa.apc.dataset_utils.apc_utils import Tokenizer4Bert
+from pyabsa.apc.dataset_utils.apc_utils import get_polarities_dim, SENTIMENT_PADDING
+
 from pyabsa.pyabsa_utils import find_target_file
 
 
@@ -143,8 +145,12 @@ class SentimentClassifier:
     def _infer(self, save_path=None, print_result=True):
 
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
-        sentiments = {0: 'Negative', 1: "Neutral", 2: 'Positive', -999: ''}
-        Correct = {True: 'Correct', False: 'Wrong'}
+        polarities_dim = get_polarities_dim()
+        if polarities_dim == 3:
+            sentiment_map = {0: 'Negative', 1: "Neutral", 2: 'Positive', SENTIMENT_PADDING: ''}
+        else:
+            sentiment_map = {p: p for p in range(polarities_dim)}
+        correct = {True: 'Correct', False: 'Wrong'}
         results = []
         if save_path:
             fout = open(save_path + '.results', 'w', encoding='utf8')
@@ -167,21 +173,21 @@ class SentimentClassifier:
                 result['text'] = sample['text_raw'][0]
                 result['aspect'] = sample['aspect'][0]
                 result['sentiment'] = int(t_probs.argmax(axis=-1))
-                result['ref_sentiment'] = sentiments[real_sent]
-                result['infer result'] = Correct[sent == real_sent]
+                result['ref_sentiment'] = sentiment_map[real_sent]
+                result['infer result'] = correct[sent == real_sent]
                 results.append(result)
                 line1 = sample['text_raw'][0]
                 if real_sent == -999:
-                    line2 = '{} --> {}'.format(aspect, sentiments[sent])
+                    line2 = '{} --> {}'.format(aspect, sentiment_map[sent])
                 else:
                     n_labeled += 1
                     if sent == real_sent:
                         n_correct += 1
-                    line2 = '{} --> {}  Real Polarity: {} ({})'.format(aspect,
-                                                                       sentiments[sent],
-                                                                       sentiments[real_sent],
-                                                                       Correct[sent == real_sent]
-                                                                       )
+                    line2 = '{} --> {}  Real: {} ({})'.format(aspect,
+                                                              sentiment_map[sent],
+                                                              sentiment_map[real_sent],
+                                                              correct[sent == real_sent]
+                                                              )
                 n_total += 1
                 try:
                     if save_path:

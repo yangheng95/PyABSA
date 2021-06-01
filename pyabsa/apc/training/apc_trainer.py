@@ -24,6 +24,7 @@ from pyabsa.apc.models.lcf_bert import LCF_BERT
 from pyabsa.apc.models.slide_lcf_bert import SLIDE_LCF_BERT
 from pyabsa.apc.dataset_utils.data_utils_for_training import ABSADataset
 from pyabsa.apc.dataset_utils.apc_utils import Tokenizer4Bert
+from pyabsa.apc.dataset_utils.apc_utils import get_polarities_dim
 
 
 class Instructor:
@@ -115,16 +116,16 @@ class Instructor:
                     loss = (1 - self.opt.sigma) * sen_loss + self.opt.sigma * lcp_loss
                 else:
                     sen_logits = outputs
-                    loss = self.opt.loss_weight * criterion(sen_logits, targets)
+                    loss = criterion(sen_logits, targets)
 
                 loss.backward()
                 optimizer.step()
 
                 # evaluate if test set is available
                 if 'test' in self.opt.dataset_file and global_step % self.opt.log_step == 0:
-                    n_correct += (torch.argmax(sen_logits, -1) == targets).sum().item()
-                    n_total += len(sen_logits)
-                    train_acc = n_correct / n_total
+                    # n_correct += (torch.argmax(sen_logits, -1) == targets).sum().item()
+                    # n_total += len(sen_logits)
+                    # train_acc = n_correct / n_total
 
                     test_acc, f1 = self._evaluate_acc_f1()
                     if test_acc > max_test_acc:
@@ -145,15 +146,8 @@ class Instructor:
                                                                      round(test_acc * 100, 2),
                                                                      )
                             self._save_model(self.model, save_path, mode=0)
-                        # print('max_acc:{}, f1:{}'.format(round(test_acc * 100, 2), round(f1 * 100, 2)))
                     if f1 > max_f1:
                         max_f1 = f1
-                    # uncomment next line to monitor the training process
-                    # print('loss: {:.4f}, acc: {:.2f}, test_acc: {:.2f}, f1: {:.2f}'.format(loss.item(),
-                    #                                                                        train_acc * 100,
-                    #                                                                        test_acc * 100,
-                    #                                                                        f1 * 100)
-                    #       )
                 iterator.postfix = (
                     'Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) | Test F1:{:.2f}(max:{:.2f})'.format(loss.item(),
                                                                                                     test_acc * 100,
@@ -204,7 +198,7 @@ class Instructor:
 
         test_acc = n_test_correct / n_test_total
         f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
-                              labels=[0, 1, 2], average='macro')
+                              labels=list(range(get_polarities_dim(self.opt))), average='macro')
         return test_acc, f1
 
     def run(self):

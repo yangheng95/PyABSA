@@ -17,8 +17,9 @@ or [LCF-ATEPC](https://github.com/yangheng95/LCF-ATEPC).
 
 # Preliminaries
 
-Install this repo by `pip install pyabsa`.
-To use our models, you may need download `en_core_web_sm` by
+Install the latest version using `pip install pyabsa`, please always update if there is a newer version.
+
+To use our (APC) models, you may need download `en_core_web_sm` by
 
 ```
 python -m spacy download en_core_web_sm
@@ -81,13 +82,12 @@ param_dict = {'model_name': 'lcf_atepc',
 
 train_set_path = 'atepc_datasets/restaurant14'
 save_path = '../atepc_usages/state_dict'
-aspect_extractor = train_atepc(parameter_dict=param_dict,  # set param_dict=None to use default model
-                               dataset_path=train_set_path,  # file or dir, dataset(s) will be automatically detected
-                               model_path_to_save=save_path,
-                               auto_evaluate=True,  # evaluate model while training if test set is available
-                               auto_device=True  # Auto choose CUDA or CPU
+aspect_extractor = train_atepc(parameter_dict=param_dict,      # set param_dict=None to use default model
+                               dataset_path=train_set_path,    # file or dir, dataset(s) will be automatically detected
+                               model_path_to_save=save_path,   # set model_path_to_save=None to avoid save model
+                               auto_evaluate=True,             # evaluate model while training if test set is available
+                               auto_device=True                # Auto choose CUDA or CPU
                                )
-
 ```
 
 3. Extract aspect terms
@@ -106,9 +106,10 @@ model_path = 'state_dict/lcf_atepc_cdw_rest14_without_spc'
 aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
                                          auto_device=True)
 
-atepc_result = aspect_extractor.extract_aspect(examples,
-                                               print_result=True,
-                                               pred_sentiment=True)
+atepc_result = aspect_extractor.extract_aspect(examples=examples,   # list-support only, for now
+                                               print_result=True,   # print the result
+                                               pred_sentiment=True  # Predict the sentiment of extracted aspect terms
+                                               )
 # print(atepc_result)
 ```
 
@@ -124,13 +125,12 @@ Check the detailed usages in [APC examples](examples/aspect_polarity_classificat
 from pyabsa import train, train_and_evaluate, load_sentiment_classifier
 dataset_path = 'datasets/laptop14'
 sent_classifier = train_and_evaluate(parameter_dict=None,
-                                dataset_path=dataset_path,
-                                model_path_to_save=None
-                                )
+                                     dataset_path=dataset_path,
+                                     model_path_to_save=None
+                                     )
 text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent ,' \
        ' the [ASP]decor[ASP] cool and understated . !sent! 1 1'
 sent_classifier.infer(text)
-
 ```
 
 1. Train our models on your custom dataset:
@@ -140,7 +140,7 @@ from pyabsa import train, train_and_evaluate, load_sentiment_classifier
 # see hyper-parameters in pyabsa/main/training_configs.py
 param_dict = {'model_name': 'bert_base', 'batch_size': 16, 'device': 'cuda', 'num_epoch': 6}
 # train_set_path = 'datasets/restaurant15'
-train_set_path = 'sum_train.dat'  # replace the path of your custom dataset(s) here
+train_set_path = 'example_files/sum_train.dat'  # replace the path of your custom dataset(s) here
 model_path_to_save = 'state_dict'
 
 sent_classifier = train_apc(parameter_dict=param_dict,    # set param_dict=None to use default model
@@ -151,19 +151,19 @@ sent_classifier = train_apc(parameter_dict=param_dict,    # set param_dict=None 
                             )
 
 # Or, if you have the test set, this function also could evaluate model while training
-datasets_path = 'datasets/restaurant15'  # Refer to the path where the the train and test sets is placed
-sent_classifier = train_apc(parameter_dict=param_dict,    # set param_dict=None to use default model
-                            dataset_path=datasets_path,   # train set and test set will be automatically detected
-                            model_path_to_save=model_path_to_save,  # set model_path_to_save=None to avoid save model
-                            auto_evaluate=True,   # evaluate model while training if test set is available
-                            auto_device=True  # Auto choose CUDA or CPU
+datasets_path = 'datasets/restaurant15'                    # Refer to the path where the the train and test sets is placed
+sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
+                            dataset_path=train_set_path,   # file or dir, dataset(s) will be automatically detected
+                            model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
+                            auto_evaluate=False,           # evaluate model while training if test set is available
+                            auto_device=True               # Auto choose CUDA or CPU
                             )
 ```
 
 We provide the pretrained models
 on [Google Drive](https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing)
 or [百度网盘（提取码：absa）](https://pan.baidu.com/s/1FSgaSP4ubGWy0BjBQdct5w) trained on a large assembled
-ABSA [dataset](examples/aspect_polarity_classification/sum_train.dat) based on BERT-BASE-UNCASED model,
+ABSA [dataset](examples/aspect_polarity_classification/example_files/sum_train.dat) based on BERT-BASE-UNCASED model,
 
 1. BERT-BASE
 2. BERT-SPC
@@ -210,7 +210,7 @@ sent_classifier.to('cuda:0')
 sent_classifier.infer(text)
 
 # batch inference from on a inference dataset
-test_set_path = './rest16_test_inferring.dat' 
+test_set_path = 'example_files/rest16_test_inferring.dat' 
 results = sent_classifier.batch_infer(test_set_path, print_result=True, save_result=True)
 ```
 
@@ -223,15 +223,6 @@ from pyabsa import generate_inferring_set_for_apc
 generate_inferring_set_for_apc('datasets/restaurant14')
 ```
 
-5. Get usage introductions and samples:
-
-```
-from pyabsa import print_usages, samples
-print_usages()
-samples = get_samples()
-for sample in samples:
-    sent_classifier.infer(sample)
-```
 How to set hyper-parameters:
 
 ```
