@@ -6,6 +6,7 @@
 import os
 import pickle
 import random
+import warnings
 
 import numpy
 import torch
@@ -63,10 +64,9 @@ class SentimentClassifier:
                 print('Config used in Training:')
                 self._log_write_args()
 
-            except Exception as e:
-                print(e)
-                raise RuntimeError('Fail to load the model, please download our latest models at Google Drive: '
-                                   'https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing')
+            except:
+                warnings.warn('Fail to load the model, please download our latest models at Google Drive: '
+                              'https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing')
 
         self.bert_tokenizer = BertTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
         self.tokenizer = Tokenizer4Bert(self.bert_tokenizer, self.opt.max_seq_len)

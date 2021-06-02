@@ -208,7 +208,7 @@ def get_lca_ids_and_cdm_vec(opt, bert_spc_indices, aspect_indices, syntactical_d
     lca_ids = np.zeros((opt.max_seq_len), dtype=np.float32)
     cdm_vec = np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
     aspect_len = np.count_nonzero(aspect_indices)
-    text_len = np.count_nonzero(bert_spc_indices) - np.count_nonzero(aspect_indices) -1
+    text_len = np.count_nonzero(bert_spc_indices) - np.count_nonzero(aspect_indices) - 1
     if 'lcfs' in opt.model_name:
         for i in range(text_len):
             if syntactical_dist[i] <= SRD:
