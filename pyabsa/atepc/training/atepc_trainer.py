@@ -24,13 +24,19 @@ from transformers.optimization import AdamW
 
 from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
 from ..models.lcf_atepc import LCF_ATEPC
+from pyabsa.logger import get_logger
 
 import warnings
+
+logger = get_logger(os.getcwd())
 
 warnings.filterwarnings('ignore')
 
 
 def train4atepc(config):
+
+
+
     opt = config
 
     if opt.gradient_accumulation_steps < 1:
@@ -81,7 +87,7 @@ def train4atepc(config):
     model = model_classes[opt.model_name](bert_base_model, opt=opt)
 
     for arg in vars(opt):
-        print('>>> {0}: {1}'.format(arg, getattr(opt, arg)))
+        logger.info('>>> {0}: {1}'.format(arg, getattr(opt, arg)))
 
     model.to(opt.device)
 
@@ -111,10 +117,10 @@ def train4atepc(config):
     def train():
         train_features = convert_examples_to_features(
             train_examples, label_list, opt.max_seq_len, tokenizer)
-        print("***** Running training *****")
-        print("  Num examples = %d", len(train_examples))
-        print("  Batch size = %d", opt.batch_size)
-        print("  Num steps = %d", num_train_optimization_steps)
+        logger.info("***** Running training *****")
+        logger.info("  Num examples = %d", len(train_examples))
+        logger.info("  Batch size = %d", opt.batch_size)
+        logger.info("  Num steps = %d", num_train_optimization_steps)
         all_spc_input_ids = torch.tensor([f.input_ids_spc for f in train_features], dtype=torch.long)
         all_input_mask = torch.tensor([f.input_mask for f in train_features], dtype=torch.long)
         all_segment_ids = torch.tensor([f.segment_ids for f in train_features], dtype=torch.long)
@@ -161,9 +167,9 @@ def train4atepc(config):
                         # if save_path:
                         #     try:
                         #         shutil.rmtree(save_path)
-                        #         # print('Remove sub-optimal trained model:', save_path)
+                        #         # logger.info('Remove sub-optimal trained model:', save_path)
                         #     except:
-                        #         print('Can not remove sub-optimal trained model:', save_path)
+                        #         logger.info('Can not remove sub-optimal trained model:', save_path)
                         if opt.model_path_to_save:
                             save_path = '{0}/{1}_{2}_apcacc_{3}_apcf1_{4}_atef1_{5}/'.format(
                                 opt.model_path_to_save,
@@ -300,7 +306,7 @@ def train4atepc(config):
             model_to_save.config.to_json_file(output_config_file)
             tokenizer.save_vocabulary(model_output_dir)
 
-        # print('trained model saved in: {}'.format(save_path))
+        # logger.info('trained model saved in: {}'.format(save_path))
         model_to_save.to(args_to_save.device)
 
     return train()

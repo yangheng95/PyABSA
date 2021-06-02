@@ -49,11 +49,15 @@ Check the detailed usages in [ATE examples](examples/aspect_term_extraction) dir
 
 1. Convert APC datasets to ATEPC datasets
 
+If you got apc datasets with the same format as provided 
+   [apc datasets](examples/aspect_polarity_classification/datasets),
+you can convert them to atepc datasets:
+
 ```
 from pyabsa import convert_apc_set_to_atepc
 convert_apc_set_to_atepc(r'../apc_usages/datasets/restaurant16')
 ```
-
+s
 2. Training for ATEPC
 
 ```
