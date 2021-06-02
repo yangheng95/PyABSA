@@ -8,7 +8,7 @@
 import os
 import random
 import pickle
-import string
+import warnings
 
 import numpy as np
 import torch
@@ -51,14 +51,18 @@ class AspectExtractor:
 
         else:
             print('Try to load trained model and config from', model_arg)
-            state_dict_path = find_target_file(model_arg, 'state_dict')
-            config_path = find_target_file(model_arg, 'config')
-            self.opt = pickle.load(open(config_path, 'rb'))
-            self.opt.bert_model = self.opt.pretrained_bert_name
-            bert_base_model = BertModel.from_pretrained(self.opt.bert_model)
-            bert_base_model.config.num_labels = self.num_labels
-            self.model = model_classes[self.opt.model_name](bert_base_model, self.opt)
-            self.model.load_state_dict(torch.load(state_dict_path))
+            try:
+                state_dict_path = find_target_file(model_arg, 'state_dict')
+                config_path = find_target_file(model_arg, 'config')
+                self.opt = pickle.load(open(config_path, 'rb'))
+                self.opt.bert_model = self.opt.pretrained_bert_name
+                bert_base_model = BertModel.from_pretrained(self.opt.bert_model)
+                bert_base_model.config.num_labels = self.num_labels
+                self.model = model_classes[self.opt.model_name](bert_base_model, self.opt)
+                self.model.load_state_dict(torch.load(state_dict_path))
+            except:
+                warnings.warn('Fail to load the model, please download our latest models at Google Drive: '
+                              'https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing')
 
         self.tokenizer = BertTokenizer.from_pretrained(self.opt.bert_model, do_lower_case=True)
 
@@ -66,6 +70,7 @@ class AspectExtractor:
         np.random.seed(self.opt.seed)
         torch.manual_seed(self.opt.seed)
 
+        print('Config used in Training:')
         for arg in vars(self.opt):
             print('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
 

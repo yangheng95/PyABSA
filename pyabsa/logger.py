@@ -22,7 +22,7 @@ def get_logger(log_path, log_type='training_log'):
     logger = logging.getLogger()
     if not logger.handlers:
         # 指定logger输出格式
-        formatter = logging.Formatter('%(asctime)s %(levelname)-8s: %(message)s')
+        formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
 
         # 文件日志
         file_handler = logging.FileHandler(log_path, encoding="utf8")

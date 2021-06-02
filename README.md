@@ -25,6 +25,25 @@ To use our (APC) models, you may need download `en_core_web_sm` by
 ```
 python -m spacy download en_core_web_sm
 ```
+# Model Support
+We provide the pretrained ATEPC and APC models
+on [Google Drive](https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing)
+or [百度网盘（提取码：absa）](https://pan.baidu.com/s/1FSgaSP4ubGWy0BjBQdct5w):
+
+## ATEPC
+1. [LCF-ATEPC](pyabsa/atepc/models/lcf_atepc.py) 
+
+## APC
+1. [BERT-BASE](pyabsa/apc/models/bert_base.py)
+2. [BERT-SPC](pyabsa/apc/models/bert_spc.py)
+3. [LCF-BERT](pyabsa/apc/models/lcf_bert.py)
+4. [LCFS-BERT](pyabsa/apc/models/lcf_bert.py)
+5. [SLIDE-LCF-BERT](pyabsa/apc/models/slide_lcf_bert.py)
+6. [SLIDE-LCFS-BERT](pyabsa/apc/models/slide_lcf_bert.py)
+7. [LCA-Net](pyabsa/apc/models/lca_bert.py)
+
+download them if necessary, note that most of the provided models are trained on the assembled train set without evaluation on test set. 
+
 
 # Aspect Term Extraction (ATE)
 
@@ -57,7 +76,7 @@ you can convert them to atepc datasets:
 from pyabsa import convert_apc_set_to_atepc
 convert_apc_set_to_atepc(r'../apc_usages/datasets/restaurant16')
 ```
-s
+
 2. Training for ATEPC
 
 ```
@@ -164,20 +183,6 @@ sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None
                             auto_device=True               # Auto choose CUDA or CPU
                             )
 ```
-
-We provide the pretrained models
-on [Google Drive](https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing)
-or [百度网盘（提取码：absa）](https://pan.baidu.com/s/1FSgaSP4ubGWy0BjBQdct5w) trained on a large assembled
-ABSA [dataset](examples/aspect_polarity_classification/example_files/sum_train.dat) based on BERT-BASE-UNCASED model,
-
-1. BERT-BASE
-2. BERT-SPC
-3. LCF-BERT
-4. LCFS-BERT
-5. SLIDE_LCF_BERT
-6. SLIDE_LCFS_BERT
-
-download them if necessary, note that most of the provided models are trained on the assembled train set without evaluation on test set. 
 
 2. Load the trained model:
 
@@ -310,6 +315,7 @@ This work build from LC-ABSA/LCF-ABSA and LCF-ATEPC. Feel free to help us optimi
 # Citation
 If this repository is helpful, please cite our paper:
 
+```
     @article{yang2021multi,
         title={A multi-task learning model for chinese-oriented aspect polarity classification and aspect term extraction},
         author={Yang, Heng and Zeng, Biqing and Yang, JianHao and Song, Youwei and Xu, Ruyang},
@@ -319,7 +325,9 @@ If this repository is helpful, please cite our paper:
         year={2021},
         publisher={Elsevier}
     }
+```
 
+```
     @article{zeng2019lcf,
         title={LCF: A Local Context Focus Mechanism for Aspect-Based Sentiment Classification},
         author={Zeng, Biqing and Yang, Heng and Xu, Ruyang and Zhou, Wu and Han, Xuli},
@@ -330,7 +338,9 @@ If this repository is helpful, please cite our paper:
         year={2019},
         publisher={Multidisciplinary Digital Publishing Institute}
     }
-
+```
+    
+```    
     @misc{yang2020enhancing,
         title={Enhancing Fine-grained Sentiment Classification Exploiting Local Context Embedding}, 
         author={Heng Yang and Biqing Zeng},
@@ -339,4 +349,4 @@ If this repository is helpful, please cite our paper:
         archivePrefix={arXiv},
         primaryClass={cs.CL}
     }
-
+```

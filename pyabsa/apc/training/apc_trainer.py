@@ -30,6 +30,7 @@ from pyabsa.logger import get_logger
 
 logger = get_logger(os.getcwd())
 
+
 class Instructor:
     def __init__(self, opt):
         self.opt = opt
@@ -143,11 +144,12 @@ class Instructor:
                                 except:
                                     # logger.info('Can not remove sub-optimal trained model:', save_path)
                                     pass
-                            save_path = '{0}/{1}_{2}_acc{3}/'.format(self.opt.model_path_to_save,
-                                                                     self.opt.model_name,
-                                                                     self.opt.lcf,
-                                                                     round(test_acc * 100, 2),
-                                                                     )
+                            save_path = '{0}/{1}_{2}_acc{3}_f1{4}/'.format(self.opt.model_path_to_save,
+                                                                           self.opt.model_name,
+                                                                           self.opt.lcf,
+                                                                           round(test_acc * 100, 2),
+                                                                           round(f1 * 100, 2),
+                                                                           )
                             self._save_model(self.model, save_path, mode=0)
                     if f1 > max_f1:
                         max_f1 = f1
@@ -161,7 +163,7 @@ class Instructor:
         # return the model paths of multiple training in case of loading the best model after training
         if save_path:
             logger.info('----------------------Training Summary----------------------')
-            logger.info('Max Accuracy: {} Max F1: {}'.format(max_test_acc, max_f1))
+            logger.info('Max Accuracy: {:.15f} Max F1: {:.15f}'.format(max_test_acc * 100, max_f1 * 100))
             return save_path
         else:
             # direct return model if do not evaluate
@@ -224,7 +226,6 @@ class Instructor:
 
 
 def train4apc(opt):
-
     if not isinstance(opt.seed, int):
         logger.info('Please do not use multiple random seeds without evaluating.')
         opt.seed = list(opt.seed)[0]
