@@ -7,6 +7,7 @@
 
 ########################################################################################################################
 #                           train and evaluate on your own datasets (need train and test datasets)                     #
+#              your custom dataset should have the continue polarity labels like [0,N-1] for N categories              #
 ########################################################################################################################
 
 from pyabsa import train_apc
@@ -70,7 +71,7 @@ sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None
 
 param_dict = {'model_name': 'slide_lcfs_bert',   # {slide_lcfs_bert, slide_lcfs_bert, lcf_bert, lcfs_bert, bert_spc, bert_base}
               'batch_size': 16,
-              'seed': {36, 6, 86},         # you can use a set of random seeds to train multiple rounds
+              'seed': {36},         # you can use a set of random seeds to train multiple rounds
               # 'seed': 996,               # or use one seed only
               'num_epoch': 10,
               'optimizer': "adam",         # {adam, adamw}
@@ -91,6 +92,7 @@ param_dict = {'model_name': 'slide_lcfs_bert',   # {slide_lcfs_bert, slide_lcfs_
               }
 
 save_path = 'state_dict'
+
 datasets_path = 'datasets/laptop14'                        # file or dir are accepted
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=datasets_path,    # train set and test set will be automatically detected
@@ -98,6 +100,10 @@ sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None
                             auto_evaluate=True,            # evaluate model while training if test set is available
                             auto_device=True               # automatic choose CUDA or CPU
                             )
+
+# 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
+sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
+sent_classifier.set_sentiment_map(sentiment_map)
 
 datasets_path = 'datasets/restaurant14'                    # file or dir are accepted
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model

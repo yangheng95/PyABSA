@@ -6,9 +6,9 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 ########################################################################################################################
-#                                  fine-tuning on custom dataset (w/o test dataset)                                    #
+#                           train and evaluate on your own datasets (need train and test datasets)                     #
+#              your custom dataset should have the continue polarity labels like [0,N-1] for N categories              #
 ########################################################################################################################
-
 
 from pyabsa import train_apc
 
@@ -20,7 +20,7 @@ param_dict = {'model_name': 'slide_lcfs_bert',  # {slide_lcfs_bert, slide_lcf_be
               'num_epoch': 6,
               'optimizer': "adam",              # {adam, adamw}
               'learning_rate': 0.00002,
-              'pretrained_bert_name': "bert-base-uncased",
+              'pretrained_bert_name': "bert-base-multilingual-uncased",
               'use_dual_bert': False,           # modeling the local and global context using different BERTs
               'use_bert_spc': True,             # Enable to enhance APC, do not use this parameter in ATE or joint task of APC and APC
               'max_seq_len': 80,

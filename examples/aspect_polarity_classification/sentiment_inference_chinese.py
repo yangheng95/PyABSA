@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: chinese_sentiment_inference.py
+# file: sentiment_inference_chinese.py
 # time: 2021/5/21 0021
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
@@ -10,7 +10,7 @@ from pyabsa import find_target_file
 from pyabsa import load_sentiment_classifier
 
 # Assume the sent_classifier is loaded or obtained using train function
-model_path = 'state_dict/bert_spc_cdw_phone_acc97.24'
+model_path = 'state_dict/bert_spc_cdw_acc_96.48_f1_95.91'
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
                                             auto_device=True  # Use CUDA if available
                                             )

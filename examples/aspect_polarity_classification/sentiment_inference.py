@@ -10,9 +10,14 @@ from pyabsa import find_target_file
 from pyabsa import load_sentiment_classifier
 
 # Assume the sent_classifier is loaded or obtained using train function
-model_path = 'state_dict/bert_spc_cdw_acc65.67'
+
+
+# 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
+sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
+model_path = 'state_dict/slide_lcfs_bert_cdm_rest16_acc92.85_f1_76.42'
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
-                                            auto_device=True  # Use CUDA if available
+                                            auto_device=True,  # Use CUDA if available
+                                            sentiment_map=sentiment_map
                                             )
 # The default loading device is CPU
 # load the model to CPU
@@ -40,4 +45,5 @@ for infer_set in inference_sets:
     results = sent_classifier.batch_infer(inference_set_path=infer_set,
                                           print_result=True,
                                           save_result=True,
-                                          ignore_error=True)
+                                          ignore_error=True,
+                                          )

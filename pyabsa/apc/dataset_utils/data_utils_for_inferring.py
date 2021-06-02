@@ -62,7 +62,7 @@ class ABSADataset(Dataset):
                         samples.append(sample.replace('[TEMP]', '[ASP]'))
 
         except:
-            print('Error while processing:', text)
+            print('Invalid Input:', text)
         return samples
 
     def prepare_infer_sample(self, text: str):
@@ -165,10 +165,10 @@ class ABSADataset(Dataset):
                 all_data.append(data)
 
             except Exception as e:
-                # if ignore_error:
-                #     print('Ignore error while processing:', text)
-                # else:
-                raise e
+                if ignore_error:
+                    print('Ignore error while processing:', text)
+                else:
+                    raise e
 
         if all_data and 'slide' in self.opt.model_name:
             copy_side_aspect('left', all_data[0], all_data[0])

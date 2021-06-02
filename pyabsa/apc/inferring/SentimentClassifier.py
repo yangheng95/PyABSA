@@ -19,17 +19,17 @@ from pyabsa.apc.models.lcf_bert import LCF_BERT
 from pyabsa.apc.models.slide_lcf_bert import SLIDE_LCF_BERT
 from pyabsa.apc.dataset_utils.data_utils_for_inferring import ABSADataset
 from pyabsa.apc.dataset_utils.apc_utils import Tokenizer4Bert
-from pyabsa.apc.dataset_utils.apc_utils import get_polarities_dim, SENTIMENT_PADDING
+from pyabsa.apc.dataset_utils.apc_utils import SENTIMENT_PADDING
 
 from pyabsa.pyabsa_utils import find_target_file
 
 
 class SentimentClassifier:
-    def __init__(self, model_arg=None):
+    def __init__(self, model_arg=None, sentiment_map=None):
         '''
             from_train_model: load inferring model from trained model
         '''
-
+        self.sentiment_map = sentiment_map
         self.model_class = {
             'bert_base': BERT_BASE,
             'bert_spc': BERT_SPC,
@@ -83,6 +83,9 @@ class SentimentClassifier:
 
         self.opt.inputs_cols = self.dataset.input_colses[self.opt.model_name]
         self.opt.initializer = self.opt.initializer
+
+    def set_sentiment_map(self, sentiment_map):
+        self.sentiment_map = sentiment_map
 
     def to(self, device=None):
         self.opt.device = device
@@ -145,11 +148,13 @@ class SentimentClassifier:
     def _infer(self, save_path=None, print_result=True):
 
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
-        polarities_dim = get_polarities_dim()
-        if polarities_dim == 3:
+
+        if self.sentiment_map:
+            sentiment_map = self.sentiment_map
+        elif self.opt.polarities_dim == 3:
             sentiment_map = {0: 'Negative', 1: "Neutral", 2: 'Positive', SENTIMENT_PADDING: ''}
         else:
-            sentiment_map = {p: p for p in range(polarities_dim)}
+            sentiment_map = {p: p for p in range(self.opt.polarities_dim)}
         correct = {True: 'Correct', False: 'Wrong'}
         results = []
         if save_path:

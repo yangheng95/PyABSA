@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: extract_aspects.py
+# file: extract_aspects_multilingual.py
 # time: 2021/5/27 0027
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
@@ -18,21 +18,19 @@ examples = ['But the staff was so nice to us .',
             'But the staff was so horrible to us .',
             r'Not only was the food outstanding , but the little ` perks \' were great .',
             'It took half an hour to get our check , which was perfect since we could sit , have drinks and talk !',
-            'It was pleasantly uncrowded , the service was delightful , the garden adorable , '
+            'It was pleasantly uncrowded , the service was delightful , the garden adorable',
             'the food -LRB- from appetizers to entrees -RRB- was delectable .',
-            'How pretentious and inappropriate for MJ Grill to claim that it provides power lunch and dinners !'
+            'How pretentious and inappropriate for MJ Grill to claim that it provides power lunch and dinners !',
+            '尤 其 是 照 的 大 尺 寸 照 片 时 效 果 也 是 非 常 不 错 的',
+            '照 大 尺 寸 的 照 片 的 时 候 手 机 反 映 速 度 太 慢',
+            '关 键 的 时 候 需 要 表 现 持 续 影 像 的 短 片 功 能 还 是 很 有 用 的',
+            '相 比 较 原 系 列 锐 度 高 了 不 少 这 一 点 好 与 不 好 大 家 有 争 议'
             ]
 
 # 从Google Drive下载提供的预训练模型
 # Download the provided pre-training model from Google Drive
-model_path = 'state_dict/lcf_atepc_cdw_apcacc_69.95_apcf1_41.16_atef1_62.61'
+model_path = 'state_dict/'  # pending release
 
-# 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
-sentiment_map = {0: 'Negative', 1: "Neutral", 2: 'Positive', -999: ''}
-# aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
-#                                          sentiment_map=sentiment_map,
-#                                          auto_device=True  # False means load model on CPU
-#                                          )
 aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
                                          auto_device=True  # False means load model on CPU
                                          )
@@ -41,7 +39,6 @@ aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
 # aspect_extractor.cpu()
 # aspect_extractor.cuda()
 # aspect_extractor.to('cuda:0')
-
 
 atepc_result = aspect_extractor.extract_aspect(examples=examples,  # list-support only, for current
                                                print_result=True,  # print the result

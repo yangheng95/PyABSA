@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: train_apc.py
+# file: train_apc_multilingual.py
 # time: 2021/5/26 0026
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
@@ -19,7 +19,7 @@ param_dict = {'model_name': 'bert_spc',   # {slide_lcfs_bert, slide_lcf_bert, lc
               'num_epoch': 10,
               'optimizer': "adam",         # {adam, adamw}
               'learning_rate': 0.00002,
-              'pretrained_bert_name': "bert-base-chinese",
+              'pretrained_bert_name': "bert-base-multilingual-uncased",
               'use_dual_bert': False,      # modeling the local and global context using different BERTs
               'use_bert_spc': True,        # Enable to enhance APC, do not use this parameter in ATE
               'max_seq_len': 80,
@@ -37,7 +37,7 @@ param_dict = {'model_name': 'bert_spc',   # {slide_lcfs_bert, slide_lcf_bert, lc
 
 save_path = 'state_dict'
 
-datasets_path = 'datasets/Chinese/phone'                   # file or dir are accepted for 'datasets_path'
+datasets_path = 'example_files/sum_train.dat'              # file or dir are accepted for 'datasets_path'
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=datasets_path,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model

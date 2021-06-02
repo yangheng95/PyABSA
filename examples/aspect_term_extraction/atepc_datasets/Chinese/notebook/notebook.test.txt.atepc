@@ -3,8 +3,8 @@
 正 O -999
 正 O -999
 的 O -999
-机 B-ASP 2
-身 I-ASP 2
+机 B-ASP 1
+身 I-ASP 1
 给 O -999
 人 O -999
 一 O -999
@@ -16,23 +16,23 @@
 觉 O -999
 
 寸 O -999
-液 B-ASP 2
-晶 I-ASP 2
-宽 I-ASP 2
-屏 I-ASP 2
+液 B-ASP 1
+晶 I-ASP 1
+宽 I-ASP 1
+屏 I-ASP 1
 赏 O -999
 心 O -999
 悦 O -999
 目 O -999
 
-端 B-ASP 2
-口 I-ASP 2
+端 B-ASP 1
+口 I-ASP 1
 齐 O -999
 全 O -999
 
 个 O -999
-接 B-ASP 2
-口 I-ASP 2
+接 B-ASP 1
+口 I-ASP 1
 用 O -999
 起 O -999
 来 O -999
@@ -43,44 +43,44 @@
 自 O -999
 如 O -999
 
-电 B-ASP 2
-池 I-ASP 2
-续 I-ASP 2
-航 I-ASP 2
-能 I-ASP 2
-力 I-ASP 2
+电 B-ASP 1
+池 I-ASP 1
+续 I-ASP 1
+航 I-ASP 1
+能 I-ASP 1
+力 I-ASP 1
 很 O -999
 强 O -999
 
-颜 B-ASP 2
-色 I-ASP 2
+颜 B-ASP 1
+色 I-ASP 1
 显 O -999
 示 O -999
 准 O -999
 确 O -999
 
-细 B-ASP 2
-节 I-ASP 2
-表 I-ASP 2
-现 I-ASP 2
+细 B-ASP 1
+节 I-ASP 1
+表 I-ASP 1
+现 I-ASP 1
 细 O -999
 腻 O -999
 精 O -999
 致 O -999
 
-显 B-ASP 2
-示 I-ASP 2
-的 I-ASP 2
-延 I-ASP 2
-迟 I-ASP 2
-时 I-ASP 2
-间 I-ASP 2
+显 B-ASP 1
+示 I-ASP 1
+的 I-ASP 1
+延 I-ASP 1
+迟 I-ASP 1
+时 I-ASP 1
+间 I-ASP 1
 很 O -999
 短 O -999
 
-对 B-ASP 2
-比 I-ASP 2
-度 I-ASP 2
+对 B-ASP 1
+比 I-ASP 1
+度 I-ASP 1
 灰 O -999
 度 O -999
 测 O -999
@@ -92,42 +92,42 @@
 不 O -999
 错 O -999
 
-屏 B-ASP 2
-幕 I-ASP 2
-亮 I-ASP 2
-度 I-ASP 2
-可 I-ASP 2
-调 I-ASP 2
-整 I-ASP 2
-的 I-ASP 2
-幅 I-ASP 2
-度 I-ASP 2
+屏 B-ASP 1
+幕 I-ASP 1
+亮 I-ASP 1
+度 I-ASP 1
+可 I-ASP 1
+调 I-ASP 1
+整 I-ASP 1
+的 I-ASP 1
+幅 I-ASP 1
+度 I-ASP 1
 大 O -999
 
 的 O -999
-散 B-ASP 2
-热 I-ASP 2
+散 B-ASP 1
+热 I-ASP 1
 很 O -999
 好 O -999
 
-风 B-ASP 2
-扇 I-ASP 2
-转 I-ASP 2
-动 I-ASP 2
-噪 I-ASP 2
-音 I-ASP 2
+风 B-ASP 1
+扇 I-ASP 1
+转 I-ASP 1
+动 I-ASP 1
+噪 I-ASP 1
+音 I-ASP 1
 小 O -999
 
-排 B-ASP 2
-热 I-ASP 2
+排 B-ASP 1
+热 I-ASP 1
 迅 O -999
 速 O -999
 
-键 B-ASP 2
-盘 I-ASP 2
-的 I-ASP 2
-阻 I-ASP 2
-尼 I-ASP 2
+键 B-ASP 1
+盘 I-ASP 1
+的 I-ASP 1
+阻 I-ASP 1
+尼 I-ASP 1
 设 O -999
 计 O -999
 得 O -999
@@ -136,20 +136,20 @@
 好 O -999
 处 O -999
 
-行 B-ASP 2
-程 I-ASP 2
-大 I-ASP 2
-小 I-ASP 2
+行 B-ASP 1
+程 I-ASP 1
+大 I-ASP 1
+小 I-ASP 1
 也 O -999
 很 O -999
 合 O -999
 适 O -999
 
-击 B-ASP 2
-键 I-ASP 2
-时 I-ASP 2
-噪 I-ASP 2
-音 I-ASP 2
+击 B-ASP 1
+键 I-ASP 1
+时 I-ASP 1
+噪 I-ASP 1
+音 I-ASP 1
 不 O -999
 大 O -999
 
@@ -218,14 +218,14 @@
 
 整 O -999
 机 O -999
-性 B-ASP 2
-能 I-ASP 2
+性 B-ASP 1
+能 I-ASP 1
 超 O -999
 稳 O -999
 定 O -999
 
-屏 B-ASP 2
-幕 I-ASP 2
+屏 B-ASP 1
+幕 I-ASP 1
 绝 O -999
 对 O -999
 不 O -999
@@ -240,8 +240,8 @@
 样 O -999
 暗 O -999
 
-键 B-ASP 2
-盘 I-ASP 2
+键 B-ASP 1
+盘 I-ASP 1
 打 O -999
 字 O -999
 很 O -999
@@ -250,24 +250,24 @@
 
 联 O -999
 想 O -999
-服 B-ASP 2
-务 I-ASP 2
+服 B-ASP 1
+务 I-ASP 1
 真 O -999
 的 O -999
 很 O -999
 棒 O -999
 
-整 B-ASP 2
-机 I-ASP 2
-用 I-ASP 2
-料 I-ASP 2
+整 B-ASP 1
+机 I-ASP 1
+用 I-ASP 1
+料 I-ASP 1
 十 O -999
 足 O -999
 
 机 O -999
 器 O -999
-外 B-ASP 2
-壳 I-ASP 2
+外 B-ASP 1
+壳 I-ASP 1
 很 O -999
 坚 O -999
 固 O -999
@@ -284,69 +284,69 @@
 的 O -999
 酷 O -999
 
-显 B-ASP 2
-示 I-ASP 2
-屏 I-ASP 2
+显 B-ASP 1
+示 I-ASP 1
+屏 I-ASP 1
 不 O -999
 错 O -999
 
-色 B-ASP 2
-彩 I-ASP 2
-还 I-ASP 2
-原 I-ASP 2
-效 I-ASP 2
-果 I-ASP 2
+色 B-ASP 1
+彩 I-ASP 1
+还 I-ASP 1
+原 I-ASP 1
+效 I-ASP 1
+果 I-ASP 1
 也 O -999
 不 O -999
 错 O -999
 
-速 B-ASP 2
-度 I-ASP 2
+速 B-ASP 1
+度 I-ASP 1
 不 O -999
 错 O -999
 
-电 B-ASP 2
-池 I-ASP 2
+电 B-ASP 1
+池 I-ASP 1
 非 O -999
 常 O -999
 不 O -999
 错 O -999
 
-使 B-ASP 2
-用 I-ASP 2
-的 I-ASP 2
-时 I-ASP 2
-间 I-ASP 2
+使 B-ASP 1
+用 I-ASP 1
+的 I-ASP 1
+时 I-ASP 1
+间 I-ASP 1
 非 O -999
 常 O -999
 可 O -999
 观 O -999
 
-键 B-ASP 2
-盘 I-ASP 2
-区 I-ASP 2
-域 I-ASP 2
+键 B-ASP 1
+盘 I-ASP 1
+区 I-ASP 1
+域 I-ASP 1
 比 O -999
 较 O -999
 简 O -999
 约 O -999
 
-整 B-ASP 2
-体 I-ASP 2
-温 I-ASP 2
-度 I-ASP 2
+整 B-ASP 1
+体 I-ASP 1
+温 I-ASP 1
+度 I-ASP 1
 控 O -999
 制 O -999
 不 O -999
 错 O -999
 
-接 B-ASP 2
-口 I-ASP 2
+接 B-ASP 1
+口 I-ASP 1
 还 O -999
 好 O -999
 
-外 B-ASP 2
-观 I-ASP 2
+外 B-ASP 1
+观 I-ASP 1
 不 O -999
 错 O -999
 
@@ -398,10 +398,10 @@
 方 O -999
 便 O -999
 
-外 B-ASP 2
-观 I-ASP 2
-设 I-ASP 2
-计 I-ASP 2
+外 B-ASP 1
+观 I-ASP 1
+设 I-ASP 1
+计 I-ASP 1
 出 O -999
 色 O -999
 
@@ -419,26 +419,26 @@
 觉 O -999
 就 O -999
 是 O -999
-机 B-ASP 2
-身 I-ASP 2
+机 B-ASP 1
+身 I-ASP 1
 轻 O -999
 薄 O -999
 而 O -999
 坚 O -999
 固 O -999
 
-外 B-ASP 2
-形 I-ASP 2
+外 B-ASP 1
+形 I-ASP 1
 时 O -999
 尚 O -999
 
-线 B-ASP 2
-条 I-ASP 2
+线 B-ASP 1
+条 I-ASP 1
 优 O -999
 美 O -999
 
-做 B-ASP 2
-工 I-ASP 2
+做 B-ASP 1
+工 I-ASP 1
 精 O -999
 细 O -999
 
@@ -449,10 +449,10 @@
 独 O -999
 特 O -999
 地 O -999
-外 B-ASP 2
-壳 I-ASP 2
-材 I-ASP 2
-料 I-ASP 2
+外 B-ASP 1
+壳 I-ASP 1
+材 I-ASP 1
+料 I-ASP 1
 还 O -999
 具 O -999
 有 O -999
@@ -467,10 +467,10 @@
 优 O -999
 点 O -999
 
-屏 B-ASP 2
-幕 I-ASP 2
-比 I-ASP 2
-例 I-ASP 2
+屏 B-ASP 1
+幕 I-ASP 1
+比 I-ASP 1
+例 I-ASP 1
 时 O -999
 尚 O -999
 
@@ -481,12 +481,12 @@
 发 O -999
 现 O -999
 该 O -999
-屏 B-ASP 2
-幕 I-ASP 2
-显 I-ASP 2
-示 I-ASP 2
-效 I-ASP 2
-果 I-ASP 2
+屏 B-ASP 1
+幕 I-ASP 1
+显 I-ASP 1
+示 I-ASP 1
+效 I-ASP 1
+果 I-ASP 1
 优 O -999
 秀 O -999
 
@@ -506,9 +506,9 @@
 流 O -999
 行 O -999
 的 O -999
-摄 B-ASP 2
-像 I-ASP 2
-头 I-ASP 2
+摄 B-ASP 1
+像 I-ASP 1
+头 I-ASP 1
 
 键 O -999
 盘 O -999
@@ -568,21 +568,21 @@
 感 O -999
 觉 O -999
 
-做 B-ASP 2
-工 I-ASP 2
+做 B-ASP 1
+工 I-ASP 1
 实 O -999
 在 O -999
 
-键 B-ASP 2
-盘 I-ASP 2
+键 B-ASP 1
+盘 I-ASP 1
 更 O -999
 是 O -999
 没 O -999
 的 O -999
 说 O -999
 
-性 B-ASP 2
-能 I-ASP 2
+性 B-ASP 1
+能 I-ASP 1
 更 O -999
 是 O -999
 没 O -999
@@ -620,51 +620,51 @@
 机 O -999
 型 O -999
 中 O -999
-价 B-ASP 2
-格 I-ASP 2
+价 B-ASP 1
+格 I-ASP 1
 比 O -999
 较 O -999
 高 O -999
 
 不 O -999
 过 O -999
-屏 B-ASP 2
-幕 I-ASP 2
-表 I-ASP 2
-现 I-ASP 2
+屏 B-ASP 1
+幕 I-ASP 1
+表 I-ASP 1
+现 I-ASP 1
 还 O -999
 不 O -999
 错 O -999
 
-亮 B-ASP 2
-度 I-ASP 2
+亮 B-ASP 1
+度 I-ASP 1
 足 O -999
 够 O -999
 
-屏 B-ASP 2
-幕 I-ASP 2
-色 I-ASP 2
-彩 I-ASP 2
+屏 B-ASP 1
+幕 I-ASP 1
+色 I-ASP 1
+彩 I-ASP 1
 都 O -999
 很 O -999
 丰 O -999
 富 O -999
 
-对 B-ASP 2
-比 I-ASP 2
-度 I-ASP 2
+对 B-ASP 1
+比 I-ASP 1
+度 I-ASP 1
 高 O -999
 
-可 B-ASP 2
-视 I-ASP 2
-角 I-ASP 2
-度 I-ASP 2
+可 B-ASP 1
+视 I-ASP 1
+角 I-ASP 1
+度 I-ASP 1
 大 O -999
 
-响 B-ASP 2
-应 I-ASP 2
-速 I-ASP 2
-度 I-ASP 2
+响 B-ASP 1
+应 I-ASP 1
+速 I-ASP 1
+度 I-ASP 1
 也 O -999
 较 O -999
 快 O -999
@@ -708,19 +708,19 @@
 合 O -999
 理 O -999
 
-处 B-ASP 2
-理 I-ASP 2
-性 I-ASP 2
-能 I-ASP 2
+处 B-ASP 1
+理 I-ASP 1
+性 I-ASP 1
+能 I-ASP 1
 非 O -999
 常 O -999
 强 O -999
 大 O -999
 
-散 B-ASP 2
-热 I-ASP 2
-系 I-ASP 2
-统 I-ASP 2
+散 B-ASP 1
+热 I-ASP 1
+系 I-ASP 1
+统 I-ASP 1
 设 O -999
 计 O -999
 的 O -999
@@ -743,64 +743,64 @@
 强 O -999
 烈 O -999
 的 O -999
-视 B-ASP 2
-觉 I-ASP 2
-感 I-ASP 2
-觉 I-ASP 2
+视 B-ASP 1
+觉 I-ASP 1
+感 I-ASP 1
+觉 I-ASP 1
 
-触 B-ASP 2
-摸 I-ASP 2
-板 I-ASP 2
-与 I-ASP 2
-键 I-ASP 2
-盘 I-ASP 2
-在 I-ASP 2
-空 I-ASP 2
-间 I-ASP 2
-位 I-ASP 2
-置 I-ASP 2
+触 B-ASP 1
+摸 I-ASP 1
+板 I-ASP 1
+与 I-ASP 1
+键 I-ASP 1
+盘 I-ASP 1
+在 I-ASP 1
+空 I-ASP 1
+间 I-ASP 1
+位 I-ASP 1
+置 I-ASP 1
 上 O -999
 比 O -999
 较 O -999
 合 O -999
 理 O -999
 
-设 B-ASP 2
-计 I-ASP 2
+设 B-ASP 1
+计 I-ASP 1
 也 O -999
 相 O -999
 对 O -999
 传 O -999
 统 O -999
 
-定 B-ASP 2
-位 I-ASP 2
+定 B-ASP 1
+位 I-ASP 1
 准 O -999
 确 O -999
 
-散 B-ASP 2
-热 I-ASP 2
+散 B-ASP 1
+热 I-ASP 1
 令 O -999
 人 O -999
 满 O -999
 意 O -999
 
-做 B-ASP 2
-工 I-ASP 2
+做 B-ASP 1
+工 I-ASP 1
 精 O -999
 良 O -999
 
-售 B-ASP 2
-后 I-ASP 2
-服 I-ASP 2
-务 I-ASP 2
+售 B-ASP 1
+后 I-ASP 1
+服 I-ASP 1
+务 I-ASP 1
 很 O -999
 好 O -999
 
 使 O -999
 得 O -999
-显 B-ASP 2
-示 I-ASP 2
+显 B-ASP 1
+示 I-ASP 1
 变 O -999
 得 O -999
 非 O -999
@@ -808,13 +808,13 @@
 细 O -999
 腻 O -999
 
-彩 B-ASP 2
-色 I-ASP 2
+彩 B-ASP 1
+色 I-ASP 1
 饱 O -999
 满 O -999
 
-亮 B-ASP 2
-度 I-ASP 2
+亮 B-ASP 1
+度 I-ASP 1
 适 O -999
 中 O -999
 
@@ -828,8 +828,8 @@
 松 O -999
 软 O -999
 
-手 B-ASP 2
-感 I-ASP 2
+手 B-ASP 1
+感 I-ASP 1
 一 O -999
 般 O -999
 
@@ -846,20 +846,20 @@
 比 O -999
 之 O -999
 下 O -999
-垂 B-ASP 2
-直 I-ASP 2
-可 I-ASP 2
-视 I-ASP 2
-角 I-ASP 2
-度 I-ASP 2
+垂 B-ASP 1
+直 I-ASP 1
+可 I-ASP 1
+视 I-ASP 1
+角 I-ASP 1
+度 I-ASP 1
 就 O -999
 较 O -999
 小 O -999
 
 整 O -999
 个 O -999
-机 B-ASP 2
-身 I-ASP 2
+机 B-ASP 1
+身 I-ASP 1
 给 O -999
 人 O -999
 第 O -999
@@ -874,16 +874,16 @@
 
 而 O -999
 且 O -999
-手 B-ASP 2
-感 I-ASP 2
+手 B-ASP 1
+感 I-ASP 1
 相 O -999
 当 O -999
 不 O -999
 错 O -999
 
-防 B-ASP 2
-污 I-ASP 2
-性 I-ASP 2
+防 B-ASP 1
+污 I-ASP 1
+性 I-ASP 1
 也 O -999
 很 O -999
 优 O -999
@@ -894,33 +894,33 @@
 较 O -999
 大 O -999
 
-按 B-ASP 2
-键 I-ASP 2
-弹 I-ASP 2
-性 I-ASP 2
+按 B-ASP 1
+键 I-ASP 1
+弹 I-ASP 1
+性 I-ASP 1
 很 O -999
 好 O -999
 
-手 B-ASP 2
-感 I-ASP 2
+手 B-ASP 1
+感 I-ASP 1
 也 O -999
 不 O -999
 错 O -999
 
 因 O -999
 此 O -999
-热 B-ASP 2
-量 I-ASP 2
-控 I-ASP 2
-制 I-ASP 2
+热 B-ASP 1
+量 I-ASP 1
+控 I-ASP 1
+制 I-ASP 1
 的 O -999
 相 O -999
 当 O -999
 出 O -999
 色 O -999
 
-视 B-ASP 2
-野 I-ASP 2
+视 B-ASP 1
+野 I-ASP 1
 和 O -999
 清 O -999
 晰 O -999
@@ -938,8 +938,8 @@
 很 O -999
 多 O -999
 
-成 B-ASP 2
-象 I-ASP 2
+成 B-ASP 1
+象 I-ASP 1
 十 O -999
 分 O -999
 的 O -999
@@ -950,12 +950,12 @@
 体 O -999
 来 O -999
 说 O -999
-数 B-ASP 2
-据 I-ASP 2
-处 I-ASP 2
-理 I-ASP 2
-速 I-ASP 2
-度 I-ASP 2
+数 B-ASP 1
+据 I-ASP 1
+处 I-ASP 1
+理 I-ASP 1
+速 I-ASP 1
+度 I-ASP 1
 还 O -999
 是 O -999
 不 O -999
@@ -963,8 +963,8 @@
 的 O -999
 
 的 O -999
-接 B-ASP 2
-口 I-ASP 2
+接 B-ASP 1
+口 I-ASP 1
 也 O -999
 十 O -999
 分 O -999
@@ -1015,8 +1015,8 @@
 
 虽 O -999
 然 O -999
-音 B-ASP 2
-量 I-ASP 2
+音 B-ASP 1
+量 I-ASP 1
 比 O -999
 较 O -999
 的 O -999
@@ -1032,10 +1032,10 @@
 偏 O -999
 硬 O -999
 
-屏 B-ASP 2
-幕 I-ASP 2
-效 I-ASP 2
-果 I-ASP 2
+屏 B-ASP 1
+幕 I-ASP 1
+效 I-ASP 1
+果 I-ASP 1
 不 O -999
 错 O -999
 
@@ -1046,30 +1046,30 @@
 度 O -999
 还 O -999
 是 O -999
-色 B-ASP 2
-彩 I-ASP 2
-还 I-ASP 2
-原 I-ASP 2
+色 B-ASP 1
+彩 I-ASP 1
+还 I-ASP 1
+原 I-ASP 1
 都 O -999
 很 O -999
 出 O -999
 色 O -999
 
-声 B-ASP 2
-音 I-ASP 2
+声 B-ASP 1
+音 I-ASP 1
 不 O -999
 错 O -999
 
-弹 B-ASP 2
-性 I-ASP 2
+弹 B-ASP 1
+性 I-ASP 1
 蛮 O -999
 好 O -999
 
-整 B-ASP 2
-机 I-ASP 2
-的 I-ASP 2
-性 I-ASP 2
-能 I-ASP 2
+整 B-ASP 1
+机 I-ASP 1
+的 I-ASP 1
+性 I-ASP 1
+能 I-ASP 1
 较 O -999
 稳 O -999
 定 O -999
@@ -1078,8 +1078,8 @@
 人 O -999
 认 O -999
 为 O -999
-大 B-ASP 2
-小 I-ASP 2
+大 B-ASP 1
+小 I-ASP 1
 和 O -999
 重 O -999
 量 O -999
@@ -1088,9 +1088,9 @@
 适 O -999
 中 O -999
 
-性 B-ASP 2
-价 I-ASP 2
-比 I-ASP 2
+性 B-ASP 1
+价 I-ASP 1
+比 I-ASP 1
 明 O -999
 显 O -999
 提 O -999
@@ -1100,8 +1100,8 @@
 时 O -999
 送 O -999
 的 O -999
-鼠 B-ASP 2
-标 I-ASP 2
+鼠 B-ASP 1
+标 I-ASP 1
 比 O -999
 较 O -999
 实 O -999
@@ -1111,10 +1111,10 @@
 机 O -999
 送 O -999
 的 O -999
-刻 B-ASP 2
-录 I-ASP 2
-软 I-ASP 2
-件 I-ASP 2
+刻 B-ASP 1
+录 I-ASP 1
+软 I-ASP 1
+件 I-ASP 1
 播 O -999
 放 O -999
 软 O -999
@@ -1141,8 +1141,8 @@
 
 好 O -999
 在 O -999
-噪 B-ASP 2
-声 I-ASP 2
+噪 B-ASP 1
+声 I-ASP 1
 还 O -999
 好 O -999
 
@@ -1188,18 +1188,18 @@
 前 O -999
 卫 O -999
 的 O -999
-设 B-ASP 2
-计 I-ASP 2
-风 I-ASP 2
-格 I-ASP 2
+设 B-ASP 1
+计 I-ASP 1
+风 I-ASP 1
+格 I-ASP 1
 
-做 B-ASP 2
-工 I-ASP 2
+做 B-ASP 1
+工 I-ASP 1
 精 O -999
 细 O -999
 
-质 B-ASP 2
-感 I-ASP 2
+质 B-ASP 1
+感 I-ASP 1
 平 O -999
 滑 O -999
 而 O -999
@@ -1212,8 +1212,8 @@
 人 O -999
 性 O -999
 化 O -999
-设 B-ASP 2
-计 I-ASP 2
+设 B-ASP 1
+计 I-ASP 1
 也 O -999
 有 O -999
 值 O -999
@@ -1229,8 +1229,8 @@
 但 O -999
 整 O -999
 个 O -999
-屏 B-ASP 2
-幕 I-ASP 2
+屏 B-ASP 1
+幕 I-ASP 1
 给 O -999
 人 O -999
 的 O -999
@@ -1249,9 +1249,9 @@
 高 O -999
 达 O -999
 的 O -999
-分 B-ASP 2
-辨 I-ASP 2
-率 I-ASP 2
+分 B-ASP 1
+辨 I-ASP 1
+率 I-ASP 1
 
 能 O -999
 极 O -999
@@ -1264,10 +1264,10 @@
 内 O -999
 容 O -999
 的 O -999
-显 B-ASP 2
-示 I-ASP 2
-效 I-ASP 2
-果 I-ASP 2
+显 B-ASP 1
+示 I-ASP 1
+效 I-ASP 1
+果 I-ASP 1
 
 虽 O -999
 然 O -999
@@ -1287,8 +1287,8 @@
 高 O -999
 
 的 O -999
-键 B-ASP 2
-盘 I-ASP 2
+键 B-ASP 1
+盘 I-ASP 1
 向 O -999
 来 O -999
 很 O -999
@@ -1296,17 +1296,17 @@
 口 O -999
 碑 O -999
 
-键 B-ASP 2
-盘 I-ASP 2
-的 I-ASP 2
-弹 I-ASP 2
-性 I-ASP 2
+键 B-ASP 1
+盘 I-ASP 1
+的 I-ASP 1
+弹 I-ASP 1
+性 I-ASP 1
 很 O -999
 适 O -999
 中 O -999
 
-操 B-ASP 2
-作 I-ASP 2
+操 B-ASP 1
+作 I-ASP 1
 起 O -999
 来 O -999
 特 O -999
@@ -1315,10 +1315,10 @@
 手 O -999
 
 在 O -999
-静 B-ASP 2
-音 I-ASP 2
-方 I-ASP 2
-面 I-ASP 2
+静 B-ASP 1
+音 I-ASP 1
+方 I-ASP 1
+面 I-ASP 1
 也 O -999
 控 O -999
 制 O -999
@@ -1355,8 +1355,8 @@
 机 O -999
 器 O -999
 中 O -999
-配 B-ASP 2
-置 I-ASP 2
+配 B-ASP 1
+置 I-ASP 1
 还 O -999
 过 O -999
 得 O -999
@@ -1366,50 +1366,50 @@
 上 O -999
 去 O -999
 的 O -999
-手 B-ASP 2
-感 I-ASP 2
+手 B-ASP 1
+感 I-ASP 1
 还 O -999
 不 O -999
 错 O -999
 
-液 B-ASP 2
-晶 I-ASP 2
-面 I-ASP 2
-板 I-ASP 2
-的 I-ASP 2
-显 I-ASP 2
-示 I-ASP 2
-质 I-ASP 2
-量 I-ASP 2
+液 B-ASP 1
+晶 I-ASP 1
+面 I-ASP 1
+板 I-ASP 1
+的 I-ASP 1
+显 I-ASP 1
+示 I-ASP 1
+质 I-ASP 1
+量 I-ASP 1
 也 O -999
 很 O -999
 好 O -999
 
-整 B-ASP 2
-体 I-ASP 2
-性 I-ASP 2
-能 I-ASP 2
+整 B-ASP 1
+体 I-ASP 1
+性 I-ASP 1
+能 I-ASP 1
 不 O -999
 错 O -999
 
 集 O -999
 成 O -999
 的 O -999
-显 B-ASP 2
-卡 I-ASP 2
-的 I-ASP 2
-显 I-ASP 2
-示 I-ASP 2
-性 I-ASP 2
-能 I-ASP 2
+显 B-ASP 1
+卡 I-ASP 1
+的 I-ASP 1
+显 I-ASP 1
+示 I-ASP 1
+性 I-ASP 1
+能 I-ASP 1
 不 O -999
 错 O -999
 
 的 O -999
-品 B-ASP 2
-牌 I-ASP 2
-效 I-ASP 2
-应 I-ASP 2
+品 B-ASP 1
+牌 I-ASP 1
+效 I-ASP 1
+应 I-ASP 1
 和 O -999
 售 O -999
 后 O -999
@@ -1471,9 +1471,9 @@
 
 不 O -999
 过 O -999
-兼 B-ASP 2
-容 I-ASP 2
-性 I-ASP 2
+兼 B-ASP 1
+容 I-ASP 1
+性 I-ASP 1
 可 O -999
 能 O -999
 会 O -999
@@ -1492,23 +1492,23 @@
 太 O -999
 少 O -999
 
-做 B-ASP 2
-工 I-ASP 2
+做 B-ASP 1
+工 I-ASP 1
 细 O -999
 致 O -999
 
-性 B-ASP 2
-能 I-ASP 2
+性 B-ASP 1
+能 I-ASP 1
 有 O -999
 所 O -999
 提 O -999
 升 O -999
 
 但 O -999
-显 B-ASP 2
-示 I-ASP 2
-效 I-ASP 2
-果 I-ASP 2
+显 B-ASP 1
+示 I-ASP 1
+效 I-ASP 1
+果 I-ASP 1
 和 O -999
 亮 O -999
 度 O -999
@@ -1519,8 +1519,8 @@
 期 O -999
 使 O -999
 用 O -999
-视 B-ASP 2
-觉 I-ASP 2
+视 B-ASP 1
+觉 I-ASP 1
 也 O -999
 很 O -999
 适 O -999
@@ -1543,22 +1543,22 @@
 深 O -999
 蓝 O -999
 色 O -999
-键 B-ASP 2
-盘 I-ASP 2
+键 B-ASP 1
+盘 I-ASP 1
 用 O -999
 起 O -999
 来 O -999
 舒 O -999
 适 O -999
 
-键 B-ASP 2
-程 I-ASP 2
+键 B-ASP 1
+程 I-ASP 1
 适 O -999
 中 O -999
 
-触 B-ASP 2
-控 I-ASP 2
-板 I-ASP 2
+触 B-ASP 1
+控 I-ASP 1
+板 I-ASP 1
 定 O -999
 位 O -999
 精 O -999

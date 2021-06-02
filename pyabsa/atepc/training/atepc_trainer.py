@@ -20,7 +20,6 @@ from sklearn.metrics import f1_score
 from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler, TensorDataset)
 from transformers import BertTokenizer
 from transformers.models.bert.modeling_bert import BertModel
-from transformers.optimization import AdamW
 
 from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
 from ..models.lcf_atepc import LCF_ATEPC
@@ -34,9 +33,6 @@ warnings.filterwarnings('ignore')
 
 
 def train4atepc(config):
-
-
-
     opt = config
 
     if opt.gradient_accumulation_steps < 1:
@@ -55,18 +51,9 @@ def train4atepc(config):
     processor = ATEPCProcessor()
     label_list = processor.get_labels()
     num_labels = len(label_list) + 1
-    model_classes = {
-        'lcf_atepc': LCF_ATEPC,
-    }
 
     optimizers = {
-        'adadelta': torch.optim.Adadelta,  # default lr=1.0
-        'adagrad': torch.optim.Adagrad,  # default lr=0.01
-        'adam': torch.optim.Adam,  # default lr=0.001
-        'adamax': torch.optim.Adamax,  # default lr=0.002
-        'asgd': torch.optim.ASGD,  # default lr=0.01
-        'rmsprop': torch.optim.RMSprop,  # default lr=0.01
-        'sgd': torch.optim.SGD,
+        'adam': torch.optim.Adam,
         'adamw': torch.optim.AdamW
     }
 
@@ -80,43 +67,43 @@ def train4atepc(config):
     bert_base_model = BertModel.from_pretrained(opt.bert_model)
     bert_base_model.config.num_labels = num_labels
 
-    # if args.polarities_dim == 2:
-    #     convert_polarity(train_examples)
-    #     convert_polarity(eval_examples)
+    eval_features = convert_examples_to_features(eval_examples, label_list, opt.max_seq_len, tokenizer, opt)
+    all_spc_input_ids = torch.tensor([f.input_ids_spc for f in eval_features], dtype=torch.long)
+    all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
+    all_segment_ids = torch.tensor([f.segment_ids for f in eval_features], dtype=torch.long)
+    all_label_ids = torch.tensor([f.label_id for f in eval_features], dtype=torch.long)
+    all_polarities = torch.tensor([f.polarity for f in eval_features], dtype=torch.long)
+    all_valid_ids = torch.tensor([f.valid_ids for f in eval_features], dtype=torch.long)
+    all_lmask_ids = torch.tensor([f.label_mask for f in eval_features], dtype=torch.long)
+    lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in eval_features], dtype=torch.float32)
+    lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in eval_features], dtype=torch.float32)
+    eval_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids, all_polarities,
+                              all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
+    # all_tokens = [f.tokens for f in eval_features]
 
-    model = model_classes[opt.model_name](bert_base_model, opt=opt)
+    # Run prediction for full data
+    eval_sampler = RandomSampler(eval_data)
+    eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=opt.batch_size)
 
     for arg in vars(opt):
         logger.info('>>> {0}: {1}'.format(arg, getattr(opt, arg)))
 
+        # init the model behind the convert_examples_to_features function in case of updating polarities_dim
+    model_classes = {
+        'lcf_atepc': LCF_ATEPC,
+    }
+    model = model_classes[opt.model_name](bert_base_model, opt=opt)
     model.to(opt.device)
-
     param_optimizer = list(model.named_parameters())
     no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
     optimizer_grouped_parameters = [
         {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay': opt.l2reg},
         {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay': opt.l2reg}
     ]
-
     optimizer = optimizers[opt.optimizer](optimizer_grouped_parameters, lr=opt.learning_rate, weight_decay=opt.l2reg)
-    eval_features = convert_examples_to_features(eval_examples, label_list, opt.max_seq_len, tokenizer)
-    all_spc_input_ids = torch.tensor([f.input_ids_spc for f in eval_features], dtype=torch.long)
-    all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
-    all_segment_ids = torch.tensor([f.segment_ids for f in eval_features], dtype=torch.long)
-    all_label_ids = torch.tensor([f.label_id for f in eval_features], dtype=torch.long)
-    all_polarities = torch.tensor([f.polarities for f in eval_features], dtype=torch.long)
-    all_valid_ids = torch.tensor([f.valid_ids for f in eval_features], dtype=torch.long)
-    all_lmask_ids = torch.tensor([f.label_mask for f in eval_features], dtype=torch.long)
-    all_tokens = [f.tokens for f in eval_features]
-    eval_data = TensorDataset(all_spc_input_ids, all_input_mask, all_segment_ids, all_label_ids,
-                              all_polarities, all_valid_ids, all_lmask_ids)
-    # Run prediction for full data
-    eval_sampler = RandomSampler(eval_data)
-    eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=opt.batch_size)
 
     def train():
-        train_features = convert_examples_to_features(
-            train_examples, label_list, opt.max_seq_len, tokenizer)
+        train_features = convert_examples_to_features(train_examples, label_list, opt.max_seq_len, tokenizer, opt)
         logger.info("***** Running training *****")
         logger.info("  Num examples = %d", len(train_examples))
         logger.info("  Batch size = %d", opt.batch_size)
@@ -127,10 +114,12 @@ def train4atepc(config):
         all_label_ids = torch.tensor([f.label_id for f in train_features], dtype=torch.long)
         all_valid_ids = torch.tensor([f.valid_ids for f in train_features], dtype=torch.long)
         all_lmask_ids = torch.tensor([f.label_mask for f in train_features], dtype=torch.long)
-        all_polarities = torch.tensor([f.polarities for f in train_features], dtype=torch.long)
+        all_polarities = torch.tensor([f.polarity for f in train_features], dtype=torch.long)
+        lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in train_features], dtype=torch.float32)
+        lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in train_features], dtype=torch.float32)
 
-        train_data = TensorDataset(all_spc_input_ids, all_input_mask, all_segment_ids,
-                                   all_label_ids, all_polarities, all_valid_ids, all_lmask_ids)
+        train_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
+                                   all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
 
         train_sampler = SequentialSampler(train_data)
         train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=opt.batch_size)
@@ -143,17 +132,20 @@ def train4atepc(config):
             nb_tr_examples, nb_tr_steps = 0, 0
             iterator = tqdm.tqdm(train_dataloader)
             for step, batch in enumerate(iterator):
-                postfix = ''
                 model.train()
                 batch = tuple(t.to(opt.device) for t in batch)
-                input_ids_spc, input_mask, segment_ids, label_ids, polarities, valid_ids, l_mask = batch
+                input_ids_spc, segment_ids, input_mask, label_ids, polarity, \
+                valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
                 loss_ate, loss_apc = model(input_ids_spc,
-                                           segment_ids,
-                                           input_mask,
-                                           label_ids,
-                                           polarities,
-                                           valid_ids,
-                                           l_mask)
+                                           token_type_ids=segment_ids,
+                                           attention_mask=input_mask,
+                                           labels=label_ids,
+                                           polarity=polarity,
+                                           valid_ids=valid_ids,
+                                           attention_mask_label=l_mask,
+                                           lcf_cdm_vec=lcf_cdm_vec,
+                                           lcf_cdw_vec=lcf_cdw_vec
+                                           )
                 loss = loss_ate + loss_apc
                 loss.backward()
                 nb_tr_examples += input_ids_spc.size(0)
@@ -198,12 +190,14 @@ def train4atepc(config):
                         postfix = 'loss_apc:{:.4f} | loss_ate:{:.4f} |'.format(loss_apc.item(), loss_ate.item())
 
                         postfix += f' APC_ACC: {current_apc_test_acc}(max:{max_apc_test_acc}) | ' \
-                                   f' APC_f1: {current_apc_test_f1}(max:{max_apc_test_f1}) | '
+                                   f' APC_F1: {current_apc_test_f1}(max:{max_apc_test_f1}) | '
+
                         if opt.use_bert_spc:
                             postfix += f' ATE_F1: {current_apc_test_f1}(max:{max_apc_test_f1})' \
-                                      f' (Unreliable since `use_bert_spc` is "True".)'
+                                       f' (Unreliable since `use_bert_spc` is "True".)'
                         else:
-                            postfix += f'| ATE_f1: {current_ate_test_f1}(max:{max_ate_test_f1})'
+                            postfix += f'ATE_F1: {current_ate_test_f1}(max:{max_ate_test_f1})'
+    
                         iterator.postfix = postfix
                         iterator.refresh()
 
@@ -219,32 +213,41 @@ def train4atepc(config):
         test_apc_logits_all, test_polarities_all = None, None
         model.eval()
         label_map = {i: label for i, label in enumerate(label_list, 1)}
-        for input_ids_spc, input_mask, segment_ids, label_ids, polarities, valid_ids, l_mask in eval_dataloader:
+
+        for i, batch in enumerate(eval_dataloader):
+            input_ids_spc, segment_ids, input_mask, label_ids, polarity, \
+            valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
+
             input_ids_spc = input_ids_spc.to(opt.device)
             input_mask = input_mask.to(opt.device)
             segment_ids = segment_ids.to(opt.device)
             valid_ids = valid_ids.to(opt.device)
             label_ids = label_ids.to(opt.device)
-            polarities = polarities.to(opt.device)
+            polarity = polarity.to(opt.device)
             l_mask = l_mask.to(opt.device)
+            lcf_cdm_vec = lcf_cdm_vec.to(opt.device)
+            lcf_cdw_vec = lcf_cdw_vec.to(opt.device)
 
             with torch.no_grad():
                 ate_logits, apc_logits = model(input_ids_spc,
-                                               segment_ids,
-                                               input_mask,
+                                               token_type_ids=segment_ids,
+                                               attention_mask=input_mask,
+                                               labels=None,
+                                               polarity=polarity,
                                                valid_ids=valid_ids,
-                                               polarities=polarities,
-                                               attention_mask_label=l_mask)
+                                               attention_mask_label=l_mask,
+                                               lcf_cdm_vec=lcf_cdm_vec,
+                                               lcf_cdw_vec=lcf_cdw_vec
+                                               )
             if eval_APC:
-                polarities = model.get_batch_polarities(polarities)
-                n_test_correct += (torch.argmax(apc_logits, -1) == polarities).sum().item()
-                n_test_total += len(polarities)
+                n_test_correct += (torch.argmax(apc_logits, -1) == polarity).sum().item()
+                n_test_total += len(polarity)
 
                 if test_polarities_all is None:
-                    test_polarities_all = polarities
+                    test_polarities_all = polarity
                     test_apc_logits_all = apc_logits
                 else:
-                    test_polarities_all = torch.cat((test_polarities_all, polarities), dim=0)
+                    test_polarities_all = torch.cat((test_polarities_all, polarity), dim=0)
                     test_apc_logits_all = torch.cat((test_apc_logits_all, apc_logits), dim=0)
 
             if eval_ATE:
@@ -271,7 +274,7 @@ def train4atepc(config):
             test_acc = n_test_correct / n_test_total
 
             test_f1 = f1_score(torch.argmax(test_apc_logits_all, -1).cpu(), test_polarities_all.cpu(),
-                               labels=list(range(opt.polarities_dim)), average='macro')
+                               labels=list(range(opt.max_polarity + 1)), average='macro')
 
             test_acc = round(test_acc * 100, 2)
             test_f1 = round(test_f1 * 100, 2)
@@ -310,14 +313,3 @@ def train4atepc(config):
         model_to_save.to(args_to_save.device)
 
     return train()
-
-
-def convert_polarity(examples):
-    for i in range(len(examples)):
-        polarities = []
-        for polarity in examples[i].polarity:
-            if polarity == 2:
-                polarities.append(1)
-            else:
-                polarities.append(polarity)
-        examples[i].polarity = polarities

@@ -42,6 +42,13 @@ def find_target_file(dir_path, file_type, exclude_key='', find_all=False):
         else:
             raise FileNotFoundError('No target(s) file found!')
     else:
+        if not dir_path:
+            return []
+        elif os.path.isfile(dir_path):
+            if file_type in dir_path.lower() and not (exclude_key and exclude_key in dir_path.lower()):
+                return [dir_path]
+            else:
+                return []
         if os.path.isdir(dir_path):
             path = [os.path.join(dir_path, p)
                     for p in os.listdir(dir_path)

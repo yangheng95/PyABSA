@@ -170,7 +170,7 @@ def prepare_input_from_text(opt, tokenizer, text_left, text_right, aspect, polar
     aspect_bert_indices = tokenizer.text_to_sequence(aspect)
 
     POLARITY_SET.add(polarity)
-    get_polarities_dim(opt)
+    opt.max_polarity = max(len(POLARITY_SET), polarity)
 
     inputs = {
         'text_raw': text_raw,
@@ -185,12 +185,6 @@ def prepare_input_from_text(opt, tokenizer, text_left, text_right, aspect, polar
     return inputs
 
 
-def get_polarities_dim(opt=None):
-    if opt:
-        opt.polarities_dim = max(POLARITY_SET) + 1
-    return max(POLARITY_SET) + 1
-
-
 def get_syntax_distance(text_raw, aspect, tokenizer):
     # Find distance in dependency parsing tree
     raw_tokens, dist = calculate_dep_dist(text_raw, aspect)
@@ -203,14 +197,14 @@ def get_syntax_distance(text_raw, aspect, tokenizer):
     return syntactical_dist
 
 
-def get_lca_ids_and_cdm_vec(opt, bert_spc_indices, aspect_indices, syntactical_dist):
+def get_lca_ids_and_cdm_vec(opt, bert_spc_indices, aspect_indices, syntactical_dist=None):
     SRD = opt.SRD
     lca_ids = np.zeros((opt.max_seq_len), dtype=np.float32)
     cdm_vec = np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
     aspect_len = np.count_nonzero(aspect_indices)
     text_len = np.count_nonzero(bert_spc_indices) - np.count_nonzero(aspect_indices) - 1
     if 'lcfs' in opt.model_name:
-        for i in range(text_len):
+        for i in range(min(text_len, opt.max_seq_len)):
             if syntactical_dist[i] <= SRD:
                 lca_ids[i] = 1
                 cdm_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
@@ -220,20 +214,20 @@ def get_lca_ids_and_cdm_vec(opt, bert_spc_indices, aspect_indices, syntactical_d
             return lca_ids, cdm_vec
         local_context_begin = max(0, aspect_begin - SRD)
         local_context_end = min(aspect_begin + aspect_len + SRD - 1, opt.max_seq_len - 1)
-        for i in range(text_len):
+        for i in range(min(text_len, opt.max_seq_len)):
             if local_context_begin <= i <= local_context_end:
                 lca_ids[i] = 1
                 cdm_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
     return lca_ids, cdm_vec
 
 
-def get_cdw_vec(opt, bert_spc_indices, aspect_indices, syntactical_dist):
+def get_cdw_vec(opt, bert_spc_indices, aspect_indices, syntactical_dist=None):
     SRD = opt.SRD
     cdw_vec = np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
     aspect_len = np.count_nonzero(aspect_indices)
     text_len = np.count_nonzero(bert_spc_indices) - np.count_nonzero(aspect_indices) - 1
     if 'lcfs' in opt.model_name:
-        for i in range(text_len):
+        for i in range(min(text_len, opt.max_seq_len)):
             if syntactical_dist[i] > SRD:
                 w = 1 - syntactical_dist[i] / text_len
                 cdw_vec[i] = w * np.ones((opt.embed_dim), dtype=np.float32)
@@ -245,7 +239,7 @@ def get_cdw_vec(opt, bert_spc_indices, aspect_indices, syntactical_dist):
             return np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
         local_context_begin = max(0, aspect_begin - SRD)
         local_context_end = min(aspect_begin + aspect_len + SRD - 1, opt.max_seq_len - 1)
-        for i in range(text_len):
+        for i in range(min(text_len, opt.max_seq_len)):
             if i < local_context_begin:
                 w = 1 - (local_context_begin - i) / text_len
                 cdw_vec[i] = w * np.ones((opt.embed_dim), dtype=np.float32)

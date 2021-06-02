@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: train_atepc.py
+# file: train_atepc_multilingual.py
 # time: 2021/5/21 0021
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
@@ -21,7 +21,7 @@ param_dict = {'model_name': 'lcf_atepc',
               'num_epoch': 10,
               'optimizer': "adamw",    # {adam, adamw}
               'learning_rate': 0.00002,
-              'pretrained_bert_name': "bert-base-uncased",
+              'pretrained_bert_name': "bert-base-multilingual-uncased",
               'use_dual_bert': False,  # modeling the local and global context using different BERTs
               'use_bert_spc': False,   # enable to enhance APC, not available for ATE or joint task of APC and ATE
               'max_seq_len': 80,
@@ -35,7 +35,7 @@ param_dict = {'model_name': 'lcf_atepc',
 
 # Mind that the 'train_atepc' function only evaluates in last few epochs
 
-train_set_path = 'atepc_datasets/laptop14'
+train_set_path = 'atepc_datasets/multilingual'
 save_path = 'state_dict'
 aspect_extractor = train_atepc(parameter_dict=param_dict,      # set param_dict=None to use default model
                                dataset_path=train_set_path,    # file or dir, dataset(s) will be automatically detected
