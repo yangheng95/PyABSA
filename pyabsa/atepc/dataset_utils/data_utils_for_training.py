@@ -5,9 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-import argparse
-import json
-import os
+from pyabsa.apc.dataset_utils.apc_utils import get_lca_ids_and_cdm_vec, get_cdw_vec
 
 SENTIMENT_PADDING = -999
 
@@ -38,16 +36,27 @@ class InputExample(object):
 class InputFeatures(object):
     """A single set of features of data."""
 
-    def __init__(self, input_ids_spc, input_mask, segment_ids, label_id, polarities=None, valid_ids=None,
-                 label_mask=None, tokens=None):
+    def __init__(self, input_ids_spc,
+                 input_mask,
+                 segment_ids,
+                 label_id,
+                 polarity=None,
+                 valid_ids=None,
+                 label_mask=None,
+                 tokens=None,
+                 lcf_cdm_vec=None,
+                 lcf_cdw_vec=None
+                 ):
         self.input_ids_spc = input_ids_spc
         self.input_mask = input_mask
         self.segment_ids = segment_ids
         self.label_id = label_id
         self.valid_ids = valid_ids
         self.label_mask = label_mask
-        self.polarities = polarities
+        self.polarity = polarity
         self.tokens = tokens
+        self.lcf_cdm_vec = lcf_cdm_vec
+        self.lcf_cdw_vec = lcf_cdw_vec
 
 
 def readfile(filename):
@@ -119,64 +128,70 @@ class ATEPCProcessor(DataProcessor):
     def _create_examples(self, lines, set_type):
         examples = []
         for i, (sentence, tag, polarity) in enumerate(lines):
-            # aspect = ['[SEP]']
-            # aspect_tag = ['O']
             aspect = []
             aspect_tag = []
-            aspect_polarity = []
+            aspect_polarity = SENTIMENT_PADDING
             for w, t, p in zip(sentence, tag, polarity):
                 if p != SENTIMENT_PADDING:
                     aspect.append(w)
                     aspect_tag.append(t)
-                    aspect_polarity.append(SENTIMENT_PADDING)
+                    aspect_polarity = p
+
             guid = "%s-%s" % (set_type, i)
             text_a = sentence
             text_b = aspect
 
             examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, IOB_label=tag,
-                                         aspect_label=aspect_tag, polarity=polarity))
+                                         aspect_label=aspect_tag, polarity=aspect_polarity))
+
         return examples
 
 
-def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer):
+def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, opt=None):
     """Loads a data file into a list of `InputBatch`s."""
 
     label_map = {label: i for i, label in enumerate(label_list, 1)}
     features = []
     for (ex_index, example) in enumerate(examples):
-        text_spc_tokens = example.text_a
-        aspect_tokens = example.text_b
+        text_spc_tokens = example.text_a[:]
+        aspect_tokens = example.text_b[:]
         IOB_label = example.IOB_label
         aspect_label = example.aspect_label
-        polaritiylist = example.polarity
+        polarity = example.polarity
         tokens = []
         labels = []
-        polarities = []
         valid = []
         label_mask = []
         text_spc_tokens.extend(['[SEP]'])
         text_spc_tokens.extend(aspect_tokens)
         enum_tokens = text_spc_tokens
         IOB_label.extend(['[SEP]'])
+
+        spc_tokens_for_lcf_vec = ['[CLS]'] + example.text_a + ['[SEP]'] + example.text_b + ['[SEP]']
+        text_spc_ids_fof_lcf_vec = tokenizer.convert_tokens_to_ids(spc_tokens_for_lcf_vec)
+        aspect_ids_for_lcf_vec = tokenizer.convert_tokens_to_ids(example.text_b)
+        _, lcf_cdm_vec = get_lca_ids_and_cdm_vec(bert_spc_indices=text_spc_ids_fof_lcf_vec,
+                                                 aspect_indices=aspect_ids_for_lcf_vec,
+                                                 opt=opt)
+        lcf_cdw_vec = get_cdw_vec(bert_spc_indices=text_spc_ids_fof_lcf_vec,
+                                  aspect_indices=aspect_ids_for_lcf_vec,
+                                  opt=opt)
+
         IOB_label.extend(aspect_label)
         label_lists = IOB_label
-        polaritiylist.extend([SENTIMENT_PADDING] * len(['[SEP]'] + aspect_label))
         for i, word in enumerate(enum_tokens):
             token = tokenizer.tokenize(word)
             tokens.extend(token)
             label_1 = label_lists[i]
-            polarity_1 = polaritiylist[i]
             for m in range(len(token)):
                 if m == 0:
                     label_mask.append(1)
                     labels.append(label_1)
                     valid.append(1)
-                    polarities.append(polarity_1)
                 else:
                     valid.append(0)
         if len(tokens) >= max_seq_len - 1:
             tokens = tokens[0:(max_seq_len - 2)]
-            polarities = polarities[0:(max_seq_len - 2)]
             labels = labels[0:(max_seq_len - 2)]
             valid = valid[0:(max_seq_len - 2)]
             label_mask = label_mask[0:(max_seq_len - 2)]
@@ -188,7 +203,6 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer):
         valid.insert(0, 1)
         label_mask.insert(0, 1)
         label_ids.append(label_map["[CLS]"])
-        polarities.insert(0, SENTIMENT_PADDING)
         # label_ids.append(label_map["O"])
         for i, token in enumerate(tokens):
             ntokens.append(token)
@@ -200,7 +214,6 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer):
         valid.append(1)
         label_mask.append(1)
         label_ids.append(label_map["[SEP]"])
-        polarities.append(SENTIMENT_PADDING)
         # label_ids.append(label_map["O"])
         input_ids_spc = tokenizer.convert_tokens_to_ids(ntokens)
         input_mask = [1] * len(input_ids_spc)
@@ -211,21 +224,20 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer):
             segment_ids.append(0)
             label_ids.append(0)
             label_mask.append(0)
-            # while len(valid) < max_seq_len:
-            valid.append(1)
+            while len(valid) < max_seq_len:
+                valid.append(1)
         while len(label_ids) < max_seq_len:
             label_ids.append(0)
             label_mask.append(0)
-        while len(polarities) < max_seq_len:
-            polarities.append(SENTIMENT_PADDING)
-        while len(ntokens) < max_seq_len:
-            ntokens.append('')
         assert len(input_ids_spc) == max_seq_len
         assert len(input_mask) == max_seq_len
         assert len(segment_ids) == max_seq_len
         assert len(label_ids) == max_seq_len
         assert len(valid) == max_seq_len
         assert len(label_mask) == max_seq_len
+
+        # update polarities_dim
+        opt.max_polarity = max(opt.max_polarity, polarity)
 
         # if ex_index < 5:
         #     print("*** Example ***")
@@ -247,8 +259,11 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer):
                           input_mask=input_mask,
                           segment_ids=segment_ids,
                           label_id=label_ids,
-                          polarities=polarities,
+                          polarity=polarity,
                           valid_ids=valid,
                           label_mask=label_mask,
-                          tokens=ntokens))
+                          tokens=example.text_a,
+                          lcf_cdm_vec=lcf_cdm_vec,
+                          lcf_cdw_vec=lcf_cdw_vec)
+        )
     return features

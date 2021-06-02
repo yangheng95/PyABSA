@@ -48,7 +48,21 @@ download them if necessary, note that most of the provided models are trained on
 # Aspect Term Extraction (ATE)
 
 ## Aspect Extraction Output Format (方面术语抽取结果示例如下):
+
 ```
+Sentence with predicted labels:
+尤(O) 其(O) 是(O) 照(O) 的(O) 大(O) 尺(O) 寸(O) 照(O) 片(O) 时(O) 效(B-ASP) 果(I-ASP) 也(O) 是(O) 非(O) 常(O) 不(O) 错(O) 的(O)
+{'aspect': '效 果', 'position': '11,12', 'sentiment': '1'}
+Sentence with predicted labels:
+照(O) 大(O) 尺(O) 寸(O) 的(O) 照(O) 片(O) 的(O) 时(O) 候(O) 手(O) 机(O) 反(B-ASP) 映(I-ASP) 速(I-ASP) 度(I-ASP) 太(O) 慢(O)
+{'aspect': '反 映 速 度', 'position': '12,13,14,15', 'sentiment': '0'}
+Sentence with predicted labels:
+关(O) 键(O) 的(O) 时(O) 候(O) 需(O) 要(O) 表(O) 现(O) 持(O) 续(O) 影(O) 像(O) 的(O) 短(B-ASP) 片(I-ASP) 功(I-ASP) 能(I-ASP) 还(O) 是(O) 很(O) 有(O) 用(O) 的(O)
+{'aspect': '短 片 功 能', 'position': '14,15,16,17', 'sentiment': '1'}
+Sentence with predicted labels:
+相(O) 比(O) 较(O) 原(O) 系(O) 列(O) 锐(B-ASP) 度(I-ASP) 高(O) 了(O) 不(O) 少(O) 这(O) 一(O) 点(O) 好(O) 与(O) 不(O) 好(O) 大(O) 家(O) 有(O) 争(O) 议(O)
+{'aspect': '锐 度', 'position': '6,7', 'sentiment': '0'}
+
 Sentence with predicted labels:
 It(O) was(O) pleasantly(O) uncrowded(O) ,(O) the(O) service(B-ASP) was(O) delightful(O) ,(O) the(O) garden(B-ASP) adorable(O) ,(O) the(O) food(B-ASP) -LRB-(O) from(O) appetizers(B-ASP) to(O) entrees(B-ASP) -RRB-(O) was(O) delectable(O) .(O)
 {'aspect': 'service', 'position': '7', 'sentiment': 'Positive'}

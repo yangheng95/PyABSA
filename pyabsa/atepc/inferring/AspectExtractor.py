@@ -21,12 +21,13 @@ from ..dataset_utils.data_utils_for_inferring import (ATEPCProcessor,
                                                       convert_examples_to_features,
                                                       SENTIMENT_PADDING)
 from ..models.lcf_atepc import LCF_ATEPC
+
 from pyabsa.pyabsa_utils import find_target_file
 
 
 class AspectExtractor:
 
-    def __init__(self, model_arg=None):
+    def __init__(self, model_arg=None,                                          sentiment_map=None):
         optimizers = {
             'adadelta': torch.optim.Adadelta,  # default lr=1.0
             'adagrad': torch.optim.Adagrad,  # default lr=0.01
@@ -89,10 +90,15 @@ class AspectExtractor:
              'weight_decay': self.opt.l2reg}
         ]
 
-        self.optimizer = optimizers[self.opt.optimizer](optimizer_grouped_parameters, lr=self.opt.learning_rate,
+        self.optimizer = optimizers[self.opt.optimizer](optimizer_grouped_parameters,
+                                                        lr=self.opt.learning_rate,
                                                         weight_decay=self.opt.l2reg)
 
         self.eval_dataloader = None
+        self.sentiment_map = sentiment_map
+
+    def set_sentiment_map(self, sentiment_map):
+        self.sentiment_map = sentiment_map
 
     def to(self, device=None):
         self.opt.device = device
@@ -136,17 +142,21 @@ class AspectExtractor:
         eval_features = convert_examples_to_features(example,
                                                      self.label_list,
                                                      self.opt.max_seq_len,
-                                                     self.tokenizer)
+                                                     self.tokenizer,
+                                                     self.opt)
         all_spc_input_ids = torch.tensor([f.input_ids_spc for f in eval_features], dtype=torch.long)
         all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
         all_segment_ids = torch.tensor([f.segment_ids for f in eval_features], dtype=torch.long)
         all_label_ids = torch.tensor([f.label_id for f in eval_features], dtype=torch.long)
-        all_polarities = torch.tensor([f.polarities for f in eval_features], dtype=torch.long)
+        all_polarities = torch.tensor([f.polarity for f in eval_features], dtype=torch.long)
         all_valid_ids = torch.tensor([f.valid_ids for f in eval_features], dtype=torch.long)
         all_lmask_ids = torch.tensor([f.label_mask for f in eval_features], dtype=torch.long)
+        lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in eval_features], dtype=torch.float32)
+        lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in eval_features], dtype=torch.float32)
+
         all_tokens = [f.tokens for f in eval_features]
         eval_data = TensorDataset(all_spc_input_ids, all_input_mask, all_segment_ids, all_label_ids,
-                                  all_polarities, all_valid_ids, all_lmask_ids)
+                                  all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
         # Run prediction for full data
         eval_sampler = SequentialSampler(eval_data)
         self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=1)
@@ -154,19 +164,18 @@ class AspectExtractor:
         # extract_aspects
         self.model.eval()
         label_map = {i: label for i, label in enumerate(self.label_list, 1)}
-        for input_ids_spc, input_mask, segment_ids, label_ids, polarities, valid_ids, l_mask in self.eval_dataloader:
-            input_ids_spc = input_ids_spc.to(self.opt.device)
-            input_mask = input_mask.to(self.opt.device)
-            segment_ids = segment_ids.to(self.opt.device)
-            valid_ids = valid_ids.to(self.opt.device)
-            label_ids = label_ids.to(self.opt.device)
-            polarities = polarities.to(self.opt.device)
-            l_mask = l_mask.to(self.opt.device)
+        for input_ids_spc, input_mask, segment_ids, label_ids, polarity, valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec in self.eval_dataloader:
 
             with torch.no_grad():
-                ate_logits, apc_logits = self.model(input_ids_spc, segment_ids, input_mask,
-                                                    valid_ids=valid_ids, polarities=polarities,
-                                                    attention_mask_label=l_mask)
+                ate_logits, apc_logits = self.model(input_ids_spc,
+                                                    segment_ids,
+                                                    input_mask,
+                                                    valid_ids=valid_ids,
+                                                    polarity=polarity,
+                                                    attention_mask_label=l_mask,
+                                                    lcf_cdm_vec=lcf_cdm_vec,
+                                                    lcf_cdw_vec=lcf_cdw_vec
+                                                    )
 
             ate_logits = torch.argmax(F.log_softmax(ate_logits, dim=2), dim=2)
             ate_logits = ate_logits.detach().cpu().numpy()
@@ -195,7 +204,7 @@ class AspectExtractor:
             asp_idx = 0
             asp_num = pred_iobs.count('B-ASP')
             IOB_PADDING = ['O'] * len(pred_iobs)
-            POLARITY_PADDING = [SENTIMENT_PADDING] * len(polarity)
+            POLARITY_PADDING = [SENTIMENT_PADDING] * len(pred_iobs)
             while asp_idx < asp_num:
                 _pred_iobs = pred_iobs[:]
                 _polarity = polarity[:]
@@ -203,7 +212,7 @@ class AspectExtractor:
                     if 'B-ASP' == pred_iobs[iob_idx] and 'ASP' not in pred_iobs[iob_idx + 1] \
                             or 'I-ASP' == pred_iobs[iob_idx] and 'ASP' not in pred_iobs[iob_idx + 1]:
                         _pred_iobs = _pred_iobs[:iob_idx + 1] + IOB_PADDING[iob_idx + 1:]
-                        pred_iobs = IOB_PADDING[:iob_idx+1] + pred_iobs[iob_idx+1:]
+                        pred_iobs = IOB_PADDING[:iob_idx + 1] + pred_iobs[iob_idx + 1:]
                         _polarity = _polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
                         polarity = POLARITY_PADDING[:iob_idx + 1] + polarity[iob_idx + 1:]
                         break
@@ -221,48 +230,58 @@ class AspectExtractor:
         eval_features = convert_examples_to_features(example,
                                                      self.label_list,
                                                      self.opt.max_seq_len,
-                                                     self.tokenizer)
+                                                     self.tokenizer,
+                                                     self.opt)
         all_spc_input_ids = torch.tensor([f.input_ids_spc for f in eval_features], dtype=torch.long)
         all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
         all_segment_ids = torch.tensor([f.segment_ids for f in eval_features], dtype=torch.long)
         all_label_ids = torch.tensor([f.label_id for f in eval_features], dtype=torch.long)
-        all_polarities = torch.tensor([f.polarities for f in eval_features], dtype=torch.long)
+        all_polarities = torch.tensor([f.polarity for f in eval_features], dtype=torch.long)
         all_valid_ids = torch.tensor([f.valid_ids for f in eval_features], dtype=torch.long)
         all_lmask_ids = torch.tensor([f.label_mask for f in eval_features], dtype=torch.long)
+        lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in eval_features], dtype=torch.float32)
+        lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in eval_features], dtype=torch.float32)
         all_tokens = [f.tokens for f in eval_features]
         eval_data = TensorDataset(all_spc_input_ids, all_input_mask, all_segment_ids, all_label_ids,
-                                  all_polarities, all_valid_ids, all_lmask_ids)
+                                  all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
         # Run prediction for full data
         eval_sampler = SequentialSampler(eval_data)
         self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=1)
 
         # extract_aspects
         self.model.eval()
+        if self.sentiment_map:
+            sentiments = self.sentiment_map
+        elif self.opt.max_polarity == 3:
+            sentiments = {0: 'Negative', 1: "Neutral", 2: 'Positive', -999: ''}
+        else:
+            sentiments = {p: str(p) for p in range(self.opt.max_polarity + 1)}
+            sentiments[-999] = ''
 
-        sentiments = {0: 'Negative', 1: "Neutral", 2: 'Positive', -999: ''}
         # Correct = {True: 'Correct', False: 'Wrong'}
+        for i, batch in enumerate(self.eval_dataloader):
+            input_ids_spc, segment_ids, input_mask, label_ids, polarity, \
+            valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
 
-        for input_ids_spc, input_mask, segment_ids, label_ids, polarities, valid_ids, l_mask in self.eval_dataloader:
-            input_ids_spc = input_ids_spc.to(self.opt.device)
-            input_mask = input_mask.to(self.opt.device)
-            segment_ids = segment_ids.to(self.opt.device)
-            valid_ids = valid_ids.to(self.opt.device)
-            label_ids = label_ids.to(self.opt.device)
-            polarities = polarities.to(self.opt.device)
-            l_mask = l_mask.to(self.opt.device)
             result = {}
             with torch.no_grad():
-                ate_logits, apc_logits = self.model(input_ids_spc, segment_ids, input_mask,
-                                                    valid_ids=valid_ids, polarities=polarities,
-                                                    attention_mask_label=l_mask)
+                ate_logits, apc_logits = self.model(input_ids_spc,
+                                                    token_type_ids=segment_ids,
+                                                    attention_mask=input_mask,
+                                                    labels=None,
+                                                    polarity=polarity,
+                                                    valid_ids=valid_ids,
+                                                    attention_mask_label=l_mask,
+                                                    lcf_cdm_vec=lcf_cdm_vec,
+                                                    lcf_cdw_vec=lcf_cdw_vec)
 
                 sent = int(torch.argmax(apc_logits, -1))
-                aspect_idx = torch.where(polarities[0] > 0)
+                aspect_idx = torch.where(polarity[0] > 0)
                 aspect = []
                 positions = []
-                for idx in aspect_idx:
-                    positions.append(str(int(idx)))
-                    aspect.append(all_tokens[0][idx - 1])
+                for idx in list(aspect_idx[0].numpy()):
+                    positions.append(str(idx))
+                    aspect.append(all_tokens[0][int(idx)])
                 result['aspect'] = ' '.join(aspect)
                 result['position'] = ','.join(positions)
                 result['sentiment'] = sentiments[sent]
@@ -270,15 +289,3 @@ class AspectExtractor:
                     print(result)
                 res.append(result)
         return res
-
-
-# Assume the original polarity are labeled as 0: negative  2: positive
-def convert_to_binary_polarity(examples):
-    for i in range(len(examples)):
-        polarities = []
-        for polarity in examples[i].polarity:
-            if polarity == 2:
-                polarities.append(1)
-            else:
-                polarities.append(polarity)
-        examples[i].polarity = polarities

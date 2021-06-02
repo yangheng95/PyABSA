@@ -34,12 +34,19 @@ class ABSADataset(Dataset):
         fin.close()
         all_data = []
 
+        fix_polarity = False
+
         for i in tqdm.tqdm(range(0, len(lines), 3), postfix='building word indices...'):
 
             text_left, _, text_right = [s.strip() for s in lines[i].partition("$T$")]
             aspect = lines[i + 1].lower().strip()
             polarity = lines[i + 2].strip()
-            polarity = int(polarity) + 1
+            polarity = int(polarity)
+
+            assert polarity >= -1
+
+            if polarity < 0:
+                fix_polarity = True
 
             prepared_inputs = prepare_input_from_text(opt, tokenizer, text_left, text_right, aspect, polarity)
 
@@ -109,6 +116,10 @@ class ABSADataset(Dataset):
                     copy_side_aspect('right', all_data[idx - 1], all_data[idx - 1])
                     copy_side_aspect('left', all_data[idx], all_data[idx])
             copy_side_aspect('right', all_data[-1], all_data[-1])
+
+        if fix_polarity:
+            for data in all_data:
+                data['polarity'] += 1
 
         self.data = all_data
 

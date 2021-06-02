@@ -45,6 +45,7 @@ def init_apc_config(config_dict, auto_device=True):
     config['embed_dim'] = apc_config.embed_dim
     config['hidden_dim'] = apc_config.hidden_dim
     config['polarities_dim'] = apc_config.polarities_dim
+    config['max_polarity'] = apc_config.max_polarity
     config['sigma'] = apc_config.sigma
     config['log_step'] = apc_config.log_step
     config['dynamic_truncate'] = apc_config.dynamic_truncate
@@ -96,6 +97,7 @@ def init_atepc_config(config_dict, auto_device=True):
     config['embed_dim'] = atepc_config.embed_dim
     config['hidden_dim'] = atepc_config.hidden_dim
     config['polarities_dim'] = atepc_config.polarities_dim
+    config['max_polarity'] = atepc_config.max_polarity
     config['log_step'] = atepc_config.log_step
     config['gradient_accumulation_steps'] = atepc_config.gradient_accumulation_steps
     # # reload hyper-parameter from training config
@@ -170,9 +172,10 @@ def train_apc(parameter_dict=None,
 
 
 def load_sentiment_classifier(trained_model_path=None,
+                              sentiment_map=None,
                               auto_device=True):
     if trained_model_path and os.path.isdir(trained_model_path):
-        infer_model = SentimentClassifier(trained_model_path)
+        infer_model = SentimentClassifier(trained_model_path, sentiment_map=sentiment_map)
         infer_model.to('cuda:' + str(choice)) if auto_device and choice >= 0 else infer_model.cpu()
         return infer_model
     else:
@@ -219,9 +222,10 @@ def train_atepc(parameter_dict=None,
 
 
 def load_aspect_extractor(trained_model_path=None,
+                          sentiment_map=None,
                           auto_device=True):
     if trained_model_path and os.path.isdir(trained_model_path):
-        aspect_extractor = AspectExtractor(trained_model_path)
+        aspect_extractor = AspectExtractor(trained_model_path, sentiment_map=sentiment_map)
         aspect_extractor.to('cuda:' + str(choice)) if auto_device and choice >= 0 else aspect_extractor.cpu()
         return aspect_extractor
     else:

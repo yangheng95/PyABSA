@@ -24,7 +24,6 @@ from pyabsa.apc.models.lcf_bert import LCF_BERT
 from pyabsa.apc.models.slide_lcf_bert import SLIDE_LCF_BERT
 from pyabsa.apc.dataset_utils.data_utils_for_training import ABSADataset
 from pyabsa.apc.dataset_utils.apc_utils import Tokenizer4Bert
-from pyabsa.apc.dataset_utils.apc_utils import get_polarities_dim
 
 from pyabsa.logger import get_logger
 
@@ -37,7 +36,6 @@ class Instructor:
         self.bert = BertModel.from_pretrained(self.opt.pretrained_bert_name)
         self.bert_tokenizer = BertTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
         self.tokenizer = Tokenizer4Bert(self.bert_tokenizer, self.opt.max_seq_len)
-        self.model = self.opt.model_class(self.bert, self.opt).to(self.opt.device)
 
         trainset = ABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
         self.train_data_loader = DataLoader(dataset=trainset,
@@ -50,6 +48,9 @@ class Instructor:
                                                batch_size=self.opt.batch_size,
                                                shuffle=False,
                                                pin_memory=True)
+        self.opt.polarities_dim = self.opt.max_polarity
+        self.model = self.opt.model_class(self.bert, self.opt).to(self.opt.device)
+
 
         if self.opt.device.type == 'cuda':
             logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device.index)))
@@ -113,6 +114,7 @@ class Instructor:
                 inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
                 outputs = self.model(inputs)
                 targets = sample_batched['polarity'].to(self.opt.device)
+
                 if 'lca' in self.opt.model_name:
                     sen_logits, lca_logits, lca_ids = outputs
                     sen_loss = criterion(sen_logits, targets)
@@ -144,12 +146,12 @@ class Instructor:
                                 except:
                                     # logger.info('Can not remove sub-optimal trained model:', save_path)
                                     pass
-                            save_path = '{0}/{1}_{2}_acc{3}_f1{4}/'.format(self.opt.model_path_to_save,
-                                                                           self.opt.model_name,
-                                                                           self.opt.lcf,
-                                                                           round(test_acc * 100, 2),
-                                                                           round(f1 * 100, 2),
-                                                                           )
+                            save_path = '{0}/{1}_{2}_acc_{3}_f1_{4}/'.format(self.opt.model_path_to_save,
+                                                                             self.opt.model_name,
+                                                                             self.opt.lcf,
+                                                                             round(test_acc * 100, 2),
+                                                                             round(f1 * 100, 2)
+                                                                             )
                             self._save_model(self.model, save_path, mode=0)
                     if f1 > max_f1:
                         max_f1 = f1
@@ -203,7 +205,7 @@ class Instructor:
 
         test_acc = n_test_correct / n_test_total
         f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
-                              labels=list(range(get_polarities_dim(self.opt))), average='macro')
+                              labels=list(range(self.opt.polarities_dim)), average='macro')
         return test_acc, f1
 
     def run(self):
