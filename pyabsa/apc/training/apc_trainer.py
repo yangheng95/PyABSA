@@ -26,6 +26,9 @@ from pyabsa.apc.dataset_utils.data_utils_for_training import ABSADataset
 from pyabsa.apc.dataset_utils.apc_utils import Tokenizer4Bert
 from pyabsa.apc.dataset_utils.apc_utils import get_polarities_dim
 
+from pyabsa.logger import get_logger
+
+logger = get_logger(os.getcwd())
 
 class Instructor:
     def __init__(self, opt):
@@ -48,7 +51,7 @@ class Instructor:
                                                pin_memory=True)
 
         if self.opt.device.type == 'cuda':
-            print("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device.index)))
+            logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device.index)))
 
         self._log_write_args()
 
@@ -60,10 +63,10 @@ class Instructor:
                 n_trainable_params += n_params
             else:
                 n_nontrainable_params += n_params
-        print(
+        logger.info(
             'n_trainable_params: {0}, n_nontrainable_params: {1}'.format(n_trainable_params, n_nontrainable_params))
         for arg in vars(self.opt):
-            print('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
+            logger.info('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
 
     def _save_model(self, model, save_path, mode=0):
         # Save a trained model, configuration and tokenizer
@@ -87,7 +90,7 @@ class Instructor:
             model_to_save.config.to_json_file(output_config_file)
             self.bert_tokenizer.save_vocabulary(model_output_dir)
 
-        # print('trained model saved in: {}'.format(save_path))
+        # logger.info('trained model saved in: {}'.format(save_path))
         self.model.to(self.opt.device)
 
     def _train_and_evaluate(self, criterion, lca_criterion, optimizer):
@@ -136,9 +139,9 @@ class Instructor:
                             if save_path:
                                 try:
                                     shutil.rmtree(save_path)
-                                    # print('Remove sub-optimal trained model:', save_path)
+                                    # logger.info('Remove sub-optimal trained model:', save_path)
                                 except:
-                                    # print('Can not remove sub-optimal trained model:', save_path)
+                                    # logger.info('Can not remove sub-optimal trained model:', save_path)
                                     pass
                             save_path = '{0}/{1}_{2}_acc{3}/'.format(self.opt.model_path_to_save,
                                                                      self.opt.model_name,
@@ -157,8 +160,8 @@ class Instructor:
                 iterator.refresh()
         # return the model paths of multiple training in case of loading the best model after training
         if save_path:
-            print('----------------------Training Summary----------------------')
-            print('Max Accuracy: {} Max F1: {}'.format(max_test_acc, max_f1))
+            logger.info('----------------------Training Summary----------------------')
+            logger.info('Max Accuracy: {} Max F1: {}'.format(max_test_acc, max_f1))
             return save_path
         else:
             # direct return model if do not evaluate
@@ -221,8 +224,9 @@ class Instructor:
 
 
 def train4apc(opt):
+
     if not isinstance(opt.seed, int):
-        print('Please do not use multiple random seeds without evaluating.')
+        logger.info('Please do not use multiple random seeds without evaluating.')
         opt.seed = list(opt.seed)[0]
     random.seed(opt.seed)
     numpy.random.seed(opt.seed)

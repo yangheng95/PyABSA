@@ -6,19 +6,8 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 import os
-import sys
 
 import torch
-import logging
-
-
-def get_logger(log_name):
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
-    logger.addHandler(logging.StreamHandler(sys.stdout))
-    log_file = '{}/training.log'.format(log_name)
-    logger.addHandler(logging.FileHandler(log_file))
-    return logger
 
 
 def get_auto_device():
@@ -35,22 +24,29 @@ def find_target_file(dir_path, file_type, exclude_key='', find_all=False):
     'exclude_key': file name contains 'exclude_key' will be ignored
     'find_all' return a result list if Ture else the first target file
     '''
-    if not dir_path:
-        return ''
-    elif os.path.isfile(dir_path) and file_type in dir_path:
-        return [dir_path] if find_all else dir_path
-    elif os.path.isfile(dir_path) and file_type not in dir_path:
-        return ''
-    elif not find_all:
-        tmp_files = [p for p in os.listdir(dir_path)
-                     if file_type in p.lower()
-                     and not (exclude_key and exclude_key in p.lower())]
-        path = os.path.join(dir_path, tmp_files[0])
 
+    if not find_all:
+        if not dir_path:
+            return ''
+        elif os.path.isfile(dir_path):
+            if file_type in dir_path.lower() and not (exclude_key and exclude_key in dir_path.lower()):
+                return dir_path
+            else:
+                return ''
+        elif os.path.isdir(dir_path):
+            tmp_files = [p for p in os.listdir(dir_path)
+                         if file_type in p.lower()
+                         and not (exclude_key and exclude_key in p.lower())]
+            path = os.path.join(dir_path, tmp_files[0])
+            return path
+        else:
+            raise FileNotFoundError('No target(s) file found!')
     else:
-        path = [os.path.join(dir_path, p)
-                for p in os.listdir(dir_path)
-                if file_type in p.lower()
-                and not (exclude_key and exclude_key in p.lower())]
-
-    return path
+        if os.path.isdir(dir_path):
+            path = [os.path.join(dir_path, p)
+                    for p in os.listdir(dir_path)
+                    if file_type in p.lower()
+                    and not (exclude_key and exclude_key in p.lower())]
+            return path
+        else:
+            raise FileNotFoundError('No target(s) file found!')
