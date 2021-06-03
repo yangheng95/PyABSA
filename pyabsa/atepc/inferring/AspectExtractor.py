@@ -27,7 +27,7 @@ from pyabsa.pyabsa_utils import find_target_file
 
 class AspectExtractor:
 
-    def __init__(self, model_arg=None,                                          sentiment_map=None):
+    def __init__(self, model_arg=None, sentiment_map=None):
         optimizers = {
             'adadelta': torch.optim.Adadelta,  # default lr=1.0
             'adagrad': torch.optim.Adagrad,  # default lr=0.01
@@ -165,7 +165,15 @@ class AspectExtractor:
         self.model.eval()
         label_map = {i: label for i, label in enumerate(self.label_list, 1)}
         for input_ids_spc, input_mask, segment_ids, label_ids, polarity, valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec in self.eval_dataloader:
-
+            input_ids_spc = input_ids_spc.to(self.opt.device)
+            input_mask = input_mask.to(self.opt.device)
+            segment_ids = segment_ids.to(self.opt.device)
+            valid_ids = valid_ids.to(self.opt.device)
+            label_ids = label_ids.to(self.opt.device)
+            polarity = polarity.to(self.opt.device)
+            l_mask = l_mask.to(self.opt.device)
+            lcf_cdm_vec = lcf_cdm_vec.to(self.opt.device)
+            lcf_cdw_vec = lcf_cdw_vec.to(self.opt.device)
             with torch.no_grad():
                 ate_logits, apc_logits = self.model(input_ids_spc,
                                                     segment_ids,
@@ -252,17 +260,25 @@ class AspectExtractor:
         self.model.eval()
         if self.sentiment_map:
             sentiments = self.sentiment_map
-        elif self.opt.max_polarity == 3:
+        elif self.opt.polarities_dim == 3:
             sentiments = {0: 'Negative', 1: "Neutral", 2: 'Positive', -999: ''}
         else:
-            sentiments = {p: str(p) for p in range(self.opt.max_polarity + 1)}
+            sentiments = {p: str(p) for p in range(self.opt.polarities_dim + 1)}
             sentiments[-999] = ''
 
         # Correct = {True: 'Correct', False: 'Wrong'}
         for i, batch in enumerate(self.eval_dataloader):
             input_ids_spc, segment_ids, input_mask, label_ids, polarity, \
             valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
-
+            input_ids_spc = input_ids_spc.to(self.opt.device)
+            input_mask = input_mask.to(self.opt.device)
+            segment_ids = segment_ids.to(self.opt.device)
+            valid_ids = valid_ids.to(self.opt.device)
+            label_ids = label_ids.to(self.opt.device)
+            polarity = polarity.to(self.opt.device)
+            l_mask = l_mask.to(self.opt.device)
+            lcf_cdm_vec = lcf_cdm_vec.to(self.opt.device)
+            lcf_cdw_vec = lcf_cdw_vec.to(self.opt.device)
             result = {}
             with torch.no_grad():
                 ate_logits, apc_logits = self.model(input_ids_spc,
@@ -279,7 +295,7 @@ class AspectExtractor:
                 aspect_idx = torch.where(polarity[0] > 0)
                 aspect = []
                 positions = []
-                for idx in list(aspect_idx[0].numpy()):
+                for idx in list(aspect_idx[0].cpu().numpy()):
                     positions.append(str(idx))
                     aspect.append(all_tokens[0][int(idx)])
                 result['aspect'] = ' '.join(aspect)

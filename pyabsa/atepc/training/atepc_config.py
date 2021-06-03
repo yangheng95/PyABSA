@@ -24,6 +24,5 @@ seed = 996
 embed_dim = 768
 hidden_dim = 768
 polarities_dim = 2
-max_polarity = -1
 log_step = 3
 gradient_accumulation_steps = 1

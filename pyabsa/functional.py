@@ -45,7 +45,6 @@ def init_apc_config(config_dict, auto_device=True):
     config['embed_dim'] = apc_config.embed_dim
     config['hidden_dim'] = apc_config.hidden_dim
     config['polarities_dim'] = apc_config.polarities_dim
-    config['max_polarity'] = apc_config.max_polarity
     config['sigma'] = apc_config.sigma
     config['log_step'] = apc_config.log_step
     config['dynamic_truncate'] = apc_config.dynamic_truncate
@@ -97,7 +96,6 @@ def init_atepc_config(config_dict, auto_device=True):
     config['embed_dim'] = atepc_config.embed_dim
     config['hidden_dim'] = atepc_config.hidden_dim
     config['polarities_dim'] = atepc_config.polarities_dim
-    config['max_polarity'] = atepc_config.max_polarity
     config['log_step'] = atepc_config.log_step
     config['gradient_accumulation_steps'] = atepc_config.gradient_accumulation_steps
     # # reload hyper-parameter from training config

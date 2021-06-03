@@ -34,6 +34,7 @@ class ABSADataset(Dataset):
         self.all_data = []
 
     def parse_sample(self, text):
+        _text = text
         samples = []
         try:
             if '!sent!' not in text:
@@ -62,7 +63,7 @@ class ABSADataset(Dataset):
                         samples.append(sample.replace('[TEMP]', '[ASP]'))
 
         except:
-            print('Invalid Input:', text)
+            print('Invalid Input:', _text)
         return samples
 
     def prepare_infer_sample(self, text: str):
@@ -109,13 +110,12 @@ class ABSADataset(Dataset):
                                                           self.tokenizer,
                                                           text_left,
                                                           text_right,
-                                                          aspect,
-                                                          polarity)
+                                                          aspect
+                                                          )
 
                 text_raw = prepared_inputs['text_raw']
                 text_spc = prepared_inputs['text_spc']
                 aspect = prepared_inputs['aspect']
-                polarity = prepared_inputs['polarity']
                 text_bert_indices = prepared_inputs['text_bert_indices']
                 text_raw_bert_indices = prepared_inputs['text_raw_bert_indices']
                 aspect_bert_indices = prepared_inputs['aspect_bert_indices']
