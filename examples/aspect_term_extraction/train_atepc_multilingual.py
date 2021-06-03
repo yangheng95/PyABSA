@@ -17,7 +17,6 @@ from pyabsa import train_atepc
 param_dict = {'model_name': 'lcf_atepc',
               'batch_size': 16,
               'seed': {996, 7, 666},
-              'device': 'cuda',        # overrides auto_device parameter
               'num_epoch': 10,
               'optimizer': "adamw",    # {adam, adamw}
               'learning_rate': 0.00002,
@@ -34,7 +33,8 @@ param_dict = {'model_name': 'lcf_atepc',
               }
 
 # Mind that the 'train_atepc' function only evaluates in last few epochs
-
+# We dont have enough resources to train this model because of the size of the multilingual dataset
+# Calling for computing resources to train this model and share with community
 train_set_path = 'atepc_datasets/multilingual'
 save_path = 'state_dict'
 aspect_extractor = train_atepc(parameter_dict=param_dict,      # set param_dict=None to use default model

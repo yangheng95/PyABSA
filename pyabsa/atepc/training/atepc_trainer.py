@@ -67,24 +67,6 @@ def train4atepc(config):
     bert_base_model = BertModel.from_pretrained(opt.bert_model)
     bert_base_model.config.num_labels = num_labels
 
-    eval_features = convert_examples_to_features(eval_examples, label_list, opt.max_seq_len, tokenizer, opt)
-    all_spc_input_ids = torch.tensor([f.input_ids_spc for f in eval_features], dtype=torch.long)
-    all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
-    all_segment_ids = torch.tensor([f.segment_ids for f in eval_features], dtype=torch.long)
-    all_label_ids = torch.tensor([f.label_id for f in eval_features], dtype=torch.long)
-    all_polarities = torch.tensor([f.polarity for f in eval_features], dtype=torch.long)
-    all_valid_ids = torch.tensor([f.valid_ids for f in eval_features], dtype=torch.long)
-    all_lmask_ids = torch.tensor([f.label_mask for f in eval_features], dtype=torch.long)
-    lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in eval_features], dtype=torch.float32)
-    lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in eval_features], dtype=torch.float32)
-    eval_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids, all_polarities,
-                              all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
-    # all_tokens = [f.tokens for f in eval_features]
-
-    # Run prediction for full data
-    eval_sampler = RandomSampler(eval_data)
-    eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=opt.batch_size)
-
     for arg in vars(opt):
         logger.info('>>> {0}: {1}'.format(arg, getattr(opt, arg)))
 
@@ -203,6 +185,24 @@ def train4atepc(config):
                         iterator.refresh()
 
         return save_path
+
+    eval_features = convert_examples_to_features(eval_examples, label_list, opt.max_seq_len, tokenizer, opt)
+    all_spc_input_ids = torch.tensor([f.input_ids_spc for f in eval_features], dtype=torch.long)
+    all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
+    all_segment_ids = torch.tensor([f.segment_ids for f in eval_features], dtype=torch.long)
+    all_label_ids = torch.tensor([f.label_id for f in eval_features], dtype=torch.long)
+    all_polarities = torch.tensor([f.polarity for f in eval_features], dtype=torch.long)
+    all_valid_ids = torch.tensor([f.valid_ids for f in eval_features], dtype=torch.long)
+    all_lmask_ids = torch.tensor([f.label_mask for f in eval_features], dtype=torch.long)
+    lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in eval_features], dtype=torch.float32)
+    lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in eval_features], dtype=torch.float32)
+    eval_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids, all_polarities,
+                              all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
+    # all_tokens = [f.tokens for f in eval_features]
+
+    # Run prediction for full data
+    eval_sampler = RandomSampler(eval_data)
+    eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=opt.batch_size)
 
     def evaluate(eval_ATE=True, eval_APC=True):
         # evaluate

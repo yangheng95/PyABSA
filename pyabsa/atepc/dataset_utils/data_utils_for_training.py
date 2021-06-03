@@ -5,6 +5,8 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
+import tqdm
+
 from pyabsa.apc.dataset_utils.apc_utils import get_lca_ids_and_cdm_vec, get_cdw_vec
 
 SENTIMENT_PADDING = -999
@@ -153,7 +155,7 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
     label_map = {label: i for i, label in enumerate(label_list, 1)}
     features = []
     polarities_set = set()
-    for (ex_index, example) in enumerate(examples):
+    for (ex_index, example) in enumerate(tqdm.tqdm(examples, postfix='convert examples to features')):
         text_spc_tokens = example.text_a[:]
         aspect_tokens = example.text_b[:]
         IOB_label = example.IOB_label

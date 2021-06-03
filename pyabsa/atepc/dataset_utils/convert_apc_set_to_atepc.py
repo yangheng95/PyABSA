@@ -42,7 +42,7 @@ def assemble_aspects(fname):
                         tags[i] = 'I-ASP'
                 samples.append([text, tags, polarities_tmp])
             except:
-                print(sample[0])
+                print('Ignore Error:', sample[0])
 
         return samples
 
@@ -50,9 +50,10 @@ def assemble_aspects(fname):
     aspects_in_one_sentence = []
     for i in range(0, len(lines), 3):
 
-        # aspects_in_one_sentence.append([lines[i], lines[i + 1], lines[i + 2]])
+        lines[i] = lines[i].replace('$T$', ' $T$ ').replace('  ', ' ')
 
         if len(aspects_in_one_sentence) == 0:
+
             aspects_in_one_sentence.append([lines[i], lines[i + 1], lines[i + 2]])
             continue
         if is_similar(aspects_in_one_sentence[-1][0], lines[i]):
@@ -89,10 +90,10 @@ def convert(fname):
 
     for sample in samples:
         for token_index in range(len(sample[1])):
-            token, label, polarty = sample[0].split()[token_index], sample[1][token_index], sample[2][token_index]
-            lines.append(token + " " + label + " " + str(polarty))
-
+            token, label, polarity = sample[0].split()[token_index], sample[1][token_index], sample[2][token_index]
+            lines.append(token + " " + label + " " + str(polarity))
         lines.append('\n')
+
     # 写之前，先检验文件是否存在，存在就删掉
     if os.path.exists(dist_fname):
         os.remove(dist_fname)

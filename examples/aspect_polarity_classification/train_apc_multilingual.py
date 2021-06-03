@@ -16,7 +16,7 @@ from pyabsa import train_apc
 param_dict = {'model_name': 'bert_spc',   # {slide_lcfs_bert, slide_lcf_bert, lcf_bert, lcfs_bert, bert_spc, bert_base}
               'batch_size': 16,
               'seed': {36, 6, 86},         # you can use a set of random seeds to train multiple rounds
-              'num_epoch': 10,
+              'num_epoch': 5,
               'optimizer': "adam",         # {adam, adamw}
               'learning_rate': 0.00002,
               'pretrained_bert_name': "bert-base-multilingual-uncased",
