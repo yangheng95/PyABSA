@@ -17,7 +17,6 @@ from pyabsa import train_atepc
 param_dict = {'model_name': 'lcf_atepc',
               'batch_size': 16,
               'seed': {996, 7, 666},
-              'device': 'cuda',        # overrides auto_device parameter
               'num_epoch': 10,
               'optimizer': "adamw",    # {adam, adamw}
               'learning_rate': 0.00002,

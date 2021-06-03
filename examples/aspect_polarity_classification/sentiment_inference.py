@@ -14,7 +14,7 @@ from pyabsa import load_sentiment_classifier
 
 # 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
 sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
-model_path = 'state_dict/slide_lcfs_bert_cdm_rest16_acc92.85_f1_76.42'
+model_path = 'state_dict/slide_lcfs_bert_cdw_rest14_acc87.5'   # pending update
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
                                             auto_device=True,  # Use CUDA if available
                                             sentiment_map=sentiment_map

@@ -29,7 +29,7 @@ examples = ['But the staff was so nice to us .',
 
 # 从Google Drive下载提供的预训练模型
 # Download the provided pre-training model from Google Drive
-model_path = 'state_dict/'  # pending release
+model_path = 'state_dict/lcf_atepc_cdw'  # pending update
 
 aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
                                          auto_device=True  # False means load model on CPU

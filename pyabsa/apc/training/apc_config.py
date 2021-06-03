@@ -19,6 +19,5 @@ seed = 996
 embed_dim = 768
 hidden_dim = 768
 polarities_dim = 3
-max_polarity = -1
 log_step = 3
 dynamic_truncate = True

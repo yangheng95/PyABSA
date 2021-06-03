@@ -152,12 +152,15 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
 
     label_map = {label: i for i, label in enumerate(label_list, 1)}
     features = []
+    polarities_set = set()
     for (ex_index, example) in enumerate(examples):
         text_spc_tokens = example.text_a[:]
         aspect_tokens = example.text_b[:]
         IOB_label = example.IOB_label
         aspect_label = example.aspect_label
         polarity = example.polarity
+        if polarity != SENTIMENT_PADDING:  # bad case handle in Chinese datasets
+            polarities_set.add(polarity)  # ignore samples without polarities
         tokens = []
         labels = []
         valid = []
@@ -236,9 +239,6 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
         assert len(valid) == max_seq_len
         assert len(label_mask) == max_seq_len
 
-        # update polarities_dim
-        opt.max_polarity = max(opt.max_polarity, polarity)
-
         # if ex_index < 5:
         #     print("*** Example ***")
         #     print("guid: %s" % (example.guid))
@@ -266,4 +266,16 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
                           lcf_cdm_vec=lcf_cdm_vec,
                           lcf_cdw_vec=lcf_cdw_vec)
         )
+
+    # update polarities_dim, init model behind this function!
+    p_min, p_max = min(polarities_set), max(polarities_set)
+    if p_min < 0:
+        for data in features:
+            data.polarity += 1
+            assert 0 <= data.polarity <= p_max + 1
+        p_min += 1
+        p_max += 1
+    assert len(polarities_set) == len(range(p_max - p_min)) + 1
+    opt.polarities_dim = p_max + 1
+
     return features

@@ -13,9 +13,8 @@ import networkx as nx
 import numpy as np
 import spacy
 
-
-POLARITY_SET = set()
 SENTIMENT_PADDING = -999
+
 
 def parse_apc_params(path):
     configs = []
@@ -157,7 +156,7 @@ class Tokenizer4Bert:
         return self.tokenizer.tokenize(text)
 
 
-def prepare_input_from_text(opt, tokenizer, text_left, text_right, aspect, polarity):
+def prepare_input_from_text(opt, tokenizer, text_left, text_right, aspect):
     if opt.dynamic_truncate:
         # dynamic truncation on input text
         text_left = ' '.join(text_left.split(' ')[int(-(tokenizer.max_seq_len - len(aspect.split())) / 2) - 1:])
@@ -169,14 +168,10 @@ def prepare_input_from_text(opt, tokenizer, text_left, text_right, aspect, polar
     text_raw_bert_indices = tokenizer.text_to_sequence('[CLS] ' + text_raw + ' [SEP]')
     aspect_bert_indices = tokenizer.text_to_sequence(aspect)
 
-    POLARITY_SET.add(polarity)
-    opt.max_polarity = max(len(POLARITY_SET), polarity)
-
     inputs = {
         'text_raw': text_raw,
         'text_spc': text_spc,
         'aspect': aspect,
-        'polarity': polarity,
         'text_bert_indices': text_bert_indices,
         'text_raw_bert_indices': text_raw_bert_indices,
         'aspect_bert_indices': aspect_bert_indices
@@ -263,7 +258,7 @@ def get_asp_index(text_ids, aspect_indices):
                     break
     except:
         return -1
-    return  -1
+    return -1
 
 
 def build_spc_mask_vec(opt, text_ids):

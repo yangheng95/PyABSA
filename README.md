@@ -273,51 +273,9 @@ param_dict = {'model_name': 'slide_lcf_bert',  # {slide_lcfs_bert, slide_lcf_ber
               }
 ```
 
-# Our LCF-based APC models
-
-Codes for our paper(s):
-
-- Yang H, Zeng
-  B. [Enhancing Fine-grained Sentiment Classification Exploiting Local Context Embedding[J]](https://arxiv.org/abs/2010.00767)
-  . arXiv preprint arXiv:2010.00767, 2020.
-
-- Yang H, Zeng B, Yang J, et
-  al. [A multi-task learning model for Chinese-oriented aspect polarity classification and aspect term extraction[J]](https://www.sciencedirect.com/science/article/abs/pii/S0925231220312534)
-  . Neurocomputing, 419: 344-356.
-
-- Zeng B, Yang H, Xu R, et
-  al. [Lcf: A local context focus mechanism for aspect-based sentiment classification[J]](https://www.mdpi.com/2076-3417/9/16/3389)
-  . Applied Sciences, 2019, 9(16): 3389.
-
-Please try our best models `SLIDE-LCFS-BERT` and `SLIDE-LCF-BERT`.
-
-- **[SLIDE-LCF-BERT](modules/models/slide_lcf_bert.py)**
-
-- **[SLIDE-LCFS-BERT](modules/models/slide_lcf_bert.py)**
-
-- **[LCA-BERT](modules/models/lca_bert.py)**
-
-- **[LCF-BERT](modules/models/lcf_bert.py)**
-
-Note that GloVe-based models have been removed.
-
-## Other famous APC models
-
-- **[LCFS-BERT](modules/models/lcf-bert.py)**
-
-Phan M H, Ogunbona P O. [Modelling context and syntactical features for aspect-based sentiment
-analysis[C]](https://www.aclweb.org/anthology/2020.acl-main.293/)//Proceedings of the 58th Annual Meeting of the
-Association for Computational Linguistics. 2020: 3211-3220.
-
-The following models are forked from [ABSA-PyTorch](https://github.com/songyouwei/ABSA-PyTorch).
-
-- **[BERT-BASE](modules/models/bert_base.py)**
-- **[BERT-SPC](modules/models/bert_spc.py)**
-
-
 # Acknowledgement
 
-This work build from LC-ABSA/LCF-ABSA and LCF-ATEPC. Feel free to help us optimize code or add new features!
+This work build from LC-ABSA/LCF-ABSA and LCF-ATEPC, and other impressive works such as PyTorch-ABSA and LCFS-BERT. Feel free to help us optimize code or add new features!
 欢迎提出疑问、意见和建议，或者帮助完善仓库，谢谢！
 
 # To Do
@@ -325,6 +283,9 @@ This work build from LC-ABSA/LCF-ABSA and LCF-ATEPC. Feel free to help us optimi
 2. Add more APIs
 3. Optimize codes and add comments
 
+# Calling for New Datasets and Models
+We hope you can help us to improve this work, e.g., provide new dataset and model implementations.
+the copyrights of contributed resources belong to the contributors, thanks for your help.
 
 # Citation
 If this repository is helpful, please cite our paper:

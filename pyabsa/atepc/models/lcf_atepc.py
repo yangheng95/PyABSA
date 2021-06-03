@@ -55,7 +55,6 @@ class LCF_ATEPC(BertForTokenClassification):
         else:
             self.bert4local = self.bert4global
 
-        self.bert_global_focus = self.bert4global
         self.dropout = nn.Dropout(self.opt.dropout)
         self.SA1 = Encoder(config, opt)
         self.SA2 = Encoder(config, opt)
@@ -63,7 +62,7 @@ class LCF_ATEPC(BertForTokenClassification):
         self.linear_triple = nn.Linear(opt.hidden_dim * 3, opt.hidden_dim)
 
         self.pooler = BertPooler(config)
-        self.dense = torch.nn.Linear(opt.hidden_dim, opt.max_polarity + 1)
+        self.dense = torch.nn.Linear(opt.hidden_dim, opt.polarities_dim)
 
     def get_batch_token_labels_bert_base_indices(self, labels):
         if labels is None:

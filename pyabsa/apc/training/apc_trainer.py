@@ -48,9 +48,9 @@ class Instructor:
                                                batch_size=self.opt.batch_size,
                                                shuffle=False,
                                                pin_memory=True)
-        self.opt.polarities_dim = self.opt.max_polarity
-        self.model = self.opt.model_class(self.bert, self.opt).to(self.opt.device)
 
+        # init the model behind the construction of datasets in case of updating polarities_dim
+        self.model = self.opt.model_class(self.bert, self.opt).to(self.opt.device)
 
         if self.opt.device.type == 'cuda':
             logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device.index)))

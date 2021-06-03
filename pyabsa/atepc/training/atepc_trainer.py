@@ -88,7 +88,7 @@ def train4atepc(config):
     for arg in vars(opt):
         logger.info('>>> {0}: {1}'.format(arg, getattr(opt, arg)))
 
-        # init the model behind the convert_examples_to_features function in case of updating polarities_dim
+    # init the model behind the convert_examples_to_features function in case of updating polarities_dim
     model_classes = {
         'lcf_atepc': LCF_ATEPC,
     }
@@ -153,6 +153,7 @@ def train4atepc(config):
                 optimizer.step()
                 optimizer.zero_grad()
                 global_step += 1
+                global_step += 1
                 if epoch >= 2 or opt.num_epoch <= 2:
                     if global_step % opt.log_step == 0:
                         apc_result, ate_result = evaluate(eval_ATE=not opt.use_bert_spc)
@@ -197,7 +198,7 @@ def train4atepc(config):
                                        f' (Unreliable since `use_bert_spc` is "True".)'
                         else:
                             postfix += f'ATE_F1: {current_ate_test_f1}(max:{max_ate_test_f1})'
-    
+
                         iterator.postfix = postfix
                         iterator.refresh()
 
@@ -274,7 +275,7 @@ def train4atepc(config):
             test_acc = n_test_correct / n_test_total
 
             test_f1 = f1_score(torch.argmax(test_apc_logits_all, -1).cpu(), test_polarities_all.cpu(),
-                               labels=list(range(opt.max_polarity + 1)), average='macro')
+                               labels=list(range(opt.polarities_dim)), average='macro')
 
             test_acc = round(test_acc * 100, 2)
             test_f1 = round(test_f1 * 100, 2)

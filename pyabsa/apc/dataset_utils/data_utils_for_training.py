@@ -34,7 +34,8 @@ class ABSADataset(Dataset):
         fin.close()
         all_data = []
 
-        fix_polarity = False
+        # record polarities type to update polarities_dim
+        polarities_set = set()
 
         for i in tqdm.tqdm(range(0, len(lines), 3), postfix='building word indices...'):
 
@@ -42,13 +43,9 @@ class ABSADataset(Dataset):
             aspect = lines[i + 1].lower().strip()
             polarity = lines[i + 2].strip()
             polarity = int(polarity)
+            polarities_set.add(polarity)
 
-            assert polarity >= -1
-
-            if polarity < 0:
-                fix_polarity = True
-
-            prepared_inputs = prepare_input_from_text(opt, tokenizer, text_left, text_right, aspect, polarity)
+            prepared_inputs = prepare_input_from_text(opt, tokenizer, text_left, text_right, aspect)
 
             text_raw = prepared_inputs['text_raw']
             text_spc = prepared_inputs['text_spc']
@@ -117,9 +114,16 @@ class ABSADataset(Dataset):
                     copy_side_aspect('left', all_data[idx], all_data[idx])
             copy_side_aspect('right', all_data[-1], all_data[-1])
 
-        if fix_polarity:
+        # update polarities_dim, init model behind this function!
+        p_min, p_max = min(polarities_set), max(polarities_set)
+        if p_min < 0:
             for data in all_data:
                 data['polarity'] += 1
+                assert 0 <= data['polarity'] <= p_max + 1
+            p_min += 1
+            p_max += 1
+        assert len(polarities_set) == len(range(p_max - p_min)) + 1
+        opt.polarities_dim = p_max + 1
 
         self.data = all_data
 
