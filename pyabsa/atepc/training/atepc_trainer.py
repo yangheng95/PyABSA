@@ -295,9 +295,10 @@ def train4atepc(config):
         if mode == 0:
             if not os.path.exists(save_path):
                 os.makedirs(save_path)
-            torch.save(model_to_save.cpu().state_dict(),
-                       save_path + args_to_save.model_name + '.state_dict')  # save the state dict
-            pickle.dump(args_to_save, open(save_path + 'model.config', 'wb'))
+            # torch.save(model_to_save.cpu().state_dict(),
+            #            save_path + args_to_save.model_name + '.state_dict')  # save the state dict
+            torch.save(model_to_save.cpu(), save_path + args_to_save.model_name + '.model')  # save the whole model
+            pickle.dump(args_to_save, open(save_path + args_to_save.model_name + '.config', 'wb'))
         else:
             # save the fine-tuned bert model
             model_output_dir = save_path

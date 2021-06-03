@@ -55,11 +55,17 @@ class SentimentClassifier:
             try:
                 print('Try to load trained model and config from', model_arg)
                 state_dict_path = find_target_file(model_arg, 'state_dict')
+                model_path = find_target_file(model_arg, 'model')
+
                 config_path = find_target_file(model_arg, 'config')
                 self.opt = pickle.load(open(config_path, 'rb'))
-                self.bert = BertModel.from_pretrained(self.opt.pretrained_bert_name)
-                self.model = self.model_class[self.opt.model_name](self.bert, self.opt)
-                self.model.load_state_dict(torch.load(state_dict_path))
+
+                if state_dict_path:
+                    self.bert = BertModel.from_pretrained(self.opt.pretrained_bert_name)
+                    self.model = self.model_class[self.opt.model_name](self.bert, self.opt)
+                    self.model.load_state_dict(torch.load(state_dict_path))
+                if model_path:
+                    self.model = torch.load(model_path)
 
                 print('Config used in Training:')
                 self._log_write_args()

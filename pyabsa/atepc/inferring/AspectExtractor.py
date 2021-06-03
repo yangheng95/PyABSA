@@ -53,14 +53,21 @@ class AspectExtractor:
         else:
             print('Try to load trained model and config from', model_arg)
             try:
-                state_dict_path = find_target_file(model_arg, 'state_dict')
+                state_dict_path = find_target_file(model_arg, '.state_dict')
+                model_path = find_target_file(model_arg, '.model')
+
                 config_path = find_target_file(model_arg, 'config')
                 self.opt = pickle.load(open(config_path, 'rb'))
-                self.opt.bert_model = self.opt.pretrained_bert_name
-                bert_base_model = BertModel.from_pretrained(self.opt.bert_model)
-                bert_base_model.config.num_labels = self.num_labels
-                self.model = model_classes[self.opt.model_name](bert_base_model, self.opt)
-                self.model.load_state_dict(torch.load(state_dict_path))
+
+                if state_dict_path:
+                    self.opt.bert_model = self.opt.pretrained_bert_name
+                    bert_base_model = BertModel.from_pretrained(self.opt.bert_model)
+                    bert_base_model.config.num_labels = self.num_labels
+                    self.model = model_classes[self.opt.model_name](bert_base_model, self.opt)
+                    self.model.load_state_dict(torch.load(state_dict_path))
+                if model_path:
+                    self.model = torch.load(model_path)
+
             except:
                 warnings.warn('Fail to load the model, please download our latest models at Google Drive: '
                               'https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing')
