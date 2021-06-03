@@ -70,20 +70,6 @@ def train4atepc(config):
     for arg in vars(opt):
         logger.info('>>> {0}: {1}'.format(arg, getattr(opt, arg)))
 
-    # init the model behind the convert_examples_to_features function in case of updating polarities_dim
-    model_classes = {
-        'lcf_atepc': LCF_ATEPC,
-    }
-    model = model_classes[opt.model_name](bert_base_model, opt=opt)
-    model.to(opt.device)
-    param_optimizer = list(model.named_parameters())
-    no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
-    optimizer_grouped_parameters = [
-        {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay': opt.l2reg},
-        {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay': opt.l2reg}
-    ]
-    optimizer = optimizers[opt.optimizer](optimizer_grouped_parameters, lr=opt.learning_rate, weight_decay=opt.l2reg)
-
     def train():
         train_features = convert_examples_to_features(train_examples, label_list, opt.max_seq_len, tokenizer, opt)
         logger.info("***** Running training *****")
@@ -136,7 +122,7 @@ def train4atepc(config):
                 optimizer.zero_grad()
                 global_step += 1
                 global_step += 1
-                if epoch >= 2 or opt.num_epoch <= 2:
+                if epoch >= opt.num_epoch / 2 or opt.num_epoch <= 2:
                     if global_step % opt.log_step == 0:
                         apc_result, ate_result = evaluate(eval_ATE=not opt.use_bert_spc)
                         # if save_path:
@@ -203,6 +189,20 @@ def train4atepc(config):
     # Run prediction for full data
     eval_sampler = RandomSampler(eval_data)
     eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=opt.batch_size)
+
+    # init the model behind the convert_examples_to_features function in case of updating polarities_dim
+    model_classes = {
+        'lcf_atepc': LCF_ATEPC,
+    }
+    model = model_classes[opt.model_name](bert_base_model, opt=opt)
+    model.to(opt.device)
+    param_optimizer = list(model.named_parameters())
+    no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
+    optimizer_grouped_parameters = [
+        {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay': opt.l2reg},
+        {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay': opt.l2reg}
+    ]
+    optimizer = optimizers[opt.optimizer](optimizer_grouped_parameters, lr=opt.learning_rate, weight_decay=opt.l2reg)
 
     def evaluate(eval_ATE=True, eval_APC=True):
         # evaluate
