@@ -61,7 +61,7 @@ def parse_example(example):
 
 def parse_examples(examples):
     data = []
-    for example in examples:
+    for example in tqdm.tqdm(examples, postfix='convert examples to features'):
         tokens = []
         for token in example.split():
             tokens.append(token)
@@ -98,7 +98,7 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
 
     label_map = {label: i for i, label in enumerate(label_list, 1)}
     features = []
-    for (ex_index, example) in enumerate(tqdm.tqdm(examples, postfix='convert examples to features')):
+    for (ex_index, example) in enumerate(examples):
         text_spc_tokens = example.text_a[:]
         aspect_tokens = example.text_b[:]
         IOB_label = example.IOB_label

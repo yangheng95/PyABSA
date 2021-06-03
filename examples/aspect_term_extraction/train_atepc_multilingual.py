@@ -29,7 +29,7 @@ param_dict = {'model_name': 'lcf_atepc',
               'lcf': "cdw",            # {cdw, cdm, fusion}
               'dropout': 0.1,
               'l2reg': 0.00001,
-              # 'polarities_dim': 3      # deprecated, polarity_dim will be automatically detected
+              # 'polarities_dim': 3    # deprecated, polarity_dim will be automatically detected
               }
 
 # Mind that the 'train_atepc' function only evaluates in last few epochs
