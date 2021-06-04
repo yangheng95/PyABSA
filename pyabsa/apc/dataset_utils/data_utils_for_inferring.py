@@ -4,6 +4,7 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
+import warnings
 
 import numpy as np
 import torch
@@ -55,8 +56,7 @@ class ABSADataset(Dataset):
                         sample += ' !sent! ' + str(ref_sent[int(i / 2)])
                         samples.append(sample.replace('[TEMP]', '[ASP]'))
                 else:
-                    print(text,
-                          ' -> Unequal length of reference sentiment and aspects, ingore the refernece sentiment.')
+                    print(text, ' -> Unequal length of reference sentiment and aspects, ignore the reference sentiment.')
                     for i in range(0, len(splits) - 1, 2):
                         sample = text.replace('[ASP]' + splits[i + 1] + '[ASP]',
                                               '[TEMP]' + splits[i + 1] + '[TEMP]').replace('[ASP]', '')

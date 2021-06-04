@@ -23,6 +23,8 @@ from pyabsa.apc.dataset_utils.apc_utils import SENTIMENT_PADDING
 
 from pyabsa.pyabsa_utils import find_target_file
 
+from termcolor import colored
+
 
 class SentimentClassifier:
     def __init__(self, model_arg=None, sentiment_map=None):
@@ -192,28 +194,36 @@ class SentimentClassifier:
                 result['ref_sentiment'] = sentiment_map[real_sent]
                 result['infer result'] = correct[sent == real_sent]
                 results.append(result)
-                line1 = sample['text_raw'][0]
+                text_raw = sample['text_raw'][0]
                 if real_sent == -999:
-                    line2 = '{} --> {}'.format(aspect, sentiment_map[sent])
+                    colored_pred_info = '{} --> {}'.format(aspect, sentiment_map[sent])
                 else:
                     n_labeled += 1
                     if sent == real_sent:
                         n_correct += 1
-                    line2 = '{} --> {}  Real: {} ({})'.format(aspect,
-                                                              sentiment_map[sent],
-                                                              sentiment_map[real_sent],
-                                                              correct[sent == real_sent]
-                                                              )
+                    pred_res = correct[sent == real_sent]
+                    colored_pred_res = colored(pred_res, 'green') if pred_res == 'Correct' else colored(pred_res, 'red')
+                    colored_aspect = colored(aspect, 'magenta')
+                    colored_pred_info = '{} --> {}  Real: {} ({})'.format(colored_aspect,
+                                                                          sentiment_map[sent],
+                                                                          sentiment_map[real_sent],
+                                                                          colored_pred_res
+                                                                          )
                 n_total += 1
                 try:
                     if save_path:
-                        fout.write(line1 + '\n')
-                        fout.write(line2 + '\n')
+                        fout.write(text_raw + '\n')
+                        pred_info = '{} --> {}  Real: {} ({})'.format(aspect,
+                                                                      sentiment_map[sent],
+                                                                      sentiment_map[real_sent],
+                                                                      pred_res
+                                                                      )
+                        fout.write(pred_info + '\n')
                 except:
                     raise IOError('Can not save result!')
                 if print_result:
-                    print(line1)
-                    print(line2)
+                    print(text_raw)
+                    print(colored_pred_info)
 
             print('Total samples:{}'.format(n_total))
             print('Labeled samples:{}'.format(n_labeled))
