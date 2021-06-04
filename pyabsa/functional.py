@@ -136,10 +136,10 @@ def train_apc(parameter_dict=None,
     # load training set
 
     dataset_file = dict()
-    dataset_file['train'] = find_target_file(dataset_path, 'train', exclude_key='infer')
-    if auto_evaluate and find_target_file(dataset_path, 'test', exclude_key='infer'):
-        dataset_file['test'] = find_target_file(dataset_path, 'test', exclude_key='infer')
-    if auto_evaluate and not find_target_file(dataset_path, 'test', exclude_key='infer'):
+    dataset_file['train'] = find_target_file(dataset_path, 'train', exclude_key='infer', find_all=True)
+    if auto_evaluate and find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
+        dataset_file['test'] = find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True)
+    if auto_evaluate and not find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
         print('Cna not find test set using for evaluating!')
     if len(dataset_file) == 0:
         raise RuntimeError('Can not load train set or test set! '
@@ -191,10 +191,10 @@ def train_atepc(parameter_dict=None,
     # load training set
 
     dataset_file = dict()
-    dataset_file['train'] = find_target_file(dataset_path, 'train', exclude_key='infer')
-    if auto_evaluate and find_target_file(dataset_path, 'test', exclude_key='infer'):
-        dataset_file['test'] = find_target_file(dataset_path, 'test', exclude_key='infer')
-    if auto_evaluate and not find_target_file(dataset_path, 'test', exclude_key='infer'):
+    dataset_file['train'] = find_target_file(dataset_path, 'train', exclude_key='infer', find_all=True)
+    if auto_evaluate and find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
+        dataset_file['test'] = find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True)
+    if auto_evaluate and not find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
         print('Cna not find test set using for evaluating!')
     if len(dataset_file) == 0:
         raise RuntimeError('Can not load train set or test set! '

@@ -93,7 +93,7 @@ class SentimentClassifier:
         self.set_sentiment_map(sentiment_map)
 
     def set_sentiment_map(self, sentiment_map):
-        if SENTIMENT_PADDING not in sentiment_map:
+        if sentiment_map and SENTIMENT_PADDING not in sentiment_map:
             sentiment_map[SENTIMENT_PADDING] = ''
         self.sentiment_map = sentiment_map
 
@@ -123,7 +123,7 @@ class SentimentClassifier:
             print('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
 
     def batch_infer(self,
-                    inference_set_path=None,
+                    target_file=None,
                     print_result=True,
                     save_result=False,
                     clear_input_samples=True,
@@ -132,15 +132,16 @@ class SentimentClassifier:
         if clear_input_samples:
             self.clear_input_samples()
 
-        if os.path.isdir(inference_set_path):
-            try:
-                inference_set_path = find_target_file(inference_set_path, 'infer')
-            except Exception as e:
+        if os.path.isdir(target_file):
+            save_path = os.path.join(target_file, 'inference.results')
+            target_file = find_target_file(target_file, 'infer', exclude_key='result', find_all=True)
+            if not target_file:
                 raise FileNotFoundError('Can not find inference dataset!')
-            self.dataset.prepare_infer_dataset(inference_set_path, ignore_error=ignore_error)
-        self.dataset.prepare_infer_dataset(inference_set_path, ignore_error=ignore_error)
+        else:
+            save_path = target_file + '.results'
+        self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=1, shuffle=False)
-        return self._infer(save_path=inference_set_path if save_result else None, print_result=print_result)
+        return self._infer(save_path=save_path if save_result else None, print_result=print_result)
 
     def infer(self, text: str = None,
               print_result=True,
@@ -168,7 +169,7 @@ class SentimentClassifier:
         correct = {True: 'Correct', False: 'Wrong'}
         results = []
         if save_path:
-            fout = open(save_path + '.results', 'w', encoding='utf8')
+            fout = open(save_path, 'w', encoding='utf8')
         with torch.no_grad():
             self.model.eval()
             n_correct = 0
@@ -210,12 +211,9 @@ class SentimentClassifier:
                         fout.write(line2 + '\n')
                 except:
                     raise IOError('Can not save result!')
-                try:
-                    if print_result:
-                        print(line1)
-                        print(line2)
-                except:
-                    raise RuntimeError('Fail to print the result!')
+                if print_result:
+                    print(line1)
+                    print(line2)
 
             print('Total samples:{}'.format(n_total))
             print('Labeled samples:{}'.format(n_labeled))
@@ -226,6 +224,7 @@ class SentimentClassifier:
                     fout.write('Total samples:{}\n'.format(n_total))
                     fout.write('Labeled samples:{}\n'.format(n_labeled))
                     fout.write('Prediction Accuracy:{}%\n'.format(100 * n_correct / n_labeled))
+                    print('inference result saved in: {}'.format(save_path))
             except:
                 pass
         if save_path:

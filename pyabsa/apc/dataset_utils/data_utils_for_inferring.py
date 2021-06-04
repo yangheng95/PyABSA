@@ -12,7 +12,7 @@ from tqdm import tqdm
 from .apc_utils import copy_side_aspect, is_similar
 from .apc_utils import get_lca_ids_and_cdm_vec, get_cdw_vec
 from .apc_utils import get_syntax_distance, build_spc_mask_vec
-from .apc_utils import prepare_input_from_text
+from .apc_utils import load_datasets, prepare_input_from_text
 
 from .apc_utils import SENTIMENT_PADDING
 
@@ -69,10 +69,9 @@ class ABSADataset(Dataset):
     def prepare_infer_sample(self, text: str):
         self.process_data(self.parse_sample(text))
 
-    def prepare_infer_dataset(self, infer_data_path, ignore_error):
+    def prepare_infer_dataset(self, infer_file, ignore_error):
 
-        fin = open(infer_data_path, 'r', encoding='utf-8', newline='\n', errors='ignore')
-        lines = fin.readlines()
+        lines = load_datasets(infer_file)
         samples = []
         for sample in lines:
             if sample:

@@ -24,3 +24,4 @@ def generate_inferring_set_for_apc(dataset_path):
             fout.close()
         except:
             print('Unprocessed file:', file)
+    print('process finished')

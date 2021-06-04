@@ -106,7 +106,7 @@ class AspectExtractor:
         self.set_sentiment_map(sentiment_map)
 
     def set_sentiment_map(self, sentiment_map):
-        if SENTIMENT_PADDING not in sentiment_map:
+        if sentiment_map and SENTIMENT_PADDING not in sentiment_map:
             sentiment_map[SENTIMENT_PADDING] = ''
         self.sentiment_map = sentiment_map
 

@@ -37,11 +37,7 @@ def find_target_file(dir_path, file_type, exclude_key='', find_all=False):
             tmp_files = [p for p in os.listdir(dir_path)
                          if file_type in p.lower()
                          and not (exclude_key and exclude_key in p.lower())]
-            if tmp_files:
-                path = os.path.join(dir_path, tmp_files[0])
-                return path
-            else:
-                return []
+            return os.path.join(dir_path, tmp_files[0]) if tmp_files else []
         else:
             raise FileNotFoundError('No target(s) file found!')
     else:
@@ -52,11 +48,11 @@ def find_target_file(dir_path, file_type, exclude_key='', find_all=False):
                 return [dir_path]
             else:
                 return []
-        if os.path.isdir(dir_path):
-            path = [os.path.join(dir_path, p)
-                    for p in os.listdir(dir_path)
-                    if file_type in p.lower()
-                    and not (exclude_key and exclude_key in p.lower())]
-            return path
+        elif os.path.isdir(dir_path):
+            tmp_res = []
+            tmp_files = os.listdir(dir_path)
+            for file in tmp_files:
+                tmp_res += find_target_file(os.path.join(dir_path, file), file_type, exclude_key, find_all)
+            return tmp_res
         else:
             raise FileNotFoundError('No target(s) file found!')
