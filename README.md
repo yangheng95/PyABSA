@@ -2,7 +2,12 @@
 # 方面术语抽取及方面情感分类工具
 ![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg) 
 [![PyPI](https://img.shields.io/pypi/v/pyabsa)](https://pypi.org/project/pyabsa/)
+![welcome](https://img.shields.io/badge/Contribution-Welcome-brightgreen)
+
+![Repo Size](https://img.shields.io/github/repo-size/yangheng95/pyabsa)
 [![PyPI_downloads](https://img.shields.io/pypi/dm/pyabsa)](https://pypi.org/project/pyabsa/)
+![License](https://img.shields.io/pypi/l/pyabsa?logo=PyABSA)
+
 > Build from LC-ABSA/LCF-ABSA and LCF-ATEPC.
 
 > Easy to use interfaces of aspect term extraction and aspect sentiment classification.
@@ -190,6 +195,16 @@ sent_classifier = train_apc(parameter_dict=None,           # set param_dict=None
 # Aspect Polarity Classification (APC)
 
 Check the detailed usages in [APC examples](examples/aspect_polarity_classification) directory.
+
+## Aspect-Polarity Classification Output Format (方面级性分类输出示例如下):
+```
+love  selena gomez  !!!! she rock !!!!!!!!!!!!!!!! and she 's cool she 's my idol 
+selena gomez --> Positive  Real: Positive (Correct)
+thehils Heard great things about the  ipad  for speech/communication . Educational discounts are problem best bet . Maybe Thanksgiving ? 
+ipad --> Neutral  Real: Neutral (Correct)
+Jamie fox , Eddie Murphy , and  barack obama  because they all are exciting , cute , and inspirational to lots of people including me !!! 
+barack obama --> Positive  Real: Neutral (Wrong)
+```
 
 ## Quick Start
 
