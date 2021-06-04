@@ -29,6 +29,7 @@ import re
 
 
 def split_text(text):
+    text = text.strip()
     word_list = []
     #   输入小写化
     s = text.lower()
@@ -38,8 +39,8 @@ def split_text(text):
             word = match.group(0)
         else:
             word = s[0:1]  # 若非英文单词，直接获取第一个字符
-
-        word_list.append(word)
+        if word:
+            word_list.append(word)
         #   从文本中去掉提取的 word，并去除文本收尾的空格字符
         s = s.replace(word, '', 1).strip(' ')
     return word_list

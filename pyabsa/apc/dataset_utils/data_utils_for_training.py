@@ -120,7 +120,10 @@ class ABSADataset(Dataset):
                 assert 0 <= data['polarity'] <= p_max + 1
             p_min += 1
             p_max += 1
-        assert list(polarities_set) == list(range(p_max - p_min + 1))
+        if -1 in polarities_set:
+            assert sorted(list(polarities_set)) == sorted([-1] + list(range(p_max - p_min)))
+        else:
+            assert sorted(list(polarities_set)) == sorted(list(range(p_max - p_min + 1)))
         opt.polarities_dim = len(polarities_set)
 
         self.data = all_data

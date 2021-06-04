@@ -37,7 +37,7 @@ param_dict = {'model_name': 'bert_spc',   # {slide_lcfs_bert, slide_lcf_bert, lc
 
 save_path = 'state_dict'
 
-datasets_path = 'datasets/Chinese'                   # file or dir are accepted for 'datasets_path'
+datasets_path = 'datasets/Chinese'                         # file or dir are accepted for 'datasets_path'
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=datasets_path,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model

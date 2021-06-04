@@ -14,11 +14,11 @@ from pyabsa import train_apc
 
 
 param_dict = {'model_name': 'bert_spc',   # {slide_lcfs_bert, slide_lcf_bert, lcf_bert, lcfs_bert, bert_spc, bert_base}
-              'batch_size': 16,
+              'batch_size': 32,
               'seed': {36, 6, 86},         # you can use a set of random seeds to train multiple rounds
               'num_epoch': 5,
               'optimizer': "adam",         # {adam, adamw}
-              'learning_rate': 0.00002,
+              'learning_rate': 0.00003,
               'pretrained_bert_name': "bert-base-multilingual-uncased",
               'use_dual_bert': False,      # modeling the local and global context using different BERTs
               'use_bert_spc': True,        # Enable to enhance APC, do not use this parameter in ATE
@@ -37,7 +37,7 @@ param_dict = {'model_name': 'bert_spc',   # {slide_lcfs_bert, slide_lcf_bert, lc
 
 save_path = 'state_dict'
 
-datasets_path = 'datasets/multilingual'                    # file or dir are accepted for 'datasets_path'
+datasets_path = 'datasets'  # file or dir are accepted for 'datasets_path'
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=datasets_path,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
