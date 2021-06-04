@@ -7,7 +7,7 @@
 
 
 ########################################################################################################################
-#                                           LCF-ATEPC training script                                                  #
+#                                               ATEPC training script                                                  #
 ########################################################################################################################
 
 
@@ -15,20 +15,20 @@ from pyabsa import train_atepc
 
 # see hyper-parameters in pyabsa/main/training_configs.py
 param_dict = {'model_name': 'lcf_atepc',
-              'batch_size': 16,
+              'batch_size': 32,
               'seed': {996, 7, 666},
               'num_epoch': 10,
               'optimizer': "adamw",    # {adam, adamw}
-              'learning_rate': 0.00002,
+              'learning_rate': 0.00005,
               'pretrained_bert_name': "bert-base-multilingual-uncased",
               'use_dual_bert': False,  # modeling the local and global context using different BERTs
               'use_bert_spc': False,   # enable to enhance APC, not available for ATE or joint task of APC and ATE
-              'max_seq_len': 80,
-              'log_step': 5,           # evaluate per steps
+              'max_seq_len': 60,
+              'log_step': 50,           # evaluate per steps
               'SRD': 3,                # distance threshold to calculate local context
               'lcf': "cdw",            # {cdw, cdm, fusion}
               'dropout': 0.1,
-              'l2reg': 0.00001,
+              'l2reg': 0.00000,
               # 'polarities_dim': 3    # deprecated, polarity_dim will be automatically detected
               }
 

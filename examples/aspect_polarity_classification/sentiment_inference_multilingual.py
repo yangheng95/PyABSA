@@ -9,7 +9,7 @@
 from pyabsa import load_sentiment_classifier
 
 # Assume the sent_classifier is loaded or obtained using train function
-model_path = 'state_dict/bert_spc_cdw_multilingual'  # pending update
+model_path = 'state_dict/bert_spc_cdw_multilingual'  # please always check update on Google Drive before using
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
                                             auto_device=True  # Use CUDA if available
                                             )

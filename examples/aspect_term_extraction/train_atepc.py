@@ -7,7 +7,7 @@
 
 
 ########################################################################################################################
-#                                           LCF-ATEPC training script                                                  #
+#                                               ATEPC training script                                                  #
 ########################################################################################################################
 
 
@@ -34,7 +34,7 @@ param_dict = {'model_name': 'lcf_atepc',
 
 # Mind that the 'train_atepc' function only evaluates in last few epochs
 
-train_set_path = 'atepc_datasets/laptop14'
+train_set_path = 'atepc_datasets/restaurant14'
 save_path = 'state_dict'
 aspect_extractor = train_atepc(parameter_dict=param_dict,      # set param_dict=None to use default model
                                dataset_path=train_set_path,    # file or dir, dataset(s) will be automatically detected

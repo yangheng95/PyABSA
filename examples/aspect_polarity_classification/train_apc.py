@@ -12,7 +12,7 @@
 
 from pyabsa import train_apc
 
-param_dict = {'model_name': 'slide_lcfs_bert',   # {slide_lcfs_bert, slide_lcfs_bert, lcf_bert, lcfs_bert, bert_spc, bert_base}
+param_dict = {'model_name': 'lcf_bert',   # {slide_lcf_bert, slide_lcf_bert, lcf_bert, lcf_bert, bert_spc, bert_base}
               'batch_size': 32,
               'seed': {1, 2, 3},      # you can use a set of random seeds to train multiple rounds
               # 'seed': 996,               # or use one seed only
@@ -25,10 +25,10 @@ param_dict = {'model_name': 'slide_lcfs_bert',   # {slide_lcfs_bert, slide_lcfs_
               'max_seq_len': 60,
               'log_step': 3,               # Evaluate per steps
               'SRD': 3,                    # Distance threshold to calculate local context
-              'eta': -1,                   # Eta is valid in [0,1] slide_lcfs_bert/slide_lcfs_bert
+              'eta': -1,                   # Eta is valid in [0,1] slide_lcf_bert/slide_lcf_bert
               'sigma': 0.3,                # Sigma is valid in LCA-Net, ranging in [0,1]
               'lcf': "cdw",                # {cdm, cdw} valid in lcf-bert models
-              'window': "lr",              # {lr, l, r} valid in slide_lcfs_bert/slide_lcfs_bert
+              'window': "lr",              # {lr, l, r} valid in slide_lcf_bert/slide_lcf_bert
               'dropout': 0,
               'l2reg': 0.00001,
               # 'polarities_dim': 2,       # deprecated, polarities_dim will be automatic detected
@@ -36,7 +36,6 @@ param_dict = {'model_name': 'slide_lcfs_bert',   # {slide_lcfs_bert, slide_lcfs_
               }
 
 save_path = 'state_dict'
-
 
 datasets_path = 'datasets/laptop14'                        # file or dir are accepted
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
@@ -70,7 +69,7 @@ sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None
                             auto_device=True               # automatic choose CUDA or CPU
                             )
 
-param_dict = {'model_name': 'slide_lcfs_bert',   # {slide_lcfs_bert, slide_lcfs_bert, lcf_bert, lcfs_bert, bert_spc, bert_base}
+param_dict = {'model_name': 'lcf_bert',   # {slide_lcf_bert, slide_lcf_bert, lcf_bert, lcf_bert, bert_spc, bert_base}
               'batch_size': 16,
               'seed': {1, 2, 3},      # you can use a set of random seeds to train multiple rounds
               # 'seed': 996,               # or use one seed only
@@ -83,10 +82,10 @@ param_dict = {'model_name': 'slide_lcfs_bert',   # {slide_lcfs_bert, slide_lcfs_
               'max_seq_len': 80,
               'log_step': 3,               # Evaluate per steps
               'SRD': 3,                    # Distance threshold to calculate local context
-              'eta': -1,                   # Eta is valid in [0,1] slide_lcfs_bert/slide_lcfs_bert
+              'eta': -1,                   # Eta is valid in [0,1] slide_lcf_bert/slide_lcf_bert
               'sigma': 0.3,                # Sigma is valid in LCA-Net, ranging in [0,1]
               'lcf': "cdm",                # {cdm, cdw} valid in lcf-bert models
-              'window': "lr",              # {lr, l, r} valid in slide_lcfs_bert/slide_lcfs_bert
+              'window': "lr",              # {lr, l, r} valid in slide_lcf_bert/slide_lcf_bert
               'dropout': 0,
               'l2reg': 0.00001,
               # 'polarities_dim': 2,       # deprecated, polarities_dim will be automatic detected

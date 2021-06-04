@@ -23,7 +23,7 @@ param_dict = {'model_name': 'bert_spc',   # {slide_lcfs_bert, slide_lcf_bert, lc
               'use_dual_bert': False,      # modeling the local and global context using different BERTs
               'use_bert_spc': True,        # Enable to enhance APC, do not use this parameter in ATE
               'max_seq_len': 80,
-              'log_step': 3,               # Evaluate per steps
+              'log_step': 30,               # Evaluate per steps
               'SRD': 3,                    # Distance threshold to calculate local context
               'eta': -1,                   # Eta is valid in [0,1] slide_lcf_bert/slide_lcfs_bert
               'sigma': 0.3,                # Sigma is valid in LCA-Net, ranging in [0,1]
@@ -37,7 +37,7 @@ param_dict = {'model_name': 'bert_spc',   # {slide_lcfs_bert, slide_lcf_bert, lc
 
 save_path = 'state_dict'
 
-datasets_path = 'example_files/sum_train.dat'              # file or dir are accepted for 'datasets_path'
+datasets_path = 'datasets/multilingual'                    # file or dir are accepted for 'datasets_path'
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=datasets_path,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model

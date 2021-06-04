@@ -12,7 +12,6 @@ from pyabsa import load_aspect_extractor
 
 # All the functions provided by this tool are experimental and for learning purpose only,
 # welcome to help maintain and put forward suggestions
-# There might batch extraction function in the future
 
 examples = ['But the staff was so nice to us .',
             'But the staff was so horrible to us .',
@@ -28,8 +27,7 @@ examples = ['But the staff was so nice to us .',
             ]
 
 # 从Google Drive下载提供的预训练模型
-# Download the provided pre-training model from Google Drive
-model_path = 'state_dict/lcf_atepc_cdw'  # pending update
+model_path = 'state_dict/lcf_atepc_cdw'   # please always check update on Google Drive before using
 
 aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
                                          auto_device=True  # False means load model on CPU

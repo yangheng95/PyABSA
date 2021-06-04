@@ -29,7 +29,6 @@ class SentimentClassifier:
         '''
             from_train_model: load inferring model from trained model
         '''
-        self.sentiment_map = sentiment_map
         self.model_class = {
             'bert_base': BERT_BASE,
             'bert_spc': BERT_SPC,
@@ -90,7 +89,12 @@ class SentimentClassifier:
         self.opt.inputs_cols = self.dataset.input_colses[self.opt.model_name]
         self.opt.initializer = self.opt.initializer
 
+        self.sentiment_map = None
+        self.set_sentiment_map(sentiment_map)
+
     def set_sentiment_map(self, sentiment_map):
+        if SENTIMENT_PADDING not in sentiment_map:
+            sentiment_map[SENTIMENT_PADDING] = ''
         self.sentiment_map = sentiment_map
 
     def to(self, device=None):

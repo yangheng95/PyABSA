@@ -24,8 +24,7 @@ examples = ['But the staff was so nice to us .',
             ]
 
 # 从Google Drive下载提供的预训练模型
-# Download the provided pre-training model from Google Drive
-model_path = 'state_dict/lcf_atepc_cdw'  # pending update
+model_path = 'state_dict/lcf_atepc_cdw'   # please always check update on Google Drive before using
 
 # 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
 sentiment_map = {0: 'Negative', 1: "Neutral", 2: 'Positive', -999: ''}

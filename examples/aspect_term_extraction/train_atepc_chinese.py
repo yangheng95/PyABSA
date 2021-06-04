@@ -6,27 +6,28 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 ########################################################################################################################
-#                                           LCF-ATEPC training script                                                  #
+#                                               ATEPC training script                                                  #
 ########################################################################################################################
 
 
 from pyabsa import train_atepc
 
 # see hyper-parameters in pyabsa/main/training_configs.py
-param_dict = {'model_name': 'lcf_atepc',
+param_dict = {'model_name': 'lcf_atepc',  # {lcf_atepc, rlcf_atepc}
               'batch_size': 16,
               'seed': {996, 7, 666},
-              'device': 'cuda',        # overrides auto_device parameter
+              'device': 'cuda',           # overrides auto_device parameter
               'num_epoch': 10,
-              'optimizer': "adamw",    # {adam, adamw}
+              'optimizer': "adamw",       # {adam, adamw}
               'learning_rate': 0.00002,
               'pretrained_bert_name': "bert-base-chinese",
-              'use_dual_bert': False,  # modeling the local and global context using different BERTs
-              'use_bert_spc': False,   # Enable to enhance APC, not available for ATE or joint task of APC and ATE
+              'use_dual_bert': False,     # modeling the local and global context using different BERTs
+              'use_bert_spc': False,      # Enable to enhance APC in lcf_atepc,
+                                          # not available for ATE or joint task of APC and ATE
               'max_seq_len': 80,
-              'log_step': 5,           # Evaluate per steps
-              'SRD': 3,                # Distance threshold to calculate local context
-              'lcf': "cdw",            # {cdw, cdm, fusion}
+              'log_step': 5,              # Evaluate per steps
+              'SRD': 3,                   # Distance threshold to calculate local context
+              'lcf': "cdw",               # {cdw, cdm, fusion}
               'dropout': 0.1,
               'l2reg': 0.00001,
               # 'polarities_dim': 2      # Deprecated, polarity_dim will be automatically detected
