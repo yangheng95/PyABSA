@@ -5,9 +5,10 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-import tqdm
 
 from pyabsa.apc.dataset_utils.apc_utils import get_lca_ids_and_cdm_vec, get_cdw_vec
+
+from pyabsa.atepc.dataset_utils.atepc_utils import split_text
 
 SENTIMENT_PADDING = -999
 
@@ -54,16 +55,17 @@ class InputFeatures(object):
 
 def parse_example(example):
     tokens = []
-    for token in example.split():
+    # for token in example.split():
+    for token in split_text(example):
         tokens.append(token)
     return [(tokens, ['$NA$'] * len(tokens), SENTIMENT_PADDING)]
 
 
 def parse_examples(examples):
     data = []
-    for example in tqdm.tqdm(examples, postfix='convert examples to features'):
+    for example in examples:
         tokens = []
-        for token in example.split():
+        for token in split_text(example):
             tokens.append(token)
         data.append((tokens, ['$NA$'] * len(tokens), SENTIMENT_PADDING))
     return data

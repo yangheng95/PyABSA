@@ -60,8 +60,8 @@ class AspectExtractor:
                 self.opt = pickle.load(open(config_path, 'rb'))
 
                 if state_dict_path:
-                    self.opt.bert_model = self.opt.pretrained_bert_name
-                    bert_base_model = BertModel.from_pretrained(self.opt.bert_model)
+                    self.opt.pretrained_bert_name = self.opt.pretrained_bert_name
+                    bert_base_model = BertModel.from_pretrained(self.opt.pretrained_bert_name)
                     bert_base_model.config.num_labels = self.num_labels
                     self.model = model_classes[self.opt.model_name](bert_base_model, self.opt)
                     self.model.load_state_dict(torch.load(state_dict_path))
@@ -72,7 +72,7 @@ class AspectExtractor:
                 warnings.warn('Fail to load the model, please download our latest models at Google Drive: '
                               'https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing')
 
-        self.tokenizer = BertTokenizer.from_pretrained(self.opt.bert_model, do_lower_case=True)
+        self.tokenizer = BertTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
 
         random.seed(self.opt.seed)
         np.random.seed(self.opt.seed)
@@ -102,9 +102,12 @@ class AspectExtractor:
                                                         weight_decay=self.opt.l2reg)
 
         self.eval_dataloader = None
-        self.sentiment_map = sentiment_map
+        self.sentiment_map = None
+        self.set_sentiment_map(sentiment_map)
 
     def set_sentiment_map(self, sentiment_map):
+        if SENTIMENT_PADDING not in sentiment_map:
+            sentiment_map[SENTIMENT_PADDING] = ''
         self.sentiment_map = sentiment_map
 
     def to(self, device=None):
@@ -200,7 +203,7 @@ class AspectExtractor:
             for j, m in enumerate(label_ids[0]):
                 if j == 0:
                     continue
-                elif label_ids[0][j] == len(self.label_list):
+                elif len(pred_iobs) == len(all_tokens[0]):
                     break
                 else:
                     pred_iobs.append(label_map.get(ate_logits[0][j], 'O'))

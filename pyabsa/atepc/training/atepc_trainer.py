@@ -23,6 +23,7 @@ from transformers.models.bert.modeling_bert import BertModel
 
 from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
 from ..models.lcf_atepc import LCF_ATEPC
+from ..models.rlcf_atepc import RLCF_ATEPC
 from pyabsa.logger import get_logger
 
 import warnings
@@ -57,14 +58,12 @@ def train4atepc(config):
         'adamw': torch.optim.AdamW
     }
 
-    opt.bert_model = opt.pretrained_bert_name
-
-    tokenizer = BertTokenizer.from_pretrained(opt.bert_model, do_lower_case=True)
+    tokenizer = BertTokenizer.from_pretrained(opt.pretrained_bert_name, do_lower_case=True)
     train_examples = processor.get_train_examples(opt.dataset_file['train'], 'train')
     eval_examples = processor.get_test_examples(opt.dataset_file['test'], 'test')
     num_train_optimization_steps = int(
         len(train_examples) / opt.batch_size / opt.gradient_accumulation_steps) * opt.num_epoch
-    bert_base_model = BertModel.from_pretrained(opt.bert_model)
+    bert_base_model = BertModel.from_pretrained(opt.pretrained_bert_name)
     bert_base_model.config.num_labels = num_labels
 
     for arg in vars(opt):
@@ -122,9 +121,9 @@ def train4atepc(config):
                 optimizer.zero_grad()
                 global_step += 1
                 global_step += 1
-                if epoch >= opt.num_epoch / 2 or opt.num_epoch <= 2:
+                if epoch >= opt.num_epoch / 2:
                     if global_step % opt.log_step == 0:
-                        apc_result, ate_result = evaluate(eval_ATE=not opt.use_bert_spc)
+                        apc_result, ate_result = evaluate(eval_ATE=not (opt.model_name == 'lcf_atepc' and opt.use_bert_spc))
                         # if save_path:
                         #     try:
                         #         shutil.rmtree(save_path)
@@ -161,9 +160,9 @@ def train4atepc(config):
                         postfix += f' APC_ACC: {current_apc_test_acc}(max:{max_apc_test_acc}) | ' \
                                    f' APC_F1: {current_apc_test_f1}(max:{max_apc_test_f1}) | '
 
-                        if opt.use_bert_spc:
+                        if (opt.model_name == 'lcf_atepc' and opt.use_bert_spc):
                             postfix += f' ATE_F1: {current_apc_test_f1}(max:{max_apc_test_f1})' \
-                                       f' (Unreliable since `use_bert_spc` is "True".)'
+                                       f' N.A. for LCF-ATEPC using BERT-SPC)'
                         else:
                             postfix += f'ATE_F1: {current_ate_test_f1}(max:{max_ate_test_f1})'
 
@@ -193,6 +192,7 @@ def train4atepc(config):
     # init the model behind the convert_examples_to_features function in case of updating polarities_dim
     model_classes = {
         'lcf_atepc': LCF_ATEPC,
+        'rlcf_atepc': RLCF_ATEPC
     }
     model = model_classes[opt.model_name](bert_base_model, opt=opt)
     model.to(opt.device)
@@ -252,8 +252,6 @@ def train4atepc(config):
                     test_apc_logits_all = torch.cat((test_apc_logits_all, apc_logits), dim=0)
 
             if eval_ATE:
-                if not opt.use_bert_spc:
-                    label_ids = model.get_batch_token_labels_bert_base_indices(label_ids)
                 ate_logits = torch.argmax(F.log_softmax(ate_logits, dim=2), dim=2)
                 ate_logits = ate_logits.detach().cpu().numpy()
                 label_ids = label_ids.to('cpu').numpy()

@@ -97,7 +97,7 @@ convert_apc_set_to_atepc(r'../apc_usages/datasets/restaurant16')
 from pyabsa import train_atepc
 
 # see hyper-parameters in pyabsa/main/training_configs.py
-param_dict = {'model_name': 'lcf_atepc',
+param_dict = {'model_name': 'rlcf_atepc',   #  {lcf_atepc, rlcf_atepc}
               'batch_size': 16,
               'seed': 1,
               'device': 'cuda',
@@ -184,8 +184,8 @@ model_path_to_save = 'state_dict'
 sent_classifier = train_apc(parameter_dict=param_dict,    # set param_dict=None to use default model
                             dataset_path=train_set_path,  # file or dir, datasets will be automatically detected
                             model_path_to_save=model_path_to_save,  # set model_path_to_save=None to avoid save model
-                            auto_evaluate=False,   # evaluate model while training if test set is available
-                            auto_device=True  # Auto choose CUDA or CPU
+                            auto_evaluate=False,          # evaluate model while training if test set is available
+                            auto_device=True              # Auto choose CUDA or CPU
                             )
 
 # Or, if you have the test set, this function also could evaluate model while training
@@ -247,35 +247,11 @@ from pyabsa import generate_inferring_set_for_apc
 generate_inferring_set_for_apc('datasets/restaurant14')
 ```
 
-How to set hyper-parameters:
-
-```
-param_dict = {'model_name': 'slide_lcf_bert',  # {slide_lcfs_bert, slide_lcf_bert lcf_bert, lcfs_bert, bert_spc, bert_base}
-              'batch_size': 16,
-              'seed': {1, 2, 3},                        # you can use a set of random seeds to train multiple rounds
-              # 'seed': 996,                    # or use one seed only
-              'device': 'cuda',
-              'num_epoch': 6,
-              'optimizer': "adamw",              # {adam, adamw}
-              'learning_rate': 0.00002,
-              'pretrained_bert_name': "bert-base-uncased",
-              'use_dual_bert': False,           # modeling the local and global context using different BERTs
-              'use_bert_spc': True,             # Enable to enhance APC, do not use this parameter in ATE or joint task of APC and APC
-              'max_seq_len': 80,
-              'log_step': 3,                    # Evaluate per steps
-              'SRD': 3,                         # Distance threshold to calculate local context
-              'eta': -1,                        # Eta is valid in [0,1]
-              'sigma': 0.3,                     # Sigma is valid in [0,1]
-              'lcf': "cdw",                     # {cdm, cdw}
-              'window': "lr",                   # {lr, l, r}
-              'dropout': 0.3,
-              'l2reg': 0.00001,
-              }
-```
 
 # Acknowledgement
 
 This work build from LC-ABSA/LCF-ABSA and LCF-ATEPC, and other impressive works such as PyTorch-ABSA and LCFS-BERT. Feel free to help us optimize code or add new features!
+
 欢迎提出疑问、意见和建议，或者帮助完善仓库，谢谢！
 
 # To Do
