@@ -53,7 +53,6 @@ def assemble_aspects(fname):
         lines[i] = lines[i].replace('$T$', ' $T$ ').replace('  ', ' ')
 
         if len(aspects_in_one_sentence) == 0:
-
             aspects_in_one_sentence.append([lines[i], lines[i + 1], lines[i + 2]])
             continue
         if is_similar(aspects_in_one_sentence[-1][0], lines[i]):

@@ -4,14 +4,14 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-
+import os
 
 import tqdm
 from torch.utils.data import Dataset
 from .apc_utils import is_similar, copy_side_aspect
 from .apc_utils import get_lca_ids_and_cdm_vec, get_cdw_vec
 from .apc_utils import get_syntax_distance, build_spc_mask_vec
-from .apc_utils import prepare_input_from_text
+from .apc_utils import load_datasets, prepare_input_from_text
 
 
 class ABSADataset(Dataset):
@@ -26,12 +26,10 @@ class ABSADataset(Dataset):
     }
 
     def __init__(self, fname, tokenizer, opt):
-
         ABSADataset.opt = opt
 
-        fin = open(fname, 'r', encoding='utf-8', newline='\n', errors='ignore')
-        lines = fin.readlines()
-        fin.close()
+        lines = load_datasets(fname)
+
         all_data = []
 
         # record polarities type to update polarities_dim
@@ -122,8 +120,8 @@ class ABSADataset(Dataset):
                 assert 0 <= data['polarity'] <= p_max + 1
             p_min += 1
             p_max += 1
-        assert len(polarities_set) == len(range(p_max - p_min)) + 1
-        opt.polarities_dim = p_max + 1
+        assert list(polarities_set) == list(range(p_max - p_min + 1))
+        opt.polarities_dim = len(polarities_set)
 
         self.data = all_data
 

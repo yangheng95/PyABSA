@@ -123,7 +123,8 @@ def train4atepc(config):
                 global_step += 1
                 if epoch >= opt.num_epoch / 2:
                     if global_step % opt.log_step == 0:
-                        apc_result, ate_result = evaluate(eval_ATE=not (opt.model_name == 'lcf_atepc' and opt.use_bert_spc))
+                        apc_result, ate_result = evaluate(
+                            eval_ATE=not (opt.model_name == 'lcf_atepc' and opt.use_bert_spc))
                         # if save_path:
                         #     try:
                         #         shutil.rmtree(save_path)

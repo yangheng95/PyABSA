@@ -6,11 +6,10 @@
 # Copyright (C) 2021. All Rights Reserved.
 # Usage: Evaluate on given text or inference dataset
 
-from pyabsa import find_target_file
 from pyabsa import load_sentiment_classifier
 
 # Assume the sent_classifier is loaded or obtained using train function
-model_path = 'state_dict/bert_spc_cdw_acc_96.48_f1_95.91'   # please always check update on Google Drive before using
+model_path = 'state_dict/bert_spc_cdw_acc_96.05_f1_95.3'   # please always check update on Google Drive before using
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
                                             auto_device=True  # Use CUDA if available
                                             )

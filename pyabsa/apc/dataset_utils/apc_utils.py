@@ -156,6 +156,19 @@ class Tokenizer4Bert:
         return self.tokenizer.tokenize(text)
 
 
+def load_datasets(fname):
+    lines = []
+    if isinstance(fname, str):
+        fname = [fname]
+
+    for f in fname:
+        print('loading: {}'.format(f))
+        fin = open(f, 'r', encoding='utf-8')
+        lines.extend(fin.readlines())
+        fin.close()
+    return lines
+
+
 def prepare_input_from_text(opt, tokenizer, text_left, text_right, aspect):
     if opt.dynamic_truncate:
         # dynamic truncation on input text

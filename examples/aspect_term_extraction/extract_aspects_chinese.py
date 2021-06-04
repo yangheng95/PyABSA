@@ -22,7 +22,7 @@ examples = ['尤 其 是 照 的 大 尺 寸 照 片 时 效 果 也 是 非 常
             ]
 
 # 从Google Drive下载提供的预训练模型
-model_path = 'state_dict/lcf_atepc_cdw'  # please always check update on Google Drive before using
+model_path = 'state_dict/lcf_atepc_cdw_apcacc_96.62_apcf1_96.09_atef1_87.89'  # please always check update on Google Drive before using
 
 # 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
 sentiment_map = {0: 'Bad', 1: 'Good', -999: ''}
@@ -45,5 +45,3 @@ atepc_result = aspect_extractor.extract_aspect(examples=examples,  # list-suppor
                                                pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
                                                )
 
-
-# print(atepc_result)

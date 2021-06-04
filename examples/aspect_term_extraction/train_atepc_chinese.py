@@ -19,7 +19,7 @@ param_dict = {'model_name': 'lcf_atepc',  # {lcf_atepc, rlcf_atepc}
               'device': 'cuda',           # overrides auto_device parameter
               'num_epoch': 10,
               'optimizer': "adamw",       # {adam, adamw}
-              'learning_rate': 0.00002,
+              'learning_rate': 0.00005,
               'pretrained_bert_name': "bert-base-chinese",
               'use_dual_bert': False,     # modeling the local and global context using different BERTs
               'use_bert_spc': False,      # Enable to enhance APC in lcf_atepc,
@@ -35,33 +35,7 @@ param_dict = {'model_name': 'lcf_atepc',  # {lcf_atepc, rlcf_atepc}
 
 save_path = 'state_dict'
 
-# Mind that 'train_atepc' function only evaluates in last few epochs
-#
-# train_set_path = 'atepc_datasets/Chinese/camera'
-# aspect_extractor = train_atepc(parameter_dict=param_dict,     # set param_dict=None to use default model
-#                                dataset_path=train_set_path,   # file or dir, dataset(s) will be automatically detected
-#                                model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
-#                                auto_evaluate=True,            # evaluate model while training if test set is available
-#                                auto_device=True               # Auto choose CUDA or CPU
-#                                )
-#
-# train_set_path = 'atepc_datasets/Chinese/car'
-# aspect_extractor = train_atepc(parameter_dict=param_dict,     # set param_dict=None to use default model
-#                                dataset_path=train_set_path,   # file or dir, dataset(s) will be automatically detected
-#                                model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
-#                                auto_evaluate=True,            # evaluate model while training if test set is available
-#                                auto_device=True               # Auto choose CUDA or CPU
-#                                )
-#
-# train_set_path = 'atepc_datasets/Chinese/notebook'
-# aspect_extractor = train_atepc(parameter_dict=param_dict,     # set param_dict=None to use default model
-#                                dataset_path=train_set_path,   # file or dir, dataset(s) will be automatically detected
-#                                model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
-#                                auto_evaluate=True,            # evaluate model while training if test set is available
-#                                auto_device=True               # Auto choose CUDA or CPU
-#                                )
-
-train_set_path = 'atepc_datasets/Chinese/phone'
+train_set_path = 'atepc_datasets/Chinese'
 aspect_extractor = train_atepc(parameter_dict=param_dict,     # set param_dict=None to use default model
                                dataset_path=train_set_path,   # file or dir, dataset(s) will be automatically detected
                                model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model

@@ -7,6 +7,8 @@
 
 import tqdm
 
+from pyabsa.pyabsa_utils import find_target_file
+
 from pyabsa.apc.dataset_utils.apc_utils import get_lca_ids_and_cdm_vec, get_cdw_vec
 
 SENTIMENT_PADDING = -999
@@ -108,7 +110,10 @@ class DataProcessor(object):
     @classmethod
     def _read_tsv(cls, input_file, quotechar=None):
         """Reads a tab separated value file."""
-        return readfile(input_file)
+        data = []
+        for file in input_file:
+            data += readfile(file)
+        return data
 
 
 class ATEPCProcessor(DataProcessor):
@@ -277,7 +282,7 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
             assert 0 <= data.polarity <= p_max + 1
         p_min += 1
         p_max += 1
-    assert len(polarities_set) == len(range(p_max - p_min)) + 1
-    opt.polarities_dim = p_max + 1
+    assert list(polarities_set) == list(range(p_max - p_min + 1))
+    opt.polarities_dim = len(polarities_set)
 
     return features
