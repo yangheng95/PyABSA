@@ -35,7 +35,7 @@ def assemble_aspects(fname):
                 asp_begin = (sample[0].split().index('$T$'))
                 asp_end = sample[0].split().index('$T$') + len(sample[1].split())
                 for i in range(asp_begin, asp_end):
-                    polarities_tmp[i] = int(sample[2]) + 1
+                    polarities_tmp[i] = int(sample[2])
                     if i - sample[0].split().index('$T$') < 1:
                         tags[i] = 'B-ASP'
                     else:
@@ -105,7 +105,11 @@ def convert(fname):
 # 将数据集中的aspect切割出来
 def convert_apc_set_to_atepc(path):
     for target_file in find_target_file(path, file_type='', exclude_key='atepc', find_all=True):
-        convert(target_file)
+        try:
+            convert(target_file)
+        except:
+            print('failed to process"{}'.format(target_file))
+    print('finished')
 
 
 # 将数据集中的aspect切割出来

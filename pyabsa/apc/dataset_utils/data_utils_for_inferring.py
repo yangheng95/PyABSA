@@ -56,7 +56,8 @@ class ABSADataset(Dataset):
                         sample += ' !sent! ' + str(ref_sent[int(i / 2)])
                         samples.append(sample.replace('[TEMP]', '[ASP]'))
                 else:
-                    print(text, ' -> Unequal length of reference sentiment and aspects, ignore the reference sentiment.')
+                    print(_text,
+                          ' -> Unequal length of reference sentiment and aspects, ignore the reference sentiment.')
                     for i in range(0, len(splits) - 1, 2):
                         sample = text.replace('[ASP]' + splits[i + 1] + '[ASP]',
                                               '[TEMP]' + splits[i + 1] + '[TEMP]').replace('[ASP]', '')
@@ -90,7 +91,11 @@ class ABSADataset(Dataset):
                 # check for given polarity
                 if '!sent!' in text:
                     text, polarity = text.split('!sent!')[0].strip(), text.split('!sent!')[1].strip()
-                    polarity = int(polarity) + 1 if polarity else SENTIMENT_PADDING
+                    polarity = int(polarity) if polarity else SENTIMENT_PADDING
+                    if polarity < 0:
+                        raise RuntimeError(
+                            'Invalid sentiment label detected, only please label the sentiment between {0, N-1} '
+                            '(assume there are N types of sentiment polarities.)')
                 else:
                     polarity = SENTIMENT_PADDING
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: AspectExtractor.py
+# file: aspect_extractor.py
 # time: 2021/5/26 0026
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95

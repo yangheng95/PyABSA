@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pyabsa',
-    version='0.6.3.4',
+    version='0.6.5',
     description='This tool provides the sota models for aspect term extraction (ATE) '
                 'and aspect polarity classification (APC)',
     # The project's main homepage.
@@ -21,7 +21,7 @@ setup(
     python_requires=">=3.6",
     packages=find_packages(),
     include_package_data=True,
-    data_files=[('config', ['pyabsa/apc/training/training_configs.json'])],
+    data_files=[],
     # Choose your license
     license='MIT',
     install_requires=['transformers>=4.4.2', 'spacy', 'networkx', 'seqeval', 'tqdm','termcolor'],

@@ -90,7 +90,7 @@ Check the detailed usages in [ATE examples](examples/aspect_term_extraction) dir
 1. Convert APC datasets to ATEPC datasets
 
 If you got apc datasets with the same format as provided 
-   [apc datasets](examples/aspect_polarity_classification/datasets),
+   [apc datasets](examples/aspect_polarity_classification/apc_datasets),
 you can convert them to atepc datasets:
 
 ```

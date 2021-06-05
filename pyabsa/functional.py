@@ -9,120 +9,37 @@ import os
 import copy
 from argparse import Namespace
 
-from pyabsa.pyabsa_utils import find_target_file, get_auto_device
+from pyabsa.pyabsa_utils import get_auto_device, detect_dataset
 
-from pyabsa.apc.inferring.SentimentClassifier import SentimentClassifier
+from pyabsa.apc.inferring.sentiment_classifier import SentimentClassifier
 from pyabsa.apc.training.apc_trainer import train4apc
-from pyabsa.apc.training import apc_config
-from pyabsa.apc.dataset_utils.apc_utils import parse_apc_params
 
 from pyabsa.atepc.training.atepc_trainer import train4atepc
-from pyabsa.atepc.inferring.AspectExtractor import AspectExtractor
-from pyabsa.atepc.training import atepc_config
+from pyabsa.atepc.inferring.aspect_extractor import AspectExtractor
+
+from pyabsa.config.atepc_config import atepc_param_dict
+from pyabsa.config.apc_config import apc_param_dict
+
 
 choice = get_auto_device()
 
 
-def init_apc_config(config_dict, auto_device=True):
-    config = dict()
-    config['model_name'] = apc_config.model_name
-    config['SRD'] = apc_config.SRD
-    config['batch_size'] = apc_config.batch_size
-    config['eta'] = apc_config.eta
-    config['dropout'] = apc_config.dropout
-    config['l2reg'] = apc_config.l2reg
-    config['lcf'] = apc_config.lcf
-    config['initializer'] = apc_config.initializer
-    config['learning_rate'] = apc_config.learning_rate
-    config['max_seq_len'] = apc_config.max_seq_len
-    config['num_epoch'] = apc_config.num_epoch
-    config['optimizer'] = apc_config.optimizer
-    config['pretrained_bert_name'] = apc_config.pretrained_bert_name
-    config['use_bert_spc'] = apc_config.use_bert_spc
-    config['use_dual_bert'] = apc_config.use_dual_bert
-    config['window'] = apc_config.window
-    config['seed'] = apc_config.seed
-    config['embed_dim'] = apc_config.embed_dim
-    config['hidden_dim'] = apc_config.hidden_dim
-    config['polarities_dim'] = apc_config.polarities_dim
-    config['sigma'] = apc_config.sigma
-    config['log_step'] = apc_config.log_step
-    config['dynamic_truncate'] = apc_config.dynamic_truncate
+def init_config(config_dict, base_config_dict, auto_device=True):
+    if config_dict:
+        if auto_device and 'device' not in config_dict:
+            if choice >= 0:
+                base_config_dict['device'] = 'cuda:' + str(choice)
+            else:
+                base_config_dict['device'] = 'cpu'
+        if not auto_device and 'device' not in config_dict:
+            base_config_dict['device'] = 'cpu'
+        # reload hyper-parameter from parameter dict
+        for key in config_dict:
+            base_config_dict[key] = config_dict[key]
 
-    # reload hyper-parameter from training config
-    path = os.path.abspath(__file__)
-    folder = os.path.dirname(path)
-    config_path = os.path.join(folder, 'apc/training/training_configs.json')
-    _config = vars(parse_apc_params(config_path)[0])
-    for key in config:
-        _config[key] = config[key]
+    apc_config = Namespace(**base_config_dict)
 
-    if auto_device and 'device' not in _config:
-        if choice >= 0:
-            _config['device'] = 'cuda:' + str(choice)
-        else:
-            _config['device'] = 'cpu'
-    if not auto_device and 'device' not in _config:
-        _config['device'] = 'cpu'
-
-    if not config_dict:
-        config_dict = dict()
-    # reload hyper-parameter from parameter dict
-    for key in config_dict:
-        _config[key] = config_dict[key]
-
-    _config = Namespace(**_config)
-
-    return _config
-
-
-def init_atepc_config(config_dict, auto_device=True):
-    config = dict()
-    config['model_name'] = atepc_config.model_name
-    config['SRD'] = atepc_config.SRD
-    config['batch_size'] = atepc_config.batch_size
-    config['dropout'] = atepc_config.dropout
-    config['l2reg'] = atepc_config.l2reg
-    config['lcf'] = atepc_config.lcf
-    config['initializer'] = atepc_config.initializer
-    config['learning_rate'] = atepc_config.learning_rate
-    config['max_seq_len'] = atepc_config.max_seq_len
-    config['num_epoch'] = atepc_config.num_epoch
-    config['optimizer'] = atepc_config.optimizer
-    config['pretrained_bert_name'] = atepc_config.pretrained_bert_name
-    config['use_bert_spc'] = atepc_config.use_bert_spc
-    config['use_dual_bert'] = atepc_config.use_dual_bert
-    config['seed'] = atepc_config.seed
-    config['embed_dim'] = atepc_config.embed_dim
-    config['hidden_dim'] = atepc_config.hidden_dim
-    config['polarities_dim'] = atepc_config.polarities_dim
-    config['log_step'] = atepc_config.log_step
-    config['gradient_accumulation_steps'] = atepc_config.gradient_accumulation_steps
-    # # reload hyper-parameter from training config
-    # path = os.path.abspath(__file__)
-    # folder = os.path.dirname(path)
-    # config_path = os.path.join(folder, 'atepc/training/experiments.json')
-    # _config = vars(parse_apc_params(config_path)[0])
-    # for key in config:
-    #     _config[key] = config[key]
-
-    if auto_device and 'device' not in config:
-        if choice >= 0:
-            config['device'] = 'cuda:' + str(choice)
-        else:
-            config['device'] = 'cpu'
-    if not auto_device and 'device' not in config:
-        config['device'] = 'cpu'
-
-    if not config_dict:
-        config_dict = dict()
-    # reload hyper-parameter from parameter dict
-    for key in config_dict:
-        config[key] = config_dict[key]
-
-    _config = Namespace(**config)
-
-    return _config
+    return apc_config
 
 
 def train_apc(parameter_dict=None,
@@ -135,17 +52,9 @@ def train_apc(parameter_dict=None,
     '''
     # load training set
 
-    dataset_file = dict()
-    dataset_file['train'] = find_target_file(dataset_path, 'train', exclude_key='infer', find_all=True)
-    if auto_evaluate and find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
-        dataset_file['test'] = find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True)
-    if auto_evaluate and not find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
-        print('Cna not find test set using for evaluating!')
-    if len(dataset_file) == 0:
-        raise RuntimeError('Can not load train set or test set! '
-                           'Make sure there are (only) one trainset and (only) one testset in the path:', dataset_path)
+    dataset_file = detect_dataset(dataset_path, auto_evaluate)
 
-    config = init_apc_config(parameter_dict, auto_device)
+    config = init_config(parameter_dict, apc_param_dict, auto_device)
     config.dataset_path = dataset_path
     config.model_path_to_save = model_path_to_save
     config.dataset_file = dataset_file
@@ -190,18 +99,9 @@ def train_atepc(parameter_dict=None,
     '''
     # load training set
 
-    dataset_file = dict()
-    dataset_file['train'] = find_target_file(dataset_path, 'train', exclude_key='infer', find_all=True)
-    if auto_evaluate and find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
-        dataset_file['test'] = find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True)
-    if auto_evaluate and not find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
-        print('Cna not find test set using for evaluating!')
-    if len(dataset_file) == 0:
-        raise RuntimeError('Can not load train set or test set! '
-                           'Make sure there are (only) one trainset and (only) one testset in the path:',
-                           dataset_path)
+    dataset_file = detect_dataset(dataset_path, auto_evaluate)
 
-    config = init_atepc_config(parameter_dict, auto_device)
+    config = init_config(parameter_dict, atepc_param_dict, auto_device)
     config.dataset_path = dataset_path
     config.model_path_to_save = model_path_to_save
     config.dataset_file = dataset_file

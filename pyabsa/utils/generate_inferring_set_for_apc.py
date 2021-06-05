@@ -6,7 +6,7 @@
 from pyabsa.pyabsa_utils import find_target_file
 
 
-# convert datasets in this repo for inferring
+# convert atepc_datasets in this repo for inferring
 def generate_inferring_set_for_apc(dataset_path):
     train_datasets = find_target_file(dataset_path, 'train', exclude_key='infer', find_all=True)
     test_datasets = find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True)
@@ -20,7 +20,7 @@ def generate_inferring_set_for_apc(dataset_path):
 
             for i in range(0, len(lines), 3):
                 sample = lines[i].strip().replace('$T$', '[ASP]{}[ASP]'.format(lines[i + 1].strip()))
-                fout.write(sample + ' !sent! ' + lines[i + 2])
+                fout.write(sample + ' !sent! ' + lines[i + 2].strip() + '\n')
             fout.close()
         except:
             print('Unprocessed file:', file)

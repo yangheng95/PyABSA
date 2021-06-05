@@ -168,6 +168,7 @@ class SentimentClassifier:
             sentiment_map = {0: 'Negative', 1: "Neutral", 2: 'Positive', SENTIMENT_PADDING: ''}
         else:
             sentiment_map = {p: p for p in range(self.opt.polarities_dim)}
+            sentiment_map[SENTIMENT_PADDING] = ''
         correct = {True: 'Correct', False: 'Wrong'}
         results = []
         if save_path:
