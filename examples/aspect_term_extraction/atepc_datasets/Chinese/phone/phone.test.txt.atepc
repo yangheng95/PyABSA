@@ -6429,13 +6429,14 @@
 够 O -999
 大 O -999
 
-手 B-ASP 0
-机 I-ASP 0
-震 I-ASP 0
-动 I-ASP 0
+通 B-ASP 0
+讯 I-ASP 0
+录 I-ASP 0
+容 I-ASP 0
+量 I-ASP -999
 不 O -999
 够 O -999
-强 O -999
+大 O -999
 
 就 O -999
 是 O -999

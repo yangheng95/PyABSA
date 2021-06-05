@@ -56,3 +56,17 @@ def find_target_file(dir_path, file_type, exclude_key='', find_all=False):
             return tmp_res
         else:
             raise FileNotFoundError('No target(s) file found!')
+
+
+def detect_dataset(dataset_path, auto_evaluate):
+    dataset_file = dict()
+    dataset_file['train'] = find_target_file(dataset_path, 'train', exclude_key='infer', find_all=True)
+    if auto_evaluate and find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
+        dataset_file['test'] = find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True)
+    if auto_evaluate and not find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
+        print('Cna not find test set using for evaluating!')
+    if len(dataset_file) == 0:
+        raise RuntimeError('Can not load train set or test set! '
+                           'Make sure there are (only) one trainset and (only) one testset in the path:',
+                           dataset_path)
+    return dataset_file

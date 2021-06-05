@@ -59,37 +59,58 @@ def train4atepc(config):
     }
 
     tokenizer = BertTokenizer.from_pretrained(opt.pretrained_bert_name, do_lower_case=True)
-    train_examples = processor.get_train_examples(opt.dataset_file['train'], 'train')
-    eval_examples = processor.get_test_examples(opt.dataset_file['test'], 'test')
-    num_train_optimization_steps = int(
-        len(train_examples) / opt.batch_size / opt.gradient_accumulation_steps) * opt.num_epoch
     bert_base_model = BertModel.from_pretrained(opt.pretrained_bert_name)
     bert_base_model.config.num_labels = num_labels
 
     for arg in vars(opt):
         logger.info('>>> {0}: {1}'.format(arg, getattr(opt, arg)))
 
+    train_examples = processor.get_train_examples(opt.dataset_file['train'], 'train')
+    num_train_optimization_steps = int(
+        len(train_examples) / opt.batch_size / opt.gradient_accumulation_steps) * opt.num_epoch
+    train_features = convert_examples_to_features(train_examples, label_list, opt.max_seq_len, tokenizer, opt)
+    all_spc_input_ids = torch.tensor([f.input_ids_spc for f in train_features], dtype=torch.long)
+    all_input_mask = torch.tensor([f.input_mask for f in train_features], dtype=torch.long)
+    all_segment_ids = torch.tensor([f.segment_ids for f in train_features], dtype=torch.long)
+    all_label_ids = torch.tensor([f.label_id for f in train_features], dtype=torch.long)
+    all_valid_ids = torch.tensor([f.valid_ids for f in train_features], dtype=torch.long)
+    all_lmask_ids = torch.tensor([f.label_mask for f in train_features], dtype=torch.long)
+    all_polarities = torch.tensor([f.polarity for f in train_features], dtype=torch.long)
+    lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in train_features], dtype=torch.float32)
+    lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in train_features], dtype=torch.float32)
+
+    train_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
+                               all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
+
+    train_sampler = SequentialSampler(train_data)
+    train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=opt.batch_size)
+
+    if 'test' in opt.dataset_file:
+        eval_examples = processor.get_test_examples(opt.dataset_file['test'], 'test')
+        eval_features = convert_examples_to_features(eval_examples, label_list, opt.max_seq_len, tokenizer, opt)
+        all_spc_input_ids = torch.tensor([f.input_ids_spc for f in eval_features], dtype=torch.long)
+        all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
+        all_segment_ids = torch.tensor([f.segment_ids for f in eval_features], dtype=torch.long)
+        all_label_ids = torch.tensor([f.label_id for f in eval_features], dtype=torch.long)
+        all_polarities = torch.tensor([f.polarity for f in eval_features], dtype=torch.long)
+        all_valid_ids = torch.tensor([f.valid_ids for f in eval_features], dtype=torch.long)
+        all_lmask_ids = torch.tensor([f.label_mask for f in eval_features], dtype=torch.long)
+        lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in eval_features], dtype=torch.float32)
+        lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in eval_features], dtype=torch.float32)
+        eval_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids, all_polarities,
+                                  all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
+        # all_tokens = [f.tokens for f in eval_features]
+
+        eval_sampler = RandomSampler(eval_data)
+        eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=opt.batch_size)
+
     def train():
-        train_features = convert_examples_to_features(train_examples, label_list, opt.max_seq_len, tokenizer, opt)
+
         logger.info("***** Running training *****")
         logger.info("  Num examples = %d", len(train_examples))
         logger.info("  Batch size = %d", opt.batch_size)
         logger.info("  Num steps = %d", num_train_optimization_steps)
-        all_spc_input_ids = torch.tensor([f.input_ids_spc for f in train_features], dtype=torch.long)
-        all_input_mask = torch.tensor([f.input_mask for f in train_features], dtype=torch.long)
-        all_segment_ids = torch.tensor([f.segment_ids for f in train_features], dtype=torch.long)
-        all_label_ids = torch.tensor([f.label_id for f in train_features], dtype=torch.long)
-        all_valid_ids = torch.tensor([f.valid_ids for f in train_features], dtype=torch.long)
-        all_lmask_ids = torch.tensor([f.label_mask for f in train_features], dtype=torch.long)
-        all_polarities = torch.tensor([f.polarity for f in train_features], dtype=torch.long)
-        lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in train_features], dtype=torch.float32)
-        lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in train_features], dtype=torch.float32)
 
-        train_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
-                                   all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
-
-        train_sampler = SequentialSampler(train_data)
-        train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=opt.batch_size)
         max_apc_test_acc = 0
         max_apc_test_f1 = 0
         max_ate_test_f1 = 0
@@ -121,8 +142,8 @@ def train4atepc(config):
                 optimizer.zero_grad()
                 global_step += 1
                 global_step += 1
-                if epoch >= opt.num_epoch / 2:
-                    if global_step % opt.log_step == 0:
+                if 'test' in opt.dataset_file and global_step % opt.log_step == 0:
+                    if epoch >= opt.evaluate_begin:
                         apc_result, ate_result = evaluate(
                             eval_ATE=not (opt.model_name == 'lcf_atepc' and opt.use_bert_spc))
                         # if save_path:
@@ -156,57 +177,26 @@ def train4atepc(config):
                         current_apc_test_f1 = apc_result['max_apc_test_f1']
                         current_ate_test_f1 = round(ate_result, 2)
 
-                        postfix = 'loss_apc:{:.4f} | loss_ate:{:.4f} |'.format(loss_apc.item(), loss_ate.item())
+                        postfix = 'Epoch:{} | '.format(epoch)
+
+                        postfix += 'loss_apc:{:.4f} | loss_ate:{:.4f} |'.format(loss_apc.item(), loss_ate.item())
 
                         postfix += f' APC_ACC: {current_apc_test_acc}(max:{max_apc_test_acc}) | ' \
                                    f' APC_F1: {current_apc_test_f1}(max:{max_apc_test_f1}) | '
 
-                        if (opt.model_name == 'lcf_atepc' and opt.use_bert_spc):
-                            postfix += f' ATE_F1: {current_apc_test_f1}(max:{max_apc_test_f1})' \
-                                       f' N.A. for LCF-ATEPC using BERT-SPC)'
+                        if opt.model_name == 'lcf_atepc' and opt.use_bert_spc:
+                            postfix += f'ATE_F1: N.A. for LCF-ATEPC using BERT-SPC)'
                         else:
                             postfix += f'ATE_F1: {current_ate_test_f1}(max:{max_ate_test_f1})'
+                    else:
+                        postfix = 'No evaluate until epoch:{}'.format(opt.evaluate_begin)
 
-                        iterator.postfix = postfix
-                        iterator.refresh()
+                    iterator.postfix = postfix
+                    iterator.refresh()
 
         return save_path
 
-    eval_features = convert_examples_to_features(eval_examples, label_list, opt.max_seq_len, tokenizer, opt)
-    all_spc_input_ids = torch.tensor([f.input_ids_spc for f in eval_features], dtype=torch.long)
-    all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
-    all_segment_ids = torch.tensor([f.segment_ids for f in eval_features], dtype=torch.long)
-    all_label_ids = torch.tensor([f.label_id for f in eval_features], dtype=torch.long)
-    all_polarities = torch.tensor([f.polarity for f in eval_features], dtype=torch.long)
-    all_valid_ids = torch.tensor([f.valid_ids for f in eval_features], dtype=torch.long)
-    all_lmask_ids = torch.tensor([f.label_mask for f in eval_features], dtype=torch.long)
-    lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in eval_features], dtype=torch.float32)
-    lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in eval_features], dtype=torch.float32)
-    eval_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids, all_polarities,
-                              all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
-    # all_tokens = [f.tokens for f in eval_features]
-
-    # Run prediction for full data
-    eval_sampler = RandomSampler(eval_data)
-    eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=opt.batch_size)
-
-    # init the model behind the convert_examples_to_features function in case of updating polarities_dim
-    model_classes = {
-        'lcf_atepc': LCF_ATEPC,
-        'rlcf_atepc': RLCF_ATEPC
-    }
-    model = model_classes[opt.model_name](bert_base_model, opt=opt)
-    model.to(opt.device)
-    param_optimizer = list(model.named_parameters())
-    no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
-    optimizer_grouped_parameters = [
-        {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay': opt.l2reg},
-        {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay': opt.l2reg}
-    ]
-    optimizer = optimizers[opt.optimizer](optimizer_grouped_parameters, lr=opt.learning_rate, weight_decay=opt.l2reg)
-
     def evaluate(eval_ATE=True, eval_APC=True):
-        # evaluate
         apc_result = {'max_apc_test_acc': 0, 'max_apc_test_f1': 0}
         ate_result = 0
         y_true = []
@@ -285,6 +275,21 @@ def train4atepc(config):
             tmps = report.split()
             ate_result = round(float(tmps[7]) * 100, 2)
         return apc_result, ate_result
+
+    # init the model behind the convert_examples_to_features function in case of updating polarities_dim
+    model_classes = {
+        'lcf_atepc': LCF_ATEPC,
+        'rlcf_atepc': RLCF_ATEPC
+    }
+    model = model_classes[opt.model_name](bert_base_model, opt=opt)
+    model.to(opt.device)
+    param_optimizer = list(model.named_parameters())
+    no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
+    optimizer_grouped_parameters = [
+        {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay': opt.l2reg},
+        {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay': opt.l2reg}
+    ]
+    optimizer = optimizers[opt.optimizer](optimizer_grouped_parameters, lr=opt.learning_rate, weight_decay=opt.l2reg)
 
     def _save_model(args_to_save, model_to_save, save_path, mode=0):
         # Save a trained model, configuration and tokenizer

@@ -2888,13 +2888,13 @@
 较 O -999
 多 O -999
 
-外 B-ASP 1
-形 I-ASP 1
-尺 I-ASP 1
-寸 I-ASP 1
+场 B-ASP 1
+景 I-ASP 1
+模 I-ASP 1
+式 I-ASP 1
 比 O -999
 较 O -999
-大 O -999
+多 O -999
 
 尺 B-ASP 0
 寸 I-ASP 0
@@ -4831,19 +4831,18 @@
 
 拍 B-ASP 1
 摄 I-ASP 1
-速 I-ASP 1
+速 B-ASP 1
 度 I-ASP 1
-比 O -999
-较 O -999
+比 I-ASP -999
+较 I-ASP -999
 快 O -999
 
-它 O -999
-的 O -999
-对 B-ASP 1
-焦 I-ASP 1
-速 I-ASP 1
+拍 B-ASP -999
+摄 I-ASP -999
+速 B-ASP 1
 度 I-ASP 1
-较 O -999
+比 I-ASP 1
+较 I-ASP 1
 快 O -999
 
 的 O -999
@@ -8672,9 +8671,16 @@
 美 I-ASP 1
 的 I-ASP 1
 
-对 B-ASP 1
-焦 I-ASP 1
-好 O -999
+我 B-ASP 1
+认 I-ASP 1
+为 I-ASP -999
+这 I-ASP -999
+款 I-ASP -999
+机 I-ASP -999
+是 I-ASP -999
+完 I-ASP -999
+美 I-ASP -999
+的 I-ASP -999
 
 焦 B-ASP 1
 点 I-ASP 1
@@ -9108,9 +9114,17 @@
 很 I-ASP 1
 赞 I-ASP 1
 
-锐 B-ASP 1
-度 I-ASP 1
-高 O -999
+那 B-ASP 1
+种 I-ASP 1
+细 I-ASP -999
+腻 I-ASP -999
+的 I-ASP -999
+感 I-ASP -999
+觉 I-ASP -999
+的 I-ASP -999
+确 I-ASP -999
+很 I-ASP -999
+赞 I-ASP -999
 
 虚 B-ASP 1
 化 I-ASP 1
@@ -11430,16 +11444,13 @@
 
 上 B-ASP 0
 网 I-ASP 0
-很 O -999
-慢 O -999
+很 I-ASP -999
+慢 I-ASP -999
 
-下 B-ASP 0
-载 I-ASP 0
-软 I-ASP 0
-件 I-ASP 0
-也 O -999
-很 O -999
-慢 O -999
+上 B-ASP 0
+网 I-ASP 0
+很 I-ASP 0
+慢 I-ASP 0
 
 开 B-ASP 1
 机 I-ASP 1
@@ -13030,9 +13041,9 @@
 出 I-ASP 1
 色 I-ASP 1
 
-速 B-ASP 1
-度 I-ASP 1
-快 O -999
+比 B-ASP 1
+出 I-ASP 1
+色 I-ASP -999
 
 效 B-ASP 1
 果 I-ASP 1
@@ -14817,9 +14828,14 @@
 不 I-ASP 1
 错 I-ASP 1
 
-手 B-ASP 1
-感 I-ASP 1
-好 O -999
+感 B-ASP 1
+觉 I-ASP 1
+这 I-ASP -999
+款 I-ASP -999
+机 I-ASP -999
+器 I-ASP -999
+不 I-ASP -999
+错 I-ASP -999
 
 功 B-ASP 1
 能 I-ASP 1

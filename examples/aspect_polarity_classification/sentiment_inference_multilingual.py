@@ -9,9 +9,9 @@
 from pyabsa import load_sentiment_classifier
 
 # Assume the sent_classifier is loaded or obtained using train function
-model_path = 'state_dict/bert_spc_cdw_acc_84.23_f1_81.52'  # please always check update on Google Drive before using
+model_path = 'state_dict/bert_spc_cdw'  # please always check update on Google Drive before using
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
-                                            auto_device=False  # Use CUDA if available
+                                            auto_device=True  # Use CUDA if available
                                             )
 
 text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent ,' \
@@ -19,10 +19,10 @@ text = 'everything is always cooked to perfection , the [ASP]service[ASP] is exc
 sent_classifier.infer(text, print_result=True)
 
 # 由于BERT采用单字分词，中文是否用空格分割不影响BERT的表现。欢迎贡献中文或其它语言数据集
-chinese_text = '还 有 就 是 [ASP]笔 画 的 键 盘 分 布[ASP] 我 感 觉 不 合 理 !sent! -1'
+chinese_text = '还有就是[ASP]笔画的键盘分布[ASP]我感觉不合理. !sent! -1'
 sent_classifier.infer(chinese_text, print_result=True)
 
-infer_set = 'datasets'
+infer_set = 'apc_datasets'
 
 sent_classifier.batch_infer(infer_set,
                             print_result=True,

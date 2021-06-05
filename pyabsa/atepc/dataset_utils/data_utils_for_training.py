@@ -166,7 +166,7 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
         IOB_label = example.IOB_label
         aspect_label = example.aspect_label
         polarity = example.polarity
-        if polarity != SENTIMENT_PADDING:  # bad case handle in Chinese datasets
+        if polarity != SENTIMENT_PADDING:  # bad case handle in Chinese atepc_datasets
             polarities_set.add(polarity)  # ignore samples without polarities
         tokens = []
         labels = []
@@ -277,11 +277,9 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
     # update polarities_dim, init model behind this function!
     p_min, p_max = min(polarities_set), max(polarities_set)
     if p_min < 0:
-        for data in features:
-            data.polarity += 1
-            assert 0 <= data.polarity <= p_max + 1
-        p_min += 1
-        p_max += 1
+        raise RuntimeError(
+            'Invalid sentiment label detected, only please label the sentiment between {0, N-1} '
+            '(assume there are N types of sentiment polarities.)')
     assert list(polarities_set) == list(range(p_max - p_min + 1))
     opt.polarities_dim = len(polarities_set)
 

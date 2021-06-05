@@ -287,23 +287,14 @@
 显 B-ASP 1
 示 I-ASP 1
 屏 I-ASP 1
-不 O -999
-错 O -999
+不 I-ASP -999
+错 I-ASP -999
 
-色 B-ASP 1
-彩 I-ASP 1
-还 I-ASP 1
-原 I-ASP 1
-效 I-ASP 1
-果 I-ASP 1
-也 O -999
-不 O -999
-错 O -999
-
-速 B-ASP 1
-度 I-ASP 1
-不 O -999
-错 O -999
+显 B-ASP 1
+示 I-ASP 1
+屏 I-ASP -999
+不 I-ASP -999
+错 I-ASP -999
 
 电 B-ASP 1
 池 I-ASP 1

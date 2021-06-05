@@ -4923,10 +4923,10 @@ best O -999
 food B-ASP 2
 , O -999
 phenominal O -999
-service B-ASP -999
+service O -999
 
 best O -999
-food B-ASP -999
+food O -999
 , O -999
 phenominal O -999
 service B-ASP 2
@@ -7935,10 +7935,10 @@ great O -999
 pizza B-ASP 2
 , O -999
 poor O -999
-service B-ASP -999
+service O -999
 
 great O -999
-pizza B-ASP -999
+pizza O -999
 , O -999
 poor O -999
 service B-ASP 0

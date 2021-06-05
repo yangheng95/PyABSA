@@ -2515,9 +2515,17 @@
 较 I-ASP 1
 强 I-ASP 1
 
-延 B-ASP 0
-时 I-ASP 0
-长 O -999
+硬 B-ASP 0
+件 I-ASP 0
+的 I-ASP -999
+全 I-ASP -999
+局 I-ASP -999
+平 I-ASP -999
+衡 I-ASP -999
+性 I-ASP -999
+比 I-ASP -999
+较 I-ASP -999
+强 I-ASP -999
 
 的 O -999
 大 O -999
@@ -4241,13 +4249,13 @@
 效 I-ASP 1
 果 I-ASP 1
 
-上 O -999
+极 O -999
 佳 O -999
 的 O -999
-成 B-ASP 1
-像 I-ASP 1
-能 I-ASP 1
-力 I-ASP 1
+微 B-ASP 1
+距 I-ASP 1
+效 I-ASP 1
+果 I-ASP 1
 
 电 B-ASP 1
 池 I-ASP 1

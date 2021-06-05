@@ -115,15 +115,9 @@ class ABSADataset(Dataset):
         # update polarities_dim, init model behind this function!
         p_min, p_max = min(polarities_set), max(polarities_set)
         if p_min < 0:
-            for data in all_data:
-                data['polarity'] += 1
-                assert 0 <= data['polarity'] <= p_max + 1
-            p_min += 1
-            p_max += 1
-        if -1 in polarities_set:
-            assert sorted(list(polarities_set)) == sorted([-1] + list(range(p_max - p_min)))
-        else:
-            assert sorted(list(polarities_set)) == sorted(list(range(p_max - p_min + 1)))
+            raise RuntimeError('Invalid sentiment label detected, only please label the sentiment between {0, N-1} '
+                               '(assume there are N types of sentiment polarities.)')
+        assert sorted(list(polarities_set)) == sorted(list(range(p_max - p_min + 1)))
         opt.polarities_dim = len(polarities_set)
 
         self.data = all_data

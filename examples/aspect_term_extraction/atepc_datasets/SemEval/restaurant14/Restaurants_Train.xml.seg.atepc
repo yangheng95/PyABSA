@@ -1925,7 +1925,7 @@ selection I-ASP 2
 is O -999
 good O -999
 and O -999
-wine-by-the-glass O -999
+wine-by-the-glass B-ASP -999
 was O -999
 generously O -999
 filled O -999
@@ -1934,9 +1934,9 @@ the O -999
 top O -999
 . O -999
 
-Wine O -999
-list O -999
-selection O -999
+Wine B-ASP -999
+list I-ASP -999
+selection I-ASP -999
 is O -999
 good O -999
 and O -999
@@ -12298,15 +12298,15 @@ high O -999
 ask O -999
 for O -999
 extra O -999
-rye O -999
-bread O -999
+rye B-ASP -999
+bread I-ASP -999
 -RRB- O -999
 . O -999
 
-Pastrami O -999
-or O -999
-corned O -999
-beef O -999
+Pastrami B-ASP -999
+or I-ASP -999
+corned I-ASP -999
+beef I-ASP -999
 are O -999
 juicy O -999
 and O -999
@@ -17399,11 +17399,11 @@ terrific O -999
 , O -999
 as O -999
 is O -999
-homemade O -999
-pasta O -999
+homemade B-ASP -999
+pasta I-ASP -999
 . O -999
 
-Pizza O -999
+Pizza B-ASP -999
 is O -999
 terrific O -999
 , O -999

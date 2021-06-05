@@ -11522,12 +11522,12 @@ Boots B-ASP 2
 up I-ASP 2
 fast O -999
 and O -999
-runs O -999
+runs B-ASP -999
 great O -999
 ! O -999
 
-Boots O -999
-up O -999
+Boots B-ASP -999
+up I-ASP -999
 fast O -999
 and O -999
 runs B-ASP 2
@@ -14417,13 +14417,13 @@ Screen B-ASP 2
 is O -999
 awesome O -999
 , O -999
-battery O -999
-life O -999
+battery B-ASP -999
+life I-ASP -999
 is O -999
 good O -999
 . O -999
 
-Screen O -999
+Screen B-ASP -999
 is O -999
 awesome O -999
 , O -999

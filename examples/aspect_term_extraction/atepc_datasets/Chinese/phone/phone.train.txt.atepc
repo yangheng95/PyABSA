@@ -3223,11 +3223,11 @@
 实 O -999
 用 O -999
 
-配 B-ASP 1
-件 I-ASP 1
+功 B-ASP 1
+能 I-ASP 1
 够 O -999
 实 O -999
-惠 O -999
+用 O -999
 
 而 O -999
 且 O -999
@@ -6756,9 +6756,10 @@
 太 I-ASP 0
 渣 I-ASP 0
 
-对 B-ASP 0
-焦 I-ASP 0
-慢 O -999
+电 B-ASP 0
+池 I-ASP 0
+太 I-ASP -999
+渣 I-ASP -999
 
 稳 B-ASP 0
 定 I-ASP 0
@@ -7842,11 +7843,12 @@
 胜 O -999
 出 O -999
 
-持 B-ASP 1
-续 I-ASP 1
-连 I-ASP 1
-拍 I-ASP 1
-时 O -999
+弱 B-ASP 1
+光 I-ASP 1
+下 I-ASP 1
+对 I-ASP 1
+焦 I-ASP -999
+略 O -999
 胜 O -999
 出 O -999
 
@@ -8886,9 +8888,58 @@
 一 I-ASP 1
 点 I-ASP 1
 
-电 B-ASP 1
-池 I-ASP 1
-好 O -999
+简 B-ASP 1
+单 I-ASP 1
+易 I-ASP -999
+用 I-ASP -999
+其 I-ASP -999
+实 I-ASP -999
+智 I-ASP -999
+能 I-ASP -999
+机 I-ASP -999
+你 I-ASP -999
+只 I-ASP -999
+要 I-ASP -999
+看 I-ASP -999
+过 I-ASP -999
+扫 I-ASP -999
+盲 I-ASP -999
+贴 I-ASP -999
+都 I-ASP -999
+简 I-ASP -999
+单 I-ASP -999
+易 I-ASP -999
+用 I-ASP -999
+黑 I-ASP -999
+莓 I-ASP -999
+的 I-ASP -999
+简 I-ASP -999
+单 I-ASP -999
+体 I-ASP -999
+现 I-ASP -999
+在 I-ASP -999
+不 I-ASP -999
+需 I-ASP -999
+要 I-ASP -999
+签 I-ASP -999
+名 I-ASP -999
+刷 I-ASP -999
+机 I-ASP -999
+的 I-ASP -999
+时 I-ASP -999
+候 I-ASP -999
+比 I-ASP -999
+起 I-ASP -999
+非 I-ASP -999
+大 I-ASP -999
+陆 I-ASP -999
+行 I-ASP -999
+的 I-ASP -999
+也 I-ASP -999
+方 I-ASP -999
+便 I-ASP -999
+一 I-ASP -999
+点 I-ASP -999
 
 内 B-ASP 1
 存 I-ASP 1
@@ -9147,16 +9198,17 @@
 
 电 B-ASP 1
 容 I-ASP 1
-屏 I-ASP 1
+屏 B-ASP 1
 手 I-ASP 1
 感 I-ASP 1
 不 O -999
 错 O -999
 
-总 O -999
-体 O -999
-界 B-ASP 1
-面 I-ASP 1
+电 B-ASP -999
+容 I-ASP -999
+屏 B-ASP 1
+手 I-ASP 1
+感 I-ASP -999
 不 O -999
 错 O -999
 
@@ -10161,13 +10213,6 @@
 觉 I-ASP 1
 不 I-ASP 1
 错 I-ASP 1
-
-屏 B-ASP 1
-幕 I-ASP 1
-分 I-ASP 1
-辨 I-ASP 1
-率 I-ASP 1
-高 O -999
 
 运 B-ASP 1
 行 I-ASP 1
@@ -17845,9 +17890,8 @@
 一 O -999
 般 O -999
 
-成 B-ASP 0
-像 I-ASP 0
-也 O -999
+音 B-ASP 0
+质 I-ASP 0
 一 O -999
 般 O -999
 

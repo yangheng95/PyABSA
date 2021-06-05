@@ -288,7 +288,7 @@ def copy_side_aspect(direct='left', target=None, source=None):
 
 
 def is_similar(s1, s2):
-    # some reviews in the datasets are broken so the similarity check is used
+    # some reviews in the atepc_datasets are broken so the similarity check is used
     count = 0.
     s1 = list(s1)
     s2 = list(s2)

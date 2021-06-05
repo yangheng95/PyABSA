@@ -7,4 +7,4 @@
 
 from pyabsa import convert_apc_set_to_atepc
 
-convert_apc_set_to_atepc(r'../aspect_polarity_classification/datasets/multilingual')
+convert_apc_set_to_atepc(r'../aspect_polarity_classification/apc_datasets')

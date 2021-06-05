@@ -12,7 +12,7 @@ from pyabsa import load_sentiment_classifier
 
 # 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
 sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
-model_path = 'state_dict/slide_lcfs_bert_cdw_acc_81.3_f1_54.84'   # please always check update on Google Drive before using
+model_path = 'state_dict/slide_lcfs_bert_cdw'   # please always check update on Google Drive before using
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
                                             auto_device=True,  # Use CUDA if available
                                             sentiment_map=sentiment_map
@@ -35,7 +35,7 @@ sent_classifier.infer(text, print_result=True)
 
 # batch inferring returns the results, save the result if necessary using save_result=True
 # infer_set = 'example_files/rest16_inferring.dat'  # file or dir
-infer_set = 'datasets/SemEval'  # file or dir, automatic load all inference set from infer_set recursively
+infer_set = 'atepc_datasets/SemEval'  # file or dir, automatic load all inference set from infer_set recursively
 
 
 results = sent_classifier.batch_infer(target_file=infer_set,

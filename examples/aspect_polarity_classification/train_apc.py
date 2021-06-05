@@ -6,15 +6,15 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 ########################################################################################################################
-#                           train and evaluate on your own datasets (need train and test datasets)                     #
+#                           train and evaluate on your own atepc_datasets (need train and test atepc_datasets)                     #
 #              your custom dataset should have the continue polarity labels like [0,N-1] for N categories              #
 ########################################################################################################################
 
 from pyabsa import train_apc
 
-param_dict = {'model_name': 'lcf_bert',   # {slide_lcf_bert, slide_lcf_bert, lcf_bert, lcf_bert, bert_spc, bert_base}
+param_dict = {'model_name': 'lcf_bert',    # {slide_lcf_bert, slide_lcf_bert, lcf_bert, lcf_bert, bert_spc, bert_base}
               'batch_size': 32,
-              'seed': {1, 2, 3},      # you can use a set of random seeds to train multiple rounds
+              'seed': {1, 2, 3},           # you can use a set of random seeds to train multiple rounds
               # 'seed': 996,               # or use one seed only
               'num_epoch': 10,
               'optimizer': "adam",         # {adam, adamw}
@@ -32,12 +32,14 @@ param_dict = {'model_name': 'lcf_bert',   # {slide_lcf_bert, slide_lcf_bert, lcf
               'dropout': 0,
               'l2reg': 0.00001,
               # 'polarities_dim': 2,       # deprecated, polarities_dim will be automatic detected
-              'dynamic_truncate': True     # Dynamic truncate the text according to the position of aspect term
+              'dynamic_truncate': True,    # Dynamic truncate the text according to the position of aspect term
+              'evaluate_begin': 2  # evaluate begin with epoch
               }
+
 
 save_path = 'state_dict'
 
-datasets_path = 'datasets/SemEval/restaurant15'  # file or dir are accepted
+datasets_path = 'apc_datasets/SemEval/laptop14'  # file or dir are accepted
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=datasets_path,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
@@ -45,7 +47,7 @@ sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None
                             auto_device=True               # automatic choose CUDA or CPU
                             )
 
-datasets_path = 'datasets/SemEval/restaurant14'  # file or dir are accepted
+datasets_path = 'apc_datasets/SemEval/restaurant14'  # file or dir are accepted
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=datasets_path,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
@@ -53,7 +55,7 @@ sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None
                             auto_device=True               # automatic choose CUDA or CPU
                             )
 
-datasets_path = 'datasets/SemEval/restaurant15'  # file or dir are accepted
+datasets_path = 'apc_datasets/SemEval/restaurant15'  # file or dir are accepted
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=datasets_path,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
@@ -61,7 +63,7 @@ sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None
                             auto_device=True               # automatic choose CUDA or CPU
                             )
 
-datasets_path = 'datasets/SemEval/restaurant16'  # file or dir are accepted
+datasets_path = 'apc_datasets/SemEval/restaurant16'  # file or dir are accepted
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=datasets_path,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
@@ -69,9 +71,9 @@ sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None
                             auto_device=True               # automatic choose CUDA or CPU
                             )
 
-param_dict = {'model_name': 'lcf_bert',   # {slide_lcf_bert, slide_lcf_bert, lcf_bert, lcf_bert, bert_spc, bert_base}
+param_dict = {'model_name': 'lcf_bert',    # {slide_lcf_bert, slide_lcf_bert, lcf_bert, lcf_bert, bert_spc, bert_base}
               'batch_size': 16,
-              'seed': {1, 2, 3},      # you can use a set of random seeds to train multiple rounds
+              'seed': {1, 2, 3},           # you can use a set of random seeds to train multiple rounds
               # 'seed': 996,               # or use one seed only
               'num_epoch': 10,
               'optimizer': "adam",         # {adam, adamw}
@@ -94,7 +96,7 @@ param_dict = {'model_name': 'lcf_bert',   # {slide_lcf_bert, slide_lcf_bert, lcf
 
 save_path = 'state_dict'
 
-datasets_path = 'datasets/SemEval/laptop14'  # file or dir are accepted
+datasets_path = 'apc_datasets/SemEval/laptop14'  # file or dir are accepted
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=datasets_path,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
@@ -106,7 +108,7 @@ sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None
 # sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
 # sent_classifier.set_sentiment_map(sentiment_map)
 
-datasets_path = 'datasets/SemEval/restaurant14'  # file or dir are accepted
+datasets_path = 'apc_datasets/SemEval/restaurant14'  # file or dir are accepted
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=datasets_path,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
@@ -114,7 +116,7 @@ sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None
                             auto_device=True               # automatic choose CUDA or CPU
                             )
 
-datasets_path = 'datasets/SemEval/restaurant15'  # file or dir are accepted
+datasets_path = 'apc_datasets/SemEval/restaurant15'  # file or dir are accepted
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=datasets_path,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
@@ -122,7 +124,7 @@ sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None
                             auto_device=True               # automatic choose CUDA or CPU
                             )
 
-datasets_path = 'datasets/SemEval/restaurant16'  # file or dir are accepted
+datasets_path = 'apc_datasets/SemEval/restaurant16'  # file or dir are accepted
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=datasets_path,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model

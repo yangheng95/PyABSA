@@ -49,7 +49,7 @@ class Instructor:
                                                shuffle=False,
                                                pin_memory=True)
 
-        # init the model behind the construction of datasets in case of updating polarities_dim
+        # init the model behind the construction of atepc_datasets in case of updating polarities_dim
         self.model = self.opt.model_class(self.bert, self.opt).to(self.opt.device)
 
         if self.opt.device.type == 'cuda':
@@ -98,14 +98,17 @@ class Instructor:
         self.model.to(self.opt.device)
 
     def _train_and_evaluate(self, criterion, lca_criterion, optimizer):
+
+        logger.info("***** Running training *****")
+        logger.info("  Num examples = %d", len(self.train_data_loader))
+        logger.info("  Batch size = %d", self.opt.batch_size)
+        logger.info("  Num steps = %d", int(len(self.train_data_loader) / self.opt.batch_size) * self.opt.num_epoch)
+
         max_test_acc = 0
         max_f1 = 0
-        test_acc = 0
-        f1 = 0
         global_step = 0
         save_path = ''
         for epoch in range(self.opt.num_epoch):
-            n_correct, n_total = 0, 0
             iterator = tqdm(self.train_data_loader)
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
@@ -131,39 +134,43 @@ class Instructor:
 
                 # evaluate if test set is available
                 if 'test' in self.opt.dataset_file and global_step % self.opt.log_step == 0:
-                    # n_correct += (torch.argmax(sen_logits, -1) == targets).sum().item()
-                    # n_total += len(sen_logits)
-                    # train_acc = n_correct / n_total
+                    if epoch >= self.opt.evaluate_begin:
 
-                    test_acc, f1 = self._evaluate_acc_f1()
-                    if test_acc > max_test_acc:
-                        max_test_acc = test_acc
-                        if self.opt.model_path_to_save:
-                            if not os.path.exists(self.opt.model_path_to_save):
-                                os.mkdir(self.opt.model_path_to_save)
-                            if save_path:
-                                try:
-                                    shutil.rmtree(save_path)
-                                    # logger.info('Remove sub-optimal trained model:', save_path)
-                                except:
-                                    # logger.info('Can not remove sub-optimal trained model:', save_path)
-                                    pass
-                            save_path = '{0}/{1}_{2}_acc_{3}_f1_{4}/'.format(self.opt.model_path_to_save,
-                                                                             self.opt.model_name,
-                                                                             self.opt.lcf,
-                                                                             round(test_acc * 100, 2),
-                                                                             round(f1 * 100, 2)
-                                                                             )
-                            self._save_model(self.model, save_path, mode=0)
-                    if f1 > max_f1:
-                        max_f1 = f1
-                iterator.postfix = (
-                    'Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) | Test F1:{:.2f}(max:{:.2f})'.format(loss.item(),
-                                                                                                    test_acc * 100,
-                                                                                                    max_test_acc * 100,
-                                                                                                    f1 * 100,
-                                                                                                    max_f1 * 100))
-                iterator.refresh()
+                        test_acc, f1 = self._evaluate_acc_f1()
+                        if test_acc > max_test_acc:
+                            max_test_acc = test_acc
+                            if self.opt.model_path_to_save:
+                                if not os.path.exists(self.opt.model_path_to_save):
+                                    os.mkdir(self.opt.model_path_to_save)
+                                if save_path:
+                                    try:
+                                        shutil.rmtree(save_path)
+                                        # logger.info('Remove sub-optimal trained model:', save_path)
+                                    except:
+                                        # logger.info('Can not remove sub-optimal trained model:', save_path)
+                                        pass
+                                save_path = '{0}/{1}_{2}_acc_{3}_f1_{4}/'.format(self.opt.model_path_to_save,
+                                                                                 self.opt.model_name,
+                                                                                 self.opt.lcf,
+                                                                                 round(test_acc * 100, 2),
+                                                                                 round(f1 * 100, 2)
+                                                                                 )
+                                self._save_model(self.model, save_path, mode=0)
+                        if f1 > max_f1:
+                            max_f1 = f1
+                        postfix = ('Epoch:{} | Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) |'
+                                   ' Test F1:{:.2f}(max:{:.2f})'.format(epoch,
+                                                                        loss.item(),
+                                                                        test_acc * 100,
+                                                                        max_test_acc * 100,
+                                                                        f1 * 100,
+                                                                        max_f1 * 100))
+                    else:
+                        postfix = 'No evaluate until epoch:{}'.format(self.opt.evaluate_begin)
+
+                    iterator.postfix = postfix
+                    iterator.refresh()
+
         # return the model paths of multiple training in case of loading the best model after training
         if save_path:
             logger.info('----------------------Training Summary----------------------')

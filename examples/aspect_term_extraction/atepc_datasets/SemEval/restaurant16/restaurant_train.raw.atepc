@@ -6138,11 +6138,11 @@ terrific O -999
 , O -999
 as O -999
 is O -999
-homemade O -999
-pasta O -999
+homemade B-ASP -999
+pasta I-ASP -999
 . O -999
 
-pizza O -999
+pizza B-ASP -999
 is O -999
 terrific O -999
 , O -999
@@ -8046,14 +8046,13 @@ place O -999
 . O -999
 
 service B-ASP 2
-was O -999
+was B-ASP -999
 quick O -999
 . O -999
 
-the O -999
-pizza B-ASP 2
-was O -999
-great O -999
+service B-ASP -999
+was B-ASP 2
+quick O -999
 . O -999
 
 have O -999
@@ -11186,9 +11185,9 @@ is O -999
 charming O -999
 . O -999
 
-service B-ASP 1
+decor B-ASP 1
 is O -999
-average O -999
+charming O -999
 . O -999
 
 what O -999
@@ -28121,8 +28120,8 @@ tasty O -999
 
 i O -999
 love O -999
-margherita O -999
-pizza O -999
+margherita B-ASP -999
+pizza I-ASP -999
 – O -999
 i O -999
 looove O -999
@@ -28137,9 +28136,9 @@ pizza I-ASP 2
 – O -999
 i O -999
 looove O -999
-east O -999
-village O -999
-pizza O -999
+east B-ASP -999
+village I-ASP -999
+pizza I-ASP -999
 
 love O -999
 this O -999

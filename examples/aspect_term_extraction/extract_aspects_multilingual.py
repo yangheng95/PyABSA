@@ -27,7 +27,7 @@ examples = ['But the staff was so nice to us .',
             ]
 
 # 从Google Drive下载提供的预训练模型
-model_path = 'state_dict/lcf_atepc_cdw'   # please always check update on Google Drive before using
+model_path = 'state_dict/lcf_atepc_cdw_apcacc_77.22_apcf1_71.0_atef1_76.47'   # please always check update on Google Drive before using
 
 aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
                                          auto_device=True  # False means load model on CPU

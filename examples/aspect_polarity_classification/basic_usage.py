@@ -7,4 +7,4 @@
 from pyabsa import generate_inferring_set_for_apc
 
 # This function coverts a ABSA dataset to inference set, try to convert every dataset found in the dir
-generate_inferring_set_for_apc('datasets')
+generate_inferring_set_for_apc('apc_datasets')

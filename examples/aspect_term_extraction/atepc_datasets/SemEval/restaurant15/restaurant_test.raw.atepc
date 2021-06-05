@@ -6471,8 +6471,8 @@ tasty O -999
 
 i O -999
 love O -999
-margherita O -999
-pizza O -999
+margherita B-ASP -999
+pizza I-ASP -999
 – O -999
 i O -999
 looove O -999
@@ -6487,9 +6487,9 @@ pizza I-ASP 2
 – O -999
 i O -999
 looove O -999
-east O -999
-village O -999
-pizza O -999
+east B-ASP -999
+village I-ASP -999
+pizza I-ASP -999
 
 love O -999
 this O -999

@@ -3744,7 +3744,7 @@
 性 O -999
 
 高 B-ASP 1
-效 I-ASP 1
+效 B-ASP 1
 能 I-ASP 1
 而 I-ASP 1
 轻 I-ASP 1
@@ -3756,9 +3756,18 @@
 压 I-ASP 1
 旋 I-ASP 1
 
-低 O -999
-重 B-ASP 1
-心 I-ASP 1
+高 B-ASP -999
+效 B-ASP 1
+能 I-ASP 1
+而 I-ASP -999
+轻 I-ASP -999
+巧 I-ASP -999
+的 I-ASP -999
+涡 I-ASP -999
+轮 I-ASP -999
+增 I-ASP -999
+压 I-ASP -999
+旋 I-ASP -999
 
 前 B-ASP 1
 后 I-ASP 1
@@ -8139,7 +8148,7 @@
 
 电 B-ASP 1
 动 I-ASP 1
-门 I-ASP 1
+门 B-ASP 1
 窗 I-ASP 1
 开 I-ASP 1
 关 I-ASP 1
@@ -8148,10 +8157,14 @@
 不 O -999
 错 O -999
 
-车 O -999
-子 O -999
-外 B-ASP 1
-形 I-ASP 1
+电 B-ASP -999
+动 I-ASP -999
+门 B-ASP 1
+窗 I-ASP 1
+开 I-ASP -999
+关 I-ASP -999
+手 I-ASP -999
+感 I-ASP -999
 不 O -999
 错 O -999
 
@@ -9224,17 +9237,15 @@
 
 性 B-ASP 1
 价 I-ASP 1
-比 I-ASP 1
-很 O -999
-高 O -999
+比 B-ASP 1
+很 I-ASP -999
+高 I-ASP -999
 
-总 O -999
-体 O -999
-满 B-ASP 1
-意 I-ASP 1
-度 I-ASP 1
-很 O -999
-高 O -999
+性 B-ASP -999
+价 I-ASP -999
+比 B-ASP 1
+很 I-ASP 1
+高 I-ASP 1
 
 于 O -999
 是 O -999
