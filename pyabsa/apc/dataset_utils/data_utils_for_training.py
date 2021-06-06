@@ -5,6 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 import os
+import warnings
 
 import tqdm
 from torch.utils.data import Dataset
@@ -51,8 +52,10 @@ class ABSADataset(Dataset):
             text_bert_indices = prepared_inputs['text_bert_indices']
             text_raw_bert_indices = prepared_inputs['text_raw_bert_indices']
             aspect_bert_indices = prepared_inputs['aspect_bert_indices']
-            syntactical_dist = get_syntax_distance(text_raw, aspect, tokenizer) \
-                if 'lcfs' in opt.model_name else None
+            if 'lcfs' in opt.model_name or opt.use_syntax_based_SRD:
+                syntactical_dist = get_syntax_distance(text_raw, aspect, tokenizer.tokenizer, opt)
+            else:
+                syntactical_dist = None
 
             if 'lca' in opt.model_name:
                 lca_ids, lcf_vec = get_lca_ids_and_cdm_vec(opt,

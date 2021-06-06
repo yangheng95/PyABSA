@@ -5,25 +5,11 @@
 
 import copy
 
-import numpy as np
 import torch
 import torch.nn as nn
-from transformers.models.bert.modeling_bert import BertPooler, BertSelfAttention
+from transformers.models.bert.modeling_bert import BertPooler
 
-
-class SelfAttention(nn.Module):
-    def __init__(self, config, opt):
-        super(SelfAttention, self).__init__()
-        self.opt = opt
-        self.config = config
-        self.SA = BertSelfAttention(config)
-        self.tanh = torch.nn.Tanh()
-
-    def forward(self, inputs):
-        zero_vec = np.zeros((inputs.size(0), 1, 1, self.opt.max_seq_len))
-        zero_tensor = torch.tensor(zero_vec).float().to(self.opt.device)
-        SA_out = self.SA(inputs, zero_tensor)
-        return self.tanh(SA_out[0])
+from pyabsa.encoder.sa_encoder import Encoder
 
 
 class LCA_BERT(nn.Module):
@@ -31,12 +17,13 @@ class LCA_BERT(nn.Module):
         super(LCA_BERT, self).__init__()
         self.bert4global = bert
         self.bert4local = copy.deepcopy(bert) if opt.use_dual_bert else self.bert4global
-        self.lc_embed = nn.Embedding(opt.max_seq_len, opt.embed_dim)
+        self.lc_embed = nn.Embedding(2, opt.embed_dim)
+        self.lc_linear = nn.Linear(opt.embed_dim * 2, opt.embed_dim)
         self.opt = opt
         self.dropout = nn.Dropout(opt.dropout)
-        self.bert_SA_L = SelfAttention(bert.config, opt)
-        self.bert_SA_G = SelfAttention(bert.config, opt)
-        self.linear = nn.Linear(opt.embed_dim * 2, opt.embed_dim)
+        self.bert_SA_L = Encoder(bert.config, opt)
+        self.bert_SA_G = Encoder(bert.config, opt)
+        self.cat_linear = nn.Linear(opt.embed_dim * 2, opt.embed_dim)
         self.pool = BertPooler(bert.config)
         self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
         self.classifier = nn.Linear(opt.embed_dim, 2)
@@ -52,19 +39,16 @@ class LCA_BERT(nn.Module):
 
         bert_global_out = self.bert4global(text_global_indices)['last_hidden_state']
         bert_local_out = self.bert4local(text_local_indices)['last_hidden_state']
-        # if self.opt.lca and 'lca' in self.opt.model_name:
-        #     lc_embedding = self.lc_embed(lca_ids)
-        #     bert_global_out = torch.mul(bert_global_out, lc_embedding)
 
         lc_embedding = self.lc_embed(lca_ids)
-        bert_global_out = torch.mul(bert_global_out, lc_embedding)
+        bert_global_out = self.lc_linear(torch.cat((bert_global_out, lc_embedding), -1))
 
         # # LCF-layer
         bert_local_out = torch.mul(bert_local_out, lcf_matrix)
         bert_local_out = self.bert_SA_L(bert_local_out)
 
         cat_features = torch.cat((bert_local_out, bert_global_out), dim=-1)
-        cat_features = self.linear(cat_features)
+        cat_features = self.cat_linear(cat_features)
 
         lca_logits = self.classifier(cat_features)
         lca_logits = lca_logits.view(-1, 2)
@@ -74,9 +58,5 @@ class LCA_BERT(nn.Module):
 
         pooled_out = self.pool(cat_features)
         dense_out = self.dense(pooled_out)
-        # if self.opt.lcp:
-        #     return dense_out, lca_logits, lca_ids
-        # else:
-        #     return dense_out
 
         return dense_out, lca_logits, lca_ids

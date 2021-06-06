@@ -3,38 +3,11 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # Copyright (C) 2021. All Rights Reserved.
 
-import numpy as np
 import torch
 import torch.nn as nn
-from transformers.models.bert.modeling_bert import BertPooler, BertSelfAttention
 
-
-class Encoder(nn.Module):
-    def __init__(self, config, opt, layer_num=1):
-        super(Encoder, self).__init__()
-        self.opt = opt
-        self.config = config
-        self.encoder = nn.ModuleList([SelfAttention(config, opt) for _ in range(layer_num)])
-        self.tanh = torch.nn.Tanh()
-
-    def forward(self, x):
-        for i, enc in enumerate(self.encoder):
-            x = self.tanh(enc(x)[0])
-        return x
-
-
-class SelfAttention(nn.Module):
-    def __init__(self, config, opt):
-        super(SelfAttention, self).__init__()
-        self.opt = opt
-        self.config = config
-        self.SA = BertSelfAttention(config)
-
-    def forward(self, inputs):
-        zero_vec = np.zeros((inputs.size(0), 1, 1, self.opt.max_seq_len))
-        zero_tensor = torch.tensor(zero_vec).float().to(self.opt.device)
-        SA_out = self.SA(inputs, zero_tensor)
-        return SA_out
+from transformers.models.bert.modeling_bert import BertPooler
+from pyabsa.encoder.sa_encoder import Encoder
 
 
 class SLIDE_LCF_BERT(nn.Module):

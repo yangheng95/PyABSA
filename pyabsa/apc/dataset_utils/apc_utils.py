@@ -130,30 +130,23 @@ class Tokenizer4Bert:
         align_dist = pad_and_truncate(align_dist, self.max_seq_len, value=self.max_seq_len)
         return align_dist
 
-    # Group distance to aspect of an original word to its corresponding subword token
-    def tokenize(self, text, dep_dist, reverse=False, padding='post', truncating='post'):
-        sequence, distances = [], []
-        for word, dist in zip(text, dep_dist):
-            tokens = self.tokenizer.tokenize(word)
-            for jx, token in enumerate(tokens):
-                sequence.append(token)
-                distances.append(dist)
-        sequence = self.tokenizer.convert_tokens_to_ids(sequence)
-
-        if len(sequence) == 0:
-            sequence = [0]
-            dep_dist = [0]
-        if reverse:
-            sequence = sequence[::-1]
-            dep_dist = dep_dist[::-1]
-        sequence = pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
-        dep_dist = pad_and_truncate(dep_dist, self.max_seq_len, padding=padding, truncating=truncating,
-                                    value=self.max_seq_len)
-
-        return sequence, dep_dist
-
     def get_bert_tokens(self, text):
         return self.tokenizer.tokenize(text)
+
+
+# Group distance to aspect of an original word to its corresponding subword token
+def pad_syntax_based_srd(text, dep_dist, tokenizer, opt):
+    sequence, distances = [], []
+    for word, dist in zip(text, dep_dist):
+        tokens = tokenizer.tokenize(word)
+        for jx, token in enumerate(tokens):
+            sequence.append(token)
+            distances.append(dist)
+    sequence = tokenizer.convert_tokens_to_ids(sequence)
+    sequence = pad_and_truncate(sequence, opt.max_seq_len)
+    dep_dist = pad_and_truncate(dep_dist, opt.max_seq_len, value=opt.max_seq_len)
+
+    return sequence, dep_dist
 
 
 def load_datasets(fname):
@@ -195,26 +188,32 @@ def prepare_input_from_text(opt, tokenizer, text_left, text_right, aspect):
 
     return inputs
 
-
-def get_syntax_distance(text_raw, aspect, tokenizer):
+def get_syntax_distance(text_raw, aspect, tokenizer, opt):
     # Find distance in dependency parsing tree
+
+    if isinstance(text_raw, list):
+        text_raw = ' '.join(text_raw)
+
+    if isinstance(aspect, list):
+        aspect = ' '.join(aspect)
+
     raw_tokens, dist = calculate_dep_dist(text_raw, aspect)
     raw_tokens.insert(0, tokenizer.bos_token)
     dist.insert(0, max(dist))
     raw_tokens.append(tokenizer.eos_token)
     dist.append(max(dist))
-    syntactical_dist = tokenizer.tokenize(raw_tokens, dist)[1]
+    syntactical_dist = pad_syntax_based_srd(raw_tokens, dist, tokenizer, opt)[1]
     # syntactical_dist = tokenizer.syntax_distance_alignment(raw_tokens, dist)
     return syntactical_dist
 
 
 def get_lca_ids_and_cdm_vec(opt, bert_spc_indices, aspect_indices, syntactical_dist=None):
     SRD = opt.SRD
-    lca_ids = np.zeros((opt.max_seq_len), dtype=np.float32)
+    lca_ids = np.zeros((opt.max_seq_len), dtype=np.int64)
     cdm_vec = np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
     aspect_len = np.count_nonzero(aspect_indices)
     text_len = np.count_nonzero(bert_spc_indices) - np.count_nonzero(aspect_indices) - 1
-    if 'lcfs' in opt.model_name:
+    if syntactical_dist is not None:
         for i in range(min(text_len, opt.max_seq_len)):
             if syntactical_dist[i] <= SRD:
                 lca_ids[i] = 1
@@ -237,7 +236,7 @@ def get_cdw_vec(opt, bert_spc_indices, aspect_indices, syntactical_dist=None):
     cdw_vec = np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
     aspect_len = np.count_nonzero(aspect_indices)
     text_len = np.count_nonzero(bert_spc_indices) - np.count_nonzero(aspect_indices) - 1
-    if 'lcfs' in opt.model_name:
+    if syntactical_dist is not None:
         for i in range(min(text_len, opt.max_seq_len)):
             if syntactical_dist[i] > SRD:
                 w = 1 - syntactical_dist[i] / text_len

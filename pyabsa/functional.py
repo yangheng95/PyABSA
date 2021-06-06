@@ -39,6 +39,12 @@ def init_config(config_dict, base_config_dict, auto_device=True):
 
     apc_config = Namespace(**base_config_dict)
 
+    if 'lcfs' in apc_config.model_name or apc_config.use_syntax_based_SRD:
+        print('-' * 100)
+        print('(Force to) use syntax distance-based semantic-relative distance,'
+              ' however Chinese is not supported to parse syntax distance yet!')
+        print('-' * 100)
+
     return apc_config
 
 
