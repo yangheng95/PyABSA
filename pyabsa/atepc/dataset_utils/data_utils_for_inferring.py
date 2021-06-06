@@ -74,6 +74,11 @@ def parse_examples(examples):
 class ATEPCProcessor:
     """Processor for the CoNLL-2003 data set."""
 
+    def __init__(self, tokenizer):
+        self.tokenizer = tokenizer
+        self.tokenizer.bos_token = tokenizer.bos_token if tokenizer.bos_token else '[CLS]'
+        self.tokenizer.eos_token = tokenizer.eos_token if tokenizer.eos_token else '[SEP]'
+
     def get_examples_for_aspect_extraction(self, examples):
         """See base class."""
         return self._create_examples(parse_examples(examples)

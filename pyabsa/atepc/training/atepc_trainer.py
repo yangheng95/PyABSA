@@ -18,8 +18,10 @@ import torch.nn.functional as F
 from seqeval.metrics import classification_report
 from sklearn.metrics import f1_score
 from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler, TensorDataset)
-from transformers import BertTokenizer
-from transformers.models.bert.modeling_bert import BertModel
+# from transformers import BertTokenizer
+# from transformers.models.bert.modeling_bert import BertModel
+from transformers import AutoTokenizer
+from transformers import AutoModel, AutoModelForTokenClassification
 
 from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
 from ..models.lcf_atepc import LCF_ATEPC
@@ -49,17 +51,17 @@ def train4atepc(config):
     if opt.model_path_to_save and not os.path.exists(opt.model_path_to_save):
         os.makedirs(opt.model_path_to_save)
 
-    processor = ATEPCProcessor()
-    label_list = processor.get_labels()
-    num_labels = len(label_list) + 1
-
     optimizers = {
         'adam': torch.optim.Adam,
         'adamw': torch.optim.AdamW
     }
 
-    tokenizer = BertTokenizer.from_pretrained(opt.pretrained_bert_name, do_lower_case=True)
-    bert_base_model = BertModel.from_pretrained(opt.pretrained_bert_name)
+    tokenizer = AutoTokenizer.from_pretrained(opt.pretrained_bert_name, do_lower_case=True)
+    bert_base_model = AutoModel.from_pretrained(opt.pretrained_bert_name)
+    processor = ATEPCProcessor(tokenizer)
+    label_list = processor.get_labels()
+    num_labels = len(label_list) + 1
+
     bert_base_model.config.num_labels = num_labels
 
     for arg in vars(opt):
@@ -185,16 +187,32 @@ def train4atepc(config):
                                    f' APC_F1: {current_apc_test_f1}(max:{max_apc_test_f1}) | '
 
                         if opt.model_name == 'lcf_atepc' and opt.use_bert_spc:
-                            postfix += f'ATE_F1: N.A. for LCF-ATEPC using BERT-SPC)'
+                            postfix += f'ATE_F1: N.A. for LCF-ATEPC under use_bert_spc=True)'
                         else:
                             postfix += f'ATE_F1: {current_ate_test_f1}(max:{max_ate_test_f1})'
                     else:
-                        postfix = 'No evaluate until epoch:{}'.format(opt.evaluate_begin)
+                        postfix = 'Epoch:{} | No evaluate until epoch:{}'.format(epoch, opt.evaluate_begin)
 
                     iterator.postfix = postfix
                     iterator.refresh()
 
-        return save_path
+        # return the model paths of multiple training in case of loading the best model after training
+        if save_path:
+            logger.info('------------------------------------Training Summary------------------------------------')
+            logger.info('Max APC Accuracy: {:.15f} Max APC F1: {:.15f} Max ATE F1: {}'.format(max_apc_test_acc * 100,
+                                                                                              max_apc_test_f1 * 100,
+                                                                                              max_ate_test_f1)
+                        )
+            return save_path
+        else:
+            # direct return model if do not evaluate
+            if opt.model_path_to_save:
+                save_path = '{0}/{1}_{2}/'.format(opt.model_path_to_save,
+                                                  opt.model_name,
+                                                  opt.lcf,
+                                                  )
+                _save_model(opt, model, save_path, mode=0)
+            return model, opt
 
     def evaluate(eval_ATE=True, eval_APC=True):
         apc_result = {'max_apc_test_acc': 0, 'max_apc_test_f1': 0}

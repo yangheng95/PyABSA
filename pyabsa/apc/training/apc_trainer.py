@@ -15,7 +15,8 @@ import torch.nn as nn
 import shutil
 from tqdm import tqdm
 from torch.utils.data import DataLoader
-from transformers import BertModel, BertTokenizer
+# from transformers import BertModel, BertTokenizer
+from transformers import AutoTokenizer, AutoModel
 from sklearn import metrics
 
 from pyabsa.apc.models.bert_base import BERT_BASE
@@ -33,8 +34,11 @@ logger = get_logger(os.getcwd())
 class Instructor:
     def __init__(self, opt):
         self.opt = opt
-        self.bert = BertModel.from_pretrained(self.opt.pretrained_bert_name)
-        self.bert_tokenizer = BertTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
+        self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert_name)
+        self.bert_tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
+
+        self.bert_tokenizer.bos_token = self.bert_tokenizer.bos_token if self.bert_tokenizer.bos_token else '[CLS]'
+        self.bert_tokenizer.eos_token = self.bert_tokenizer.eos_token if self.bert_tokenizer.eos_token else '[SEP]'
         self.tokenizer = Tokenizer4Bert(self.bert_tokenizer, self.opt.max_seq_len)
 
         trainset = ABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
@@ -166,7 +170,7 @@ class Instructor:
                                                                         f1 * 100,
                                                                         max_f1 * 100))
                     else:
-                        postfix = 'No evaluate until epoch:{}'.format(self.opt.evaluate_begin)
+                        postfix = 'Epoch:{} | No evaluate until epoch:{}'.format(epoch, self.opt.evaluate_begin)
 
                     iterator.postfix = postfix
                     iterator.refresh()

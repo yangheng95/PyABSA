@@ -72,8 +72,8 @@ def pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating
 class Tokenizer4Bert:
     def __init__(self, tokenizer, max_seq_len):
         self.tokenizer = tokenizer
-        self.cls_token = tokenizer.cls_token
-        self.sep_token = tokenizer.sep_token
+        self.bos_token = tokenizer.bos_token if tokenizer.bos_token else '[CLS]'
+        self.eos_token = tokenizer.eos_token if tokenizer.eos_token else '[SEP]'
         self.max_seq_len = max_seq_len
 
     def text_to_sequence(self, text, reverse=False, padding='post', truncating='post'):
@@ -175,10 +175,13 @@ def prepare_input_from_text(opt, tokenizer, text_left, text_right, aspect):
         text_left = ' '.join(text_left.split(' ')[int(-(tokenizer.max_seq_len - len(aspect.split())) / 2) - 1:])
         text_right = ' '.join(text_right.split(' ')[:int((tokenizer.max_seq_len - len(aspect.split())) / 2) + 1])
 
+    bos_token = tokenizer.tokenizer.bos_token if tokenizer.tokenizer.bos_token else '[CLS]'
+    eos_token = tokenizer.tokenizer.eos_token if tokenizer.tokenizer.eos_token else '[SEP]'
+
     text_raw = text_left + ' ' + aspect + ' ' + text_right
-    text_spc = '[CLS] ' + text_raw + ' [SEP] ' + aspect + ' [SEP]'
+    text_spc = bos_token + ' ' + text_raw + ' ' + eos_token + ' ' + aspect + ' ' + eos_token
     text_bert_indices = tokenizer.text_to_sequence(text_spc)
-    text_raw_bert_indices = tokenizer.text_to_sequence('[CLS] ' + text_raw + ' [SEP]')
+    text_raw_bert_indices = tokenizer.text_to_sequence(bos_token + ' ' + text_raw + ' ' + eos_token)
     aspect_bert_indices = tokenizer.text_to_sequence(aspect)
 
     inputs = {
@@ -196,9 +199,9 @@ def prepare_input_from_text(opt, tokenizer, text_left, text_right, aspect):
 def get_syntax_distance(text_raw, aspect, tokenizer):
     # Find distance in dependency parsing tree
     raw_tokens, dist = calculate_dep_dist(text_raw, aspect)
-    raw_tokens.insert(0, tokenizer.cls_token)
+    raw_tokens.insert(0, tokenizer.bos_token)
     dist.insert(0, max(dist))
-    raw_tokens.append(tokenizer.sep_token)
+    raw_tokens.append(tokenizer.eos_token)
     dist.append(max(dist))
     syntactical_dist = tokenizer.tokenize(raw_tokens, dist)[1]
     # syntactical_dist = tokenizer.syntax_distance_alignment(raw_tokens, dist)
@@ -282,18 +285,31 @@ def build_spc_mask_vec(opt, text_ids):
     return spc_mask_vec
 
 
+def build_sentiment_window(examples, tokenizer):
+    copy_side_aspect('left', examples[0], examples[0])
+    for idx in range(1, len(examples)):
+        if is_similar(examples[idx - 1]['text_bert_indices'], examples[idx]['text_bert_indices'], tokenizer):
+            copy_side_aspect('right', examples[idx - 1], examples[idx])
+            copy_side_aspect('left', examples[idx], examples[idx - 1])
+        else:
+            copy_side_aspect('right', examples[idx - 1], examples[idx - 1])
+            copy_side_aspect('left', examples[idx], examples[idx])
+    copy_side_aspect('right', examples[-1], examples[-1])
+    return examples
+
+
 def copy_side_aspect(direct='left', target=None, source=None):
     for data_item in ['lcf_vec']:
         target[direct + '_' + data_item] = source[data_item]
 
 
-def is_similar(s1, s2):
+def is_similar(s1, s2, tokenizer):
     # some reviews in the atepc_datasets are broken so the similarity check is used
     count = 0.
     s1 = list(s1)
     s2 = list(s2)
-    s1 = s1[:s1.index(102) if 102 in s1 else len(s1)]
-    s2 = s2[:s2.index(102) if 102 in s2 else len(s2)]
+    s1 = s1[:s1.index(tokenizer.eos_token) if tokenizer.eos_token in s1 else len(s1)]
+    s2 = s2[:s2.index(tokenizer.eos_token) if tokenizer.eos_token in s2 else len(s2)]
     for ids in s1:
         if ids in s2:
             count += 1

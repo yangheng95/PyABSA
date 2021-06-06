@@ -10,7 +10,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 from tqdm import tqdm
-from .apc_utils import copy_side_aspect, is_similar
+from .apc_utils import build_sentiment_window
 from .apc_utils import get_lca_ids_and_cdm_vec, get_cdw_vec
 from .apc_utils import get_syntax_distance, build_spc_mask_vec
 from .apc_utils import load_datasets, prepare_input_from_text
@@ -175,16 +175,9 @@ class ABSADataset(Dataset):
                     raise e
 
         if all_data and 'slide' in self.opt.model_name:
-            copy_side_aspect('left', all_data[0], all_data[0])
-            for idx in range(1, len(all_data)):
-                if is_similar(all_data[idx - 1]['text_bert_indices'],
-                              all_data[idx]['text_bert_indices']):
-                    copy_side_aspect('right', all_data[idx - 1], all_data[idx])
-                    copy_side_aspect('left', all_data[idx], all_data[idx - 1])
-                else:
-                    copy_side_aspect('right', all_data[idx - 1], all_data[idx - 1])
-                    copy_side_aspect('left', all_data[idx], all_data[idx])
-            copy_side_aspect('right', all_data[-1], all_data[-1])
+            if 'slide' in self.opt.model_name:
+                all_data = build_sentiment_window(all_data, self.tokenizer)
+
         self.all_data = all_data
         return all_data
 

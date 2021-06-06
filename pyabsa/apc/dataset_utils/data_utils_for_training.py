@@ -8,7 +8,7 @@ import os
 
 import tqdm
 from torch.utils.data import Dataset
-from .apc_utils import is_similar, copy_side_aspect
+from .apc_utils import build_sentiment_window
 from .apc_utils import get_lca_ids_and_cdm_vec, get_cdw_vec
 from .apc_utils import get_syntax_distance, build_spc_mask_vec
 from .apc_utils import load_datasets, prepare_input_from_text
@@ -102,15 +102,7 @@ class ABSADataset(Dataset):
             all_data.append(data)
 
         if 'slide' in opt.model_name:
-            copy_side_aspect('left', all_data[0], all_data[0])
-            for idx in range(1, len(all_data)):
-                if is_similar(all_data[idx - 1]['text_bert_indices'], all_data[idx]['text_bert_indices']):
-                    copy_side_aspect('right', all_data[idx - 1], all_data[idx])
-                    copy_side_aspect('left', all_data[idx], all_data[idx - 1])
-                else:
-                    copy_side_aspect('right', all_data[idx - 1], all_data[idx - 1])
-                    copy_side_aspect('left', all_data[idx], all_data[idx])
-            copy_side_aspect('right', all_data[-1], all_data[-1])
+            all_data = build_sentiment_window(all_data, tokenizer)
 
         # update polarities_dim, init model behind this function!
         p_min, p_max = min(polarities_set), max(polarities_set)
