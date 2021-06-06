@@ -2,11 +2,11 @@
 # 方面术语抽取及方面情感分类工具
 ![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg) 
 [![PyPI](https://img.shields.io/pypi/v/pyabsa)](https://pypi.org/project/pyabsa/)
-![welcome](https://img.shields.io/badge/Contribution-Welcome-brightgreen)
-
 ![Repo Size](https://img.shields.io/github/repo-size/yangheng95/pyabsa)
 [![PyPI_downloads](https://img.shields.io/pypi/dm/pyabsa)](https://pypi.org/project/pyabsa/)
 ![License](https://img.shields.io/pypi/l/pyabsa?logo=PyABSA)
+![welcome](https://img.shields.io/badge/Contribution-Welcome-brightgreen)
+[![Gitter](https://badges.gitter.im/PyABSA/community.svg)](https://gitter.im/PyABSA/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 > Build from LC-ABSA/LCF-ABSA and LCF-ATEPC.
 

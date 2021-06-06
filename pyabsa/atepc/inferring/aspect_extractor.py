@@ -41,15 +41,11 @@ class AspectExtractor:
         model_classes = {
             'lcf_atepc': LCF_ATEPC,
         }
-        self.processor = ATEPCProcessor()
-        self.label_list = self.processor.get_labels()
-        self.num_labels = len(self.label_list) + 1
+
         # load from a model path
         if not isinstance(model_arg, str):
-            # self.model = model_arg[0]
-            # self.opt = model_arg[1]
-            raise NotImplementedError('No implemented yet')
-
+            self.model = model_arg[0]
+            self.opt = model_arg[1]
         else:
             print('Try to load trained model and config from', model_arg)
             try:
@@ -60,7 +56,6 @@ class AspectExtractor:
                 self.opt = pickle.load(open(config_path, 'rb'))
 
                 if state_dict_path:
-                    self.opt.pretrained_bert_name = self.opt.pretrained_bert_name
                     bert_base_model = BertModel.from_pretrained(self.opt.pretrained_bert_name)
                     bert_base_model.config.num_labels = self.num_labels
                     self.model = model_classes[self.opt.model_name](bert_base_model, self.opt)
@@ -73,7 +68,9 @@ class AspectExtractor:
                               'https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing')
 
         self.tokenizer = BertTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
-
+        self.processor = ATEPCProcessor(self.tokenizer)
+        self.label_list = self.processor.get_labels()
+        self.num_labels = len(self.label_list) + 1
         random.seed(self.opt.seed)
         np.random.seed(self.opt.seed)
         torch.manual_seed(self.opt.seed)

@@ -119,6 +119,11 @@ class DataProcessor(object):
 class ATEPCProcessor(DataProcessor):
     """Processor for the CoNLL-2003 data set."""
 
+    def __init__(self, tokenizer):
+        self.tokenizer = tokenizer
+        self.tokenizer.bos_token = tokenizer.bos_token if tokenizer.bos_token else '[CLS]'
+        self.tokenizer.eos_token = tokenizer.eos_token if tokenizer.eos_token else '[SEP]'
+
     def get_train_examples(self, data_dir, set_tag):
         """See base class."""
         return self._create_examples(
@@ -130,7 +135,7 @@ class ATEPCProcessor(DataProcessor):
             self._read_tsv(data_dir), set_tag)
 
     def get_labels(self):
-        return ["O", "B-ASP", "I-ASP", "[CLS]", "[SEP]"]
+        return ["O", "B-ASP", "I-ASP", self.tokenizer.bos_token, self.tokenizer.eos_token]
 
     def _create_examples(self, lines, set_type):
         examples = []
@@ -156,7 +161,8 @@ class ATEPCProcessor(DataProcessor):
 
 def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, opt=None):
     """Loads a data file into a list of `InputBatch`s."""
-
+    bos_token = tokenizer.bos_token
+    eos_token = tokenizer.eos_token
     label_map = {label: i for i, label in enumerate(label_list, 1)}
     features = []
     polarities_set = set()
@@ -172,12 +178,12 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
         labels = []
         valid = []
         label_mask = []
-        text_spc_tokens.extend(['[SEP]'])
+        text_spc_tokens.extend([eos_token])
         text_spc_tokens.extend(aspect_tokens)
         enum_tokens = text_spc_tokens
-        IOB_label.extend(['[SEP]'])
+        IOB_label.extend([eos_token])
 
-        spc_tokens_for_lcf_vec = ['[CLS]'] + example.text_a + ['[SEP]'] + example.text_b + ['[SEP]']
+        spc_tokens_for_lcf_vec = [bos_token] + example.text_a + [eos_token] + example.text_b + [eos_token]
         text_spc_ids_fof_lcf_vec = tokenizer.convert_tokens_to_ids(spc_tokens_for_lcf_vec)
         aspect_ids_for_lcf_vec = tokenizer.convert_tokens_to_ids(example.text_b)
         _, lcf_cdm_vec = get_lca_ids_and_cdm_vec(bert_spc_indices=text_spc_ids_fof_lcf_vec,
@@ -208,22 +214,21 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
         ntokens = []
         segment_ids = []
         label_ids = []
-        ntokens.append("[CLS]")
+        ntokens.append(bos_token)
         segment_ids.append(0)
         valid.insert(0, 1)
         label_mask.insert(0, 1)
-        label_ids.append(label_map["[CLS]"])
-        # label_ids.append(label_map["O"])
+        label_ids.append(label_map[bos_token])
         for i, token in enumerate(tokens):
             ntokens.append(token)
             segment_ids.append(0)
             if len(labels) > i:
                 label_ids.append(label_map[labels[i]])
-        ntokens.append("[SEP]")
+        ntokens.append(eos_token)
         segment_ids.append(0)
         valid.append(1)
         label_mask.append(1)
-        label_ids.append(label_map["[SEP]"])
+        label_ids.append(label_map[eos_token])
         # label_ids.append(label_map["O"])
         input_ids_spc = tokenizer.convert_tokens_to_ids(ntokens)
         input_mask = [1] * len(input_ids_spc)
@@ -245,21 +250,6 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
         assert len(label_ids) == max_seq_len
         assert len(valid) == max_seq_len
         assert len(label_mask) == max_seq_len
-
-        # if ex_index < 5:
-        #     print("*** Example ***")
-        #     print("guid: %s" % (example.guid))
-        #     print("tokens: %s" % " ".join(
-        #             [str(x) for x in ntokens]))
-        #     print("input_ids: %s" % " ".join([str(x) for x in input_ids_spc]))
-        #     print("input_mask: %s" % " ".join([str(x) for x in input_mask]))
-        #     print("segment_ids: %s" % " ".join([str(x) for x in segment_ids]))
-        #     # print("label: %s (id = %d)" % (example.label, label_ids))
-        #
-        # input_ids_spc = np.array(input_ids_spc)
-        # label_ids = np.array(label_ids)
-        # labels = np.array(labels)
-        # valid = np.array(valid)
 
         features.append(
             InputFeatures(input_ids_spc=input_ids_spc,
