@@ -5,25 +5,10 @@
 
 import copy
 
-import numpy as np
 import torch
 import torch.nn as nn
-from transformers.models.bert.modeling_bert import BertPooler, BertSelfAttention
-
-
-class SelfAttention(nn.Module):
-    def __init__(self, config, opt):
-        super(SelfAttention, self).__init__()
-        self.opt = opt
-        self.config = config
-        self.SA = BertSelfAttention(config)
-        self.tanh = torch.nn.Tanh()
-
-    def forward(self, inputs):
-        zero_vec = np.zeros((inputs.size(0), 1, 1, self.opt.max_seq_len))
-        zero_tensor = torch.tensor(zero_vec).float().to(self.opt.device)
-        SA_out = self.SA(inputs, zero_tensor)
-        return self.tanh(SA_out[0])
+from transformers.models.bert.modeling_bert import BertPooler
+from pyabsa.encoder.sa_encoder import Encoder
 
 
 class LCF_BERT(nn.Module):
@@ -33,9 +18,9 @@ class LCF_BERT(nn.Module):
         self.bert4local = copy.deepcopy(bert) if opt.use_dual_bert else self.bert4global
         self.opt = opt
         self.dropout = nn.Dropout(opt.dropout)
-        self.bert_SA = SelfAttention(bert.config, opt)
+        self.bert_SA = Encoder(bert.config, opt)
         self.linear2 = nn.Linear(opt.embed_dim * 2, opt.embed_dim)
-        self.bert_SA_ = SelfAttention(bert.config, opt)
+        self.bert_SA_ = Encoder(bert.config, opt)
         self.bert_pooler = BertPooler(bert.config)
         self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
 

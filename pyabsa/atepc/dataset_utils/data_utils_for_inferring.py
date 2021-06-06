@@ -5,8 +5,11 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
+import warnings
 
-from pyabsa.apc.dataset_utils.apc_utils import get_lca_ids_and_cdm_vec, get_cdw_vec
+from pyabsa.apc.dataset_utils.apc_utils import (get_syntax_distance,
+                                                get_lca_ids_and_cdm_vec,
+                                                get_cdw_vec)
 
 from pyabsa.atepc.dataset_utils.atepc_utils import split_text
 
@@ -90,7 +93,7 @@ class ATEPCProcessor:
         return self._create_examples(extraction_result)
 
     def get_labels(self):
-        return ["O", "B-ASP", "I-ASP", "[CLS]", "[SEP]"]
+        return ["O", "B-ASP", "I-ASP", self.tokenizer.bos_token, self.tokenizer.eos_token]
 
     def _create_examples(self, lines):
         examples = []
@@ -105,6 +108,8 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
 
     label_map = {label: i for i, label in enumerate(label_list, 1)}
     features = []
+    bos_token = tokenizer.bos_token
+    eos_token = tokenizer.eos_token
     for (ex_index, example) in enumerate(examples):
         text_spc_tokens = example.text_a[:]
         aspect_tokens = example.text_b[:]
@@ -123,12 +128,22 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
         spc_tokens_for_lcf_vec = ['[CLS]'] + example.text_a + ['[SEP]'] + example.text_b + ['[SEP]']
         text_spc_ids_fof_lcf_vec = tokenizer.convert_tokens_to_ids(spc_tokens_for_lcf_vec)
         aspect_ids_for_lcf_vec = tokenizer.convert_tokens_to_ids(example.text_b)
+
+        if 'lcfs' in opt.model_name or opt.use_syntax_based_SRD:
+            syntactical_dist = get_syntax_distance(example.text_a, example.text_b, tokenizer, opt)
+            print('(Force) to use syntax distance-based semantic-relative distance,'
+                  ' however Chinese is not supported to parse syntax distance yet!')
+        else:
+            syntactical_dist = None
+
         _, lcf_cdm_vec = get_lca_ids_and_cdm_vec(bert_spc_indices=text_spc_ids_fof_lcf_vec,
                                                  aspect_indices=aspect_ids_for_lcf_vec,
-                                                 opt=opt)
+                                                 opt=opt,
+                                                 syntactical_dist=syntactical_dist)
         lcf_cdw_vec = get_cdw_vec(bert_spc_indices=text_spc_ids_fof_lcf_vec,
                                   aspect_indices=aspect_ids_for_lcf_vec,
-                                  opt=opt)
+                                  opt=opt,
+                                  syntactical_dist=syntactical_dist)
 
         IOB_label.extend(aspect_label)
         label_lists = IOB_label

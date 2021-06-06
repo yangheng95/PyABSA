@@ -4,44 +4,16 @@
 # Copyright (C) 2019. All Rights Reserved.
 
 
-from transformers.models.bert.modeling_bert import BertForTokenClassification, BertPooler, BertSelfAttention
-
 from torch.nn import CrossEntropyLoss
 import torch
 import torch.nn as nn
 import copy
 import numpy as np
 
-from ..dataset_utils.data_utils_for_training import SENTIMENT_PADDING
+from transformers.models.bert.modeling_bert import BertForTokenClassification, BertPooler
 
-
-class Encoder(nn.Module):
-    def __init__(self, config, opt, layer_num=1):
-        super(Encoder, self).__init__()
-        self.opt = opt
-        self.config = config
-        self.encoder = nn.ModuleList([SelfAttention(config, opt) for _ in range(layer_num)])
-        self.tanh = torch.nn.Tanh()
-
-    def forward(self, x):
-        for i, enc in enumerate(self.encoder):
-            x = self.tanh(enc(x)[0])
-        return x
-
-
-class SelfAttention(nn.Module):
-    def __init__(self, config, opt):
-        super(SelfAttention, self).__init__()
-        self.opt = opt
-        self.config = config
-        self.SA = BertSelfAttention(config)
-
-    def forward(self, inputs):
-        zero_vec = np.zeros((inputs.size(0), 1, 1, self.opt.max_seq_len))
-        zero_tensor = torch.tensor(zero_vec).float().to(self.opt.device)
-        SA_out = self.SA(inputs, zero_tensor)
-        return SA_out
-
+from pyabsa.atepc.dataset_utils.data_utils_for_training import SENTIMENT_PADDING
+from pyabsa.encoder.sa_encoder import Encoder
 
 class LCF_ATEPC(BertForTokenClassification):
 

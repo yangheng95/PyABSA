@@ -28,14 +28,14 @@ from ..models.lcf_atepc import LCF_ATEPC
 from ..models.rlcf_atepc import RLCF_ATEPC
 from pyabsa.logger import get_logger
 
-import warnings
-
 logger = get_logger(os.getcwd())
-
-warnings.filterwarnings('ignore')
 
 
 def train4atepc(config):
+
+    import warnings
+    warnings.filterwarnings('ignore')
+
     opt = config
 
     if opt.gradient_accumulation_steps < 1:

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# file: run_apc.py
+# file: train_apc_without_test_set.py
 # time: 2021/5/26 0026
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
 ########################################################################################################################
-#                           train and evaluate on your own atepc_datasets (need train and test atepc_datasets)                     #
+#                  train and evaluate on your own atepc_datasets (need train and test atepc_datasets)                  #
 #              your custom dataset should have the continue polarity labels like [0,N-1] for N categories              #
 ########################################################################################################################
 

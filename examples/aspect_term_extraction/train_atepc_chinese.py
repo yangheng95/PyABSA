@@ -17,7 +17,7 @@ param_dict = {'model_name': 'lcf_atepc',  # {lcf_atepc, rlcf_atepc}
               'batch_size': 16,
               'seed': {996, 7, 666},
               'device': 'cuda',           # overrides auto_device parameter
-              'num_epoch': 10,
+              'num_epoch': 6,
               'optimizer': "adamw",       # {adam, adamw}
               'learning_rate': 0.00005,
               'pretrained_bert_name': "bert-base-chinese",
@@ -28,9 +28,9 @@ param_dict = {'model_name': 'lcf_atepc',  # {lcf_atepc, rlcf_atepc}
               'log_step': 5,              # Evaluate per steps
               'SRD': 3,                   # Distance threshold to calculate local context
               'lcf': "cdw",               # {cdw, cdm, fusion}
-              'dropout': 0.1,
+              'dropout': 0,
               'l2reg': 0.00001,
-              'evaluate_begin': 2  # evaluate begin with epoch
+              'evaluate_begin': 5  # evaluate begin with epoch
               # 'polarities_dim': 2      # Deprecated, polarity_dim will be automatically detected
               }
 

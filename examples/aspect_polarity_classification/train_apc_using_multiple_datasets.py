@@ -5,6 +5,11 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
+########################################################################################################################
+#                  train and evaluate on your own atepc_datasets (need train and test atepc_datasets)                  #
+#              your custom dataset should have the continue polarity labels like [0,N-1] for N categories              #
+########################################################################################################################
+
 from pyabsa import train_apc
 
 # You can place multiple atepc_datasets file in one dir to easily train using some atepc_datasets

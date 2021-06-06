@@ -23,6 +23,7 @@ from pyabsa.apc.models.bert_base import BERT_BASE
 from pyabsa.apc.models.bert_spc import BERT_SPC
 from pyabsa.apc.models.lcf_bert import LCF_BERT
 from pyabsa.apc.models.slide_lcf_bert import SLIDE_LCF_BERT
+from pyabsa.apc.models.lca_bert import LCA_BERT
 from pyabsa.apc.dataset_utils.data_utils_for_training import ABSADataset
 from pyabsa.apc.dataset_utils.apc_utils import Tokenizer4Bert
 
@@ -41,14 +42,20 @@ class Instructor:
         self.bert_tokenizer.eos_token = self.bert_tokenizer.eos_token if self.bert_tokenizer.eos_token else '[SEP]'
         self.tokenizer = Tokenizer4Bert(self.bert_tokenizer, self.opt.max_seq_len)
 
-        trainset = ABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
-        self.train_data_loader = DataLoader(dataset=trainset,
+        self.train_set = ABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
+        self.train_data_loader = DataLoader(dataset=self.train_set,
                                             batch_size=self.opt.batch_size,
                                             shuffle=True,
                                             pin_memory=True)
+
+        logger.info("***** Running training *****")
+        logger.info("  Num examples = %d", len(self.train_set))
+        logger.info("  Batch size = %d", self.opt.batch_size)
+        logger.info("  Num steps = %d", int(len(self.train_set) / self.opt.batch_size) * self.opt.num_epoch)
+
         if 'test' in self.opt.dataset_file:
-            testset = ABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
-            self.test_data_loader = DataLoader(dataset=testset,
+            self.test_set = ABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
+            self.test_data_loader = DataLoader(dataset=self.test_set,
                                                batch_size=self.opt.batch_size,
                                                shuffle=False,
                                                pin_memory=True)
@@ -102,11 +109,6 @@ class Instructor:
         self.model.to(self.opt.device)
 
     def _train_and_evaluate(self, criterion, lca_criterion, optimizer):
-
-        logger.info("***** Running training *****")
-        logger.info("  Num examples = %d", len(self.train_data_loader))
-        logger.info("  Batch size = %d", self.opt.batch_size)
-        logger.info("  Num steps = %d", int(len(self.train_data_loader) / self.opt.batch_size) * self.opt.num_epoch)
 
         max_test_acc = 0
         max_f1 = 0
@@ -257,7 +259,8 @@ def train4apc(opt):
         'lcf_bert': LCF_BERT,
         'lcfs_bert': LCF_BERT,
         'slide_lcf_bert': SLIDE_LCF_BERT,
-        'slide_lcfs_bert': SLIDE_LCF_BERT
+        'slide_lcfs_bert': SLIDE_LCF_BERT,
+        'lca_bert': LCA_BERT
     }
 
     optimizers = {

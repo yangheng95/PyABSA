@@ -26,6 +26,7 @@ param_dict = {'model_name': 'lcf_atepc',
               'max_seq_len': 80,
               'log_step': 5,           # evaluate per steps
               'SRD': 3,                # distance threshold to calculate local context
+              # 'use_syntax_based_SRD': True,   # force to use syntax-based semantic-relative distance in all lcf-based models
               'lcf': "cdw",            # {cdw, cdm, fusion}
               'dropout': 0,
               'l2reg': 0.00001,
@@ -66,6 +67,7 @@ param_dict = {'model_name': 'lcf_atepc',
               'max_seq_len': 80,
               'log_step': 5,           # evaluate per steps
               'SRD': 3,                # distance threshold to calculate local context
+              # 'use_syntax_based_SRD': True,  # force to use syntax-based semantic-relative distance in all lcf-based models
               'lcf': "cdw",            # {cdw, cdm, fusion}
               'dropout': 0,
               'l2reg': 0.00001,

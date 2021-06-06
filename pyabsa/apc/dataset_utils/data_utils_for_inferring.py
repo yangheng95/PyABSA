@@ -123,8 +123,10 @@ class ABSADataset(Dataset):
                 text_bert_indices = prepared_inputs['text_bert_indices']
                 text_raw_bert_indices = prepared_inputs['text_raw_bert_indices']
                 aspect_bert_indices = prepared_inputs['aspect_bert_indices']
-                syntactical_dist = get_syntax_distance(text_raw, aspect, self.tokenizer) \
-                    if 'lcfs' in self.opt.model_name else None
+                if 'lcfs' in self.opt.model_name or self.opt.use_syntax_based_SRD:
+                    syntactical_dist = get_syntax_distance(text_raw, aspect, self.tokenizer.tokenizer, self.opt)
+                else:
+                    syntactical_dist = None
 
                 if 'lca' in self.opt.model_name:
                     lca_ids, lcf_vec = get_lca_ids_and_cdm_vec(self.opt, text_bert_indices,

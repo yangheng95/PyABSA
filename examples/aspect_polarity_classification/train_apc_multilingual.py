@@ -6,7 +6,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 ########################################################################################################################
-#                           train and evaluate on your own atepc_datasets (need train and test atepc_datasets)                     #
+#                  train and evaluate on your own atepc_datasets (need train and test atepc_datasets)                  #
 #              your custom dataset should have the continue polarity labels like [0,N-1] for N categories              #
 ########################################################################################################################
 
@@ -14,9 +14,9 @@ from pyabsa import train_apc
 
 
 param_dict = {'model_name': 'bert_spc',   # {slide_lcfs_bert, slide_lcf_bert, lcf_bert, lcfs_bert, bert_spc, bert_base}
-              'batch_size': 32,
+              'batch_size': 16,
               'seed': {36, 6, 86},         # you can use a set of random seeds to train multiple rounds
-              'num_epoch': 5,
+              'num_epoch': 6,
               'optimizer': "adam",         # {adam, adamw}
               'learning_rate': 0.00003,
               'pretrained_bert_name': "bert-base-multilingual-uncased",
@@ -32,7 +32,7 @@ param_dict = {'model_name': 'bert_spc',   # {slide_lcfs_bert, slide_lcf_bert, lc
               'dropout': 0,
               'l2reg': 0.00001,
               'dynamic_truncate': True,    # Dynamic truncate the text according to the position of aspect term
-              'evaluate_begin': 2  # evaluate begin with epoch
+              'evaluate_begin': 5  # evaluate begin with epoch
               }
 
 
