@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-# file: train_atepc.py
-# time: 2021/5/21 0021
+# file: train_atepc_english.py
+# time: 2021/6/8 0008
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-
 ########################################################################################################################
-#                                               ATEPC training script                                                  #
+#                                               ATEPC training_tutorials script                                        #
 ########################################################################################################################
 
 
@@ -34,22 +33,22 @@ param_dict = {'model_name': 'lcf_atepc',
               # 'polarities_dim': 3      # deprecated, polarity_dim will be automatically detected
               }
 
-save_path = ''
+save_path = '../state_dict'
 
 # Mind that the 'train_atepc' function only evaluates in last few epochs
-train_set_path = 'atepc_datasets/SemEval/restaurant14'
+train_set_path = '../atepc_datasets/SemEval/restaurant14'
 aspect_extractor = train_atepc(parameter_dict=param_dict,      # set param_dict=None to use default model
                                dataset_path=train_set_path,    # file or dir, dataset(s) will be automatically detected
                                model_path_to_save=save_path,   # set model_path_to_save=None to avoid save model
-                               auto_evaluate=True,             # evaluate model while training if test set is available
+                               auto_evaluate=True,             # evaluate model while training_tutorials if test set is available
                                auto_device=True                # Auto choose CUDA or CPU
                                )
 
-train_set_path = 'atepc_datasets/SemEval/laptop14'
+train_set_path = '../atepc_datasets/SemEval/laptop14'
 aspect_extractor = train_atepc(parameter_dict=param_dict,      # set param_dict=None to use default model
                                dataset_path=train_set_path,    # file or dir, dataset(s) will be automatically detected
                                model_path_to_save=save_path,   # set model_path_to_save=None to avoid save model
-                               auto_evaluate=True,             # evaluate model while training if test set is available
+                               auto_evaluate=True,             # evaluate model while training_tutorials if test set is available
                                auto_device=True                # Auto choose CUDA or CPU
                                )
 
@@ -76,19 +75,18 @@ param_dict = {'model_name': 'lcf_atepc',
               }
 
 # Mind that the 'train_atepc' function only evaluates in last few epochs
-train_set_path = 'atepc_datasets/SemEval/restaurant14'
+train_set_path = '../atepc_datasets/SemEval/restaurant14'
 aspect_extractor = train_atepc(parameter_dict=param_dict,      # set param_dict=None to use default model
                                dataset_path=train_set_path,    # file or dir, dataset(s) will be automatically detected
                                model_path_to_save=save_path,   # set model_path_to_save=None to avoid save model
-                               auto_evaluate=True,             # evaluate model while training if test set is available
+                               auto_evaluate=True,             # evaluate model while training_tutorials if test set is available
                                auto_device=True                # Auto choose CUDA or CPU
                                )
 
-train_set_path = 'atepc_datasets/SemEval/laptop14'
+train_set_path = '../atepc_datasets/SemEval/laptop14'
 aspect_extractor = train_atepc(parameter_dict=param_dict,      # set param_dict=None to use default model
                                dataset_path=train_set_path,    # file or dir, dataset(s) will be automatically detected
                                model_path_to_save=save_path,   # set model_path_to_save=None to avoid save model
-                               auto_evaluate=True,             # evaluate model while training if test set is available
+                               auto_evaluate=True,             # evaluate model while training_tutorials if test set is available
                                auto_device=True                # Auto choose CUDA or CPU
                                )
-

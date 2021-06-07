@@ -7,7 +7,7 @@
 
 
 ########################################################################################################################
-#                                               ATEPC training script                                                  #
+#                                               ATEPC training_tutorials script                                        #
 ########################################################################################################################
 
 
@@ -36,12 +36,12 @@ param_dict = {'model_name': 'lcf_atepc',
 # Mind that the 'train_atepc' function only evaluates in last few epochs
 # We dont have enough resources to train this model because of the size of the multilingual dataset
 # Calling for computing resources to train this model and share with community
-train_set_path = 'atepc_datasets/multilingual'
-save_path = 'state_dict'
+train_set_path = '../atepc_datasets/multilingual'
+save_path = '../state_dict'
 aspect_extractor = train_atepc(parameter_dict=param_dict,      # set param_dict=None to use default model
                                dataset_path=train_set_path,    # file or dir, dataset(s) will be automatically detected
                                model_path_to_save=save_path,   # set model_path_to_save=None to avoid save model
-                               auto_evaluate=True,             # evaluate model while training if test set is available
+                               auto_evaluate=True,             # evaluate model while training_tutorials if test set is available
                                auto_device=True                # Auto choose CUDA or CPU
                                )
 

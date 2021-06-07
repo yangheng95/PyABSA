@@ -28,10 +28,10 @@ from ..models.lcf_atepc import LCF_ATEPC
 from ..models.rlcf_atepc import RLCF_ATEPC
 from pyabsa.logger import get_logger
 
-logger = get_logger(os.getcwd())
-
 
 def train4atepc(config):
+    log_name = '{}_{}_{}'.format(config.model_name, config.lcf, config.SRD)
+    logger = get_logger(os.getcwd(), log_name=log_name, log_type='training_tutorials')
 
     import warnings
     warnings.filterwarnings('ignore')
@@ -108,7 +108,7 @@ def train4atepc(config):
 
     def train():
 
-        logger.info("***** Running training *****")
+        logger.info("***** Running training_tutorials *****")
         logger.info("  Num examples = %d", len(train_examples))
         logger.info("  Batch size = %d", opt.batch_size)
         logger.info("  Num steps = %d", num_train_optimization_steps)
@@ -196,7 +196,7 @@ def train4atepc(config):
                     iterator.postfix = postfix
                     iterator.refresh()
 
-        # return the model paths of multiple training in case of loading the best model after training
+        # return the model paths of multiple training_tutorials in case of loading the best model after training_tutorials
         if save_path:
             logger.info('------------------------------------Training Summary------------------------------------')
             logger.info('Max APC Accuracy: {:.15f} Max APC F1: {:.15f} Max ATE F1: {}'.format(max_apc_test_acc * 100,

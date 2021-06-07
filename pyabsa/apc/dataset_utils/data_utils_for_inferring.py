@@ -84,7 +84,7 @@ class ABSADataset(Dataset):
 
         for text in tqdm(samples, postfix='building word indices...'):
             try:
-                # handle for empty lines in inferring dataset
+                # handle for empty lines in inferring_tutorials dataset
                 if text is None or '' == text.strip():
                     raise RuntimeError('Invalid Input!')
 

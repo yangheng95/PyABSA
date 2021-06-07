@@ -17,8 +17,8 @@ from pyabsa.apc.training.apc_trainer import train4apc
 from pyabsa.atepc.training.atepc_trainer import train4atepc
 from pyabsa.atepc.inferring.aspect_extractor import AspectExtractor
 
-from pyabsa.config.atepc_config import atepc_param_dict
-from pyabsa.config.apc_config import apc_param_dict
+from pyabsa.config.atepc_config import atepc_param_dict_base
+from pyabsa.config.apc_config import apc_param_dict_base
 
 
 choice = get_auto_device()
@@ -54,13 +54,13 @@ def train_apc(parameter_dict=None,
               auto_evaluate=True,
               auto_device=True):
     '''
-    evaluate model performance while training model in order to obtain best benchmarked model
+    evaluate model performance while training_tutorials model in order to obtain best benchmarked model
     '''
-    # load training set
+    # load training_tutorials set
 
     dataset_file = detect_dataset(dataset_path, auto_evaluate)
 
-    config = init_config(parameter_dict, apc_param_dict, auto_device)
+    config = init_config(parameter_dict, apc_param_dict_base, auto_device)
     config.dataset_path = dataset_path
     config.model_path_to_save = model_path_to_save
     config.dataset_file = dataset_file
@@ -101,13 +101,13 @@ def train_atepc(parameter_dict=None,
                 auto_evaluate=True,
                 auto_device=True):
     '''
-    evaluate model performance while training model in order to obtain best benchmarked model
+    evaluate model performance while training_tutorials model in order to obtain best benchmarked model
     '''
-    # load training set
+    # load training_tutorials set
 
     dataset_file = detect_dataset(dataset_path, auto_evaluate)
 
-    config = init_config(parameter_dict, atepc_param_dict, auto_device)
+    config = init_config(parameter_dict, atepc_param_dict_base, auto_device)
     config.dataset_path = dataset_path
     config.model_path_to_save = model_path_to_save
     config.dataset_file = dataset_file

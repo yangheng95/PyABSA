@@ -17,7 +17,7 @@ SENTIMENT_PADDING = -999
 
 
 class InputExample(object):
-    """A single training/test example for simple sequence classification."""
+    """A single training_tutorials/test example for simple sequence classification."""
 
     def __init__(self, guid, text_a, text_b=None, IOB_label=None, aspect_label=None, polarity=None):
         """Constructs a InputExample.
