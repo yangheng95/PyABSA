@@ -84,10 +84,15 @@ class Tokenizer4Bert:
             sequence = sequence[::-1]
         return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
 
-    def syntax_distance_alignment(self, tokens, dist):
+
+    def get_bert_tokens(self, text):
+        return self.tokenizer.tokenize(text)
+
+
+def syntax_distance_alignment(tokens, dist, max_seq_len, tokenizer):
         text = tokens[:]
         dep_dist = dist[:]
-        bert_tokens = self.tokenizer.tokenize(' '.join(text))
+        bert_tokens = tokenizer.tokenize(' '.join(text))
         _bert_tokens = bert_tokens[:]
         align_dist = []
         if bert_tokens != text:
@@ -111,7 +116,7 @@ class Tokenizer4Bert:
                     text = text[1:]
                     bert_tokens = bert_tokens[1:]
                 elif len(text[0]) > len(bert_tokens[0]):
-                    tmp_tokens = self.tokenizer.tokenize(text[0])
+                    tmp_tokens = tokenizer.tokenize(text[0])
                     for jx, tmp_token in enumerate(tmp_tokens):
                         align_dist.append(dep_dist[0])
 
@@ -127,11 +132,8 @@ class Tokenizer4Bert:
         else:
             align_dist = dep_dist
 
-        align_dist = pad_and_truncate(align_dist, self.max_seq_len, value=self.max_seq_len)
+        align_dist = pad_and_truncate(align_dist, max_seq_len, value=max_seq_len)
         return align_dist
-
-    def get_bert_tokens(self, text):
-        return self.tokenizer.tokenize(text)
 
 
 # Group distance to aspect of an original word to its corresponding subword token
@@ -188,6 +190,7 @@ def prepare_input_from_text(opt, tokenizer, text_left, text_right, aspect):
 
     return inputs
 
+
 def get_syntax_distance(text_raw, aspect, tokenizer, opt):
     # Find distance in dependency parsing tree
 
@@ -196,14 +199,18 @@ def get_syntax_distance(text_raw, aspect, tokenizer, opt):
 
     if isinstance(aspect, list):
         aspect = ' '.join(aspect)
-
-    raw_tokens, dist = calculate_dep_dist(text_raw, aspect)
+    try:
+        raw_tokens, dist = calculate_dep_dist(text_raw, aspect)
+    except Exception as e:
+        print(e)
+        raise RuntimeError('Are you using syntax-based SRD on a dataset containing Chinese text?')
     raw_tokens.insert(0, tokenizer.bos_token)
     dist.insert(0, max(dist))
     raw_tokens.append(tokenizer.eos_token)
     dist.append(max(dist))
+    # the following two functions are both designed to calcualate syntax-based distances
     syntactical_dist = pad_syntax_based_srd(raw_tokens, dist, tokenizer, opt)[1]
-    # syntactical_dist = tokenizer.syntax_distance_alignment(raw_tokens, dist)
+    # syntactical_dist = syntax_distance_alignment(raw_tokens, dist, opt.max_seq_len, tokenizer)
     return syntactical_dist
 
 

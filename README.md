@@ -222,31 +222,24 @@ text = 'everything is always cooked to perfection , the [ASP]service[ASP] is exc
 sent_classifier.infer(text)
 ```
 
-1. Train our models on your custom dataset:
+1. Train our models on your custom dataset or public datasets:
 
 ```
-from pyabsa import train, train_and_evaluate, load_sentiment_classifier
-# see hyper-parameters in pyabsa/main/training_configs.py
-param_dict = {'model_name': 'bert_base', 'batch_size': 16, 'device': 'cuda', 'num_epoch': 6}
-# train_set_path = 'datasets/restaurant15'
-train_set_path = 'example_files/sum_train.dat'  # replace the path of your custom dataset(s) here
-model_path_to_save = 'state_dict'
+from pyabsa import train_apc, apc_param_dict_base
 
-sent_classifier = train_apc(parameter_dict=param_dict,    # set param_dict=None to use default model
-                            dataset_path=train_set_path,  # file or dir, datasets will be automatically detected
-                            model_path_to_save=model_path_to_save,  # set model_path_to_save=None to avoid save model
-                            auto_evaluate=False,          # evaluate model while training if test set is available
-                            auto_device=True              # Auto choose CUDA or CPU
+save_path = '../state_dict'
+
+datasets_path = '../apc_datasets/SemEval/laptop14'               # automatic detect all datasets files in this path
+sent_classifier = train_apc(parameter_dict=apc_param_dict_base,  # set param_dict=None will use the apc_param_dict as well
+                            dataset_path=datasets_path,          # train set and test set will be automatically detected
+                            model_path_to_save=save_path,        # set model_path_to_save=None to avoid save model
+                            auto_evaluate=True,                  # evaluate model while training_tutorials if test set is available
+                            auto_device=True                     # automatic choose CUDA or CPU
                             )
 
-# Or, if you have the test set, this function also could evaluate model while training
-datasets_path = 'datasets/restaurant15'                    # Refer to the path where the the train and test sets is placed
-sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
-                            dataset_path=train_set_path,   # file or dir, dataset(s) will be automatically detected
-                            model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
-                            auto_evaluate=False,           # evaluate model while training if test set is available
-                            auto_device=True               # Auto choose CUDA or CPU
-                            )
+# 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
+sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
+sent_classifier.set_sentiment_map(sentiment_map)
 ```
 
 2. Load the trained model:

@@ -55,7 +55,7 @@ def find_target_file(dir_path, file_type, exclude_key='', find_all=False):
                 tmp_res += find_target_file(os.path.join(dir_path, file), file_type, exclude_key, find_all)
             return tmp_res
         else:
-            raise FileNotFoundError('No target(s) file found!')
+            raise FileNotFoundError('No target file (file type:{}) found in {}!'.format(file_type, dir_path))
 
 
 def detect_dataset(dataset_path, auto_evaluate):

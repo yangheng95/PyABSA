@@ -29,7 +29,7 @@ from termcolor import colored
 class SentimentClassifier:
     def __init__(self, model_arg=None, sentiment_map=None):
         '''
-            from_train_model: load inferring model from trained model
+            from_train_model: load inferring_tutorials model from trained model
         '''
         self.model_class = {
             'bert_base': BERT_BASE,
@@ -48,7 +48,7 @@ class SentimentClassifier:
 
         # load from a model path
         if not isinstance(model_arg, str):
-            print('Try to load trained model from training')
+            print('Try to load trained model from training_tutorials')
             self.model = model_arg[0]
             self.opt = model_arg[1]
         else:

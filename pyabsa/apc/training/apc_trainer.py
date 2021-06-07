@@ -29,11 +29,9 @@ from pyabsa.apc.dataset_utils.apc_utils import Tokenizer4Bert
 
 from pyabsa.logger import get_logger
 
-logger = get_logger(os.getcwd())
-
-
 class Instructor:
-    def __init__(self, opt):
+    def __init__(self, opt, logger):
+        self.logger = logger
         self.opt = opt
         self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert_name)
         self.bert_tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
@@ -48,7 +46,7 @@ class Instructor:
                                             shuffle=True,
                                             pin_memory=True)
 
-        logger.info("***** Running training *****")
+        logger.info("***** Running training_tutorials *****")
         logger.info("  Num examples = %d", len(self.train_set))
         logger.info("  Batch size = %d", self.opt.batch_size)
         logger.info("  Num steps = %d", int(len(self.train_set) / self.opt.batch_size) * self.opt.num_epoch)
@@ -76,10 +74,10 @@ class Instructor:
                 n_trainable_params += n_params
             else:
                 n_nontrainable_params += n_params
-        logger.info(
+        self.logger.info(
             'n_trainable_params: {0}, n_nontrainable_params: {1}'.format(n_trainable_params, n_nontrainable_params))
         for arg in vars(self.opt):
-            logger.info('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
+            self.logger.info('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
 
     def _save_model(self, model, save_path, mode=0):
         # Save a trained model, configuration and tokenizer
@@ -119,7 +117,7 @@ class Instructor:
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
 
-                # switch model to training mode, clear gradient accumulators
+                # switch model to training_tutorials mode, clear gradient accumulators
                 self.model.train()
                 optimizer.zero_grad()
                 inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
@@ -177,10 +175,10 @@ class Instructor:
                     iterator.postfix = postfix
                     iterator.refresh()
 
-        # return the model paths of multiple training in case of loading the best model after training
+        # return the model paths of multiple training_tutorials in case of loading the best model after training_tutorials
         if save_path:
-            logger.info('----------------------Training Summary----------------------')
-            logger.info('Max Accuracy: {:.15f} Max F1: {:.15f}'.format(max_test_acc * 100, max_f1 * 100))
+            self.logger.info('----------------------Training Summary----------------------')
+            self.logger.info('Max Accuracy: {:.15f} Max F1: {:.15f}'.format(max_test_acc * 100, max_f1 * 100))
             return save_path
         else:
             # direct return model if do not evaluate
@@ -243,6 +241,9 @@ class Instructor:
 
 
 def train4apc(opt):
+    log_name = '{}_{}_{}'.format(opt.model_name, opt.lcf, opt.SRD)
+    logger = get_logger(os.getcwd(), log_name=log_name, log_type='training_tutorials')
+    
     if not isinstance(opt.seed, int):
         logger.info('Please do not use multiple random seeds without evaluating.')
         opt.seed = list(opt.seed)[0]
@@ -278,5 +279,5 @@ def train4apc(opt):
     opt.inputs_cols = ABSADataset.input_colses[opt.model_name]
     opt.optimizer = optimizers[opt.optimizer]
     opt.device = torch.device(opt.device)
-    ins = Instructor(opt)
+    ins = Instructor(opt, logger)
     return ins.run()
