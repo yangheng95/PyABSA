@@ -17,7 +17,7 @@ from pyabsa import train_atepc
 param_dict = {'model_name': 'lcf_atepc',
               'batch_size': 16,
               'seed': {996},
-              'num_epoch': 1,
+              'num_epoch': 6,
               'optimizer': "adam",    # {adam, adamw}
               'learning_rate': 0.00003,
               'pretrained_bert_name': "bert-base-uncased",
@@ -26,11 +26,11 @@ param_dict = {'model_name': 'lcf_atepc',
               'max_seq_len': 80,
               'log_step': 5,           # evaluate per steps
               'SRD': 3,                # distance threshold to calculate local context
-              # 'use_syntax_based_SRD': True,   # force to use syntax-based semantic-relative distance in all lcf-based models
+              'use_syntax_based_SRD': True,   # force to use syntax-based semantic-relative distance in all lcf-based models
               'lcf': "cdw",            # {cdw, cdm, fusion}
               'dropout': 0,
               'l2reg': 0.00001,
-              'evaluate_begin': 0  # evaluate begin with epoch
+              'evaluate_begin': 4  # evaluate begin with epoch
               # 'polarities_dim': 3      # deprecated, polarity_dim will be automatically detected
               }
 
@@ -67,7 +67,7 @@ param_dict = {'model_name': 'lcf_atepc',
               'max_seq_len': 80,
               'log_step': 5,           # evaluate per steps
               'SRD': 3,                # distance threshold to calculate local context
-              # 'use_syntax_based_SRD': True,  # force to use syntax-based semantic-relative distance in all lcf-based models
+              'use_syntax_based_SRD': True,  # force to use syntax-based semantic-relative distance in all lcf-based models
               'lcf': "cdw",            # {cdw, cdm, fusion}
               'dropout': 0,
               'l2reg': 0.00001,

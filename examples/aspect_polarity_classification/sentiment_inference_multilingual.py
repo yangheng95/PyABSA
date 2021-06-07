@@ -22,7 +22,7 @@ sent_classifier.infer(text, print_result=True)
 chinese_text = '还有就是[ASP]笔画的键盘分布[ASP]我感觉不合理. !sent! -1'
 sent_classifier.infer(chinese_text, print_result=True)
 
-infer_set = 'apc_datasets'
+infer_set = 'apc_datasets/multilingual'
 
 sent_classifier.batch_infer(infer_set,
                             print_result=True,

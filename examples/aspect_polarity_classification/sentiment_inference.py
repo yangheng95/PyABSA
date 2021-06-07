@@ -35,7 +35,7 @@ sent_classifier.infer(text, print_result=True)
 
 # batch inferring returns the results, save the result if necessary using save_result=True
 # infer_set = 'example_files/rest16_inferring.dat'  # file or dir
-infer_set = 'atepc_datasets/SemEval'  # file or dir, automatic load all inference set from infer_set recursively
+infer_set = 'apc_datasets/SemEval'  # file or dir, automatic load all inference set from infer_set recursively
 
 
 results = sent_classifier.batch_infer(target_file=infer_set,
