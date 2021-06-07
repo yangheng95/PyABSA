@@ -88,10 +88,10 @@ class Instructor:
         if mode == 0 or 'bert' not in self.opt.model_name:
             if not os.path.exists(save_path):
                 os.makedirs(save_path)
-            torch.save(self.model.cpu().state_dict(),
-                       save_path + self.opt.model_name + '.state_dict')  # save the state dict
-            # torch.save(self.model.cpu(),
-            #            save_path + self.opt.model_name + '.model')  # save the state dict
+            # torch.save(self.model.cpu().state_dict(),
+            #            save_path + self.opt.model_name + '.state_dict')  # save the state dict
+            torch.save(self.model.cpu(),
+                       save_path + self.opt.model_name + '.model')  # save the state dict
             pickle.dump(self.opt, open(save_path + self.opt.model_name + '.config', 'wb'))
         else:
             # save the fine-tuned bert model
