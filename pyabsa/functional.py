@@ -40,10 +40,10 @@ def init_config(config_dict, base_config_dict, auto_device=True):
     apc_config = Namespace(**base_config_dict)
 
     if 'lcfs' in apc_config.model_name or apc_config.use_syntax_based_SRD:
-        print('-' * 100)
+        print('-' * 150)
         print('(Force to) use syntax distance-based semantic-relative distance,'
               ' however Chinese is not supported to parse syntax distance yet!')
-        print('-' * 100)
+        print('-' * 150)
 
     return apc_config
 
@@ -58,7 +58,7 @@ def train_apc(parameter_dict=None,
     '''
     # load training_tutorials set
 
-    dataset_file = detect_dataset(dataset_path, auto_evaluate)
+    dataset_file = detect_dataset(dataset_path, auto_evaluate, task='apc')
 
     config = init_config(parameter_dict, apc_param_dict_base, auto_device)
     config.dataset_path = dataset_path
@@ -105,7 +105,7 @@ def train_atepc(parameter_dict=None,
     '''
     # load training_tutorials set
 
-    dataset_file = detect_dataset(dataset_path, auto_evaluate)
+    dataset_file = detect_dataset(dataset_path, auto_evaluate, task='atepc')
 
     config = init_config(parameter_dict, atepc_param_dict_base, auto_device)
     config.dataset_path = dataset_path

@@ -6,11 +6,16 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 import os
+import git
+import shutil
+import tempfile
 
-import torch
+integrated_dataset_list = {'laptop14', 'restaurant14', 'restaurant15', 'restaurant16',
+                           'twitter', 'phone', 'notebook', 'camera', 'car', 'mams'}
 
 
 def get_auto_device():
+    import torch
     choice = -1
     if torch.cuda.is_available():
         from .Pytorch_GPUManager import GPUManager
@@ -58,15 +63,57 @@ def find_target_file(dir_path, file_type, exclude_key='', find_all=False):
             raise FileNotFoundError('No target file (file type:{}) found in {}!'.format(file_type, dir_path))
 
 
-def detect_dataset(dataset_path, auto_evaluate):
-    dataset_file = dict()
-    dataset_file['train'] = find_target_file(dataset_path, 'train', exclude_key='infer', find_all=True)
-    if auto_evaluate and find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
-        dataset_file['test'] = find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True)
-    if auto_evaluate and not find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
-        print('Cna not find test set using for evaluating!')
-    if len(dataset_file) == 0:
-        raise RuntimeError('Can not load train set or test set! '
-                           'Make sure there are (only) one trainset and (only) one testset in the path:',
-                           dataset_path)
+def detect_dataset(dataset_path, auto_evaluate, task='apc'):
+    if dataset_path.lower() in integrated_dataset_list:
+
+        print('{} is a integrated dataset, load the dataset '
+              'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
+        dataset_name = dataset_path
+        download_datasets_from_github()
+        if task == 'apc':
+            dataset_path = os.path.join('datasets', 'apc_datasets')
+        elif task == 'atepc':
+            dataset_path = os.path.join('datasets', 'atepc_datasets')
+        else:
+            raise RuntimeError('No dataset was found!')
+
+        dataset_file = dict()
+        dataset_file['train'] = find_target_file(dataset_path, 'train', exclude_key='infer', find_all=True)
+        dataset_file['train'] = [d for d in dataset_file['train'] if dataset_name.lower() in d.lower()]
+        if auto_evaluate and find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
+            dataset_file['test'] = find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True)
+            dataset_file['test'] = [d for d in dataset_file['test'] if dataset_name.lower() in d.lower()]
+        if auto_evaluate and not find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
+            print('Cna not find test set using for evaluating!')
+        if len(dataset_file) == 0:
+            raise RuntimeError('Can not load train set or test set! '
+                               'Make sure there are (only) one trainset and (only) one testset in the path:',
+                               dataset_path)
+
+    else:
+        dataset_file = dict()
+        dataset_file['train'] = find_target_file(dataset_path, 'train', exclude_key='infer', find_all=True)
+        if auto_evaluate and find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
+            dataset_file['test'] = find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True)
+        if auto_evaluate and not find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
+            print('Cna not find test set using for evaluating!')
+        if len(dataset_file) == 0:
+            raise RuntimeError('Can not load train set or test set! '
+                               'Make sure there are (only) one trainset and (only) one testset in the path:',
+                               dataset_path)
     return dataset_file
+
+
+def download_datasets_from_github(save_path='./'):
+    # Create temporary dir
+    t = tempfile.mkdtemp()
+    try:
+        # Clone into temporary dir
+        git.Repo.clone_from('https://github.com/yangheng95/ABSADatasets.git', t, branch='master', depth=1)
+        # Copy desired file from temporary dir
+        shutil.move(os.path.join(t, 'datasets'), save_path)
+        # Remove temporary dir
+        # call("rm -rf {}/".format(dataset_path), shell=True)
+        shutil.rmtree(t)
+    except Exception as e:
+        pass

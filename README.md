@@ -26,7 +26,13 @@ or [LCF-ATEPC](https://github.com/yangheng95/LCF-ATEPC).
 
 Please star this repository in case of keeping find new examples and providing your advice.
 
-Install the latest version using `pip install pyabsa`, always update if there is a newer version. 
+Install the latest version using,
+
+```
+pip install pyabsa
+```
+
+please always update if there is a newer version. 
 To use our (APC) models, you may need download `en_core_web_sm` by
 
 ```
@@ -95,7 +101,7 @@ you can convert them to atepc datasets:
 
 ```
 from pyabsa import convert_apc_set_to_atepc
-convert_apc_set_to_atepc(r'../apc_usages/datasets/restaurant16')
+convert_apc_set_to_atepc_set(r'../apc_usages/datasets/restaurant16')
 ```
 
 2. Training for ATEPC
@@ -208,28 +214,24 @@ barack obama --> Positive  Real: Neutral (Wrong)
 
 ## Quick Start
 
-0. Instant train and infer on the provided datasets:
+0. Run benchmark for our sota apc models!
 
 ```
-from pyabsa import train, train_and_evaluate, load_sentiment_classifier
-dataset_path = 'datasets/laptop14'
-sent_classifier = train_and_evaluate(parameter_dict=None,
-                                     dataset_path=dataset_path,
-                                     model_path_to_save=None
-                                     )
-text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent ,' \
-       ' the [ASP]decor[ASP] cool and understated . !sent! 1 1'
-sent_classifier.infer(text)
+from pyabsa.research.apc.apc_benchmark import run_benchmark_for_apc_models
+
+run_benchmark_for_apc_models()
+
 ```
 
-1. Train our models on your custom dataset or public datasets:
+1. Train our models on your custom dataset or public datasets, 
+   in any train function can use the dataset name to load the dataset from network:
 
 ```
 from pyabsa import train_apc, apc_param_dict_base
 
 save_path = '../state_dict'
 
-datasets_path = '../apc_datasets/SemEval/laptop14'               # automatic detect all datasets files in this path
+datasets_path = 'laptop14'  # integeated dataset name       
 sent_classifier = train_apc(parameter_dict=apc_param_dict_base,  # set param_dict=None will use the apc_param_dict as well
                             dataset_path=datasets_path,          # train set and test set will be automatically detected
                             model_path_to_save=save_path,        # set model_path_to_save=None to avoid save model

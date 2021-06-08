@@ -208,9 +208,9 @@ def get_syntax_distance(text_raw, aspect, tokenizer, opt):
     dist.insert(0, max(dist))
     raw_tokens.append(tokenizer.eos_token)
     dist.append(max(dist))
-    # the following two functions are both designed to calcualate syntax-based distances
-    syntactical_dist = pad_syntax_based_srd(raw_tokens, dist, tokenizer, opt)[1]
-    # syntactical_dist = syntax_distance_alignment(raw_tokens, dist, opt.max_seq_len, tokenizer)
+    # the following two functions are both designed to calculate syntax-based distances
+    # syntactical_dist = pad_syntax_based_srd(raw_tokens, dist, tokenizer, opt)[1]
+    syntactical_dist = syntax_distance_alignment(raw_tokens, dist, opt.max_seq_len, tokenizer)
     return syntactical_dist
 
 

@@ -22,3 +22,7 @@ from pyabsa.config.atepc_config import (atepc_param_dict_base,
                                         atepc_param_dict_english,
                                         atepc_param_dict_chinese,
                                         atepc_param_dict_multilingual)
+
+import pyabsa.research.apc.apc_benchmark as apc_benchmark
+import pyabsa.research.atepc.atepc_benchmark as atepc_benchmark
+
