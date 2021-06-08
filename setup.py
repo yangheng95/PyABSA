@@ -11,17 +11,18 @@ from setuptools import setup, find_packages
 
 setup(
     name='pyabsa',
-    version='0.6.6.2',
+    version='0.6.7',
     description='This tool provides the sota models for aspect term extraction (ATE) '
                 'and aspect polarity classification (APC)',
     # The project's main homepage.
     url='https://github.com/yangheng95/pyabsa',
     # Author details
     author='Yang Heng',
+    author_email='yangheng@m.scnu.edu.cn',
     python_requires=">=3.6",
     packages=find_packages(),
     include_package_data=True,
-    data_files=[],
+    exclude_package_date={'': ['.gitignore']},
     # Choose your license
     license='MIT',
     install_requires=['transformers>=4.4.2', 'spacy', 'networkx', 'seqeval', 'tqdm', 'termcolor'],
