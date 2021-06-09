@@ -11,7 +11,8 @@ import shutil
 import tempfile
 
 integrated_dataset_list = {'laptop14', 'restaurant14', 'restaurant15', 'restaurant16',
-                           'twitter', 'phone', 'notebook', 'camera', 'car', 'mams'}
+                           'twitter', 'phone', 'notebook', 'camera', 'car', 'mams',
+                           'multilingual', 'apc_dataset', 'atepc_datasets', 'chinese', 'semeval'}
 
 
 def get_auto_device():
@@ -64,10 +65,13 @@ def find_target_file(dir_path, file_type, exclude_key='', find_all=False):
 
 
 def detect_dataset(dataset_path, auto_evaluate, task='apc'):
-    if dataset_path.lower() in integrated_dataset_list:
-
-        print('{} is a integrated dataset, load the dataset '
-              'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
+    if dataset_path.lower() in integrated_dataset_list or not os.path.exists(dataset_path):
+        if dataset_path.lower() in integrated_dataset_list:
+            print('{} is the integrated dataset,try to load the dataset '
+                  'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
+        else:
+            print('Maybe {} is the integrated dataset,try to load the dataset '
+                  'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
         dataset_name = dataset_path
         download_datasets_from_github()
         if task == 'apc':
