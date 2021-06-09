@@ -17,4 +17,8 @@ camera = 'camera'
 mams = 'mams'
 multilingual = 'multilingual'
 
+chinese = 'chinese'
+semeval = 'semeval'
 
+apc_datasets = 'apc_datasets'
+atepc_datasets = 'atepc_datasets'

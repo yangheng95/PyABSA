@@ -118,7 +118,11 @@ def download_datasets_from_github(save_path='./'):
     try:
         # Copy desired file from temporary dir
         shutil.move(os.path.join(t, 'datasets'), save_path)
-        # Remove temporary dir
-        shutil.rmtree(t)
     except Exception as e:
         raise e
+
+    try:
+        shutil.rmtree(t)
+    except:
+        print('fail to remove the temp file {}'.format(t))
+
