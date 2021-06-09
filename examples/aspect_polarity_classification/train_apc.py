@@ -10,13 +10,13 @@
 #              your custom dataset should have the continue polarity labels like [0,N-1] for N categories              #
 ########################################################################################################################
 
-from pyabsa import train_apc, get_atepc_param_dict_base
+from pyabsa import train_apc, get_apc_param_dict_base
 
 from pyabsa.dataset import laptop14
 
 save_path = 'state_dict'
 
-apc_param_dict_base = get_atepc_param_dict_base()
+apc_param_dict_base = get_apc_param_dict_base()
 
 # datasets_path = '../apc_datasets/SemEval/laptop14'  # automatic detect all datasets files in this path
 sent_classifier = train_apc(parameter_dict=apc_param_dict_base,  # set param_dict=None will use the apc_param_dict as well

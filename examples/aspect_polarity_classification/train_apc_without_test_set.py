@@ -36,7 +36,6 @@ param_dict = {'model_name': 'slide_lcfs_bert',  # {slide_lcfs_bert, slide_lcf_be
               'l2reg': 0.00001,
               }
 
-# see hyper-parameters in pyabsa/main/training_configs.py
 param_dict = {'model_name': 'bert_base', 'batch_size': 16, 'device': 'cuda', 'num_epoch': 5}
 
 save_path = 'state_dict'

@@ -119,7 +119,8 @@ def download_datasets_from_github(save_path='./'):
         # Copy desired file from temporary dir
         shutil.move(os.path.join(t, 'datasets'), save_path)
     except Exception as e:
-        raise e
+        print('Seems datasets downloaded in: {}, if not please remove the datasets and download again',
+              os.path.join(save_path, 'datasets'))
 
     try:
         shutil.rmtree(t)
