@@ -5,6 +5,8 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
+import copy
+
 apc_param_dict_base = {'model_name': "slide_lcfs_bert",
                        'optimizer': "adam",
                        'learning_rate': 0.00002,
@@ -112,3 +114,19 @@ apc_param_dict_chinese = {'model_name': "slide_lcfs_bert",
                           'dynamic_truncate': True,
                           'evaluate_begin': 0,
                           }
+
+
+def get_apc_param_dict_base():
+    return copy.deepcopy(apc_param_dict_base)
+
+
+def get_apc_param_dict_english():
+    return copy.deepcopy(apc_param_dict_english)
+
+
+def get_apc_param_dict_chinese():
+    return copy.deepcopy(apc_param_dict_chinese)
+
+
+def get_apc_param_dict_multilingual():
+    return copy.deepcopy(apc_param_dict_multilingual)

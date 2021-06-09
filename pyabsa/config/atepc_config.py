@@ -5,6 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
+import copy
 
 atepc_param_dict_base = {'model_name': "lcf_atepc",
                          'optimizer': "adamw",
@@ -105,3 +106,19 @@ atepc_param_dict_multilingual = {'model_name': "lca_atepc",
                                  'gradient_accumulation_steps': 1,
                                  'evaluate_begin': 0
                                  }
+
+
+def get_atepc_param_dict_base():
+    return copy.deepcopy(atepc_param_dict_base)
+
+
+def get_atepc_param_dict_english():
+    return copy.deepcopy(atepc_param_dict_english)
+
+
+def get_atepc_param_dict_chinese():
+    return copy.deepcopy(atepc_param_dict_chinese)
+
+
+def get_atepc_param_dict_multilingual():
+    return copy.deepcopy(atepc_param_dict_multilingual)

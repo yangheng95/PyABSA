@@ -101,42 +101,23 @@ you can convert them to atepc datasets:
 
 ```
 from pyabsa import convert_apc_set_to_atepc
-convert_apc_set_to_atepc_set(r'../apc_usages/datasets/restaurant16')
+convert_apc_set_to_atepc_set(r'apc_usages/datasets/restaurant16')
 ```
 
 2. Training for ATEPC
 
 ```
-from pyabsa import train_atepc
+from pyabsa import train_atepc, get_atepc_param_dict_english
 
-# see hyper-parameters in pyabsa/main/training_configs.py
-param_dict = {'model_name': 'rlcf_atepc',   #  {lcf_atepc, rlcf_atepc}
-              'batch_size': 16,
-              'seed': 1,
-              'device': 'cuda',
-              'num_epoch': 5,
-              'optimizer': "adamw",
-              'learning_rate': 0.00002,
-              'pretrained_bert_name': "bert-base-uncased",
-              'use_dual_bert': False,
-              'use_bert_spc': False,
-              'max_seq_len': 80,
-              'log_step': 30,
-              'SRD': 3,
-              'lcf': "cdw",
-              'dropout': 0,
-              'l2reg': 0.00001,
-              'polarities_dim': 3
-              }
+from pyabsa.dataset import restaurant15
 
-# Mind that polarities_dim = 2 for Chinese datasets, and the 'train_atepc' function only evaluates in last few epochs
+save_path = 'state_dict'
 
-train_set_path = 'atepc_datasets/restaurant14'
-save_path = '../atepc_usages/state_dict'
-aspect_extractor = train_atepc(parameter_dict=param_dict,      # set param_dict=None to use default model
-                               dataset_path=train_set_path,    # file or dir, dataset(s) will be automatically detected
+atepc_param_dict_english = get_atepc_param_dict_english()
+aspect_extractor = train_atepc(parameter_dict=atepc_param_dict_english,      # set param_dict=None to use default model
+                               dataset_path=restaurant15,    # file or dir, dataset(s) will be automatically detected
                                model_path_to_save=save_path,   # set model_path_to_save=None to avoid save model
-                               auto_evaluate=True,             # evaluate model while training if test set is available
+                               auto_evaluate=True,             # evaluate model while training_tutorials if test set is available
                                auto_device=True                # Auto choose CUDA or CPU
                                )
 ```
@@ -165,35 +146,17 @@ atepc_result = aspect_extractor.extract_aspect(examples=examples,   # list-suppo
 
 4. Training on Multiple datasets
 ```
-from pyabsa import train_apc
+from pyabsa import train_apc, get_apc_param_dict_english
 
-# You can place multiple datasets file in one dir to easily train using some datasets
+from pyabsa.dataset import semeval
 
-# for example, training on the SemEval datasets, you can organize the dir as follow
-
-# ATEPC同样支持多数据集集成训练，但请不要将极性标签（种类，长度）不同的数据集融合训练！
-# --datasets
-# ----laptop14
-# ----restaurant14
-# ----restaurant15
-# ----restaurant16
-
-# or
-# --datasets
-# ----SemEval2014
-# ------laptop14
-# ------restaurant14
-# ----SemEval2015
-# ------restaurant15
-# ----SemEval2016
-# ------restaurant16
+# You can place multiple atepc_datasets file in one dir to easily train using some atepc_datasets
 
 save_path = 'state_dict'
-datasets_path = 'datasets/SemEval'  # file or dir are accepted
-sent_classifier = train_apc(parameter_dict=None,           # set param_dict=None to use default model
-                            dataset_path=datasets_path,    # train set and test set will be automatically detected
+sent_classifier = train_apc(parameter_dict=get_apc_param_dict_english(),           # set param_dict=None to use default model
+                            dataset_path=semeval,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
-                            auto_evaluate=True,            # evaluate model while training if test set is available
+                            auto_evaluate=True,            # evaluate model while training_tutorials if test set is available
                             auto_device=True               # automatic choose CUDA or CPU
                             )
 ```
@@ -227,21 +190,22 @@ run_benchmark_for_apc_models()
    in any train function can use the dataset name to load the dataset from network:
 
 ```
-from pyabsa import train_apc, apc_param_dict_base
+from pyabsa import train_apc, get_atepc_param_dict_base
 
-save_path = '../state_dict'
+from pyabsa.dataset import laptop14
 
-datasets_path = 'laptop14'  # integeated dataset name       
+save_path = 'state_dict'
+
+apc_param_dict_base = get_atepc_param_dict_base()
+
+# datasets_path = '../apc_datasets/SemEval/laptop14'  # automatic detect all datasets files in this path
 sent_classifier = train_apc(parameter_dict=apc_param_dict_base,  # set param_dict=None will use the apc_param_dict as well
-                            dataset_path=datasets_path,          # train set and test set will be automatically detected
+                            dataset_path=laptop14,          # train set and test set will be automatically detected
                             model_path_to_save=save_path,        # set model_path_to_save=None to avoid save model
                             auto_evaluate=True,                  # evaluate model while training_tutorials if test set is available
                             auto_device=True                     # automatic choose CUDA or CPU
                             )
 
-# 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
-sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
-sent_classifier.set_sentiment_map(sentiment_map)
 ```
 
 2. Load the trained model:
@@ -254,44 +218,66 @@ from pyabsa import load_sentiment_classifier
 # The trained_model_path should be a dir containing the state_dict and config file
 state_dict_path = 'state_dict/slide_lcfs_bert_trained'
 sent_classifier = load_sentiment_classifier(trained_model_path=state_dict_path)
+
+
+# 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
+sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
+sent_classifier.set_sentiment_map(sentiment_map)
 ```
 
 3. Sentiment Prediction on an inference set:
 
 ```
-# Infer a formatted text, the reference sentiment begins with !sent! is optional
+from pyabsa import load_sentiment_classifier
 
-text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated . !sent! 1 1'
-# or text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated .'
+from pyabsa.dataset import semeval
 
-sent_classifier = load_sentiment_classifier(trained_model_path='../state_dict/slide_lcfs_bert_trained')
+# Assume the sent_classifier is loaded or obtained using train function
 
-# The default loading device is CPU, you can alter the loading device
+model_path = '../state_dict/slide_lcfs_bert_cdw'   # please always check update on Google Drive before using
+sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
+                                            auto_device=True,  # Use CUDA if available
+                                            sentiment_map=sentiment_map
+                                            )
 
-# load the model to CPU
-# sent_classifier.cpu()
+text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent ,' \
+       ' the [ASP]decor[ASP] cool and understated . !sent! 1 1'
+sent_classifier.infer(text, print_result=True)
 
-# load the model to CUDA (0)
-# sent_classifier.cuda()
+# batch inferring_tutorials returns the results, save the result if necessary using save_result=True
+results = sent_classifier.batch_infer(target_file=semeval,
+                                      print_result=True,
+                                      save_result=True,
+                                      ignore_error=True,
+                                      )
 
-# load the model to CPU or CUDA, like cpu, cuda:0, cuda:1, etc.
-sent_classifier.to('cuda:0')
-
-sent_classifier.infer(text)
-
-# batch inference from on a inference dataset
-test_set_path = 'example_files/rest16_test_inferring.dat' 
-results = sent_classifier.batch_infer(test_set_path, print_result=True, save_result=True)
 ```
 
 4. Convert datasets for inference
 
 ```
-from pyabsa import generate_inferring_set_for_apc
+from pyabsa import generate_inferrence_set_for_apc
+
+from pyabsa.dataset import apc_datasets
 
 # This function coverts a ABSA dataset to inference set, try to convert every dataset found in the dir
-generate_inferring_set_for_apc('datasets/restaurant14')
+# please do check the output file!
+generate_inferrence_set_for_apc(apc_datasets)
+
 ```
+# [Datasets](https://github.com/yangheng95/ABSADatasets)
+
+1. Twitter 
+2. Laptop14
+3. Restaurant14
+4. Restaurant15
+5. Restaurant16
+6. Phone
+7. Car
+8. Camera
+9. Notebook
+10. Multilingual (The sum of above datasets.)
+   
 
 
 # Acknowledgement
