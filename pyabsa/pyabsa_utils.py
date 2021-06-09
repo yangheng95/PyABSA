@@ -105,15 +105,20 @@ def detect_dataset(dataset_path, auto_evaluate, task='apc'):
 
 
 def download_datasets_from_github(save_path='./'):
+    if os.path.exists(os.path.join(save_path, 'datasets')):
+        return
     # Create temporary dir
     t = tempfile.mkdtemp()
     try:
         # Clone into temporary dir
         git.Repo.clone_from('https://github.com/yangheng95/ABSADatasets.git', t, branch='master', depth=1)
+    except Exception as e:
+        raise e
+
+    try:
         # Copy desired file from temporary dir
         shutil.move(os.path.join(t, 'datasets'), save_path)
         # Remove temporary dir
-        # call("rm -rf {}/".format(dataset_path), shell=True)
         shutil.rmtree(t)
     except Exception as e:
-        pass
+        raise e
