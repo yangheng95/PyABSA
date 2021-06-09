@@ -43,7 +43,7 @@ def init_config(config_dict, base_config_dict, auto_device=True):
         print('-' * 150)
         print('(Force to) use syntax distance-based semantic-relative distance,'
               ' however Chinese is not supported to parse syntax distance yet!')
-        print('-' * 150)
+        print('-' * 130)
 
     return apc_config
 

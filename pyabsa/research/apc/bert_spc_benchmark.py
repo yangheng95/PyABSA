@@ -5,7 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa import train_apc, apc_param_dict_english
+from pyabsa import train_apc, get_apc_param_dict_english
 
 from pyabsa.dataset import *
 
@@ -13,7 +13,7 @@ import copy
 
 
 def run_bert_spc_cdw():
-    _apc_param_dict_english = copy.deepcopy(apc_param_dict_english)
+    _apc_param_dict_english = copy.deepcopy(get_apc_param_dict_english())
     _apc_param_dict_english['model_name'] = 'bert_spc'
     _apc_param_dict_english['lcf'] = 'cdw'
     _apc_param_dict_english['evaluate_begin'] = 2
@@ -44,7 +44,7 @@ def run_bert_spc_cdw():
 
 
 def run_bert_spc_cdm():
-    _apc_param_dict_english = copy.deepcopy(apc_param_dict_english)
+    _apc_param_dict_english = copy.deepcopy(get_apc_param_dict_english())
     _apc_param_dict_english['model_name'] = 'bert_spc'
     _apc_param_dict_english['lcf'] = 'cdm'
     _apc_param_dict_english['evaluate_begin'] = 2
