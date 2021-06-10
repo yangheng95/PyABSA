@@ -30,6 +30,7 @@ atepc_param_dict_base = {'model_name': "lcf_atepc",
                          'log_step': 10,
                          'gradient_accumulation_steps': 1,
                          'dynamic_truncate': True,
+                         'srd_alignment': True,  # for srd_alignment
                          'evaluate_begin': 0
                          }
 
@@ -56,6 +57,7 @@ atepc_param_dict_english = {'model_name': "lcf_atepc",
                             'log_step': 10,
                             'gradient_accumulation_steps': 1,
                             'dynamic_truncate': True,
+                            'srd_alignment': True,  # for srd_alignment
                             'evaluate_begin': 0
                             }
 
@@ -82,6 +84,7 @@ atepc_param_dict_chinese = {'model_name': "lcf_atepc",
                             'log_step': 10,
                             'gradient_accumulation_steps': 1,
                             'dynamic_truncate': True,
+                            'srd_alignment': True,  # for srd_alignment
                             'evaluate_begin': 0
                             }
 
@@ -108,6 +111,7 @@ atepc_param_dict_multilingual = {'model_name': "lcf_atepc",
                                  'log_step': 10,
                                  'gradient_accumulation_steps': 1,
                                  'dynamic_truncate': True,
+                                 'srd_alignment': True,  # for srd_alignment
                                  'evaluate_begin': 0
                                  }
 

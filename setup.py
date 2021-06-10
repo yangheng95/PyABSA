@@ -9,7 +9,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pyabsa',
-    version='0.7.0.2',
+    version='0.7.1.0',
     description='This tool provides the sota models for aspect term extraction (ATE) '
                 'and aspect polarity classification (APC)',
     # The project's main homepage.
