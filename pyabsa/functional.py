@@ -9,7 +9,7 @@ import os
 import copy
 from argparse import Namespace
 
-from pyabsa.pyabsa_utils import get_auto_device, detect_dataset
+from pyabsa.utils.pyabsa_utils import get_auto_device, detect_dataset
 
 from pyabsa.apc.inferring.sentiment_classifier import SentimentClassifier
 from pyabsa.apc.training.apc_trainer import train4apc

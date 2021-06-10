@@ -5,6 +5,6 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa.research.apc.apc_benchmark import run_benchmark_for_apc_models
+from pyabsa import run_benchmark_for_apc_models
 
 run_benchmark_for_apc_models()

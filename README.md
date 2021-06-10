@@ -8,10 +8,10 @@
 ![welcome](https://img.shields.io/badge/Contribution-Welcome-brightgreen)
 [![Gitter](https://badges.gitter.im/PyABSA/community.svg)](https://gitter.im/PyABSA/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-> Build from LC-ABSA/LCF-ABSA and LCF-ATEPC.
+> Build from LC-ABSA / LCF-ABSA / LCF-BERT and LCF-ATEPC.
 
 > Easy to use interfaces of aspect term extraction and aspect sentiment classification.
-
+> 
 > Provide the tutorials of using ATE and APC interfaces.
 
 > PyTorch Implementations (CPU & CUDA supported).

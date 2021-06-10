@@ -22,7 +22,7 @@ from ..dataset_utils.data_utils_for_inferring import (ATEPCProcessor,
                                                       SENTIMENT_PADDING)
 from ..models.lcf_atepc import LCF_ATEPC
 
-from pyabsa.pyabsa_utils import find_target_file
+from pyabsa.utils.pyabsa_utils import find_target_file
 
 
 class AspectExtractor:

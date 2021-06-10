@@ -21,7 +21,7 @@ from pyabsa.apc.dataset_utils.data_utils_for_inferring import ABSADataset
 from pyabsa.apc.dataset_utils.apc_utils import Tokenizer4Bert
 from pyabsa.apc.dataset_utils.apc_utils import SENTIMENT_PADDING
 
-from pyabsa.pyabsa_utils import find_target_file
+from pyabsa.utils.pyabsa_utils import find_target_file
 
 from termcolor import colored
 
