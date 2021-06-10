@@ -13,9 +13,10 @@ import numpy
 import torch
 import torch.nn as nn
 import shutil
+import time
+
 from tqdm import tqdm
 from torch.utils.data import DataLoader
-# from transformers import BertModel, BertTokenizer
 from transformers import AutoTokenizer, AutoModel
 from sklearn import metrics
 
@@ -178,9 +179,9 @@ class Instructor:
                     iterator.postfix = postfix
                     iterator.refresh()
 
-        self.logger.info('----------------------Training Summary----------------------')
+        self.logger.info('-----------------------Training Summary-----------------------')
         self.logger.info('  Max Accuracy: {:.15f} Max F1: {:.15f}  '.format(max_test_acc * 100, max_f1 * 100))
-        self.logger.info('----------------------Training Summary----------------------')
+        self.logger.info('-----------------------Training Summary-----------------------')
         # return the model paths of multiple training_tutorials in case of loading the best model after training_tutorials
         if save_path:
             return save_path
@@ -283,5 +284,15 @@ def train4apc(opt):
     opt.inputs_cols = ABSADataset.input_colses[opt.model_name]
     opt.optimizer = optimizers[opt.optimizer]
     opt.device = torch.device(opt.device)
-    ins = Instructor(opt, logger)
-    return ins.run()
+
+    # in case of handling ConnectionError exception
+    finished = False
+    while not finished:
+        try:
+            ins = Instructor(opt, logger)
+            return ins.run()
+        except ConnectionError as e:
+            time.sleep(60)
+            print('ConnectionError, retry in {} seconds...'.format(60))
+        finished = True
+

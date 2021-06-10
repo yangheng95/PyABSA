@@ -7,6 +7,7 @@
 
 import os
 import copy
+import time
 from argparse import Namespace
 
 from pyabsa.utils.pyabsa_utils import get_auto_device
