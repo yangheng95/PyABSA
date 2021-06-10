@@ -84,56 +84,55 @@ class Tokenizer4Bert:
             sequence = sequence[::-1]
         return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
 
-
     def get_bert_tokens(self, text):
         return self.tokenizer.tokenize(text)
 
 
 def syntax_distance_alignment(tokens, dist, max_seq_len, tokenizer):
-        text = tokens[:]
-        dep_dist = dist[:]
-        bert_tokens = tokenizer.tokenize(' '.join(text))
-        _bert_tokens = bert_tokens[:]
-        align_dist = []
-        if bert_tokens != text:
-            while text or bert_tokens:
-                if text[0] == ' ' or text[0] == '\xa0':  # bad case handle
+    text = tokens[:]
+    dep_dist = dist[:]
+    bert_tokens = tokenizer.tokenize(' '.join(text))
+    _bert_tokens = bert_tokens[:]
+    align_dist = []
+    if bert_tokens != text:
+        while text or bert_tokens:
+            if text[0] == ' ' or text[0] == '\xa0':  # bad case handle
+                text = text[1:]
+                dep_dist = dep_dist[1:]
+            elif text[0] == bert_tokens[0]:
+                text = text[1:]
+                bert_tokens = bert_tokens[1:]
+                align_dist.append(dep_dist[0])
+                dep_dist = dep_dist[1:]
+            elif len(text[0]) < len(bert_tokens[0]):
+                tmp_str = text[0]
+                while len(tmp_str) < len(bert_tokens[0]):
                     text = text[1:]
+                    tmp_str += text[0]
                     dep_dist = dep_dist[1:]
-                elif text[0] == bert_tokens[0]:
-                    text = text[1:]
-                    bert_tokens = bert_tokens[1:]
+                align_dist.append(dep_dist[0])
+                dep_dist = dep_dist[1:]
+                text = text[1:]
+                bert_tokens = bert_tokens[1:]
+            elif len(text[0]) > len(bert_tokens[0]):
+                tmp_tokens = tokenizer.tokenize(text[0])
+                for jx, tmp_token in enumerate(tmp_tokens):
                     align_dist.append(dep_dist[0])
-                    dep_dist = dep_dist[1:]
-                elif len(text[0]) < len(bert_tokens[0]):
-                    tmp_str = text[0]
-                    while len(tmp_str) < len(bert_tokens[0]):
-                        text = text[1:]
-                        tmp_str += text[0]
-                        dep_dist = dep_dist[1:]
-                    align_dist.append(dep_dist[0])
-                    dep_dist = dep_dist[1:]
-                    text = text[1:]
-                    bert_tokens = bert_tokens[1:]
-                elif len(text[0]) > len(bert_tokens[0]):
-                    tmp_tokens = tokenizer.tokenize(text[0])
-                    for jx, tmp_token in enumerate(tmp_tokens):
-                        align_dist.append(dep_dist[0])
 
-                    text = text[1:]
-                    dep_dist = dep_dist[1:]
-                    bert_tokens = bert_tokens[len(tmp_tokens):]
-                else:
-                    text = text[1:]
-                    bert_tokens = bert_tokens[1:]
-                    align_dist.append(dep_dist[0])
-                    dep_dist = dep_dist[1:]
+                text = text[1:]
+                dep_dist = dep_dist[1:]
+                bert_tokens = bert_tokens[len(tmp_tokens):]
+            else:
+                text = text[1:]
+                bert_tokens = bert_tokens[1:]
+                align_dist.append(dep_dist[0])
+                dep_dist = dep_dist[1:]
 
-        else:
-            align_dist = dep_dist
+    else:
+        align_dist = dep_dist
 
-        align_dist = pad_and_truncate(align_dist, max_seq_len, value=max_seq_len)
-        return align_dist
+    align_dist = pad_and_truncate(align_dist, max_seq_len, value=max_seq_len)
+    return align_dist
 
 
 # Group distance to aspect of an original word to its corresponding subword token
@@ -164,8 +163,8 @@ def load_datasets(fname):
     return lines
 
 
-def prepare_input_from_text(opt, tokenizer, text_left, text_right, aspect):
-    if opt.dynamic_truncate:
+def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
+    if hasattr(opt, 'dynamic_truncate') and opt.dynamic_truncate:
         # dynamic truncation on input text
         text_left = ' '.join(text_left.split(' ')[int(-(tokenizer.max_seq_len - len(aspect.split())) / 2) - 1:])
         text_right = ' '.join(text_right.split(' ')[:int((tokenizer.max_seq_len - len(aspect.split())) / 2) + 1])
@@ -179,13 +178,75 @@ def prepare_input_from_text(opt, tokenizer, text_left, text_right, aspect):
     text_raw_bert_indices = tokenizer.text_to_sequence(bos_token + ' ' + text_raw + ' ' + eos_token)
     aspect_bert_indices = tokenizer.text_to_sequence(aspect)
 
+    aspect_begin = len(tokenizer.tokenizer.tokenize(bos_token + ' ' + text_left + ' ' + aspect + ' ')) - 1
+    if 'lcfs' in opt.model_name or opt.use_syntax_based_SRD:
+        syntactical_dist = get_syntax_distance(text_raw, aspect, tokenizer.tokenizer, opt)
+    else:
+        syntactical_dist = None
+
+    lca_ids, lcf_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices,
+                                                   aspect_begin, syntactical_dist)
+
+    lcf_cdw_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices,
+                              aspect_begin, syntactical_dist)
+
     inputs = {
         'text_raw': text_raw,
         'text_spc': text_spc,
         'aspect': aspect,
         'text_bert_indices': text_bert_indices,
         'text_raw_bert_indices': text_raw_bert_indices,
-        'aspect_bert_indices': aspect_bert_indices
+        'aspect_bert_indices': aspect_bert_indices,
+        'lca_ids': lca_ids,
+        'lcf_cdm_vec': lcf_cdm_vec,
+        'lcf_cdw_vec': lcf_cdw_vec,
+    }
+
+    return inputs
+
+
+def prepare_input_for_atepc(opt, tokenizer, text_left, text_right, aspect):
+    if hasattr(opt, 'dynamic_truncate') and opt.dynamic_truncate:
+        # dynamic truncation on input text
+        text_left = ' '.join(text_left.split(' ')[int(-(opt.max_seq_len - len(aspect.split())) / 2) - 1:])
+        text_right = ' '.join(text_right.split(' ')[:int((opt.max_seq_len - len(aspect.split())) / 2) + 1])
+
+    bos_token = tokenizer.bos_token if tokenizer.bos_token else '[CLS]'
+    eos_token = tokenizer.eos_token if tokenizer.eos_token else '[SEP]'
+
+    text_raw = text_left + ' ' + aspect + ' ' + text_right
+    text_spc = bos_token + ' ' + text_raw + ' ' + eos_token + ' ' + aspect + ' ' + eos_token
+
+    text_bert_tokens = tokenizer.tokenize(text_spc)
+    text_raw_bert_tokens = tokenizer.tokenize(bos_token + ' ' + text_raw + ' ' + eos_token)
+    aspect_bert_tokens = tokenizer.tokenize(aspect)
+
+    text_bert_indices = tokenizer.convert_tokens_to_ids(text_bert_tokens)
+    text_raw_bert_indices = tokenizer.convert_tokens_to_ids(text_raw_bert_tokens)
+    aspect_bert_indices = tokenizer.convert_tokens_to_ids(aspect_bert_tokens)
+
+    aspect_begin = len(tokenizer.tokenize(bos_token + ' ' + text_left + ' ' + aspect + ' ')) - 1
+    if 'lcfs' in opt.model_name or opt.use_syntax_based_SRD:
+        syntactical_dist = get_syntax_distance(text_raw, aspect, tokenizer, opt)
+    else:
+        syntactical_dist = None
+
+    lca_ids, lcf_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices,
+                                                   aspect_begin, syntactical_dist)
+
+    lcf_cdw_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices,
+                              aspect_begin, syntactical_dist)
+
+    inputs = {
+        'text_raw': text_raw,
+        'text_spc': text_spc,
+        'aspect': aspect,
+        'text_bert_indices': text_bert_indices,
+        'text_raw_bert_indices': text_raw_bert_indices,
+        'aspect_bert_indices': aspect_bert_indices,
+        'lca_ids': lca_ids,
+        'lcf_cdm_vec': lcf_cdm_vec,
+        'lcf_cdw_vec': lcf_cdw_vec,
     }
 
     return inputs
@@ -214,7 +275,7 @@ def get_syntax_distance(text_raw, aspect, tokenizer, opt):
     return syntactical_dist
 
 
-def get_lca_ids_and_cdm_vec(opt, bert_spc_indices, aspect_indices, syntactical_dist=None):
+def get_lca_ids_and_cdm_vec(opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None):
     SRD = opt.SRD
     lca_ids = np.zeros((opt.max_seq_len), dtype=np.int64)
     cdm_vec = np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
@@ -226,7 +287,7 @@ def get_lca_ids_and_cdm_vec(opt, bert_spc_indices, aspect_indices, syntactical_d
                 lca_ids[i] = 1
                 cdm_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
     else:
-        aspect_begin = get_asp_index(bert_spc_indices, aspect_indices)
+        # aspect_begin = get_asp_index(bert_spc_indices, aspect_indices)
         if aspect_begin < 0:
             return lca_ids, cdm_vec
         local_context_begin = max(0, aspect_begin - SRD)
@@ -238,7 +299,7 @@ def get_lca_ids_and_cdm_vec(opt, bert_spc_indices, aspect_indices, syntactical_d
     return lca_ids, cdm_vec
 
 
-def get_cdw_vec(opt, bert_spc_indices, aspect_indices, syntactical_dist=None):
+def get_cdw_vec(opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None):
     SRD = opt.SRD
     cdw_vec = np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
     aspect_len = np.count_nonzero(aspect_indices)
@@ -251,7 +312,7 @@ def get_cdw_vec(opt, bert_spc_indices, aspect_indices, syntactical_dist=None):
             else:
                 cdw_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
     else:
-        aspect_begin = get_asp_index(bert_spc_indices, aspect_indices)
+        # aspect_begin = get_asp_index(bert_spc_indices, aspect_indices)
         if aspect_begin < 0:
             return np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
         local_context_begin = max(0, aspect_begin - SRD)

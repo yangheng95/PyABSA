@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 
 from transformers.models.bert.modeling_bert import BertPooler
-from pyabsa.encoder.sa_encoder import Encoder
+from pyabsa.network.sa_encoder import Encoder
 
 
 class SLIDE_LCF_BERT(nn.Module):

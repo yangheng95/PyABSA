@@ -6,13 +6,8 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 import tqdm
-import warnings
 
-from pyabsa.apc.dataset_utils.apc_utils import (get_syntax_distance,
-                                                get_lca_ids_and_cdm_vec,
-                                                get_cdw_vec)
-
-from pyabsa.atepc.dataset_utils.atepc_utils import split_text
+from pyabsa.module.apc.dataset_utils.apc_utils import prepare_input_for_atepc
 
 SENTIMENT_PADDING = -999
 
@@ -186,23 +181,16 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
         enum_tokens = text_spc_tokens
         IOB_label.extend([eos_token])
 
-        spc_tokens_for_lcf_vec = [bos_token] + example.text_a + [eos_token] + example.text_b + [eos_token]
-        text_spc_ids_fof_lcf_vec = tokenizer.convert_tokens_to_ids(spc_tokens_for_lcf_vec)
-        aspect_ids_for_lcf_vec = tokenizer.convert_tokens_to_ids(example.text_b)
-
-        if 'lcfs' in opt.model_name or opt.use_syntax_based_SRD:
-            syntactical_dist = get_syntax_distance(example.text_a, example.text_b, tokenizer, opt)
-        else:
-            syntactical_dist = None
-
-        _, lcf_cdm_vec = get_lca_ids_and_cdm_vec(bert_spc_indices=text_spc_ids_fof_lcf_vec,
-                                                 aspect_indices=aspect_ids_for_lcf_vec,
-                                                 opt=opt,
-                                                 syntactical_dist=syntactical_dist)
-        lcf_cdw_vec = get_cdw_vec(bert_spc_indices=text_spc_ids_fof_lcf_vec,
-                                  aspect_indices=aspect_ids_for_lcf_vec,
-                                  opt=opt,
-                                  syntactical_dist=syntactical_dist)
+        aspect = ' '.join(example.text_b)
+        try:
+            text_left, _, text_right = [s.strip() for s in ' '.join(example.text_a).partition(aspect)]
+        except:
+            text_left = ' '.join(example.text_a)
+            text_right = ''
+            aspect = ''
+        prepared_inputs = prepare_input_for_atepc(opt, tokenizer, text_left, text_right, aspect)
+        lcf_cdm_vec = prepared_inputs['lcf_cdm_vec']
+        lcf_cdw_vec = prepared_inputs['lcf_cdw_vec']
 
         IOB_label.extend(aspect_label)
         label_lists = IOB_label
@@ -240,7 +228,6 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
         valid.append(1)
         label_mask.append(1)
         label_ids.append(label_map[eos_token])
-        # label_ids.append(label_map["O"])
         input_ids_spc = tokenizer.convert_tokens_to_ids(ntokens)
         input_mask = [1] * len(input_ids_spc)
         label_mask = [1] * len(label_ids)

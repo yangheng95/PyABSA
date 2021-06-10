@@ -1,6 +1,8 @@
-# trained models
+# dev files
 state_dict/
 datasets/
+*.results
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

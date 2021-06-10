@@ -5,13 +5,11 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from os import path
-
 from setuptools import setup, find_packages
 
 setup(
     name='pyabsa',
-    version='0.7.0.0',
+    version='0.7.0.1',
     description='This tool provides the sota models for aspect term extraction (ATE) '
                 'and aspect polarity classification (APC)',
     # The project's main homepage.

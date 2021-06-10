@@ -9,17 +9,18 @@ import os
 import copy
 from argparse import Namespace
 
-from pyabsa.utils.pyabsa_utils import get_auto_device, detect_dataset
+from pyabsa.utils.pyabsa_utils import get_auto_device
 
-from pyabsa.apc.inferring.sentiment_classifier import SentimentClassifier
-from pyabsa.apc.training.apc_trainer import train4apc
+from pyabsa.dataset import detect_dataset
 
-from pyabsa.atepc.training.atepc_trainer import train4atepc
-from pyabsa.atepc.inferring.aspect_extractor import AspectExtractor
+from pyabsa.module.apc.inferring.sentiment_classifier import SentimentClassifier
+from pyabsa.module.apc.training.apc_trainer import train4apc
+
+from pyabsa.module.atepc.training.atepc_trainer import train4atepc
+from pyabsa.module.atepc.inferring.aspect_extractor import AspectExtractor
 
 from pyabsa.config.atepc_config import atepc_param_dict_base
 from pyabsa.config.apc_config import apc_param_dict_base
-
 
 choice = get_auto_device()
 
@@ -41,8 +42,8 @@ def init_config(config_dict, base_config_dict, auto_device=True):
 
     if 'lcfs' in apc_config.model_name or apc_config.use_syntax_based_SRD:
         print('-' * 130)
-        print('(Force to) use syntax distance-based semantic-relative distance,'
-              ' however Chinese is not supported to parse syntax distance yet!')
+        print('  (Force to) use syntax distance-based semantic-relative distance,'
+              ' however Chinese is not supported to parse syntax distance yet!  ')
         print('-' * 130)
 
     return apc_config
@@ -116,7 +117,7 @@ def train_atepc(parameter_dict=None,
     if isinstance(config.seed, int):
         config.seed = [config.seed]
 
-    # always save all trained models in case of obtaining best performance in different metrics among ATE and APC task.
+    # always save all trained models in case of obtaining best performance in different metrics among ATE and APC module.
     for _, s in enumerate(config.seed):
         t_config = copy.deepcopy(config)
         t_config.seed = s

@@ -44,16 +44,17 @@ on [Google Drive](https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb
 or [百度网盘（提取码：absa）](https://pan.baidu.com/s/1FSgaSP4ubGWy0BjBQdct5w):
 
 ## ATEPC
-1. [LCF-ATEPC](pyabsa/atepc/models/lcf_atepc.py) 
+1. [LCF-ATEPC](pyabsa/module/atepc/models/lcf_atepc.py) 
+2. [BERT-BASE](pyabsa/module/atepc/models/bert_base.py) 
 
 ## APC
-1. [BERT-BASE](pyabsa/apc/models/bert_base.py)
-2. [BERT-SPC](pyabsa/apc/models/bert_spc.py)
-3. [LCF-BERT](pyabsa/apc/models/lcf_bert.py)
-4. [LCFS-BERT](pyabsa/apc/models/lcf_bert.py)
-5. [SLIDE-LCF-BERT](pyabsa/apc/models/slide_lcf_bert.py)
-6. [SLIDE-LCFS-BERT](pyabsa/apc/models/slide_lcf_bert.py)
-7. [LCA-Net](pyabsa/apc/models/lca_bert.py)
+1. [BERT-BASE](pyabsa/module/apc/models/bert_base.py)
+2. [BERT-SPC](pyabsa/module/apc/models/bert_spc.py)
+3. [LCF-BERT](pyabsa/module/apc/models/lcf_bert.py)
+4. [LCFS-BERT](pyabsa/module/apc/models/lcf_bert.py)
+5. [SLIDE-LCF-BERT](pyabsa/module/apc/models/slide_lcf_bert.py)
+6. [SLIDE-LCFS-BERT](pyabsa/module/apc/models/slide_lcf_bert.py)
+7. [LCA-Net](pyabsa/module/apc/models/lca_bert.py)
 
 download them if necessary, note that most of the provided models are trained on the assembled train set without evaluation on test set. 
 

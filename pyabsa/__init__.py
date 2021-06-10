@@ -25,4 +25,3 @@ from pyabsa.config.atepc_config import (get_atepc_param_dict_base,
 
 from pyabsa.research.apc.apc_benchmark import run_benchmark_for_apc_models
 from pyabsa.research.atepc.atepc_benchmark import run_benchmark_for_atepc_models
-
