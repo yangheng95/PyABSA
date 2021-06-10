@@ -3,7 +3,7 @@
 # author: yangheng<yangheng@m.scnu.edu.cn>
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa.pyabsa_utils import find_target_file
+from pyabsa.utils.pyabsa_utils import find_target_file
 
 
 # convert atepc_datasets in this repo for inferring_tutorials

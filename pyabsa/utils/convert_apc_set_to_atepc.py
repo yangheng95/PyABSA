@@ -1,7 +1,7 @@
 import os
 import copy
 
-from pyabsa.pyabsa_utils import find_target_file
+from pyabsa.utils.pyabsa_utils import find_target_file
 
 
 def is_similar(s1, s2):

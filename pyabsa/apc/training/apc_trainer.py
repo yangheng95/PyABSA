@@ -27,7 +27,7 @@ from pyabsa.apc.models.lca_bert import LCA_BERT
 from pyabsa.apc.dataset_utils.data_utils_for_training import ABSADataset
 from pyabsa.apc.dataset_utils.apc_utils import Tokenizer4Bert
 
-from pyabsa.logger import get_logger
+from pyabsa.utils.logger import get_logger
 
 class Instructor:
     def __init__(self, opt, logger):
@@ -175,10 +175,11 @@ class Instructor:
                     iterator.postfix = postfix
                     iterator.refresh()
 
+        self.logger.info('----------------------Training Summary----------------------')
+        self.logger.info('|Max Accuracy: {:.15f} Max F1: {:.15f}|'.format(max_test_acc * 100, max_f1 * 100))
+        self.logger.info('----------------------Training Summary----------------------')
         # return the model paths of multiple training_tutorials in case of loading the best model after training_tutorials
         if save_path:
-            self.logger.info('----------------------Training Summary----------------------')
-            self.logger.info('Max Accuracy: {:.15f} Max F1: {:.15f}'.format(max_test_acc * 100, max_f1 * 100))
             return save_path
         else:
             # direct return model if do not evaluate

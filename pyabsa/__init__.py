@@ -8,7 +8,7 @@
 from .functional import train_apc, load_sentiment_classifier
 from .functional import train_atepc, load_aspect_extractor
 
-from .pyabsa_utils import find_target_file
+from pyabsa.utils.pyabsa_utils import find_target_file
 
 from pyabsa.utils.generate_inferring_set_for_apc import generate_inferrence_set_for_apc
 from pyabsa.utils.convert_apc_set_to_atepc import convert_apc_set_to_atepc_set
@@ -23,6 +23,6 @@ from pyabsa.config.atepc_config import (get_atepc_param_dict_base,
                                         get_atepc_param_dict_chinese,
                                         get_atepc_param_dict_multilingual)
 
-import pyabsa.research.apc.apc_benchmark as apc_benchmark
-import pyabsa.research.atepc.atepc_benchmark as atepc_benchmark
+from pyabsa.research.apc.apc_benchmark import run_benchmark_for_apc_models
+from pyabsa.research.atepc.atepc_benchmark import run_benchmark_for_atepc_models
 

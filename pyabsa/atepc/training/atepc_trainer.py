@@ -7,7 +7,6 @@
 
 
 import os
-import shutil
 import random
 import pickle
 import tqdm
@@ -21,12 +20,12 @@ from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler, Tens
 # from transformers import BertTokenizer
 # from transformers.models.bert.modeling_bert import BertModel
 from transformers import AutoTokenizer
-from transformers import AutoModel, AutoModelForTokenClassification
+from transformers import AutoModel
 
 from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
 from ..models.lcf_atepc import LCF_ATEPC
 from ..models.rlcf_atepc import RLCF_ATEPC
-from pyabsa.logger import get_logger
+from pyabsa.utils.logger import get_logger
 
 
 def train4atepc(config):
@@ -196,13 +195,14 @@ def train4atepc(config):
                     iterator.postfix = postfix
                     iterator.refresh()
 
-        # return the model paths of multiple training_tutorials in case of loading the best model after training_tutorials
-        if save_path:
-            logger.info('------------------------------------Training Summary------------------------------------')
-            logger.info('Max APC Accuracy: {:.15f} Max APC F1: {:.15f} Max ATE F1: {}'.format(max_apc_test_acc * 100,
+        logger.info('------------------------------------Training Summary------------------------------------')
+        logger.info('|Max APC Accuracy: {:.15f} Max APC F1: {:.15f} Max ATE F1: {}|'.format(max_apc_test_acc * 100,
                                                                                               max_apc_test_f1 * 100,
                                                                                               max_ate_test_f1)
                         )
+        logger.info('------------------------------------Training Summary------------------------------------')
+        # return the model paths of multiple training_tutorials in case of loading the best model after training_tutorials
+        if save_path:
             return save_path
         else:
             # direct return model if do not evaluate

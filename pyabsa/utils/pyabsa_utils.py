@@ -19,7 +19,7 @@ def get_auto_device():
     import torch
     choice = -1
     if torch.cuda.is_available():
-        from .Pytorch_GPUManager import GPUManager
+        from pyabsa.utils.Pytorch_GPUManager import GPUManager
         choice = GPUManager().auto_choice()
     return choice
 

@@ -9,6 +9,6 @@
 from pyabsa.research.atepc.lcf_atepc_benchmark import run_lcf_atepc_cdw, run_lcf_atepc_cdm
 
 
-def run_atepc_benchmark():
+def run_benchmark_for_atepc_models():
     run_lcf_atepc_cdw()
     run_lcf_atepc_cdm()

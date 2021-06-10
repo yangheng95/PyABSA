@@ -311,15 +311,16 @@ def copy_side_aspect(direct='left', target=None, source=None):
 
 def is_similar(s1, s2, tokenizer):
     # some reviews in the atepc_datasets are broken so the similarity check is used
+    # similarity check is based on the observation and analysis of datasets
     count = 0.
     s1 = list(s1)
     s2 = list(s2)
     s1 = s1[:s1.index(tokenizer.eos_token) if tokenizer.eos_token in s1 else len(s1)]
     s2 = s2[:s2.index(tokenizer.eos_token) if tokenizer.eos_token in s2 else len(s2)]
-    for ids in s1:
+    for i, ids in enumerate(s1):
         if ids in s2:
             count += 1
-    if count / len(s1) >= 0.9 and count / len(s2) >= 0.9:
+    if count / len(s1) >= 0.98 and count / len(s2) >= 0.98:
         return True
     else:
         return False
