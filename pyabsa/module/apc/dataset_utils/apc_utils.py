@@ -270,8 +270,10 @@ def get_syntax_distance(text_raw, aspect, tokenizer, opt):
     raw_tokens.append(tokenizer.eos_token)
     dist.append(max(dist))
     # the following two functions are both designed to calculate syntax-based distances
-    # syntactical_dist = pad_syntax_based_srd(raw_tokens, dist, tokenizer, opt)[1]
-    syntactical_dist = syntax_distance_alignment(raw_tokens, dist, opt.max_seq_len, tokenizer)
+    if opt.srd_alignment:
+        syntactical_dist = syntax_distance_alignment(raw_tokens, dist, opt.max_seq_len, tokenizer)
+    else:
+        syntactical_dist = pad_syntax_based_srd(raw_tokens, dist, tokenizer, opt)[1]
     return syntactical_dist
 
 
@@ -287,7 +289,8 @@ def get_lca_ids_and_cdm_vec(opt, bert_spc_indices, aspect_indices, aspect_begin,
                 lca_ids[i] = 1
                 cdm_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
     else:
-        # aspect_begin = get_asp_index(bert_spc_indices, aspect_indices)
+        # if 'lcfs' in opt.model_name or opt.use_syntax_based_SRD:
+        #     aspect_begin = get_asp_index(bert_spc_indices, aspect_indices)
         if aspect_begin < 0:
             return lca_ids, cdm_vec
         local_context_begin = max(0, aspect_begin - SRD)
@@ -312,7 +315,8 @@ def get_cdw_vec(opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical
             else:
                 cdw_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
     else:
-        # aspect_begin = get_asp_index(bert_spc_indices, aspect_indices)
+        # if 'lcfs' in opt.model_name or opt.use_syntax_based_SRD:
+        #     aspect_begin = get_asp_index(bert_spc_indices, aspect_indices)
         if aspect_begin < 0:
             return np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
         local_context_begin = max(0, aspect_begin - SRD)

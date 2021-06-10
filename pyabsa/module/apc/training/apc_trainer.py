@@ -291,8 +291,7 @@ def train4apc(opt):
         try:
             ins = Instructor(opt, logger)
             return ins.run()
-        except ConnectionError as e:
+        except ValueError as e:
             time.sleep(60)
             print('ConnectionError, retry in {} seconds...'.format(60))
-        finished = True
 

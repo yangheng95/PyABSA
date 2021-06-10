@@ -17,12 +17,27 @@ from pyabsa.dataset import (laptop14,
                             restaurant15,
                             restaurant16)
 
-save_path = 'state_dict'
+save_path = ''
 
 apc_param_dict_english = get_apc_param_dict_english()
 apc_param_dict_english['evaluate_begin'] = 2
+apc_param_dict_english['lcf'] = 'cdm'
+# apc_param_dict_english['srd_alignment'] = False
 
-
+sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
+                            # set param_dict=None will use the apc_param_dict as well
+                            dataset_path=laptop14,  # train set and test set will be automatically detected
+                            model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
+                            auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
+                            auto_device=True  # automatic choose CUDA or CPU
+                            )
+sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
+                            # set param_dict=None will use the apc_param_dict as well
+                            dataset_path=restaurant14,  # train set and test set will be automatically detected
+                            model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
+                            auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
+                            auto_device=True  # automatic choose CUDA or CPU
+                            )
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=restaurant15,  # train set and test set will be automatically detected
@@ -30,7 +45,6 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                             auto_device=True  # automatic choose CUDA or CPU
                             )
-
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=restaurant16,  # train set and test set will be automatically detected

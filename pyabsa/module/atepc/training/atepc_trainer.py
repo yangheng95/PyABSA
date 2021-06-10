@@ -356,8 +356,7 @@ def train4atepc(config):
         try:
             ins = Instructor(config)
             return ins.train()
-        except ConnectionError as e:
+        except ValueError as e:
             time.sleep(60)
             print('ConnectionError, retry in {} seconds...'.format(60))
-        finished = True
 

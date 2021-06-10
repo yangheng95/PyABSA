@@ -31,6 +31,7 @@ apc_param_dict_base = {'model_name': "slide_lcfs_bert",
                        'polarities_dim': 3,
                        'log_step': 3,
                        'dynamic_truncate': True,
+                       'srd_alignment': True,  # for srd_alignment
                        'evaluate_begin': 0
                        }
 
@@ -58,6 +59,7 @@ apc_param_dict_english = {'model_name': "slide_lcfs_bert",
                           'polarities_dim': 3,
                           'log_step': 3,
                           'dynamic_truncate': True,
+                          'srd_alignment': True,  # for srd_alignment
                           'evaluate_begin': 0,
                           }
 
@@ -85,6 +87,7 @@ apc_param_dict_multilingual = {'model_name': "slide_lcfs_bert",
                                'polarities_dim': 3,
                                'log_step': 3,
                                'dynamic_truncate': True,
+                               'srd_alignment': True,  # for srd_alignment
                                'evaluate_begin': 0,
                                }
 
@@ -112,6 +115,7 @@ apc_param_dict_chinese = {'model_name': "slide_lcfs_bert",
                           'polarities_dim': 3,
                           'log_step': 3,
                           'dynamic_truncate': True,
+                          'srd_alignment': True,  # for srd_alignment
                           'evaluate_begin': 0,
                           }
 
