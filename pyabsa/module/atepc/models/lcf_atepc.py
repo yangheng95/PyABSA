@@ -12,8 +12,9 @@ import numpy as np
 
 from transformers.models.bert.modeling_bert import BertForTokenClassification, BertPooler
 
-from pyabsa.atepc.dataset_utils.data_utils_for_training import SENTIMENT_PADDING
-from pyabsa.encoder.sa_encoder import Encoder
+from pyabsa.module.atepc.dataset_utils.data_utils_for_training import SENTIMENT_PADDING
+from pyabsa.network.sa_encoder import Encoder
+
 
 class LCF_ATEPC(BertForTokenClassification):
 
@@ -64,11 +65,12 @@ class LCF_ATEPC(BertForTokenClassification):
                 lcf_cdm_vec=None,
                 lcf_cdw_vec=None
                 ):
-
         if not self.opt.use_bert_spc:
-            input_ids_spc = self.get_ids_for_local_context_extractor(input_ids_spc)
+            input_ids = self.get_ids_for_local_context_extractor(input_ids_spc)
             labels = self.get_batch_token_labels_bert_base_indices(labels)
-        global_context_out = self.bert4global(input_ids_spc, token_type_ids, attention_mask)['last_hidden_state']
+            global_context_out = self.bert4global(input_ids, token_type_ids, attention_mask)['last_hidden_state']
+        else:
+            global_context_out = self.bert4global(input_ids_spc, token_type_ids, attention_mask)['last_hidden_state']
 
         batch_size, max_len, feat_dim = global_context_out.shape
         global_valid_output = torch.zeros(batch_size, max_len, feat_dim, dtype=torch.float32).to(self.opt.device)
@@ -81,13 +83,8 @@ class LCF_ATEPC(BertForTokenClassification):
         global_context_out = self.dropout(global_valid_output)
         ate_logits = self.classifier(global_context_out)
 
-        if self.opt.lcf is not None:
-
-            if self.opt.use_bert_spc:
-                local_context_ids = self.get_ids_for_local_context_extractor(input_ids_spc)
-            else:
-                local_context_ids = input_ids_spc
-
+        if lcf_cdm_vec is not None or lcf_cdw_vec is not None:
+            local_context_ids = self.get_ids_for_local_context_extractor(input_ids_spc)
             local_context_out = self.bert4local(local_context_ids)['last_hidden_state']
             batch_size, max_len, feat_dim = local_context_out.shape
             local_valid_output = torch.zeros(batch_size, max_len, feat_dim, dtype=torch.float32).to(self.opt.device)
@@ -116,17 +113,16 @@ class LCF_ATEPC(BertForTokenClassification):
                 cat_out = self.linear_triple(cat_out)
             sa_out = self.SA2(cat_out)
             pooled_out = self.pooler(sa_out)
+            pooled_out = self.dropout(pooled_out)
+            apc_logits = self.dense(pooled_out)
         else:
-            pooled_out = self.pooler(global_context_out)
-        pooled_out = self.dropout(pooled_out)
-        apc_logits = self.dense(pooled_out)
+            apc_logits = None
 
         if labels is not None:
             criterion_ate = CrossEntropyLoss(ignore_index=0)
             criterion_apc = CrossEntropyLoss(ignore_index=SENTIMENT_PADDING)
             loss_ate = criterion_ate(ate_logits.view(-1, self.num_labels), labels.view(-1))
             loss_apc = criterion_apc(apc_logits, polarity)
-
             return loss_ate, loss_apc
         else:
             return ate_logits, apc_logits

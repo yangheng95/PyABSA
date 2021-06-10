@@ -13,14 +13,16 @@
 
 from pyabsa import train_atepc, get_atepc_param_dict_english
 
-from pyabsa.dataset import restaurant15
+from pyabsa.dataset import laptop14
 
 
 save_path = 'state_dict'
 
 atepc_param_dict_english = get_atepc_param_dict_english()
+atepc_param_dict_english['model_name'] = 'bert_base'
+# atepc_param_dict_english['model_name'] = 'lcf_atepc'
 aspect_extractor = train_atepc(parameter_dict=atepc_param_dict_english,      # set param_dict=None to use default model
-                               dataset_path=restaurant15,    # file or dir, dataset(s) will be automatically detected
+                               dataset_path=laptop14,    # file or dir, dataset(s) will be automatically detected
                                model_path_to_save=save_path,   # set model_path_to_save=None to avoid save model
                                auto_evaluate=True,             # evaluate model while training_tutorials if test set is available
                                auto_device=True                # Auto choose CUDA or CPU
@@ -35,7 +37,7 @@ aspect_extractor = train_atepc(parameter_dict=atepc_param_dict_english,      # s
 #               'learning_rate': 0.00003,
 #               'pretrained_bert_name': "bert-base-uncased",
 #               'use_dual_bert': False,  # modeling the local and global context using different BERTs
-#               'use_bert_spc': False,   # enable to enhance APC, not available for ATE or joint task of APC and ATE
+#               'use_bert_spc': False,   # enable to enhance APC, not available for ATE or joint module of APC and ATE
 #               'max_seq_len': 80,
 #               'log_step': 5,           # evaluate per steps
 #               'SRD': 3,                # distance threshold to calculate local context

@@ -13,15 +13,17 @@ import torch
 from torch.utils.data import DataLoader
 from transformers import BertModel, BertTokenizer
 
-from pyabsa.apc.models.bert_base import BERT_BASE
-from pyabsa.apc.models.bert_spc import BERT_SPC
-from pyabsa.apc.models.lcf_bert import LCF_BERT
-from pyabsa.apc.models.slide_lcf_bert import SLIDE_LCF_BERT
-from pyabsa.apc.dataset_utils.data_utils_for_inferring import ABSADataset
-from pyabsa.apc.dataset_utils.apc_utils import Tokenizer4Bert
-from pyabsa.apc.dataset_utils.apc_utils import SENTIMENT_PADDING
+from pyabsa.module.apc.models.bert_base import BERT_BASE
+from pyabsa.module.apc.models.bert_spc import BERT_SPC
+from pyabsa.module.apc.models.lcf_bert import LCF_BERT
+from pyabsa.module.apc.models.slide_lcf_bert import SLIDE_LCF_BERT
+from pyabsa.module.apc.dataset_utils.data_utils_for_inferring import ABSADataset
+from pyabsa.module.apc.dataset_utils.apc_utils import Tokenizer4Bert
+from pyabsa.module.apc.dataset_utils.apc_utils import SENTIMENT_PADDING
 
 from pyabsa.utils.pyabsa_utils import find_target_file
+
+from pyabsa.dataset import detect_infer_dataset
 
 from termcolor import colored
 
@@ -51,13 +53,14 @@ class SentimentClassifier:
             print('Try to load trained model from training_tutorials')
             self.model = model_arg[0]
             self.opt = model_arg[1]
+            self.tokenizer = model_arg[2]
         else:
             # load from a trained model
             try:
                 print('Try to load trained model and config from', model_arg)
                 state_dict_path = find_target_file(model_arg, 'state_dict')
                 model_path = find_target_file(model_arg, 'model')
-
+                tokenizer_path = find_target_file(model_arg, 'tokenizer')
                 config_path = find_target_file(model_arg, 'config')
                 self.opt = pickle.load(open(config_path, 'rb'))
 
@@ -65,9 +68,18 @@ class SentimentClassifier:
                     self.bert = BertModel.from_pretrained(self.opt.pretrained_bert_name)
                     self.model = self.model_class[self.opt.model_name](self.bert, self.opt)
                     self.model.load_state_dict(torch.load(state_dict_path))
+
                 if model_path:
                     self.model = torch.load(model_path)
 
+                if tokenizer_path:
+                    self.tokenizer = pickle.load(open(tokenizer_path, 'rb'))
+                else:
+                    self.bert_tokenizer = BertTokenizer.from_pretrained(self.opt.pretrained_bert_name,
+                                                                        do_lower_case=True)
+                    self.tokenizer = Tokenizer4Bert(self.bert_tokenizer, self.opt.max_seq_len)
+                self.bert_tokenizer.bos_token = self.bert_tokenizer.bos_token if self.bert_tokenizer.bos_token else '[CLS]'
+                self.bert_tokenizer.eos_token = self.bert_tokenizer.eos_token if self.bert_tokenizer.eos_token else '[SEP]'
                 print('Config used in Training:')
                 self._log_write_args()
 
@@ -75,10 +87,6 @@ class SentimentClassifier:
                 warnings.warn('Fail to load the model, please download our latest models at Google Drive: '
                               'https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing')
 
-        self.bert_tokenizer = BertTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
-        self.tokenizer = Tokenizer4Bert(self.bert_tokenizer, self.opt.max_seq_len)
-        self.bert_tokenizer.bos_token = self.bert_tokenizer.bos_token if self.bert_tokenizer.bos_token else '[CLS]'
-        self.bert_tokenizer.eos_token = self.bert_tokenizer.eos_token if self.bert_tokenizer.eos_token else '[SEP]'
         self.dataset = ABSADataset(tokenizer=self.tokenizer, opt=self.opt)
         self.infer_dataloader = None
 
@@ -143,6 +151,7 @@ class SentimentClassifier:
                 raise FileNotFoundError('Can not find inference dataset!')
         else:
             save_path = target_file + '.results'
+        target_file = detect_infer_dataset(target_file, task='apc')
         self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=1, shuffle=False)
         return self._infer(save_path=save_path if save_result else None, print_result=print_result)

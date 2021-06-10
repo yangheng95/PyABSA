@@ -19,15 +19,16 @@ from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, AutoModel
 from sklearn import metrics
 
-from pyabsa.apc.models.bert_base import BERT_BASE
-from pyabsa.apc.models.bert_spc import BERT_SPC
-from pyabsa.apc.models.lcf_bert import LCF_BERT
-from pyabsa.apc.models.slide_lcf_bert import SLIDE_LCF_BERT
-from pyabsa.apc.models.lca_bert import LCA_BERT
-from pyabsa.apc.dataset_utils.data_utils_for_training import ABSADataset
-from pyabsa.apc.dataset_utils.apc_utils import Tokenizer4Bert
+from pyabsa.module.apc.models.bert_base import BERT_BASE
+from pyabsa.module.apc.models.bert_spc import BERT_SPC
+from pyabsa.module.apc.models.lcf_bert import LCF_BERT
+from pyabsa.module.apc.models.slide_lcf_bert import SLIDE_LCF_BERT
+from pyabsa.module.apc.models.lca_bert import LCA_BERT
+from pyabsa.module.apc.dataset_utils.data_utils_for_training import ABSADataset
+from pyabsa.module.apc.dataset_utils.apc_utils import Tokenizer4Bert
 
 from pyabsa.utils.logger import get_logger
+
 
 class Instructor:
     def __init__(self, opt, logger):
@@ -91,6 +92,8 @@ class Instructor:
             torch.save(self.model.cpu(),
                        save_path + self.opt.model_name + '.model')  # save the state dict
             pickle.dump(self.opt, open(save_path + self.opt.model_name + '.config', 'wb'))
+            pickle.dump(self.tokenizer, open(save_path + self.opt.model_name + '.tokenizer', 'wb'))
+
         else:
             # save the fine-tuned bert model
             model_output_dir = save_path + '_fine-tuned'
@@ -176,7 +179,7 @@ class Instructor:
                     iterator.refresh()
 
         self.logger.info('----------------------Training Summary----------------------')
-        self.logger.info('|Max Accuracy: {:.15f} Max F1: {:.15f}|'.format(max_test_acc * 100, max_f1 * 100))
+        self.logger.info('  Max Accuracy: {:.15f} Max F1: {:.15f}  '.format(max_test_acc * 100, max_f1 * 100))
         self.logger.info('----------------------Training Summary----------------------')
         # return the model paths of multiple training_tutorials in case of loading the best model after training_tutorials
         if save_path:
@@ -189,7 +192,7 @@ class Instructor:
                                                   self.opt.lcf,
                                                   )
                 self._save_model(self.model, save_path, mode=0)
-            return self.model, self.opt
+            return self.model, self.opt, self.tokenizer
 
     def _evaluate_acc_f1(self):
         # switch model to evaluation mode
@@ -244,7 +247,7 @@ class Instructor:
 def train4apc(opt):
     log_name = '{}_{}_{}'.format(opt.model_name, opt.lcf, opt.SRD)
     logger = get_logger(os.getcwd(), log_name=log_name, log_type='training_tutorials')
-    
+
     if not isinstance(opt.seed, int):
         logger.info('Please do not use multiple random seeds without evaluating.')
         opt.seed = list(opt.seed)[0]

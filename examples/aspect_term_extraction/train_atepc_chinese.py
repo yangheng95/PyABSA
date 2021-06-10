@@ -25,7 +25,7 @@ param_dict = {'model_name': 'lcf_atepc',  # {lcf_atepc, rlcf_atepc}
               'pretrained_bert_name': "bert-base-chinese",
               'use_dual_bert': False,     # modeling the local and global context using different BERTs
               'use_bert_spc': False,      # Enable to enhance APC in lcf_atepc,
-                                          # not available for ATE or joint task of APC and ATE
+                                          # not available for ATE or joint module of APC and ATE
               'max_seq_len': 80,
               'log_step': 5,              # Evaluate per steps
               'SRD': 3,                   # Distance threshold to calculate local context

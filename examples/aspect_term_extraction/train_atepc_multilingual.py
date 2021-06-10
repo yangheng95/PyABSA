@@ -23,7 +23,7 @@ param_dict = {'model_name': 'lcf_atepc',
               'learning_rate': 0.00003,
               'pretrained_bert_name': "bert-base-multilingual-uncased",
               'use_dual_bert': False,  # modeling the local and global context using different BERTs
-              'use_bert_spc': False,    # enable to enhance APC, not available for ATE or joint task of APC and ATE
+              'use_bert_spc': False,    # enable to enhance APC, not available for ATE or joint module of APC and ATE
               'max_seq_len': 80,
               'log_step': 10,          # evaluate per steps
               'SRD': 3,                # distance threshold to calculate local context
@@ -33,7 +33,7 @@ param_dict = {'model_name': 'lcf_atepc',
               'evaluate_begin': 5      # evaluate begin with epoch
               # 'polarities_dim': 3    # deprecated, polarity_dim will be automatically detected
               }
-param_dict = get_atepc_param_dict_multilingual()
+# param_dict = get_atepc_param_dict_multilingual()
 save_path = 'state_dict'
 aspect_extractor = train_atepc(parameter_dict=param_dict,      # set param_dict=None to use default model
                                dataset_path=multilingual,    # file or dir, dataset(s) will be automatically detected

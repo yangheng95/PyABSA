@@ -18,9 +18,11 @@ from transformers import BertTokenizer
 from transformers.models.bert.modeling_bert import BertModel
 
 from ..dataset_utils.data_utils_for_inferring import (ATEPCProcessor,
-                                                      convert_examples_to_features,
+                                                      convert_ate_examples_to_features,
+                                                      convert_apc_examples_to_features,
                                                       SENTIMENT_PADDING)
 from ..models.lcf_atepc import LCF_ATEPC
+from ..models.bert_base import BERT_BASE
 
 from pyabsa.utils.pyabsa_utils import find_target_file
 
@@ -28,6 +30,8 @@ from pyabsa.utils.pyabsa_utils import find_target_file
 class AspectExtractor:
 
     def __init__(self, model_arg=None, sentiment_map=None):
+        print('This is the aspect extractor aims to extract aspect and predict sentiment,'
+              ' note that use_bert_spc is disabled while extracting aspects and classifying sentiment!')
         optimizers = {
             'adadelta': torch.optim.Adadelta,  # default lr=1.0
             'adagrad': torch.optim.Adagrad,  # default lr=0.01
@@ -40,18 +44,20 @@ class AspectExtractor:
         }
         model_classes = {
             'lcf_atepc': LCF_ATEPC,
+            'bert_base': BERT_BASE
         }
 
         # load from a model path
         if not isinstance(model_arg, str):
             self.model = model_arg[0]
             self.opt = model_arg[1]
+            self.tokenizer = model_arg[2]
         else:
             print('Try to load trained model and config from', model_arg)
             try:
                 state_dict_path = find_target_file(model_arg, '.state_dict')
                 model_path = find_target_file(model_arg, '.model')
-
+                tokenizer_path = find_target_file(model_arg, 'tokenizer')
                 config_path = find_target_file(model_arg, 'config')
                 self.opt = pickle.load(open(config_path, 'rb'))
 
@@ -62,12 +68,15 @@ class AspectExtractor:
                     self.model.load_state_dict(torch.load(state_dict_path))
                 if model_path:
                     self.model = torch.load(model_path)
+                if tokenizer_path:
+                    self.tokenizer = pickle.load(open(tokenizer_path, 'rb'))
+                else:
+                    self.tokenizer = BertTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
 
             except:
                 warnings.warn('Fail to load the model, please download our latest models at Google Drive: '
                               'https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing')
 
-        self.tokenizer = BertTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
         self.processor = ATEPCProcessor(self.tokenizer)
         self.label_list = self.processor.get_labels()
         self.num_labels = len(self.label_list) + 1
@@ -146,11 +155,11 @@ class AspectExtractor:
 
         self.eval_dataloader = None
         example = self.processor.get_examples_for_aspect_extraction(example)
-        eval_features = convert_examples_to_features(example,
-                                                     self.label_list,
-                                                     self.opt.max_seq_len,
-                                                     self.tokenizer,
-                                                     self.opt)
+        eval_features = convert_ate_examples_to_features(example,
+                                                         self.label_list,
+                                                         self.opt.max_seq_len,
+                                                         self.tokenizer,
+                                                         self.opt)
         all_spc_input_ids = torch.tensor([f.input_ids_spc for f in eval_features], dtype=torch.long)
         all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
         all_segment_ids = torch.tensor([f.segment_ids for f in eval_features], dtype=torch.long)
@@ -158,12 +167,10 @@ class AspectExtractor:
         all_polarities = torch.tensor([f.polarity for f in eval_features], dtype=torch.long)
         all_valid_ids = torch.tensor([f.valid_ids for f in eval_features], dtype=torch.long)
         all_lmask_ids = torch.tensor([f.label_mask for f in eval_features], dtype=torch.long)
-        lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in eval_features], dtype=torch.float32)
-        lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in eval_features], dtype=torch.float32)
 
         all_tokens = [f.tokens for f in eval_features]
         eval_data = TensorDataset(all_spc_input_ids, all_input_mask, all_segment_ids, all_label_ids,
-                                  all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
+                                  all_polarities, all_valid_ids, all_lmask_ids)
         # Run prediction for full data
         eval_sampler = SequentialSampler(eval_data)
         self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=1)
@@ -171,7 +178,7 @@ class AspectExtractor:
         # extract_aspects
         self.model.eval()
         label_map = {i: label for i, label in enumerate(self.label_list, 1)}
-        for input_ids_spc, input_mask, segment_ids, label_ids, polarity, valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec in self.eval_dataloader:
+        for input_ids_spc, input_mask, segment_ids, label_ids, polarity, valid_ids, l_mask in self.eval_dataloader:
             input_ids_spc = input_ids_spc.to(self.opt.device)
             input_mask = input_mask.to(self.opt.device)
             segment_ids = segment_ids.to(self.opt.device)
@@ -179,8 +186,6 @@ class AspectExtractor:
             label_ids = label_ids.to(self.opt.device)
             polarity = polarity.to(self.opt.device)
             l_mask = l_mask.to(self.opt.device)
-            lcf_cdm_vec = lcf_cdm_vec.to(self.opt.device)
-            lcf_cdw_vec = lcf_cdw_vec.to(self.opt.device)
             with torch.no_grad():
                 ate_logits, apc_logits = self.model(input_ids_spc,
                                                     segment_ids,
@@ -188,8 +193,6 @@ class AspectExtractor:
                                                     valid_ids=valid_ids,
                                                     polarity=polarity,
                                                     attention_mask_label=l_mask,
-                                                    lcf_cdm_vec=lcf_cdm_vec,
-                                                    lcf_cdw_vec=lcf_cdw_vec
                                                     )
 
             ate_logits = torch.argmax(F.log_softmax(ate_logits, dim=2), dim=2)
@@ -242,11 +245,11 @@ class AspectExtractor:
 
         self.eval_dataloader = None
         example = self.processor.get_examples_for_sentiment_classification(example)
-        eval_features = convert_examples_to_features(example,
-                                                     self.label_list,
-                                                     self.opt.max_seq_len,
-                                                     self.tokenizer,
-                                                     self.opt)
+        eval_features = convert_apc_examples_to_features(example,
+                                                         self.label_list,
+                                                         self.opt.max_seq_len,
+                                                         self.tokenizer,
+                                                         self.opt)
         all_spc_input_ids = torch.tensor([f.input_ids_spc for f in eval_features], dtype=torch.long)
         all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
         all_segment_ids = torch.tensor([f.segment_ids for f in eval_features], dtype=torch.long)

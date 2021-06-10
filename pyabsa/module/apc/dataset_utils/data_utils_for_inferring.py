@@ -4,16 +4,14 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-import warnings
 
-import numpy as np
 import torch
 from torch.utils.data import Dataset
 from tqdm import tqdm
 from .apc_utils import build_sentiment_window
 from .apc_utils import get_lca_ids_and_cdm_vec, get_cdw_vec
 from .apc_utils import get_syntax_distance, build_spc_mask_vec
-from .apc_utils import load_datasets, prepare_input_from_text
+from .apc_utils import load_datasets, prepare_input_for_apc
 
 from .apc_utils import SENTIMENT_PADDING
 
@@ -110,64 +108,39 @@ class ABSADataset(Dataset):
                 text_right = ' '.join(
                     text_right.split(' ')[:int((self.tokenizer.max_seq_len - len(aspect.split())) / 2) + 1])
 
-                prepared_inputs = prepare_input_from_text(self.opt,
-                                                          self.tokenizer,
-                                                          text_left,
-                                                          text_right,
-                                                          aspect
-                                                          )
+                prepared_inputs = prepare_input_for_apc(self.opt, self.tokenizer, text_left, text_right, aspect)
 
                 text_raw = prepared_inputs['text_raw']
-                text_spc = prepared_inputs['text_spc']
                 aspect = prepared_inputs['aspect']
                 text_bert_indices = prepared_inputs['text_bert_indices']
                 text_raw_bert_indices = prepared_inputs['text_raw_bert_indices']
                 aspect_bert_indices = prepared_inputs['aspect_bert_indices']
-                if 'lcfs' in self.opt.model_name or self.opt.use_syntax_based_SRD:
-                    syntactical_dist = get_syntax_distance(text_raw, aspect, self.tokenizer.tokenizer, self.opt)
-                else:
-                    syntactical_dist = None
-
-                if 'lca' in self.opt.model_name:
-                    lca_ids, lcf_vec = get_lca_ids_and_cdm_vec(self.opt, text_bert_indices,
-                                                               aspect_bert_indices,
-                                                               syntactical_dist)
-                    lcf_vec = torch.from_numpy(lcf_vec)
-                    lca_ids = torch.from_numpy(lca_ids).long()
-                elif 'lcf' in self.opt.model_name:
-                    if 'cdm' in self.opt.lcf:
-                        _, lcf_vec = get_lca_ids_and_cdm_vec(self.opt, text_bert_indices,
-                                                             aspect_bert_indices,
-                                                             syntactical_dist)
-                        lcf_vec = torch.from_numpy(lcf_vec)
-                    elif 'cdw' in self.opt.lcf:
-                        lcf_vec = get_cdw_vec(self.opt, text_bert_indices,
-                                              aspect_bert_indices,
-                                              syntactical_dist)
-                        lcf_vec = torch.from_numpy(lcf_vec)
-                    elif 'fusion' in self.opt.lcf:
-                        raise NotImplementedError('LCF-Fusion is not recommended due to its low efficiency!')
-                    else:
-                        raise KeyError('Invalid LCF Mode!')
-
+                lca_ids = prepared_inputs['lca_ids']
+                lcf_vec = prepared_inputs['lcf_cdm_vec'] if self.opt.lcf == 'cdm' else prepared_inputs['lcf_cdw_vec']
                 data = {
                     'text_raw': text_raw,
+
                     'aspect': aspect,
+
                     'lca_ids': lca_ids if 'lca_ids' in self.input_colses[self.opt.model_name] else 0,
+
                     'lcf_vec': lcf_vec if 'lcf_vec' in self.input_colses[self.opt.model_name] else 0,
+
                     'spc_mask_vec': build_spc_mask_vec(self.opt, text_raw_bert_indices)
                     if 'spc_mask_vec' in self.input_colses[self.opt.model_name] else 0,
-                    'text_bert_indices': text_bert_indices if 'text_bert_indices' in self.input_colses[
-                        self.opt.model_name] else 0,
-                    'aspect_bert_indices': aspect_bert_indices if 'aspect_bert_indices' in self.input_colses[
-                        self.opt.model_name] else 0,
+
+                    'text_bert_indices': text_bert_indices
+                    if 'text_bert_indices' in self.input_colses[self.opt.model_name] else 0,
+
+                    'aspect_bert_indices': aspect_bert_indices
+                    if 'aspect_bert_indices' in self.input_colses[self.opt.model_name] else 0,
+
                     'text_raw_bert_indices': text_raw_bert_indices
                     if 'text_raw_bert_indices' in self.input_colses[self.opt.model_name] else 0,
+
                     'polarity': polarity,
                 }
 
-                for _, item in enumerate(data):
-                    data[item] = torch.tensor(data[item]) if type(item) is not str else data[item]
                 all_data.append(data)
 
             except Exception as e:

@@ -11,7 +11,7 @@ from pyabsa import load_sentiment_classifier
 from pyabsa.dataset import chinese
 
 # Assume the sent_classifier is loaded or obtained using train function
-model_path = '../state_dict/bert_spc_cdw_acc_97.43_f1_96.94'   # please always check update on Google Drive before using
+model_path = 'state_dict/bert_spc_cdw_acc_97.43_f1_96.94'   # please always check update on Google Drive before using
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
                                             auto_device=True  # Use CUDA if available
                                             )

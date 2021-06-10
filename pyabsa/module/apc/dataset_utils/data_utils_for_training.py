@@ -10,9 +10,8 @@ import warnings
 import tqdm
 from torch.utils.data import Dataset
 from .apc_utils import build_sentiment_window
-from .apc_utils import get_lca_ids_and_cdm_vec, get_cdw_vec
-from .apc_utils import get_syntax_distance, build_spc_mask_vec
-from .apc_utils import load_datasets, prepare_input_from_text
+from .apc_utils import build_spc_mask_vec
+from .apc_utils import load_datasets, prepare_input_for_apc
 
 
 class ABSADataset(Dataset):
@@ -37,47 +36,21 @@ class ABSADataset(Dataset):
         polarities_set = set()
 
         for i in tqdm.tqdm(range(0, len(lines), 3), postfix='building word indices...'):
-
             text_left, _, text_right = [s.strip() for s in lines[i].partition("$T$")]
             aspect = lines[i + 1].lower().strip()
             polarity = lines[i + 2].strip()
             polarity = int(polarity)
             polarities_set.add(polarity)
 
-            prepared_inputs = prepare_input_from_text(opt, tokenizer, text_left, text_right, aspect)
+            prepared_inputs = prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect)
 
             text_raw = prepared_inputs['text_raw']
-            text_spc = prepared_inputs['text_spc']
             aspect = prepared_inputs['aspect']
             text_bert_indices = prepared_inputs['text_bert_indices']
             text_raw_bert_indices = prepared_inputs['text_raw_bert_indices']
             aspect_bert_indices = prepared_inputs['aspect_bert_indices']
-            if 'lcfs' in opt.model_name or opt.use_syntax_based_SRD:
-                syntactical_dist = get_syntax_distance(text_raw, aspect, tokenizer.tokenizer, opt)
-            else:
-                syntactical_dist = None
-
-            if 'lca' in opt.model_name:
-                lca_ids, lcf_vec = get_lca_ids_and_cdm_vec(opt,
-                                                           text_bert_indices,
-                                                           aspect_bert_indices,
-                                                           syntactical_dist)
-            elif 'lcf' in opt.model_name:
-                if 'cdm' in opt.lcf:
-                    _, lcf_vec = get_lca_ids_and_cdm_vec(opt,
-                                                         text_bert_indices,
-                                                         aspect_bert_indices,
-                                                         syntactical_dist)
-                elif 'cdw' in opt.lcf:
-                    lcf_vec = get_cdw_vec(opt,
-                                          text_bert_indices,
-                                          aspect_bert_indices,
-                                          syntactical_dist)
-                elif 'fusion' in opt.lcf:
-                    raise NotImplementedError('LCF-Fusion is not recommended due to its low efficiency!')
-                else:
-                    raise KeyError('Invalid LCF Mode!')
-
+            lca_ids = prepared_inputs['lca_ids']
+            lcf_vec = prepared_inputs['lcf_cdm_vec'] if opt.lcf == 'cdm' else prepared_inputs['lcf_cdw_vec']
             data = {
                 'text_raw': text_raw,
 
