@@ -16,6 +16,8 @@ from pyabsa import train_apc, get_apc_param_dict_multilingual
 
 save_path = 'state_dict'
 apc_param_dict_multilingual = get_apc_param_dict_multilingual()
+apc_param_dict_multilingual['model_name'] = 'bert_spc'
+apc_param_dict_multilingual['evaluate_begin'] = 4
 
 datasets_path = 'datasets/apc_datasets/multilingual'  # file or dir are accepted for 'datasets_path'
 sent_classifier = train_apc(parameter_dict=apc_param_dict_multilingual,     # set param_dict=None to use default model

@@ -10,17 +10,22 @@
 
 > Build from LC-ABSA / LCF-ABSA / LCF-BERT and LCF-ATEPC.
 
-> Easy to use interfaces of aspect term extraction and aspect sentiment classification.
-> 
+> Easy to use interfaces of aspect term extraction and aspect-polarity classification.
+
 > Provide the tutorials of using ATE and APC interfaces.
 
 > PyTorch Implementations (CPU & CUDA supported).
+> 
+# Introduction
+
+This is an ASBA research-oriented code repository. I notice that some repos do not provide inference scripts and the codes may be redundant or hard to reproduce, so I build the framework to make the training and inference process easier. Except for providing SOTA model for both ATE and APC subtasks,  some functions and methods are reusable. In another word, you can develop your model using integrated functions, e.g., local context weight vector building. Please feel free to give me your interesting thoughts, to help me build an easy-to-use toolkit in order to reduce the cost of building models and reproduction.
 
 # Notice
 
-if you are looking for the original codes of the LCF-related papers, please go to
+If you are looking for the original codes of the LCF-related papers, please go to
 the [LC-ABSA](https://github.com/yangheng95/LC-ABSA/tree/master)
 or [LCF-ATEPC](https://github.com/yangheng95/LCF-ATEPC).
+
 
 # Preliminaries
 

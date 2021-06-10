@@ -10,6 +10,7 @@ import os
 import random
 import pickle
 import tqdm
+import time
 
 import numpy as np
 import torch
@@ -219,12 +220,12 @@ class Instructor:
                     iterator.postfix = postfix
                     iterator.refresh()
 
-        self.logger.info('------------------------------------Training Summary------------------------------------')
-        self.logger.info('  Max APC Accuracy: {:.15f} Max APC F1: {:.15f} Max ATE F1: {}  '.format(max_apc_test_acc,
+        self.logger.info('--------------------------------------Training Summary--------------------------------------')
+        self.logger.info('  Max APC Acc: {:.15f} Max APC F1: {:.15f} Max ATE F1: {:.15f}  '.format(max_apc_test_acc,
                                                                                                    max_apc_test_f1,
                                                                                                    max_ate_test_f1)
                          )
-        self.logger.info('------------------------------------Training Summary------------------------------------')
+        self.logger.info('--------------------------------------Training Summary--------------------------------------')
         # return the model paths of multiple training_tutorials in case of loading the best model after training_tutorials
         if save_path:
             return save_path
@@ -348,5 +349,15 @@ class Instructor:
 
 
 def train4atepc(config):
-    ins = Instructor(config)
-    ins.train()
+    # in case of handling ConnectionError exception
+
+    finished = False
+    while not finished:
+        try:
+            ins = Instructor(config)
+            return ins.train()
+        except ConnectionError as e:
+            time.sleep(60)
+            print('ConnectionError, retry in {} seconds...'.format(60))
+        finished = True
+
