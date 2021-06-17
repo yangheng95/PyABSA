@@ -49,11 +49,12 @@ class AspectExtractor:
 
         # load from a model path
         if not isinstance(model_arg, str):
+            print('Load aspect extractor from training')
             self.model = model_arg[0]
             self.opt = model_arg[1]
             self.tokenizer = model_arg[2]
         else:
-            print('Try to load trained model and config from', model_arg)
+            print('Load aspect extractor from', model_arg)
             try:
                 state_dict_path = find_target_file(model_arg, '.state_dict')
                 model_path = find_target_file(model_arg, '.model')
@@ -68,6 +69,7 @@ class AspectExtractor:
                     self.model.load_state_dict(torch.load(state_dict_path))
                 if model_path:
                     self.model = torch.load(model_path)
+                    self.model.opt = self.opt
                 if tokenizer_path:
                     self.tokenizer = pickle.load(open(tokenizer_path, 'rb'))
                 else:

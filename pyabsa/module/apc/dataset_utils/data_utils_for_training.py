@@ -4,8 +4,6 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-import os
-import warnings
 
 import tqdm
 from torch.utils.data import Dataset
@@ -26,6 +24,7 @@ class ABSADataset(Dataset):
     }
 
     def __init__(self, fname, tokenizer, opt):
+
         ABSADataset.opt = opt
 
         lines = load_datasets(fname)
@@ -78,7 +77,7 @@ class ABSADataset(Dataset):
             all_data.append(data)
 
         if 'slide' in opt.model_name:
-            all_data = build_sentiment_window(all_data, tokenizer)
+            all_data = build_sentiment_window(all_data, tokenizer, opt.similarity_threshold)
 
         # update polarities_dim, init model behind this function!
         p_min, p_max = min(polarities_set), max(polarities_set)

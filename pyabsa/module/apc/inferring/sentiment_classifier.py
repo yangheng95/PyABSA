@@ -50,14 +50,14 @@ class SentimentClassifier:
 
         # load from a model path
         if not isinstance(model_arg, str):
-            print('Try to load trained model from training_tutorials')
+            print('Load sentiment classifier from training')
             self.model = model_arg[0]
             self.opt = model_arg[1]
             self.tokenizer = model_arg[2]
         else:
             # load from a trained model
             try:
-                print('Try to load trained model and config from', model_arg)
+                print('Load sentiment classifier from', model_arg)
                 state_dict_path = find_target_file(model_arg, 'state_dict')
                 model_path = find_target_file(model_arg, 'model')
                 tokenizer_path = find_target_file(model_arg, 'tokenizer')
@@ -151,7 +151,7 @@ class SentimentClassifier:
                 raise FileNotFoundError('Can not find inference dataset!')
         else:
             save_path = target_file + '.results'
-        target_file = detect_infer_dataset(target_file, task='apc')
+        target_file = detect_infer_dataset(target_file, task='apc_benchmark')
         self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=1, shuffle=False)
         return self._infer(save_path=save_path if save_result else None, print_result=print_result)

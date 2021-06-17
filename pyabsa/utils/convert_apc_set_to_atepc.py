@@ -83,7 +83,7 @@ def split_aspects(sentence):
 
 
 def convert(fname):
-    dist_fname = fname + '.atepc'
+    dist_fname = fname + '.atepc_benchmark'
     lines = []
     samples = assemble_aspects(fname)
 
@@ -104,7 +104,7 @@ def convert(fname):
 
 # 将数据集中的aspect切割出来
 def convert_apc_set_to_atepc_set(path):
-    for target_file in find_target_file(path, file_type='', exclude_key='atepc', find_all=True):
+    for target_file in find_target_file(path, file_type='', exclude_key='atepc_benchmark', find_all=True):
         try:
             convert(target_file)
         except:

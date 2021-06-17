@@ -34,6 +34,6 @@ class SelfAttention(nn.Module):
 
     def forward(self, inputs):
         zero_vec = np.zeros((inputs.size(0), 1, 1, self.opt.max_seq_len))
-        zero_tensor = torch.tensor(zero_vec).float().to(self.opt.device)
+        zero_tensor = torch.tensor(zero_vec).float().to(inputs.device)
         SA_out = self.SA(inputs, zero_tensor)
         return SA_out

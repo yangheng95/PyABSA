@@ -13,8 +13,12 @@ today = time.strftime('%Y%m%d %H%M%S', time.localtime(time.time()))
 
 
 def get_logger(log_path, log_name='', log_type='training_log'):
-    log_dir = os.path.join(log_path, "logs")
-    full_path = os.path.join(log_dir, log_name + today)
+    if not log_path:
+        log_dir = os.path.join(log_path, "logs")
+    else:
+        log_dir = os.path.join('.', "logs")
+
+    full_path = os.path.join(log_dir, log_name + '_' + today)
     if not os.path.exists(full_path):
         os.makedirs(full_path)
     log_path = os.path.join(full_path, "{}.log".format(log_type))

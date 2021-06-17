@@ -12,6 +12,7 @@ import tempfile
 
 from pyabsa.utils.pyabsa_utils import find_target_file
 
+# deprecated code
 laptop14 = 'laptop14'
 restaurant14 = 'restaurant14'
 restaurant15 = 'restaurant15'
@@ -30,24 +31,40 @@ semeval = 'semeval'
 apc_datasets = 'apc_datasets'
 atepc_datasets = 'atepc_datasets'
 
-integrated_dataset_list = {'laptop14', 'restaurant14', 'restaurant15', 'restaurant16',
-                           'twitter', 'phone', 'notebook', 'camera', 'car', 'mams',
-                           'multilingual', 'apc_dataset', 'atepc_datasets', 'chinese', 'semeval'}
+
+class Datasets:
+    laptop14 = 'laptop14'
+    restaurant14 = 'restaurant14'
+    restaurant15 = 'restaurant15'
+    restaurant16 = 'restaurant16'
+    acl_twitter = 'twitter'
+    phone = 'phone'
+    car = 'car'
+    notebook = 'notebook'
+    camera = 'camera'
+    mams = 'mams'
+    multilingual = 'multilingual'
+
+    chinese = 'chinese'
+    semeval = 'semeval'
+
+    apc_datasets = 'apc_datasets'
+    atepc_datasets = 'atepc_datasets'
 
 
-def detect_dataset(dataset_path, auto_evaluate=True, task='apc'):
-    if dataset_path.lower() in integrated_dataset_list or not os.path.exists(dataset_path):
-        if dataset_path.lower() in integrated_dataset_list:
-            print('{} is the integrated dataset,try to load the dataset '
+def detect_dataset(dataset_path, auto_evaluate=True, task='apc_benchmark'):
+    if hasattr(Datasets, dataset_path.lower()) or not os.path.exists(dataset_path):
+        if hasattr(Datasets, dataset_path.lower()):
+            print('{} is the integrated dataset, try to load the dataset '
                   'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
         else:
-            print('Maybe {} is the integrated dataset,try to load the dataset '
+            print('Invalid dataset path {}, try to load the dataset '
                   'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
         dataset_name = dataset_path
         download_datasets_from_github()
-        if task == 'apc':
+        if task == 'apc_benchmark':
             dataset_path = os.path.join('datasets', 'apc_datasets')
-        elif task == 'atepc':
+        elif task == 'atepc_benchmark':
             dataset_path = os.path.join('datasets', 'atepc_datasets')
         else:
             raise RuntimeError('No dataset was found!')
@@ -62,7 +79,7 @@ def detect_dataset(dataset_path, auto_evaluate=True, task='apc'):
             print('Cna not find test set using for evaluating!')
         if len(dataset_file) == 0:
             raise RuntimeError('Can not load train set or test set! '
-                               'Make sure there are (only) one trainset and (only) one testset in the path:',
+                               'Make sure there are trainsets and (only) one testsets in the path:',
                                dataset_path)
 
     else:
@@ -74,25 +91,25 @@ def detect_dataset(dataset_path, auto_evaluate=True, task='apc'):
             print('Cna not find test set using for evaluating!')
         if len(dataset_file) == 0:
             raise RuntimeError('Can not load train set or test set! '
-                               'Make sure there are (only) one trainset and (only) one testset in the path:',
+                               'Make sure there are trainsets and testsets in the path:',
                                dataset_path)
     return dataset_file
 
 
-def detect_infer_dataset(dataset_path, task='apc'):
+def detect_infer_dataset(dataset_path, task='apc_benchmark'):
     dataset_file = []
-    if dataset_path.lower() in integrated_dataset_list or not os.path.exists(dataset_path):
-        if dataset_path.lower() in integrated_dataset_list:
-            print('{} is the integrated dataset,try to load the dataset '
+    if hasattr(Datasets, dataset_path.lower()) or not os.path.exists(dataset_path):
+        if hasattr(Datasets, dataset_path.lower()):
+            print('{} is the integrated dataset, try to load the dataset '
                   'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
         else:
-            print('Maybe {} is the integrated dataset,try to load the dataset '
+            print('Invalid dataset path {}, try to load the dataset '
                   'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
         dataset_name = dataset_path
         download_datasets_from_github()
-        if task == 'apc':
+        if task == 'apc_benchmark':
             dataset_path = os.path.join('datasets', 'apc_datasets')
-        elif task == 'atepc':
+        elif task == 'atepc_benchmark':
             dataset_path = os.path.join('datasets', 'atepc_datasets')
         else:
             raise RuntimeError('No dataset was found!')
