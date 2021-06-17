@@ -7,7 +7,7 @@
 
 from pyabsa.research.parameter_search.search_param_for_apc import apc_param_search
 
-from pyabsa.dataset import laptop14, restaurant16
+from pyabsa.absa_dataset import laptop14, restaurant16
 
 from pyabsa.config.apc_config import get_apc_param_dict_english
 

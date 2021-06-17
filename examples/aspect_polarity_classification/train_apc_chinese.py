@@ -12,7 +12,7 @@
 
 from pyabsa import train_apc, get_apc_param_dict_chinese
 
-from pyabsa.dataset import Datasets
+from pyabsa.absa_dataset import Datasets
 
 
 param_dict = {'model_name': 'bert_spc',    # {slide_lcfs_bert, slide_lcf_bert, lcf_bert, lcfs_bert, bert_spc, bert_base}
@@ -25,16 +25,16 @@ param_dict = {'model_name': 'bert_spc',    # {slide_lcfs_bert, slide_lcf_bert, l
               'use_dual_bert': False,      # modeling the local and global context using different BERTs
               'use_bert_spc': True,        # Enable to enhance APC, do not use this parameter in ATE
               'max_seq_len': 80,
-              'log_step': 5,               # Evaluate per steps
+              'log_step': 10,               # Evaluate per steps
               'SRD': 3,                    # Distance threshold to calculate local context
               'eta': -1,                   # Eta is valid in [0,1] slide_lcf_bert/slide_lcfs_bert
               'sigma': 0.3,                # Sigma is valid in LCA-Net, ranging in [0,1]
               'lcf': "cdw",                # {cdm, cdw} valid in lcf-bert models
               'window': "lr",              # {lr, l, r} valid in slide_lcf_bert/slide_lcfs_bert
               'dropout': 0,
-              'l2reg': 0.0001,
+              'l2reg': 0.00001,
               'dynamic_truncate': True,    # Dynamic truncate the text according to the position of aspect term
-              'evaluate_begin': 5,         # evaluate begin with epoch
+              'evaluate_begin': 6,         # evaluate begin with epoch
               }
 
 # param_dict = get_apc_param_dict_chinese()

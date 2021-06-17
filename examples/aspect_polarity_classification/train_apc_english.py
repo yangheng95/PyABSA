@@ -12,11 +12,14 @@
 
 from pyabsa import train_apc, get_apc_param_dict_english
 
-from pyabsa.dataset import Datasets
+from pyabsa.absa_dataset import Datasets
 apc_param_dict_english = get_apc_param_dict_english()
 
 save_path = ''
 restaurant14 = Datasets.restaurant14
+apc_param_dict_english['log_step'] = 50
+apc_param_dict_english['evaluate_begin'] = 5
+
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,     # set param_dict=None to use default model
                             dataset_path=restaurant14,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model

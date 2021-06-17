@@ -6,7 +6,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 from pyabsa import generate_inferrence_set_for_apc
 
-from pyabsa.dataset import Datasets
+from pyabsa.absa_dataset import Datasets
 
 # This function coverts a ABSA dataset to inference set, try to convert every dataset found in the dir
 # please do check the output file!

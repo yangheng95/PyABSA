@@ -8,7 +8,7 @@
 
 from pyabsa import load_sentiment_classifier
 
-from pyabsa.dataset import Datasets
+from pyabsa.absa_dataset import Datasets
 
 # Assume the sent_classifier is loaded or obtained using train function
 model_path = 'state_dict/bert_spc_cdw_acc_97.43_f1_96.94'   # please always check update on Google Drive before using

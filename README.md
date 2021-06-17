@@ -134,7 +134,7 @@ convert_apc_set_to_atepc_set(r'apc_usages/datasets/restaurant16')
 ```
 from pyabsa import train_atepc, get_atepc_param_dict_english
 
-from pyabsa.dataset import restaurant15
+from pyabsa.absa_dataset import restaurant15
 
 save_path = 'state_dict'
 
@@ -173,7 +173,7 @@ atepc_result = aspect_extractor.extract_aspect(examples=examples,   # list-suppo
 ```
 from pyabsa import train_apc, get_apc_param_dict_english
 
-from pyabsa.dataset import semeval
+from pyabsa.absa_dataset import semeval
 
 # You can place multiple atepc_datasets file in one dir to easily train using some atepc_datasets
 
@@ -206,7 +206,7 @@ barack obama --> Positive  Real: Neutral (Wrong)
 ```
 from pyabsa.research.parameter_search.search_param_for_apc import apc_param_search
 
-from pyabsa.dataset import laptop14
+from pyabsa.absa_dataset import laptop14
 from pyabsa.config.apc_config import get_apc_param_dict_english
 
 apc_param_dict_english = get_apc_param_dict_english()
@@ -228,7 +228,7 @@ apc_param_search(parameter_dict=apc_param_dict_english,
 ```
 from pyabsa import train_apc, get_atepc_param_dict_base
 
-from pyabsa.dataset import laptop14
+from pyabsa.absa_dataset import laptop14
 
 save_path = 'state_dict'
 
@@ -266,7 +266,7 @@ sent_classifier.set_sentiment_map(sentiment_map)
 ```
 from pyabsa import load_sentiment_classifier
 
-from pyabsa.dataset import semeval
+from pyabsa.absa_dataset import semeval
 
 # Assume the sent_classifier is loaded or obtained using train function
 
@@ -293,7 +293,7 @@ results = sent_classifier.batch_infer(target_file=semeval,
 ```
 from pyabsa import generate_inferrence_set_for_apc
 
-from pyabsa.dataset import apc_datasets
+from pyabsa.absa_dataset import apc_datasets
 
 # This function coverts a ABSA dataset to inference set, try to convert every dataset found in the dir
 # please do check the output file!

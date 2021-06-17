@@ -11,7 +11,7 @@
 ########################################################################################################################
 from pyabsa import train_apc, get_apc_param_dict_english
 
-from pyabsa.dataset import Datasets
+from pyabsa.absa_dataset import Datasets
 
 # You can place multiple atepc_datasets file in one dir to easily train using some atepc_datasets
 

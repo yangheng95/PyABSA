@@ -12,7 +12,7 @@
 
 from pyabsa import train_atepc
 
-from pyabsa.dataset import Datasets
+from pyabsa.absa_dataset import Datasets
 
 # see hyper-parameters in pyabsa/main/training_configs.py
 param_dict = {'model_name': 'lcf_atepc',  # {lcf_atepc, rlcf_atepc}

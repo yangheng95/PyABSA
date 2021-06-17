@@ -12,7 +12,7 @@
 
 from pyabsa import train_atepc, get_atepc_param_dict_english
 
-from pyabsa.dataset import Datasets
+from pyabsa.absa_dataset import Datasets
 
 # see hyper-parameters in pyabsa/main/training_configs.py
 param_dict = {'model_name': 'lcf_atepc',
@@ -25,13 +25,13 @@ param_dict = {'model_name': 'lcf_atepc',
               'use_dual_bert': False,  # modeling the local and global context using different BERTs
               'use_bert_spc': False,   # enable to enhance APC, not available for ATE or joint module of APC and ATE
               'max_seq_len': 80,
-              'log_step': 5,           # evaluate per steps
+              'log_step': 50,           # evaluate per steps
               'SRD': 3,                # distance threshold to calculate local context
               'use_syntax_based_SRD': True,   # force to use syntax-based semantic-relative distance in all lcf-based models
               'lcf': "cdw",            # {cdw, cdm, fusion}
               'dropout': 0,
               'l2reg': 0.00001,
-              'evaluate_begin': 4  # evaluate begin with epoch
+              'evaluate_begin': 5  # evaluate begin with epoch
               # 'polarities_dim': 3      # deprecated, polarity_dim will be automatically detected
               }
 

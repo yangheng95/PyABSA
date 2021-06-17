@@ -12,7 +12,7 @@
 from pyabsa import train_apc, get_apc_param_dict_english
 
 from pyabsa.models import APCModels
-from pyabsa.dataset import Datasets
+from pyabsa.absa_dataset import Datasets
 
 save_path = 'state_dict'
 apc_param_dict_english = get_apc_param_dict_english()

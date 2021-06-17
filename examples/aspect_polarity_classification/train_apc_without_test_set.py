@@ -12,7 +12,7 @@
 
 from pyabsa import train_apc
 
-from pyabsa.dataset import Datasets
+from pyabsa.absa_dataset import Datasets
 
 # param_dict = {'model_name': 'slide_lcfs_bert',  # {slide_lcfs_bert, slide_lcf_bert lcf_bert, lcfs_bert, bert_spc, bert_base}
 #               'batch_size': 16,

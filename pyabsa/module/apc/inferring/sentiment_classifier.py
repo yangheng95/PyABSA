@@ -23,7 +23,7 @@ from pyabsa.module.apc.dataset_utils.apc_utils import SENTIMENT_PADDING
 
 from pyabsa.utils.pyabsa_utils import find_target_file
 
-from pyabsa.dataset import detect_infer_dataset
+from pyabsa.absa_dataset import detect_infer_dataset
 
 from termcolor import colored
 

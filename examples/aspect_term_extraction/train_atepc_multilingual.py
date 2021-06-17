@@ -13,7 +13,7 @@
 
 from pyabsa import train_atepc, get_atepc_param_dict_multilingual
 
-from pyabsa.dataset import Datasets
+from pyabsa.absa_dataset import Datasets
 
 param_dict = {'model_name': 'lcf_atepc',
               'batch_size': 16,

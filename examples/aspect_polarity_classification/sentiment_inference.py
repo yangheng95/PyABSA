@@ -8,7 +8,7 @@
 
 from pyabsa import load_sentiment_classifier
 
-from pyabsa.dataset import Datasets
+from pyabsa.absa_dataset import Datasets
 
 # Assume the sent_classifier is loaded or obtained using train function
 
