@@ -151,7 +151,7 @@ class ABSADataset(Dataset):
 
         if all_data and 'slide' in self.opt.model_name:
             if 'slide' in self.opt.model_name:
-                all_data = build_sentiment_window(all_data, self.tokenizer)
+                all_data = build_sentiment_window(all_data, self.tokenizer, self.opt.similarity_threshold)
 
         self.all_data = all_data
         return all_data

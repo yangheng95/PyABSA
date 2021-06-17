@@ -7,6 +7,6 @@
 
 from pyabsa import convert_apc_set_to_atepc_set
 
-from pyabsa.dataset import apc_datasets
-
+from pyabsa.dataset import Datasets
+apc_datasets = Datasets.apc_datasets
 convert_apc_set_to_atepc_set(apc_datasets)

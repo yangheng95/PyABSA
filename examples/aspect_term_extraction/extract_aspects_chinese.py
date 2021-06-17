@@ -23,18 +23,14 @@ examples = ['尤 其 是 照 的 大 尺 寸 照 片 时 效 果 也 是 非 常
             ]
 
 # 从Google Drive下载提供的预训练模型
-model_path = 'state_dict/lcf_atepc_cdw_apcacc_95.74_apcf1_95.01_atef1_91.21'  # please always check update on Google Drive before using
+model_path = 'state_dict/lcf_atepc_cdw_apcacc_95.56_apcf1_94.72_atef1_90.36'  # please always check update on Google Drive before using
 
 # 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
 sentiment_map = {0: 'Bad', 1: 'Good', -999: ''}
 aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
                                          sentiment_map=sentiment_map,  # optional
-                                         auto_device=True  # False means load model on CPU
+                                         auto_device=False  # False means load model on CPU
                                          )
-
-# aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
-#                                          auto_device=False  # False means load model on CPU
-#                                          )
 
 # You can switch device manually using following functions
 # aspect_extractor.cpu()

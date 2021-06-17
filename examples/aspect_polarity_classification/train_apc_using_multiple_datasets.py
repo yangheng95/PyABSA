@@ -6,13 +6,12 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 ########################################################################################################################
-#                  train and evaluate on your own atepc_datasets (need train and test atepc_datasets)                  #
+#                    train and evaluate on your own apc_datasets (need train and test apc_datasets)                    #
 #              your custom dataset should have the continue polarity labels like [0,N-1] for N categories              #
 ########################################################################################################################
-
 from pyabsa import train_apc, get_apc_param_dict_english
 
-from pyabsa.dataset import semeval
+from pyabsa.dataset import Datasets
 
 # You can place multiple atepc_datasets file in one dir to easily train using some atepc_datasets
 
@@ -37,7 +36,7 @@ from pyabsa.dataset import semeval
 
 
 save_path = 'state_dict'
-
+semeval = Datasets.semeval
 sent_classifier = train_apc(parameter_dict=get_apc_param_dict_english(),           # set param_dict=None to use default model
                             dataset_path=semeval,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model

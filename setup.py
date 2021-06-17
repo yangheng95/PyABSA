@@ -6,10 +6,10 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 from setuptools import setup, find_packages
-
+from pyabsa import __name__, __version__
 setup(
-    name='pyabsa',
-    version='0.7.1.0',
+    name=__name__,
+    version=__version__,
     description='This tool provides the sota models for aspect term extraction (ATE) '
                 'and aspect polarity classification (APC)',
     # The project's main homepage.
@@ -23,5 +23,6 @@ setup(
     exclude_package_date={'': ['.gitignore']},
     # Choose your license
     license='MIT',
-    install_requires=['transformers>=4.4.2', 'spacy', 'networkx', 'seqeval', 'tqdm', 'termcolor', 'gitpython', 'torch'],
+    install_requires=['transformers>=4.4.2', 'spacy', 'networkx', 'seqeval', 'update_checker',
+                      'tqdm', 'termcolor', 'gitpython', 'torch'],
 )

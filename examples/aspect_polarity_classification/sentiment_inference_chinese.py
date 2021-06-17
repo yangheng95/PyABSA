@@ -8,7 +8,7 @@
 
 from pyabsa import load_sentiment_classifier
 
-from pyabsa.dataset import chinese
+from pyabsa.dataset import Datasets
 
 # Assume the sent_classifier is loaded or obtained using train function
 model_path = 'state_dict/bert_spc_cdw_acc_97.43_f1_96.94'   # please always check update on Google Drive before using
@@ -20,7 +20,7 @@ sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
 chinese_text = '还有就是[ASP]笔画的键盘分布[ASP]我感觉不合理!sent! 0'
 sent_classifier.infer(chinese_text, print_result=True)
 
-infer_set = chinese
+infer_set = Datasets.chinese
 
 results = sent_classifier.batch_infer(target_file=infer_set,
                                       print_result=True,

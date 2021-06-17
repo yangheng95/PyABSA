@@ -6,12 +6,11 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 ########################################################################################################################
-#                  train and evaluate on your own atepc_datasets (need train and test atepc_datasets)                  #
+#                    train and evaluate on your own apc_datasets (need train and test apc_datasets)                    #
 #              your custom dataset should have the continue polarity labels like [0,N-1] for N categories              #
 ########################################################################################################################
 
 from pyabsa import train_apc, get_apc_param_dict_multilingual
-
 
 
 save_path = 'state_dict'

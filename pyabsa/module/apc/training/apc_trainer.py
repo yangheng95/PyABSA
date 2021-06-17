@@ -48,11 +48,6 @@ class Instructor:
                                             shuffle=True,
                                             pin_memory=True)
 
-        logger.info("***** Running training_tutorials *****")
-        logger.info("  Num examples = %d", len(self.train_set))
-        logger.info("  Batch size = %d", self.opt.batch_size)
-        logger.info("  Num steps = %d", int(len(self.train_set) / self.opt.batch_size) * self.opt.num_epoch)
-
         if 'test' in self.opt.dataset_file:
             self.test_set = ABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
             self.test_data_loader = DataLoader(dataset=self.test_set,
@@ -67,6 +62,11 @@ class Instructor:
             logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device.index)))
 
         self._log_write_args()
+
+        logger.info("***** Running training for Aspect Polarity Classification *****")
+        logger.info("  Num examples = %d", len(self.train_set))
+        logger.info("  Batch size = %d", self.opt.batch_size)
+        logger.info("  Num steps = %d", int(len(self.train_set) / self.opt.batch_size) * self.opt.num_epoch)
 
     def _log_write_args(self):
         n_trainable_params, n_nontrainable_params = 0, 0
@@ -111,7 +111,9 @@ class Instructor:
         self.model.to(self.opt.device)
 
     def _train_and_evaluate(self, criterion, lca_criterion, optimizer):
-
+        sum_loss = 0
+        sum_acc = 0
+        sum_f1 = 0
         max_test_acc = 0
         max_f1 = 0
         global_step = 0
@@ -136,7 +138,7 @@ class Instructor:
                 else:
                     sen_logits = outputs
                     loss = criterion(sen_logits, targets)
-
+                sum_loss += loss.item()
                 loss.backward()
                 optimizer.step()
 
@@ -145,6 +147,8 @@ class Instructor:
                     if epoch >= self.opt.evaluate_begin:
 
                         test_acc, f1 = self._evaluate_acc_f1()
+                        sum_acc += test_acc
+                        sum_f1 += f1
                         if test_acc > max_test_acc:
                             max_test_acc = test_acc
                             if self.opt.model_path_to_save:
@@ -180,9 +184,9 @@ class Instructor:
                     iterator.refresh()
 
         self.logger.info('-----------------------Training Summary-----------------------')
-        self.logger.info('  Max Accuracy: {:.15f} Max F1: {:.15f}  '.format(max_test_acc * 100, max_f1 * 100))
+        self.logger.info(
+            '  Max Accuracy: {:.8f} Max F1: {:.8f} Loss: {:.8f}'.format(max_test_acc * 100, max_f1 * 100, sum_loss))
         self.logger.info('-----------------------Training Summary-----------------------')
-        # return the model paths of multiple training_tutorials in case of loading the best model after training_tutorials
         if save_path:
             return save_path
         else:
@@ -193,7 +197,7 @@ class Instructor:
                                                   self.opt.lcf,
                                                   )
                 self._save_model(self.model, save_path, mode=0)
-            return self.model, self.opt, self.tokenizer
+            return self.model, self.opt, self.tokenizer, sum_acc, sum_f1
 
     def _evaluate_acc_f1(self):
         # switch model to evaluation mode
@@ -246,8 +250,12 @@ class Instructor:
 
 
 def train4apc(opt):
-    log_name = '{}_{}_{}'.format(opt.model_name, opt.lcf, opt.SRD)
-    logger = get_logger(os.getcwd(), log_name=log_name, log_type='training_tutorials')
+    if os.path.exists(opt.dataset_path):
+        log_name = '{}_{}_srd{}__unknown'.format(opt.model_name, opt.lcf, opt.SRD)
+    else:
+        log_name = '{}_{}_srd{}_{}'.format(opt.model_name, opt.lcf, opt.SRD, opt.dataset_path)
+
+    logger = get_logger(os.getcwd(), log_name=log_name, log_type='training')
 
     if not isinstance(opt.seed, int):
         logger.info('Please do not use multiple random seeds without evaluating.')
@@ -293,5 +301,4 @@ def train4apc(opt):
             return ins.run()
         except ValueError as e:
             time.sleep(60)
-            print('ConnectionError, retry in {} seconds...'.format(60))
-
+            print('Seems to be ConnectionError, retry in {} seconds...'.format(60))

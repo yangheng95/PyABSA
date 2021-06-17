@@ -7,7 +7,6 @@
 
 import os
 import copy
-import time
 from argparse import Namespace
 
 from pyabsa.utils.pyabsa_utils import get_auto_device
@@ -58,9 +57,8 @@ def train_apc(parameter_dict=None,
     '''
     evaluate model performance while training_tutorials model in order to obtain best benchmarked model
     '''
-    # load training_tutorials set
 
-    dataset_file = detect_dataset(dataset_path, auto_evaluate, task='apc')
+    dataset_file = detect_dataset(dataset_path, auto_evaluate, task='apc_benchmark')
 
     config = init_config(parameter_dict, apc_param_dict_base, auto_device)
     config.dataset_path = dataset_path
@@ -105,9 +103,8 @@ def train_atepc(parameter_dict=None,
     '''
     evaluate model performance while training_tutorials model in order to obtain best benchmarked model
     '''
-    # load training_tutorials set
 
-    dataset_file = detect_dataset(dataset_path, auto_evaluate, task='atepc')
+    dataset_file = detect_dataset(dataset_path, auto_evaluate, task='atepc_benchmark')
 
     config = init_config(parameter_dict, atepc_param_dict_base, auto_device)
     config.dataset_path = dataset_path
@@ -118,7 +115,8 @@ def train_atepc(parameter_dict=None,
     if isinstance(config.seed, int):
         config.seed = [config.seed]
 
-    # always save all trained models in case of obtaining best performance in different metrics among ATE and APC module.
+    # always save all trained models in case of obtaining best performance
+    # in different metrics among ATE and APC module.
     for _, s in enumerate(config.seed):
         t_config = copy.deepcopy(config)
         t_config.seed = s

@@ -30,7 +30,12 @@ from pyabsa.utils.logger import get_logger
 class Instructor:
 
     def __init__(self, config):
-        log_name = '{}_{}_{}'.format(config.model_name, config.lcf, config.SRD)
+        self.opt = config
+
+        if os.path.exists(self.opt.dataset_path):
+            log_name = '{}_{}_srd{}_unknown'.format(self.opt.model_name, self.opt.lcf, self.opt.SRD)
+        else:
+            log_name = '{}_{}_srd{}_{}'.format(self.opt.model_name, self.opt.lcf, self.opt.SRD, self.opt.dataset_path)
         self.logger = get_logger(os.getcwd(), log_name=log_name, log_type='training_tutorials')
         if config.use_bert_spc:
             self.logger.info('Warning, the use_bert_spc parameter is disabled in '
@@ -38,9 +43,6 @@ class Instructor:
             config.use_bert_spc = False
         import warnings
         warnings.filterwarnings('ignore')
-
-        self.opt = config
-
         if self.opt.gradient_accumulation_steps < 1:
             raise ValueError("Invalid gradient_accumulation_steps parameter: {}, should be >= 1".format(
                 self.opt.gradient_accumulation_steps))
@@ -132,11 +134,14 @@ class Instructor:
 
     def train(self):
 
-        self.logger.info("***** Running training_tutorials *****")
+        self.logger.info("***** Running training for Aspect Term Extraction *****")
         self.logger.info("  Num examples = %d", len(self.train_examples))
         self.logger.info("  Batch size = %d", self.opt.batch_size)
         self.logger.info("  Num steps = %d", self.num_train_optimization_steps)
-
+        sum_loss = 0
+        sum_apc_test_acc = 0
+        sum_apc_test_f1 = 0
+        sum_ate_test_f1 = 0
         max_apc_test_acc = 0
         max_apc_test_f1 = 0
         max_ate_test_f1 = 0
@@ -161,6 +166,7 @@ class Instructor:
                                                 lcf_cdw_vec=lcf_cdw_vec
                                                 )
                 loss = loss_ate + loss_apc
+                sum_loss += loss.item()
                 loss.backward()
                 nb_tr_examples += input_ids_spc.size(0)
                 nb_tr_steps += 1
@@ -172,6 +178,9 @@ class Instructor:
                     if epoch >= self.opt.evaluate_begin:
                         apc_result, ate_result = self.evaluate(
                             eval_ATE=not (self.opt.model_name == 'lcf_atepc' and self.opt.use_bert_spc))
+                        sum_apc_test_acc += apc_result['apc_test_acc']
+                        sum_apc_test_f1 += apc_result['apc_test_f1']
+                        sum_ate_test_f1 += ate_result
                         # if save_path:
                         #     try:
                         #         shutil.rmtree(save_path)
@@ -183,24 +192,24 @@ class Instructor:
                                 self.opt.model_path_to_save,
                                 self.opt.model_name,
                                 self.opt.lcf,
-                                round(apc_result['max_apc_test_acc'], 2),
-                                round(apc_result['max_apc_test_f1'], 2),
+                                round(apc_result['apc_test_acc'], 2),
+                                round(apc_result['apc_test_f1'], 2),
                                 round(ate_result, 2)
                             )
-                            if apc_result['max_apc_test_acc'] > max_apc_test_acc or \
-                                    apc_result['max_apc_test_f1'] > max_apc_test_f1 or \
+                            if apc_result['apc_test_acc'] > max_apc_test_acc or \
+                                    apc_result['apc_test_f1'] > max_apc_test_f1 or \
                                     ate_result > max_ate_test_f1:
                                 self._save_model(self.opt, self.model, save_path, mode=0)
 
-                        if apc_result['max_apc_test_acc'] > max_apc_test_acc:
-                            max_apc_test_acc = apc_result['max_apc_test_acc']
-                        if apc_result['max_apc_test_f1'] > max_apc_test_f1:
-                            max_apc_test_f1 = apc_result['max_apc_test_f1']
+                        if apc_result['apc_test_acc'] > max_apc_test_acc:
+                            max_apc_test_acc = apc_result['apc_test_acc']
+                        if apc_result['apc_test_f1'] > max_apc_test_f1:
+                            max_apc_test_f1 = apc_result['apc_test_f1']
                         if ate_result > max_ate_test_f1:
                             max_ate_test_f1 = ate_result
 
-                        current_apc_test_acc = apc_result['max_apc_test_acc']
-                        current_apc_test_f1 = apc_result['max_apc_test_f1']
+                        current_apc_test_acc = apc_result['apc_test_acc']
+                        current_apc_test_f1 = apc_result['apc_test_f1']
                         current_ate_test_f1 = round(ate_result, 2)
 
                         postfix = 'Epoch:{} | '.format(epoch)
@@ -221,9 +230,10 @@ class Instructor:
                     iterator.refresh()
 
         self.logger.info('--------------------------------------Training Summary--------------------------------------')
-        self.logger.info('  Max APC Acc: {:.15f} Max APC F1: {:.15f} Max ATE F1: {:.15f}  '.format(max_apc_test_acc,
-                                                                                                   max_apc_test_f1,
-                                                                                                   max_ate_test_f1)
+        self.logger.info('  Max APC Acc: {:.8f} Max APC F1: {:.8f} Max ATE F1: {:.8f} Loss: {}'.format(max_apc_test_acc,
+                                                                                                       max_apc_test_f1,
+                                                                                                       max_ate_test_f1,
+                                                                                                       sum_loss)
                          )
         self.logger.info('--------------------------------------Training Summary--------------------------------------')
         # return the model paths of multiple training_tutorials in case of loading the best model after training_tutorials
@@ -237,10 +247,10 @@ class Instructor:
                                                   self.opt.lcf,
                                                   )
                 self._save_model(self.opt, self.model, save_path, mode=0)
-            return self.model, self.opt, self.tokenizer
+            return self.model, self.opt, self.tokenizer, sum_apc_test_acc, sum_apc_test_f1, sum_ate_test_f1
 
     def evaluate(self, eval_ATE=True, eval_APC=True):
-        apc_result = {'max_apc_test_acc': 0, 'max_apc_test_f1': 0}
+        apc_result = {'apc_test_acc': 0, 'apc_test_f1': 0}
         ate_result = 0
         y_true = []
         y_pred = []
@@ -311,7 +321,7 @@ class Instructor:
 
             test_acc = round(test_acc * 100, 2)
             test_f1 = round(test_f1 * 100, 2)
-            apc_result = {'max_apc_test_acc': test_acc, 'max_apc_test_f1': test_f1}
+            apc_result = {'apc_test_acc': test_acc, 'apc_test_f1': test_f1}
 
         if eval_ATE:
             report = classification_report(y_true, y_pred, digits=4)
@@ -358,5 +368,4 @@ def train4atepc(config):
             return ins.train()
         except ValueError as e:
             time.sleep(60)
-            print('ConnectionError, retry in {} seconds...'.format(60))
-
+            print('Seems to be ConnectionError, retry in {} seconds...'.format(60))

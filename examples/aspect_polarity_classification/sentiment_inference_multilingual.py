@@ -8,7 +8,7 @@
 
 from pyabsa import load_sentiment_classifier
 
-from pyabsa.dataset import multilingual
+from pyabsa.dataset import Datasets
 
 # Assume the sent_classifier is loaded or obtained using train function
 model_path = '../state_dict/bert_spc_cdw'  # please always check update on Google Drive before using
@@ -26,6 +26,7 @@ sent_classifier.infer(chinese_text, print_result=True)
 
 infer_set_path = 'apc_datasets/multilingual'
 
+multilingual = Datasets.multilingual
 sent_classifier.batch_infer(infer_set_path=multilingual,
                             print_result=True,
                             save_result=True

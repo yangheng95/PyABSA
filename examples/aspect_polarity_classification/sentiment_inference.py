@@ -8,7 +8,7 @@
 
 from pyabsa import load_sentiment_classifier
 
-from pyabsa.dataset import semeval
+from pyabsa.dataset import Datasets
 
 # Assume the sent_classifier is loaded or obtained using train function
 
@@ -36,8 +36,8 @@ text = 'everything is always cooked to perfection , the [ASP]service[ASP] is exc
 sent_classifier.infer(text, print_result=True)
 
 # batch inferring_tutorials returns the results, save the result if necessary using save_result=True
-
-results = sent_classifier.batch_infer(target_file=semeval,
+inference_sets = Datasets.semeval
+results = sent_classifier.batch_infer(target_file=inference_sets,
                                       print_result=True,
                                       save_result=True,
                                       ignore_error=True,
