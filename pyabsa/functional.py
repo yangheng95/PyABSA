@@ -11,7 +11,7 @@ from argparse import Namespace
 
 from pyabsa.utils.pyabsa_utils import get_auto_device
 
-from pyabsa.dataset import detect_dataset
+from pyabsa.absa_dataset import detect_dataset
 
 from pyabsa.module.apc.inferring.sentiment_classifier import SentimentClassifier
 from pyabsa.module.apc.training.apc_trainer import train4apc

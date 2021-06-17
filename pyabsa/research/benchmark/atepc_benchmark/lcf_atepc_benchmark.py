@@ -7,7 +7,7 @@
 
 from pyabsa import train_atepc, get_atepc_param_dict_english
 
-from pyabsa.dataset import Datasets
+from pyabsa.absa_dataset import Datasets
 from pyabsa.models import ATEPCModels
 
 import copy

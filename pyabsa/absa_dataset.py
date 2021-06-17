@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: dataset.py
+# file: absa_dataset.py
 # time: 2021/6/8 0008
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95

@@ -5,8 +5,8 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-__version__ = '0.7.7.0'
-__name__ = 'PyABSA'
+__version__ = '0.8.0.1'
+__name__ = 'pyabsa'
 
 from .functional import train_apc, load_sentiment_classifier
 from .functional import train_atepc, load_aspect_extractor
