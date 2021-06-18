@@ -5,7 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-__version__ = '0.8.0.1'
+__version__ = '0.8.0.5'
 __name__ = 'pyabsa'
 
 from .functional import train_apc, load_sentiment_classifier
@@ -25,6 +25,8 @@ from pyabsa.config.atepc_config import (get_atepc_param_dict_base,
                                         get_atepc_param_dict_english,
                                         get_atepc_param_dict_chinese,
                                         get_atepc_param_dict_multilingual)
+
+from pyabsa.absa_dataset import ABSADatasets
 
 from update_checker import update_check
 

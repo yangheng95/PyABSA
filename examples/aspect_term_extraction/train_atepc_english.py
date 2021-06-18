@@ -12,7 +12,7 @@
 
 from pyabsa import train_atepc, get_atepc_param_dict_english
 
-from pyabsa.absa_dataset import Datasets
+from pyabsa import ABSADatasets
 
 # see hyper-parameters in pyabsa/main/training_configs.py
 param_dict = {'model_name': 'lcf_atepc',
@@ -38,7 +38,7 @@ param_dict = {'model_name': 'lcf_atepc',
 save_path = 'state_dict'
 
 # param_dict = get_atepc_param_dict_english()
-restaurant14 = Datasets.restaurant14
+restaurant14 = ABSADatasets.restaurant14
 aspect_extractor = train_atepc(parameter_dict=param_dict,      # set param_dict=None to use default model
                                dataset_path=restaurant14,    # file or dir, dataset(s) will be automatically detected
                                model_path_to_save=save_path,   # set model_path_to_save=None to avoid save model

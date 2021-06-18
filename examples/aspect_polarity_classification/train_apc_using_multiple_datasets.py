@@ -11,7 +11,7 @@
 ########################################################################################################################
 from pyabsa import train_apc, get_apc_param_dict_english
 
-from pyabsa.absa_dataset import Datasets
+from pyabsa import ABSADatasets
 
 # You can place multiple atepc_datasets file in one dir to easily train using some atepc_datasets
 
@@ -36,7 +36,7 @@ from pyabsa.absa_dataset import Datasets
 
 
 save_path = 'state_dict'
-semeval = Datasets.semeval
+semeval = ABSADatasets.semeval
 sent_classifier = train_apc(parameter_dict=get_apc_param_dict_english(),           # set param_dict=None to use default model
                             dataset_path=semeval,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model

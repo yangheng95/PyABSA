@@ -12,7 +12,7 @@
 
 from pyabsa import train_apc, get_apc_param_dict_chinese
 
-from pyabsa.absa_dataset import Datasets
+from pyabsa import ABSADatasets
 
 
 param_dict = {'model_name': 'bert_spc',    # {slide_lcfs_bert, slide_lcf_bert, lcf_bert, lcfs_bert, bert_spc, bert_base}
@@ -40,7 +40,7 @@ param_dict = {'model_name': 'bert_spc',    # {slide_lcfs_bert, slide_lcf_bert, l
 # param_dict = get_apc_param_dict_chinese()
 
 save_path = 'state_dict'
-chinese_sets = Datasets.chinese
+chinese_sets = ABSADatasets.chinese
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=chinese_sets,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model

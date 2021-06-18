@@ -12,11 +12,11 @@
 
 from pyabsa import train_apc, get_apc_param_dict_english
 
-from pyabsa.absa_dataset import Datasets
+from pyabsa import ABSADatasets
 apc_param_dict_english = get_apc_param_dict_english()
 
 save_path = ''
-restaurant14 = Datasets.restaurant14
+restaurant14 = ABSADatasets.restaurant14
 apc_param_dict_english['log_step'] = 50
 apc_param_dict_english['evaluate_begin'] = 5
 

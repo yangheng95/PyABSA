@@ -12,7 +12,7 @@
 
 from pyabsa import train_apc
 
-from pyabsa.absa_dataset import Datasets
+from pyabsa import ABSADatasets
 
 # param_dict = {'model_name': 'slide_lcfs_bert',  # {slide_lcfs_bert, slide_lcf_bert lcf_bert, lcfs_bert, bert_spc, bert_base}
 #               'batch_size': 16,
@@ -38,7 +38,7 @@ from pyabsa.absa_dataset import Datasets
 
 param_dict = {'model_name': 'bert_base', 'batch_size': 16, 'device': 'cuda', 'num_epoch': 5}
 
-multilingual = Datasets.multilingual
+multilingual = ABSADatasets.multilingual
 save_path = 'state_dict'
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=multilingual,   # file or dir, dataset(s) will be automatically detected

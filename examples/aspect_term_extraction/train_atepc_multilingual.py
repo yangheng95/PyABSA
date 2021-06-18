@@ -13,7 +13,7 @@
 
 from pyabsa import train_atepc, get_atepc_param_dict_multilingual
 
-from pyabsa.absa_dataset import Datasets
+from pyabsa import ABSADatasets
 
 param_dict = {'model_name': 'lcf_atepc',
               'batch_size': 16,
@@ -35,7 +35,7 @@ param_dict = {'model_name': 'lcf_atepc',
               }
 # param_dict = get_atepc_param_dict_multilingual()
 save_path = 'state_dict'
-multilingual = Datasets.multilingual
+multilingual = ABSADatasets.multilingual
 aspect_extractor = train_atepc(parameter_dict=param_dict,      # set param_dict=None to use default model
                                dataset_path=multilingual,    # file or dir, dataset(s) will be automatically detected
                                model_path_to_save=save_path,   # set model_path_to_save=None to avoid save model

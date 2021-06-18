@@ -13,11 +13,11 @@
 
 from pyabsa import train_atepc, get_atepc_param_dict_english
 
-from pyabsa.absa_dataset import Datasets
+from pyabsa import ABSADatasets
 
 
 save_path = 'state_dict'
-laptop14 = Datasets.laptop14
+laptop14 = ABSADatasets.laptop14
 atepc_param_dict_english = get_atepc_param_dict_english()
 atepc_param_dict_english['model_name'] = 'bert_base'
 # atepc_param_dict_english['model_name'] = 'lcf_atepc'

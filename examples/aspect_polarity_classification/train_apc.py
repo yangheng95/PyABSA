@@ -12,19 +12,21 @@
 from pyabsa import train_apc, get_apc_param_dict_english
 
 from pyabsa.models import APCModels
-from pyabsa.absa_dataset import Datasets
+from pyabsa import ABSADatasets
 
-save_path = 'state_dict'
+save_path = ''
 apc_param_dict_english = get_apc_param_dict_english()
-apc_param_dict_english['model_name'] = APCModels.SLIDE_LCFS_BERT
+apc_param_dict_english['model_name'] = APCModels.SLIDE_LCF_BERT
 apc_param_dict_english['evaluate_begin'] = 2
 apc_param_dict_english['similarity_threshold'] = 1
 apc_param_dict_english['max_seq_len'] = 80
 apc_param_dict_english['dropout'] = 0.5
+apc_param_dict_english['log_step'] = 5
+apc_param_dict_english['l2reg'] = 0.00005
 apc_param_dict_english['dynamic_truncate'] = True
 # apc_param_dict_english['lcf'] = 'cdm'
 
-laptop14 = Datasets.laptop14
+laptop14 = ABSADatasets.laptop14
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=laptop14,     # train set and test set will be automatically detected
@@ -32,7 +34,7 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             auto_evaluate=True,            # evaluate model if test set is available
                             auto_device=True               # automatic choose CUDA or CPU
                             )
-restaurant14 = Datasets.restaurant14
+restaurant14 = ABSADatasets.restaurant14
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=restaurant14,     # train set and test set will be automatically detected
@@ -40,7 +42,7 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             auto_evaluate=True,            # evaluate model if test set is available
                             auto_device=True               # automatic choose CUDA or CPU
                             )
-restaurant15 = Datasets.restaurant15
+restaurant15 = ABSADatasets.restaurant15
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=restaurant15,     # train set and test set will be automatically detected
@@ -48,7 +50,7 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             auto_evaluate=True,            # evaluate model if test set is available
                             auto_device=True               # automatic choose CUDA or CPU
                             )
-restaurant16 = Datasets.restaurant16
+restaurant16 = ABSADatasets.restaurant16
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=restaurant16,     # train set and test set will be automatically detected
@@ -58,7 +60,7 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             )
 
 apc_param_dict_english['lcf'] = 'cdm'
-laptop14 = Datasets.laptop14
+laptop14 = ABSADatasets.laptop14
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=laptop14,     # train set and test set will be automatically detected
@@ -66,7 +68,7 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             auto_evaluate=True,            # evaluate model if test set is available
                             auto_device=True               # automatic choose CUDA or CPU
                             )
-restaurant14 = Datasets.restaurant14
+restaurant14 = ABSADatasets.restaurant14
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=restaurant14,     # train set and test set will be automatically detected
@@ -74,7 +76,7 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             auto_evaluate=True,            # evaluate model if test set is available
                             auto_device=True               # automatic choose CUDA or CPU
                             )
-restaurant15 = Datasets.restaurant15
+restaurant15 = ABSADatasets.restaurant15
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=restaurant15,     # train set and test set will be automatically detected
@@ -82,7 +84,7 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             auto_evaluate=True,            # evaluate model if test set is available
                             auto_device=True               # automatic choose CUDA or CPU
                             )
-restaurant16 = Datasets.restaurant16
+restaurant16 = ABSADatasets.restaurant16
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=restaurant16,     # train set and test set will be automatically detected
@@ -91,6 +93,8 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             auto_device=True               # automatic choose CUDA or CPU
                             )
 
-# 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
-sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
-sent_classifier.set_sentiment_map(sentiment_map)
+
+#
+# # 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
+# sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
+# sent_classifier.set_sentiment_map(sentiment_map)

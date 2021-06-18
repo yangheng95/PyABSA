@@ -7,7 +7,7 @@
 
 import copy
 
-from pyabsa.absa_dataset import Datasets, detect_dataset
+from pyabsa import ABSADatasets, detect_dataset
 from pyabsa.functional import init_config
 
 from pyabsa.config.atepc_config import atepc_param_dict_base
