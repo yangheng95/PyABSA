@@ -24,6 +24,7 @@ apc_param_dict_english['dropout'] = 0.5
 apc_param_dict_english['log_step'] = 5
 apc_param_dict_english['l2reg'] = 0.0001
 apc_param_dict_english['dynamic_truncate'] = True
+apc_param_dict_english['srd_alignment'] = True
 # apc_param_dict_english['lcf'] = 'cdm'
 
 laptop14 = ABSADatasets.laptop14

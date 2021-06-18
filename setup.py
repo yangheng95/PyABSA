@@ -24,5 +24,5 @@ setup(
     # Choose your license
     license='MIT',
     install_requires=['transformers>=4.4.2', 'spacy', 'networkx', 'seqeval', 'update_checker',
-                      'tqdm', 'termcolor', 'gitpython', 'google_drive_downloader', 'torch'],
+                      'tqdm', 'termcolor', 'gitpython', 'googledrivedownloader', 'torch'],
 )
