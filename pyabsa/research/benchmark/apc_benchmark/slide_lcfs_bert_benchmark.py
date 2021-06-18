@@ -9,7 +9,7 @@
 from pyabsa import train_apc, get_apc_param_dict_english
 
 from pyabsa import ABSADatasets
-from pyabsa.models import APCModels
+from pyabsa.models import APCModelList
 
 import copy
 
@@ -18,7 +18,7 @@ def run_slide_lcfs_bert_cdw(param_dict=None):
     if not param_dict:
         print('No optimal hyper-parameters are set, using default params...')
         _apc_param_dict_english = copy.deepcopy(get_apc_param_dict_english())
-        _apc_param_dict_english['model_name'] = APCModels.SLIDE_LCFS_BERT
+        _apc_param_dict_english['model_name'] = APCModelList.SLIDE_LCFS_BERT
         _apc_param_dict_english['lcf'] = 'cdw'
         _apc_param_dict_english['evaluate_begin'] = 1
         _apc_param_dict_english['similarity_threshold'] = 0.9
@@ -57,7 +57,7 @@ def run_slide_lcfs_bert_cdm(param_dict=None):
     if not param_dict:
         print('No optimal hyper-parameters are set, using default params...')
         _apc_param_dict_english = copy.deepcopy(get_apc_param_dict_english())
-        _apc_param_dict_english['model_name'] = APCModels.SLIDE_LCFS_BERT
+        _apc_param_dict_english['model_name'] = APCModelList.SLIDE_LCFS_BERT
         _apc_param_dict_english['lcf'] = 'cdm'
         _apc_param_dict_english['evaluate_begin'] = 1
         _apc_param_dict_english['similarity_threshold'] = 0.9

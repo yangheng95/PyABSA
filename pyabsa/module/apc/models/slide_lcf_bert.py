@@ -63,7 +63,7 @@ class SLIDE_LCF_BERT(nn.Module):
         elif 'r' == self.opt.window:
             sent_out = self.linear_window_2h(torch.cat((lcf_features, right_lcf_features), -1))
         else:
-            raise KeyError('Invalid parameter:', self.opt.window)
+            raise KeyError('Invalid window parameter:', self.opt.window)
 
         sent_out = torch.cat((global_context_features, sent_out), -1)
         sent_out = self.post_linear(sent_out)
