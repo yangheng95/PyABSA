@@ -64,12 +64,24 @@ python -m spacy download en_core_web_sm
 6. [BERT-SPC](pyabsa/module/apc/models/bert_spc.py)
 7. [LCA-Net](pyabsa/module/apc/models/lca_bert.py)
 
+
 '*' Copyrights Reserved. Please wait our paper to introduce them in detail. 
 We provide the pretrained ATEPC and APC models
 on [Google Drive](https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing)
 or [百度网盘（提取码：absa）](https://pan.baidu.com/s/1FSgaSP4ubGWy0BjBQdct5w), 
 download them if necessary. 
 
+## Brief Performance Report
+
+|      Models          | Laptop14 (acc) |  Rest14 (acc) | Rest15 (acc) | Rest16 (acc) |
+| :------------------: | :------------: | :-----------: |:------------:|:------------:|
+| SLIDE-LCFS-BERT (CDW)|    81.35       |        88.04  |    85.93     |   92.52      | 
+| SLIDE-LCFS-BERT (CDM)|     82.13      |        87.5   |    85.37     |   92.36      |
+| SLIDE-LCF-BERT (CDW) |      -         |       -       |    -         |    -         |
+| SLIDE-LCF-BERT (CDM) |    -           |        -      |   -          |    -         |
+
+The optimal performance in three random seeds. Note that the with the update of this repo, 
+the results could be updated.
 
 I notice the importance of the reproducibility of the experimental results, 
 you can use the integrated benchmark function to reproduce the results easily.

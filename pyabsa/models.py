@@ -35,6 +35,13 @@ class APCTrainedModelManger:
     MultilingualModel = ''
 
     @staticmethod
+    def get_APC_trained_model_by_name(model_name=''):
+        return download_pretrained_model(task='apc',
+                                         language='chinese',
+                                         archive_path=APCTrainedModelManger.ChineseModel,
+                                         model_name=model_name)
+
+    @staticmethod
     def get_Chinese_APC_trained_model(model_name=''):
         return download_pretrained_model(task='apc',
                                          language='chinese',
@@ -58,15 +65,8 @@ class APCTrainedModelManger:
 
 class ATEPCTrainedModelManager:
     ChineseModel = '19VdszKYWTVL4exaSTU5zl3ueP5FNbKeJ'
-    EnglishModel = ''
+    EnglishModel = '14cLWoF-yKV64D0u7Fq_k_fYbJY4hjF4L'
     MultilingualModel = ''
-
-    @staticmethod
-    def get_Chinese_ATEPC_trained_model(model_name=''):
-        return download_pretrained_model(task='atepc',
-                                         language='chinese',
-                                         archive_path=ATEPCTrainedModelManager.ChineseModel,
-                                         model_name=model_name)
 
     @staticmethod
     def get_English_ATEPC_trained_model(model_name=''):
