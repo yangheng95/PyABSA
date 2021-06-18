@@ -87,12 +87,9 @@ def train_apc(parameter_dict=None,
 def load_sentiment_classifier(trained_model_path=None,
                               sentiment_map=None,
                               auto_device=True):
-    if trained_model_path and os.path.isdir(trained_model_path):
-        infer_model = SentimentClassifier(trained_model_path, sentiment_map=sentiment_map)
-        infer_model.to('cuda:' + str(choice)) if auto_device and choice >= 0 else infer_model.cpu()
-        return infer_model
-    else:
-        raise RuntimeError('Not a valid model path!')
+    infer_model = SentimentClassifier(trained_model_path, sentiment_map=sentiment_map)
+    infer_model.to('cuda:' + str(choice)) if auto_device and choice >= 0 else infer_model.cpu()
+    return infer_model
 
 
 def train_atepc(parameter_dict=None,
@@ -128,9 +125,6 @@ def train_atepc(parameter_dict=None,
 def load_aspect_extractor(trained_model_path=None,
                           sentiment_map=None,
                           auto_device=True):
-    if trained_model_path and os.path.isdir(trained_model_path):
-        aspect_extractor = AspectExtractor(trained_model_path, sentiment_map=sentiment_map)
-        aspect_extractor.to('cuda:' + str(choice)) if auto_device and choice >= 0 else aspect_extractor.cpu()
-        return aspect_extractor
-    else:
-        raise RuntimeError('Not a valid model path!')
+    aspect_extractor = AspectExtractor(trained_model_path, sentiment_map=sentiment_map)
+    aspect_extractor.to('cuda:' + str(choice)) if auto_device and choice >= 0 else aspect_extractor.cpu()
+    return aspect_extractor

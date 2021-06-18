@@ -10,6 +10,7 @@ import spacy
 import termcolor
 import networkx as nx
 import numpy as np
+import os
 
 SENTIMENT_PADDING = -999
 
@@ -126,7 +127,7 @@ def load_datasets(fname):
 
 def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
     if hasattr(opt, 'dynamic_truncate') and opt.dynamic_truncate:
-        _max_seq_len = opt.max_seq_len - len(aspect.split()) - 5
+        _max_seq_len = opt.max_seq_len - len(aspect.split())
         text_left = text_left.split(' ')
         text_right = text_right.split(' ')
         if _max_seq_len < (len(text_left) + len(text_right)):
@@ -175,7 +176,7 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
 
 def prepare_input_for_atepc(opt, tokenizer, text_left, text_right, aspect):
     if hasattr(opt, 'dynamic_truncate') and opt.dynamic_truncate:
-        _max_seq_len = opt.max_seq_len - len(aspect.split()) - 5
+        _max_seq_len = opt.max_seq_len - len(aspect.split())
         text_left = text_left.split(' ')
         text_right = text_right.split(' ')
         if _max_seq_len < len(text_left) + len(text_right):
@@ -406,9 +407,13 @@ def is_same(s1, s2, tokenizer):
 try:
     nlp = spacy.load("en_core_web_sm")
 except:
-    warnings.warn(RuntimeWarning('Can not load en_core_web_sm from spacy, download it in order to parse syntax tree:\n',
-                                 termcolor.colored('python -m spacy download en_core_web_sm', 'green')))
-
+    print('Can not load en_core_web_sm from spacy, try to download it in order to parse syntax tree:',
+          termcolor.colored('\npython -m spacy download en_core_web_sm', 'green'))
+    try:
+        os.system('python -m spacy download en_core_web_sm')
+        nlp = spacy.load("en_core_web_sm")
+    except:
+        raise RuntimeError('Download failed, you can download en_core_web_sm manually.')
 
 def calculate_dep_dist(sentence, aspect):
     terms = [a.lower() for a in aspect.split()]

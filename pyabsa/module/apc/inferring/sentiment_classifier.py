@@ -84,8 +84,10 @@ class SentimentClassifier:
                 self._log_write_args()
 
             except:
-                warnings.warn('Fail to load the model, please download our latest models at Google Drive: '
-                              'https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing')
+                raise FileNotFoundError('Fail to load the model from {}'.format(model_arg),
+                                        'if you have not trained a model, please download our latest models at Google Drive: '
+                                        'https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing'
+                                        )
 
         self.dataset = ABSADataset(tokenizer=self.tokenizer, opt=self.opt)
         self.infer_dataloader = None

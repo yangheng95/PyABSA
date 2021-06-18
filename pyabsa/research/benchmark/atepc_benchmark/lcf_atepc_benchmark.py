@@ -7,7 +7,7 @@
 
 from pyabsa import train_atepc, get_atepc_param_dict_english
 
-from pyabsa.absa_dataset import Datasets
+from pyabsa import ABSADatasets
 from pyabsa.models import ATEPCModels
 
 import copy
@@ -24,49 +24,49 @@ def run_lcf_atepc_cdw(param_dict=None):
     else:
         _atepc_param_dict_english = param_dict
 
-    train_atepc(dataset_path=Datasets.laptop14,
+    train_atepc(dataset_path=ABSADatasets.laptop14,
                 parameter_dict=_atepc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
                 auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                 auto_device=True  # automatic choose CUDA or CPU
                 )
 
-    train_atepc(dataset_path=Datasets.restaurant14,
+    train_atepc(dataset_path=ABSADatasets.restaurant14,
                 parameter_dict=_atepc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
                 auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                 auto_device=True  # automatic choose CUDA or CPU
                 )
 
-    train_atepc(dataset_path=Datasets.restaurant15,
+    train_atepc(dataset_path=ABSADatasets.restaurant15,
                 parameter_dict=_atepc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
                 auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                 auto_device=True  # automatic choose CUDA or CPU
                 )
 
-    train_atepc(dataset_path=Datasets.restaurant16,
+    train_atepc(dataset_path=ABSADatasets.restaurant16,
                 parameter_dict=_atepc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
                 auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                 auto_device=True  # automatic choose CUDA or CPU
                 )
 
-    train_atepc(dataset_path=Datasets.phone,
+    train_atepc(dataset_path=ABSADatasets.phone,
                 parameter_dict=_atepc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
                 auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                 auto_device=True  # automatic choose CUDA or CPU
                 )
 
-    train_atepc(dataset_path=Datasets.car,
+    train_atepc(dataset_path=ABSADatasets.car,
                 parameter_dict=_atepc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
                 auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                 auto_device=True  # automatic choose CUDA or CPU
                 )
 
-    train_atepc(dataset_path=Datasets.camera,
+    train_atepc(dataset_path=ABSADatasets.camera,
                 parameter_dict=_atepc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
                 auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                 auto_device=True  # automatic choose CUDA or CPU
                 )
 
-    train_atepc(dataset_path=Datasets.notebook,
+    train_atepc(dataset_path=ABSADatasets.notebook,
                 parameter_dict=_atepc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
                 auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                 auto_device=True  # automatic choose CUDA or CPU
@@ -84,49 +84,49 @@ def run_lcf_atepc_cdm(param_dict=None):
     else:
         _atepc_param_dict_english = param_dict
 
-    train_atepc(dataset_path=Datasets.laptop14,
+    train_atepc(dataset_path=ABSADatasets.laptop14,
                 parameter_dict=_atepc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
                 auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                 auto_device=True  # automatic choose CUDA or CPU
                 )
 
-    train_atepc(dataset_path=Datasets.restaurant14,
+    train_atepc(dataset_path=ABSADatasets.restaurant14,
                 parameter_dict=_atepc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
                 auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                 auto_device=True  # automatic choose CUDA or CPU
                 )
 
-    train_atepc(dataset_path=Datasets.restaurant15,
+    train_atepc(dataset_path=ABSADatasets.restaurant15,
                 parameter_dict=_atepc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
                 auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                 auto_device=True  # automatic choose CUDA or CPU
                 )
 
-    train_atepc(dataset_path=Datasets.restaurant16,
+    train_atepc(dataset_path=ABSADatasets.restaurant16,
                 parameter_dict=_atepc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
                 auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                 auto_device=True  # automatic choose CUDA or CPU
                 )
 
-    train_atepc(dataset_path=Datasets.phone,
+    train_atepc(dataset_path=ABSADatasets.phone,
                 parameter_dict=_atepc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
                 auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                 auto_device=True  # automatic choose CUDA or CPU
                 )
 
-    train_atepc(dataset_path=Datasets.car,
+    train_atepc(dataset_path=ABSADatasets.car,
                 parameter_dict=_atepc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
                 auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                 auto_device=True  # automatic choose CUDA or CPU
                 )
 
-    train_atepc(dataset_path=Datasets.camera,
+    train_atepc(dataset_path=ABSADatasets.camera,
                 parameter_dict=_atepc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
                 auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                 auto_device=True  # automatic choose CUDA or CPU
                 )
 
-    train_atepc(dataset_path=Datasets.notebook,
+    train_atepc(dataset_path=ABSADatasets.notebook,
                 parameter_dict=_atepc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
                 auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                 auto_device=True  # automatic choose CUDA or CPU

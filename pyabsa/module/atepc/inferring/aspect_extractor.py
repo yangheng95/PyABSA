@@ -76,8 +76,10 @@ class AspectExtractor:
                     self.tokenizer = BertTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
 
             except:
-                warnings.warn('Fail to load the model, please download our latest models at Google Drive: '
-                              'https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing')
+                raise FileNotFoundError('Fail to load the model from {}'.format(model_arg),
+                                        'if you have not trained a model, please download our latest models at Google Drive: '
+                                        'https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing'
+                                        )
 
         self.processor = ATEPCProcessor(self.tokenizer)
         self.label_list = self.processor.get_labels()

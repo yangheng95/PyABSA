@@ -32,7 +32,7 @@ apc_datasets = 'apc_datasets'
 atepc_datasets = 'atepc_datasets'
 
 
-class Datasets:
+class ABSADatasets:
     laptop14 = 'laptop14'
     restaurant14 = 'restaurant14'
     restaurant15 = 'restaurant15'
@@ -53,8 +53,8 @@ class Datasets:
 
 
 def detect_dataset(dataset_path, auto_evaluate=True, task='apc_benchmark'):
-    if hasattr(Datasets, dataset_path.lower()) or not os.path.exists(dataset_path):
-        if hasattr(Datasets, dataset_path.lower()):
+    if hasattr(ABSADatasets, dataset_path.lower()) or not os.path.exists(dataset_path):
+        if hasattr(ABSADatasets, dataset_path.lower()):
             print('{} is the integrated dataset, try to load the dataset '
                   'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
         else:
@@ -98,8 +98,8 @@ def detect_dataset(dataset_path, auto_evaluate=True, task='apc_benchmark'):
 
 def detect_infer_dataset(dataset_path, task='apc_benchmark'):
     dataset_file = []
-    if hasattr(Datasets, dataset_path.lower()) or not os.path.exists(dataset_path):
-        if hasattr(Datasets, dataset_path.lower()):
+    if hasattr(ABSADatasets, dataset_path.lower()) or not os.path.exists(dataset_path):
+        if hasattr(ABSADatasets, dataset_path.lower()):
             print('{} is the integrated dataset, try to load the dataset '
                   'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
         else:
