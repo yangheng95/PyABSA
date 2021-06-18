@@ -7,6 +7,8 @@
 
 from pyabsa import load_aspect_extractor
 
+from pyabsa import ATEPCTrainedModelManager
+
 # 本工具提供的所有功能均属于测试功能，供学习所用， 欢迎帮助维护及提出意见
 # 仅仅实现了单条文本抽取方面及分类情感， 后面有精力会实现批量抽取方面
 
@@ -27,16 +29,11 @@ examples = ['But the staff was so nice to us .',
             ]
 
 # 从Google Drive下载提供的预训练模型
-model_path = 'state_dict/lcf_atepc_cdw_apcacc_78.73_apcf1_74.37_atef1_72.8'   # please always check update on Google Drive before using
+model_path = ATEPCTrainedModelManager.get_Multilingual_ATEPC_trained_model()
 
 aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
                                          auto_device=True  # False means load model on CPU
                                          )
-
-# You can switch device manually using following functions
-# aspect_extractor.cpu()
-# aspect_extractor.cuda()
-# aspect_extractor.to('cuda:0')
 
 atepc_result = aspect_extractor.extract_aspect(examples=examples,  # list-support only, for current
                                                print_result=True,  # print the result

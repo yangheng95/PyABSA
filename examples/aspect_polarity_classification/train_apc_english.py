@@ -15,13 +15,13 @@ from pyabsa import train_apc, get_apc_param_dict_english
 from pyabsa import ABSADatasets
 apc_param_dict_english = get_apc_param_dict_english()
 
-save_path = ''
-restaurant14 = ABSADatasets.restaurant14
+save_path = 'state_dict'
 apc_param_dict_english['log_step'] = 50
+apc_param_dict_english['model_name'] = 'bert_spc'
 apc_param_dict_english['evaluate_begin'] = 5
-
+semeval = ABSADatasets.semeval
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,     # set param_dict=None to use default model
-                            dataset_path=restaurant14,    # train set and test set will be automatically detected
+                            dataset_path=semeval,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
                             auto_evaluate=True,            # evaluate model while training_tutorials if test set is available
                             auto_device=True               # automatic choose CUDA or CPU

@@ -8,7 +8,7 @@
 from pyabsa import train_atepc, get_atepc_param_dict_english
 
 from pyabsa import ABSADatasets
-from pyabsa.models import ATEPCModels
+from pyabsa.models import ATEPCModelList
 
 import copy
 
@@ -17,7 +17,7 @@ def run_lcf_atepc_cdw(param_dict=None):
     if not param_dict:
         print('No optimal hyper-parameters are set, using default params...')
         _atepc_param_dict_english = copy.deepcopy(get_atepc_param_dict_english())
-        _atepc_param_dict_english['model_name'] = ATEPCModels.LCF_ATEPC
+        _atepc_param_dict_english['model_name'] = ATEPCModelList.LCF_ATEPC
         _atepc_param_dict_english['lcf'] = 'cdw'
         _atepc_param_dict_english['log_step'] = 10
         _atepc_param_dict_english['evaluate_begin'] = 2
@@ -77,7 +77,7 @@ def run_lcf_atepc_cdm(param_dict=None):
     if not param_dict:
         print('No optimal hyper-parameters are set, using default params...')
         _atepc_param_dict_english = copy.deepcopy(get_atepc_param_dict_english())
-        _atepc_param_dict_english['model_name'] = ATEPCModels.LCF_ATEPC
+        _atepc_param_dict_english['model_name'] = ATEPCModelList.LCF_ATEPC
         _atepc_param_dict_english['lcf'] = 'cdm'
         _atepc_param_dict_english['log_step'] = 10
         _atepc_param_dict_english['evaluate_begin'] = 2

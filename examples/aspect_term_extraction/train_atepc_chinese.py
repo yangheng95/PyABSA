@@ -15,7 +15,7 @@ from pyabsa import train_atepc
 from pyabsa import ABSADatasets
 
 # see hyper-parameters in pyabsa/main/training_configs.py
-param_dict = {'model_name': 'lcf_atepc',  # {lcf_atepc, rlcf_atepc}
+param_dict = {'model_name': 'bert_base',  # {lcf_atepc, rlcf_atepc}
               'batch_size': 16,
               'seed': {996, 7, 666},
               'device': 'cuda',           # overrides auto_device parameter

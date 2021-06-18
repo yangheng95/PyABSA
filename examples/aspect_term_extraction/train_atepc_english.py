@@ -15,7 +15,7 @@ from pyabsa import train_atepc, get_atepc_param_dict_english
 from pyabsa import ABSADatasets
 
 # see hyper-parameters in pyabsa/main/training_configs.py
-param_dict = {'model_name': 'lcf_atepc',
+param_dict = {'model_name': 'bert_base',
               'batch_size': 16,
               'seed': {996},
               'num_epoch': 6,
@@ -29,7 +29,7 @@ param_dict = {'model_name': 'lcf_atepc',
               'SRD': 3,                # distance threshold to calculate local context
               'use_syntax_based_SRD': True,   # force to use syntax-based semantic-relative distance in all lcf-based models
               'lcf': "cdw",            # {cdw, cdm, fusion}
-              'dropout': 0,
+              'dropout': 0.5,
               'l2reg': 0.00001,
               'evaluate_begin': 5  # evaluate begin with epoch
               # 'polarities_dim': 3      # deprecated, polarity_dim will be automatically detected
@@ -38,9 +38,9 @@ param_dict = {'model_name': 'lcf_atepc',
 save_path = 'state_dict'
 
 # param_dict = get_atepc_param_dict_english()
-restaurant14 = ABSADatasets.restaurant14
+semeval = ABSADatasets.semeval
 aspect_extractor = train_atepc(parameter_dict=param_dict,      # set param_dict=None to use default model
-                               dataset_path=restaurant14,    # file or dir, dataset(s) will be automatically detected
+                               dataset_path=semeval,    # file or dir, dataset(s) will be automatically detected
                                model_path_to_save=save_path,   # set model_path_to_save=None to avoid save model
                                auto_evaluate=True,             # evaluate model while training_tutorials if test set is available
                                auto_device=True                # Auto choose CUDA or CPU
