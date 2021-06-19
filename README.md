@@ -10,20 +10,25 @@
 
 > Build from LC-ABSA / LCF-ABSA / LCF-BERT and LCF-ATEPC.
 
-> Easy to use interfaces of aspect term extraction and aspect-polarity classification.
+> Efficient implementation of Local Context Focus
 
-> Provide the tutorials of training and using of ATE and APC models.
+> Easy to use toolkit of aspect term extraction and aspect-polarity classification.
+
+> Provide tutorials of training and using of ATE and APC models.
 
 > PyTorch Implementations (CPU & CUDA supported).
 
-# Introduction
+# Preface
 
-This is an ASBA research-oriented code repository. I notice that some repos do not provide inference scripts
-and the codes may be redundant or hard to reproduce, so I build the framework to make the training and inference process easier.
-Except for providing SOTA model for both ATE and APC subtasks,  some functions and methods are reusable. 
-In another word, you can develop your model using integrated functions, e.g., local context weight vector building.
-Please feel free to give me your interesting thoughts, to help me build an easy-to-use toolkit in order to reduce the 
-cost of building models and reproduction.
+This is an ASBA research-oriented code repository. I notice that some repos do not provide inference script,
+and the codes may be redundant or hard to use, so I build PyABSA to make the training and inference easier.
+PyABSA contains ATEPC and APC models now.
+Except for providing SOTA models for both ATEPC and APC, some source codes in PyABSA are reusable. 
+In another word, you can develop your model based PyABSA. 
+e.g., using efficient local context focus implementation from PyASBA.
+Please feel free to give me your interesting thoughts,
+to help me build an easy-to-use toolkit in order to reduce the 
+cost of building models and reproduction in ABSA task.
 
 # Notice
 
@@ -34,21 +39,30 @@ or [LCF-ATEPC](https://github.com/yangheng95/LCF-ATEPC).
 
 # Preliminaries
 
-Please star this repository in case of keeping find new tutorials and providing your advice anytime.
-
-Install the latest version using,
+Please star this repository in order to keep notified of new features or tutorials in PyABSA.
+Install the latest version using：
 
 ```
-pip install pyabsa
+pip install -U pyabsa
 ```
 
-please always update if there is a newer version. 
 To use our (APC) models, you may need download `en_core_web_sm` by
 
 ```
 python -m spacy download en_core_web_sm
 ```
 # Model Support
+
+The pretrained ATEPC and APC models are available on 
+[Google Drive](https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing)
+or [百度网盘（提取码：absa）](https://pan.baidu.com/s/1FSgaSP4ubGWy0BjBQdct5w), 
+download them if necessary.
+Additionally, you can use following command to load pretrained model from GoogleDrive: 
+```
+from pyabsa import APCTrainedModelManager
+
+pretrained_apc_model = APCTrainedModelManager.get_English_APC_trained_model()
+```
 
 ## ATEPC
 1. [LCF-ATEPC](pyabsa/module/atepc/models/lcf_atepc.py) 
@@ -65,11 +79,7 @@ python -m spacy download en_core_web_sm
 7. [LCA-Net](pyabsa/module/apc/models/lca_bert.py)
 
 
-'*' Copyrights Reserved. Please wait the publish of our paper to get introduction of them in detail. 
-We provide the pretrained ATEPC and APC models
-on [Google Drive](https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing)
-or [百度网盘（提取码：absa）](https://pan.baidu.com/s/1FSgaSP4ubGWy0BjBQdct5w), 
-download them if necessary. 
+'*' Copyrights Reserved, please wait the publishing of our paper to get introduction of them in detail. 
 
 ## Brief Performance Report
 
@@ -80,7 +90,7 @@ download them if necessary.
 | SLIDE-LCF-BERT (CDW) |      -         |       -       |    -         |    -         |
 | SLIDE-LCF-BERT (CDM) |    -           |        -      |   -          |    -         |
 
-The optimal performance in three random seeds. Note that the with the update of this repo, 
+The optimal performance obtained among three random seeds. Note that the with the update of this repo, 
 the results could be updated.
 
 I notice the importance of the reproducibility of the experimental results, 
@@ -93,11 +103,10 @@ from pyabsa.research.benchmark.atepc_benchmark import run_benchmark_for_atepc_mo
 run_slide_lcf_bert_cdw()
 run_slide_lcf_bert_cdm()
 
-run_benchmark_for_atepc_models()
 ```
 # Aspect Term Extraction (ATE)
 
-## Aspect Extraction Output Format (方面术语抽取结果示例如下):
+## Aspect Extraction & Sentiment Inference Output Format (方面抽取及情感分类结果示例如下):
 
 ```
 Sentence with predicted labels:
@@ -159,7 +168,7 @@ aspect_extractor = train_atepc(parameter_dict=atepc_param_dict_english,      # s
                                )
 ```
 
-3. Extract aspect terms
+3. Extract aspect terms (with inference of sentiment)
 ```
 from pyabsa import load_aspect_extractor
 
@@ -203,7 +212,7 @@ sent_classifier = train_apc(parameter_dict=get_apc_param_dict_english(),        
 
 Check the detailed usages in [APC examples](examples/aspect_polarity_classification) directory.
 
-## Aspect-Polarity Classification Output Format (方面级性分类输出示例如下):
+## Aspect-Polarity Classification Output Format (方面极性性分类输出示例如下):
 ```
 love  selena gomez  !!!! she rock !!!!!!!!!!!!!!!! and she 's cool she 's my idol 
 selena gomez --> Positive  Real: Positive (Correct)
@@ -241,15 +250,13 @@ apc_param_search(parameter_dict=apc_param_dict_english,
 ```
 from pyabsa import train_apc, get_atepc_param_dict_base
 
-from pyabsa import laptop14
-
 save_path = 'state_dict'
 
 apc_param_dict_base = get_atepc_param_dict_base()
 
-# datasets_path = '../apc_datasets/SemEval/laptop14'  # automatic detect all datasets files in this path
+datasets_path = 'path of your own dataset'  # automatic detect all datasets files in this path
 sent_classifier = train_apc(parameter_dict=apc_param_dict_base,  # set param_dict=None will use the apc_param_dict as well
-                            dataset_path=laptop14,               # train set and test set will be automatically detected
+                            dataset_path=datasets_path,               # train set and test set will be automatically detected
                             model_path_to_save=save_path,        # set model_path_to_save=None to avoid save model
                             auto_evaluate=True,                  # evaluate model while training_tutorials if test set is available
                             auto_device=True                     # automatic choose CUDA or CPU
@@ -279,15 +286,16 @@ sent_classifier.set_sentiment_map(sentiment_map)
 ```
 from pyabsa import load_sentiment_classifier
 
-from pyabsa import APCTrainedModelManger
+from pyabsa import APCTrainedModelManager
 
 from pyabsa import ABSADatasets
+
 semeval = ABSADatasets.semeval
 
 # Assume the sent_classifier is loaded or obtained using train function
 
 # model_path = '../state_dict/slide_lcfs_bert_cdw'   # please always check update on Google Drive before using
-pretrained_apc_model = model_path = APCTrainedModelManger.get_English_APC_trained_model()
+pretrained_apc_model = model_path = APCTrainedModelManager.get_English_APC_trained_model()
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
                                             auto_device=True,  # Use CUDA if available
                                             sentiment_map=sentiment_map
@@ -314,8 +322,7 @@ from pyabsa import ABSADatasets
 apc_datasets = ABSADatasets.apc_datasets
 
 # This function coverts a ABSA dataset to inference set, try to convert every dataset found in the dir
-# please do check the output file!
-generate_inferrence_set_for_apc(apc_datasets)
+generate_inferrence_set_for_apc(apc_datasets)  # cascade-converting, please do check the output file!
 
 ```
 
@@ -331,7 +338,8 @@ generate_inferrence_set_for_apc(apc_datasets)
 8. Camera
 9. Notebook
 10. Multilingual (The sum of above datasets.)
-   
+
+Basically, you don't have to download the datasets, as the datasets will be downloaded automatically. 
 
 
 # Acknowledgement

@@ -5,7 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-__version__ = '0.8.1.5'
+__version__ = '0.8.2.0'
 __name__ = 'pyabsa'
 
 from .functional import train_apc, load_sentiment_classifier
@@ -28,10 +28,15 @@ from pyabsa.config.atepc_config import (get_atepc_param_dict_base,
 
 from pyabsa.absa_dataset import ABSADatasets
 
-from pyabsa.models import APCTrainedModelManger, ATEPCTrainedModelManager
+from pyabsa.models import APCTrainedModelManager, ATEPCTrainedModelManager
 
 from pyabsa.models import APCModelList, ATEPCModelList
 
-from update_checker import update_check
+from update_checker import UpdateChecker
 
-update_check(__name__, __version__)
+from termcolor import colored
+
+checker = UpdateChecker()
+check_result = checker.check(__name__, __version__)
+print(check_result)
+print('Please update via pip: {}'.format(colored('pip install -U {}'.format(__name__), 'red')))
