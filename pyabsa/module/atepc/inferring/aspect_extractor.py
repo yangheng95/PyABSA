@@ -56,25 +56,27 @@ class AspectExtractor:
         else:
             print('Load aspect extractor from', model_arg)
             try:
-                state_dict_path = find_target_file(model_arg, '.state_dict')
-                model_path = find_target_file(model_arg, '.model')
-                tokenizer_path = find_target_file(model_arg, 'tokenizer')
-                config_path = find_target_file(model_arg, 'config')
-                self.opt = pickle.load(open(config_path, 'rb'))
+                state_dict_path = find_target_file(model_arg, '.state_dict', find_all=True)
+                model_path = find_target_file(model_arg, '.model', find_all=True)
+                tokenizer_path = find_target_file(model_arg, 'tokenizer', find_all=True)
+                config_path = find_target_file(model_arg, 'config', find_all=True)
+                self.opt = pickle.load(open(config_path[0], 'rb'))
 
                 if state_dict_path:
                     bert_base_model = BertModel.from_pretrained(self.opt.pretrained_bert_name)
                     bert_base_model.config.num_labels = self.num_labels
                     self.model = model_classes[self.opt.model_name](bert_base_model, self.opt)
-                    self.model.load_state_dict(torch.load(state_dict_path))
+                    self.model.load_state_dict(torch.load(state_dict_path[0]))
                 if model_path:
-                    self.model = torch.load(model_path)
+                    self.model = torch.load(model_path[0])
                     self.model.opt = self.opt
                 if tokenizer_path:
-                    self.tokenizer = pickle.load(open(tokenizer_path, 'rb'))
+                    self.tokenizer = pickle.load(open(tokenizer_path[0], 'rb'))
                 else:
                     self.tokenizer = BertTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
 
+                self.tokenizer.bos_token = self.tokenizer.bos_token if self.tokenizer.bos_token else '[CLS]'
+                self.tokenizer.eos_token = self.tokenizer.eos_token if self.tokenizer.eos_token else '[SEP]'
             except:
                 raise FileNotFoundError('Fail to load the model from {}'.format(model_arg),
                                         'if you have not trained a model, please download our latest models at Google Drive: '
