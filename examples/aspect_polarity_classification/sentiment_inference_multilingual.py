@@ -29,7 +29,7 @@ sent_classifier.infer(chinese_text, print_result=True)
 infer_set_path = 'apc_datasets/multilingual'
 
 multilingual = ABSADatasets.multilingual
-sent_classifier.batch_infer(infer_set_path=multilingual,
+sent_classifier.batch_infer(target_file=multilingual,
                             print_result=True,
                             save_result=True
                             )
