@@ -15,7 +15,7 @@
 > Provide the tutorials of training and using of ATE and APC models.
 
 > PyTorch Implementations (CPU & CUDA supported).
->
+
 # Introduction
 
 This is an ASBA research-oriented code repository. I notice that some repos do not provide inference scripts
@@ -65,7 +65,7 @@ python -m spacy download en_core_web_sm
 7. [LCA-Net](pyabsa/module/apc/models/lca_bert.py)
 
 
-'*' Copyrights Reserved. Please wait our paper to introduce them in detail. 
+'*' Copyrights Reserved. Please wait the publish of our paper to get introduction of them in detail. 
 We provide the pretrained ATEPC and APC models
 on [Google Drive](https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing)
 or [百度网盘（提取码：absa）](https://pan.baidu.com/s/1FSgaSP4ubGWy0BjBQdct5w), 
@@ -279,12 +279,15 @@ sent_classifier.set_sentiment_map(sentiment_map)
 ```
 from pyabsa import load_sentiment_classifier
 
+from pyabsa import APCTrainedModelManger
+
 from pyabsa import ABSADatasets
 semeval = ABSADatasets.semeval
 
 # Assume the sent_classifier is loaded or obtained using train function
 
-model_path = '../state_dict/slide_lcfs_bert_cdw'   # please always check update on Google Drive before using
+# model_path = '../state_dict/slide_lcfs_bert_cdw'   # please always check update on Google Drive before using
+pretrained_apc_model = model_path = APCTrainedModelManger.get_English_APC_trained_model()
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
                                             auto_device=True,  # Use CUDA if available
                                             sentiment_map=sentiment_map
@@ -344,13 +347,16 @@ This work build from LC-ABSA/LCF-ABSA and LCF-ATEPC, and other impressive works 
 
 # Calling for New Datasets and Models
 We hope you can help us to improve this work, e.g.,
-provide new dataset or share your models in this repo,
-I will help you provided that I have some free time.
-the copyrights of contributed resources belong to the contributors, 
-thanks for your help.
+provide new datasets. Or, if you **develop your model using this PyABSA**,
+It is highly recommended to **release your model in PyABSA** by pull request, 
+as open source project make your work much more valuable!
+I will help you only if I have some free time.
+
+The copyrights of contributed resources belong to the contributors, 
+I hope you can help, thanks very much!
 
 # Citation
-If this repository is helpful, please cite our paper:
+If PyABSA is helpful, please star this repo and cite our paper:
 
 - paper of LCF-ATEPC:
 ```

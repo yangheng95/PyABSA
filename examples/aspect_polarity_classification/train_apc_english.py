@@ -13,12 +13,22 @@
 from pyabsa import train_apc, get_apc_param_dict_english
 
 from pyabsa import ABSADatasets
+
+from pyabsa.models import APCModelList
+
 apc_param_dict_english = get_apc_param_dict_english()
 
 save_path = 'state_dict'
-apc_param_dict_english['log_step'] = 50
-apc_param_dict_english['model_name'] = 'bert_spc'
-apc_param_dict_english['evaluate_begin'] = 5
+apc_param_dict_english = get_apc_param_dict_english()
+apc_param_dict_english['model_name'] = APCModelList.SLIDE_LCFS_BERT
+apc_param_dict_english['evaluate_begin'] = 2
+apc_param_dict_english['similarity_threshold'] = 1
+apc_param_dict_english['max_seq_len'] = 80
+apc_param_dict_english['dropout'] = 0.5
+apc_param_dict_english['log_step'] = 5
+apc_param_dict_english['l2reg'] = 0.0001
+apc_param_dict_english['dynamic_truncate'] = True
+apc_param_dict_english['srd_alignment'] = False
 semeval = ABSADatasets.semeval
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,     # set param_dict=None to use default model
                             dataset_path=semeval,    # train set and test set will be automatically detected
