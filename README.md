@@ -10,7 +10,7 @@
 
 > Build from LC-ABSA / LCF-ABSA / LCF-BERT and LCF-ATEPC.
 
-> Efficient implementation of Local Context Focus
+> Fast implementation of Local Context Focus
 
 > Easy to use toolkit of aspect term extraction and aspect-polarity classification.
 
@@ -212,7 +212,7 @@ sent_classifier = train_apc(parameter_dict=get_apc_param_dict_english(),        
 
 Check the detailed usages in [APC examples](examples/aspect_polarity_classification) directory.
 
-## Aspect-Polarity Classification Output Format (方面极性性分类输出示例如下):
+## Aspect-Polarity Classification Output Format (方面极性分类输出示例如下):
 ```
 love  selena gomez  !!!! she rock !!!!!!!!!!!!!!!! and she 's cool she 's my idol 
 selena gomez --> Positive  Real: Positive (Correct)
@@ -353,7 +353,7 @@ This work build from LC-ABSA/LCF-ABSA and LCF-ATEPC, and other impressive works 
 2. Add more APIs
 3. Optimize codes and add comments
 
-# Calling for New Datasets and Models
+# Calling for Contribution
 We hope you can help us to improve this work, e.g.,
 provide new datasets. Or, if you **develop your model using this PyABSA**,
 It is highly recommended to **release your model in PyABSA** by pull request, 
