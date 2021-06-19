@@ -19,7 +19,7 @@ sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
 # model_path = '../state_dict/slide_lcfs_bert_cdw'   # please always check update on Google Drive before using
 model_path = APCTrainedModelManager.get_English_APC_trained_model()
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
-                                            auto_device=False,  # Use CUDA if available
+                                            auto_device=True,  # Use CUDA if available
                                             sentiment_map=sentiment_map
                                             )
 # The default loading device is CPU
