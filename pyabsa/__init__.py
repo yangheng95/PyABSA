@@ -5,7 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-__version__ = '0.8.2.0'
+__version__ = '0.8.2.3'
 __name__ = 'pyabsa'
 
 from .functional import train_apc, load_sentiment_classifier
@@ -38,5 +38,7 @@ from termcolor import colored
 
 checker = UpdateChecker()
 check_result = checker.check(__name__, __version__)
-print(check_result)
-print('Please update via pip: {}'.format(colored('pip install -U {}'.format(__name__), 'red')))
+
+if check_result:
+    print(check_result)
+    print('Please update via pip: {}'.format(colored('pip install -U {}'.format(__name__), 'red')))

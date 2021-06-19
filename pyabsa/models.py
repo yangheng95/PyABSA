@@ -62,6 +62,12 @@ class ATEPCTrainedModelManager:
     MultilingualModel = '1CrAwc6Rhxrb4EDNEdCZ_cH2Pj7Q-SVkU'
 
     @staticmethod
+    def get_Chinese_ATEPC_trained_model():
+        return download_pretrained_model(task='atepc',
+                                         language='chinese',
+                                         archive_path=ATEPCTrainedModelManager.ChineseModel)
+
+    @staticmethod
     def get_English_ATEPC_trained_model():
         return download_pretrained_model(task='atepc',
                                          language='english',
