@@ -18,7 +18,7 @@ def download_pretrained_model(task='apc', language='chinese', archive_path='', m
     dest_path = os.path.join('.', tmp_dir)
     if not os.path.exists(dest_path):
         os.mkdir(dest_path)
-    if len(os.listdir(dest_path)):
+    if len(os.listdir(dest_path)) > 1:
         return dest_path
     save_path = os.path.join(dest_path, '{}.zip'.format(model_name))
     try:
@@ -32,7 +32,7 @@ def download_pretrained_model(task='apc', language='chinese', archive_path='', m
     return dest_path
 
 
-class APCTrainedModelManger:
+class APCTrainedModelManager:
     ChineseModel = '1dPvXgQIQn3c2VkWjW3iE4o_A7oWfjnWv'
     EnglishModel = '1QyRM3RrnCjz293G3pol9jJM8CShAZuof'
     MultilingualModel = '1K4tCPDmvuULAmGoerIHJApWnoCAJi1p-'
@@ -41,19 +41,19 @@ class APCTrainedModelManger:
     def get_Chinese_APC_trained_model():
         return download_pretrained_model(task='apc',
                                          language='chinese',
-                                         archive_path=APCTrainedModelManger.ChineseModel)
+                                         archive_path=APCTrainedModelManager.ChineseModel)
 
     @staticmethod
     def get_English_APC_trained_model():
         return download_pretrained_model(task='apc',
                                          language='english',
-                                         archive_path=APCTrainedModelManger.EnglishModel)
+                                         archive_path=APCTrainedModelManager.EnglishModel)
 
     @staticmethod
     def get_Multilingual_APC_trained_model():
         return download_pretrained_model(task='apc',
                                          language='multilingual',
-                                         archive_path=APCTrainedModelManger.MultilingualModel)
+                                         archive_path=APCTrainedModelManager.MultilingualModel)
 
 
 class ATEPCTrainedModelManager:
