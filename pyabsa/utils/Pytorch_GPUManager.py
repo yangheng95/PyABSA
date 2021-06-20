@@ -150,4 +150,4 @@ if check_gpus():
             index = chosen_gpu['index']
             # print('Using GPU {i}:\n{info}'.format(i=index, info='\n'.join(
             #     [str(k) + ':' + str(v) for k, v in chosen_gpu.items()])))
-            return int(index)
+            return chosen_gpu['gpu_name'], int(index)

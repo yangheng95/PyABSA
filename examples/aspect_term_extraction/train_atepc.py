@@ -11,49 +11,24 @@
 ########################################################################################################################
 
 
-from pyabsa import train_atepc, get_atepc_param_dict_english
-
+from pyabsa import train_atepc, atepc_config_handler
 from pyabsa import ABSADatasets
+from pyabsa.models import ATEPCModelList
 
 
 save_path = 'state_dict'
-laptop14 = ABSADatasets.laptop14
-atepc_param_dict_english = get_atepc_param_dict_english()
-atepc_param_dict_english['model_name'] = 'bert_base'
-# atepc_param_dict_english['model_name'] = 'lcf_atepc'
+laptop14 = ABSADatasets.Laptop14
+atepc_param_dict_english = atepc_config_handler.get_atepc_param_dict_english()
+atepc_param_dict_english['num_epoch'] = 1
+atepc_param_dict_english['evaluate_begin'] = 0
+atepc_param_dict_english['lot_step'] = 100
+atepc_param_dict_english['model'] = ATEPCModelList.LCF_ATEPC
 aspect_extractor = train_atepc(parameter_dict=atepc_param_dict_english,      # set param_dict=None to use default model
-                               dataset_path=laptop14,    # file or dir, dataset(s) will be automatically detected
+                               dataset_path=laptop14,          # file or dir, dataset(s) will be automatically detected
                                model_path_to_save=save_path,   # set model_path_to_save=None to avoid save model
                                auto_evaluate=True,             # evaluate model while training_tutorials if test set is available
                                auto_device=True                # Auto choose CUDA or CPU
                                )
 
-# you can construct param_dict by your welling
-# param_dict = {'model_name': 'lcf_atepc',
-#               'batch_size': 16,
-#               'seed': {996},
-#               'num_epoch': 6,
-#               'optimizer': "adam",    # {adam, adamw}
-#               'learning_rate': 0.00003,
-#               'pretrained_bert_name': "bert-base-uncased",
-#               'use_dual_bert': False,  # modeling the local and global context using different BERTs
-#               'use_bert_spc': False,   # enable to enhance APC, not available for ATE or joint module of APC and ATE
-#               'max_seq_len': 80,
-#               'log_step': 5,           # evaluate per steps
-#               'SRD': 3,                # distance threshold to calculate local context
-#               'use_syntax_based_SRD': True,   # force to use syntax-based semantic-relative distance in all lcf-based models
-#               'lcf': "cdw",            # {cdw, cdm, fusion}
-#               'dropout': 0,
-#               'l2reg': 0.00001,
-#               'evaluate_begin': 4  # evaluate begin with epoch
-#               # 'polarities_dim': 3      # deprecated, polarity_dim will be automatically detected
-#               }
-# train_set_path = '../atepc_datasets/SemEval/laptop14'
-# aspect_extractor = train_atepc(parameter_dict=param_dict,      # set param_dict=None to use default model
-#                                dataset_path=train_set_path,    # file or dir, dataset(s) will be automatically detected
-#                                model_path_to_save=save_path,   # set model_path_to_save=None to avoid save model
-#                                auto_evaluate=True,             # evaluate model while training_tutorials if test set is available
-#                                auto_device=True                # Auto choose CUDA or CPU
-#                                )
 
 

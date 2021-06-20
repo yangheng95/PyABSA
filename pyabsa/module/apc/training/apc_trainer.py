@@ -20,11 +20,9 @@ from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, AutoModel
 from sklearn import metrics
 
-from pyabsa.module.apc.models.bert_base import BERT_BASE
-from pyabsa.module.apc.models.bert_spc import BERT_SPC
-from pyabsa.module.apc.models.lcf_bert import LCF_BERT
-from pyabsa.module.apc.models.slide_lcf_bert import SLIDE_LCF_BERT
+
 from pyabsa.module.apc.models.lca_bert import LCA_BERT
+
 from pyabsa.module.apc.dataset_utils.data_utils_for_training import ABSADataset
 from pyabsa.module.apc.dataset_utils.apc_utils import Tokenizer4Bert
 
@@ -56,7 +54,7 @@ class Instructor:
                                                pin_memory=True)
 
         # init the model behind the construction of atepc_datasets in case of updating polarities_dim
-        self.model = self.opt.model_class(self.bert, self.opt).to(self.opt.device)
+        self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
 
         if self.opt.device.type == 'cuda':
             logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device.index)))
@@ -267,16 +265,6 @@ def train4apc(opt):
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 
-    model_classes = {
-        'bert_base': BERT_BASE,
-        'bert_spc': BERT_SPC,
-        'lcf_bert': LCF_BERT,
-        'lcfs_bert': LCF_BERT,
-        'slide_lcf_bert': SLIDE_LCF_BERT,
-        'slide_lcfs_bert': SLIDE_LCF_BERT,
-        'lca_bert': LCA_BERT
-    }
-
     optimizers = {
         'adadelta': torch.optim.Adadelta,  # default lr=1.0
         'adagrad': torch.optim.Adagrad,  # default lr=0.01
@@ -288,8 +276,7 @@ def train4apc(opt):
         'adamw': torch.optim.AdamW
     }
 
-    opt.model_class = model_classes[opt.model_name]
-    opt.inputs_cols = ABSADataset.input_colses[opt.model_name]
+    opt.inputs_cols = ABSADataset.input_colses[opt.model]
     opt.optimizer = optimizers[opt.optimizer]
     opt.device = torch.device(opt.device)
 

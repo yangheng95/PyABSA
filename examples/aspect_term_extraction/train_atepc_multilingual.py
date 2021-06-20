@@ -11,31 +11,14 @@
 ########################################################################################################################
 
 
-from pyabsa import train_atepc, get_atepc_param_dict_multilingual
+from pyabsa import train_atepc, atepc_config_handler
 
 from pyabsa import ABSADatasets
 
-param_dict = {'model_name': 'lcf_atepc',
-              'batch_size': 16,
-              'seed': {996, 7, 666},
-              'num_epoch': 6,
-              'optimizer': "adamw",    # {adam, adamw}
-              'learning_rate': 0.00003,
-              'pretrained_bert_name': "bert-base-multilingual-uncased",
-              'use_dual_bert': False,  # modeling the local and global context using different BERTs
-              'use_bert_spc': False,    # enable to enhance APC, not available for ATE or joint module of APC and ATE
-              'max_seq_len': 80,
-              'log_step': 10,          # evaluate per steps
-              'SRD': 3,                # distance threshold to calculate local context
-              'lcf': "cdw",            # {cdw, cdm, fusion}
-              'dropout': 0.1,
-              'l2reg': 0.00001,
-              'evaluate_begin': 5      # evaluate begin with epoch
-              # 'polarities_dim': 3    # deprecated, polarity_dim will be automatically detected
-              }
-# param_dict = get_atepc_param_dict_multilingual()
+param_dict = atepc_config_handler.get_atepc_param_dict_multilingual()
+param_dict['evaluate_begin'] = 5
 save_path = 'state_dict'
-multilingual = ABSADatasets.multilingual
+multilingual = ABSADatasets.Multilingual
 aspect_extractor = train_atepc(parameter_dict=param_dict,      # set param_dict=None to use default model
                                dataset_path=multilingual,    # file or dir, dataset(s) will be automatically detected
                                model_path_to_save=save_path,   # set model_path_to_save=None to avoid save model

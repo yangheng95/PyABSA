@@ -13,7 +13,7 @@ from pyabsa import ABSADatasets
 from pyabsa import APCTrainedModelManager
 
 # Assume the sent_classifier is loaded or obtained using train function
-model_path = APCTrainedModelManager.get_Multilingual_APC_trained_model()
+model_path = APCTrainedModelManager.get_checkpoint(checkpoint_name='Multilingual')
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
                                             auto_device=True  # Use CUDA if available
                                             )
@@ -28,7 +28,7 @@ sent_classifier.infer(chinese_text, print_result=True)
 
 infer_set_path = 'apc_datasets/multilingual'
 
-multilingual = ABSADatasets.multilingual
+multilingual = ABSADatasets.Multilingual
 sent_classifier.batch_infer(target_file=multilingual,
                             print_result=True,
                             save_result=True

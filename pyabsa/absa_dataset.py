@@ -12,49 +12,29 @@ import tempfile
 
 from pyabsa.utils.pyabsa_utils import find_target_file
 
-# deprecated code
-laptop14 = 'laptop14'
-restaurant14 = 'restaurant14'
-restaurant15 = 'restaurant15'
-restaurant16 = 'restaurant16'
-acl_twitter = 'twitter'
-phone = 'phone'
-car = 'car'
-notebook = 'notebook'
-camera = 'camera'
-mams = 'mams'
-multilingual = 'multilingual'
-
-chinese = 'chinese'
-semeval = 'semeval'
-
-apc_datasets = 'apc_datasets'
-atepc_datasets = 'atepc_datasets'
-
-
 class ABSADatasets:
-    laptop14 = 'laptop14'
-    restaurant14 = 'restaurant14'
-    restaurant15 = 'restaurant15'
-    restaurant16 = 'restaurant16'
-    acl_twitter = 'twitter'
-    phone = 'phone'
-    car = 'car'
-    notebook = 'notebook'
-    camera = 'camera'
-    mams = 'mams'
-    multilingual = 'multilingual'
+    Laptop14 = 'Laptop14'
+    Restaurant14 = 'Restaurant14'
+    Restaurant15 = 'Restaurant15'
+    Restaurant16 = 'Restaurant16'
+    ACL_Twitter = 'Twitter'
+    Phone = 'Phone'
+    Car = 'Car'
+    Notebook = 'Notebook'
+    Camera = 'Camera'
+    MAMS = 'MAMS'
+    Multilingual = 'Multilingual'
 
-    chinese = 'chinese'
-    semeval = 'semeval'
+    Chinese = 'Chinese'
+    SemEval = 'SemEval'
 
-    apc_datasets = 'apc_datasets'
-    atepc_datasets = 'atepc_datasets'
+    APC_Datasets = 'APC_Datasets'
+    ATEPC_Datasets = 'ATEPC_Datasets'
 
 
 def detect_dataset(dataset_path, auto_evaluate=True, task='apc_benchmark'):
-    if hasattr(ABSADatasets, dataset_path.lower()) or not os.path.exists(dataset_path):
-        if hasattr(ABSADatasets, dataset_path.lower()):
+    if hasattr(ABSADatasets, dataset_path) or not os.path.exists(dataset_path):
+        if hasattr(ABSADatasets, dataset_path):
             print('{} is the integrated dataset, try to load the dataset '
                   'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
         else:
@@ -98,8 +78,8 @@ def detect_dataset(dataset_path, auto_evaluate=True, task='apc_benchmark'):
 
 def detect_infer_dataset(dataset_path, task='apc_benchmark'):
     dataset_file = []
-    if hasattr(ABSADatasets, dataset_path.lower()) or not os.path.exists(dataset_path):
-        if hasattr(ABSADatasets, dataset_path.lower()):
+    if hasattr(ABSADatasets, dataset_path) or not os.path.exists(dataset_path):
+        if hasattr(ABSADatasets, dataset_path):
             print('{} is the integrated dataset, try to load the dataset '
                   'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
         else:

@@ -7,8 +7,3 @@
 
 
 from pyabsa.research.benchmark.atepc_benchmark.lcf_atepc_benchmark import run_lcf_atepc_cdw, run_lcf_atepc_cdm
-
-
-def run_benchmark_for_atepc_models(param_dict=None):
-    run_lcf_atepc_cdw(param_dict)
-    run_lcf_atepc_cdm(param_dict)

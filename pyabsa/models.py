@@ -4,16 +4,41 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
+
+from termcolor import colored
 import os.path
+import json
 
 from google_drive_downloader import GoogleDriveDownloader as gdd
 
 
+class APCModelList:
+    from pyabsa.module.apc.models import BERT_BASE, BERT_SPC
+
+    from pyabsa.module.apc.models import LCF_BERT, FAST_LCF_BERT, LCF_BERT_LARGE
+
+    from pyabsa.module.apc.models import LCFS_BERT, FAST_LCFS_BERT, LCFS_BERT_LARGE
+
+    from pyabsa.module.apc.models import SLIDE_LCF_BERT, SLIDE_LCFS_BERT
+
+    from pyabsa.module.apc.models import LCA_BERT
+
+
+class ATEPCModelList:
+    from pyabsa.module.atepc.models import BERT_BASE_ATEPC
+
+    from pyabsa.module.atepc.models import LCF_ATEPC, LCF_ATEPC_LARGE, FAST_LCF_ATEPC
+
+    from pyabsa.module.atepc.models import LCFS_ATEPC, LCFS_ATEPC_LARGE, FAST_LCFS_ATEPC
+
+
 def download_pretrained_model(task='apc', language='chinese', archive_path='', model_name='any_model'):
-    print('Please check https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC '
-          'to download more trained models. \n '
-          'The pretrained models are used for build demo, either fine-tuned the hyper-parameters'
-          ' nor trained on enough resources, it is recommended to train the models on your own custom dataset')
+    print('Check https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC '
+          'to download more trained ABSA models. \n' +
+          colored('Notice: The pretrained models are used for testing, '
+                  'neither trained using fine-tuned the hyper-parameters nor trained with enough steps, '
+                  'it is recommended to train the models on your own custom dataset', 'red')
+          )
     tmp_dir = '{}_{}_TRAINED_MODEL'.format(task.upper(), language.upper())
     dest_path = os.path.join('.', tmp_dir)
     if not os.path.exists(dest_path):
@@ -26,70 +51,63 @@ def download_pretrained_model(task='apc', language='chinese', archive_path='', m
                                             dest_path=save_path,
                                             unzip=True)
     except:
-        raise ConnectionError('Download failed, you can download the trained model manually at: {},'.format(
-            'https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC'))
+        raise RuntimeError(
+            'Download failed, you can update PyABSA and download the trained model manually at: {},'.format(
+                'https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC'))
     os.remove(save_path)
     return dest_path
 
 
 class APCTrainedModelManager:
-    ChineseModel = '1dPvXgQIQn3c2VkWjW3iE4o_A7oWfjnWv'
-    EnglishModel = '1QyRM3RrnCjz293G3pol9jJM8CShAZuof'
-    MultilingualModel = '1K4tCPDmvuULAmGoerIHJApWnoCAJi1p-'
+    checkpoint_archive = {
+        'chinese': '1gSrfU-ALC4jbTWzaxe15Pv40iPO8Z1x2',
+        'english': 'please wait upload',
+        'multilingual': '1vOhLBOLQ5kjN99YwBIY9NPXNT1rAALSn',
+    }
 
     @staticmethod
-    def get_Chinese_APC_trained_model():
+    def get_checkpoint(checkpoint_name: str = 'Chinese'):
+        apc_checkpoint = update_checkpoints()['APC']
+        if checkpoint_name.lower() in apc_checkpoint:
+            print(colored('Find latest checkpoint named {} on Google Drive...'.format(checkpoint_name), 'green'))
+        else:
+            raise FileNotFoundError(colored('Checkpoint {} is not found.'.format(checkpoint_name), 'red'))
         return download_pretrained_model(task='apc',
-                                         language='chinese',
-                                         archive_path=APCTrainedModelManager.ChineseModel)
-
-    @staticmethod
-    def get_English_APC_trained_model():
-        return download_pretrained_model(task='apc',
-                                         language='english',
-                                         archive_path=APCTrainedModelManager.EnglishModel)
-
-    @staticmethod
-    def get_Multilingual_APC_trained_model():
-        return download_pretrained_model(task='apc',
-                                         language='multilingual',
-                                         archive_path=APCTrainedModelManager.MultilingualModel)
+                                         language=checkpoint_name.lower(),
+                                         archive_path=apc_checkpoint[checkpoint_name.lower()])
 
 
 class ATEPCTrainedModelManager:
-    ChineseModel = '19VdszKYWTVL4exaSTU5zl3ueP5FNbKeJ'
-    EnglishModel = '14cLWoF-yKV64D0u7Fq_k_fYbJY4hjF4L'
-    MultilingualModel = '1CrAwc6Rhxrb4EDNEdCZ_cH2Pj7Q-SVkU'
+    checkpoint_archive = {
+        'chinese': '1BCIEkPwD6aMIrSs4fglKsqdAqi0Oz2VP',
+        'english': 'please wait upload',
+        'multilingual': 'please wait upload',
+    }
 
     @staticmethod
-    def get_Chinese_ATEPC_trained_model():
+    def get_checkpoint(checkpoint_name: str = 'Chinese'):
+        atepc_checkpoint = update_checkpoints()['ATEPC']
+        if checkpoint_name.lower() in atepc_checkpoint:
+            print('Find latest checkpoint named {}'.format(checkpoint_name))
+        else:
+            raise FileNotFoundError(colored('Checkpoint {} is not found.'.format(checkpoint_name), 'red'))
         return download_pretrained_model(task='atepc',
-                                         language='chinese',
-                                         archive_path=ATEPCTrainedModelManager.ChineseModel)
-
-    @staticmethod
-    def get_English_ATEPC_trained_model():
-        return download_pretrained_model(task='atepc',
-                                         language='english',
-                                         archive_path=ATEPCTrainedModelManager.EnglishModel)
-
-    @staticmethod
-    def get_Multilingual_ATEPC_trained_model():
-        return download_pretrained_model(task='atepc',
-                                         language='multilingual',
-                                         archive_path=ATEPCTrainedModelManager.MultilingualModel)
+                                         language=checkpoint_name.lower(),
+                                         archive_path=atepc_checkpoint[checkpoint_name.lower()])
 
 
-class APCModelList:
-    BERT_BASE = 'bert_base'
-    BERT_SPC = 'bert_spc'
-    LCF_BERT = 'lcf_bert'
-    LCFS_BERT = 'lcfs_bert'
-    SLIDE_LCF_BERT = 'slide_lcf_bert'
-    SLIDE_LCFS_BERT = 'slide_lcfs_bert'
-    LCA_BERT = 'lca_bert'
-
-
-class ATEPCModelList:
-    BERT_BASE = 'bert_base'
-    LCF_ATEPC = 'lcf_atepc'
+def update_checkpoints():
+    try:
+        checkpoint_url = '1jjaAQM6F9s_IEXNpaY-bQF9EOrhq0PBD'
+        if os.path.isfile('./checkpoint_map.json'):
+            os.remove('./checkpoint_map.json')
+        gdd.download_file_from_google_drive(file_id=checkpoint_url,
+                                            dest_path='./checkpoint_map.json')
+        check_map = json.load(open('checkpoint_map.json', 'r'))
+        APCTrainedModelManager.checkpoint_archive = check_map['APC']
+        ATEPCTrainedModelManager.checkpoint_archive = check_map['ATEPC']
+        print(colored('Available checkpoints:', 'green'), check_map)
+        return check_map
+    except ConnectionError as e:
+        print('Failed to update available checkpoints!')
+        return None

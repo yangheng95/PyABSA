@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-# file: lcf_atepc.py
+# file: fast_lcf_atepc.py
+# time: 2021/6/20
 # author: yangheng <yangheng@m.scnu.edu.cn>
-# Copyright (C) 2019. All Rights Reserved.
+# github: https://github.com/yangheng95
+# Copyright (C) 2021. All Rights Reserved.
 
 
 from torch.nn import CrossEntropyLoss
@@ -16,14 +18,13 @@ from pyabsa.module.atepc.dataset_utils.data_utils_for_training import SENTIMENT_
 from pyabsa.network.sa_encoder import Encoder
 
 
-class LCF_ATEPC(BertForTokenClassification):
+class FAST_LCF_ATEPC(BertForTokenClassification):
 
     def __init__(self, bert_base_model, opt):
-        super(LCF_ATEPC, self).__init__(config=bert_base_model.config)
+        super(FAST_LCF_ATEPC, self).__init__(config=bert_base_model.config)
         config = bert_base_model.config
         self.bert4global = bert_base_model
         self.opt = opt
-        self.bert4local = self.bert4global
 
         self.dropout = nn.Dropout(self.opt.dropout)
         self.SA1 = Encoder(config, opt)
@@ -81,31 +82,20 @@ class LCF_ATEPC(BertForTokenClassification):
         ate_logits = self.classifier(global_context_out)
 
         if lcf_cdm_vec is not None or lcf_cdw_vec is not None:
-            local_context_ids = self.get_ids_for_local_context_extractor(input_ids_spc)
-            local_context_out = self.bert4local(local_context_ids)['last_hidden_state']
-            batch_size, max_len, feat_dim = local_context_out.shape
-            local_valid_output = torch.zeros(batch_size, max_len, feat_dim, dtype=torch.float32).to(self.opt.device)
-            for i in range(batch_size):
-                jj = -1
-                for j in range(max_len):
-                    if valid_ids[i][j].item() == 1:
-                        jj += 1
-                        local_valid_output[i][jj] = local_context_out[i][j]
-            local_context_out = self.dropout(local_valid_output)
 
             if 'cdm' in self.opt.lcf:
-                cdm_context_out = torch.mul(local_context_out, lcf_cdm_vec)
+                cdm_context_out = torch.mul(global_context_out, lcf_cdm_vec)
                 cdm_context_out = self.SA1(cdm_context_out)
                 cat_out = torch.cat((global_context_out, cdm_context_out), dim=-1)
                 cat_out = self.linear_double(cat_out)
             elif 'cdw' in self.opt.lcf:
-                cdw_context_out = torch.mul(local_context_out, lcf_cdw_vec)
+                cdw_context_out = torch.mul(global_context_out, lcf_cdw_vec)
                 cdw_context_out = self.SA1(cdw_context_out)
                 cat_out = torch.cat((global_context_out, cdw_context_out), dim=-1)
                 cat_out = self.linear_double(cat_out)
             elif 'fusion' in self.opt.lcf:
-                cdm_context_out = torch.mul(local_context_out, lcf_cdm_vec)
-                cdw_context_out = torch.mul(local_context_out, lcf_cdw_vec)
+                cdm_context_out = torch.mul(global_context_out, lcf_cdm_vec)
+                cdw_context_out = torch.mul(global_context_out, lcf_cdw_vec)
                 cat_out = torch.cat((global_context_out, cdw_context_out, cdm_context_out), dim=-1)
                 cat_out = self.linear_triple(cat_out)
             sa_out = self.SA2(cat_out)

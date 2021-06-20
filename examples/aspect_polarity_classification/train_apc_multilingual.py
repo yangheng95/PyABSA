@@ -10,11 +10,11 @@
 #              your custom dataset should have the continue polarity labels like [0,N-1] for N categories              #
 ########################################################################################################################
 
-from pyabsa import train_apc, get_apc_param_dict_multilingual
+from pyabsa import train_apc, apc_config_handler
 
 
 save_path = 'state_dict'
-apc_param_dict_multilingual = get_apc_param_dict_multilingual()
+apc_param_dict_multilingual = apc_config_handler.get_apc_param_dict_multilingual()
 apc_param_dict_multilingual['model_name'] = 'bert_spc'
 apc_param_dict_multilingual['evaluate_begin'] = 4
 

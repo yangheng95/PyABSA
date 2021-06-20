@@ -7,12 +7,5 @@
 
 from pyabsa.research.benchmark.apc_benchmark import run_slide_lcf_bert_cdw, run_slide_lcf_bert_cdm
 
-from pyabsa.research.benchmark.atepc_benchmark import run_benchmark_for_atepc_models
-
 run_slide_lcf_bert_cdw()
 run_slide_lcf_bert_cdm()
-
-from pyabsa.research.benchmark.apc_benchmark import run_slide_lcfs_bert_cdw, run_slide_lcfs_bert_cdm
-
-run_slide_lcfs_bert_cdw()
-run_slide_lcfs_bert_cdm()

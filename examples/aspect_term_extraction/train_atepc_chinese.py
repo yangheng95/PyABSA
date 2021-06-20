@@ -10,36 +10,22 @@
 ########################################################################################################################
 
 
-from pyabsa import train_atepc
+from pyabsa import train_atepc, atepc_config_handler
 
 from pyabsa import ABSADatasets
 
-# see hyper-parameters in pyabsa/main/training_configs.py
-param_dict = {'model_name': 'bert_base',  # {lcf_atepc, rlcf_atepc}
-              'batch_size': 16,
-              'seed': {996, 7, 666},
-              'device': 'cuda',           # overrides auto_device parameter
-              'num_epoch': 6,
-              'optimizer': "adamw",       # {adam, adamw}
-              'learning_rate': 0.00003,
-              'pretrained_bert_name': "bert-base-chinese",
-              'use_dual_bert': False,     # modeling the local and global context using different BERTs
-              'use_bert_spc': False,      # Enable to enhance APC in lcf_atepc,
-                                          # not available for ATE or joint module of APC and ATE
-              'max_seq_len': 80,
-              'log_step': 30,              # Evaluate per steps
-              'SRD': 3,                   # Distance threshold to calculate local context
-              'lcf': "cdw",               # {cdw, cdm, fusion}
-              'dropout': 0.5,
-              'l2reg': 0.00001,
-              'evaluate_begin': 5  # evaluate begin with epoch
-              # 'polarities_dim': 2      # Deprecated, polarity_dim will be automatically detected
-              }
+from pyabsa.models import ATEPCModelList
+
 
 save_path = 'state_dict'
 
-chinese_sets = ABSADatasets.chinese
-aspect_extractor = train_atepc(parameter_dict=param_dict,     # set param_dict=None to use default model
+chinese_sets = ABSADatasets.Chinese
+atepc_param_dict_chinese = atepc_config_handler.get_atepc_param_dict_chinese()
+atepc_param_dict_chinese['log_step'] = 20
+atepc_param_dict_chinese['model'] = ATEPCModelList.LCF_ATEPC
+atepc_param_dict_chinese['evaluate_begin'] = 5
+
+aspect_extractor = train_atepc(parameter_dict=atepc_param_dict_chinese,     # set param_dict=None to use default model
                                dataset_path=chinese_sets,   # file or dir, dataset(s) will be automatically detected
                                model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
                                auto_evaluate=True,            # evaluate model while training_tutorials if test set is available

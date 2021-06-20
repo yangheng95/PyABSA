@@ -8,5 +8,5 @@
 from pyabsa import convert_apc_set_to_atepc_set
 
 from pyabsa import ABSADatasets
-apc_datasets = ABSADatasets.apc_datasets
+apc_datasets = ABSADatasets.APC_Datasets
 convert_apc_set_to_atepc_set(apc_datasets)

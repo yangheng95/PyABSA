@@ -8,8 +8,9 @@
 
 from pyabsa import load_sentiment_classifier
 
-# Assume the sent_classifier is loaded or obtained using train function
-model_path = 'state_dict/slide_lcfs_bert_cdw'   # please always check update on Google Drive before using
+from pyabsa import APCTrainedModelManager
+
+model_path = APCTrainedModelManager.get_checkpoint('Chinese')
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
                                             auto_device=True,  # Use CUDA if available
                                             )

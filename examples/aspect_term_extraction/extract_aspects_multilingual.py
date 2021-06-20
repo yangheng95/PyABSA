@@ -29,7 +29,7 @@ examples = ['But the staff was so nice to us .',
             ]
 
 # 从Google Drive下载提供的预训练模型
-model_path = ATEPCTrainedModelManager.get_Multilingual_ATEPC_trained_model()
+model_path = ATEPCTrainedModelManager.get_checkpoint(checkpoint_name='Multilingual')
 
 aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
                                          auto_device=True  # False means load model on CPU
