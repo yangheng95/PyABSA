@@ -13,23 +13,3 @@ from pyabsa.research.benchmark.apc_benchmark.lcf_bert_benchmark import run_lcf_b
 from pyabsa.research.benchmark.apc_benchmark.lcfs_bert_benchmark import run_lcfs_bert_cdw, run_lcfs_bert_cdm
 from pyabsa.research.benchmark.apc_benchmark.bert_spc_benchmark import run_bert_spc_cdw, run_bert_spc_cdm
 from pyabsa.research.benchmark.apc_benchmark.bert_base_benchmark import run_bert_base_cdw, run_bert_base_cdm
-
-
-def run_benchmark_for_apc_models(param_dict):
-    run_slide_lcfs_bert_cdw(param_dict)
-    run_slide_lcfs_bert_cdm(param_dict)
-
-    run_slide_lcf_bert_cdw(param_dict)
-    run_slide_lcf_bert_cdm(param_dict)
-
-    run_lcf_bert_cdw(param_dict)
-    run_lcf_bert_cdm(param_dict)
-
-    run_lcfs_bert_cdw(param_dict)
-    run_lcfs_bert_cdm(param_dict)
-
-    run_bert_spc_cdw(param_dict)
-    run_bert_spc_cdm(param_dict)
-
-    run_bert_base_cdw(param_dict)
-    run_bert_base_cdm(param_dict)

@@ -22,7 +22,7 @@ from ..dataset_utils.data_utils_for_inferring import (ATEPCProcessor,
                                                       convert_apc_examples_to_features,
                                                       SENTIMENT_PADDING)
 from ..models.lcf_atepc import LCF_ATEPC
-from ..models.bert_base import BERT_BASE
+from ..models.bert_base_atepc import BERT_BASE_ATEPC
 
 from pyabsa.utils.pyabsa_utils import find_target_file
 
@@ -42,11 +42,6 @@ class AspectExtractor:
             'sgd': torch.optim.SGD,
             'adamw': torch.optim.AdamW
         }
-        model_classes = {
-            'lcf_atepc': LCF_ATEPC,
-            'bert_base': BERT_BASE
-        }
-
         # load from a model path
         if not isinstance(model_arg, str):
             print('Load aspect extractor from training')
@@ -58,14 +53,14 @@ class AspectExtractor:
             try:
                 state_dict_path = find_target_file(model_arg, '.state_dict', find_all=True)
                 model_path = find_target_file(model_arg, '.model', find_all=True)
-                tokenizer_path = find_target_file(model_arg, 'tokenizer', find_all=True)
-                config_path = find_target_file(model_arg, 'config', find_all=True)
+                tokenizer_path = find_target_file(model_arg, '.tokenizer', find_all=True)
+                config_path = find_target_file(model_arg, '.config', find_all=True)
                 self.opt = pickle.load(open(config_path[0], 'rb'))
 
                 if state_dict_path:
                     bert_base_model = BertModel.from_pretrained(self.opt.pretrained_bert_name)
                     bert_base_model.config.num_labels = self.num_labels
-                    self.model = model_classes[self.opt.model_name](bert_base_model, self.opt)
+                    self.model = self.opt.model(bert_base_model, self.opt)
                     self.model.load_state_dict(torch.load(state_dict_path[0]))
                 if model_path:
                     self.model = torch.load(model_path[0])

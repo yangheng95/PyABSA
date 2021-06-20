@@ -19,10 +19,10 @@ from pyabsa.module.apc.training.apc_trainer import train4apc
 from pyabsa.module.atepc.training.atepc_trainer import train4atepc
 from pyabsa.module.atepc.inferring.aspect_extractor import AspectExtractor
 
-from pyabsa.config.atepc_config import atepc_param_dict_base
-from pyabsa.config.apc_config import apc_param_dict_base
+from pyabsa.config.atepc_config import atepc_config_handler
+from pyabsa.config.apc_config import apc_config_handler
 
-choice = get_auto_device()
+gpu_name, choice = get_auto_device()
 
 
 def init_config(config_dict, base_config_dict, auto_device=True):
@@ -37,10 +37,13 @@ def init_config(config_dict, base_config_dict, auto_device=True):
         # reload hyper-parameter from parameter dict
         for key in config_dict:
             base_config_dict[key] = config_dict[key]
-
+    assert base_config_dict['evaluate_begin'] <= base_config_dict['num_epoch']
+    base_config_dict['model_name'] = base_config_dict['model'].__name__.lower()
+    if gpu_name:
+        base_config_dict['device_name'] = gpu_name
     apc_config = Namespace(**base_config_dict)
 
-    if 'lcfs' in apc_config.model_name or apc_config.use_syntax_based_SRD:
+    if apc_config.use_syntax_based_SRD:
         print('-' * 130)
         print('  (Force to) use syntax distance-based semantic-relative distance,'
               ' however Chinese is not supported to parse syntax distance yet!  ')
@@ -60,7 +63,7 @@ def train_apc(parameter_dict=None,
 
     dataset_file = detect_dataset(dataset_path, auto_evaluate, task='apc_benchmark')
 
-    config = init_config(parameter_dict, apc_param_dict_base, auto_device)
+    config = init_config(parameter_dict, apc_config_handler.get_apc_param_dict_base(), auto_device)
     config.dataset_path = dataset_path
     config.model_path_to_save = model_path_to_save
     config.dataset_file = dataset_file
@@ -103,7 +106,7 @@ def train_atepc(parameter_dict=None,
 
     dataset_file = detect_dataset(dataset_path, auto_evaluate, task='atepc_benchmark')
 
-    config = init_config(parameter_dict, atepc_param_dict_base, auto_device)
+    config = init_config(parameter_dict, atepc_config_handler.get_atepc_param_dict_base(), auto_device)
     config.dataset_path = dataset_path
     config.model_path_to_save = model_path_to_save
     config.dataset_file = dataset_file

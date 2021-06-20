@@ -23,7 +23,7 @@ from transformers import AutoModel
 
 from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
 from ..models.lcf_atepc import LCF_ATEPC
-from ..models.bert_base import BERT_BASE
+from ..models.bert_base_atepc import BERT_BASE_ATEPC
 from pyabsa.utils.logger import get_logger
 
 
@@ -114,11 +114,8 @@ class Instructor:
             self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=self.opt.batch_size)
 
         # init the model behind the convert_examples_to_features function in case of updating polarities_dim
-        model_classes = {
-            'lcf_atepc': LCF_ATEPC,
-            'bert_base': BERT_BASE
-        }
-        self.model = model_classes[self.opt.model_name](bert_base_model, opt=self.opt)
+
+        self.model = self.opt.model(bert_base_model, opt=self.opt)
         self.model.to(self.opt.device)
         param_optimizer = list(self.model.named_parameters())
         no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']

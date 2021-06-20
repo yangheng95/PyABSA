@@ -10,11 +10,12 @@ import os
 
 def get_auto_device():
     import torch
+    gpu_name = ''
     choice = -1
     if torch.cuda.is_available():
         from pyabsa.utils.Pytorch_GPUManager import GPUManager
-        choice = GPUManager().auto_choice()
-    return choice
+        gpu_name, choice = GPUManager().auto_choice()
+    return gpu_name, choice
 
 
 def find_target_file(dir_path, file_type, exclude_key='', find_all=False):
@@ -38,7 +39,8 @@ def find_target_file(dir_path, file_type, exclude_key='', find_all=False):
                          and not (exclude_key and exclude_key in p.lower())]
             return os.path.join(dir_path, tmp_files[0]) if tmp_files else []
         else:
-            raise FileNotFoundError('No target(s) file found!')
+            # print('No target(s) file found!')
+            return ''
     else:
         if not dir_path:
             return []
@@ -54,4 +56,5 @@ def find_target_file(dir_path, file_type, exclude_key='', find_all=False):
                 tmp_res += find_target_file(os.path.join(dir_path, file), file_type, exclude_key, find_all)
             return tmp_res
         else:
-            raise FileNotFoundError('No target file (file type:{}) found in {}!'.format(file_type, dir_path))
+            # print('No target file (file type:{}) found in {}!'.format(file_type, dir_path))
+            return []

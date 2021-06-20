@@ -13,10 +13,6 @@ import torch
 from torch.utils.data import DataLoader
 from transformers import BertModel, BertTokenizer
 
-from pyabsa.module.apc.models.bert_base import BERT_BASE
-from pyabsa.module.apc.models.bert_spc import BERT_SPC
-from pyabsa.module.apc.models.lcf_bert import LCF_BERT
-from pyabsa.module.apc.models.slide_lcf_bert import SLIDE_LCF_BERT
 from pyabsa.module.apc.dataset_utils.data_utils_for_inferring import ABSADataset
 from pyabsa.module.apc.dataset_utils.apc_utils import Tokenizer4Bert
 from pyabsa.module.apc.dataset_utils.apc_utils import SENTIMENT_PADDING
@@ -33,14 +29,6 @@ class SentimentClassifier:
         '''
             from_train_model: load inferring_tutorials model from trained model
         '''
-        self.model_class = {
-            'bert_base': BERT_BASE,
-            'bert_spc': BERT_SPC,
-            'lcf_bert': LCF_BERT,
-            'lcfs_bert': LCF_BERT,
-            'slide_lcf_bert': SLIDE_LCF_BERT,
-            'slide_lcfs_bert': SLIDE_LCF_BERT,
-        }
 
         self.initializers = {
             'xavier_uniform_': torch.nn.init.xavier_uniform_,
@@ -58,15 +46,15 @@ class SentimentClassifier:
             # load from a trained model
             try:
                 print('Load sentiment classifier from', model_arg)
-                state_dict_path = find_target_file(model_arg, 'state_dict', find_all=True)
-                model_path = find_target_file(model_arg, 'model', find_all=True)
-                tokenizer_path = find_target_file(model_arg, 'tokenizer', find_all=True)
-                config_path = find_target_file(model_arg, 'config', find_all=True)
+                state_dict_path = find_target_file(model_arg, '.state_dict', find_all=True)
+                model_path = find_target_file(model_arg, '.model', find_all=True)
+                tokenizer_path = find_target_file(model_arg, '.tokenizer', find_all=True)
+                config_path = find_target_file(model_arg, '.config', find_all=True)
                 self.opt = pickle.load(open(config_path[0], 'rb'))
 
                 if state_dict_path:
                     self.bert = BertModel.from_pretrained(self.opt.pretrained_bert_name)
-                    self.model = self.model_class[self.opt.model_name](self.bert, self.opt)
+                    self.model = self.opt.model(self.bert, self.opt)
                     self.model.load_state_dict(torch.load(state_dict_path[0]))
 
                 if model_path:
@@ -101,7 +89,7 @@ class SentimentClassifier:
             torch.backends.cudnn.deterministic = True
             torch.backends.cudnn.benchmark = False
 
-        self.opt.inputs_cols = self.dataset.input_colses[self.opt.model_name]
+        self.opt.inputs_cols = self.dataset.input_colses[self.opt.model]
         self.opt.initializer = self.opt.initializer
 
         self.sentiment_map = None

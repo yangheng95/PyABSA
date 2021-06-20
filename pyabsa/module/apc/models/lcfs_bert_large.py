@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-# file: lcf_bert.py
-# author: yangheng <yangheng@m.scnu.edu.cn>
-# Copyright (C) 2019. All Rights Reserved.
+# @FileName: lcfs_bert_large.py
+# @Time    : 2021/6/20 9:30
+# @Author  : yangheng@m.scnu.edu.cn
+# @github  : https://github.com/yangheng95
+# Copyright (C) 2021. All Rights Reserved.
 
 import copy
 
@@ -11,11 +13,11 @@ from transformers.models.bert.modeling_bert import BertPooler
 from pyabsa.network.sa_encoder import Encoder
 
 
-class LCF_BERT(nn.Module):
+class LCFS_BERT_LARGE(nn.Module):
     def __init__(self, bert, opt):
-        super(LCF_BERT, self).__init__()
+        super(LCFS_BERT_LARGE, self).__init__()
         self.bert4global = bert
-        self.bert4local = self.bert4global
+        self.bert4local = copy.deepcopy(bert)
         self.opt = opt
         self.dropout = nn.Dropout(opt.dropout)
         self.bert_SA = Encoder(bert.config, opt)

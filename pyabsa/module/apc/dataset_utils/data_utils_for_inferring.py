@@ -5,29 +5,42 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-import torch
 from torch.utils.data import Dataset
 from tqdm import tqdm
 from .apc_utils import build_sentiment_window
-from .apc_utils import get_lca_ids_and_cdm_vec, get_cdw_vec
-from .apc_utils import get_syntax_distance, build_spc_mask_vec
+from .apc_utils import build_spc_mask_vec
 from .apc_utils import load_datasets, prepare_input_for_apc
 
 from .apc_utils import SENTIMENT_PADDING
+
+from pyabsa.module.apc.models import BERT_BASE, BERT_SPC
+
+from pyabsa.module.apc.models import LCF_BERT, FAST_LCF_BERT, LCF_BERT_LARGE
+
+from pyabsa.module.apc.models import LCFS_BERT, FAST_LCFS_BERT, LCFS_BERT_LARGE
+
+from pyabsa.module.apc.models import SLIDE_LCF_BERT, SLIDE_LCFS_BERT
+
+from pyabsa.module.apc.models import LCA_BERT
 
 
 class ABSADataset(Dataset):
 
     def __init__(self, tokenizer, opt):
         self.input_colses = {
-            'bert_base': ['text_raw_bert_indices'],
-            'bert_spc': ['text_raw_bert_indices'],
-            'lca_bert': ['text_bert_indices', 'text_raw_bert_indices', 'lca_ids', 'lcf_vec'],
-            'lcf_bert': ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
-            'slide_lcf_bert': ['text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec'],
-            'slide_lcfs_bert': ['text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec'],
-            'lcfs_bert': ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
+            BERT_BASE: ['text_raw_bert_indices'],
+            BERT_SPC: ['text_bert_indices'],
+            LCA_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lca_ids', 'lcf_vec'],
+            LCF_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
+            FAST_LCF_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
+            LCF_BERT_LARGE: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
+            LCFS_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
+            FAST_LCFS_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
+            LCFS_BERT_LARGE: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
+            SLIDE_LCFS_BERT: ['text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec'],
+            SLIDE_LCF_BERT: ['text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec'],
         }
+
         self.tokenizer = tokenizer
         self.opt = opt
         self.all_data = []
@@ -122,21 +135,21 @@ class ABSADataset(Dataset):
 
                     'aspect': aspect,
 
-                    'lca_ids': lca_ids if 'lca_ids' in self.input_colses[self.opt.model_name] else 0,
+                    'lca_ids': lca_ids if 'lca_ids' in self.input_colses[self.opt.model] else 0,
 
-                    'lcf_vec': lcf_vec if 'lcf_vec' in self.input_colses[self.opt.model_name] else 0,
+                    'lcf_vec': lcf_vec if 'lcf_vec' in self.input_colses[self.opt.model] else 0,
 
                     'spc_mask_vec': build_spc_mask_vec(self.opt, text_raw_bert_indices)
-                    if 'spc_mask_vec' in self.input_colses[self.opt.model_name] else 0,
+                    if 'spc_mask_vec' in self.input_colses[self.opt.model] else 0,
 
                     'text_bert_indices': text_bert_indices
-                    if 'text_bert_indices' in self.input_colses[self.opt.model_name] else 0,
+                    if 'text_bert_indices' in self.input_colses[self.opt.model] else 0,
 
                     'aspect_bert_indices': aspect_bert_indices
-                    if 'aspect_bert_indices' in self.input_colses[self.opt.model_name] else 0,
+                    if 'aspect_bert_indices' in self.input_colses[self.opt.model] else 0,
 
                     'text_raw_bert_indices': text_raw_bert_indices
-                    if 'text_raw_bert_indices' in self.input_colses[self.opt.model_name] else 0,
+                    if 'text_raw_bert_indices' in self.input_colses[self.opt.model] else 0,
 
                     'polarity': polarity,
                 }
