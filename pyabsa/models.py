@@ -33,9 +33,7 @@ class ATEPCModelList:
 
 
 def download_pretrained_model(task='apc', language='chinese', archive_path='', model_name='any_model'):
-    print('Check https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC '
-          'to download more trained ABSA models. \n' +
-          colored('Notice: The pretrained models are used for testing, '
+    print(colored('Notice: The pretrained models are used for testing, '
                   'neither trained using fine-tuned the hyper-parameters nor trained with enough steps, '
                   'it is recommended to train the models on your own custom dataset', 'red')
           )
@@ -59,44 +57,33 @@ def download_pretrained_model(task='apc', language='chinese', archive_path='', m
 
 
 class APCTrainedModelManager:
-    checkpoint_archive = {
-        'chinese': '1gSrfU-ALC4jbTWzaxe15Pv40iPO8Z1x2',
-        'english': 'please wait upload',
-        'multilingual': '1vOhLBOLQ5kjN99YwBIY9NPXNT1rAALSn',
-    }
-
     @staticmethod
     def get_checkpoint(checkpoint_name: str = 'Chinese'):
-        apc_checkpoint = update_checkpoints()['APC']
+        apc_checkpoint = update_checkpoints('APC')['APC']
         if checkpoint_name.lower() in apc_checkpoint:
-            print(colored('Find latest checkpoint named {} on Google Drive...'.format(checkpoint_name), 'green'))
+            print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint_name), 'green'))
         else:
-            raise FileNotFoundError(colored('Checkpoint {} is not found.'.format(checkpoint_name), 'red'))
+            raise FileNotFoundError(colored('Checkpoint:{} is not found.'.format(checkpoint_name), 'red'))
         return download_pretrained_model(task='apc',
                                          language=checkpoint_name.lower(),
-                                         archive_path=apc_checkpoint[checkpoint_name.lower()])
+                                         archive_path=apc_checkpoint[checkpoint_name.lower()]['id'])
 
 
 class ATEPCTrainedModelManager:
-    checkpoint_archive = {
-        'chinese': '1BCIEkPwD6aMIrSs4fglKsqdAqi0Oz2VP',
-        'english': 'please wait upload',
-        'multilingual': 'please wait upload',
-    }
 
     @staticmethod
     def get_checkpoint(checkpoint_name: str = 'Chinese'):
-        atepc_checkpoint = update_checkpoints()['ATEPC']
+        atepc_checkpoint = update_checkpoints('ATEPC')['ATEPC']
         if checkpoint_name.lower() in atepc_checkpoint:
-            print('Find latest checkpoint named {}'.format(checkpoint_name))
+            print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint_name), 'green'))
         else:
-            raise FileNotFoundError(colored('Checkpoint {} is not found.'.format(checkpoint_name), 'red'))
+            raise FileNotFoundError(colored('Checkpoint:{} is not found.'.format(checkpoint_name), 'red'))
         return download_pretrained_model(task='atepc',
                                          language=checkpoint_name.lower(),
-                                         archive_path=atepc_checkpoint[checkpoint_name.lower()])
+                                         archive_path=atepc_checkpoint[checkpoint_name.lower()]['id'])
 
 
-def update_checkpoints():
+def update_checkpoints(task=''):
     try:
         checkpoint_url = '1jjaAQM6F9s_IEXNpaY-bQF9EOrhq0PBD'
         if os.path.isfile('./checkpoint_map.json'):
@@ -104,10 +91,30 @@ def update_checkpoints():
         gdd.download_file_from_google_drive(file_id=checkpoint_url,
                                             dest_path='./checkpoint_map.json')
         check_map = json.load(open('checkpoint_map.json', 'r'))
-        APCTrainedModelManager.checkpoint_archive = check_map['APC']
-        ATEPCTrainedModelManager.checkpoint_archive = check_map['ATEPC']
-        print(colored('Available checkpoints:', 'green'), check_map)
+        APC_checkpoint_map = check_map['APC']
+        ATEPC_checkpoint_map = check_map['ATEPC']
+
+        if not (task and 'APC' not in task.upper()):
+            print(colored('Available checkpoints for APC:', 'green'))
+            for i, checkpoint in enumerate(APC_checkpoint_map):
+                print('-' * 100)
+                print("{}. Checkpoint Name: {}\nDescription: {}\nComment: {}".format(
+                    i + 1,
+                    checkpoint,
+                    APC_checkpoint_map[checkpoint]['description'],
+                    APC_checkpoint_map[checkpoint]['comment'],
+                ))
+        if not (task and 'ATEPC' not in task.upper()):
+            print(colored('Available checkpoints for ATEPC:', 'green'))
+            for i, checkpoint in enumerate(ATEPC_checkpoint_map):
+                print('-' * 100)
+                print("{}. Checkpoint Name: {}\nDescription: {}\nComment: {}".format(
+                    i + 1,
+                    checkpoint,
+                    ATEPC_checkpoint_map[checkpoint]['description'],
+                    ATEPC_checkpoint_map[checkpoint]['comment'],
+                ))
         return check_map
     except ConnectionError as e:
-        print('Failed to update available checkpoints!')
+        print('Failed to update available checkpoints! Please contact author to solve this problem.')
         return None

@@ -1,6 +1,6 @@
 # APC model leaderboard
 Average accuracy running with 1, 2, 3 random seed. Due to the limitation of computational resources, 
-I will be glad if you help us finish the leaderboard, for the sake of providing reference of reproduction.
+we will be glad if you help us finish the leaderboard, for the sake of providing reference of reproduction.
 The performance reports of other models are welcome.
 
 |      Models          | Laptop14 (acc) |  Rest14 (acc) | Rest15 (acc) | Rest16 (acc) |

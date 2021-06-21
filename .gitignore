@@ -2,6 +2,9 @@
 state_dict/
 datasets/
 *.results
+*.tokenizer
+*.model
+*.config
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

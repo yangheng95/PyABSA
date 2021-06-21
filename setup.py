@@ -23,6 +23,6 @@ setup(
     exclude_package_date={'': ['.gitignore']},
     # Choose your license
     license='MIT',
-    install_requires=['transformers>=4.4.2', 'spacy', 'networkx', 'seqeval', 'update_checker',
+    install_requires=['transformers>4.5', 'spacy', 'networkx', 'seqeval', 'update_checker',
                       'tqdm', 'termcolor', 'gitpython', 'googledrivedownloader', 'torch'],
 )

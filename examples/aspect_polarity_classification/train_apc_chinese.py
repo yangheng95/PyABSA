@@ -24,7 +24,7 @@ param_dict['l2reg'] = 0.00001
 save_path = 'state_dict'
 chinese_sets = ABSADatasets.Chinese
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
-                            dataset_path=chinese_sets,    # train set and test set will be automatically detected
+                            dataset_path=chinese_sets,     # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
                             auto_evaluate=True,            # evaluate model while training_tutorials if test set is available
                             auto_device=True               # automatic choose CUDA or CPU
