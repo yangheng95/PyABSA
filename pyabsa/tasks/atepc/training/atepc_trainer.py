@@ -36,10 +36,10 @@ class Instructor:
         else:
             log_name = '{}_{}_srd{}_{}'.format(self.opt.model_name, self.opt.lcf, self.opt.SRD, self.opt.dataset_path)
         self.logger = get_logger(os.getcwd(), log_name=log_name, log_type='training_tutorials')
-        # if config.use_bert_spc:
-        #     self.logger.info('Warning, the use_bert_spc parameter is disabled in '
-        #                      'extracting aspect and predicting sentiment, reset use_bert_spc=False and go on... ')
-        #     config.use_bert_spc = False
+        if config.use_bert_spc:
+            self.logger.info('Warning, the use_bert_spc parameter is disabled in '
+                             'extracting aspect and predicting sentiment, reset use_bert_spc=False and go on... ')
+            config.use_bert_spc = False
         import warnings
         warnings.filterwarnings('ignore')
         if self.opt.gradient_accumulation_steps < 1:

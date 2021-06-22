@@ -5,7 +5,6 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-import math
 from pyabsa import __version__
 
 from termcolor import colored
@@ -69,7 +68,7 @@ class APCTrainedModelManager:
         apc_checkpoint = update_checkpoints('APC')['APC']
         if checkpoint_name.lower() in apc_checkpoint:
             min_ver, _, max_ver = apc_checkpoint[checkpoint_name.lower()]['version'].partition('-')
-            max_ver = max_ver if max_ver else math.inf
+            max_ver = max_ver if max_ver else 'N.A.'
             if min_ver <= __version__ <= max_ver:
                 print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint_name), 'green'))
             else:
@@ -90,7 +89,7 @@ class ATEPCTrainedModelManager:
         atepc_checkpoint = update_checkpoints('ATEPC')['ATEPC']
         if checkpoint_name.lower() in atepc_checkpoint:
             min_ver, _, max_ver = atepc_checkpoint[checkpoint_name.lower()]['version'].partition('-')
-            max_ver = max_ver if max_ver else math.inf
+            max_ver = max_ver if max_ver else 'N.A.'
             if min_ver <= __version__ <= max_ver:
                 print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint_name), 'green'))
             else:
