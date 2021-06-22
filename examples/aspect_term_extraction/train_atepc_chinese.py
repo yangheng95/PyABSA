@@ -14,7 +14,7 @@ from pyabsa import train_atepc, atepc_config_handler
 
 from pyabsa import ABSADatasets
 
-from pyabsa.models import ATEPCModelList
+from pyabsa.model_utils import ATEPCModelList
 
 
 save_path = 'state_dict'

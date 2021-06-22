@@ -14,7 +14,7 @@ from pyabsa import train_apc, apc_config_handler
 
 from pyabsa import ABSADatasets
 
-from pyabsa.models import APCModelList
+from pyabsa.model_utils import APCModelList
 
 save_path = 'state_dict'
 apc_param_dict_english = apc_config_handler.get_apc_param_dict_english()

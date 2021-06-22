@@ -11,7 +11,7 @@
 ########################################################################################################################
 from pyabsa import train_apc, apc_config_handler
 
-from pyabsa.models import APCModelList
+from pyabsa.model_utils import APCModelList
 from pyabsa import ABSADatasets
 
 save_path = 'state_dict'
@@ -21,7 +21,8 @@ apc_param_dict_english['evaluate_begin'] = 2
 apc_param_dict_english['similarity_threshold'] = 1
 apc_param_dict_english['max_seq_len'] = 80
 apc_param_dict_english['dropout'] = 0
-apc_param_dict_english['log_step'] = 5
+apc_param_dict_english['log_step'] = 50
+apc_param_dict_english['num_epoch'] = 3
 apc_param_dict_english['l2reg'] = 0.00001
 apc_param_dict_english['dynamic_truncate'] = True
 apc_param_dict_english['srd_alignment'] = True

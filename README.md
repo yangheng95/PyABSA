@@ -27,7 +27,10 @@ Please feel free to give me your interesting thoughts,
 to help me build an easy-to-use toolkit to reduce the cost of building models and reproduction in ABSA tasks.
 
 # Notice
-
+The LCF is a simple and adoptive mechanism proposed for ABSA. 
+Many models based on LCF has been proposed and achieved SOTA performance. 
+Developing your models based on LCF will significantly improve your ABSA models.
+If you are looking for the original theory of LCF, please redirect to 
 If you are looking for the original codes of the LCF-related papers, please redirect to [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/master)
 or [LCF-ATEPC](https://github.com/yangheng95/LCF-ATEPC).
 
@@ -41,32 +44,35 @@ To use PyABSA, install the latest version from pip or source code:
 pip install -U pyabsa
 ```
 
-Then try our [tutorials](examples) and have fun!
+Then try our [tutorials](examples) and have fun! 
 
 # Model Support
 
+Except for the following models, we provide a template model involving LCF vec, 
+you can develop your model based on the template.
+
 ## ATEPC
-1. [LCF-ATEPC](pyabsa/module/atepc/models/lcf_atepc.py) 
-2. [LCF-ATEPC-LARGE](pyabsa/module/atepc/models/lcf_atepc_large.py) 
-2. [FAST-LCF-ATEPC](pyabsa/module/atepc/models/fast_lcf_atepc.py) 
-3. [LCFS-ATEPC](pyabsa/module/atepc/models/lcfs_atepc.py) 
-4. [LCFS-ATEPC-LARGE](pyabsa/module/atepc/models/lcfs_atepc_large.py) 
-5. [FAST-LCFS-ATEPC](pyabsa/module/atepc/models/fast_lcfs_atepc.py) 
-6. [BERT-BASE](pyabsa/module/atepc/models/bert_base_atepc.py) 
+1. [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_atepc.py) 
+2. [LCF-ATEPC-LARGE](pyabsa/tasks/atepc/models/lcf_atepc_large.py) 
+2. [FAST-LCF-ATEPC](pyabsa/tasks/atepc/models/fast_lcf_atepc.py) 
+3. [LCFS-ATEPC](pyabsa/tasks/atepc/models/lcfs_atepc.py) 
+4. [LCFS-ATEPC-LARGE](pyabsa/tasks/atepc/models/lcfs_atepc_large.py) 
+5. [FAST-LCFS-ATEPC](pyabsa/tasks/atepc/models/fast_lcfs_atepc.py) 
+6. [BERT-BASE](pyabsa/tasks/atepc/models/bert_base_atepc.py) 
 
 ## APC
 
-1. [SLIDE-LCF-BERT *](pyabsa/module/apc/models/slide_lcf_bert.py) (Faster & Performs Better than LCF/LCFS-BERT)
-2. [SLIDE-LCFS-BERT *](pyabsa/module/apc/models/slide_lcfs_bert.py) (Faster & Performs Better than LCF/LCFS-BERT)
-3. [LCF-BERT](pyabsa/module/apc/models/lcf_bert.py) (Reimplemented & Enhanced)
-4. [LCFS-BERT](pyabsa/module/apc/models/lcfs_bert.py) (Reimplemented & Enhanced)
-5. [FAST-LCF-BERT](pyabsa/module/apc/models/fast_lcf_bert.py) (Faster with slightly performance loss)
-6. [FAST_LCFS-BERT](pyabsa/module/apc/models/fast_lcfs_bert.py) (Faster with slightly performance loss)
-7. [LCF-BERT-LARGE](pyabsa/module/apc/models/lcf_bert_large.py) (Dual BERT)
-8. [LCFS-BERT-LARGE](pyabsa/module/apc/models/lcf_bert_large.py) (Dual BERT)
-9. [BERT-BASE](pyabsa/module/apc/models/bert_base.py)
-10. [BERT-SPC](pyabsa/module/apc/models/bert_spc.py)
-11. [LCA-Net](pyabsa/module/apc/models/lca_bert.py)
+1. [SLIDE-LCF-BERT *](pyabsa/tasks/apc/models/slide_lcf_bert.py) (Faster & Performs Better than LCF/LCFS-BERT)
+2. [SLIDE-LCFS-BERT *](pyabsa/tasks/apc/models/slide_lcfs_bert.py) (Faster & Performs Better than LCF/LCFS-BERT)
+3. [LCF-BERT](pyabsa/tasks/apc/models/lcf_bert.py) (Reimplemented & Enhanced)
+4. [LCFS-BERT](pyabsa/tasks/apc/models/lcfs_bert.py) (Reimplemented & Enhanced)
+5. [FAST-LCF-BERT](pyabsa/tasks/apc/models/fast_lcf_bert.py) (Faster with slightly performance loss)
+6. [FAST_LCFS-BERT](pyabsa/tasks/apc/models/fast_lcfs_bert.py) (Faster with slightly performance loss)
+7. [LCF-BERT-LARGE](pyabsa/tasks/apc/models/lcf_bert_large.py) (Dual BERT)
+8. [LCFS-BERT-LARGE](pyabsa/tasks/apc/models/lcf_bert_large.py) (Dual BERT)
+9. [BERT-BASE](pyabsa/tasks/apc/models/bert_base.py)
+10. [BERT-SPC](pyabsa/tasks/apc/models/bert_spc.py)
+11. [LCA-Net](pyabsa/tasks/apc/models/lca_bert.py)
 
 * Copyrights Reserved, please wait for the publishing of our paper to get the introduction of them in detail. 
 
@@ -80,7 +86,7 @@ Then try our [tutorials](examples) and have fun!
 | SLIDE-LCF-BERT (CDM) |    -           |        -      |   -          |    -         |
 
 The optimal performance result among three random seeds. Note that with the update of this repo, 
-the results could be updated. We are working on the construct of
+the results could be updated. We are working on the construction of
 **[leaderboard](examples/aspect_polarity_classification/leaderboard.md)**, 
 you can help us by reporting performance of other models.
 
@@ -211,7 +217,7 @@ apc_param_dict_english['l2reg'] = 0.0001
 apc_param_dict_english['dynamic_truncate'] = True
 apc_param_dict_english['srd_alignment'] = True
 ```
-check [parameter introduction](examples/param_dict_introduction.py) and learn how to set them
+check [parameter introduction](examples/common_usages/param_dict_introduction.py) and learn how to set them
 
 ### 4. Configure runtime setting and running training
 ```

@@ -8,7 +8,7 @@
 from pyabsa import train_apc, apc_config_handler
 
 from pyabsa import ABSADatasets
-from pyabsa.models import APCModelList
+from pyabsa.model_utils import APCModelList
 
 import copy
 
