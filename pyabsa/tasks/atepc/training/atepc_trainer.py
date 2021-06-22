@@ -22,8 +22,6 @@ from transformers import AutoTokenizer
 from transformers import AutoModel
 
 from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
-from ..models.lcf_atepc import LCF_ATEPC
-from ..models.bert_base_atepc import BERT_BASE_ATEPC
 from pyabsa.utils.logger import get_logger
 
 
@@ -31,16 +29,17 @@ class Instructor:
 
     def __init__(self, config):
         self.opt = config
+        self.logger = config.logger
 
         if os.path.exists(self.opt.dataset_path):
             log_name = '{}_{}_srd{}_unknown'.format(self.opt.model_name, self.opt.lcf, self.opt.SRD)
         else:
             log_name = '{}_{}_srd{}_{}'.format(self.opt.model_name, self.opt.lcf, self.opt.SRD, self.opt.dataset_path)
         self.logger = get_logger(os.getcwd(), log_name=log_name, log_type='training_tutorials')
-        if config.use_bert_spc:
-            self.logger.info('Warning, the use_bert_spc parameter is disabled in '
-                             'extracting aspect and predicting sentiment, reset use_bert_spc=False and go on... ')
-            config.use_bert_spc = False
+        # if config.use_bert_spc:
+        #     self.logger.info('Warning, the use_bert_spc parameter is disabled in '
+        #                      'extracting aspect and predicting sentiment, reset use_bert_spc=False and go on... ')
+        #     config.use_bert_spc = False
         import warnings
         warnings.filterwarnings('ignore')
         if self.opt.gradient_accumulation_steps < 1:
@@ -293,6 +292,8 @@ class Instructor:
                     test_apc_logits_all = torch.cat((test_apc_logits_all, apc_logits), dim=0)
 
             if eval_ATE:
+                if not self.opt.use_bert_spc:
+                    label_ids = self.model.get_batch_token_labels_bert_base_indices(label_ids)
                 ate_logits = torch.argmax(F.log_softmax(ate_logits, dim=2), dim=2)
                 ate_logits = ate_logits.detach().cpu().numpy()
                 label_ids = label_ids.to('cpu').numpy()
@@ -329,7 +330,7 @@ class Instructor:
     def _save_model(self, args_to_save, model_to_save, save_path, mode=0):
         # Save a trained model, configuration and tokenizer
         model_to_save = model_to_save.module if hasattr(model_to_save,
-                                                        'module') else model_to_save  # Only save the model it-self
+                                                        'tasks') else model_to_save  # Only save the model it-self
 
         if mode == 0:
             if not os.path.exists(save_path):

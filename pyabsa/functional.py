@@ -11,16 +11,18 @@ from argparse import Namespace
 
 from pyabsa.utils.pyabsa_utils import get_auto_device
 
-from pyabsa.absa_dataset import detect_dataset
+from pyabsa.dataset_utils import detect_dataset
 
-from pyabsa.module.apc.inferring.sentiment_classifier import SentimentClassifier
-from pyabsa.module.apc.training.apc_trainer import train4apc
+from pyabsa.tasks.apc.prediction.sentiment_classifier import SentimentClassifier
+from pyabsa.tasks.apc.training.apc_trainer import train4apc
 
-from pyabsa.module.atepc.training.atepc_trainer import train4atepc
-from pyabsa.module.atepc.inferring.aspect_extractor import AspectExtractor
+from pyabsa.tasks.atepc.training.atepc_trainer import train4atepc
+from pyabsa.tasks.atepc.prediction.aspect_extractor import AspectExtractor
 
 from pyabsa.config.atepc_config import atepc_config_handler
 from pyabsa.config.apc_config import apc_config_handler
+
+from pyabsa.utils.logger import get_logger
 
 gpu_name, choice = get_auto_device()
 
@@ -73,6 +75,13 @@ def train_apc(parameter_dict=None,
     if isinstance(config.seed, int):
         config.seed = [config.seed]
 
+    if os.path.exists(config.dataset_path):
+        log_name = '{}_{}_srd{}__unknown'.format(config.model_name, config.lcf, config.SRD)
+    else:
+        log_name = '{}_{}_srd{}_{}'.format(config.model_name, config.lcf, config.SRD, config.dataset_path)
+
+    logger = get_logger(os.getcwd(), log_name=log_name, log_type='training')
+    config.logger = logger
     for _, s in enumerate(config.seed):
         t_config = copy.deepcopy(config)
         t_config.seed = s
@@ -81,6 +90,8 @@ def train_apc(parameter_dict=None,
         else:
             # always return the last trained model if dont save trained models
             sent_classifier = SentimentClassifier(model_arg=train4apc(t_config))
+    while logger.handlers:
+        logger.removeHandler(logger.handlers[0])
     if model_path_to_save:
         return SentimentClassifier(model_arg=max(model_path))
     else:
@@ -115,13 +126,19 @@ def train_atepc(parameter_dict=None,
     if isinstance(config.seed, int):
         config.seed = [config.seed]
 
+    if os.path.exists(config.dataset_path):
+        log_name = '{}_{}_srd{}__unknown'.format(config.model_name, config.lcf, config.SRD)
+    else:
+        log_name = '{}_{}_srd{}_{}'.format(config.model_name, config.lcf, config.SRD, config.dataset_path)
+    logger = get_logger(os.getcwd(), log_name=log_name, log_type='training')
+    config.logger = logger
     # always save all trained models in case of obtaining best performance
-    # in different metrics among ATE and APC module.
+    # in different metrics among ATE and APC tasks.
     for _, s in enumerate(config.seed):
         t_config = copy.deepcopy(config)
         t_config.seed = s
         model_path.append(train4atepc(t_config))
-
+    logger.disabled = True
     return AspectExtractor(max(model_path))
 
 

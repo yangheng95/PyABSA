@@ -13,13 +13,13 @@ import torch
 from torch.utils.data import DataLoader
 from transformers import BertModel, BertTokenizer
 
-from pyabsa.module.apc.dataset_utils.data_utils_for_inferring import ABSADataset
-from pyabsa.module.apc.dataset_utils.apc_utils import Tokenizer4Bert
-from pyabsa.module.apc.dataset_utils.apc_utils import SENTIMENT_PADDING
+from pyabsa.tasks.apc.dataset_utils.data_utils_for_inferring import ABSADataset
+from pyabsa.tasks.apc.dataset_utils.apc_utils import Tokenizer4Bert
+from pyabsa.tasks.apc.dataset_utils.apc_utils import SENTIMENT_PADDING
 
 from pyabsa.utils.pyabsa_utils import find_target_file
 
-from pyabsa.absa_dataset import detect_infer_dataset
+from pyabsa.dataset_utils import detect_infer_dataset
 
 from termcolor import colored
 

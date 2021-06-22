@@ -5,7 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa.module.apc.models import BERT_SPC
+from pyabsa.tasks.apc.models import BERT_SPC
 
 import copy
 

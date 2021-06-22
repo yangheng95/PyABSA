@@ -7,7 +7,7 @@
 
 import tqdm
 
-from pyabsa.module.apc.dataset_utils.apc_utils import prepare_input_for_atepc
+from pyabsa.tasks.atepc.dataset_utils.atepc_utils import prepare_input_for_atepc
 
 SENTIMENT_PADDING = -999
 

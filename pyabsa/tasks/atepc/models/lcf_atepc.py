@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-# @FileName: lcf_atepc_large.py
-# @Time    : 2021/6/20 10:07
-# @Author  : yangheng@m.scnu.edu.cn
-# @github  : https://github.com/yangheng95
-# Copyright (C) 2021. All Rights Reserved.
+# file: lcf_atepc.py
+# author: yangheng <yangheng@m.scnu.edu.cn>
+# Copyright (C) 2019. All Rights Reserved.
+
 
 from torch.nn import CrossEntropyLoss
 import torch
@@ -13,18 +12,18 @@ import numpy as np
 
 from transformers.models.bert.modeling_bert import BertForTokenClassification, BertPooler
 
-from pyabsa.module.atepc.dataset_utils.data_utils_for_training import SENTIMENT_PADDING
+from pyabsa.tasks.atepc.dataset_utils.data_utils_for_training import SENTIMENT_PADDING
 from pyabsa.network.sa_encoder import Encoder
 
 
-class LCFS_ATEPC_LARGE(BertForTokenClassification):
+class LCF_ATEPC(BertForTokenClassification):
 
     def __init__(self, bert_base_model, opt):
-        super(LCFS_ATEPC_LARGE, self).__init__(config=bert_base_model.config)
+        super(LCF_ATEPC, self).__init__(config=bert_base_model.config)
         config = bert_base_model.config
         self.bert4global = bert_base_model
         self.opt = opt
-        self.bert4local = copy.deepcopy(self.bert4global)
+        self.bert4local = self.bert4global
 
         self.dropout = nn.Dropout(self.opt.dropout)
         self.SA1 = Encoder(config, opt)

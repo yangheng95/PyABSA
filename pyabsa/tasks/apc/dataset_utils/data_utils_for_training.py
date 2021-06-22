@@ -11,15 +11,17 @@ from .apc_utils import build_sentiment_window
 from .apc_utils import build_spc_mask_vec
 from .apc_utils import load_datasets, prepare_input_for_apc
 
-from pyabsa.module.apc.models import BERT_BASE, BERT_SPC
+from pyabsa.tasks.apc.models import BERT_BASE, BERT_SPC
 
-from pyabsa.module.apc.models import LCF_BERT, FAST_LCF_BERT, LCF_BERT_LARGE
+from pyabsa.tasks.apc.models import LCF_BERT, FAST_LCF_BERT, LCF_BERT_LARGE
 
-from pyabsa.module.apc.models import LCFS_BERT, FAST_LCFS_BERT, LCFS_BERT_LARGE
+from pyabsa.tasks.apc.models import LCFS_BERT, FAST_LCFS_BERT, LCFS_BERT_LARGE
 
-from pyabsa.module.apc.models import SLIDE_LCF_BERT, SLIDE_LCFS_BERT
+from pyabsa.tasks.apc.models import SLIDE_LCF_BERT, SLIDE_LCFS_BERT
 
-from pyabsa.module.apc.models import LCA_BERT
+from pyabsa.tasks.apc.models import LCA_BERT
+
+from pyabsa.tasks.apc.models import LCF_TEMPLATE_BERT
 
 
 class ABSADataset(Dataset):
@@ -35,6 +37,7 @@ class ABSADataset(Dataset):
         LCFS_BERT_LARGE: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
         SLIDE_LCFS_BERT: ['text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec'],
         SLIDE_LCF_BERT: ['text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec'],
+        LCF_TEMPLATE_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
     }
 
     def __init__(self, fname, tokenizer, opt):

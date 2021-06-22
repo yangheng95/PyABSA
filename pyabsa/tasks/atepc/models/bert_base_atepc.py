@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# file: fast_lcf_atepc.py
-# time: 2021/6/20
+# file: bert_base.py
+# time: 2021/6/10 0010
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
@@ -14,17 +14,21 @@ import numpy as np
 
 from transformers.models.bert.modeling_bert import BertForTokenClassification, BertPooler
 
-from pyabsa.module.atepc.dataset_utils.data_utils_for_training import SENTIMENT_PADDING
+from pyabsa.tasks.atepc.dataset_utils.data_utils_for_training import SENTIMENT_PADDING
 from pyabsa.network.sa_encoder import Encoder
 
 
-class FAST_LCF_ATEPC(BertForTokenClassification):
+class BERT_BASE_ATEPC(BertForTokenClassification):
 
     def __init__(self, bert_base_model, opt):
-        super(FAST_LCF_ATEPC, self).__init__(config=bert_base_model.config)
+        super(BERT_BASE_ATEPC, self).__init__(config=bert_base_model.config)
         config = bert_base_model.config
         self.bert4global = bert_base_model
         self.opt = opt
+        if self.opt.use_dual_bert:
+            self.bert4local = copy.deepcopy(self.bert4global)
+        else:
+            self.bert4local = self.bert4global
 
         self.dropout = nn.Dropout(self.opt.dropout)
         self.SA1 = Encoder(config, opt)
@@ -63,6 +67,7 @@ class FAST_LCF_ATEPC(BertForTokenClassification):
                 lcf_cdm_vec=None,
                 lcf_cdw_vec=None
                 ):
+
         if not self.opt.use_bert_spc:
             input_ids = self.get_ids_for_local_context_extractor(input_ids_spc)
             labels = self.get_batch_token_labels_bert_base_indices(labels)
@@ -81,29 +86,10 @@ class FAST_LCF_ATEPC(BertForTokenClassification):
         global_context_out = self.dropout(global_valid_output)
         ate_logits = self.classifier(global_context_out)
 
-        if lcf_cdm_vec is not None or lcf_cdw_vec is not None:
-
-            if 'cdm' in self.opt.lcf:
-                cdm_context_out = torch.mul(global_context_out, lcf_cdm_vec)
-                cdm_context_out = self.SA1(cdm_context_out)
-                cat_out = torch.cat((global_context_out, cdm_context_out), dim=-1)
-                cat_out = self.linear_double(cat_out)
-            elif 'cdw' in self.opt.lcf:
-                cdw_context_out = torch.mul(global_context_out, lcf_cdw_vec)
-                cdw_context_out = self.SA1(cdw_context_out)
-                cat_out = torch.cat((global_context_out, cdw_context_out), dim=-1)
-                cat_out = self.linear_double(cat_out)
-            elif 'fusion' in self.opt.lcf:
-                cdm_context_out = torch.mul(global_context_out, lcf_cdm_vec)
-                cdw_context_out = torch.mul(global_context_out, lcf_cdw_vec)
-                cat_out = torch.cat((global_context_out, cdw_context_out, cdm_context_out), dim=-1)
-                cat_out = self.linear_triple(cat_out)
-            sa_out = self.SA2(cat_out)
-            pooled_out = self.pooler(sa_out)
-            pooled_out = self.dropout(pooled_out)
-            apc_logits = self.dense(pooled_out)
-        else:
-            apc_logits = None
+        local_context_out = self.bert4local(input_ids)['last_hidden_state']
+        pooled_out = self.pooler(local_context_out)
+        pooled_out = self.dropout(pooled_out)
+        apc_logits = self.dense(pooled_out)
 
         if labels is not None:
             criterion_ate = CrossEntropyLoss(ignore_index=0)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: absa_dataset.py
+# file: dataset_utils.py
 # time: 2021/6/8 0008
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
@@ -124,4 +124,4 @@ def download_datasets_from_github(save_path='./'):
     try:
         shutil.rmtree(t)
     except:
-        print('fail to remove the temp file {}'.format(t))
+        print('Fail to remove the temp file {}'.format(t))

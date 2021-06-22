@@ -14,7 +14,7 @@ import numpy as np
 
 from transformers.models.bert.modeling_bert import BertForTokenClassification, BertPooler
 
-from pyabsa.module.atepc.dataset_utils.data_utils_for_training import SENTIMENT_PADDING
+from pyabsa.tasks.atepc.dataset_utils.data_utils_for_training import SENTIMENT_PADDING
 from pyabsa.network.sa_encoder import Encoder
 
 

@@ -21,10 +21,10 @@ from transformers import AutoTokenizer, AutoModel
 from sklearn import metrics
 
 
-from pyabsa.module.apc.models.lca_bert import LCA_BERT
+from pyabsa.tasks.apc.models.lca_bert import LCA_BERT
 
-from pyabsa.module.apc.dataset_utils.data_utils_for_training import ABSADataset
-from pyabsa.module.apc.dataset_utils.apc_utils import Tokenizer4Bert
+from pyabsa.tasks.apc.dataset_utils.data_utils_for_training import ABSADataset
+from pyabsa.tasks.apc.dataset_utils.apc_utils import Tokenizer4Bert
 
 from pyabsa.utils.logger import get_logger
 
@@ -81,7 +81,7 @@ class Instructor:
 
     def _save_model(self, model, save_path, mode=0):
         # Save a trained model, configuration and tokenizer
-        model_to_save = model.module if hasattr(model, 'module') else model  # Only save the model it-self
+        model_to_save = model.module if hasattr(model, 'tasks') else model  # Only save the model it-self
 
         if mode == 0 or 'bert' not in self.opt.model_name:
             if not os.path.exists(save_path):
@@ -248,15 +248,9 @@ class Instructor:
 
 
 def train4apc(opt):
-    if os.path.exists(opt.dataset_path):
-        log_name = '{}_{}_srd{}__unknown'.format(opt.model_name, opt.lcf, opt.SRD)
-    else:
-        log_name = '{}_{}_srd{}_{}'.format(opt.model_name, opt.lcf, opt.SRD, opt.dataset_path)
-
-    logger = get_logger(os.getcwd(), log_name=log_name, log_type='training')
 
     if not isinstance(opt.seed, int):
-        logger.info('Please do not use multiple random seeds without evaluating.')
+        opt.logger.info('Please do not use multiple random seeds without evaluating.')
         opt.seed = list(opt.seed)[0]
     random.seed(opt.seed)
     numpy.random.seed(opt.seed)
@@ -284,7 +278,7 @@ def train4apc(opt):
     finished = False
     while not finished:
         try:
-            ins = Instructor(opt, logger)
+            ins = Instructor(opt, opt.logger)
             return ins.run()
         except ValueError as e:
             time.sleep(60)

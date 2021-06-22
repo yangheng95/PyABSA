@@ -5,7 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-__version__ = '0.8.5.5'
+__version__ = '0.8.6.0'
 __name__ = 'pyabsa'
 
 from .functional import train_apc, load_sentiment_classifier
@@ -19,13 +19,13 @@ from pyabsa.utils.convert_apc_set_to_atepc import convert_apc_set_to_atepc_set
 from pyabsa.config.apc_config import apc_config_handler
 from pyabsa.config.atepc_config import atepc_config_handler
 
-from pyabsa.absa_dataset import ABSADatasets
+from pyabsa.dataset_utils import ABSADatasets
 
-from pyabsa.models import APCTrainedModelManager, ATEPCTrainedModelManager
+from pyabsa.model_utils import APCTrainedModelManager, ATEPCTrainedModelManager
 
-from pyabsa.models import APCModelList, ATEPCModelList
+from pyabsa.model_utils import APCModelList, ATEPCModelList
 
-from pyabsa.models import update_checkpoints
+from pyabsa.model_utils import update_checkpoints
 
 from update_checker import UpdateChecker
 

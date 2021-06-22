@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-# file: models.py
+# file: model_utils.py
 # time: 2021/6/11 0011
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
+
+import math
+from pyabsa import __version__
 
 from termcolor import colored
 import os.path
@@ -13,23 +16,27 @@ from google_drive_downloader import GoogleDriveDownloader as gdd
 
 
 class APCModelList:
-    from pyabsa.module.apc.models import BERT_BASE, BERT_SPC
+    from pyabsa.tasks.apc.models import BERT_BASE, BERT_SPC
 
-    from pyabsa.module.apc.models import LCF_BERT, FAST_LCF_BERT, LCF_BERT_LARGE
+    from pyabsa.tasks.apc.models import LCF_BERT, FAST_LCF_BERT, LCF_BERT_LARGE
 
-    from pyabsa.module.apc.models import LCFS_BERT, FAST_LCFS_BERT, LCFS_BERT_LARGE
+    from pyabsa.tasks.apc.models import LCFS_BERT, FAST_LCFS_BERT, LCFS_BERT_LARGE
 
-    from pyabsa.module.apc.models import SLIDE_LCF_BERT, SLIDE_LCFS_BERT
+    from pyabsa.tasks.apc.models import SLIDE_LCF_BERT, SLIDE_LCFS_BERT
 
-    from pyabsa.module.apc.models import LCA_BERT
+    from pyabsa.tasks.apc.models import LCA_BERT
+
+    from pyabsa.tasks.apc.models import LCF_TEMPLATE_BERT
 
 
 class ATEPCModelList:
-    from pyabsa.module.atepc.models import BERT_BASE_ATEPC
+    from pyabsa.tasks.atepc.models import BERT_BASE_ATEPC
 
-    from pyabsa.module.atepc.models import LCF_ATEPC, LCF_ATEPC_LARGE, FAST_LCF_ATEPC
+    from pyabsa.tasks.atepc.models import LCF_ATEPC, LCF_ATEPC_LARGE, FAST_LCF_ATEPC
 
-    from pyabsa.module.atepc.models import LCFS_ATEPC, LCFS_ATEPC_LARGE, FAST_LCFS_ATEPC
+    from pyabsa.tasks.atepc.models import LCFS_ATEPC, LCFS_ATEPC_LARGE, FAST_LCFS_ATEPC
+
+    from pyabsa.tasks.atepc.models import LCF_TEMPLATE_ATEPC
 
 
 def download_pretrained_model(task='apc', language='chinese', archive_path='', model_name='any_model'):
@@ -61,7 +68,14 @@ class APCTrainedModelManager:
     def get_checkpoint(checkpoint_name: str = 'Chinese'):
         apc_checkpoint = update_checkpoints('APC')['APC']
         if checkpoint_name.lower() in apc_checkpoint:
-            print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint_name), 'green'))
+            min_ver, _, max_ver = apc_checkpoint[checkpoint_name.lower()]['version'].partition('-')
+            max_ver = max_ver if max_ver else math.inf
+            if min_ver <= __version__ <= max_ver:
+                print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint_name), 'green'))
+            else:
+                raise KeyError('This checkpoint only works under Version [{}] of PyABSA!'.format(
+                    apc_checkpoint[checkpoint_name.lower()]['version'])
+                )
         else:
             raise FileNotFoundError(colored('Checkpoint:{} is not found.'.format(checkpoint_name), 'red'))
         return download_pretrained_model(task='apc',
@@ -75,7 +89,14 @@ class ATEPCTrainedModelManager:
     def get_checkpoint(checkpoint_name: str = 'Chinese'):
         atepc_checkpoint = update_checkpoints('ATEPC')['ATEPC']
         if checkpoint_name.lower() in atepc_checkpoint:
-            print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint_name), 'green'))
+            min_ver, _, max_ver = atepc_checkpoint[checkpoint_name.lower()]['version'].partition('-')
+            max_ver = max_ver if max_ver else math.inf
+            if min_ver <= __version__ <= max_ver:
+                print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint_name), 'green'))
+            else:
+                raise KeyError('This checkpoint only works under Version [{}] of PyABSA!'.format(
+                    atepc_checkpoint[checkpoint_name.lower()]['version'])
+                )
         else:
             raise FileNotFoundError(colored('Checkpoint:{} is not found.'.format(checkpoint_name), 'red'))
         return download_pretrained_model(task='atepc',
@@ -98,21 +119,23 @@ def update_checkpoints(task=''):
             print(colored('Available checkpoints for APC:', 'green'))
             for i, checkpoint in enumerate(APC_checkpoint_map):
                 print('-' * 100)
-                print("{}. Checkpoint Name: {}\nDescription: {}\nComment: {}".format(
+                print("{}. Checkpoint Name: {}\nDescription: {}\nComment: {}\n Version: {}".format(
                     i + 1,
                     checkpoint,
                     APC_checkpoint_map[checkpoint]['description'],
                     APC_checkpoint_map[checkpoint]['comment'],
+                    APC_checkpoint_map[checkpoint]['version'],
                 ))
         if not (task and 'ATEPC' not in task.upper()):
             print(colored('Available checkpoints for ATEPC:', 'green'))
             for i, checkpoint in enumerate(ATEPC_checkpoint_map):
                 print('-' * 100)
-                print("{}. Checkpoint Name: {}\nDescription: {}\nComment: {}".format(
+                print("{}. Checkpoint Name: {}\nDescription: {}\nComment: {}\nVersion: {}".format(
                     i + 1,
                     checkpoint,
                     ATEPC_checkpoint_map[checkpoint]['description'],
                     ATEPC_checkpoint_map[checkpoint]['comment'],
+                    ATEPC_checkpoint_map[checkpoint]['version'],
                 ))
         return check_map
     except ConnectionError as e:

@@ -5,7 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa.module.atepc.models import LCF_ATEPC
+from pyabsa.tasks.atepc.models import LCF_ATEPC
 
 import copy
 
