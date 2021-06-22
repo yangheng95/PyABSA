@@ -25,7 +25,8 @@ examples = ['尤 其 是 照 的 大 尺 寸 照 片 时 效 果 也 是 非 常
             ]
 
 # 从Google Drive下载提供的预训练模型
-model_path = ATEPCTrainedModelManager.get_checkpoint(checkpoint_name='Chinese')
+# model_path = ATEPCTrainedModelManager.get_checkpoint(checkpoint_name='Chinese')
+model_path = 'state_dict/lcf_atepc_cdw_apcacc_96.88_apcf1_96.35_atef1_91.2'
 
 # 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
 sentiment_map = {0: 'Bad', 1: 'Good', -999: ''}

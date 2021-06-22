@@ -17,10 +17,10 @@ from pyabsa import ABSADatasets
 from pyabsa import APCModelList
 
 param_dict = apc_config_handler.get_apc_param_dict_chinese()
-param_dict['evaluate_begin'] = 0
+param_dict['evaluate_begin'] = 3
 param_dict['dropout'] = 0
-param_dict['l2reg'] = 0.00001
-# param_dict['model'] = APCModelList.LCF_BERT
+param_dict['l2reg'] = 0.0001
+param_dict['model'] = APCModelList.FAST_LCF_BERT
 save_path = 'state_dict'
 chinese_sets = ABSADatasets.Chinese
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model

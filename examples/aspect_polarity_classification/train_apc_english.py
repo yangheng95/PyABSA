@@ -28,7 +28,7 @@ apc_param_dict_english['l2reg'] = 0.0001
 apc_param_dict_english['dynamic_truncate'] = True
 apc_param_dict_english['srd_alignment'] = False
 
-Laptop14 = ABSADatasets.Laptop14
+Laptop14 = ABSADatasets.SemEval
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,     # set param_dict=None to use default model
                             dataset_path=Laptop14,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model

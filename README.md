@@ -49,7 +49,8 @@ Then try our [tutorials](examples) and have fun!
 # Model Support
 
 Except for the following models, we provide a template model involving LCF vec, 
-you can develop your model based on the template.
+you can develop your model based on the [LCF-APC](pyabsa/tasks/apc/models/lcf_template_apc.py) model template 
+or [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_template_atepc.py) model template.
 
 ## ATEPC
 1. [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_atepc.py) 
@@ -99,6 +100,16 @@ from pyabsa import update_checkpoints
 
 checkpoint_map = update_checkpoints()
 ```
+
+## How to share checkpoints (e.g., checkpoints trained on your custom dataset) with community
+
+For resource limitation, we do not provide diversities of checkpoints, 
+we hope you can share your checkpoints with those who have not enough resource to train their model.
+
+1. Upload your checkpoint to Google Drive in a shared folder
+
+2. Register the zipped checkpoint id in the [checkpoint_map](examples/checkpoint_map.json), 
+   then make a pull request, we will update the checkpoints index as soon as we can, Thanks for your help!
 
 # Aspect Term Extraction (ATE)
 
@@ -320,42 +331,5 @@ We will help you to do this, only if we have some free time.
 The copyrights of contributed resources belong to the contributors, 
 we hope you can help, thanks very much!
 
-# Citation
-If PyABSA is helpful, please star this repo and consider cite our paper which is related to your current work:
-
-- paper of LCF-ATEPC:
-```
-    @article{yang2021multi,
-        title={A multi-task learning model for chinese-oriented aspect polarity classification and aspect term extraction},
-        author={Yang, Heng and Zeng, Biqing and Yang, JianHao and Song, Youwei and Xu, Ruyang},
-        journal={Neurocomputing},
-        volume={419},
-        pages={344--356},
-        year={2021},
-        publisher={Elsevier}
-    }
-```
-- paper of LCF-BERT:
-```
-    @article{zeng2019lcf,
-        title={LCF: A Local Context Focus Mechanism for Aspect-Based Sentiment Classification},
-        author={Zeng, Biqing and Yang, Heng and Xu, Ruyang and Zhou, Wu and Han, Xuli},
-        journal={Applied Sciences},
-        volume={9},
-        number={16},
-        pages={3389},
-        year={2019},
-        publisher={Multidisciplinary Digital Publishing Institute}
-    }
-```
-- paper of LCA-Net:
-```    
-    @misc{yang2020enhancing,
-        title={Enhancing Fine-grained Sentiment Classification Exploiting Local Context Embedding}, 
-        author={Heng Yang and Biqing Zeng},
-        year={2020},
-        eprint={2010.00767},
-        archivePrefix={arXiv},
-        primaryClass={cs.CL}
-    }
-```
+# License 
+MIT
