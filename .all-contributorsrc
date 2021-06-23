@@ -13,6 +13,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "yangheng95",
+      "name": "YangHeng",
+      "avatar_url": "https://avatars.githubusercontent.com/u/51735130?v=4",
+      "profile": "https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=zh-CN",
+      "contributions": [
+        "projectManagement"
+      ]
     }
   ],
   "contributorsPerLine": 7,
