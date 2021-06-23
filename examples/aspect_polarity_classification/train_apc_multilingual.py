@@ -12,10 +12,11 @@
 
 from pyabsa import train_apc, apc_config_handler
 
+from pyabsa import  APCModelList
 
 save_path = 'state_dict'
 apc_param_dict_multilingual = apc_config_handler.get_apc_param_dict_multilingual()
-apc_param_dict_multilingual['model_name'] = 'bert_spc'
+apc_param_dict_multilingual['model'] = APCModelList.FAST_LCF_BERT
 apc_param_dict_multilingual['evaluate_begin'] = 4
 
 datasets_path = 'datasets/apc_datasets/multilingual'  # file or dir are accepted for 'datasets_path'

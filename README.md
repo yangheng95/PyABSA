@@ -106,10 +106,10 @@ checkpoint_map = update_checkpoints()
 For resource limitation, we do not provide diversities of checkpoints, 
 we hope you can share your checkpoints with those who have not enough resource to train their model.
 
-1. Upload your checkpoint to Google Drive in a shared folder
+1. Upload your zipped checkpoint to Google Drive **in a shared folder**.
 
-2. Register the zipped checkpoint id in the [checkpoint_map](examples/checkpoint_map.json), 
-   then make a pull request, we will update the checkpoints index as soon as we can, Thanks for your help!
+2. Register the checkpoint in the [checkpoint_map](examples/checkpoint_map.json), 
+   then make a pull request. We will update the checkpoints index as soon as we can, Thanks for your help!
 
 # Aspect Term Extraction (ATE)
 

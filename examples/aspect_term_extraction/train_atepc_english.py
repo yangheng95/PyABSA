@@ -19,7 +19,7 @@ from pyabsa import ATEPCModelList
 save_path = 'state_dict'
 
 param_dict = atepc_config_handler.get_atepc_param_dict_english()
-param_dict['model'] = ATEPCModelList.LCF_ATEPC
+param_dict['model'] = ATEPCModelList.FAST_LCF_ATEPC
 param_dict['evaluate_begin'] = 5
 param_dict['num_epoch'] = 6
 semeval = ABSADatasets.SemEval
