@@ -7,11 +7,11 @@ Local Context Focus (LCF) mechanism is a simple and adoptive mechanism proposed 
 
 ## The simulation of Context Dynamic Weighted (CDW)
 CDW weight down the less-semantic-relative context words.
-![cdw](cdw.png)
+![cdw](pic/cdw.png)
 
 ## The simulation of Context Dynamic Masked (CDM)
 CDW masked the less-semantic-relative context words.
-![cdm](cdm.png)
+![cdm](pic/cdm.png)
 
 
 # Some works based on LCF
