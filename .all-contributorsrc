@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "XuMayi",
+      "name": "XuMayi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/50400855?v=4",
+      "profile": "https://github.com/XuMayi",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "PyABSA",
+  "projectOwner": "yangheng95",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
