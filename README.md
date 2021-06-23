@@ -30,7 +30,7 @@ to help me build an easy-to-use toolkit to reduce the cost of building models an
 The LCF is a simple and adoptive mechanism proposed for ABSA. 
 Many models based on LCF has been proposed and achieved SOTA performance. 
 Developing your models based on LCF will significantly improve your ABSA models.
-If you are looking for the original theory of LCF, please redirect to [LCF-theory](https://github.com/XuMayi/PyABSA/tree/release/LCF-theory). If you are looking for the original codes of the LCF-related papers, please redirect to [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/master)
+If you are looking for the original theory of LCF, please redirect to [LCF-theory](https://github.com/yangheng95/PyABSA/tree/release/LCF-theory). If you are looking for the original codes of the LCF-related papers, please redirect to [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/master)
 or [LCF-ATEPC](https://github.com/XuMayi/LCF-ATEPC).
 
 
