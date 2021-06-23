@@ -7,8 +7,8 @@ The performance reports of other models are welcome.
 | :------------------: | :------------: | :-----------: |:------------:|:------------:|
 | SLIDE-LCFS-BERT (CDW)|    81.35       |        88.04  |    85.93     |   92.52      | 
 | SLIDE-LCFS-BERT (CDM)|     82.13      |        87.5   |    85.37     |   92.36      |
-| SLIDE-LCF-BERT (CDW) |      -         |       -       |    -         |    -         |
-| SLIDE-LCF-BERT (CDM) |    -           |        -      |   -          |    -         |
+| SLIDE-LCF-BERT (CDW) |      80.82         |        86.04      |    85.18        |    91.98         |
+| SLIDE-LCF-BERT (CDM) |    80.67          |        86.13      |   85.31          |    91.92         |
 | FAST-LCF-BERT (CDW) |      -         |       -       |    -         |    -         |
 | FAST-LCF-BERT (CDM) |    -           |        -      |   -          |    -         |
 | FAST-LCFS-BERT (CDW) |      -         |       -       |    -         |    -         |
