@@ -1,7 +1,4 @@
 # PyABSA - Exploiting Fast LCF and BERT in Aspect-based Sentiment Analysis
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
 ![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg) 
 [![PyPI](https://img.shields.io/pypi/v/pyabsa)](https://pypi.org/project/pyabsa/)
 ![Repo Size](https://img.shields.io/github/repo-size/yangheng95/pyabsa)
@@ -9,6 +6,10 @@
 ![License](https://img.shields.io/pypi/l/pyabsa?logo=PyABSA)
 ![welcome](https://img.shields.io/badge/Contribution-Welcome-brightgreen)
 [![Gitter](https://badges.gitter.im/PyABSA/community.svg)](https://gitter.im/PyABSA/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
 
 > Fast & Enhanced implementation of Local Context Focus.
 
