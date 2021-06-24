@@ -1,6 +1,16 @@
 # Local Context Focus mechanism
 
-**Local Context Focus (LCF)** mechanism is a simple and adoptive mechanism proposed for ABSA. Most previous works divided the input sequence into aspect term sequence and context sequence, then models their interrelation. We find that apart from the global context, the local context of aspect terms contains more significant information. Therefore, we propose the **Semantic-Relative Distance (SRD)** to measure the relevance between the aspect term and its context words, aiming to assist the model to capture local context. In addition, we design a **Local Context Focus (LCF)** mechanism to pay more attention to the local context words whose SRD does not exceed the **predefined fixed threshold**. According to our experiments in SemEval-2014, 15, and 16, LCF works best when the **predefined fixed threshold is** set **3**. LCF contains two patterns: **Context Dynamic Weighted (CDW)** and **Context Dynamic Masked (CDM)**. More detail about LCF is available in [our paper](https://www.mdpi.com/2076-3417/9/16/3389).
+**Local Context Focus (LCF)** mechanism is a simple and adoptive method proposed for ABSA. 
+Most previous works divided the input sequence into aspect term sequence and context sequence,
+then models their interrelation. We find that apart from the global context, 
+the local context of aspect terms contains more significant information. 
+Therefore, we propose the **Semantic-Relative Distance (SRD)** to measure the relevance
+between the aspect term and its context words, aiming to assist the model to capture local context. 
+In addition, we design a **Local Context Focus (LCF)** mechanism to pay more attention to the local context
+words whose SRD does not exceed the **predefined fixed threshold**. According to our experiments in SemEval-2014,
+15, and 16, LCF works best when the **predefined fixed threshold is** set **3**. 
+LCF contains two patterns: **Context Dynamic Weighted (CDW)** and **Context Dynamic Masked (CDM)**. 
+More detail about LCF is available in [our paper](https://www.mdpi.com/2076-3417/9/16/3389).
 
 ## LCF architecture
 ![lcf](pic/lcf.png)
@@ -38,5 +48,3 @@ CDW masked the less-semantic-relative context words.
 [11] Hamborg F, Donnay K, Gipp B. Towards Target-dependent Sentiment Classification in News Articles[J]. arXiv preprint arXiv:2105.09660, 2021.
 
 [12] Mukherjee R, Shetty S, Chattopadhyay S, et al. Reproducibility, Replicability and Beyond: Assessing Production Readiness of Aspect Based Sentiment Analysis in the Wild[J]. arXiv preprint arXiv:2101.09449, 2021.
-
-Try to design your model on LCF!

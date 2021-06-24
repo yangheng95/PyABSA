@@ -10,9 +10,9 @@ import copy
 from pyabsa import ABSADatasets, detect_dataset
 from pyabsa.functional import init_config
 
-from pyabsa.config.apc_config import apc_param_dict_base
+from pyabsa.config.apc_config import apc_config_handler
 
-from pyabsa.module.apc.training.apc_trainer import train4apc
+from pyabsa.tasks.apc.training.apc_trainer import train4apc
 
 from pyabsa.utils.logger import get_logger
 
@@ -39,7 +39,8 @@ def apc_param_search(parameter_dict=None,
         score = 0
         for dataset in dataset_path:
             dataset_file = detect_dataset(dataset, auto_evaluate, task='apc_benchmark')
-            config = init_config(parameter_dict, apc_param_dict_base, auto_device)
+            config = init_config(parameter_dict, apc_config_handler.get_apc_param_dict_base(), auto_device)
+            config.logger = logger
             config.dataset_path = dataset
             config.model_path_to_save = None
             config.dataset_file = dataset_file
