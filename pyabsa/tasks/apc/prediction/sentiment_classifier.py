@@ -141,7 +141,7 @@ class SentimentClassifier:
             if not target_file:
                 raise FileNotFoundError('Can not find inference dataset!')
         else:
-            save_path = target_file + '.results'
+            save_path = target_file + '.apc.results'
         target_file = detect_infer_dataset(target_file, task='apc_benchmark')
         self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=1, shuffle=False)

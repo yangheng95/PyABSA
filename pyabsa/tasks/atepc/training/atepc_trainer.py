@@ -51,6 +51,7 @@ class Instructor:
         random.seed(self.opt.seed)
         np.random.seed(self.opt.seed)
         torch.manual_seed(self.opt.seed)
+        torch.cuda.manual_seed(self.opt.seed)
 
         if self.opt.model_path_to_save and not os.path.exists(self.opt.model_path_to_save):
             os.makedirs(self.opt.model_path_to_save)
@@ -138,9 +139,11 @@ class Instructor:
         sum_apc_test_acc = 0
         sum_apc_test_f1 = 0
         sum_ate_test_f1 = 0
-        max_apc_test_acc = 0
-        max_apc_test_f1 = 0
-        max_ate_test_f1 = 0
+        # max_apc_test_acc = 0
+        # max_apc_test_f1 = 0
+        # max_ate_test_f1 = 0
+        self.opt.max_test_metrics = {'max_apc_test_acc': 0, 'max_apc_test_f1': 0, 'max_ate_test_f1': 0}
+        self.opt.metrics_of_this_checkpoint = {'apc_acc': 0, 'apc_f1': 0, 'ate_f1': 0}
         global_step = 0
         save_path = ''
         for epoch in range(int(self.opt.num_epoch)):
@@ -177,6 +180,9 @@ class Instructor:
                         sum_apc_test_acc += apc_result['apc_test_acc']
                         sum_apc_test_f1 += apc_result['apc_test_f1']
                         sum_ate_test_f1 += ate_result
+                        self.opt.metrics_of_this_checkpoint['apc_acc'] = sum_apc_test_acc
+                        self.opt.metrics_of_this_checkpoint['apc_f1'] = sum_apc_test_f1
+                        self.opt.metrics_of_this_checkpoint['ate_f1'] = sum_ate_test_f1
                         # if save_path:
                         #     try:
                         #         shutil.rmtree(save_path)
@@ -192,17 +198,17 @@ class Instructor:
                                 round(apc_result['apc_test_f1'], 2),
                                 round(ate_result, 2)
                             )
-                            if apc_result['apc_test_acc'] > max_apc_test_acc or \
-                                    apc_result['apc_test_f1'] > max_apc_test_f1 or \
-                                    ate_result > max_ate_test_f1:
+                            if apc_result['apc_test_acc'] > self.opt.max_test_metrics['max_apc_test_acc'] or \
+                                    apc_result['apc_test_f1'] > self.opt.max_test_metrics['max_apc_test_f1'] or \
+                                    ate_result > self.opt.max_test_metrics['max_ate_test_f1']:
                                 self._save_model(self.opt, self.model, save_path, mode=0)
 
-                        if apc_result['apc_test_acc'] > max_apc_test_acc:
-                            max_apc_test_acc = apc_result['apc_test_acc']
-                        if apc_result['apc_test_f1'] > max_apc_test_f1:
-                            max_apc_test_f1 = apc_result['apc_test_f1']
-                        if ate_result > max_ate_test_f1:
-                            max_ate_test_f1 = ate_result
+                        if apc_result['apc_test_acc'] > self.opt.max_test_metrics['max_apc_test_acc']:
+                            self.opt.max_test_metrics['max_apc_test_acc'] = apc_result['apc_test_acc']
+                        if apc_result['apc_test_f1'] > self.opt.max_test_metrics['max_apc_test_f1']:
+                            self.opt.max_test_metrics['max_apc_test_f1'] = apc_result['apc_test_f1']
+                        if ate_result > self.opt.max_test_metrics['max_ate_test_f1']:
+                            self.opt.max_test_metrics['max_ate_test_f1'] = ate_result
 
                         current_apc_test_acc = apc_result['apc_test_acc']
                         current_apc_test_f1 = apc_result['apc_test_f1']
@@ -212,26 +218,35 @@ class Instructor:
 
                         postfix += 'loss_apc:{:.4f} | loss_ate:{:.4f} |'.format(loss_apc.item(), loss_ate.item())
 
-                        postfix += f' APC_ACC: {current_apc_test_acc}(max:{max_apc_test_acc}) | ' \
-                                   f' APC_F1: {current_apc_test_f1}(max:{max_apc_test_f1}) | '
-
+                        postfix += ' APC_ACC: {}(max:{}) | APC_F1: {}(max:{}) | '.format(current_apc_test_acc,
+                                                                                         self.opt.max_test_metrics[
+                                                                                             'max_apc_test_acc'],
+                                                                                         current_apc_test_f1,
+                                                                                         self.opt.max_test_metrics[
+                                                                                             'max_apc_test_f1']
+                                                                                         )
                         if self.opt.model_name == 'lcf_atepc' and self.opt.use_bert_spc:
-                            postfix += f'ATE_F1: N.A. for LCF-ATEPC under use_bert_spc=True)'
+                            postfix += 'ATE_F1: N.A. for LCF-ATEPC under use_bert_spc=True)'
                         else:
-                            postfix += f'ATE_F1: {current_ate_test_f1}(max:{max_ate_test_f1})'
+                            postfix += 'ATE_F1: {}(max:{})'.format(current_ate_test_f1, self.opt.max_test_metrics[
+                                'max_ate_test_f1'])
                     else:
-                        postfix = 'Epoch:{} | No evaluate until epoch:{}'.format(epoch, self.opt.evaluate_begin)
+                        postfix = 'Epoch:{} | No evaluation until epoch:{}'.format(epoch, self.opt.evaluate_begin)
 
                     iterator.postfix = postfix
                     iterator.refresh()
 
-        self.logger.info('--------------------------------------Training Summary--------------------------------------')
-        self.logger.info('  Max APC Acc: {:.8f} Max APC F1: {:.8f} Max ATE F1: {:.8f} Loss: {}'.format(max_apc_test_acc,
-                                                                                                       max_apc_test_f1,
-                                                                                                       max_ate_test_f1,
-                                                                                                       sum_loss)
-                         )
-        self.logger.info('--------------------------------------Training Summary--------------------------------------')
+        self.logger.info('-------------------------------------Training Summary-------------------------------------')
+        self.logger.info(
+            '  Max APC Acc: {:.5f} Max APC F1: {:.5f} Max ATE F1: {:.5f} Loss: {}'.format(self.opt.max_test_metrics[
+                                                                                              'max_apc_test_acc'],
+                                                                                          self.opt.max_test_metrics[
+                                                                                              'max_apc_test_f1'],
+                                                                                          self.opt.max_test_metrics[
+                                                                                              'max_ate_test_f1'],
+                                                                                          sum_loss)
+        )
+        self.logger.info('-------------------------------------Training Summary-------------------------------------')
         # return the model paths of multiple training_tutorials in case of loading the best model after training_tutorials
         if save_path:
             return save_path
@@ -365,5 +380,5 @@ def train4atepc(config):
             ins = Instructor(config)
             return ins.train()
         except ValueError as e:
-            time.sleep(60)
             print('Seems to be ConnectionError, retry in {} seconds...'.format(60))
+            time.sleep(60)

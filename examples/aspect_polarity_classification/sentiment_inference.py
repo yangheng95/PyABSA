@@ -15,6 +15,7 @@ from pyabsa import APCTrainedModelManager, update_checkpoints
 sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
 
 model_path = APCTrainedModelManager.get_checkpoint(checkpoint_name='English')
+# model_path = 'state_dict/slide_lcfs_bert_cdw_acc_81.03_f1_77.69'
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
                                             auto_device=True,  # Use CUDA if available
                                             sentiment_map=sentiment_map

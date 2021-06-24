@@ -33,6 +33,9 @@ def apc_param_search(parameter_dict=None,
 
     optimal_param = 'None'
     max_score = 0
+    max_acc = 0
+    max_f1 = 0
+    output = {}
     for alternative in search_param[1]:
         parameter_dict[search_param[0]] = alternative
         logger.info('*********************** Set {} = {} ***********************'.format(search_param[0], alternative))
@@ -54,20 +57,33 @@ def apc_param_search(parameter_dict=None,
                 # else:
                 #     score += train4apc(t_config)[4]
                 running_result = train4apc(t_config)
-                score += (running_result[3] + running_result[4])
-        logger.info('{}: {} tested on dataset {} scored: {}'.format(search_param[0],
-                                                                    alternative,
-                                                                    ','.join(dataset_path),
-                                                                    score))
+                t_acc, t_f1 = running_result[3], running_result[4]
+                score += (t_acc + t_f1)
+                if t_acc > max_acc:
+                    output['max_acc'] = 'Max acc recorded while {} is {}'.format(search_param[0], alternative)
+                    max_acc = t_acc
+                if t_f1 > max_f1:
+                    output['max_f1'] = 'Max F1 recorded while {} is {}'.format(search_param[0], alternative)
+                    max_f1 = t_f1
+        output[alternative] = '{}: {} tested on dataset {} scored: {}'.format(search_param[0],
+                                                                              alternative,
+                                                                              ','.join(dataset_path),
+                                                                              score)
         print()
         if score > max_score:
             max_score = score
             optimal_param = alternative
-    logger.info('*' * 100)
-    logger.info('Optimal {} tested on dataset(s) {} is {}'.format(search_param[0],
-                                                                  ','.join(dataset_path),
-                                                                  optimal_param))
-    logger.info('*' * 100)
+    output['optimal'] = 'Optimal {} tested on dataset(s) {} is {}'.format(search_param[0],
+                                                                          ','.join(dataset_path),
+                                                                          optimal_param)
+    logger.info('************************* Param Search Report *************************')
+    logger.info(output['optimal'])
+    for alternative in search_param[1]:
+        logger.info(output[alternative])
+    logger.info(output['max_acc'])
+    logger.info(output['max_f1'])
+    logger.info('************************* Param Search Report *************************')
     print()
-
+    while logger.handlers:
+        logger.removeHandler(logger.handlers[0])
     return optimal_param

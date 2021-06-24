@@ -6,7 +6,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 import os
-import copy
+
 from argparse import Namespace
 
 from pyabsa.utils.pyabsa_utils import get_auto_device
@@ -47,7 +47,7 @@ def init_config(config_dict, base_config_dict, auto_device=True):
 
     if apc_config.use_syntax_based_SRD:
         print('-' * 130)
-        print('  (Force to) use syntax distance-based semantic-relative distance,'
+        print('Force to use syntax distance-based semantic-relative distance,'
               ' however Chinese is not supported to parse syntax distance yet!  ')
         print('-' * 130)
 
@@ -83,7 +83,7 @@ def train_apc(parameter_dict=None,
     logger = get_logger(os.getcwd(), log_name=log_name, log_type='training')
     config.logger = logger
     for _, s in enumerate(config.seed):
-        t_config = copy.deepcopy(config)
+        t_config = Namespace(**vars(config))
         t_config.seed = s
         if model_path_to_save:
             model_path.append(train4apc(t_config))
@@ -135,7 +135,7 @@ def train_atepc(parameter_dict=None,
     # always save all trained models in case of obtaining best performance
     # in different metrics among ATE and APC tasks.
     for _, s in enumerate(config.seed):
-        t_config = copy.deepcopy(config)
+        t_config = Namespace(**vars(config))
         t_config.seed = s
         model_path.append(train4atepc(t_config))
     logger.disabled = True

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: bert_base_benchmark.py
+# file: bert_base_atepc_benchmark.py
 # time: 2021/6/8 0008
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
@@ -13,7 +13,7 @@ from pyabsa.model_utils import ATEPCModelList
 import copy
 
 
-def run_lcf_atepc_cdw(param_dict=None):
+def run_bert_base_atepc_cdw(param_dict=None):
     if not param_dict:
         print('No optimal hyper-parameters are set, using default params...')
         _atepc_param_dict_english = copy.deepcopy(atepc_config_handler.get_atepc_param_dict_english())
@@ -73,7 +73,7 @@ def run_lcf_atepc_cdw(param_dict=None):
                 )
 
 
-def run_lcf_atepc_cdm(param_dict=None):
+def run_bert_base_atepc_cdm(param_dict=None):
     if not param_dict:
         print('No optimal hyper-parameters are set, using default params...')
         _atepc_param_dict_english = copy.deepcopy(atepc_config_handler.get_atepc_param_dict_english())

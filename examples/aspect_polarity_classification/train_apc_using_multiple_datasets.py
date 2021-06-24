@@ -43,6 +43,3 @@ sent_classifier = train_apc(parameter_dict=apc_config_handler.get_apc_param_dict
                             auto_evaluate=True,            # evaluate model while training_tutorials if test set is available
                             auto_device=True               # automatic choose CUDA or CPU
                             )
-
-
-

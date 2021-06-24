@@ -16,7 +16,7 @@ _apc_param_dict_template = {'model': BERT_SPC,
                             'learning_rate': 0.00002,
                             'pretrained_bert_name': "bert-base-uncased",
                             'use_bert_spc': True,
-                            'max_seq_len': 50,
+                            'max_seq_len': 80,
                             'SRD': 3,
                             'use_syntax_based_SRD': False,
                             'sigma': 0.3,
@@ -28,7 +28,7 @@ _apc_param_dict_template = {'model': BERT_SPC,
                             'num_epoch': 10,
                             'batch_size': 16,
                             'initializer': 'xavier_uniform_',
-                            'seed': {1, 2, 3},
+                            'seed': 996,
                             'embed_dim': 768,
                             'hidden_dim': 768,
                             'polarities_dim': 3,
@@ -36,7 +36,8 @@ _apc_param_dict_template = {'model': BERT_SPC,
                             'dynamic_truncate': True,
                             'srd_alignment': True,  # for srd_alignment
                             'evaluate_begin': 0,
-                            'similarity_threshold': 0.9  # disable same text check for different examples
+                            'similarity_threshold': 0.9,  # disable same text check for different examples
+                            'cross_validate_fold': -1  # split train and test datasets into 5 folds and repeat 3 training
                             }
 
 _apc_param_dict_base = {'model': BERT_SPC,
@@ -44,7 +45,7 @@ _apc_param_dict_base = {'model': BERT_SPC,
                         'learning_rate': 0.00002,
                         'pretrained_bert_name': "bert-base-uncased",
                         'use_bert_spc': True,
-                        'max_seq_len': 50,
+                        'max_seq_len': 80,
                         'SRD': 3,
                         'use_syntax_based_SRD': False,
                         'sigma': 0.3,
@@ -64,7 +65,8 @@ _apc_param_dict_base = {'model': BERT_SPC,
                         'dynamic_truncate': True,
                         'srd_alignment': True,  # for srd_alignment
                         'evaluate_begin': 0,
-                        'similarity_threshold': 0.9  # disable same text check for different examples
+                        'similarity_threshold': 0.9,  # disable same text check for different examples
+                        'cross_validate_fold': -1  # split train and test datasets into 5 folds and repeat 3 training
                         }
 
 _apc_param_dict_english = {'model': BERT_SPC,
@@ -84,7 +86,7 @@ _apc_param_dict_english = {'model': BERT_SPC,
                            'num_epoch': 10,
                            'batch_size': 16,
                            'initializer': 'xavier_uniform_',
-                           'seed': {1, 2, 3},
+                           'seed': 996,
                            'embed_dim': 768,
                            'hidden_dim': 768,
                            'polarities_dim': 3,
@@ -92,7 +94,8 @@ _apc_param_dict_english = {'model': BERT_SPC,
                            'dynamic_truncate': True,
                            'srd_alignment': True,  # for srd_alignment
                            'evaluate_begin': 2,
-                           'similarity_threshold': 0.9
+                           'similarity_threshold': 0.9,  # disable same text check for different examples
+                           'cross_validate_fold': -1  # split train and test datasets into 5 folds and repeat 3 training
                            }
 
 _apc_param_dict_multilingual = {'model': BERT_SPC,
@@ -112,7 +115,7 @@ _apc_param_dict_multilingual = {'model': BERT_SPC,
                                 'num_epoch': 10,
                                 'batch_size': 16,
                                 'initializer': 'xavier_uniform_',
-                                'seed': {1, 2, 3},
+                                'seed': 996,
                                 'embed_dim': 768,
                                 'hidden_dim': 768,
                                 'polarities_dim': 3,
@@ -120,7 +123,8 @@ _apc_param_dict_multilingual = {'model': BERT_SPC,
                                 'dynamic_truncate': True,
                                 'srd_alignment': True,  # for srd_alignment
                                 'evaluate_begin': 2,
-                                'similarity_threshold': 0.9
+                                'similarity_threshold': 0.9,  # disable same text check for different examples
+                                'cross_validate_fold': -1  # split train and test datasets into 5 folds and repeat 3 training
                                 }
 
 _apc_param_dict_chinese = {'model': BERT_SPC,
@@ -140,7 +144,7 @@ _apc_param_dict_chinese = {'model': BERT_SPC,
                            'num_epoch': 10,
                            'batch_size': 16,
                            'initializer': 'xavier_uniform_',
-                           'seed': {1, 2, 3},
+                           'seed': 996,
                            'embed_dim': 768,
                            'hidden_dim': 768,
                            'polarities_dim': 3,
@@ -148,7 +152,8 @@ _apc_param_dict_chinese = {'model': BERT_SPC,
                            'dynamic_truncate': True,
                            'srd_alignment': True,  # for srd_alignment
                            'evaluate_begin': 2,
-                           'similarity_threshold': 0.9
+                           'similarity_threshold': 0.9,  # disable same text check for different examples
+                           'cross_validate_fold': -1  # split train and test datasets into 5 folds and repeat 3 training
                            }
 
 
