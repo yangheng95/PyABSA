@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# file: slide_lcfs_bert_benchmark.py
-# time: 2021/6/8 0008
+# file: fast_lcf_bert_benchmark.py
+# time: 2021/6/24
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
@@ -14,18 +14,17 @@ from pyabsa.model_utils import APCModelList
 import copy
 
 
-def run_slide_lcfs_bert_cdw(param_dict=None):
+def run_fast_lcf_bert_cdw(param_dict=None):
     if not param_dict:
         print('No optimal hyper-parameters are set, using default params...')
         _apc_param_dict_english = copy.deepcopy(apc_config_handler.get_apc_param_dict_english())
-        _apc_param_dict_english['model'] = APCModelList.SLIDE_LCFS_BERT
+        _apc_param_dict_english['model_name'] = APCModelList.FAST_LCF_BERT
         _apc_param_dict_english['evaluate_begin'] = 1
         _apc_param_dict_english['similarity_threshold'] = 1
         _apc_param_dict_english['dropout'] = 0.5
         _apc_param_dict_english['log_step'] = 5
         _apc_param_dict_english['num_epoch'] = 10
         _apc_param_dict_english['l2reg'] = 0.0001
-
     else:
         _apc_param_dict_english = param_dict
 
@@ -54,11 +53,11 @@ def run_slide_lcfs_bert_cdw(param_dict=None):
               )
 
 
-def run_slide_lcfs_bert_cdm(param_dict=None):
+def run_fast_lcf_bert_cdm(param_dict=None):
     if not param_dict:
         print('No optimal hyper-parameters are set, using default params...')
         _apc_param_dict_english = copy.deepcopy(apc_config_handler.get_apc_param_dict_english())
-        _apc_param_dict_english['model'] = APCModelList.SLIDE_LCFS_BERT
+        _apc_param_dict_english['model_name'] = APCModelList.FAST_LCF_BERT
         _apc_param_dict_english['evaluate_begin'] = 1
         _apc_param_dict_english['similarity_threshold'] = 1
         _apc_param_dict_english['dropout'] = 0.5

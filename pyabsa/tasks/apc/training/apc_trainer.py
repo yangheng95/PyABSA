@@ -19,40 +19,36 @@ from tqdm import tqdm
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, AutoModel
 from sklearn import metrics
+from torch.utils.data import random_split, ConcatDataset
 
-
-from pyabsa.tasks.apc.models.lca_bert import LCA_BERT
 
 from pyabsa.tasks.apc.dataset_utils.data_utils_for_training import ABSADataset
 from pyabsa.tasks.apc.dataset_utils.apc_utils import Tokenizer4Bert
 
-from pyabsa.utils.logger import get_logger
 
 
 class Instructor:
     def __init__(self, opt, logger):
         self.logger = logger
         self.opt = opt
-        self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert_name)
         self.bert_tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
-
         self.bert_tokenizer.bos_token = self.bert_tokenizer.bos_token if self.bert_tokenizer.bos_token else '[CLS]'
         self.bert_tokenizer.eos_token = self.bert_tokenizer.eos_token if self.bert_tokenizer.eos_token else '[SEP]'
         self.tokenizer = Tokenizer4Bert(self.bert_tokenizer, self.opt.max_seq_len)
 
         self.train_set = ABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
-        self.train_data_loader = DataLoader(dataset=self.train_set,
-                                            batch_size=self.opt.batch_size,
-                                            shuffle=True,
-                                            pin_memory=True)
-
         if 'test' in self.opt.dataset_file:
             self.test_set = ABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
             self.test_data_loader = DataLoader(dataset=self.test_set,
                                                batch_size=self.opt.batch_size,
                                                shuffle=False,
                                                pin_memory=True)
+        else:
+            self.test_set = None
+        self.train_data_loaders = []
+        self.test_data_loaders = []
 
+        self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert_name)
         # init the model behind the construction of atepc_datasets in case of updating polarities_dim
         self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
 
@@ -65,6 +61,51 @@ class Instructor:
         logger.info("  Num examples = %d", len(self.train_set))
         logger.info("  Batch size = %d", self.opt.batch_size)
         logger.info("  Num steps = %d", int(len(self.train_set) / self.opt.batch_size) * self.opt.num_epoch)
+
+        _params = filter(lambda p: p.requires_grad, self.model.parameters())
+        self.optimizer = self.opt.optimizer(_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
+        if os.path.exists('./init_state_dict.bin'):
+            os.remove('./init_state_dict.bin')
+        torch.save(self.model.state_dict(), './init_state_dict.bin')
+
+    def reload_model(self):
+        self.model.load_state_dict(torch.load('./init_state_dict.bin'))
+        _params = filter(lambda p: p.requires_grad, self.model.parameters())
+        self.optimizer = self.opt.optimizer(_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
+
+    def prepare_data_loader(self, train_set, test_set=None, cross_validate=True):
+        if self.opt.cross_validate_fold < 1:
+            self.train_data_loaders.append(DataLoader(dataset=train_set,
+                                                      batch_size=self.opt.batch_size,
+                                                      shuffle=True,
+                                                      pin_memory=True))
+            if test_set:
+                self.test_data_loaders.append(DataLoader(dataset=test_set,
+                                                         batch_size=self.opt.batch_size,
+                                                         shuffle=False,
+                                                         pin_memory=True))
+        else:
+            if test_set:
+                sum_dataset = ConcatDataset([train_set, test_set])
+            else:
+                sum_dataset = train_set
+            len_per_fold = len(sum_dataset) // self.opt.cross_validate_fold
+            folds = random_split(sum_dataset, tuple([len_per_fold] * (self.opt.cross_validate_fold - 1) + [
+                len(sum_dataset) - len_per_fold * (self.opt.cross_validate_fold - 1)]))
+
+            d_index = []
+            while len(d_index) < 3:
+                idx = random.randint(0, self.opt.cross_validate_fold - 1)
+                while idx in d_index:
+                    idx = random.randint(0, self.opt.cross_validate_fold)
+                d_index.append(idx)
+
+                train_set = ConcatDataset([x for i, x in enumerate(folds) if i != idx])
+                test_set = folds[idx]
+                self.train_data_loaders.append(
+                    DataLoader(dataset=train_set, batch_size=self.opt.batch_size, shuffle=True))
+                self.test_data_loaders.append(
+                    DataLoader(dataset=test_set, batch_size=self.opt.batch_size, shuffle=False))
 
     def _log_write_args(self):
         n_trainable_params, n_nontrainable_params = 0, 0
@@ -108,83 +149,99 @@ class Instructor:
         # logger.info('trained model saved in: {}'.format(save_path))
         self.model.to(self.opt.device)
 
-    def _train_and_evaluate(self, criterion, lca_criterion, optimizer):
+    def _train_and_evaluate(self, criterion, lca_criterion):
+        self.prepare_data_loader(self.train_set, self.test_set)
         sum_loss = 0
         sum_acc = 0
         sum_f1 = 0
-        max_test_acc = 0
-        max_f1 = 0
-        global_step = 0
-        save_path = ''
-        for epoch in range(self.opt.num_epoch):
-            iterator = tqdm(self.train_data_loader)
-            for i_batch, sample_batched in enumerate(iterator):
-                global_step += 1
+        self.opt.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
+        fold_test_acc = []
+        fold_test_f1 = []
+        for f, (train_dataloader, test_dataloader) in enumerate(zip(self.train_data_loaders, self.test_data_loaders)):
+            if len(self.train_data_loaders) > 1:
+                self.opt.logger.info('No. {} training in {} repeats...'.format(f + 1, self.opt.cross_validate_fold))
+            global_step = 0
+            max_fold_acc = 0
+            max_fold_f1 = 0
+            save_path = ''
+            for epoch in range(self.opt.num_epoch):
+                iterator = tqdm(train_dataloader)
+                for i_batch, sample_batched in enumerate(iterator):
+                    global_step += 1
+                    # switch model to training_tutorials mode, clear gradient accumulators
+                    self.model.train()
+                    self.optimizer.zero_grad()
+                    inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
+                    outputs = self.model(inputs)
+                    targets = sample_batched['polarity'].to(self.opt.device)
 
-                # switch model to training_tutorials mode, clear gradient accumulators
-                self.model.train()
-                optimizer.zero_grad()
-                inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
-                outputs = self.model(inputs)
-                targets = sample_batched['polarity'].to(self.opt.device)
-
-                if 'lca' in self.opt.model_name:
-                    sen_logits, lca_logits, lca_ids = outputs
-                    sen_loss = criterion(sen_logits, targets)
-                    lcp_loss = lca_criterion(lca_logits, lca_ids)
-                    loss = (1 - self.opt.sigma) * sen_loss + self.opt.sigma * lcp_loss
-                else:
-                    sen_logits = outputs
-                    loss = criterion(sen_logits, targets)
-                sum_loss += loss.item()
-                loss.backward()
-                optimizer.step()
-
-                # evaluate if test set is available
-                if 'test' in self.opt.dataset_file and global_step % self.opt.log_step == 0:
-                    if epoch >= self.opt.evaluate_begin:
-
-                        test_acc, f1 = self._evaluate_acc_f1()
-                        sum_acc += test_acc
-                        sum_f1 += f1
-                        if test_acc > max_test_acc:
-                            max_test_acc = test_acc
-                            if self.opt.model_path_to_save:
-                                if not os.path.exists(self.opt.model_path_to_save):
-                                    os.mkdir(self.opt.model_path_to_save)
-                                if save_path:
-                                    try:
-                                        shutil.rmtree(save_path)
-                                        # logger.info('Remove sub-optimal trained model:', save_path)
-                                    except:
-                                        # logger.info('Can not remove sub-optimal trained model:', save_path)
-                                        pass
-                                save_path = '{0}/{1}_{2}_acc_{3}_f1_{4}/'.format(self.opt.model_path_to_save,
-                                                                                 self.opt.model_name,
-                                                                                 self.opt.lcf,
-                                                                                 round(test_acc * 100, 2),
-                                                                                 round(f1 * 100, 2)
-                                                                                 )
-                                self._save_model(self.model, save_path, mode=0)
-                        if f1 > max_f1:
-                            max_f1 = f1
-                        postfix = ('Epoch:{} | Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) |'
-                                   ' Test F1:{:.2f}(max:{:.2f})'.format(epoch,
-                                                                        loss.item(),
-                                                                        test_acc * 100,
-                                                                        max_test_acc * 100,
-                                                                        f1 * 100,
-                                                                        max_f1 * 100))
+                    if 'lca' in self.opt.model_name:
+                        sen_logits, lca_logits, lca_ids = outputs
+                        sen_loss = criterion(sen_logits, targets)
+                        lcp_loss = lca_criterion(lca_logits, lca_ids)
+                        loss = (1 - self.opt.sigma) * sen_loss + self.opt.sigma * lcp_loss
                     else:
-                        postfix = 'Epoch:{} | No evaluate until epoch:{}'.format(epoch, self.opt.evaluate_begin)
+                        sen_logits = outputs
+                        loss = criterion(sen_logits, targets)
+                    sum_loss += loss.item()
+                    loss.backward()
+                    self.optimizer.step()
 
-                    iterator.postfix = postfix
-                    iterator.refresh()
+                    # evaluate if test set is available
+                    if 'test' in self.opt.dataset_file and global_step % self.opt.log_step == 0:
+                        if epoch >= self.opt.evaluate_begin:
 
-        self.logger.info('-----------------------Training Summary-----------------------')
+                            test_acc, f1 = self._evaluate_acc_f1(test_dataloader)
+                            self.opt.metrics_of_this_checkpoint['acc'] = test_acc
+                            self.opt.metrics_of_this_checkpoint['f1'] = f1
+                            sum_acc += test_acc
+                            sum_f1 += f1
+                            if test_acc > max_fold_acc:
+
+                                max_fold_acc = test_acc
+                                if self.opt.model_path_to_save:
+                                    if not os.path.exists(self.opt.model_path_to_save):
+                                        os.mkdir(self.opt.model_path_to_save)
+                                    if save_path:
+                                        try:
+                                            shutil.rmtree(save_path)
+                                            # logger.info('Remove sub-optimal trained model:', save_path)
+                                        except:
+                                            # logger.info('Can not remove sub-optimal trained model:', save_path)
+                                            pass
+                                    save_path = '{0}/{1}_{2}_acc_{3}_f1_{4}/'.format(self.opt.model_path_to_save,
+                                                                                     self.opt.model_name,
+                                                                                     self.opt.lcf,
+                                                                                     round(test_acc * 100, 2),
+                                                                                     round(f1 * 100, 2)
+                                                                                     )
+                                    self._save_model(self.model, save_path, mode=0)
+                            if f1 > max_fold_f1:
+                                max_fold_f1 = f1
+                            postfix = ('Epoch:{} | Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) |'
+                                       ' Test F1:{:.2f}(max:{:.2f})'.format(epoch,
+                                                                            loss.item(),
+                                                                            test_acc * 100,
+                                                                            max_fold_acc * 100,
+                                                                            f1 * 100,
+                                                                            max_fold_f1 * 100))
+                        else:
+                            postfix = 'Epoch:{} | No evaluation until epoch:{}'.format(epoch, self.opt.evaluate_begin)
+
+                        iterator.postfix = postfix
+                        iterator.refresh()
+            fold_test_acc.append(max_fold_acc)
+            fold_test_f1.append(max_fold_f1)
+            self.reload_model()
+        os.remove('./init_state_dict.bin')
+        mean_test_acc = numpy.mean(fold_test_acc)
+        mean_test_f1 = numpy.mean(fold_test_f1)
+        self.logger.info('-------------------------- Training Summary --------------------------')
         self.logger.info(
-            '  Max Accuracy: {:.8f} Max F1: {:.8f} Loss: {:.8f}'.format(max_test_acc * 100, max_f1 * 100, sum_loss))
-        self.logger.info('-----------------------Training Summary-----------------------')
+            'Avg Acc: {:.8f} Avg F1: {:.8f} Loss: {:.8f}'.format(mean_test_acc * 100,
+                                                                 mean_test_f1 * 100,
+                                                                 sum_loss))
+        self.logger.info('-------------------------- Training Summary --------------------------')
         if save_path:
             return save_path
         else:
@@ -197,13 +254,13 @@ class Instructor:
                 self._save_model(self.model, save_path, mode=0)
             return self.model, self.opt, self.tokenizer, sum_acc, sum_f1
 
-    def _evaluate_acc_f1(self):
+    def _evaluate_acc_f1(self, test_dataloader):
         # switch model to evaluation mode
         self.model.eval()
         n_test_correct, n_test_total = 0, 0
         t_targets_all, t_outputs_all = None, None
         with torch.no_grad():
-            for t_batch, t_sample_batched in enumerate(self.test_data_loader):
+            for t_batch, t_sample_batched in enumerate(test_dataloader):
 
                 t_inputs = [t_sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
                 t_targets = t_sample_batched['polarity'].to(self.opt.device)
@@ -232,19 +289,8 @@ class Instructor:
         # Loss and Optimizer
         criterion = nn.CrossEntropyLoss()
         lca_criterion = nn.CrossEntropyLoss()
-        # # ---------------------------------------------------------------- #
-        # bert_paprams = list(map(id, self.model.bert4global.parameters()))
-        # _params = filter(lambda p: id(p) not in bert_paprams, self.model.parameters())
-        # bert_params = filter(lambda p: p.requires_grad, self.model.bert4global.parameters())
-        # params = [{'params': _params, 'lr': 0.0001},
-        #           {'params': bert_params, 'lr': self.opt.learning_rate}
-        #           ]
-        # optimizer = self.opt.optimizer(params, weight_decay=self.opt.l2reg)
-        # ---------------------------------------------------------------- #
-        _params = filter(lambda p: p.requires_grad, self.model.parameters())
-        optimizer = self.opt.optimizer(_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
-        return self._train_and_evaluate(criterion, lca_criterion, optimizer)
+        return self._train_and_evaluate(criterion, lca_criterion)
 
 
 def train4apc(opt):
@@ -256,8 +302,6 @@ def train4apc(opt):
     numpy.random.seed(opt.seed)
     torch.manual_seed(opt.seed)
     torch.cuda.manual_seed(opt.seed)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
 
     optimizers = {
         'adadelta': torch.optim.Adadelta,  # default lr=1.0
@@ -281,5 +325,5 @@ def train4apc(opt):
             ins = Instructor(opt, opt.logger)
             return ins.run()
         except ValueError as e:
-            time.sleep(60)
             print('Seems to be ConnectionError, retry in {} seconds...'.format(60))
+            time.sleep(60)

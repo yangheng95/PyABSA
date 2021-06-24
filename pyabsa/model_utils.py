@@ -43,8 +43,10 @@ def download_pretrained_model(task='apc', language='chinese', archive_path='', m
                   'neither trained using fine-tuned the hyper-parameters nor trained with enough steps, '
                   'it is recommended to train the models on your own custom dataset', 'red')
           )
+    if not os.path.exists('./checkpoints'):
+        os.mkdir('./checkpoints')
     tmp_dir = '{}_{}_TRAINED_MODEL'.format(task.upper(), language.upper())
-    dest_path = os.path.join('.', tmp_dir)
+    dest_path = os.path.join('./checkpoints', tmp_dir)
     if not os.path.exists(dest_path):
         os.mkdir(dest_path)
     if len(os.listdir(dest_path)) > 1:
@@ -67,16 +69,9 @@ def download_pretrained_model(task='apc', language='chinese', archive_path='', m
 class APCTrainedModelManager:
     @staticmethod
     def get_checkpoint(checkpoint_name: str = 'Chinese'):
-        apc_checkpoint = update_checkpoints('APC')['APC']
+        apc_checkpoint = update_checkpoints('APC')
         if checkpoint_name.lower() in apc_checkpoint:
-            min_ver, _, max_ver = apc_checkpoint[checkpoint_name.lower()]['version'].partition('-')
-            max_ver = max_ver if max_ver else 'N.A.'
-            if min_ver <= __version__ <= max_ver:
-                print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint_name), 'green'))
-            else:
-                raise KeyError('This checkpoint only works under Version [{}] of PyABSA!'.format(
-                    apc_checkpoint[checkpoint_name.lower()]['version'])
-                )
+            print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint_name), 'green'))
         else:
             raise FileNotFoundError(colored('Checkpoint:{} is not found.'.format(checkpoint_name), 'red'))
         return download_pretrained_model(task='apc',
@@ -88,16 +83,9 @@ class ATEPCTrainedModelManager:
 
     @staticmethod
     def get_checkpoint(checkpoint_name: str = 'Chinese'):
-        atepc_checkpoint = update_checkpoints('ATEPC')['ATEPC']
+        atepc_checkpoint = update_checkpoints('ATEPC')
         if checkpoint_name.lower() in atepc_checkpoint:
-            min_ver, _, max_ver = atepc_checkpoint[checkpoint_name.lower()]['version'].partition('-')
-            max_ver = max_ver if max_ver else 'N.A.'
-            if min_ver <= __version__ <= max_ver:
-                print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint_name), 'green'))
-            else:
-                raise KeyError('This checkpoint only works under Version [{}] of PyABSA!'.format(
-                    atepc_checkpoint[checkpoint_name.lower()]['version'])
-                )
+            print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint_name), 'green'))
         else:
             raise FileNotFoundError(colored('Checkpoint:{} is not found.'.format(checkpoint_name), 'red'))
         return download_pretrained_model(task='atepc',
@@ -113,12 +101,22 @@ def update_checkpoints(task=''):
         gdd.download_file_from_google_drive(file_id=checkpoint_url,
                                             dest_path='./checkpoints.json')
         checkpoint_map = json.load(open('./checkpoints.json', 'r'))
-        current_version_map = []
+        current_version_map = {}
         for t_map in checkpoint_map:
-            min_ver, _, max_ver = t_map.partition('-')
-            max_ver = max_ver if max_ver else 'N.A.'
-            if min_ver <= __version__ <= max_ver:
-                current_version_map += checkpoint_map[t_map].items()
+            if '-' in t_map:
+                min_ver, _, max_ver = t_map.partition('-')
+                max_ver = max_ver if max_ver else 'N.A.'
+                if min_ver <= __version__ <= max_ver:
+                    current_version_map.update(checkpoint_map[t_map])
+            elif '+' in t_map:
+                min_ver, _, max_ver = t_map.partition('+')
+                max_ver = max_ver if max_ver else 'N.A.'
+                if min_ver <= __version__ <= max_ver:
+                    current_version_map.update(checkpoint_map[t_map])
+            else:
+                min_ver = t_map
+                if min_ver <= __version__:
+                    current_version_map.update(checkpoint_map[t_map])
         APC_checkpoint_map = dict(current_version_map)['APC']
         ATEPC_checkpoint_map = dict(current_version_map)['ATEPC']
 
@@ -144,7 +142,7 @@ def update_checkpoints(task=''):
                     ATEPC_checkpoint_map[checkpoint]['comment']
                 ))
         # os.remove('./checkpoints.json')
-        return APC_checkpoint_map if task.upper()=='APC' else ATEPC_checkpoint_map
+        return APC_checkpoint_map if task.upper() == 'APC' else ATEPC_checkpoint_map
     except ConnectionError as e:
         print('Failed to update available checkpoints! Please contact author to solve this problem.')
         return None

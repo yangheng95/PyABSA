@@ -11,7 +11,7 @@
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 
-> Fast & Enhanced implementation of Local Context Focus.
+> Fast & Low Memory requirement & Enhanced implementation of Local Context Focus.
 
 > Build from LC-ABSA / LCF-ABSA / LCF-BERT and LCF-ATEPC.
 
@@ -47,7 +47,12 @@ To use PyABSA, install the latest version from pip or source code:
 pip install -U pyabsa
 ```
 
-Then try our [tutorials](examples) and have fun! 
+Then clone our example and try our [tutorials](examples) and have fun! 
+```
+git clone https://github.com/yangheng95/PyABSA --depth=1
+cd PyABSA/examples/aspect_polarity_classification
+python sentiment_inference_chinese.py
+```
 
 # Model Support
 

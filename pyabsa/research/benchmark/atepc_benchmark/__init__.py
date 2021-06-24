@@ -5,6 +5,4 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from .atepc_benchmark import (run_benchmark_for_atepc_models,
-                              run_lcf_atepc_cdm,
-                              run_lcf_atepc_cdw)
+from .atepc_benchmark import *

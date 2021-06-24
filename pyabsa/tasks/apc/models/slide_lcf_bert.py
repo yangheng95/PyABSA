@@ -26,7 +26,6 @@ class SLIDE_LCF_BERT(nn.Module):
         self.linear_window_2h = nn.Linear(opt.embed_dim * 2, opt.embed_dim)
 
         self.post_encoder = Encoder(bert.config, opt)
-        self.post_encoder_ = Encoder(bert.config, opt)
         self.bert_pooler = BertPooler(bert.config)
         self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
 
@@ -50,7 +49,6 @@ class SLIDE_LCF_BERT(nn.Module):
         right_lcf_features = torch.mul(masked_global_context_features, right_lcf_matrix)
         right_lcf_features = self.encoder_right(right_lcf_features)
         # # --------------------------------------------------- #
-
         if 'lr' == self.opt.window or 'rl' == self.opt.window:
             if self.opt.eta >= 0:
                 cat_features = torch.cat(
@@ -68,7 +66,7 @@ class SLIDE_LCF_BERT(nn.Module):
         sent_out = torch.cat((global_context_features, sent_out), -1)
         sent_out = self.post_linear(sent_out)
         sent_out = self.dropout(sent_out)
-        sent_out = self.post_encoder_(sent_out)
+        sent_out = self.post_encoder(sent_out)
         dense_out = self.dense(self.bert_pooler(sent_out))
 
         return dense_out
