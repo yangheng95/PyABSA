@@ -10,9 +10,9 @@ import copy
 from pyabsa import ABSADatasets, detect_dataset
 from pyabsa.functional import init_config
 
-from pyabsa.config.atepc_config import atepc_param_dict_base
+from pyabsa.config.atepc_config import atepc_config_handler
 
-from pyabsa.module.atepc.training.atepc_trainer import train4atepc
+from pyabsa.tasks.atepc.training.atepc_trainer import train4atepc
 
 from pyabsa.utils.logger import get_logger
 
@@ -39,7 +39,8 @@ def atepc_param_search(parameter_dict=None,
         score = 0
         for dataset in dataset_path:
             dataset_file = detect_dataset(dataset, auto_evaluate, task='atepc_benchmark')
-            config = init_config(parameter_dict, atepc_param_dict_base, auto_device)
+            config = init_config(parameter_dict, atepc_config_handler.get_atepc_param_dict_base(), auto_device)
+            config.logger = logger
             config.dataset_path = dataset
             config.model_path_to_save = None
             config.dataset_file = dataset_file

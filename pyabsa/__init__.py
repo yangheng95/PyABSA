@@ -19,7 +19,7 @@ from pyabsa.utils.convert_apc_set_to_atepc import convert_apc_set_to_atepc_set
 from pyabsa.config.apc_config import apc_config_handler
 from pyabsa.config.atepc_config import atepc_config_handler
 
-from pyabsa.dataset_utils import ABSADatasets
+from pyabsa.dataset_utils import ABSADatasets, detect_dataset
 
 from pyabsa.model_utils import APCTrainedModelManager, ATEPCTrainedModelManager
 
