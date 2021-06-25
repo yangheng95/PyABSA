@@ -49,12 +49,16 @@ class SLIDE_LCF_BERT(nn.Module):
         right_lcf_features = torch.mul(masked_global_context_features, right_lcf_matrix)
         right_lcf_features = self.encoder_right(right_lcf_features)
         # # --------------------------------------------------- #
+
         if 'lr' == self.opt.window or 'rl' == self.opt.window:
             if self.opt.eta >= 0:
-                cat_features = torch.cat(
-                    (lcf_features, self.opt.eta * left_lcf_features, (1 - self.opt.eta) * right_lcf_features), -1)
+                cat_features = torch.cat((lcf_features,
+                                          self.opt.eta * left_lcf_features,
+                                          (1 - self.opt.eta) * right_lcf_features), -1)
             else:
-                cat_features = torch.cat((lcf_features, left_lcf_features, right_lcf_features), -1)
+                cat_features = torch.cat((lcf_features,
+                                          left_lcf_features,
+                                          right_lcf_features), -1)
             sent_out = self.linear_window_3h(cat_features)
         elif 'l' == self.opt.window:
             sent_out = self.linear_window_2h(torch.cat((lcf_features, left_lcf_features), -1))

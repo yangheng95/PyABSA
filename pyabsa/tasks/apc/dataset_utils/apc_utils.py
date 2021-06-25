@@ -293,32 +293,10 @@ def copy_side_aspect(direct='left', target=None, source=None):
 
 
 # buggy code
-# def is_similar(s1, s2, tokenizer, similarity_threshold):
-#     # some reviews in the datasets are broken and can not use s1 == s2 to distinguish
-#     # the same text which contains multiple aspects, so the similarity check is used
-#     # similarity check is based on the observation and analysis of datasets
-#     count = 0.
-#     s1 = list(s1)
-#     s2 = list(s2)
-#     s1 = s1[:s1.index(tokenizer.eos_token_id) if tokenizer.eos_token_id in s1 else len(s1)]
-#     s2 = s2[:s2.index(tokenizer.eos_token_id) if tokenizer.eos_token_id in s2 else len(s2)]
-#     len1 = len(s1)
-#     len2 = len(s2)
-#     for i, ids in enumerate(s1):
-#         if ids in s2:
-#             count += 1
-#     if count / len1 >= similarity_threshold and count / len2 >= similarity_threshold:
-#         return True
-#     else:
-#         return False
-
-
 def is_similar(s1, s2, tokenizer, similarity_threshold):
     # some reviews in the datasets are broken and can not use s1 == s2 to distinguish
     # the same text which contains multiple aspects, so the similarity check is used
     # similarity check is based on the observation and analysis of datasets
-    if abs(np.count_nonzero(s1) - np.count_nonzero(s2)) > 5:
-        return False
     count = 0.
     s1 = list(s1)
     s2 = list(s2)
@@ -326,16 +304,38 @@ def is_similar(s1, s2, tokenizer, similarity_threshold):
     s2 = s2[:s2.index(tokenizer.eos_token_id) if tokenizer.eos_token_id in s2 else len(s2)]
     len1 = len(s1)
     len2 = len(s2)
-    while s1 and s2:
-        if s1[-1] in s2:
+    for i, ids in enumerate(s1):
+        if ids in s2:
             count += 1
-            s2.remove(s1[-1])
-        s1.remove(s1[-1])
-
     if count / len1 >= similarity_threshold and count / len2 >= similarity_threshold:
         return True
     else:
         return False
+
+
+# def is_similar(s1, s2, tokenizer, similarity_threshold):
+#     # some reviews in the datasets are broken and can not use s1 == s2 to distinguish
+#     # the same text which contains multiple aspects, so the similarity check is used
+#     # similarity check is based on the observation and analysis of datasets
+#     if abs(np.count_nonzero(s1) - np.count_nonzero(s2)) > 5:
+#         return False
+#     count = 0.
+#     s1 = list(s1)
+#     s2 = list(s2)
+#     s1 = s1[:s1.index(tokenizer.eos_token_id) if tokenizer.eos_token_id in s1 else len(s1)]
+#     s2 = s2[:s2.index(tokenizer.eos_token_id) if tokenizer.eos_token_id in s2 else len(s2)]
+#     len1 = len(s1)
+#     len2 = len(s2)
+#     while s1 and s2:
+#         if s1[-1] in s2:
+#             count += 1
+#             s2.remove(s1[-1])
+#         s1.remove(s1[-1])
+#
+#     if count / len1 >= similarity_threshold and count / len2 >= similarity_threshold:
+#         return True
+#     else:
+#         return False
 
 
 def is_same(s1, s2, tokenizer):
