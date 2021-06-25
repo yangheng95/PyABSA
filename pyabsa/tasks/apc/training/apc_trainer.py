@@ -57,11 +57,6 @@ class Instructor:
 
         self._log_write_args()
 
-        logger.info("***** Running training for Aspect Polarity Classification *****")
-        logger.info("  Num examples = %d", len(self.train_set))
-        logger.info("  Batch size = %d", self.opt.batch_size)
-        logger.info("  Num steps = %d", int(len(self.train_set) / self.opt.batch_size) * self.opt.num_epoch)
-
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
         self.optimizer = self.opt.optimizer(_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
         if os.path.exists('./init_state_dict.bin'):
@@ -94,14 +89,9 @@ class Instructor:
                 len(sum_dataset) - len_per_fold * (self.opt.cross_validate_fold - 1)]))
 
             d_index = []
-            while len(d_index) < 3:
-                idx = random.randint(0, self.opt.cross_validate_fold - 1)
-                while idx in d_index:
-                    idx = random.randint(0, self.opt.cross_validate_fold)
-                d_index.append(idx)
-
-                train_set = ConcatDataset([x for i, x in enumerate(folds) if i != idx])
-                test_set = folds[idx]
+            for f_idx in range(self.opt.cross_validate_fold):
+                train_set = ConcatDataset([x for i, x in enumerate(folds) if i != f_idx])
+                test_set = folds[f_idx]
                 self.train_data_loaders.append(
                     DataLoader(dataset=train_set, batch_size=self.opt.batch_size, shuffle=True))
                 self.test_data_loaders.append(
@@ -158,6 +148,12 @@ class Instructor:
         fold_test_acc = []
         fold_test_f1 = []
         for f, (train_dataloader, test_dataloader) in enumerate(zip(self.train_data_loaders, self.test_data_loaders)):
+            self.opt.logger.info("***** Running training for Aspect Polarity Classification *****")
+            self.opt.logger.info("Training set examples = %d", len(train_dataloader))
+            self.opt.logger.info("Test set examples = %d", len(test_dataloader))
+            self.opt.logger.info("Batch size = %d", self.opt.batch_size)
+            self.opt.logger.info("Num steps = %d", len(train_dataloader) // self.opt.batch_size * self.opt.num_epoch)
+
             if len(self.train_data_loaders) > 1:
                 self.opt.logger.info('No. {} training in {} repeats...'.format(f + 1, self.opt.cross_validate_fold))
             global_step = 0
