@@ -23,14 +23,14 @@
 
 # 前言
 
-这是一个ASBA面向研究的代码库。我注意到有些repo不提供推理脚本，
-并且代码存在冗余以及难以使用的问题，因此我们构建了PyABSA，使训练和推理更容易。
+这是一个面向ABSA研究的代码库。我注意到有些repo不提供推理脚本，
+并且代码存在冗余以及难以使用的问题，为了使模型训练和推理更容易，我们构建了PyABSA。
 PyABSA现在包含ATEPC和APC模型。
 除了为ATEPC和APC提供SOTA模型之外，PyABSA中的一些源代码是可以作为您构建自己的模型的基础。
-换句话说，您可以基于PyABSA快捷且高效地开发模型。
+您可以基于PyABSA快捷且高效地开发您的模型。
 例如，从PyABSA中使用高效的局部上下文聚焦机制作为您开发的基础。
 如果您有有趣的想法以及任何问题，欢迎随时告知我们，
-欢迎帮助我们构建一个易于使用的工具包，以降低在ABSA任务中构建模型和复制的成本。
+欢迎帮助我们构建一个易于使用的工具包，以降低在ABSA任务中构建和复制模型的成本。
 
 # 公告
 LCF是为ABSA提出的一个简单高效且易于使用的机制。
@@ -40,9 +40,9 @@ LCF是为ABSA提出的一个简单高效且易于使用的机制。
 或者[LCF-ATEPC](https://github.com/XuMayi/LCF-ATEPC).
 
 
-# Preliminaries
+# 试用
 
-**如果您认为此库对您有帮助，您可以给这个库打上星号，以便随时接受PyABSA中的新特性或教程的通知。**
+**如果您认为此库对您有帮助，您可以给这个库打上一个小星星，以便随时接受PyABSA中的新特性或教程的通知。**
 如果您需要使用PyABSA，请从pip或源代码安装最新版本:
 
 ```
@@ -97,7 +97,7 @@ python sentiment_inference_chinese.py
 | SLIDE-LCF-BERT (CDM) |    81.35          |        86.43      |   85.93          |    92.2         |
 
 上述结果取自三种随机种子的最佳性能结果。 我们会在版本更新的过程中及时更新上述性能表现。我们正在构建一个面向APC的
-**[排行榜](examples/aspect_polarity_classification/leaderboard.md)**, 
+**[leaderboard](examples/aspect_polarity_classification/leaderboard.md)**, 
 您可以通过告知我们其他模型的性能来帮助我们完善这个排行榜.
 
 
@@ -120,7 +120,7 @@ checkpoint_map = update_checkpoints()
 2. 在[checkpoint_map](examples/checkpoint_map.json)中注册您的checkpoints, 
   然后提交pull request。我们会尽快更新checkpoint索引，谢谢您的帮助!
 
-# Aspect Term Extraction (ATE)
+# 方面词抽取 (ATE)
 
 ## 方面抽取及情感分类结果示例如下:
 
@@ -158,7 +158,7 @@ from pyabsa import ATEPCModelList
 param_dict = atepc_config_handler.get_apc_param_dict_chinese()
 ```
 
-### 3. 指定一个ATEPC模型并更改一些超参数 (如果必要的话)
+### 3. 指定一个ATEPC模型并在您需要的情况下更改一些超参数
 ```
 atepc_param_dict_chinese['model'] = ATEPCModelList.LCF_ATEPC
 atepc_param_dict_chinese['log_step'] = 20
@@ -225,7 +225,7 @@ from pyabsa import ABSADatasets
 param_dict = apc_config_handler.get_atepc_param_dict_english()
 ```
 
-### 3. 指定一个APC模型并更改一些超参数 (如果必要的话)
+### 3. 指定一个APC模型并在您需要的情况下更改一些超参数
 ```
 apc_param_dict_english['model'] = APCModelList.SLIDE_LCF_BERT
 apc_param_dict_english['evaluate_begin'] = 2  # to reduce evaluation times and save resources 
@@ -249,7 +249,7 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english, # ignore this
                             auto_device=True               # automatic choose CUDA if any, False means always use CPU
                             )
 ```
-### 5.  配置运行时的设置和运行训练
+### 5.  情感推断
 ```
 from pyabsa import load_sentiment_classifier
 from pyabsa import ABSADatasets
@@ -332,9 +332,9 @@ apc_param_search(parameter_dict=apc_param_dict_english,
 
 # 期待您的贡献
 我们期待您能帮助我们改进这项工作，例如:
-提供新的数据集。或者，如果您用**PyABSA开发你的模型**，
+提供新的数据集。或者使用**PyABSA开发你的模型**，
 我们非常欢迎您**在PyABSA中通过pull request开源您的模型**，
-开源项目会让你的工作更有价值!
+开源项目会让您的工作更有价值!
 只要我们有空闲时间，我们非常乐意协助您完成您的开源工作。
 
 供稿资源的著作权属于供稿人，
