@@ -20,3 +20,5 @@ The performance reports of other models are welcome.
 | BERT-BASE |      80.46         |       83.24       |    82.53         |    89.65         |
 | BERT-SPC |    80.62          |        86.55      |   84.75          |    91.44         |
 | Etc. |      -         |       -       |    -         |    -         |
+
+**The above results were obtained in the 0.8.7.4 version of Pybasa, and all experiments were performed on the Nvidia Tesla T4 GPU.**

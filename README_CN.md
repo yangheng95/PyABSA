@@ -340,7 +340,7 @@ apc_param_search(parameter_dict=apc_param_dict_english,
 供稿资源的著作权属于供稿人，
 希望能得到您的帮助，非常感谢!
 
-# License 
+# 许可证
 MIT
 ## 贡献者 ✨
 
