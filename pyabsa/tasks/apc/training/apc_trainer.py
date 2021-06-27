@@ -9,6 +9,8 @@
 import os
 import random
 import pickle
+
+import contiguous_params
 import numpy
 import torch
 import torch.nn as nn
@@ -56,12 +58,11 @@ class Instructor:
             logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device.index)))
 
         self._log_write_args()
-
-        _params = filter(lambda p: p.requires_grad, self.model.parameters())
-        self.optimizer = self.opt.optimizer(_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
+        self.optimizer = self.opt.optimizer(self.model.parameters(), lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
         if os.path.exists('./init_state_dict.bin'):
             os.remove('./init_state_dict.bin')
-        torch.save(self.model.state_dict(), './init_state_dict.bin')
+        if self.opt.cross_validate_fold > 0:
+            torch.save(self.model.state_dict(), './init_state_dict.bin')
 
     def reload_model(self):
         self.model.load_state_dict(torch.load('./init_state_dict.bin'))
@@ -228,8 +229,9 @@ class Instructor:
                         iterator.refresh()
             fold_test_acc.append(max_fold_acc)
             fold_test_f1.append(max_fold_f1)
+        if os.path.exists('./init_state_dict.bin'):
             self.reload_model()
-        os.remove('./init_state_dict.bin')
+            os.remove('./init_state_dict.bin')
         mean_test_acc = numpy.mean(fold_test_acc)
         mean_test_f1 = numpy.mean(fold_test_f1)
         self.logger.info('-------------------------- Training Summary --------------------------')
