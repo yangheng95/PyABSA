@@ -9,7 +9,7 @@
 ![welcome](https://img.shields.io/badge/Contribution-Welcome-brightgreen)
 [![Gitter](https://badges.gitter.im/PyABSA/community.svg)](https://gitter.im/PyABSA/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 
@@ -93,19 +93,8 @@ or [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_template_atepc.py) model template.
 | :------------------: | :------------: | :-----------: |:------------:|:------------:|
 | SLIDE-LCFS-BERT (CDW)|    81.35       |        88.04  |    85.93     |   92.52      | 
 | SLIDE-LCFS-BERT (CDM)|     82.13      |        87.5   |    85.37     |   92.36      |
-| SLIDE-LCF-BERT (CDW) |      80.82         |        86.04      |    85.18        |    91.98         |
-| SLIDE-LCF-BERT (CDM) |    80.67          |        86.13      |   85.31          |    91.92         |
-| FAST-LCF-BERT (CDW) |      80.35	         |      86.4      |       84.5     |    91.06        |
-| FAST-LCF-BERT (CDM) |    80.62          |        86.34      |   84.57          |    92.09         |
-| FAST-LCFS-BERT (CDW) |      80.56         |       86.4       |    85.62         |    91.49         |
-| FAST-LCFS-BERT (CDM) |    80.15           |        86.69      |   84.63         |    91.65         |
-| LCF-BERT-LARGE (CDW) |      80.04         |       86.4       |    84.69         |    91.49         |
-| LCF-BERT-LARGE (CDM) |    80.25           |        85.89      |   85.13         |    91.22         |
-| LCFS-BERT-LARGE (CDW) |      79.31         |       86.7       |    84.26         |    91.54         |
-| LCFS-BERT-LARGE (CDM) |    79.94           |        85.54      |   85.74         |    92.2         |
-| BERT-BASE |      80.46         |       83.24       |    82.53         |    89.65         |
-| BERT-SPC |    80.62          |        86.55      |   84.75          |    91.44         |
-| Etc. |      -         |       -       |    -         |    -         |
+| SLIDE-LCF-BERT (CDW) |      -         |       -       |    -         |    -         |
+| SLIDE-LCF-BERT (CDM) |    -           |        -      |   -          |    -         |
 
 The optimal performance result among three random seeds. Note that with the update of this repo, 
 the results could be updated. We are working on the construction of
