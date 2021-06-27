@@ -23,14 +23,14 @@
 
 # Preface
 
-This is an ASBA research-oriented code repository. I notice that some Repos do not provide the inference script,
-and the codes may be redundant or hard to use, so I build PyABSA to make the training and inference easier.
-PyABSA contains ATEPC and APC models now.
-Except for providing SOTA models for both ATEPC and APC, some source codes in PyABSA are reusable. 
-In another word, you can develop your model based on PyABSA. 
-e.g., using efficient local context focus implementation from PyASBA.
-Please feel free to give me your interesting thoughts,
-to help me build an easy-to-use toolkit to reduce the cost of building models and reproduction in ABSA tasks.
+这是一个ASBA面向研究的代码库。我注意到有些repo不提供推理脚本，
+代码可能是冗余的或难以使用，所以我构建了PyABSA，使训练和推理更容易。
+PyABSA现在包含ATEPC和APC模型。
+除了为ATEPC和APC提供SOTA模型之外，PyABSA中的一些源代码是可重用的。
+换句话说，您可以基于PyABSA开发模型。
+例如，使用有效的本地上下文焦点实现从PyASBA。
+请随时给我你们有趣的想法，
+帮助我们构建一个易于使用的工具包，以降低在ABSA任务中构建模型和复制的成本。
 
 # Notice
 The LCF is a simple and adoptive mechanism proposed for ABSA. 
@@ -93,8 +93,19 @@ or [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_template_atepc.py) model template.
 | :------------------: | :------------: | :-----------: |:------------:|:------------:|
 | SLIDE-LCFS-BERT (CDW)|    81.35       |        88.04  |    85.93     |   92.52      | 
 | SLIDE-LCFS-BERT (CDM)|     82.13      |        87.5   |    85.37     |   92.36      |
-| SLIDE-LCF-BERT (CDW) |      -         |       -       |    -         |    -         |
-| SLIDE-LCF-BERT (CDM) |    -           |        -      |   -          |    -         |
+| SLIDE-LCF-BERT (CDW) |      80.82         |        86.04      |    85.18        |    91.98         |
+| SLIDE-LCF-BERT (CDM) |    80.67          |        86.13      |   85.31          |    91.92         |
+| FAST-LCF-BERT (CDW) |      80.35	         |      86.4      |       84.5     |    91.06        |
+| FAST-LCF-BERT (CDM) |    80.62          |        86.34      |   84.57          |    92.09         |
+| FAST-LCFS-BERT (CDW) |      80.56         |       86.4       |    85.62         |    91.49         |
+| FAST-LCFS-BERT (CDM) |    80.15           |        86.69      |   84.63         |    91.65         |
+| LCF-BERT-LARGE (CDW) |      80.04         |       86.4       |    84.69         |    91.49         |
+| LCF-BERT-LARGE (CDM) |    80.25           |        85.89      |   85.13         |    91.22         |
+| LCFS-BERT-LARGE (CDW) |      79.31         |       86.7       |    84.26         |    91.54         |
+| LCFS-BERT-LARGE (CDM) |    79.94           |        85.54      |   85.74         |    92.2         |
+| BERT-BASE |      80.46         |       83.24       |    82.53         |    89.65         |
+| BERT-SPC |    80.62          |        86.55      |   84.75          |    91.44         |
+| Etc. |      -         |       -       |    -         |    -         |
 
 The optimal performance result among three random seeds. Note that with the update of this repo, 
 the results could be updated. We are working on the construction of
