@@ -229,17 +229,26 @@ class Instructor:
                         iterator.refresh()
             fold_test_acc.append(max_fold_acc)
             fold_test_f1.append(max_fold_f1)
-        if os.path.exists('./init_state_dict.bin'):
-            self.reload_model()
-            os.remove('./init_state_dict.bin')
+            if os.path.exists('./init_state_dict.bin'):
+                self.reload_model()
         mean_test_acc = numpy.mean(fold_test_acc)
         mean_test_f1 = numpy.mean(fold_test_f1)
         self.logger.info('-------------------------- Training Summary --------------------------')
-        self.logger.info(
-            'Avg Acc: {:.8f} Avg F1: {:.8f} Loss: {:.8f}'.format(mean_test_acc * 100,
-                                                                 mean_test_f1 * 100,
-                                                                 sum_loss))
+        if self.opt.cross_validate_fold > 0:
+            self.logger.info(
+                '{}-fold Avg Acc: {:.8f} Avg F1: {:.8f} Loss: {:.8f}'.format(self.opt.cross_validate_fold,
+                                                                             mean_test_acc * 100,
+                                                                             mean_test_f1 * 100,
+                                                                             sum_loss))
+        else:
+            self.logger.info(
+                'Acc: {:.8f} F1: {:.8f} Loss: {:.8f}'.format(fold_test_acc[0] * 100,
+                                                             fold_test_f1[0] * 100,
+                                                             sum_loss))
         self.logger.info('-------------------------- Training Summary --------------------------')
+        if os.path.exists('./init_state_dict.bin'):
+            self.reload_model()
+            os.remove('./init_state_dict.bin')
         if save_path:
             return save_path
         else:

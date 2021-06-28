@@ -15,8 +15,9 @@ save_path = 'state_dict'
 apc_param_dict_english = apc_config_handler.get_apc_param_dict_english()
 apc_param_dict_english['model'] = APCModelList.SLIDE_LCFS_BERT
 apc_param_dict_english['evaluate_begin'] = 1
-apc_param_dict_english['max_seq_len'] = 60
-apc_param_dict_english['cross_validate_fold'] = 5
+apc_param_dict_english['num_epoch'] = 10
+apc_param_dict_english['max_seq_len'] = 80
+apc_param_dict_english['cross_validate_fold'] = -1
 
 laptop14 = ABSADatasets.Laptop14
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,

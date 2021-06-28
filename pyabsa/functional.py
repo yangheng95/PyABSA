@@ -9,8 +9,6 @@ import os
 
 from argparse import Namespace
 
-from pyabsa.utils.pyabsa_utils import get_auto_device
-
 from pyabsa.dataset_utils import detect_dataset
 
 from pyabsa.tasks.apc.prediction.sentiment_classifier import SentimentClassifier
@@ -23,6 +21,9 @@ from pyabsa.config.atepc_config import atepc_config_handler
 from pyabsa.config.apc_config import apc_config_handler
 
 from pyabsa.utils.logger import get_logger
+from pyabsa.utils.pyabsa_utils import get_auto_device
+
+from pyabsa import __version__
 
 gpu_name, choice = get_auto_device()
 
@@ -32,6 +33,8 @@ def init_config(config_dict, base_config_dict, auto_device=True):
         if auto_device and 'device' not in config_dict:
             if choice >= 0:
                 base_config_dict['device'] = 'cuda:' + str(choice)
+                if gpu_name:
+                    base_config_dict['device_name'] = gpu_name
             else:
                 base_config_dict['device'] = 'cpu'
         if not auto_device and 'device' not in config_dict:
@@ -48,8 +51,8 @@ def init_config(config_dict, base_config_dict, auto_device=True):
     assert base_config_dict['cross_validate_fold'] == -1 or 5 <= base_config_dict['cross_validate_fold'] <= 10
 
     base_config_dict['model_name'] = base_config_dict['model'].__name__.lower()
-    if gpu_name:
-        base_config_dict['device_name'] = gpu_name
+    base_config_dict['Version'] = __version__
+
     apc_config = Namespace(**base_config_dict)
 
     if apc_config.use_syntax_based_SRD:
