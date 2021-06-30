@@ -17,7 +17,7 @@ def run_bert_base_cdw(param_dict=None):
     if not param_dict:
         print('No optimal hyper-parameters are set, using default params...')
         _apc_param_dict_english = copy.deepcopy(apc_config_handler.get_apc_param_dict_english())
-        _apc_param_dict_english['model_name'] = APCModelList.BERT_BASE
+        _apc_param_dict_english['model'] = APCModelList.BERT_BASE
         _apc_param_dict_english['evaluate_begin'] = 1
         _apc_param_dict_english['log_step'] = 5
         _apc_param_dict_english['dropout'] = 0.5
@@ -55,7 +55,7 @@ def run_bert_base_cdm(param_dict=None):
     if not param_dict:
         print('No optimal hyper-parameters are set, using default params...')
         _apc_param_dict_english = copy.deepcopy(apc_config_handler.get_apc_param_dict_english())
-        _apc_param_dict_english['model_name'] = APCModelList.BERT_BASE
+        _apc_param_dict_english['model'] = APCModelList.BERT_BASE
         _apc_param_dict_english['evaluate_begin'] = 1
         _apc_param_dict_english['log_step'] = 5
         _apc_param_dict_english['dropout'] = 0.5

@@ -26,6 +26,7 @@ class SLIDE_LCF_BERT(nn.Module):
         self.linear_window_2h = nn.Linear(opt.embed_dim * 2, opt.embed_dim)
 
         self.post_encoder = Encoder(bert.config, opt)
+        self.post_encoder_ = Encoder(bert.config, opt)
         self.bert_pooler = BertPooler(bert.config)
         self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
 
@@ -52,25 +53,22 @@ class SLIDE_LCF_BERT(nn.Module):
 
         if 'lr' == self.opt.window or 'rl' == self.opt.window:
             if self.opt.eta >= 0:
-                cat_features = torch.cat((lcf_features,
-                                          self.opt.eta * left_lcf_features,
-                                          (1 - self.opt.eta) * right_lcf_features), -1)
+                cat_features = torch.cat(
+                    (lcf_features, self.opt.eta * left_lcf_features, (1 - self.opt.eta) * right_lcf_features), -1)
             else:
-                cat_features = torch.cat((lcf_features,
-                                          left_lcf_features,
-                                          right_lcf_features), -1)
+                cat_features = torch.cat((lcf_features, left_lcf_features, right_lcf_features), -1)
             sent_out = self.linear_window_3h(cat_features)
         elif 'l' == self.opt.window:
             sent_out = self.linear_window_2h(torch.cat((lcf_features, left_lcf_features), -1))
         elif 'r' == self.opt.window:
             sent_out = self.linear_window_2h(torch.cat((lcf_features, right_lcf_features), -1))
         else:
-            raise KeyError('Invalid window parameter:', self.opt.window)
+            raise KeyError('Invalid parameter:', self.opt.window)
 
         sent_out = torch.cat((global_context_features, sent_out), -1)
         sent_out = self.post_linear(sent_out)
         sent_out = self.dropout(sent_out)
-        sent_out = self.post_encoder(sent_out)
+        sent_out = self.post_encoder_(sent_out)
         dense_out = self.dense(self.bert_pooler(sent_out))
 
         return dense_out

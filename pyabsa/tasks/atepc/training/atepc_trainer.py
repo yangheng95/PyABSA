@@ -238,16 +238,15 @@ class Instructor:
 
         self.logger.info('-------------------------------------Training Summary-------------------------------------')
         self.logger.info(
-            '  Max APC Acc: {:.5f} Max APC F1: {:.5f} Max ATE F1: {:.5f} Loss: {}'.format(self.opt.max_test_metrics[
-                                                                                              'max_apc_test_acc'],
-                                                                                          self.opt.max_test_metrics[
-                                                                                              'max_apc_test_f1'],
-                                                                                          self.opt.max_test_metrics[
-                                                                                              'max_ate_test_f1'],
-                                                                                          sum_loss)
+            '  Max APC Acc: {:.5f} Max APC F1: {:.5f} Max ATE F1: {:.5f} Accumulated Loss: {}'.format(
+                self.opt.max_test_metrics['max_apc_test_acc'],
+                self.opt.max_test_metrics['max_apc_test_f1'],
+                self.opt.max_test_metrics['max_ate_test_f1'],
+                sum_loss)
         )
         self.logger.info('-------------------------------------Training Summary-------------------------------------')
-        # return the model paths of multiple training_tutorials in case of loading the best model after training_tutorials
+        # return the model paths of multiple training_tutorials
+        # in case of loading the best model after training_tutorials
         if save_path:
             return save_path
         else:

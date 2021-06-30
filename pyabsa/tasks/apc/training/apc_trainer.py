@@ -10,7 +10,6 @@ import os
 import random
 import pickle
 
-import contiguous_params
 import numpy
 import torch
 import torch.nn as nn
@@ -58,7 +57,11 @@ class Instructor:
             logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device.index)))
 
         self._log_write_args()
-        self.optimizer = self.opt.optimizer(self.model.parameters(), lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
+        self.optimizer = self.opt.optimizer(
+            self.model.parameters(),
+            lr=self.opt.learning_rate,
+            weight_decay=self.opt.l2reg
+        )
         if os.path.exists('./init_state_dict.bin'):
             os.remove('./init_state_dict.bin')
         if self.opt.cross_validate_fold > 0:
@@ -69,7 +72,7 @@ class Instructor:
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
         self.optimizer = self.opt.optimizer(_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
-    def prepare_data_loader(self, train_set, test_set=None, cross_validate=True):
+    def prepare_data_loader(self, train_set, test_set=None):
         if self.opt.cross_validate_fold < 1:
             self.train_data_loaders.append(DataLoader(dataset=train_set,
                                                       batch_size=self.opt.batch_size,
@@ -89,7 +92,6 @@ class Instructor:
             folds = random_split(sum_dataset, tuple([len_per_fold] * (self.opt.cross_validate_fold - 1) + [
                 len(sum_dataset) - len_per_fold * (self.opt.cross_validate_fold - 1)]))
 
-            d_index = []
             for f_idx in range(self.opt.cross_validate_fold):
                 train_set = ConcatDataset([x for i, x in enumerate(folds) if i != f_idx])
                 test_set = folds[f_idx]
@@ -148,15 +150,15 @@ class Instructor:
         self.opt.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
         fold_test_acc = []
         fold_test_f1 = []
+        save_path = ''
         for f, (train_dataloader, test_dataloader) in enumerate(zip(self.train_data_loaders, self.test_data_loaders)):
             self.opt.logger.info("***** Running training for Aspect Polarity Classification *****")
             self.opt.logger.info("Training set examples = %d", len(train_dataloader))
             self.opt.logger.info("Test set examples = %d", len(test_dataloader))
             self.opt.logger.info("Batch size = %d", self.opt.batch_size)
             self.opt.logger.info("Num steps = %d", len(train_dataloader) // self.opt.batch_size * self.opt.num_epoch)
-
             if len(self.train_data_loaders) > 1:
-                self.opt.logger.info('No. {} training in {} repeats...'.format(f + 1, self.opt.cross_validate_fold))
+                self.opt.logger.info('No. {} training in {} folds...'.format(f + 1, self.opt.cross_validate_fold))
             global_step = 0
             max_fold_acc = 0
             max_fold_f1 = 0
@@ -229,23 +231,28 @@ class Instructor:
                         iterator.refresh()
             fold_test_acc.append(max_fold_acc)
             fold_test_f1.append(max_fold_f1)
+            self.logger.info('-------------------------- Training Summary --------------------------')
+            self.logger.info('Acc: {:.8f} F1: {:.8f} Accumulated Loss: {:.8f}'.format(
+                fold_test_acc[0] * 100,
+                fold_test_f1[0] * 100,
+                sum_loss)
+            )
+            self.logger.info('-------------------------- Training Summary --------------------------')
             if os.path.exists('./init_state_dict.bin'):
                 self.reload_model()
         mean_test_acc = numpy.mean(fold_test_acc)
         mean_test_f1 = numpy.mean(fold_test_f1)
-        self.logger.info('-------------------------- Training Summary --------------------------')
+
         if self.opt.cross_validate_fold > 0:
-            self.logger.info(
-                '{}-fold Avg Acc: {:.8f} Avg F1: {:.8f} Loss: {:.8f}'.format(self.opt.cross_validate_fold,
-                                                                             mean_test_acc * 100,
-                                                                             mean_test_f1 * 100,
-                                                                             sum_loss))
-        else:
-            self.logger.info(
-                'Acc: {:.8f} F1: {:.8f} Loss: {:.8f}'.format(fold_test_acc[0] * 100,
-                                                             fold_test_f1[0] * 100,
-                                                             sum_loss))
-        self.logger.info('-------------------------- Training Summary --------------------------')
+            self.logger.info('-------------------------- Training Summary --------------------------')
+            self.logger.info('{}-fold Avg Acc: {:.8f} Avg F1: {:.8f} Accumulated Loss: {:.8f}'.format(
+                self.opt.cross_validate_fold,
+                mean_test_acc * 100,
+                mean_test_f1 * 100,
+                sum_loss)
+            )
+            self.logger.info('-------------------------- Training Summary --------------------------')
+
         if os.path.exists('./init_state_dict.bin'):
             self.reload_model()
             os.remove('./init_state_dict.bin')

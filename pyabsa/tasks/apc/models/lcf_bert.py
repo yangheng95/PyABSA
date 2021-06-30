@@ -3,8 +3,6 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # Copyright (C) 2019. All Rights Reserved.
 
-import copy
-
 import torch
 import torch.nn as nn
 from transformers.models.bert.modeling_bert import BertPooler

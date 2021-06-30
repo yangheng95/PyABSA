@@ -17,7 +17,7 @@ def run_lcfs_atepc_large_cdw(param_dict=None):
     if not param_dict:
         print('No optimal hyper-parameters are set, using default params...')
         _atepc_param_dict_english = copy.deepcopy(atepc_config_handler.get_atepc_param_dict_english())
-        _atepc_param_dict_english['model_name'] = ATEPCModelList.LCFS_ATEPC_LARGE
+        _atepc_param_dict_english['model'] = ATEPCModelList.LCFS_ATEPC_LARGE
         _atepc_param_dict_english['lcf'] = 'cdw'
         _atepc_param_dict_english['log_step'] = 10
         _atepc_param_dict_english['evaluate_begin'] = 2
@@ -77,7 +77,7 @@ def run_lcfs_atepc_large_cdm(param_dict=None):
     if not param_dict:
         print('No optimal hyper-parameters are set, using default params...')
         _atepc_param_dict_english = copy.deepcopy(atepc_config_handler.get_atepc_param_dict_english())
-        _atepc_param_dict_english['model_name'] = ATEPCModelList.LCFS_ATEPC_LARGE
+        _atepc_param_dict_english['model'] = ATEPCModelList.LCFS_ATEPC_LARGE
         _atepc_param_dict_english['lcf'] = 'cdm'
         _atepc_param_dict_english['log_step'] = 10
         _atepc_param_dict_english['evaluate_begin'] = 2

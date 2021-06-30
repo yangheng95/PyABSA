@@ -17,7 +17,7 @@ def run_lcfs_bert_large_cdw(param_dict=None):
     if not param_dict:
         print('No optimal hyper-parameters are set, using default params...')
         _apc_param_dict_english = copy.deepcopy(apc_config_handler.get_apc_param_dict_english())
-        _apc_param_dict_english['model_name'] = APCModelList.LCFS_BERT_LARGE
+        _apc_param_dict_english['model'] = APCModelList.LCFS_BERT_LARGE
         _apc_param_dict_english['evaluate_begin'] = 1
         _apc_param_dict_english['similarity_threshold'] = 1
         _apc_param_dict_english['dropout'] = 0.5
@@ -56,7 +56,7 @@ def run_lcfs_bert_large_cdm(param_dict=None):
     if not param_dict:
         print('No optimal hyper-parameters are set, using default params...')
         _apc_param_dict_english = copy.deepcopy(apc_config_handler.get_apc_param_dict_english())
-        _apc_param_dict_english['model_name'] = APCModelList.LCFS_BERT_LARGE
+        _apc_param_dict_english['model'] = APCModelList.LCFS_BERT_LARGE
         _apc_param_dict_english['evaluate_begin'] = 1
         _apc_param_dict_english['similarity_threshold'] = 1
         _apc_param_dict_english['dropout'] = 0.5

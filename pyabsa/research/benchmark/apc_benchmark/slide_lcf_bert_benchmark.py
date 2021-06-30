@@ -18,7 +18,7 @@ def run_slide_lcf_bert_cdw(param_dict=None):
     if not param_dict:
         print('No optimal hyper-parameters are set, using default params...')
         _apc_param_dict_english = copy.deepcopy(apc_config_handler.get_apc_param_dict_english())
-        _apc_param_dict_english['model_name'] = APCModelList.SLIDE_LCF_BERT
+        _apc_param_dict_english['model'] = APCModelList.SLIDE_LCF_BERT
         _apc_param_dict_english['evaluate_begin'] = 1
         _apc_param_dict_english['dropout'] = 0.5
         _apc_param_dict_english['log_step'] = 5
@@ -56,7 +56,7 @@ def run_slide_lcf_bert_cdm(param_dict=None):
     if not param_dict:
         print('No optimal hyper-parameters are set, using default params...')
         _apc_param_dict_english = copy.deepcopy(apc_config_handler.get_apc_param_dict_english())
-        _apc_param_dict_english['model_name'] = APCModelList.SLIDE_LCF_BERT
+        _apc_param_dict_english['model'] = APCModelList.SLIDE_LCF_BERT
         _apc_param_dict_english['evaluate_begin'] = 1
         _apc_param_dict_english['max_seq_len'] = 70
         _apc_param_dict_english['dropout'] = 0.5
