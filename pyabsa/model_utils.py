@@ -5,6 +5,9 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
+import pyabsa.tasks.apc.models
+import pyabsa.tasks.atepc.models
+
 from pyabsa import __version__
 
 from termcolor import colored
@@ -15,27 +18,35 @@ from google_drive_downloader import GoogleDriveDownloader as gdd
 
 
 class APCModelList:
-    from pyabsa.tasks.apc.models import BERT_BASE, BERT_SPC
+    SLIDE_LCFS_BERT = pyabsa.tasks.apc.models.SLIDE_LCFS_BERT
+    SLIDE_LCF_BERT = pyabsa.tasks.apc.models.SLIDE_LCF_BERT
 
-    from pyabsa.tasks.apc.models import LCF_BERT, FAST_LCF_BERT, LCF_BERT_LARGE
+    LCF_BERT = pyabsa.tasks.apc.models.LCF_BERT
+    FAST_LCF_BERT = pyabsa.tasks.apc.models.FAST_LCF_BERT
+    LCF_BERT_LARGE = pyabsa.tasks.apc.models.LCF_BERT_LARGE
 
-    from pyabsa.tasks.apc.models import LCFS_BERT, FAST_LCFS_BERT, LCFS_BERT_LARGE
+    LCFS_BERT = pyabsa.tasks.apc.models.LCFS_BERT
+    FAST_LCFS_BERT = pyabsa.tasks.apc.models.FAST_LCFS_BERT
+    LCFS_BERT_LARGE = pyabsa.tasks.apc.models.LCFS_BERT_LARGE
 
-    from pyabsa.tasks.apc.models import SLIDE_LCF_BERT, SLIDE_LCFS_BERT
+    BERT_BASE = pyabsa.tasks.apc.models.BERT_BASE
+    BERT_SPC = pyabsa.tasks.apc.models.BERT_SPC
 
-    from pyabsa.tasks.apc.models import LCA_BERT
-
-    from pyabsa.tasks.apc.models import LCF_TEMPLATE_BERT
+    LCF_TEMPLATE_BERT = pyabsa.tasks.apc.models.LCF_TEMPLATE_BERT
 
 
 class ATEPCModelList:
-    from pyabsa.tasks.atepc.models import BERT_BASE_ATEPC
+    BERT_BASE_ATEPC = pyabsa.tasks.atepc.models.BERT_BASE_ATEPC
 
-    from pyabsa.tasks.atepc.models import LCF_ATEPC, LCF_ATEPC_LARGE, FAST_LCF_ATEPC
+    LCF_ATEPC = pyabsa.tasks.atepc.models.LCF_ATEPC
+    LCF_ATEPC_LARGE = pyabsa.tasks.atepc.models.LCF_ATEPC_LARGE
+    FAST_LCF_ATEPC = pyabsa.tasks.atepc.models.FAST_LCF_ATEPC
 
-    from pyabsa.tasks.atepc.models import LCFS_ATEPC, LCFS_ATEPC_LARGE, FAST_LCFS_ATEPC
+    LCFS_ATEPC = pyabsa.tasks.atepc.models.LCFS_ATEPC
+    LCFS_ATEPC_LARGE = pyabsa.tasks.atepc.models.LCFS_ATEPC_LARGE
+    FAST_LCFS_ATEPC = pyabsa.tasks.atepc.models.FAST_LCFS_ATEPC
 
-    from pyabsa.tasks.atepc.models import LCF_TEMPLATE_ATEPC
+    LCF_TEMPLATE_ATEPC = pyabsa.tasks.atepc.models.LCF_TEMPLATE_ATEPC
 
 
 def download_pretrained_model(task='apc', language='chinese', archive_path='', model_name='any_model'):

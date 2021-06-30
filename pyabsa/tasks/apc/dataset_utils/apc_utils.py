@@ -5,7 +5,6 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-import warnings
 import spacy
 import termcolor
 import networkx as nx
@@ -138,6 +137,7 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
                 text_right = text_right[:len(text_right) - cut_len]
         text_left = ' '.join(text_left)
         text_right = ' '.join(text_right)
+
     bos_token = tokenizer.tokenizer.bos_token if tokenizer.tokenizer.bos_token else '[CLS]'
     eos_token = tokenizer.tokenizer.eos_token if tokenizer.tokenizer.eos_token else '[SEP]'
 
@@ -246,21 +246,6 @@ def get_cdw_vec(opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical
     return cdw_vec
 
 
-def get_asp_index(text_ids, aspect_indices):
-    try:
-        aspect_len = np.count_nonzero(aspect_indices)
-        aspect_indices = aspect_indices[0: aspect_len]
-        for i in range(len(text_ids)):
-            for j in range(len(aspect_indices)):
-                if text_ids[i + j] == aspect_indices[j] and j == len(aspect_indices) - 1:
-                    return i
-                elif text_ids[i + j] != aspect_indices[j]:
-                    break
-    except:
-        return -1
-    return -1
-
-
 def build_spc_mask_vec(opt, text_ids):
     spc_mask_vec = (text_ids > 0)
     spc_mask_vec = np.array(
@@ -292,26 +277,6 @@ def copy_side_aspect(direct='left', target=None, source=None):
         target[direct + '_' + data_item] = source[data_item]
 
 
-# def is_similar(s1, s2, tokenizer, similarity_threshold):
-#     # some reviews in the datasets are broken and can not use s1 == s2 to distinguish
-#     # the same text which contains multiple aspects, so the similarity check is used
-#     # similarity check is based on the observation and analysis of datasets
-#     count = 0.
-#     s1 = list(s1)
-#     s2 = list(s2)
-#     len1 = len(s1)
-#     len2 = len(s2)
-#     while s1 and s2:
-#         if s1[-1] in s2:
-#             count += 1
-#             s2.remove(s1[-1])
-#         s1.remove(s1[-1])
-#     if count / len1 >= similarity_threshold and count / len2 >= similarity_threshold:
-#         return True
-#     else:
-#         return False
-
-
 def is_similar(s1, s2, tokenizer, similarity_threshold):
     # some reviews in the datasets are broken and can not use s1 == s2 to distinguish
     # the same text which contains multiple aspects, so the similarity check is used
@@ -337,14 +302,50 @@ def is_similar(s1, s2, tokenizer, similarity_threshold):
         return False
 
 
-def is_same(s1, s2, tokenizer):
-    eos_idx1 = np.min(np.where(s1 == tokenizer.eos_token_id))
-    eos_idx2 = np.min(np.where(s2 == tokenizer.eos_token_id))
-    s1 = s1[:eos_idx1] if np.count_nonzero(s1) < tokenizer.max_seq_len else s1
-    s2 = s2[:eos_idx2] if np.count_nonzero(s2) < tokenizer.max_seq_len else s2
-    s1 = list(s1)
-    s2 = list(s2)
-    return s1 == s2
+##################  deprecated code  ################
+# def is_similar(s1, s2, tokenizer, similarity_threshold):
+#     # some reviews in the datasets are broken and can not use s1 == s2 to distinguish
+#     # the same text which contains multiple aspects, so the similarity check is used
+#     # similarity check is based on the observation and analysis of datasets
+#     count = 0.
+#     s1 = list(s1)
+#     s2 = list(s2)
+#     len1 = len(s1)
+#     len2 = len(s2)
+#     while s1 and s2:
+#         if s1[-1] in s2:
+#             count += 1
+#             s2.remove(s1[-1])
+#         s1.remove(s1[-1])
+#     if count / len1 >= similarity_threshold and count / len2 >= similarity_threshold:
+#         return True
+#     else:
+#         return False
+
+# def is_similar(s1, s2, tokenizer, similarity_threshold):
+#     # some reviews in the atepc_datasets are broken so the similarity check is used
+#     # similarity check is based on the observation and analysis of datasets
+#     count = 0.
+#     s1 = list(s1)
+#     s2 = list(s2)
+#     s1 = s1[:s1.index(tokenizer.eos_token) if tokenizer.eos_token in s1 else len(s1)]
+#     s2 = s2[:s2.index(tokenizer.eos_token) if tokenizer.eos_token in s2 else len(s2)]
+#     for i, ids in enumerate(s1):
+#         if ids in s2:
+#             count += 1
+#     if count / len(s1) >= 0.98 and count / len(s2) >= 0.98:
+#         return True
+#     else:
+#         return False
+
+# def is_same(s1, s2, tokenizer):
+#     eos_idx1 = np.min(np.where(s1 == tokenizer.eos_token_id))
+#     eos_idx2 = np.min(np.where(s2 == tokenizer.eos_token_id))
+#     s1 = s1[:eos_idx1] if np.count_nonzero(s1) < tokenizer.max_seq_len else s1
+#     s2 = s2[:eos_idx2] if np.count_nonzero(s2) < tokenizer.max_seq_len else s2
+#     s1 = list(s1)
+#     s2 = list(s2)
+#     return s1 == s2
 
 
 try:
