@@ -27,19 +27,19 @@ from pyabsa.utils.logger import get_logger
 
 class Instructor:
 
-    def __init__(self, config):
-        self.opt = config
-        self.logger = config.logger
+    def __init__(self, opt):
+        self.opt = opt
+        self.logger = opt.logger
 
         if os.path.exists(self.opt.dataset_path):
             log_name = '{}_{}_srd{}_unknown'.format(self.opt.model_name, self.opt.lcf, self.opt.SRD)
         else:
             log_name = '{}_{}_srd{}_{}'.format(self.opt.model_name, self.opt.lcf, self.opt.SRD, self.opt.dataset_path)
         self.logger = get_logger(os.getcwd(), log_name=log_name, log_type='training_tutorials')
-        if config.use_bert_spc:
+        if opt.use_bert_spc:
             self.logger.info('Warning, the use_bert_spc parameter is disabled in '
                              'extracting aspect and predicting sentiment, reset use_bert_spc=False and go on... ')
-            config.use_bert_spc = False
+            opt.use_bert_spc = False
         import warnings
         warnings.filterwarnings('ignore')
         if self.opt.gradient_accumulation_steps < 1:
@@ -68,9 +68,6 @@ class Instructor:
         num_labels = len(self.label_list) + 1
 
         bert_base_model.config.num_labels = num_labels
-
-        for arg in vars(self.opt):
-            self.logger.info('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
 
         self.train_examples = processor.get_train_examples(self.opt.dataset_file['train'], 'train')
         self.num_train_optimization_steps = int(
@@ -128,6 +125,9 @@ class Instructor:
         self.optimizer = self.optimizers[self.opt.optimizer](self.optimizer_grouped_parameters,
                                                              lr=self.opt.learning_rate,
                                                              weight_decay=self.opt.l2reg)
+        for arg in vars(self.opt):
+            self.logger.info('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
+
 
     def train(self):
 
@@ -370,14 +370,13 @@ class Instructor:
         model_to_save.to(args_to_save.device)
 
 
-def train4atepc(config):
+def train4atepc(opt):
     # in case of handling ConnectionError exception
-
-    finished = False
-    while not finished:
+    trainer = None
+    while not trainer:
         try:
-            ins = Instructor(config)
-            return ins.train()
+            trainer = Instructor(opt)
         except ValueError as e:
             print('Seems to be ConnectionError, retry in {} seconds...'.format(60))
             time.sleep(60)
+    return trainer.train()

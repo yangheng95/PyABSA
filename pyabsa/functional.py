@@ -42,13 +42,21 @@ def init_config(config_dict, base_config_dict, auto_device=True):
         # reload hyper-parameter from parameter dict
         for key in config_dict:
             base_config_dict[key] = config_dict[key]
-    assert base_config_dict['SRD'] >= 0
-    assert base_config_dict['lcf'] in {'cdw', 'cdm', 'fusion'}
-    assert base_config_dict['window'] in {'l', 'r', 'lr'}
-    assert base_config_dict['eta'] == -1 or 0 <= base_config_dict['eta'] <= 1
-    assert 0 <= base_config_dict['similarity_threshold'] <= 1
-    assert 0 <= base_config_dict['evaluate_begin'] < base_config_dict['num_epoch']
-    assert base_config_dict['cross_validate_fold'] == -1 or 5 <= base_config_dict['cross_validate_fold'] <= 10
+
+    if hasattr(base_config_dict, 'SRD'):
+        assert base_config_dict['SRD'] >= 0
+    if hasattr(base_config_dict, 'lcf'):
+        assert base_config_dict['lcf'] in {'cdw', 'cdm', 'fusion'}
+    if hasattr(base_config_dict, 'window'):
+        assert base_config_dict['window'] in {'l', 'r', 'lr'}
+    if hasattr(base_config_dict, 'eta'):
+        assert base_config_dict['eta'] == -1 or 0 <= base_config_dict['eta'] <= 1
+    if hasattr(base_config_dict, 'similarity_threshold'):
+        assert 0 <= base_config_dict['similarity_threshold'] <= 1
+    if hasattr(base_config_dict, 'num_epoch'):
+        assert 0 <= base_config_dict['evaluate_begin'] < base_config_dict['num_epoch']
+    if hasattr(base_config_dict, 'cross_validate_fold'):
+        assert base_config_dict['cross_validate_fold'] == -1 or 5 <= base_config_dict['cross_validate_fold'] <= 10
 
     base_config_dict['model_name'] = base_config_dict['model'].__name__.lower()
     base_config_dict['Version'] = __version__

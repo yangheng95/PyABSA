@@ -16,15 +16,15 @@ class LCF_Pooler(nn.Module):
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
         self.activation = nn.Tanh()
 
-    def forward(self, hidden_states, asp_pos):
-        # We "pool" the model by simply taking the hidden state corresponding
-        # to the first token.
+    def forward(self, hidden_states, lcf_vec):
         device = hidden_states.device
-        asp_pos = asp_pos.detach().cpu().numpy()
+        lcf_vec = lcf_vec.detach().cpu().numpy()
+
         pooled_output = numpy.zeros((hidden_states.shape[0], hidden_states.shape[2]), dtype=numpy.float32)
         hidden_states = hidden_states.detach().cpu().numpy()
-        for i, pos in enumerate(asp_pos):
-            pooled_output[i] = hidden_states[i][pos]
+        for i, vec in enumerate(lcf_vec):
+            lcf_ids = [j for j in range(len(vec)) if sum(vec[j] - 1.) == 0]
+            pooled_output[i] = hidden_states[i][lcf_ids[len(lcf_ids) // 2]]
 
         pooled_output = torch.Tensor(pooled_output).to(device)
         pooled_output = self.dense(pooled_output)

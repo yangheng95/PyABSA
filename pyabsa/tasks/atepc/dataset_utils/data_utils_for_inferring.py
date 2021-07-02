@@ -204,7 +204,14 @@ def convert_apc_examples_to_features(examples, label_list, max_seq_len, tokenize
 
         aspect = ' '.join(aspect_tokens)
 
-        text_left, _, text_right = [s.strip() for s in ' '.join(example.text_a).partition(aspect)]
+        try:
+            text_left, _, text_right = [s.strip() for s in ' '.join(example.text_a).partition(aspect)]
+        except:
+            text_left = ' '.join(example.text_a)
+            text_right = ''
+            aspect = ''
+        print('Disable input truncation to avoid potential loss of aspect term extraction...')
+        opt.dynamic_truncate = False
         prepared_inputs = prepare_input_for_atepc(opt, tokenizer, text_left, text_right, aspect)
         lcf_cdm_vec = prepared_inputs['lcf_cdm_vec']
         lcf_cdw_vec = prepared_inputs['lcf_cdw_vec']

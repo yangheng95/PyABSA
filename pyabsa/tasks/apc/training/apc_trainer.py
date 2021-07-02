@@ -18,24 +18,21 @@ import time
 
 from tqdm import tqdm
 from torch.utils.data import DataLoader
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModel, BertTokenizer
 from sklearn import metrics
 from torch.utils.data import random_split, ConcatDataset
 
 
 from pyabsa.tasks.apc.dataset_utils.data_utils_for_training import ABSADataset
-from pyabsa.tasks.apc.dataset_utils.apc_utils import Tokenizer4Bert
-
 
 
 class Instructor:
-    def __init__(self, opt, logger):
-        self.logger = logger
+    def __init__(self, opt):
+        self.logger = opt.logger
         self.opt = opt
-        self.bert_tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
-        self.bert_tokenizer.bos_token = self.bert_tokenizer.bos_token if self.bert_tokenizer.bos_token else '[CLS]'
-        self.bert_tokenizer.eos_token = self.bert_tokenizer.eos_token if self.bert_tokenizer.eos_token else '[SEP]'
-        self.tokenizer = Tokenizer4Bert(self.bert_tokenizer, self.opt.max_seq_len)
+        self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
+        self.tokenizer.bos_token = self.tokenizer.bos_token if self.tokenizer.bos_token else '[CLS]'
+        self.tokenizer.eos_token = self.tokenizer.eos_token if self.tokenizer.eos_token else '[SEP]'
 
         self.train_set = ABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
         if 'test' in self.opt.dataset_file:
@@ -54,7 +51,8 @@ class Instructor:
         self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
 
         if self.opt.device.type == 'cuda':
-            logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device.index)))
+            self.logger.info(
+                "cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device.index)))
 
         self._log_write_args()
         self.optimizer = self.opt.optimizer(
@@ -333,11 +331,11 @@ def train4apc(opt):
     opt.device = torch.device(opt.device)
 
     # in case of handling ConnectionError exception
-    finished = False
-    while not finished:
+    trainer = None
+    while not trainer:
         try:
-            ins = Instructor(opt, opt.logger)
-            return ins.run()
+            trainer = Instructor(opt)
         except ValueError as e:
             print('Seems to be ConnectionError, retry in {} seconds...'.format(60))
             time.sleep(60)
+    return trainer.run()
