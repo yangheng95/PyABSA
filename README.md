@@ -91,10 +91,10 @@ or [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_template_atepc.py) model template.
 
 |      Models          | Laptop14 (acc) |  Rest14 (acc) | Rest15 (acc) | Rest16 (acc) |
 | :------------------: | :------------: | :-----------: |:------------:|:------------:|
-| SLIDE-LCFS-BERT (CDW)|    81.35       |        88.04  |    85.93     |   92.52      | 
-| SLIDE-LCFS-BERT (CDM)|     82.13      |        87.5   |    85.37     |   92.36      |
-| SLIDE-LCF-BERT (CDW) |      81.82         |        86.34      |      86.11      |    92.85         |
-| SLIDE-LCF-BERT (CDM) |    81.35          |        86.43      |   85.93          |    92.2         |
+| SLIDE-LCFS-BERT (CDW)|    81.66       |        86.68  |    85.19     |   92.36      | 
+| SLIDE-LCFS-BERT (CDM)|     81.35      |        88.21   |    85.19     |   92.20      |
+| SLIDE-LCF-BERT (CDW) |      81.66         |        87.59      |      84.81      |    92.03         |
+| SLIDE-LCF-BERT (CDM) |    80.25          |        86.86      |   85.74          |    91.71         |
 
 The optimal performance result among three random seeds. Note that with the update of this repo, 
 the results could be updated. We are working on the construction of
