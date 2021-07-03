@@ -89,12 +89,12 @@ python sentiment_inference_chinese.py
 
 ## 模型性能表现
 
-|      模型          | Laptop14 (acc) |  Rest14 (acc) | Rest15 (acc) | Rest16 (acc) |
+|      Models          | Laptop14 (acc) |  Rest14 (acc) | Rest15 (acc) | Rest16 (acc) |
 | :------------------: | :------------: | :-----------: |:------------:|:------------:|
-| SLIDE-LCFS-BERT (CDW)|    81.35       |        88.04  |    85.93     |   92.52      | 
-| SLIDE-LCFS-BERT (CDM)|     82.13      |        87.5   |    85.37     |   92.36      |
-| SLIDE-LCF-BERT (CDW) |      81.82         |        86.34      |      86.11      |    92.85         |
-| SLIDE-LCF-BERT (CDM) |    81.35          |        86.43      |   85.93          |    92.2         |
+| SLIDE-LCFS-BERT (CDW)|    81.66       |        86.68  |    85.19     |   92.36      | 
+| SLIDE-LCFS-BERT (CDM)|     81.35      |        88.21   |    85.19     |   92.20      |
+| SLIDE-LCF-BERT (CDW) |      81.66         |        87.59      |      84.81      |    92.03         |
+| SLIDE-LCF-BERT (CDM) |    80.25          |        86.86      |   85.74          |    91.71         |
 
 上述结果取自三种随机种子的最佳性能结果。 我们会在版本更新的过程中及时更新上述性能表现。我们正在构建一个面向APC的
 **[leaderboard](examples/aspect_polarity_classification/leaderboard.md)**, 
