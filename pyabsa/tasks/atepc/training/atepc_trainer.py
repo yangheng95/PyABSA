@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: train_atepc.py
+# file: test_train_atepc.py
 # time: 2021/5/26 0026
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
@@ -8,7 +8,6 @@
 
 import os
 import random
-import pickle
 import tqdm
 import time
 
@@ -23,23 +22,23 @@ from transformers import AutoModel
 
 from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
 from pyabsa.utils.logger import get_logger
-
+from pyabsa.utils.pyabsa_utils import save_model
+from pyabsa.utils.pyabsa_utils import print_args
 
 class Instructor:
 
-    def __init__(self, config):
-        self.opt = config
-        self.logger = config.logger
-
+    def __init__(self, opt, logger):
+        self.opt = opt
+        self.logger = logger
         if os.path.exists(self.opt.dataset_path):
             log_name = '{}_{}_srd{}_unknown'.format(self.opt.model_name, self.opt.lcf, self.opt.SRD)
         else:
             log_name = '{}_{}_srd{}_{}'.format(self.opt.model_name, self.opt.lcf, self.opt.SRD, self.opt.dataset_path)
-        self.logger = get_logger(os.getcwd(), log_name=log_name, log_type='training_tutorials')
-        if config.use_bert_spc:
-            self.logger.info('Warning, the use_bert_spc parameter is disabled in '
-                             'extracting aspect and predicting sentiment, reset use_bert_spc=False and go on... ')
-            config.use_bert_spc = False
+        self.logger = get_logger(os.getcwd(), log_name=log_name, log_type='training')
+        if opt.use_bert_spc:
+            self.logger.info('Warning: The use_bert_spc is disabled for extracting aspect,'
+                             ' reset use_bert_spc=False and go on... ')
+            opt.use_bert_spc = False
         import warnings
         warnings.filterwarnings('ignore')
         if self.opt.gradient_accumulation_steps < 1:
@@ -65,12 +64,9 @@ class Instructor:
         bert_base_model = AutoModel.from_pretrained(self.opt.pretrained_bert_name)
         processor = ATEPCProcessor(self.tokenizer)
         self.label_list = processor.get_labels()
-        num_labels = len(self.label_list) + 1
+        self.opt.num_labels = len(self.label_list) + 1
 
-        bert_base_model.config.num_labels = num_labels
-
-        for arg in vars(self.opt):
-            self.logger.info('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
+        bert_base_model.config.num_labels = self.opt.num_labels
 
         self.train_examples = processor.get_train_examples(self.opt.dataset_file['train'], 'train')
         self.num_train_optimization_steps = int(
@@ -128,6 +124,7 @@ class Instructor:
         self.optimizer = self.optimizers[self.opt.optimizer](self.optimizer_grouped_parameters,
                                                              lr=self.opt.learning_rate,
                                                              weight_decay=self.opt.l2reg)
+        print_args(self.opt, self.logger)
 
     def train(self):
 
@@ -164,7 +161,9 @@ class Instructor:
                                                 lcf_cdm_vec=lcf_cdm_vec,
                                                 lcf_cdw_vec=lcf_cdw_vec
                                                 )
-                loss = loss_ate + loss_apc
+                # loss_ate = loss_ate.item() / (loss_ate.item() + loss_apc.item()) * loss_ate
+                # loss_apc = loss_apc.item() / (loss_ate.item() + loss_apc.item()) * loss_apc
+                loss = loss_ate + 2*loss_apc
                 sum_loss += loss.item()
                 loss.backward()
                 nb_tr_examples += input_ids_spc.size(0)
@@ -180,15 +179,16 @@ class Instructor:
                         sum_apc_test_acc += apc_result['apc_test_acc']
                         sum_apc_test_f1 += apc_result['apc_test_f1']
                         sum_ate_test_f1 += ate_result
-                        self.opt.metrics_of_this_checkpoint['apc_acc'] = sum_apc_test_acc
-                        self.opt.metrics_of_this_checkpoint['apc_f1'] = sum_apc_test_f1
-                        self.opt.metrics_of_this_checkpoint['ate_f1'] = sum_ate_test_f1
+                        self.opt.metrics_of_this_checkpoint['apc_acc'] = apc_result['apc_test_acc']
+                        self.opt.metrics_of_this_checkpoint['apc_f1'] = apc_result['apc_test_f1']
+                        self.opt.metrics_of_this_checkpoint['ate_f1'] = ate_result
                         # if save_path:
                         #     try:
                         #         shutil.rmtree(save_path)
                         #         # self.logger.info('Remove sub-self.optimal trained model:', save_path)
                         #     except:
                         #         self.logger.info('Can not remove sub-self.optimal trained model:', save_path)
+
                         if self.opt.model_path_to_save:
                             save_path = '{0}/{1}_{2}_apcacc_{3}_apcf1_{4}_atef1_{5}/'.format(
                                 self.opt.model_path_to_save,
@@ -201,14 +201,14 @@ class Instructor:
                             if apc_result['apc_test_acc'] > self.opt.max_test_metrics['max_apc_test_acc'] or \
                                     apc_result['apc_test_f1'] > self.opt.max_test_metrics['max_apc_test_f1'] or \
                                     ate_result > self.opt.max_test_metrics['max_ate_test_f1']:
-                                self._save_model(self.opt, self.model, save_path, mode=0)
 
-                        if apc_result['apc_test_acc'] > self.opt.max_test_metrics['max_apc_test_acc']:
-                            self.opt.max_test_metrics['max_apc_test_acc'] = apc_result['apc_test_acc']
-                        if apc_result['apc_test_f1'] > self.opt.max_test_metrics['max_apc_test_f1']:
-                            self.opt.max_test_metrics['max_apc_test_f1'] = apc_result['apc_test_f1']
-                        if ate_result > self.opt.max_test_metrics['max_ate_test_f1']:
-                            self.opt.max_test_metrics['max_ate_test_f1'] = ate_result
+                                if apc_result['apc_test_acc'] > self.opt.max_test_metrics['max_apc_test_acc']:
+                                    self.opt.max_test_metrics['max_apc_test_acc'] = apc_result['apc_test_acc']
+                                if apc_result['apc_test_f1'] > self.opt.max_test_metrics['max_apc_test_f1']:
+                                    self.opt.max_test_metrics['max_apc_test_f1'] = apc_result['apc_test_f1']
+                                if ate_result > self.opt.max_test_metrics['max_ate_test_f1']:
+                                    self.opt.max_test_metrics['max_ate_test_f1'] = ate_result
+                                save_model(self.opt, self.model, self.tokenizer, save_path, mode=0)
 
                         current_apc_test_acc = apc_result['apc_test_acc']
                         current_apc_test_f1 = apc_result['apc_test_f1']
@@ -245,8 +245,8 @@ class Instructor:
                 sum_loss)
         )
         self.logger.info('-------------------------------------Training Summary-------------------------------------')
-        # return the model paths of multiple training_tutorials
-        # in case of loading the best model after training_tutorials
+        # return the model paths of multiple training
+        # in case of loading the best model after training
         if save_path:
             return save_path
         else:
@@ -256,7 +256,7 @@ class Instructor:
                                                   self.opt.model_name,
                                                   self.opt.lcf,
                                                   )
-                self._save_model(self.opt, self.model, save_path, mode=0)
+                save_model(self.opt, self.model, self.tokenizer, save_path, mode=0)
             return self.model, self.opt, self.tokenizer, sum_apc_test_acc, sum_apc_test_f1, sum_ate_test_f1
 
     def evaluate(self, eval_ATE=True, eval_APC=True):
@@ -341,43 +341,14 @@ class Instructor:
             ate_result = round(float(tmps[7]) * 100, 2)
         return apc_result, ate_result
 
-    def _save_model(self, args_to_save, model_to_save, save_path, mode=0):
-        # Save a trained model, configuration and tokenizer
-        model_to_save = model_to_save.module if hasattr(model_to_save,
-                                                        'tasks') else model_to_save  # Only save the model it-self
 
-        if mode == 0:
-            if not os.path.exists(save_path):
-                os.makedirs(save_path)
-            # torch.save(model_to_save.cpu().state_dict(),
-            #            save_path + args_to_save.model_name + '.state_dict')  # save the state dict
-            torch.save(model_to_save.cpu(), save_path + args_to_save.model_name + '.model')  # save the whole model
-            pickle.dump(args_to_save, open(save_path + args_to_save.model_name + '.config', 'wb'))
-            pickle.dump(self.tokenizer, open(save_path + args_to_save.model_name + '.tokenizer', 'wb'))
-        else:
-            # save the fine-tuned bert model
-            model_output_dir = save_path
-            if not os.path.exists(model_output_dir):
-                os.makedirs(model_output_dir)
-            output_model_file = os.path.join(model_output_dir, 'pytorch_model.bin')
-            output_config_file = os.path.join(model_output_dir, 'bert_config.json')
-
-            torch.save(model_to_save.state_dict(), output_model_file)
-            model_to_save.config.to_json_file(output_config_file)
-            self.tokenizer.save_vocabulary(model_output_dir)
-
-        # self.logger.info('trained model saved in: {}'.format(save_path))
-        model_to_save.to(args_to_save.device)
-
-
-def train4atepc(config):
+def train4atepc(opt, logger):
     # in case of handling ConnectionError exception
-
-    finished = False
-    while not finished:
+    trainer = None
+    while not trainer:
         try:
-            ins = Instructor(config)
-            return ins.train()
+            trainer = Instructor(opt, logger)
         except ValueError as e:
             print('Seems to be ConnectionError, retry in {} seconds...'.format(60))
             time.sleep(60)
+    return trainer.train()

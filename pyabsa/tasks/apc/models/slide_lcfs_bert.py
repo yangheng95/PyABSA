@@ -69,6 +69,7 @@ class SLIDE_LCFS_BERT(nn.Module):
         sent_out = self.post_linear(sent_out)
         sent_out = self.dropout(sent_out)
         sent_out = self.post_encoder_(sent_out)
-        dense_out = self.dense(self.bert_pooler(sent_out))
+        sent_out = self.bert_pooler(sent_out)
+        dense_out = self.dense(sent_out)
 
         return dense_out

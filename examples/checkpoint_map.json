@@ -1,53 +1,17 @@
 {
-  "0.8.6.0+": {
+  "min_version-max_version": {
     "APC": {
-      "chinese": {
-        "id": "https://drive.google.com/file/d/1_xnAXORC7hmlz_cAOIm4QBlp-h-aTF0b/view?usp=sharing",
-        "description": "Train on four chinese datasets using fast-lcf-bert model.",
-        "comment": ""
-      },
-      "english": {
-        "id": "1AE2DC72vigxdAlYKjiV4_IfWsPUH7aX_",
-        "description": "Train on four SemEval2014,SemEval2015, SemEval2016 datasets using fast-lcf-bert model.",
-        "comment": ""
-      },
-      "multilingual": {
-        "id": "https://drive.google.com/file/d/1FFUwu6qbpT5fqs9qx3eTmpwTab2iOdpz/view?usp=sharing",
-        "description": "Train on four all datasets using fast-lcf-bert model.",
-        "comment": ""
+      "checkpoint_name": {
+        "id": "url or file-id on your Google Drive",
+        "description": "some notice",
+        "comment": "whatever you want us to know"
       }
     },
     "ATEPC": {
-      "chinese": {
-        "id": "1pRLDjjrmkIeQyAiwy6I34XVNWkvKQYBW",
-        "description": "Train on four Chinese datasets using lcf-atepc model.",
-        "comment": "In order to avoid mis-usage, the bert-spc imput format is disabled in ATEPC models. "
-      },
-      "english": {
-        "id": "1fdu80s0HFY_48SfCuC-hXCona32L3D3s",
-        "description": "",
-        "comment": ""
-      },
-      "multilingual": {
-        "id": "please wait upload",
-        "description": "Due to computational resources limitation, we sincerely call for help to train and share the model. If you have interest, please contact us.",
-        "comment": ""
-      }
-    }
-  },
-    "0.8.1.0-0.8.5.5": {
-    "APC": {
-      "chinese": {
-        "id": "removed",
-        "description": "",
-        "comment": ""
-      }
-    },
-    "ATEPC": {
-      "chinese": {
-        "id": "removed",
-        "description": "",
-        "comment": ""
+      "checkpoint_name": {
+        "id": "url or file-id on your Google Drive",
+        "description": "some notice",
+        "comment": "whatever you want us to know"
       }
     }
   }

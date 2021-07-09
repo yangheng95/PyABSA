@@ -84,7 +84,8 @@ class APCTrainedModelManager:
         if checkpoint_name.lower() in apc_checkpoint:
             print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint_name), 'green'))
         else:
-            raise FileNotFoundError(colored('Checkpoint:{} is not found.'.format(checkpoint_name), 'red'))
+            print(colored('Checkpoint:{} is not found.'.format(checkpoint_name), 'red'))
+            exit(-1)
         return download_pretrained_model(task='apc',
                                          language=checkpoint_name.lower(),
                                          archive_path=apc_checkpoint[checkpoint_name.lower()]['id'])
@@ -98,7 +99,8 @@ class ATEPCTrainedModelManager:
         if checkpoint_name.lower() in atepc_checkpoint:
             print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint_name), 'green'))
         else:
-            raise FileNotFoundError(colored('Checkpoint:{} is not found.'.format(checkpoint_name), 'red'))
+            print(colored('Checkpoint:{} is not found.'.format(checkpoint_name), 'red'))
+            exit(-1)
         return download_pretrained_model(task='atepc',
                                          language=checkpoint_name.lower(),
                                          archive_path=atepc_checkpoint[checkpoint_name.lower()]['id'])
@@ -128,12 +130,12 @@ def update_checkpoints(task=''):
                 min_ver = t_map
                 if min_ver <= __version__:
                     current_version_map.update(checkpoint_map[t_map])
-        APC_checkpoint_map = dict(current_version_map)['APC']
-        ATEPC_checkpoint_map = dict(current_version_map)['ATEPC']
+        APC_checkpoint_map = dict(current_version_map)['APC'] if 'APC' in current_version_map else {}
+        ATEPC_checkpoint_map = dict(current_version_map)['ATEPC'] if 'ATEPC' in current_version_map else {}
 
         if not (task and 'APC' not in task.upper()):
-            print(colored('Available APC model checkpoints for Version:{}'.format(__version__), 'green'))
-
+            print('*' * 23, colored('Available APC model checkpoints for Version:{}'.format(__version__), 'green'),
+                  '*' * 23)
             for i, checkpoint in enumerate(APC_checkpoint_map):
                 print('-' * 100)
                 print("{}. Checkpoint Name: {}\nDescription: {}\nComment: {}".format(
@@ -142,8 +144,11 @@ def update_checkpoints(task=''):
                     APC_checkpoint_map[checkpoint]['description'],
                     APC_checkpoint_map[checkpoint]['comment'],
                 ))
+            print('-' * 100)
         if not (task and 'ATEPC' not in task.upper()):
-            print(colored('Available ATEPC model checkpoints for Version:{}'.format(__version__), 'green'))
+            print('-' * 100)
+            print('*' * 22, colored('Available ATEPC model checkpoints for Version:{}'.format(__version__), 'green'),
+                  '*' * 22)
             for i, checkpoint in enumerate(ATEPC_checkpoint_map):
                 print('-' * 100)
                 print("{}. Checkpoint Name: {}\nDescription: {}\nComment: {}".format(
@@ -152,6 +157,7 @@ def update_checkpoints(task=''):
                     ATEPC_checkpoint_map[checkpoint]['description'],
                     ATEPC_checkpoint_map[checkpoint]['comment']
                 ))
+            print('-' * 100)
         # os.remove('./checkpoints.json')
         return APC_checkpoint_map if task.upper() == 'APC' else ATEPC_checkpoint_map
     except ConnectionError as e:

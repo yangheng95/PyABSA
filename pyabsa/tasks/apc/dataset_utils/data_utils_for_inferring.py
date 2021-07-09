@@ -118,12 +118,6 @@ class ABSADataset(Dataset):
                 text_left = text_left.replace('[PADDING] ', '')
                 text_right = text_right.replace(' [PADDING]', '')
 
-                # dynamic truncation on input text
-                text_left = ' '.join(
-                    text_left.split(' ')[int(-(self.tokenizer.max_seq_len - len(aspect.split())) / 2) - 1:])
-                text_right = ' '.join(
-                    text_right.split(' ')[:int((self.tokenizer.max_seq_len - len(aspect.split())) / 2) + 1])
-
                 prepared_inputs = prepare_input_for_apc(self.opt, self.tokenizer, text_left, text_right, aspect)
 
                 text_raw = prepared_inputs['text_raw']

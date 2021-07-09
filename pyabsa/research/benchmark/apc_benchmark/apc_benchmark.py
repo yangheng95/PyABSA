@@ -28,12 +28,12 @@ from pyabsa.research.benchmark.apc_benchmark.lcfs_bert_large_benchmark import (r
 
 
 def run_benchmark_for_all_apc_models():
-    run_slide_lcfs_bert_cdw()
-    run_slide_lcfs_bert_cdm()
-    run_slide_lcf_bert_cdw()
-    run_slide_lcf_bert_cdm()
-    run_lcf_bert_cdw()
-    run_lcf_bert_cdm()
+    # run_slide_lcfs_bert_cdw()
+    # run_slide_lcfs_bert_cdm()
+    # run_slide_lcf_bert_cdw()
+    # run_slide_lcf_bert_cdm()
+    # run_lcf_bert_cdw()
+    # run_lcf_bert_cdm()
     run_lcfs_bert_cdw()
     run_lcfs_bert_cdm()
     run_fast_lcf_bert_cdw()

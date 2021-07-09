@@ -24,7 +24,7 @@ CDW masked the less-semantic-relative context words.
 ![cdm](pic/cdm.png)
 
 
-# Some works based on LCF
+# Some works related to LCF
 [1] Phan M H, Ogunbona P O. Modelling context and syntactical features for aspect-based sentiment analysis[C]//Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics. 2020: 3211-3220.
 
 [2] Hyun D, Cho J, Yu H. Building Large-Scale English and Korean Datasets for Aspect-Level Sentiment Analysis in Automotive Domain[C]//Proceedings of the 28th International Conference on Computational Linguistics. 2020: 961-966.

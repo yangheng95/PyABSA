@@ -36,7 +36,9 @@ PyABSA现在包含ATEPC和APC模型。
 LCF是为ABSA提出的一个简单高效且易于使用的机制。
 许多基于LCF的模型已经被提出并实现了SOTA性能。
 基于LCF开发模型将显著改进ABSA模型。
-如果您在寻找LCF的原始理论，请查看 [LCF-theory](https://github.com/yangheng95/PyABSA/tree/release/examples/local_context_focus). 如果您正在寻找与LCF相关的论文的原始代码，请跳转到 [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/master)
+如果您在寻找LCF介绍，请查看 [LCF](https://github.com/yangheng95/PyABSA/tree/release/examples/local_context_focus) 的介绍. 
+如果您正在寻找与LCF相关的论文的原始代码，
+请跳转到 [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/LC-ABSA)
 或者[LCF-ATEPC](https://github.com/XuMayi/LCF-ATEPC).
 
 
@@ -89,12 +91,12 @@ python sentiment_inference_chinese.py
 
 ## 模型性能表现
 
-|      模型          | Laptop14 (acc) |  Rest14 (acc) | Rest15 (acc) | Rest16 (acc) |
+|         模型          | Laptop14 (acc) |  Rest14 (acc) | Rest15 (acc) | Rest16 (acc) |
 | :------------------: | :------------: | :-----------: |:------------:|:------------:|
-| SLIDE-LCFS-BERT (CDW)|    81.35       |        88.04  |    85.93     |   92.52      | 
-| SLIDE-LCFS-BERT (CDM)|     82.13      |        87.5   |    85.37     |   92.36      |
-| SLIDE-LCF-BERT (CDW) |      81.82         |        86.34      |      86.11      |    92.85         |
-| SLIDE-LCF-BERT (CDM) |    81.35          |        86.43      |   85.93          |    92.2         |
+| SLIDE-LCFS-BERT (CDW)|      81.66     |      86.68    |     85.19    |    92.36     | 
+| SLIDE-LCFS-BERT (CDM)|      81.35     |      88.21    |     85.19    |    92.20     |
+| SLIDE-LCF-BERT (CDW) |      81.66     |      87.59    |     84.81    |    92.03     |
+| SLIDE-LCF-BERT (CDM) |      80.25     |      86.86    |     85.74    |    91.71     |
 
 上述结果取自三种随机种子的最佳性能结果。 我们会在版本更新的过程中及时更新上述性能表现。我们正在构建一个面向APC的
 **[leaderboard](examples/aspect_polarity_classification/leaderboard.md)**, 
@@ -110,6 +112,8 @@ from pyabsa import update_checkpoints
 checkpoint_map = update_checkpoints()
 ```
 
+如果您无法访问谷歌Drive，您可以下载我们预训练的模型，并手动解压缩并加载模型。
+模型下载[地址](https://pan.baidu.com/s/1oKkO7RJ6Ob9vY6flnJk3Sg) 提取码：ABSA
 ## 如何分享你的checkpoints (例如在您构建的数据集上训练的checkpoints)到社区之中
 
 由于资源限制，我们无法提供充足的checkpoints，

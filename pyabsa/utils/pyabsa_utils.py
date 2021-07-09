@@ -6,6 +6,8 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 import os
+import torch
+import pickle
 
 
 def get_auto_device():
@@ -58,3 +60,36 @@ def find_target_file(dir_path, file_type, exclude_key='', find_all=False):
         else:
             # print('No target file (file type:{}) found in {}!'.format(file_type, dir_path))
             return []
+
+
+def save_model(opt, model, tokenizer, save_path, mode=0):
+    # Save a trained model, configuration and tokenizer
+    model_to_save = model.module if hasattr(model, 'tasks') else model  # Only save the model it-self
+
+    if mode == 0 or 'bert' not in opt.model_name:
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
+        # torch.save(self.model.cpu().state_dict(), save_path + self.opt.model_name + '.state_dict')  # save the state dict
+        torch.save(model.cpu(), save_path + opt.model_name + '.model')  # save the state dict
+        pickle.dump(opt, open(save_path + opt.model_name + '.config', 'wb'))
+        pickle.dump(tokenizer, open(save_path + opt.model_name + '.tokenizer', 'wb'))
+
+    else:
+        # save the fine-tuned bert model
+        model_output_dir = save_path + '-fine-tuned'
+        if not os.path.exists(model_output_dir):
+            os.makedirs(model_output_dir)
+        output_model_file = os.path.join(model_output_dir, 'pytorch_model.bin')
+        output_config_file = os.path.join(model_output_dir, 'bert_config.json')
+
+        torch.save(model_to_save.state_dict(), output_model_file)
+        model_to_save.config.to_json_file(output_config_file)
+        tokenizer.save_vocabulary(model_output_dir)
+
+    model.to(opt.device)
+
+
+def print_args(opt, logger):
+    for arg in vars(opt):
+        if getattr(opt, arg) is not None:
+            logger.info('>>> {0}: {1}'.format(arg, getattr(opt, arg)))

@@ -42,13 +42,21 @@ def init_config(config_dict, base_config_dict, auto_device=True):
         # reload hyper-parameter from parameter dict
         for key in config_dict:
             base_config_dict[key] = config_dict[key]
-    assert base_config_dict['SRD'] >= 0
-    assert base_config_dict['lcf'] in {'cdw', 'cdm', 'fusion'}
-    assert base_config_dict['window'] in {'l', 'r', 'lr'}
-    assert base_config_dict['eta'] == -1 or 0 <= base_config_dict['eta'] <= 1
-    assert 0 <= base_config_dict['similarity_threshold'] <= 1
-    assert 0 <= base_config_dict['evaluate_begin'] < base_config_dict['num_epoch']
-    assert base_config_dict['cross_validate_fold'] == -1 or 5 <= base_config_dict['cross_validate_fold'] <= 10
+
+    if hasattr(base_config_dict, 'SRD'):
+        assert base_config_dict['SRD'] >= 0
+    if hasattr(base_config_dict, 'lcf'):
+        assert base_config_dict['lcf'] in {'cdw', 'cdm', 'fusion'}
+    if hasattr(base_config_dict, 'window'):
+        assert base_config_dict['window'] in {'l', 'r', 'lr'}
+    if hasattr(base_config_dict, 'eta'):
+        assert base_config_dict['eta'] == -1 or 0 <= base_config_dict['eta'] <= 1
+    if hasattr(base_config_dict, 'similarity_threshold'):
+        assert 0 <= base_config_dict['similarity_threshold'] <= 1
+    if hasattr(base_config_dict, 'num_epoch'):
+        assert 0 <= base_config_dict['evaluate_begin'] < base_config_dict['num_epoch']
+    if hasattr(base_config_dict, 'cross_validate_fold'):
+        assert base_config_dict['cross_validate_fold'] == -1 or 5 <= base_config_dict['cross_validate_fold'] <= 10
 
     base_config_dict['model_name'] = base_config_dict['model'].__name__.lower()
     base_config_dict['Version'] = __version__
@@ -90,15 +98,14 @@ def train_apc(parameter_dict=None,
         log_name = '{}_{}_srd{}_{}'.format(config.model_name, config.lcf, config.SRD, config.dataset_path)
 
     logger = get_logger(os.getcwd(), log_name=log_name, log_type='training')
-    config.logger = logger
     for _, s in enumerate(config.seed):
         t_config = Namespace(**vars(config))
         t_config.seed = s
         if model_path_to_save:
-            model_path.append(train4apc(t_config))
+            model_path.append(train4apc(t_config, logger))
         else:
             # always return the last trained model if dont save trained models
-            sent_classifier = SentimentClassifier(model_arg=train4apc(t_config))
+            sent_classifier = SentimentClassifier(model_arg=train4apc(t_config, logger))
     while logger.handlers:
         logger.removeHandler(logger.handlers[0])
     if model_path_to_save:
@@ -140,13 +147,12 @@ def train_atepc(parameter_dict=None,
     else:
         log_name = '{}_{}_srd{}_{}'.format(config.model_name, config.lcf, config.SRD, config.dataset_path)
     logger = get_logger(os.getcwd(), log_name=log_name, log_type='training')
-    config.logger = logger
     # always save all trained models in case of obtaining best performance
     # in different metrics among ATE and APC tasks.
     for _, s in enumerate(config.seed):
         t_config = Namespace(**vars(config))
         t_config.seed = s
-        model_path.append(train4atepc(t_config))
+        model_path.append(train4atepc(t_config, logger))
     logger.disabled = True
     return AspectExtractor(max(model_path))
 
