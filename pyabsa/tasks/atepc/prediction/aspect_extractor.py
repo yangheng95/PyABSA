@@ -8,7 +8,6 @@
 import os
 import random
 import pickle
-import warnings
 
 import numpy as np
 import torch
@@ -21,8 +20,6 @@ from ..dataset_utils.data_utils_for_inferring import (ATEPCProcessor,
                                                       convert_ate_examples_to_features,
                                                       convert_apc_examples_to_features,
                                                       SENTIMENT_PADDING)
-from ..models.lcf_atepc import LCF_ATEPC
-from ..models.bert_base_atepc import BERT_BASE_ATEPC
 
 from pyabsa.utils.pyabsa_utils import find_target_file
 
@@ -59,7 +56,7 @@ class AspectExtractor:
 
                 if state_dict_path:
                     bert_base_model = BertModel.from_pretrained(self.opt.pretrained_bert_name)
-                    bert_base_model.config.num_labels = self.num_labels
+                    bert_base_model.config.num_labels = self.opt.num_labels
                     self.model = self.opt.model(bert_base_model, self.opt)
                     self.model.load_state_dict(torch.load(state_dict_path[0]))
                 if model_path:
@@ -72,11 +69,12 @@ class AspectExtractor:
 
                 self.tokenizer.bos_token = self.tokenizer.bos_token if self.tokenizer.bos_token else '[CLS]'
                 self.tokenizer.eos_token = self.tokenizer.eos_token if self.tokenizer.eos_token else '[SEP]'
-            except:
-                raise FileNotFoundError('Fail to load the model from {}'.format(model_arg),
-                                        'if you have not trained a model, please download our latest models at Google Drive: '
-                                        'https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing'
-                                        )
+            except Exception as e:
+                print(e)
+                print('Fail to load the model from {}'.format(model_arg),
+                      'if you have not trained a model, you can view and load our provided checkpoints.'
+                      )
+                exit()
 
         self.processor = ATEPCProcessor(self.tokenizer)
         self.label_list = self.processor.get_labels()
@@ -87,7 +85,8 @@ class AspectExtractor:
 
         print('Config used in Training:')
         for arg in vars(self.opt):
-            print('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
+            if getattr(self.opt, arg) is not None:
+                print('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
 
         if self.opt.gradient_accumulation_steps < 1:
             raise ValueError("Invalid gradient_accumulation_steps parameter: {}, should be >= 1".format(
@@ -151,7 +150,8 @@ class AspectExtractor:
 
     # Temporal code, pending optimization
     def _extract(self, example, print_result):
-
+        print('Disable input truncation to avoid potential loss of aspect term extraction...')
+        self.opt.dynamic_truncate = False
         res = []  # extraction result
 
         self.eval_dataloader = None

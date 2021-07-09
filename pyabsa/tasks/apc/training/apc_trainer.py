@@ -6,9 +6,9 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 
+
 import os
 import random
-import pickle
 
 import numpy
 import torch
@@ -24,26 +24,21 @@ from torch.utils.data import random_split, ConcatDataset
 
 
 from pyabsa.tasks.apc.dataset_utils.data_utils_for_training import ABSADataset
-from pyabsa.tasks.apc.dataset_utils.apc_utils import Tokenizer4Bert
-
+from pyabsa.utils.pyabsa_utils import save_model
+from pyabsa.utils.pyabsa_utils import print_args
 
 
 class Instructor:
     def __init__(self, opt, logger):
         self.logger = logger
         self.opt = opt
-        self.bert_tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
-        self.bert_tokenizer.bos_token = self.bert_tokenizer.bos_token if self.bert_tokenizer.bos_token else '[CLS]'
-        self.bert_tokenizer.eos_token = self.bert_tokenizer.eos_token if self.bert_tokenizer.eos_token else '[SEP]'
-        self.tokenizer = Tokenizer4Bert(self.bert_tokenizer, self.opt.max_seq_len)
+        self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
+        self.tokenizer.bos_token = self.tokenizer.bos_token if self.tokenizer.bos_token else '[CLS]'
+        self.tokenizer.eos_token = self.tokenizer.eos_token if self.tokenizer.eos_token else '[SEP]'
 
         self.train_set = ABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
         if 'test' in self.opt.dataset_file:
             self.test_set = ABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
-            self.test_data_loader = DataLoader(dataset=self.test_set,
-                                               batch_size=self.opt.batch_size,
-                                               shuffle=False,
-                                               pin_memory=True)
         else:
             self.test_set = None
         self.train_data_loaders = []
@@ -54,9 +49,10 @@ class Instructor:
         self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
 
         if self.opt.device.type == 'cuda':
-            logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device.index)))
+            self.logger.info(
+                "cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device.index)))
 
-        self._log_write_args()
+        print_args(self.opt, self.logger)
         self.optimizer = self.opt.optimizer(
             self.model.parameters(),
             lr=self.opt.learning_rate,
@@ -100,65 +96,25 @@ class Instructor:
                 self.test_data_loaders.append(
                     DataLoader(dataset=test_set, batch_size=self.opt.batch_size, shuffle=False))
 
-    def _log_write_args(self):
-        n_trainable_params, n_nontrainable_params = 0, 0
-        for p in self.model.parameters():
-            n_params = torch.prod(torch.tensor(p.shape))
-            if p.requires_grad:
-                n_trainable_params += n_params
-            else:
-                n_nontrainable_params += n_params
-        self.logger.info(
-            'n_trainable_params: {0}, n_nontrainable_params: {1}'.format(n_trainable_params, n_nontrainable_params))
-        for arg in vars(self.opt):
-            self.logger.info('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
-
-    def _save_model(self, model, save_path, mode=0):
-        # Save a trained model, configuration and tokenizer
-        model_to_save = model.module if hasattr(model, 'tasks') else model  # Only save the model it-self
-
-        if mode == 0 or 'bert' not in self.opt.model_name:
-            if not os.path.exists(save_path):
-                os.makedirs(save_path)
-            # torch.save(self.model.cpu().state_dict(),
-            #            save_path + self.opt.model_name + '.state_dict')  # save the state dict
-            torch.save(self.model.cpu(),
-                       save_path + self.opt.model_name + '.model')  # save the state dict
-            pickle.dump(self.opt, open(save_path + self.opt.model_name + '.config', 'wb'))
-            pickle.dump(self.tokenizer, open(save_path + self.opt.model_name + '.tokenizer', 'wb'))
-
-        else:
-            # save the fine-tuned bert model
-            model_output_dir = save_path + '_fine-tuned'
-            if not os.path.exists(model_output_dir):
-                os.makedirs(model_output_dir)
-            output_model_file = os.path.join(model_output_dir, 'pytorch_model.bin')
-            output_config_file = os.path.join(model_output_dir, 'bert_config.json')
-
-            torch.save(model_to_save.state_dict(), output_model_file)
-            model_to_save.config.to_json_file(output_config_file)
-            self.bert_tokenizer.save_vocabulary(model_output_dir)
-
-        # logger.info('trained model saved in: {}'.format(save_path))
-        self.model.to(self.opt.device)
-
     def _train_and_evaluate(self, criterion, lca_criterion):
         self.prepare_data_loader(self.train_set, self.test_set)
         sum_loss = 0
         sum_acc = 0
         sum_f1 = 0
         self.opt.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
+        self.opt.max_test_metrics = {'max_apc_test_acc': 0, 'max_apc_test_f1': 0, 'max_ate_test_f1': 0}
+
         fold_test_acc = []
         fold_test_f1 = []
         save_path = ''
         for f, (train_dataloader, test_dataloader) in enumerate(zip(self.train_data_loaders, self.test_data_loaders)):
-            self.opt.logger.info("***** Running training for Aspect Polarity Classification *****")
-            self.opt.logger.info("Training set examples = %d", len(train_dataloader))
-            self.opt.logger.info("Test set examples = %d", len(test_dataloader))
-            self.opt.logger.info("Batch size = %d", self.opt.batch_size)
-            self.opt.logger.info("Num steps = %d", len(train_dataloader) // self.opt.batch_size * self.opt.num_epoch)
+            self.logger.info("***** Running training for Aspect Polarity Classification *****")
+            self.logger.info("Training set examples = %d", len(self.train_set))
+            self.logger.info("Test set examples = %d", len(self.test_set))
+            self.logger.info("Batch size = %d", self.opt.batch_size)
+            self.logger.info("Num steps = %d", len(train_dataloader) // self.opt.batch_size * self.opt.num_epoch)
             if len(self.train_data_loaders) > 1:
-                self.opt.logger.info('No. {} training in {} folds...'.format(f + 1, self.opt.cross_validate_fold))
+                self.logger.info('No. {} training in {} folds...'.format(f + 1, self.opt.cross_validate_fold))
             global_step = 0
             max_fold_acc = 0
             max_fold_f1 = 0
@@ -191,8 +147,10 @@ class Instructor:
                         if epoch >= self.opt.evaluate_begin:
 
                             test_acc, f1 = self._evaluate_acc_f1(test_dataloader)
+
                             self.opt.metrics_of_this_checkpoint['acc'] = test_acc
                             self.opt.metrics_of_this_checkpoint['f1'] = f1
+
                             sum_acc += test_acc
                             sum_f1 += f1
                             if test_acc > max_fold_acc:
@@ -214,7 +172,13 @@ class Instructor:
                                                                                      round(test_acc * 100, 2),
                                                                                      round(f1 * 100, 2)
                                                                                      )
-                                    self._save_model(self.model, save_path, mode=0)
+
+                                    if test_acc > self.opt.max_test_metrics['max_apc_test_acc']:
+                                        self.opt.max_test_metrics['max_apc_test_acc'] = test_acc
+                                    if f1 > self.opt.max_test_metrics['max_apc_test_f1']:
+                                        self.opt.max_test_metrics['max_apc_test_f1'] = f1
+
+                                    save_model(self.opt, self.model, self.tokenizer, save_path, mode=0)
                             if f1 > max_fold_f1:
                                 max_fold_f1 = f1
                             postfix = ('Epoch:{} | Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) |'
@@ -307,7 +271,7 @@ class Instructor:
         return self._train_and_evaluate(criterion, lca_criterion)
 
 
-def train4apc(opt):
+def train4apc(opt, logger):
 
     if not isinstance(opt.seed, int):
         opt.logger.info('Please do not use multiple random seeds without evaluating.')
@@ -333,11 +297,11 @@ def train4apc(opt):
     opt.device = torch.device(opt.device)
 
     # in case of handling ConnectionError exception
-    finished = False
-    while not finished:
+    trainer = None
+    while not trainer:
         try:
-            ins = Instructor(opt, opt.logger)
-            return ins.run()
+            trainer = Instructor(opt, logger)
         except ValueError as e:
             print('Seems to be ConnectionError, retry in {} seconds...'.format(60))
             time.sleep(60)
+    return trainer.run()

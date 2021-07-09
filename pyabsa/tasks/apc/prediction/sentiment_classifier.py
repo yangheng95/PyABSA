@@ -6,15 +6,13 @@
 import os
 import pickle
 import random
-import warnings
 
 import numpy
 import torch
 from torch.utils.data import DataLoader
-from transformers import BertModel, BertTokenizer
+from transformers import BertModel, AutoTokenizer
 
 from pyabsa.tasks.apc.dataset_utils.data_utils_for_inferring import ABSADataset
-from pyabsa.tasks.apc.dataset_utils.apc_utils import Tokenizer4Bert
 from pyabsa.tasks.apc.dataset_utils.apc_utils import SENTIMENT_PADDING
 
 from pyabsa.utils.pyabsa_utils import find_target_file
@@ -63,20 +61,19 @@ class SentimentClassifier:
                 if tokenizer_path:
                     self.tokenizer = pickle.load(open(tokenizer_path[0], 'rb'))
                 else:
-                    self.bert_tokenizer = BertTokenizer.from_pretrained(self.opt.pretrained_bert_name,
-                                                                        do_lower_case=True)
-                    self.tokenizer = Tokenizer4Bert(self.bert_tokenizer, self.opt.max_seq_len)
+                    self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
                 self.tokenizer.bos_token = self.tokenizer.bos_token if self.tokenizer.bos_token else '[CLS]'
                 self.tokenizer.eos_token = self.tokenizer.eos_token if self.tokenizer.eos_token else '[SEP]'
+
                 print('Config used in Training:')
                 self._log_write_args()
 
             except Exception as e:
                 print(e)
-                raise FileNotFoundError('Fail to load the model from {}'.format(model_arg),
-                                        'if you have not trained a model, please download our latest models at Google Drive: '
-                                        'https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC?usp=sharing'
-                                        )
+                print('Fail to load the model from {}'.format(model_arg),
+                      'if you have not trained a model, you can view and load our provided checkpoints.'
+                      )
+                exit()
 
         self.dataset = ABSADataset(tokenizer=self.tokenizer, opt=self.opt)
         self.infer_dataloader = None
@@ -123,7 +120,8 @@ class SentimentClassifier:
         print(
             'n_trainable_params: {0}, n_nontrainable_params: {1}'.format(n_trainable_params, n_nontrainable_params))
         for arg in vars(self.opt):
-            print('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
+            if getattr(self.opt, arg) is not None:
+                print('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
 
     def batch_infer(self,
                     target_file=None,

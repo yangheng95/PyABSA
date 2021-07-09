@@ -36,7 +36,11 @@ to help me build an easy-to-use toolkit to reduce the cost of building models an
 The LCF is a simple and adoptive mechanism proposed for ABSA. 
 Many models based on LCF has been proposed and achieved SOTA performance. 
 Developing your models based on LCF will significantly improve your ABSA models.
-If you are looking for the original theory of LCF, please redirect to [LCF-theory](https://github.com/yangheng95/PyABSA/tree/release/examples/local_context_focus). If you are looking for the original codes of the LCF-related papers, please redirect to [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/master)
+If you are looking for the original proposal of local context focus, 
+please redirect to the introduction of 
+[LCF](https://github.com/yangheng95/PyABSA/tree/release/examples/local_context_focus).
+If you are looking for the original codes of the LCF-related papers, 
+please redirect to [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/LC-ABSA)
 or [LCF-ATEPC](https://github.com/XuMayi/LCF-ATEPC).
 
 
@@ -91,10 +95,10 @@ or [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_template_atepc.py) model template.
 
 |      Models          | Laptop14 (acc) |  Rest14 (acc) | Rest15 (acc) | Rest16 (acc) |
 | :------------------: | :------------: | :-----------: |:------------:|:------------:|
-| SLIDE-LCFS-BERT (CDW)|    81.35       |        88.04  |    85.93     |   92.52      | 
-| SLIDE-LCFS-BERT (CDM)|     82.13      |        87.5   |    85.37     |   92.36      |
-| SLIDE-LCF-BERT (CDW) |      81.82         |        86.34      |      86.11      |    92.85         |
-| SLIDE-LCF-BERT (CDM) |    81.35          |        86.43      |   85.93          |    92.2         |
+| SLIDE-LCFS-BERT (CDW)|      81.66     |      86.68    |     85.19    |    92.36     | 
+| SLIDE-LCFS-BERT (CDM)|      81.35     |      88.21    |     85.19    |    92.20     |
+| SLIDE-LCF-BERT (CDW) |      81.66     |      87.59    |     84.81    |    92.03     |
+| SLIDE-LCF-BERT (CDM) |      80.25     |      86.86    |     85.74    |    91.71     |
 
 The optimal performance result among three random seeds. Note that with the update of this repo, 
 the results could be updated. We are working on the construction of
@@ -110,6 +114,10 @@ from pyabsa import update_checkpoints
 
 checkpoint_map = update_checkpoints()
 ```
+
+If you can not access to Google Drive, you can download our checkpoints and load the unzipped checkpoint manually.
+如果您无法访问谷歌Drive，您可以下载我们预训练的模型，并手动解压缩并加载模型。
+模型下载[地址](https://pan.baidu.com/s/1oKkO7RJ6Ob9vY6flnJk3Sg) 提取码：ABSA
 
 ## How to share checkpoints (e.g., checkpoints trained on your custom dataset) with community
 

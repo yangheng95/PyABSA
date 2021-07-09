@@ -27,28 +27,6 @@ def pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating
         x[-len(trunc):] = trunc
     return x
 
-
-class Tokenizer4Bert:
-    def __init__(self, tokenizer, max_seq_len):
-        self.tokenizer = tokenizer
-        self.bos_token = tokenizer.bos_token if tokenizer.bos_token else '[CLS]'
-        self.eos_token = tokenizer.eos_token if tokenizer.eos_token else '[SEP]'
-        self.bos_token_id = tokenizer.bos_token_id if tokenizer.bos_token_id else 101
-        self.eos_token_id = tokenizer.eos_token_id if tokenizer.eos_token_id else 102
-        self.max_seq_len = max_seq_len
-
-    def text_to_sequence(self, text, reverse=False, padding='post', truncating='post'):
-        sequence = self.tokenizer.convert_tokens_to_ids(self.tokenizer.tokenize(text))
-        if len(sequence) == 0:
-            sequence = [0]
-        if reverse:
-            sequence = sequence[::-1]
-        return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
-
-    def get_bert_tokens(self, text):
-        return self.tokenizer.tokenize(text)
-
-
 def syntax_distance_alignment(tokens, dist, max_seq_len, tokenizer):
     text = tokens[:]
     dep_dist = dist[:]
@@ -124,9 +102,62 @@ def load_datasets(fname):
     return lines
 
 
+# test code, this implementation applies dynamic truncation on tokenized input,
+# instead of truncating the original input itself
+# def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
+#     bos_token = tokenizer.bos_token if tokenizer.bos_token else '[CLS]'
+#     eos_token = tokenizer.eos_token if tokenizer.eos_token else '[SEP]'
+#
+#     text_left_tokens = tokenizer.tokenize(text_left)
+#     text_right_tokens = tokenizer.tokenize(text_right)
+#     text_aspect_tokens = tokenizer.tokenize(aspect)
+#
+#     if hasattr(opt, 'dynamic_truncate') and opt.dynamic_truncate:
+#         # reserve 3 tokens for [CLS] and double [SEP]s
+#         _max_seq_len = opt.max_seq_len - 2 * len(text_aspect_tokens) - 3
+#         if _max_seq_len < (len(text_left_tokens) + len(text_right_tokens)):
+#             cut_len = len(text_left_tokens) + len(text_right_tokens) - _max_seq_len
+#             if len(text_left_tokens) > len(text_right_tokens):
+#                 text_left_tokens = text_left_tokens[cut_len:]
+#             else:
+#                 text_right_tokens = text_right_tokens[:len(text_right_tokens) - cut_len]
+#
+#     text_raw = text_left + ' ' + aspect + ' ' + text_right
+#     text_raw_tokens = [bos_token] + text_left_tokens + text_aspect_tokens + text_right_tokens + [eos_token]
+#     text_raw_bert_indices = tokenizer.convert_tokens_to_ids(text_raw_tokens)
+#     text_spc_tokens = text_raw_tokens + text_aspect_tokens + [eos_token]
+#     text_bert_indices = tokenizer.convert_tokens_to_ids(text_spc_tokens)
+#     aspect_bert_indices = tokenizer.convert_tokens_to_ids(text_aspect_tokens)
+#     text_bert_indices = pad_and_truncate(text_bert_indices, opt.max_seq_len)
+#     aspect_begin = len(text_left_tokens) + 1
+#     if 'lcfs' in opt.model_name or opt.use_syntax_based_SRD:
+#         syntactical_dist = get_syntax_distance(text_raw, aspect, tokenizer, opt)
+#     else:
+#         syntactical_dist = None
+#
+#     lca_ids, lcf_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices,
+#                                                    aspect_begin, syntactical_dist)
+#
+#     lcf_cdw_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices,
+#                               aspect_begin, syntactical_dist)
+#
+#     inputs = {
+#         'text_raw': text_raw,
+#         'aspect': aspect,
+#         'text_bert_indices': text_bert_indices,
+#         'text_raw_bert_indices': text_raw_bert_indices,
+#         'aspect_bert_indices': aspect_bert_indices,
+#         'lca_ids': lca_ids,
+#         'lcf_cdm_vec': lcf_cdm_vec,
+#         'lcf_cdw_vec': lcf_cdw_vec,
+#     }
+#
+#     return inputs
+
 def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
+
     if hasattr(opt, 'dynamic_truncate') and opt.dynamic_truncate:
-        _max_seq_len = opt.max_seq_len - len(aspect.split())
+        _max_seq_len = opt.max_seq_len - len(aspect.split(' '))
         text_left = text_left.split(' ')
         text_right = text_right.split(' ')
         if _max_seq_len < (len(text_left) + len(text_right)):
@@ -138,18 +169,18 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
         text_left = ' '.join(text_left)
         text_right = ' '.join(text_right)
 
-    bos_token = tokenizer.tokenizer.bos_token if tokenizer.tokenizer.bos_token else '[CLS]'
-    eos_token = tokenizer.tokenizer.eos_token if tokenizer.tokenizer.eos_token else '[SEP]'
+    bos_token = tokenizer.bos_token if tokenizer.bos_token else '[CLS]'
+    eos_token = tokenizer.eos_token if tokenizer.eos_token else '[SEP]'
 
     text_raw = text_left + ' ' + aspect + ' ' + text_right
     text_spc = bos_token + ' ' + text_raw + ' ' + eos_token + ' ' + aspect + ' ' + eos_token
-    text_bert_indices = tokenizer.text_to_sequence(text_spc)
-    text_raw_bert_indices = tokenizer.text_to_sequence(bos_token + ' ' + text_raw + ' ' + eos_token)
-    aspect_bert_indices = tokenizer.text_to_sequence(aspect)
+    text_bert_indices = text_to_sequence(tokenizer, text_spc, opt.max_seq_len)
+    text_raw_bert_indices = text_to_sequence(tokenizer, bos_token + ' ' + text_raw + ' ' + eos_token, opt.max_seq_len)
+    aspect_bert_indices = text_to_sequence(tokenizer, aspect, opt.max_seq_len)
 
-    aspect_begin = len(tokenizer.tokenizer.tokenize(bos_token + ' ' + text_left))
+    aspect_begin = len(tokenizer.tokenize(bos_token + ' ' + text_left))
     if 'lcfs' in opt.model_name or opt.use_syntax_based_SRD:
-        syntactical_dist = get_syntax_distance(text_raw, aspect, tokenizer.tokenizer, opt)
+        syntactical_dist = get_syntax_distance(text_raw, aspect, tokenizer, opt)
     else:
         syntactical_dist = None
 
@@ -173,6 +204,9 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
 
     return inputs
 
+
+def text_to_sequence(tokenizer, text, max_seq_len):
+    return pad_and_truncate(tokenizer.convert_tokens_to_ids(tokenizer.tokenize(text)), max_seq_len)
 
 def get_syntax_distance(text_raw, aspect, tokenizer, opt):
     # Find distance in dependency parsing tree
@@ -237,22 +271,22 @@ def get_cdw_vec(opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical
         for i in range(min(text_len, opt.max_seq_len)):
             if i < local_context_begin:
                 w = 1 - (local_context_begin - i) / text_len
-                cdw_vec[i] = w * np.ones((opt.embed_dim), dtype=np.float32)
             elif local_context_begin <= i <= local_context_end:
-                cdw_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
-            elif i > local_context_end:
+                w = 1
+            else:
                 w = 1 - (i - local_context_end) / text_len
-                cdw_vec[i] = w * np.ones((opt.embed_dim), dtype=np.float32)
+            try:
+                assert 0 <= w <= 1  # exception
+            except:
+                print('Warning! invalid CDW weight:', w)
+            cdw_vec[i] = w * np.ones((opt.embed_dim), dtype=np.float32)
     return cdw_vec
 
 
 def build_spc_mask_vec(opt, text_ids):
-    spc_mask_vec = (text_ids > 0)
-    spc_mask_vec = np.array(
-        [np.ones((opt.embed_dim))
-         if vec_i else np.zeros((opt.embed_dim))
-         for vec_i in spc_mask_vec]
-    ).astype(np.float32)
+    spc_mask_vec = np.zeros((opt.max_seq_len, opt.hidden_dim), dtype=np.float32)
+    for i in range(len(text_ids)):
+        spc_mask_vec[i] = np.ones((opt.hidden_dim), dtype=np.float32)
     return spc_mask_vec
 
 
@@ -300,52 +334,6 @@ def is_similar(s1, s2, tokenizer, similarity_threshold):
         return True
     else:
         return False
-
-
-##################  deprecated code  ################
-# def is_similar(s1, s2, tokenizer, similarity_threshold):
-#     # some reviews in the datasets are broken and can not use s1 == s2 to distinguish
-#     # the same text which contains multiple aspects, so the similarity check is used
-#     # similarity check is based on the observation and analysis of datasets
-#     count = 0.
-#     s1 = list(s1)
-#     s2 = list(s2)
-#     len1 = len(s1)
-#     len2 = len(s2)
-#     while s1 and s2:
-#         if s1[-1] in s2:
-#             count += 1
-#             s2.remove(s1[-1])
-#         s1.remove(s1[-1])
-#     if count / len1 >= similarity_threshold and count / len2 >= similarity_threshold:
-#         return True
-#     else:
-#         return False
-
-# def is_similar(s1, s2, tokenizer, similarity_threshold):
-#     # some reviews in the atepc_datasets are broken so the similarity check is used
-#     # similarity check is based on the observation and analysis of datasets
-#     count = 0.
-#     s1 = list(s1)
-#     s2 = list(s2)
-#     s1 = s1[:s1.index(tokenizer.eos_token) if tokenizer.eos_token in s1 else len(s1)]
-#     s2 = s2[:s2.index(tokenizer.eos_token) if tokenizer.eos_token in s2 else len(s2)]
-#     for i, ids in enumerate(s1):
-#         if ids in s2:
-#             count += 1
-#     if count / len(s1) >= 0.98 and count / len(s2) >= 0.98:
-#         return True
-#     else:
-#         return False
-
-# def is_same(s1, s2, tokenizer):
-#     eos_idx1 = np.min(np.where(s1 == tokenizer.eos_token_id))
-#     eos_idx2 = np.min(np.where(s2 == tokenizer.eos_token_id))
-#     s1 = s1[:eos_idx1] if np.count_nonzero(s1) < tokenizer.max_seq_len else s1
-#     s2 = s2[:eos_idx2] if np.count_nonzero(s2) < tokenizer.max_seq_len else s2
-#     s1 = list(s1)
-#     s2 = list(s2)
-#     return s1 == s2
 
 
 try:

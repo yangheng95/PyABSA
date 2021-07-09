@@ -7,7 +7,7 @@
 
 import tqdm
 
-from pyabsa.tasks.atepc.dataset_utils.atepc_utils import prepare_input_for_atepc
+from pyabsa.tasks.apc.dataset_utils.apc_utils import prepare_input_for_apc
 
 SENTIMENT_PADDING = -999
 
@@ -188,7 +188,7 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
             text_left = ' '.join(example.text_a)
             text_right = ''
             aspect = ''
-        prepared_inputs = prepare_input_for_atepc(opt, tokenizer, text_left, text_right, aspect)
+        prepared_inputs = prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect)
         lcf_cdm_vec = prepared_inputs['lcf_cdm_vec']
         lcf_cdw_vec = prepared_inputs['lcf_cdw_vec']
 
