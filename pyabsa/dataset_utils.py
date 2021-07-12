@@ -56,7 +56,7 @@ def detect_dataset(dataset_path, auto_evaluate=True, task='apc_benchmark'):
             dataset_file['test'] = find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True)
             dataset_file['test'] = [d for d in dataset_file['test'] if dataset_name.lower() in d.lower()]
         if auto_evaluate and not find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
-            print('Cna not find test set using for evaluating!')
+            print('Can not find test set using for evaluating!')
         if len(dataset_file) == 0:
             raise RuntimeError('Can not load train set or test set! '
                                'Make sure there are trainsets and (only) one testsets in the path:',

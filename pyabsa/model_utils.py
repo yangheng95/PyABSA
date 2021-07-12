@@ -70,9 +70,7 @@ def download_pretrained_model(task='apc', language='chinese', archive_path='', m
                                             dest_path=save_path,
                                             unzip=True)
     except:
-        raise RuntimeError(
-            'Download failed, you can update PyABSA and download the trained model manually at: {},'.format(
-                'https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC'))
+        raise ConnectionError("Fail to download checkpoint, seems to be a connection error.")
     os.remove(save_path)
     return dest_path
 
@@ -160,6 +158,8 @@ def update_checkpoints(task=''):
             print('-' * 100)
         # os.remove('./checkpoints.json')
         return APC_checkpoint_map if task.upper() == 'APC' else ATEPC_checkpoint_map
-    except ConnectionError as e:
-        print('Failed to update available checkpoints! Please contact author to solve this problem.')
-        return None
+    except Exception as e:
+        print('\nFailed to query checkpoints, try manually download the checkpoints from: \n'
+              '[1]\tGoogle Drive\t: https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC\n'
+              '[2]\tBaidu NetDisk\t: https://pan.baidu.com/s/1K8aYQ4EIrPm1GjQv_mnxEg (Access Code: absa)\n')
+        exit()

@@ -14,5 +14,72 @@
         "comment": "whatever you want us to know"
       }
     }
+  },
+  "0.8.8.0+": {
+    "APC": {
+      "chinese": {
+        "id": "https://drive.google.com/file/d/12UPwGEOWcBToEmpiKAyeKTmXZ-38LDuo/view?usp=sharing",
+        "description": "",
+        "comment": "Trained on RTX2080"
+      },
+      "HELP-WANTED": {
+        "id": "",
+        "description": "PLEASE NOTE THAT THIS IS NOT A REAL CHECKPOINT!",
+        "comment": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community."
+      }
+    },
+    "ATEPC": {
+      "chinese": {
+        "id": "https://drive.google.com/file/d/1LDCoYEhZLWt0pKsKflC3pOXUV3JMDT64/view?usp=sharing",
+        "description": "",
+        "comment": "Trained on RTX2080"
+      },
+      "english": {
+        "id": "https://drive.google.com/file/d/1wCA3bfA69GXTFGX1EoKgePsxT1vawc_J/view?usp=sharing",
+        "description": "Trained on SemEval-2014, 2015 datasets.",
+        "comment": "origin name: fast_lcf_atepc_cdw_apcacc_85.62_apcf1_76.87_atef1_81.1.zip Trained on RTX2080 Ti"
+      },
+      "HELP-WANTED": {
+        "id": "",
+        "description": "PLEASE NOTE THAT THIS IS NOT A REAL CHECKPOINT!",
+        "comment": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community."
+      }
+    }
+  },
+  "0.8.6.6-0.8.7.9": {
+    "APC": {
+      "chinese": {
+        "id": "https://drive.google.com/file/d/1_xnAXORC7hmlz_cAOIm4QBlp-h-aTF0b/view?usp=sharing",
+        "description": "Train on four chinese datasets using fast-lcf-bert model.",
+        "comment": "You can find the training GPU name (if any) in model parameter config"
+      },
+      "english": {
+        "id": "1AE2DC72vigxdAlYKjiV4_IfWsPUH7aX_",
+        "description": "Train on four SemEval2014,SemEval2015, SemEval2016 datasets using fast-lcf-bert model.",
+        "comment": ""
+      },
+      "multilingual": {
+        "id": "https://drive.google.com/file/d/1FFUwu6qbpT5fqs9qx3eTmpwTab2iOdpz/view?usp=sharing",
+        "description": "Train on four all datasets using fast-lcf-bert model.",
+        "comment": ""
+      }
+    },
+    "ATEPC": {
+      "chinese": {
+        "id": "1pRLDjjrmkIeQyAiwy6I34XVNWkvKQYBW",
+        "description": "Train on four Chinese datasets using lcf-atepc model.",
+        "comment": "In order to avoid mis-usage, the bert-spc imput format is disabled in ATEPC models. "
+      },
+      "english": {
+        "id": "1fdu80s0HFY_48SfCuC-hXCona32L3D3s",
+        "description": "",
+        "comment": ""
+      },
+      "multilingual": {
+        "id": "https://drive.google.com/file/d/14rumZKiAX6ysi23SGveiM_vLSM4_ynxJ/view?usp=sharing",
+        "description": "Due to computational resources limitation, we sincerely call for help to train and share the model. If you have interest, please contact us.",
+        "comment": "if you have enough resource to train the models, please help us and share your checkpoints."
+      }
+    }
   }
 }
