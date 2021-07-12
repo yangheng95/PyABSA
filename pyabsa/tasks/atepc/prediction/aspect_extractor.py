@@ -150,8 +150,7 @@ class AspectExtractor:
 
     # Temporal code, pending optimization
     def _extract(self, example, print_result):
-        print('Disable input truncation to avoid potential loss of aspect term extraction...')
-        self.opt.dynamic_truncate = False
+
         res = []  # extraction result
 
         self.eval_dataloader = None
