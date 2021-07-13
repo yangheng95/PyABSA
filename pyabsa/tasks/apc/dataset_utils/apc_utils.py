@@ -169,6 +169,15 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
         text_left = ' '.join(text_left)
         text_right = ' '.join(text_right)
 
+        # test code
+        text_left = ' '.join(text_left.split(' ')[int(-(opt.max_seq_len - len(aspect.split())) / 2) - 1:])
+        text_right = ' '.join(text_right.split(' ')[:int((opt.max_seq_len - len(aspect.split())) / 2) + 1])
+
+    # if hasattr(opt, 'dynamic_truncate') and opt.dynamic_truncate:
+    #     # dynamic truncation on input text
+    #     text_left = ' '.join(text_left.split(' ')[int(-(opt.max_seq_len - len(aspect.split())) / 2) - 1:])
+    #     text_right = ' '.join(text_right.split(' ')[:int((opt.max_seq_len - len(aspect.split())) / 2) + 1])
+
     bos_token = tokenizer.bos_token if tokenizer.bos_token else '[CLS]'
     eos_token = tokenizer.eos_token if tokenizer.eos_token else '[SEP]'
 
@@ -207,6 +216,7 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
 
 def text_to_sequence(tokenizer, text, max_seq_len):
     return pad_and_truncate(tokenizer.convert_tokens_to_ids(tokenizer.tokenize(text)), max_seq_len)
+
 
 def get_syntax_distance(text_raw, aspect, tokenizer, opt):
     # Find distance in dependency parsing tree

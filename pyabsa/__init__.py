@@ -5,16 +5,15 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-__version__ = '0.8.8.4'
+__version__ = '0.8.8.5'
 __name__ = 'pyabsa'
 
 from .functional import train_apc, load_sentiment_classifier
 from .functional import train_atepc, load_aspect_extractor
 
-from pyabsa.utils.pyabsa_utils import find_target_file
-
-from pyabsa.utils.generate_inferring_set_for_apc import generate_inferrence_set_for_apc
-from pyabsa.utils.convert_apc_set_to_atepc import convert_apc_set_to_atepc_set
+from pyabsa.utils.pyabsa_utils import (find_target_file,
+                                       generate_inferrence_set_for_apc,
+                                       convert_apc_set_to_atepc_set)
 
 from pyabsa.config.apc_config import apc_config_handler
 from pyabsa.config.atepc_config import atepc_config_handler

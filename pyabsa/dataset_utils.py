@@ -13,20 +13,30 @@ import tempfile
 from pyabsa.utils.pyabsa_utils import find_target_file
 
 class ABSADatasets:
+    # SemEval
     Laptop14 = 'Laptop14'
     Restaurant14 = 'Restaurant14'
     Restaurant15 = 'Restaurant15'
     Restaurant16 = 'Restaurant16'
+
+    # Twitter
     ACL_Twitter = 'Twitter'
+
+    # Chinese
     Phone = 'Phone'
     Car = 'Car'
     Notebook = 'Notebook'
     Camera = 'Camera'
     MAMS = 'MAMS'
-    Multilingual = 'Multilingual'
 
+    # @R Mukherjee et al.
+    Television = 'Television'
+    TShirt = 'TShirt'
+
+    # assembled dataset
     Chinese = 'Chinese'
     SemEval = 'SemEval'
+    Multilingual = 'Multilingual'
 
     APC_Datasets = 'APC_Datasets'
     ATEPC_Datasets = 'ATEPC_Datasets'

@@ -68,7 +68,7 @@ class Instructor:
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
         self.optimizer = self.opt.optimizer(_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
-    def prepare_dataloader(self, train_set, test_set=None):
+    def prepare_data_loader(self, train_set, test_set=None):
         if self.opt.cross_validate_fold < 1:
             self.train_data_loaders.append(DataLoader(dataset=train_set,
                                                       batch_size=self.opt.batch_size,
@@ -97,7 +97,7 @@ class Instructor:
                     DataLoader(dataset=test_set, batch_size=self.opt.batch_size, shuffle=False))
 
     def _train_and_evaluate(self, criterion, lca_criterion):
-        self.prepare_dataloader(self.train_set, self.test_set)
+        self.prepare_data_loader(self.train_set, self.test_set)
         sum_loss = 0
         sum_acc = 0
         sum_f1 = 0
@@ -229,7 +229,7 @@ class Instructor:
                                                   self.opt.model_name,
                                                   self.opt.lcf,
                                                   )
-                save_model(self.opt, self.model, self.tokenizer, save_path, mode=0)
+                self._save_model(self.model, save_path, mode=0)
             return self.model, self.opt, self.tokenizer, sum_acc, sum_f1
 
     def _evaluate_acc_f1(self, test_dataloader):

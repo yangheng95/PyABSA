@@ -4,9 +4,11 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
+import warnings
 
 import tqdm
 from torch.utils.data import Dataset
+
 from .apc_utils import build_sentiment_window
 from .apc_utils import build_spc_mask_vec
 from .apc_utils import load_datasets, prepare_input_for_apc
@@ -23,6 +25,7 @@ from pyabsa.tasks.apc.models import LCA_BERT
 
 from pyabsa.tasks.apc.models import LCF_TEMPLATE_BERT
 
+from pyabsa.utils import check_and_fix_polarity_labels
 
 class ABSADataset(Dataset):
     input_colses = {
@@ -93,16 +96,11 @@ class ABSADataset(Dataset):
 
             all_data.append(data)
 
+        check_and_fix_polarity_labels(polarities_set, all_data)
+        opt.polarities_dim = len(polarities_set)
+
         if 'slide' in opt.model_name:
             all_data = build_sentiment_window(all_data, tokenizer, opt.similarity_threshold)
-
-        # update polarities_dim, init model behind this function!
-        p_min, p_max = min(polarities_set), max(polarities_set)
-        if p_min < 0:
-            raise RuntimeError('Invalid sentiment label detected, only please label the sentiment between {0, N-1} '
-                               '(assume there are N types of sentiment polarities.)')
-        assert sorted(list(polarities_set)) == sorted(list(range(p_max - p_min + 1)))
-        opt.polarities_dim = len(polarities_set)
 
         self.data = all_data
 
