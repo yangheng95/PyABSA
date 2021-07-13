@@ -8,7 +8,6 @@ datasets/
 *.config
 *.zip
 *.gz
-checkpoints.json
 *.bin
 *.DS_Store
 # Byte-compiled / optimized / DLL files
@@ -17,6 +16,10 @@ __pycache__/
 *$py.class
 *.pyc
 .idea/
+
+# project config files
+checkpoints.json
+release_note.json
 
 # C extensions
 *.so

@@ -6,3 +6,4 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 from pyabsa.utils.pyabsa_utils import *
+from pyabsa.utils.file_utils import *
