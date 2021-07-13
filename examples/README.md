@@ -7,3 +7,5 @@ please contact us to fix them or submit a PR to fix them.
 New features and samples will be updated continuously, 
 and we are looking forward to your advice, Thanks!
 
+# Notice
+We test each example before release, however if you find any problem while running the examples please feel free to contact me or raise an issue.

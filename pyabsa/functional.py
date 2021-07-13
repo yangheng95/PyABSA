@@ -93,7 +93,7 @@ def train_apc(parameter_dict=None,
         config.seed = [config.seed]
 
     if os.path.exists(config.dataset_path):
-        log_name = '{}_{}_srd{}__unknown'.format(config.model_name, config.lcf, config.SRD)
+        log_name = '{}_{}_srd{}_custom_dataset'.format(config.model_name, config.lcf, config.SRD)
     else:
         log_name = '{}_{}_srd{}_{}'.format(config.model_name, config.lcf, config.SRD, config.dataset_path)
 
@@ -143,7 +143,7 @@ def train_atepc(parameter_dict=None,
         config.seed = [config.seed]
 
     if os.path.exists(config.dataset_path):
-        log_name = '{}_{}_srd{}__unknown'.format(config.model_name, config.lcf, config.SRD)
+        log_name = '{}_{}_srd{}_custom_dataset'.format(config.model_name, config.lcf, config.SRD)
     else:
         log_name = '{}_{}_srd{}_{}'.format(config.model_name, config.lcf, config.SRD, config.dataset_path)
     logger = get_logger(os.getcwd(), log_name=log_name, log_type='training')

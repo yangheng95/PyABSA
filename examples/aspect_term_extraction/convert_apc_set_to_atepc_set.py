@@ -9,4 +9,5 @@ from pyabsa import convert_apc_set_to_atepc_set
 
 from pyabsa import ABSADatasets
 apc_datasets = ABSADatasets.APC_Datasets
-convert_apc_set_to_atepc_set(apc_datasets)
+
+convert_apc_set_to_atepc_set(apc_datasets) # for custom dataset, absolute path recommended for this function

@@ -32,6 +32,8 @@ e.g., using efficient local context focus implementation from PyASBA.
 Please feel free to give me your interesting thoughts,
 to help me build an easy-to-use toolkit to reduce the cost of building models and reproduction in ABSA tasks.
 
+**Please star PyABSA in order to keep it developing and find latest released features or tutorials.**
+
 # Notice
 The LCF is a simple and adoptive mechanism proposed for ABSA. 
 Many models based on LCF has been proposed and achieved SOTA performance. 
@@ -46,7 +48,6 @@ or [LCF-ATEPC](https://github.com/XuMayi/LCF-ATEPC).
 
 # Preliminaries
 
-**Please star this repository in order to keep notified of new features or tutorials in PyABSA.**
 To use PyABSA, install the latest version from pip or source code:
 
 ```

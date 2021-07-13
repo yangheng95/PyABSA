@@ -10,6 +10,8 @@ import tqdm
 # from pyabsa.tasks.apc.dataset_utils.apc_utils import prepare_input_for_apc
 from pyabsa.tasks.atepc.dataset_utils.atepc_utils import prepare_input_for_atepc
 
+from pyabsa.utils import check_and_fix_polarity_labels
+
 SENTIMENT_PADDING = -999
 
 
@@ -262,14 +264,7 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
                           lcf_cdm_vec=lcf_cdm_vec,
                           lcf_cdw_vec=lcf_cdw_vec)
         )
-
-    # update polarities_dim, init model behind this function!
-    p_min, p_max = min(polarities_set), max(polarities_set)
-    if p_min < 0:
-        raise RuntimeError(
-            'Invalid sentiment label detected, only please label the sentiment between {0, N-1} '
-            '(assume there are N types of sentiment polarities.)')
-    assert list(polarities_set) == list(range(p_max - p_min + 1))
+    check_and_fix_polarity_labels(polarities_set, features)
     opt.polarities_dim = len(polarities_set)
 
     return features

@@ -10,4 +10,4 @@ from pyabsa import ABSADatasets
 
 # This function coverts a ABSA dataset to inference set, try to convert every dataset found in the dir
 # please do check the output file!
-generate_inferrence_set_for_apc(dataset_path=ABSADatasets.APC_Datasets)
+# generate_inferrence_set_for_apc(dataset_path=ABSADatasets.APC_Datasets)
