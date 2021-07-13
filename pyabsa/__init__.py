@@ -5,7 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-__version__ = '0.8.8.5'
+__version__ = '0.8.8.7'
 __name__ = 'pyabsa'
 
 from .functional import train_apc, load_sentiment_classifier
@@ -30,11 +30,14 @@ from update_checker import UpdateChecker
 
 from termcolor import colored
 
+from pyabsa.utils import check_update_log
+
 checker = UpdateChecker()
 check_result = checker.check(__name__, __version__)
 
 if check_result:
     print(check_result)
+    check_update_log()
     print('You can update via pip: {}'.format(colored('pip install -U {}'.format(__name__), 'green')))
-    print(colored('The version ends with letter-postfix is a test version,'
-                  ' please always update if you are using a test version.', 'red'))
+    # print(colored('The version ends with letter-postfix is a test version,'
+    #               ' please always update if you are using a test version.', 'red'))
