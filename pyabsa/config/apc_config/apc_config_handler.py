@@ -37,7 +37,8 @@ _apc_param_dict_template = {'model': BERT_SPC,
                             'srd_alignment': True,  # for srd_alignment
                             'evaluate_begin': 0,
                             'similarity_threshold': 1,  # disable same text check for different examples
-                            'cross_validate_fold': -1  # split train and test datasets into 5 folds and repeat 3 training
+                            'cross_validate_fold': -1
+                            # split train and test datasets into 5 folds and repeat 3 training
                             }
 
 _apc_param_dict_base = {'model': BERT_SPC,
@@ -124,7 +125,8 @@ _apc_param_dict_multilingual = {'model': BERT_SPC,
                                 'srd_alignment': True,  # for srd_alignment
                                 'evaluate_begin': 2,
                                 'similarity_threshold': 1,  # disable same text check for different examples
-                                'cross_validate_fold': -1  # split train and test datasets into 5 folds and repeat 3 training
+                                'cross_validate_fold': -1
+                                # split train and test datasets into 5 folds and repeat 3 training
                                 }
 
 _apc_param_dict_chinese = {'model': BERT_SPC,

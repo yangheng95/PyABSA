@@ -25,6 +25,7 @@ from pyabsa.utils.logger import get_logger
 from pyabsa.utils.pyabsa_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args
 
+
 class Instructor:
 
     def __init__(self, opt, logger):
@@ -163,7 +164,7 @@ class Instructor:
                                                 )
                 # loss_ate = loss_ate.item() / (loss_ate.item() + loss_apc.item()) * loss_ate
                 # loss_apc = loss_apc.item() / (loss_ate.item() + loss_apc.item()) * loss_apc
-                loss = loss_ate + 2*loss_apc
+                loss = loss_ate + 2 * loss_apc
                 sum_loss += loss.item()
                 loss.backward()
                 nb_tr_examples += input_ids_spc.size(0)
@@ -245,6 +246,8 @@ class Instructor:
                 sum_loss)
         )
         self.logger.info('-------------------------------------Training Summary-------------------------------------')
+        print('Training finished, we hope you can share your checkpoint with everybody, please see:',
+              'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
         # return the model paths of multiple training
         # in case of loading the best model after training
         if save_path:

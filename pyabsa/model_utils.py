@@ -82,7 +82,9 @@ class APCTrainedModelManager:
         if checkpoint_name.lower() in apc_checkpoint:
             print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint_name), 'green'))
         else:
-            print(colored('Checkpoint:{} is not found.'.format(checkpoint_name), 'red'))
+            print(colored(
+                'Checkpoint:{} is not found, you can raise an issue for requesting shares of checkpoints'.format(
+                    checkpoint_name), 'red'))
             exit(-1)
         return download_pretrained_model(task='apc',
                                          language=checkpoint_name.lower(),

@@ -20,6 +20,5 @@ class LCF_TEMPLATE_BERT(nn.Module):
         self.dropout = nn.Dropout(opt.dropout)
 
     def forward(self, inputs):
-
         raise NotImplementedError('This is a template ATEPC model based on LCF, '
-                          'please implement your model use this template.')
+                                  'please implement your model use this template.')

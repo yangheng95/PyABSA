@@ -12,6 +12,7 @@ import tempfile
 
 from pyabsa.utils.pyabsa_utils import find_target_file
 
+
 class ABSADatasets:
     # SemEval
     Laptop14 = 'Laptop14'

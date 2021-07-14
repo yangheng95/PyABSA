@@ -27,6 +27,7 @@ def pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating
         x[-len(trunc):] = trunc
     return x
 
+
 def syntax_distance_alignment(tokens, dist, max_seq_len, tokenizer):
     text = tokens[:]
     dep_dist = dist[:]
@@ -155,7 +156,6 @@ def load_datasets(fname):
 #     return inputs
 
 def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
-
     if hasattr(opt, 'dynamic_truncate') and opt.dynamic_truncate:
         _max_seq_len = opt.max_seq_len - len(aspect.split(' '))
         text_left = text_left.split(' ')

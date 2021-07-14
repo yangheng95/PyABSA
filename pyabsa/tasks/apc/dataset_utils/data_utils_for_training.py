@@ -27,6 +27,7 @@ from pyabsa.tasks.apc.models import LCF_TEMPLATE_BERT
 
 from pyabsa.utils import check_and_fix_polarity_labels
 
+
 class ABSADataset(Dataset):
     input_colses = {
         BERT_BASE: ['text_raw_bert_indices'],

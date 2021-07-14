@@ -8,6 +8,7 @@
 import re
 from pyabsa.tasks.apc.dataset_utils.apc_utils import get_syntax_distance, get_cdw_vec, get_lca_ids_and_cdm_vec
 
+
 def split_text(text):
     text = text.strip()
     word_list = []

@@ -49,7 +49,7 @@ def atepc_param_search(parameter_dict=None,
             for _, s in enumerate(config.seed):
                 t_config = copy.deepcopy(config)
                 t_config.seed = s
-                running_result = train4atepc(t_config)
+                running_result = train4atepc(t_config, logger)
                 score += (running_result[3] + running_result[4] + running_result[5])
         logger.info('{}: {} tested on dataset {} scored: {}'.format(search_param[0],
                                                                     alternative,
