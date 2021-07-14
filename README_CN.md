@@ -319,7 +319,8 @@ apc_param_search(parameter_dict=apc_param_dict_english,
 8. Camera
 9. Notebook
 10. Multilingual (The sum of the above datasets.)
-
+11. TShirt
+12. Television
 您不需要手动下载数据集，PyABSA会自动下载数据集。
 
 

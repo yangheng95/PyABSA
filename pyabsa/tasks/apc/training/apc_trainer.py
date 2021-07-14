@@ -6,7 +6,6 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 
-
 import os
 import random
 
@@ -21,7 +20,6 @@ from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, AutoModel
 from sklearn import metrics
 from torch.utils.data import random_split, ConcatDataset
-
 
 from pyabsa.tasks.apc.dataset_utils.data_utils_for_training import ABSADataset
 from pyabsa.utils.pyabsa_utils import save_model
@@ -217,6 +215,9 @@ class Instructor:
             )
             self.logger.info('-------------------------- Training Summary --------------------------')
 
+        print('Training finished, we hope you can share your checkpoint with everybody, please see:',
+              'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
+
         if os.path.exists('./init_state_dict.bin'):
             self.reload_model()
             os.remove('./init_state_dict.bin')
@@ -272,7 +273,6 @@ class Instructor:
 
 
 def train4apc(opt, logger):
-
     if not isinstance(opt.seed, int):
         opt.logger.info('Please do not use multiple random seeds without evaluating.')
         opt.seed = list(opt.seed)[0]

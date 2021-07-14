@@ -13,6 +13,7 @@ from google_drive_downloader import GoogleDriveDownloader as gdd
 
 from pyabsa import __version__
 
+
 def check_update_log():
     try:
         if os.path.exists('./release_note.json'):

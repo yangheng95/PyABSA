@@ -1,0 +1,16 @@
+{  "0.8.8.8":{
+    "1": "Add checkpoint verification",
+    "2": "Add release note with open source code",
+    "3": "fix param search function"
+  },
+  "0.8.8.7":{
+    "1": "Add release note",
+    "2": "Remove some duplicated code"
+  },
+  "0.8.8.5":{
+    "1": "Add new datasets (T-shirt, Television, Copyright belongs to https://github.com/rajdeep345/ABSA-Reproducibility)",
+    "2": "Add polarity label-fix features for some datasets containing negative labels",
+    "3": "Some typo-fix"
+  }
+}
+

@@ -28,7 +28,6 @@ class LCF_TEMPLATE_ATEPC(BertForTokenClassification):
         self.bert4local = self.bert4global
         self.dropout = nn.Dropout(self.opt.dropout)
 
-
     def get_batch_token_labels_bert_base_indices(self, labels):
         if labels is None:
             return

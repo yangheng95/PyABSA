@@ -22,6 +22,7 @@ from ..dataset_utils.data_utils_for_inferring import (ATEPCProcessor,
                                                       SENTIMENT_PADDING)
 
 from pyabsa.utils.pyabsa_utils import find_target_file
+from pyabsa.model_utils import ATEPCModelList
 
 
 class AspectExtractor:
@@ -39,13 +40,14 @@ class AspectExtractor:
             'sgd': torch.optim.SGD,
             'adamw': torch.optim.AdamW
         }
-        # load from a model path
+        # load from a training
         if not isinstance(model_arg, str):
             print('Load aspect extractor from training')
             self.model = model_arg[0]
             self.opt = model_arg[1]
             self.tokenizer = model_arg[2]
         else:
+            # load from a model path
             print('Load aspect extractor from', model_arg)
             try:
                 state_dict_path = find_target_file(model_arg, '.state_dict', find_all=True)
@@ -69,12 +71,13 @@ class AspectExtractor:
 
                 self.tokenizer.bos_token = self.tokenizer.bos_token if self.tokenizer.bos_token else '[CLS]'
                 self.tokenizer.eos_token = self.tokenizer.eos_token if self.tokenizer.eos_token else '[SEP]'
+
             except Exception as e:
-                print(e)
-                print('Fail to load the model from {}'.format(model_arg),
-                      'if you have not trained a model, you can view and load our provided checkpoints.'
-                      )
-                exit()
+                raise KeyError('Fail to load the model from {}'.format(model_arg),
+                               '\nplease check the path, or maybe the checkpoint is not compatible with this version.')
+
+            if not hasattr(ATEPCModelList, self.model.__class__.__name__):
+                raise KeyError('The checkpoint you are loading is not from ATEPC model.')
 
         self.processor = ATEPCProcessor(self.tokenizer)
         self.label_list = self.processor.get_labels()

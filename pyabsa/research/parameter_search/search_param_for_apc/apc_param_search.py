@@ -7,7 +7,7 @@
 
 import copy
 
-from pyabsa import ABSADatasets, detect_dataset
+from pyabsa import detect_dataset
 from pyabsa.functional import init_config
 
 from pyabsa.config.apc_config import apc_config_handler
@@ -56,7 +56,7 @@ def apc_param_search(parameter_dict=None,
                 #     score += train4apc(t_config)[3]
                 # else:
                 #     score += train4apc(t_config)[4]
-                running_result = train4apc(t_config)
+                running_result = train4apc(t_config, logger)
                 t_acc, t_f1 = running_result[3], running_result[4]
                 score += (t_acc + t_f1)
                 if t_acc > max_acc:

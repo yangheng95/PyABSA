@@ -20,6 +20,7 @@ from pyabsa.utils.pyabsa_utils import find_target_file
 from pyabsa.dataset_utils import detect_infer_dataset
 
 from termcolor import colored
+from pyabsa.model_utils import APCModelList
 
 
 class SentimentClassifier:
@@ -33,15 +34,14 @@ class SentimentClassifier:
             'xavier_normal_': torch.nn.init.xavier_normal,
             'orthogonal_': torch.nn.init.orthogonal_
         }
-
-        # load from a model path
+        # load from a training
         if not isinstance(model_arg, str):
             print('Load sentiment classifier from training')
             self.model = model_arg[0]
             self.opt = model_arg[1]
             self.tokenizer = model_arg[2]
         else:
-            # load from a trained model
+            # load from a model path
             try:
                 print('Load sentiment classifier from', model_arg)
                 state_dict_path = find_target_file(model_arg, '.state_dict', find_all=True)
@@ -69,11 +69,11 @@ class SentimentClassifier:
                 self._log_write_args()
 
             except Exception as e:
-                print(e)
-                print('Fail to load the model from {}'.format(model_arg),
-                      'if you have not trained a model, you can view and load our provided checkpoints.'
-                      )
-                exit()
+                raise KeyError('Fail to load the model from {}'.format(model_arg),
+                               '\nplease check the path, or maybe the checkpoint is not compatible with this version.')
+
+            if not hasattr(APCModelList, self.model.__class__.__name__):
+                raise KeyError('The checkpoint you are loading is not from APC model.')
 
         self.dataset = ABSADataset(tokenizer=self.tokenizer, opt=self.opt)
         self.infer_dataloader = None
