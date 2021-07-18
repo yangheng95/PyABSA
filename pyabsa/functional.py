@@ -11,8 +11,11 @@ from argparse import Namespace
 
 from pyabsa.dataset_utils import detect_dataset
 
+from pyabsa.model_utils import APCModelList, ATEPCModelList
+
 from pyabsa.tasks.apc.prediction.sentiment_classifier import SentimentClassifier
 from pyabsa.tasks.apc.training.apc_trainer import train4apc
+from pyabsa.tasks.glove_apc.training.apc_trainer_glove import train4apc_glove
 
 from pyabsa.tasks.atepc.training.atepc_trainer import train4atepc
 from pyabsa.tasks.atepc.prediction.aspect_extractor import AspectExtractor
@@ -89,6 +92,11 @@ def train_apc(parameter_dict=None,
     model_path = []
     sent_classifier = None
 
+    if hasattr(APCModelList.GloVeAPCModelList, parameter_dict['model'].__name__):
+        train4apc_func = train4apc_glove
+    else:
+        train4apc_func = train4apc
+
     if isinstance(config.seed, int):
         config.seed = [config.seed]
 
@@ -102,10 +110,10 @@ def train_apc(parameter_dict=None,
         t_config = Namespace(**vars(config))
         t_config.seed = s
         if model_path_to_save:
-            model_path.append(train4apc(t_config, logger))
+            model_path.append(train4apc_func(t_config, logger))
         else:
             # always return the last trained model if dont save trained models
-            sent_classifier = SentimentClassifier(model_arg=train4apc(t_config, logger))
+            sent_classifier = SentimentClassifier(model_arg=train4apc_func(t_config, logger))
     while logger.handlers:
         logger.removeHandler(logger.handlers[0])
     if model_path_to_save:

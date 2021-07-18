@@ -89,6 +89,18 @@ or [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_template_atepc.py) model template.
 9. [BERT-BASE](pyabsa/tasks/apc/models/bert_base.py)
 10. [BERT-SPC](pyabsa/tasks/apc/models/bert_spc.py)
 11. [LCA-Net](pyabsa/tasks/apc/models/lca_bert.py)
+### GloVe-based APC models
+12. AOA 
+13. ASGCN
+14. ATAE-LSTM
+15. Cabasc
+16. IAN
+17. LSTM
+18. MemNet
+19. MGAN
+20. RAM
+21. TC/TD-LSTM
+22. TNet_LF
 
 * Copyrights Reserved, please wait for the publishing of our paper to get the introduction of them in detail. 
 

@@ -16,14 +16,14 @@ from pyabsa import ABSADatasets
 
 save_path = 'state_dict'
 apc_param_dict_english = apc_config_handler.get_apc_param_dict_english()
-apc_param_dict_english['model'] = APCModelList.SLIDE_LCF_BERT
-apc_param_dict_english['evaluate_begin'] = 0
+apc_param_dict_english['model'] = APCModelList.BERT_BASE
+apc_param_dict_english['evaluate_begin'] = 10
 apc_param_dict_english['similarity_threshold'] = 1
 apc_param_dict_english['max_seq_len'] = 80
 
 apc_param_dict_english['dropout'] = 0
 apc_param_dict_english['log_step'] = 10
-apc_param_dict_english['num_epoch'] = 1
+apc_param_dict_english['num_epoch'] = 11
 apc_param_dict_english['l2reg'] = 0.0001
 apc_param_dict_english['seed'] = {1, 2, 3}
 apc_param_dict_english['cross_validate_fold'] = -1  # disable cross_validate
