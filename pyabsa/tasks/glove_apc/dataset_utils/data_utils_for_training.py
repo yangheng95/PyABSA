@@ -12,12 +12,13 @@ from torch.utils.data import Dataset
 
 from google_drive_downloader.google_drive_downloader import GoogleDriveDownloader as gdd
 
+from pyabsa.utils.pyabsa_utils import find_target_file
 from pyabsa.tasks.apc.dataset_utils.apc_utils import load_datasets
 from pyabsa.tasks.glove_apc.dataset_utils.dependency_graph import prepare_dependency_graph
 
 
 def prepare_glove840_embedding(glove_path):
-    glove840_id = '1jcABpuDZKHE1k8880vsk7nEygv5jaYpp'
+    glove840_id = '1G-vd6W1oF9ByyJ-pzp9dcqKnr_plh4Em'
     if not os.path.exists(glove_path):
         os.mkdir(glove_path)
     elif os.path.isfile(glove_path):
@@ -25,11 +26,14 @@ def prepare_glove840_embedding(glove_path):
     elif os.path.isfile(os.path.join(os.getcwd(), 'glove.840B.300d.txt')):
         return os.path.join(os.getcwd(), 'glove.840B.300d.txt')
     elif os.path.isdir(glove_path):
-        glove_path = os.path.join(glove_path, 'glove.840B.300d.txt')
-        print('No GloVe embedding found at {}, downloading...'.format(glove_path))
+        zip_glove_path = os.path.join(glove_path, 'glove.840B.300d.txt.zip')
+        print('No GloVe embedding found at {},'
+              ' downloading glove.840B.300d.txt (2GB transferred / 5.5GB unzipped)...'.format(glove_path))
         gdd.download_file_from_google_drive(file_id=glove840_id,
-                                            dest_path=glove_path,
-                                            unzip=True)
+                                            dest_path=zip_glove_path,
+                                            unzip=True
+                                            )
+        glove_path = find_target_file(glove_path, 'txt', exclude_key='.zip')
     return glove_path
 
 
@@ -59,7 +63,7 @@ def build_tokenizer(dataset_list, max_seq_len, dat_fname, opt):
 def _load_word_vec(path, word2idx=None, embed_dim=300):
     fin = open(path, 'r', encoding='utf-8', newline='\n', errors='ignore')
     word_vec = {}
-    for line in fin:
+    for line in tqdm.tqdm(fin, postfix='Loading Word Vectors...'):
         tokens = line.rstrip().split()
         word, vec = ' '.join(tokens[:-embed_dim]), tokens[-embed_dim:]
         if word in word2idx.keys():

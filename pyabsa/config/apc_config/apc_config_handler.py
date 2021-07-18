@@ -202,4 +202,3 @@ def get_apc_param_dict_multilingual():
 
 def get_apc_param_dict_glove():
     return copy.deepcopy(_apc_param_dict_glove)
-
