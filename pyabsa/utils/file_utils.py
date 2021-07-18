@@ -22,7 +22,7 @@ def check_update_log():
         update_logs = json.load(open('release_note.json'))
         for v in update_logs:
             if v > __version__:
-                print(colored('*' * 20 + ' Release Note above Version {} '.format(v) + '*' * 20, 'green'))
+                print(colored('*' * 20 + ' Release Note of Version {} '.format(v) + '*' * 20, 'green'))
                 for i, line in enumerate(update_logs[v]):
                     print('{}.\t{}'.format(i + 1, update_logs[v][line]))
     except:

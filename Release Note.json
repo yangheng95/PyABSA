@@ -1,4 +1,4 @@
-{  "0.8.9.0":{
+{  "0.8.9.1":{
     "1": "Add GloVe models support for APC, available model list: AOA, ASGCN, ATAE-LSTM, Cabasc, IAN, LSTM, MemNet, MGAN, RAM, TC/TD-LSTM, TNet_LF",
     "2": "Add GloVe embedding download support",
     "3": "Next Step: Add inference support for GloVe-based APC models",

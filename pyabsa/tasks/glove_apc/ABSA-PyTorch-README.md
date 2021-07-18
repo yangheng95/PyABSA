@@ -97,6 +97,7 @@ arXiv:1810.04805 (2018). [[pdf]](https://arxiv.org/pdf/1810.04805.pdf)
 
 Zhang, Chen, et al. "Aspect-based Sentiment Classification with Aspect-specific Graph Convolutional Networks."
 Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing.
+
 2019. [[pdf]](https://www.aclweb.org/anthology/D19-1464)
 
 ### MGAN ([mgan.py](./models/mgan.py))
