@@ -6,6 +6,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 from pyabsa.tasks.apc.models import BERT_SPC
+from pyabsa.tasks.glove_apc.models import TNet_LF
 
 import copy
 
@@ -158,6 +159,26 @@ _apc_param_dict_chinese = {'model': BERT_SPC,
                            'cross_validate_fold': -1  # split train and test datasets into 5 folds and repeat 3 training
                            }
 
+_apc_param_dict_glove = {'model': TNet_LF,
+                         'optimizer': "adam",
+                         'learning_rate': 0.001,
+                         'max_seq_len': 100,
+                         'dropout': 0.1,
+                         'l2reg': 0.0001,
+                         'num_epoch': 20,
+                         'batch_size': 16,
+                         'initializer': 'xavier_uniform_',
+                         'seed': {1, 2, 3},
+                         'embed_dim': 300,
+                         'hidden_dim': 300,
+                         'polarities_dim': 3,
+                         'log_step': 5,
+                         'hops': 3,  # valid in MemNet and RAM only
+                         'evaluate_begin': 0,
+                         'similarity_threshold': 1,  # disable same text check for different examples
+                         'cross_validate_fold': -1  # split train and test datasets into 5 folds and repeat 3 training
+                         }
+
 
 def get_apc_param_dict_template():
     return copy.deepcopy(_apc_param_dict_template)
@@ -177,3 +198,8 @@ def get_apc_param_dict_chinese():
 
 def get_apc_param_dict_multilingual():
     return copy.deepcopy(_apc_param_dict_multilingual)
+
+
+def get_apc_param_dict_glove():
+    return copy.deepcopy(_apc_param_dict_glove)
+
