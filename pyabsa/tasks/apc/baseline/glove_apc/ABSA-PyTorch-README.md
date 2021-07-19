@@ -81,7 +81,7 @@ sentence." arXiv preprint arXiv:1903.09588 (2019). [[pdf](https://arxiv.org/pdf/
 Zeng Biqing, Yang Heng, et al. "LCF: A Local Context Focus Mechanism for Aspect-Based Sentiment Classification." Applied
 Sciences. 2019, 9, 3389. [[pdf]](https://www.mdpi.com/2076-3417/9/16/3389/pdf)
 
-### AEN-BERT ([aen.py](./models/aen.py))
+### AEN-BERT ([aen.py](models/aen.py))
 
 Song, Youwei, et al. "Attentional Encoder Network for Targeted Sentiment Classification." arXiv preprint arXiv:
 1902.09314 (2019). [[pdf]](https://arxiv.org/pdf/1902.09314.pdf)
@@ -93,59 +93,59 @@ arXiv:1810.04805 (2018). [[pdf]](https://arxiv.org/pdf/1810.04805.pdf)
 
 ## Non-BERT-based models
 
-### ASGCN ([asgcn.py](./models/asgcn.py)) ([official](https://github.com/GeneZC/ASGCN))
+### ASGCN ([asgcn.py](models/asgcn.py)) ([official](https://github.com/GeneZC/ASGCN))
 
 Zhang, Chen, et al. "Aspect-based Sentiment Classification with Aspect-specific Graph Convolutional Networks."
 Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing.
 
 2019. [[pdf]](https://www.aclweb.org/anthology/D19-1464)
 
-### MGAN ([mgan.py](./models/mgan.py))
+### MGAN ([mgan.py](models/mgan.py))
 
 Fan, Feifan, et al. "Multi-grained Attention Network for Aspect-Level Sentiment Classification." Proceedings of the 2018
 Conference on Empirical Methods in Natural Language Processing. 2018. [[pdf]](http://aclweb.org/anthology/D18-1380)
 
-### AOA ([aoa.py](./models/aoa.py))
+### AOA ([aoa.py](models/aoa.py))
 
 Huang, Binxuan, et al. "Aspect Level Sentiment Classification with Attention-over-Attention Neural Networks." arXiv
 preprint arXiv:1804.06536 (2018). [[pdf]](https://arxiv.org/pdf/1804.06536.pdf)
 
-### TNet ([tnet_lf.py](./models/tnet_lf.py)) ([official](https://github.com/lixin4ever/TNet))
+### TNet ([tnet_lf.py](models/tnet_lf.py)) ([official](https://github.com/lixin4ever/TNet))
 
 Li, Xin, et al. "Transformation Networks for Target-Oriented Sentiment Classification." arXiv preprint arXiv:
 1805.01086 (2018). [[pdf]](https://arxiv.org/pdf/1805.01086)
 
-### Cabasc ([cabasc.py](./models/cabasc.py))
+### Cabasc ([cabasc.py](models/cabasc.py))
 
 Liu, Qiao, et al. "Content Attention Model for Aspect Based Sentiment Analysis." Proceedings of the 2018 World Wide Web
 Conference on World Wide Web. International World Wide Web Conferences Steering Committee, 2018.
 
-### RAM ([ram.py](./models/ram.py))
+### RAM ([ram.py](models/ram.py))
 
 Chen, Peng, et al. "Recurrent Attention Network on Memory for Aspect Sentiment Analysis." Proceedings of the 2017
 Conference on Empirical Methods in Natural Language Processing. 2017. [[pdf]](http://www.aclweb.org/anthology/D17-1047)
 
-### MemNet ([memnet.py](./models/memnet.py)) ([official](https://drive.google.com/open?id=1Hc886aivHmIzwlawapzbpRdTfPoTyi1U))
+### MemNet ([memnet.py](models/memnet.py)) ([official](https://drive.google.com/open?id=1Hc886aivHmIzwlawapzbpRdTfPoTyi1U))
 
 Tang, Duyu, B. Qin, and T. Liu. "Aspect Level Sentiment Classification with Deep Memory Network." Conference on
 Empirical Methods in Natural Language Processing 2016:214-224. [[pdf]](https://arxiv.org/pdf/1605.08900)
 
-### IAN ([ian.py](./models/ian.py))
+### IAN ([ian.py](models/ian.py))
 
 Ma, Dehong, et al. "Interactive Attention Networks for Aspect-Level Sentiment Classification." arXiv preprint arXiv:
 1709.00893 (2017). [[pdf]](https://arxiv.org/pdf/1709.00893)
 
-### ATAE-LSTM ([atae_lstm.py](./models/atae_lstm.py))
+### ATAE-LSTM ([atae_lstm.py](models/atae_lstm.py))
 
 Wang, Yequan, Minlie Huang, and Li Zhao. "Attention-based lstm for aspect-level sentiment classification." Proceedings
 of the 2016 conference on empirical methods in natural language processing. 2016.
 
-### TD-LSTM ([td_lstm.py](./models/td_lstm.py), [tc_lstm.py](./models/tc_lstm.py)) ([official](https://drive.google.com/open?id=17RF8MZs456ov9MDiUYZp0SCGL6LvBQl6))
+### TD-LSTM ([td_lstm.py](models/td_lstm.py), [tc_lstm.py](models/tc_lstm.py)) ([official](https://drive.google.com/open?id=17RF8MZs456ov9MDiUYZp0SCGL6LvBQl6))
 
 Tang, Duyu, et al. "Effective LSTMs for Target-Dependent Sentiment Classification." Proceedings of COLING 2016, the 26th
 International Conference on Computational Linguistics: Technical Papers. 2016. [[pdf]](https://arxiv.org/pdf/1512.01100)
 
-### LSTM ([lstm.py](./models/lstm.py))
+### LSTM ([lstm.py](models/lstm.py))
 
 Hochreiter, Sepp, and Jürgen Schmidhuber. "Long short-term memory." Neural computation 9.8 (1997):
 1735-1780. [[pdf](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.676.4320&rep=rep1&type=pdf)]

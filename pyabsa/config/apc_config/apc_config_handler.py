@@ -6,7 +6,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 from pyabsa.tasks.apc.models import BERT_SPC
-from pyabsa.tasks.glove_apc.models import TNet_LF
+from pyabsa.tasks.apc.baseline.glove_apc import TNet_LF
 
 import copy
 

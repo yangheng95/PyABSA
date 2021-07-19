@@ -19,7 +19,7 @@ from pyabsa import ABSADatasets
 save_path = 'state_dict'
 apc_param_dict_english = apc_config_handler.get_apc_param_dict_glove()
 apc_param_dict_english['model'] = APCModelList.GloVeAPCModelList.TNet_LF
-apc_param_dict_english['cross_validate_fold'] = -1  # disable cross_validate
+apc_param_dict_english['cross_validate_fold'] = -1  # disable cross_validate, enable in {5, 10}
 
 Dataset = ABSADatasets.Restaurant14
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,

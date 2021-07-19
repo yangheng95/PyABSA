@@ -15,7 +15,7 @@ from pyabsa.utils.pyabsa_utils import find_target_file
 
 class ABSADatasets:
     # SemEval
-    Laptop14 = 'Restaurant14'
+    Laptop14 = 'Laptop14'
     Restaurant14 = 'Restaurant14'
     Restaurant15 = 'Restaurant15'
     Restaurant16 = 'Restaurant16'
