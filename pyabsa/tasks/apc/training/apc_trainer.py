@@ -24,7 +24,7 @@ from torch.utils.data import random_split, ConcatDataset
 from pyabsa.tasks.apc.dataset_utils.data_utils_for_training import ABSADataset
 from pyabsa.utils.pyabsa_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args
-
+from pyabsa.utils import find_target_file
 
 class Instructor:
     def __init__(self, opt, logger):
@@ -37,10 +37,12 @@ class Instructor:
         self.train_set = ABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
         if 'test' in self.opt.dataset_file:
             self.test_set = ABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
+            self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
+
         else:
             self.test_set = None
-        self.train_data_loaders = []
-        self.test_data_loaders = []
+        self.train_dataloaders = []
+        self.val_dataloaders = []
 
         self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert_name)
         # init the model behind the construction of atepc_datasets in case of updating polarities_dim
@@ -66,52 +68,174 @@ class Instructor:
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
         self.optimizer = self.opt.optimizer(_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
-    def prepare_dataloader(self, train_set, test_set=None):
+    def prepare_dataloader(self, train_set):
         if self.opt.cross_validate_fold < 1:
-            self.train_data_loaders.append(DataLoader(dataset=train_set,
-                                                      batch_size=self.opt.batch_size,
-                                                      shuffle=True,
-                                                      pin_memory=True))
-            if test_set:
-                self.test_data_loaders.append(DataLoader(dataset=test_set,
-                                                         batch_size=self.opt.batch_size,
-                                                         shuffle=False,
-                                                         pin_memory=True))
+            self.train_dataloaders.append(DataLoader(dataset=train_set,
+                                                     batch_size=self.opt.batch_size,
+                                                     shuffle=True,
+                                                     pin_memory=True))
+
         else:
-            if test_set:
-                sum_dataset = ConcatDataset([train_set, test_set])
-            else:
-                sum_dataset = train_set
-            len_per_fold = len(sum_dataset) // self.opt.cross_validate_fold
-            folds = random_split(sum_dataset, tuple([len_per_fold] * (self.opt.cross_validate_fold - 1) + [
-                len(sum_dataset) - len_per_fold * (self.opt.cross_validate_fold - 1)]))
+            split_dataset = train_set
+            len_per_fold = len(split_dataset) // self.opt.cross_validate_fold
+            folds = random_split(split_dataset, tuple([len_per_fold] * (self.opt.cross_validate_fold - 1) + [
+                len(split_dataset) - len_per_fold * (self.opt.cross_validate_fold - 1)]))
 
             for f_idx in range(self.opt.cross_validate_fold):
                 train_set = ConcatDataset([x for i, x in enumerate(folds) if i != f_idx])
-                test_set = folds[f_idx]
-                self.train_data_loaders.append(
+                val_set = folds[f_idx]
+                self.train_dataloaders.append(
                     DataLoader(dataset=train_set, batch_size=self.opt.batch_size, shuffle=True))
-                self.test_data_loaders.append(
-                    DataLoader(dataset=test_set, batch_size=self.opt.batch_size, shuffle=False))
+                self.val_dataloaders.append(
+                    DataLoader(dataset=val_set, batch_size=self.opt.batch_size, shuffle=True))
+
+    def _train(self, criterion, lca_criterion):
+        self.prepare_dataloader(self.train_set)
+        if self.val_dataloaders:
+            return self._k_fold_train_and_evaluate(criterion, lca_criterion)
+        else:
+            return self._train_and_evaluate(criterion, lca_criterion)
 
     def _train_and_evaluate(self, criterion, lca_criterion):
-        self.prepare_dataloader(self.train_set, self.test_set)
+
         sum_loss = 0
         sum_acc = 0
         sum_f1 = 0
+
+        global_step = 0
+        max_fold_acc = 0
+        max_fold_f1 = 0
+        save_path = ''
         self.opt.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
         self.opt.max_test_metrics = {'max_apc_test_acc': 0, 'max_apc_test_f1': 0, 'max_ate_test_f1': 0}
 
+        self.logger.info("***** Running training for Aspect Polarity Classification *****")
+        self.logger.info("Training set examples = %d", len(self.train_set))
+        self.logger.info("Test set examples = %d", len(self.test_set))
+        self.logger.info("Batch size = %d", self.opt.batch_size)
+        self.logger.info("Num steps = %d", len(self.train_dataloaders[0]) // self.opt.batch_size * self.opt.num_epoch)
+
+        for epoch in range(self.opt.num_epoch):
+            iterator = tqdm(self.train_dataloaders[0])
+            for i_batch, sample_batched in enumerate(iterator):
+                global_step += 1
+                # switch model to training_tutorials mode, clear gradient accumulators
+                self.model.train()
+                self.optimizer.zero_grad()
+                inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
+                outputs = self.model(inputs)
+                targets = sample_batched['polarity'].to(self.opt.device)
+
+                if 'lca' in self.opt.model_name:
+                    sen_logits, lca_logits, lca_ids = outputs
+                    sen_loss = criterion(sen_logits, targets)
+                    lcp_loss = lca_criterion(lca_logits, lca_ids)
+                    loss = (1 - self.opt.sigma) * sen_loss + self.opt.sigma * lcp_loss
+                else:
+                    sen_logits = outputs
+                    loss = criterion(sen_logits, targets)
+                sum_loss += loss.item()
+                loss.backward()
+                self.optimizer.step()
+
+                # evaluate if test set is available
+                if 'test' in self.opt.dataset_file and global_step % self.opt.log_step == 0:
+                    if epoch >= self.opt.evaluate_begin:
+
+                        test_acc, f1 = self._evaluate_acc_f1(self.test_dataloader)
+
+                        self.opt.metrics_of_this_checkpoint['acc'] = test_acc
+                        self.opt.metrics_of_this_checkpoint['f1'] = f1
+
+                        sum_acc += test_acc
+                        sum_f1 += f1
+                        if test_acc > max_fold_acc:
+
+                            max_fold_acc = test_acc
+                            if self.opt.model_path_to_save:
+                                if not os.path.exists(self.opt.model_path_to_save):
+                                    os.mkdir(self.opt.model_path_to_save)
+                                if save_path:
+                                    try:
+                                        shutil.rmtree(save_path)
+                                        # logger.info('Remove sub-optimal trained model:', save_path)
+                                    except:
+                                        # logger.info('Can not remove sub-optimal trained model:', save_path)
+                                        pass
+                                save_path = '{0}/{1}_{2}_acc_{3}_f1_{4}/'.format(self.opt.model_path_to_save,
+                                                                                 self.opt.model_name,
+                                                                                 self.opt.lcf,
+                                                                                 round(test_acc * 100, 2),
+                                                                                 round(f1 * 100, 2)
+                                                                                 )
+
+                                if test_acc > self.opt.max_test_metrics['max_apc_test_acc']:
+                                    self.opt.max_test_metrics['max_apc_test_acc'] = test_acc
+                                if f1 > self.opt.max_test_metrics['max_apc_test_f1']:
+                                    self.opt.max_test_metrics['max_apc_test_f1'] = f1
+
+                                save_model(self.opt, self.model, self.tokenizer, save_path, mode=0)
+                        if f1 > max_fold_f1:
+                            max_fold_f1 = f1
+                        postfix = ('Epoch:{} | Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) |'
+                                   ' Test F1:{:.2f}(max:{:.2f})'.format(epoch,
+                                                                        loss.item(),
+                                                                        test_acc * 100,
+                                                                        max_fold_acc * 100,
+                                                                        f1 * 100,
+                                                                        max_fold_f1 * 100))
+                    else:
+                        postfix = 'Epoch:{} | No evaluation until epoch:{}'.format(epoch, self.opt.evaluate_begin)
+
+                    iterator.postfix = postfix
+                    iterator.refresh()
+
+        self.logger.info('-------------------------- Training Summary --------------------------')
+        self.logger.info('Acc: {:.8f} F1: {:.8f} Accumulated Loss: {:.8f}'.format(
+            max_fold_acc * 100,
+            max_fold_f1 * 100,
+            sum_loss)
+        )
+        self.logger.info('-------------------------- Training Summary --------------------------')
+        if os.path.exists('./init_state_dict.bin'):
+            self.reload_model()
+
+        print('Training finished, we hope you can share your checkpoint with everybody, please see:',
+              'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
+
+        if save_path:
+            return save_path
+        else:
+            # direct return model if do not evaluate
+            if self.opt.model_path_to_save:
+                save_path = '{0}/{1}_{2}/'.format(self.opt.model_path_to_save,
+                                                  self.opt.model_name,
+                                                  self.opt.lcf,
+                                                  )
+                save_model(self.opt, self.model, self.tokenizer, save_path, mode=0)
+            return self.model, self.opt, self.tokenizer, sum_acc, sum_f1
+
+    def _k_fold_train_and_evaluate(self, criterion, lca_criterion):
+        sum_loss = 0
+        sum_acc = 0
+        sum_f1 = 0
+
         fold_test_acc = []
         fold_test_f1 = []
-        save_path = ''
-        for f, (train_dataloader, test_dataloader) in enumerate(zip(self.train_data_loaders, self.test_data_loaders)):
+
+        save_path_k_fold = ''
+        max_fold_acc_k_fold = 0
+
+        self.opt.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
+        self.opt.max_test_metrics = {'max_apc_test_acc': 0, 'max_apc_test_f1': 0, 'max_ate_test_f1': 0}
+
+        for f, (train_dataloader, val_dataloader) in enumerate(zip(self.train_dataloaders, self.val_dataloaders)):
             self.logger.info("***** Running training for Aspect Polarity Classification *****")
             self.logger.info("Training set examples = %d", len(self.train_set))
             self.logger.info("Test set examples = %d", len(self.test_set))
             self.logger.info("Batch size = %d", self.opt.batch_size)
             self.logger.info("Num steps = %d", len(train_dataloader) // self.opt.batch_size * self.opt.num_epoch)
-            if len(self.train_data_loaders) > 1:
+            if len(self.train_dataloaders) > 1:
                 self.logger.info('No. {} training in {} folds...'.format(f + 1, self.opt.cross_validate_fold))
             global_step = 0
             max_fold_acc = 0
@@ -144,7 +268,7 @@ class Instructor:
                     if 'test' in self.opt.dataset_file and global_step % self.opt.log_step == 0:
                         if epoch >= self.opt.evaluate_begin:
 
-                            test_acc, f1 = self._evaluate_acc_f1(test_dataloader)
+                            test_acc, f1 = self._evaluate_acc_f1(val_dataloader)
 
                             self.opt.metrics_of_this_checkpoint['acc'] = test_acc
                             self.opt.metrics_of_this_checkpoint['f1'] = f1
@@ -191,17 +315,22 @@ class Instructor:
 
                         iterator.postfix = postfix
                         iterator.refresh()
+            self.model = torch.load(find_target_file(save_path, 'model')).to(self.opt.device)
+            max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
+            if max_fold_acc > max_fold_acc_k_fold:
+                save_path_k_fold = save_path
             fold_test_acc.append(max_fold_acc)
             fold_test_f1.append(max_fold_f1)
             self.logger.info('-------------------------- Training Summary --------------------------')
             self.logger.info('Acc: {:.8f} F1: {:.8f} Accumulated Loss: {:.8f}'.format(
-                fold_test_acc[0] * 100,
-                fold_test_f1[0] * 100,
+                max_fold_acc * 100,
+                max_fold_f1 * 100,
                 sum_loss)
             )
             self.logger.info('-------------------------- Training Summary --------------------------')
             if os.path.exists('./init_state_dict.bin'):
                 self.reload_model()
+
         mean_test_acc = numpy.mean(fold_test_acc)
         mean_test_f1 = numpy.mean(fold_test_f1)
 
@@ -221,16 +350,16 @@ class Instructor:
         if os.path.exists('./init_state_dict.bin'):
             self.reload_model()
             os.remove('./init_state_dict.bin')
-        if save_path:
-            return save_path
+        if save_path_k_fold:
+            return save_path_k_fold
         else:
             # direct return model if do not evaluate
             if self.opt.model_path_to_save:
-                save_path = '{0}/{1}_{2}/'.format(self.opt.model_path_to_save,
-                                                  self.opt.model_name,
-                                                  self.opt.lcf,
-                                                  )
-                save_model(self.opt, self.model, self.tokenizer, save_path, mode=0)
+                save_path_k_fold = '{0}/{1}_{2}/'.format(self.opt.model_path_to_save,
+                                                         self.opt.model_name,
+                                                         self.opt.lcf,
+                                                         )
+                save_model(self.opt, self.model, self.tokenizer, save_path_k_fold, mode=0)
             return self.model, self.opt, self.tokenizer, sum_acc, sum_f1
 
     def _evaluate_acc_f1(self, test_dataloader):
@@ -269,7 +398,7 @@ class Instructor:
         criterion = nn.CrossEntropyLoss()
         lca_criterion = nn.CrossEntropyLoss()
 
-        return self._train_and_evaluate(criterion, lca_criterion)
+        return self._train(criterion, lca_criterion)
 
 
 def train4apc(opt, logger):

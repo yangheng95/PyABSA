@@ -8,7 +8,7 @@
 import pyabsa.tasks.apc.models
 import pyabsa.tasks.atepc.models
 
-import pyabsa.tasks.glove_apc.models
+import pyabsa.tasks.apc.baseline.glove_apc.models
 
 from pyabsa import __version__
 
@@ -37,18 +37,18 @@ class APCModelList:
     LCF_TEMPLATE_BERT = pyabsa.tasks.apc.models.LCF_TEMPLATE_BERT
 
     class GloVeAPCModelList:
-        LSTM = pyabsa.tasks.glove_apc.models.LSTM
-        IAN = pyabsa.tasks.glove_apc.models.IAN
-        MemNet = pyabsa.tasks.glove_apc.models.MemNet
-        RAM = pyabsa.tasks.glove_apc.models.RAM
-        TD_LSTM = pyabsa.tasks.glove_apc.models.TD_LSTM
-        TC_LSTM = pyabsa.tasks.glove_apc.models.TC_LSTM
-        Cabasc = pyabsa.tasks.glove_apc.models.Cabasc
-        ATAE_LSTM = pyabsa.tasks.glove_apc.models.ATAE_LSTM
-        TNet_LF = pyabsa.tasks.glove_apc.models.TNet_LF
-        AOA = pyabsa.tasks.glove_apc.models.AOA
-        MGAN = pyabsa.tasks.glove_apc.models.MGAN
-        ASGCN = pyabsa.tasks.glove_apc.models.ASGCN
+        LSTM = pyabsa.tasks.apc.baseline.glove_apc.models.LSTM
+        IAN = pyabsa.tasks.apc.baseline.glove_apc.models.IAN
+        MemNet = pyabsa.tasks.apc.baseline.glove_apc.models.MemNet
+        RAM = pyabsa.tasks.apc.baseline.glove_apc.models.RAM
+        TD_LSTM = pyabsa.tasks.apc.baseline.glove_apc.models.TD_LSTM
+        TC_LSTM = pyabsa.tasks.apc.baseline.glove_apc.models.TC_LSTM
+        Cabasc = pyabsa.tasks.apc.baseline.glove_apc.models.Cabasc
+        ATAE_LSTM = pyabsa.tasks.apc.baseline.glove_apc.models.ATAE_LSTM
+        TNet_LF = pyabsa.tasks.apc.baseline.glove_apc.models.TNet_LF
+        AOA = pyabsa.tasks.apc.baseline.glove_apc.models.AOA
+        MGAN = pyabsa.tasks.apc.baseline.glove_apc.models.MGAN
+        ASGCN = pyabsa.tasks.apc.baseline.glove_apc.models.ASGCN
 
 
 class ATEPCModelList:

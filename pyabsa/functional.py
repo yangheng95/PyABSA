@@ -11,11 +11,11 @@ from argparse import Namespace
 
 from pyabsa.dataset_utils import detect_dataset
 
-from pyabsa.model_utils import APCModelList, ATEPCModelList
+from pyabsa.model_utils import APCModelList
 
 from pyabsa.tasks.apc.prediction.sentiment_classifier import SentimentClassifier
 from pyabsa.tasks.apc.training.apc_trainer import train4apc
-from pyabsa.tasks.glove_apc.training.apc_trainer_glove import train4apc_glove
+from pyabsa.tasks.apc.baseline.glove_apc.training.apc_trainer_glove import train4apc_glove
 
 from pyabsa.tasks.atepc.training.atepc_trainer import train4atepc
 from pyabsa.tasks.atepc.prediction.aspect_extractor import AspectExtractor

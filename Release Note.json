@@ -1,4 +1,10 @@
-{  "0.8.9.1":{
+{ "0.8.9.2":{
+    "1": "Add DLCF_DCA_BERT models",
+    "2": "Refactor parameter loading method to manage parameters depend on specific model (Note you need to clone the latest examples after updating)",
+    "3": "Fix cross validation",
+    "4": "Plan to enable BERT for baseline models"
+  },
+  "0.8.9.1":{
     "1": "Add GloVe models support for APC, available model list: AOA, ASGCN, ATAE-LSTM, Cabasc, IAN, LSTM, MemNet, MGAN, RAM, TC/TD-LSTM, TNet_LF",
     "2": "Add GloVe embedding download support",
     "3": "Next Step: Add inference support for GloVe-based APC models",
