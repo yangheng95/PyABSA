@@ -70,7 +70,7 @@ def prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect):
 
 def get_dynamic_cdw_vec(opt, max_dist, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None):
     #the function is used to set dynamic threshold and calculate cdm/cdw for DLCF_DCA_BERT
-    a = opt.a
+    a = opt.dlcf_a
     if max_dist > 0:
         dynamic_threshold = math.log(max_dist, a) + a - 1
     else:
@@ -108,7 +108,7 @@ def get_dynamic_cdw_vec(opt, max_dist, bert_spc_indices, aspect_indices, aspect_
 
 def get_dynamic_cdm_vec(opt, max_dist, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None):
     #the function is used to set dynamic threshold and calculate cdm/cdw for DLCF_DCA_BERT
-    a = opt.a
+    a = opt.dlcf_a
     if max_dist > 0:
         dynamic_threshold = math.log(max_dist, a) + a - 1
     else:

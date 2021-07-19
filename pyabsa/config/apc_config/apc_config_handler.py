@@ -78,9 +78,9 @@ _apc_param_dict_english = {'model': BERT_SPC,
                            'use_bert_spc': True,
                            'max_seq_len': 80,
                            'SRD': 3,
-                           'a': 2, # the a in dlcf_dca_bert
-                           'p': 1, # the p in dlcf_dca_bert
-                           'layer': 3, # the layer in dlcf_dca_bert
+                           'dlcf_a': 2, # the a in dlcf_dca_bert
+                           'dca_p': 1, # the p in dlcf_dca_bert
+                           'dca_layer': 3, # the layer in dlcf_dca_bert
                            'use_syntax_based_SRD': False,
                            'sigma': 0.3,
                            'lcf': "cdw",

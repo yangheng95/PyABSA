@@ -86,7 +86,7 @@ class DLCF_DCA_BERT(nn.Module):
         self.bert_pooler = BertPooler(bert.config)
         self.dense = nn.Linear(self.hidden, opt.polarities_dim)
 
-        if opt.layer >= 1:
+        if opt.dca_layer >= 1:
             self.bert_d_sa1 = Encoder(bert.config, opt)
             self.bert_d_pooler1 =  BertPooler(bert.config)
             self.lin1 = nn.Sequential(
@@ -95,7 +95,7 @@ class DLCF_DCA_BERT(nn.Module):
                 nn.Linear(opt.bert_dim * 2, 1),
                 nn.Sigmoid(),
             )
-        if opt.layer >= 2:
+        if opt.dca_layer >= 2:
             self.bert_d_sa2 = Encoder(bert.config, opt)
             self.bert_d_pooler2 =  BertPooler(bert.config)
             self.lin2 = nn.Sequential(
@@ -104,7 +104,7 @@ class DLCF_DCA_BERT(nn.Module):
                 nn.Linear(opt.bert_dim * 2, 1),
                 nn.Sigmoid(),
             )
-        if opt.layer >= 3:
+        if opt.dca_layer >= 3:
             self.bert_d_sa3 = Encoder(bert.config, opt)
             self.bert_d_pooler3 =  BertPooler(bert.config)
             self.lin3 = nn.Sequential(
@@ -113,7 +113,7 @@ class DLCF_DCA_BERT(nn.Module):
                 nn.Linear(opt.bert_dim * 2, 1),
                 nn.Sigmoid(),
             )
-        if opt.layer >= 4:
+        if opt.dca_layer >= 4:
             self.bert_d_sa4 = Encoder(bert.config, opt)
             self.bert_d_pooler4 =  BertPooler(bert.config)
             self.lin4 = nn.Sequential(
@@ -122,7 +122,7 @@ class DLCF_DCA_BERT(nn.Module):
                 nn.Linear(opt.bert_dim * 2, 1),
                 nn.Sigmoid(),
             )
-        if opt.layer >= 5:
+        if opt.dca_layer >= 5:
             self.bert_d_sa5 = Encoder(bert.config, opt)
             self.bert_d_pooler5 =  BertPooler(bert.config)
             self.lin5 = nn.Sequential(
@@ -131,7 +131,7 @@ class DLCF_DCA_BERT(nn.Module):
                 nn.Linear(opt.bert_dim * 2, 1),
                 nn.Sigmoid(),
             )
-        if opt.layer >= 6:
+        if opt.dca_layer >= 6:
             self.bert_d_sa6 = Encoder(bert.config, opt)
             self.bert_d_pooler6 =  BertPooler(bert.config)
             self.lin6 = nn.Sequential(
@@ -140,7 +140,7 @@ class DLCF_DCA_BERT(nn.Module):
                 nn.Linear(opt.bert_dim * 2, 1),
                 nn.Sigmoid(),
             )
-        if opt.layer >= 7:
+        if opt.dca_layer >= 7:
             self.bert_d_sa7 = Encoder(bert.config, opt)
             self.bert_d_pooler7 =  BertPooler(bert.config)
             self.lin7 = nn.Sequential(
@@ -172,10 +172,10 @@ class DLCF_DCA_BERT(nn.Module):
             depended_weight[i] = depended_weight[i].item() * ded_w[i].item()
             weight_sum = depend_weight[i].item() + depended_weight[i].item()
             if weight_sum != 0:
-                depend_weight[i] = (2 * depend_weight[i] / weight_sum) ** self.opt.p
+                depend_weight[i] = (2 * depend_weight[i] / weight_sum) ** self.opt.dca_p
                 if depend_weight[i] > 2:
                     depend_weight[i] = 2
-                depended_weight[i] = (2 * depended_weight[i] / weight_sum) ** self.opt.p
+                depended_weight[i] = (2 * depended_weight[i] / weight_sum) ** self.opt.dca_p
                 if depended_weight[i] > 2:
                     depended_weight[i] = 2
             else:
