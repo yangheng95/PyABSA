@@ -45,7 +45,7 @@ class Instructor:
         self.val_dataloaders = []
 
         self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert_name)
-        # init the model behind the construction of atepc_datasets in case of updating polarities_dim
+        # init the model behind the construction of apc_datasets in case of updating polarities_dim
         self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
 
         if self.opt.device.type == 'cuda':

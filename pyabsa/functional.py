@@ -46,19 +46,19 @@ def init_config(config_dict, base_config_dict, auto_device=True):
         for key in config_dict:
             base_config_dict[key] = config_dict[key]
 
-    if hasattr(base_config_dict, 'SRD'):
+    if 'SRD' in base_config_dict:
         assert base_config_dict['SRD'] >= 0
-    if hasattr(base_config_dict, 'lcf'):
+    if 'lcf' in base_config_dict:
         assert base_config_dict['lcf'] in {'cdw', 'cdm', 'fusion'}
-    if hasattr(base_config_dict, 'window'):
+    if 'window' in base_config_dict:
         assert base_config_dict['window'] in {'l', 'r', 'lr'}
-    if hasattr(base_config_dict, 'eta'):
+    if 'eta' in base_config_dict:
         assert base_config_dict['eta'] == -1 or 0 <= base_config_dict['eta'] <= 1
-    if hasattr(base_config_dict, 'similarity_threshold'):
+    if 'similarity_threshold' in base_config_dict:
         assert 0 <= base_config_dict['similarity_threshold'] <= 1
-    if hasattr(base_config_dict, 'num_epoch'):
+    if 'num_epoch' in base_config_dict:
         assert 0 <= base_config_dict['evaluate_begin'] < base_config_dict['num_epoch']
-    if hasattr(base_config_dict, 'cross_validate_fold'):
+    if 'cross_validate_fold' in base_config_dict:
         assert base_config_dict['cross_validate_fold'] == -1 or 5 <= base_config_dict['cross_validate_fold'] <= 10
 
     base_config_dict['model_name'] = base_config_dict['model'].__name__.lower()
