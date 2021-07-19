@@ -202,49 +202,49 @@ class DLCF_DCA_BERT(nn.Module):
         depend_weight = torch.ones(bert_local_out.size()[0])
         depended_weight = torch.ones(bert_local_out.size()[0])
 
-        if self.opt.layer >= 1:
+        if self.opt.dca_layer >= 1:
             depend_out, depended_out = dependency_hidden(bert_local_out, depend, depended)
             depend_weight, depended_weight = self.weight_calculate(self.bert_d_sa1, self.bert_d_pooler1, self.lin1,
                                                                    depend_weight, depended_weight, depend_out,
                                                                    depended_out)
             bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend, depended,
                                                      self.opt, no_connect)
-        if self.opt.layer >= 2:
+        if self.opt.dca_layer >= 2:
             depend_out, depended_out = dependency_hidden(bert_local_out, depend, depended)
             depend_weight, depended_weight = self.weight_calculate(self.bert_d_sa2, self.bert_d_pooler2, self.lin2,
                                                                    depend_weight, depended_weight, depend_out,
                                                                    depended_out)
             bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend, depended,
                                                      self.opt, no_connect)
-        if self.opt.layer >= 3:
+        if self.opt.dca_layer >= 3:
             depend_out, depended_out = dependency_hidden(bert_local_out, depend, depended)
             depend_weight, depended_weight = self.weight_calculate(self.bert_d_sa3, self.bert_d_pooler3, self.lin3,
                                                                    depend_weight, depended_weight, depend_out,
                                                                    depended_out)
             bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend, depended,
                                                      self.opt, no_connect)
-        if self.opt.layer >= 4:
+        if self.opt.dca_layer >= 4:
             depend_out, depended_out = dependency_hidden(bert_local_out, depend, depended)
             depend_weight, depended_weight = self.weight_calculate(self.bert_d_sa4, self.bert_d_pooler4, self.lin4,
                                                                    depend_weight, depended_weight, depend_out,
                                                                    depended_out)
             bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend, depended,
                                                      self.opt, no_connect)
-        if self.opt.layer >= 5:
+        if self.opt.dca_layer >= 5:
             depend_out, depended_out = dependency_hidden(bert_local_out, depend, depended)
             depend_weight, depended_weight = self.weight_calculate(self.bert_d_sa5, self.bert_d_pooler5, self.lin5,
                                                                    depend_weight, depended_weight, depend_out,
                                                                    depended_out)
             bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend, depended,
                                                      self.opt, no_connect)
-        if self.opt.layer >= 6:
+        if self.opt.dca_layer >= 6:
             depend_out, depended_out = dependency_hidden(bert_local_out, depend, depended)
             depend_weight, depended_weight = self.weight_calculate(self.bert_d_sa6, self.bert_d_pooler6, self.lin6,
                                                                    depend_weight, depended_weight, depend_out,
                                                                    depended_out)
             bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend, depended,
                                                      self.opt, no_connect)
-        if self.opt.layer >= 7:
+        if self.opt.dca_layer >= 7:
             depend_out, depended_out = dependency_hidden(bert_local_out, depend, depended)
             depend_weight, depended_weight = self.weight_calculate(self.bert_d_sa7, self.bert_d_pooler7, self.lin7,
                                                                    depend_weight, depended_weight, depend_out,
