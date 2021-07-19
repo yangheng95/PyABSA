@@ -18,4 +18,6 @@ from pyabsa.tasks.apc.models.slide_lcf_bert import SLIDE_LCF_BERT
 from pyabsa.tasks.apc.models.slide_lcfs_bert import SLIDE_LCFS_BERT
 from pyabsa.tasks.apc.models.lca_bert import LCA_BERT
 
+from pyabsa.tasks.apc.models.dlcf_dca_bert import DLCF_DCA_BERT
+
 from pyabsa.tasks.apc.models.lcf_template_apc import LCF_TEMPLATE_BERT
