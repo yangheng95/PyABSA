@@ -86,9 +86,9 @@ class DLCF_DCA_BERT(nn.Module):
         self.bert_pooler = BertPooler(bert.config)
         self.dense = nn.Linear(self.hidden, opt.polarities_dim)
 
-        self.dca_sa = []
-        self.dca_pool = []
-        self.dca_lin = []
+        self.dca_sa = nn.ModuleList()
+        self.dca_pool = nn.ModuleList()
+        self.dca_lin = nn.ModuleList()
 
         for i in range(opt.dca_layer):
             self.dca_sa.append(Encoder(bert.config, opt))
