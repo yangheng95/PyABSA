@@ -15,9 +15,9 @@ from .apc_utils import SENTIMENT_PADDING
 
 from pyabsa.tasks.apc.models import BERT_BASE, BERT_SPC
 
-from pyabsa.tasks.apc.models import LCF_BERT, FAST_LCF_BERT, LCF_BERT_LARGE
+from pyabsa.tasks.apc.models import LCF_BERT, FAST_LCF_BERT, LCF_DUAL_BERT
 
-from pyabsa.tasks.apc.models import LCFS_BERT, FAST_LCFS_BERT, LCFS_BERT_LARGE
+from pyabsa.tasks.apc.models import LCFS_BERT, FAST_LCFS_BERT, LCFS_DUAL_BERT
 
 from pyabsa.tasks.apc.models import SLIDE_LCF_BERT, SLIDE_LCFS_BERT
 
@@ -35,10 +35,10 @@ class ABSADataset(Dataset):
             LCA_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lca_ids', 'lcf_vec'],
             LCF_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
             FAST_LCF_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
-            LCF_BERT_LARGE: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
+            LCF_DUAL_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
             LCFS_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
             FAST_LCFS_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
-            LCFS_BERT_LARGE: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
+            LCFS_DUAL_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
             SLIDE_LCFS_BERT: ['text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec'],
             SLIDE_LCF_BERT: ['text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec'],
             LCF_TEMPLATE_BERT: ['text_bert_indices', 'text_raw_bert_indices'],
