@@ -89,6 +89,7 @@ or [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_template_atepc.py) model template.
 9. [BERT-BASE](pyabsa/tasks/apc/models/bert_base.py)
 10. [BERT-SPC](pyabsa/tasks/apc/models/bert_spc.py)
 11. [LCA-Net](pyabsa/tasks/apc/models/lca_bert.py)
+12. [DLCF-DCA-BERT](pyabsa/tasks/apc/models/dlcf_dca_bert.py)
 ### GloVe-based APC models
 12. AOA 
 13. ASGCN
