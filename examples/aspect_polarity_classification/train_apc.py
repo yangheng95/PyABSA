@@ -23,10 +23,11 @@ apc_param_dict_english['max_seq_len'] = 80
 
 apc_param_dict_english['dropout'] = 0
 apc_param_dict_english['log_step'] = 10
-apc_param_dict_english['num_epoch'] = 11
+apc_param_dict_english['num_epoch'] = 10
 apc_param_dict_english['l2reg'] = 0.0001
 apc_param_dict_english['seed'] = {1, 2, 3}
 apc_param_dict_english['cross_validate_fold'] = -1  # disable cross_validate
+#apc_param_dict_english['use_syntax_based_SRD'] = True
 
 laptop14 = ABSADatasets.Laptop14
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,

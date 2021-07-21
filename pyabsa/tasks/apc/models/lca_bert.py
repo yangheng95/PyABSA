@@ -16,7 +16,7 @@ class LCA_BERT(nn.Module):
     def __init__(self, bert, opt):
         super(LCA_BERT, self).__init__()
         self.bert4global = bert
-        self.bert4local = copy.deepcopy(bert) if opt.use_dual_bert else self.bert4global
+        self.bert4local = copy.deepcopy(bert)
         self.lc_embed = nn.Embedding(2, opt.embed_dim)
         self.lc_linear = nn.Linear(opt.embed_dim * 2, opt.embed_dim)
         self.opt = opt

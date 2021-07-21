@@ -23,13 +23,17 @@ class APCModelList:
     SLIDE_LCFS_BERT = pyabsa.tasks.apc.models.SLIDE_LCFS_BERT
     SLIDE_LCF_BERT = pyabsa.tasks.apc.models.SLIDE_LCF_BERT
 
+    DLCF_DCA_BERT = pyabsa.tasks.apc.models.DLCF_DCA_BERT
+
     LCF_BERT = pyabsa.tasks.apc.models.LCF_BERT
     FAST_LCF_BERT = pyabsa.tasks.apc.models.FAST_LCF_BERT
-    LCF_BERT_LARGE = pyabsa.tasks.apc.models.LCF_BERT_LARGE
+    LCF_DUAL_BERT = pyabsa.tasks.apc.models.LCF_DUAL_BERT
 
     LCFS_BERT = pyabsa.tasks.apc.models.LCFS_BERT
     FAST_LCFS_BERT = pyabsa.tasks.apc.models.FAST_LCFS_BERT
-    LCFS_BERT_LARGE = pyabsa.tasks.apc.models.LCFS_BERT_LARGE
+    LCFS_DUAL_BERT = pyabsa.tasks.apc.models.LCFS_DUAL_BERT
+
+    LCA_BERT = pyabsa.tasks.apc.models.LCA_BERT
 
     BERT_BASE = pyabsa.tasks.apc.models.BERT_BASE
     BERT_SPC = pyabsa.tasks.apc.models.BERT_SPC
