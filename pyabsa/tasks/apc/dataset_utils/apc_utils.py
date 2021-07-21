@@ -189,7 +189,7 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
 
     aspect_begin = len(tokenizer.tokenize(bos_token + ' ' + text_left))
     if 'lcfs' in opt.model_name or opt.use_syntax_based_SRD:
-        syntactical_dist = get_syntax_distance(text_raw, aspect, tokenizer, opt)
+        syntactical_dist, _ = get_syntax_distance(text_raw, aspect, tokenizer, opt)
     else:
         syntactical_dist = None
 
@@ -226,7 +226,7 @@ def get_syntax_distance(text_raw, aspect, tokenizer, opt):
     if isinstance(aspect, list):
         aspect = ' '.join(aspect)
     try:
-        raw_tokens, dist = calculate_dep_dist(text_raw, aspect)
+        raw_tokens, dist, max_dist = calculate_dep_dist(text_raw, aspect)
     except Exception as e:
         print(e)
         raise RuntimeError('Are you using syntax-based SRD on a dataset containing Chinese text?')
@@ -239,7 +239,7 @@ def get_syntax_distance(text_raw, aspect, tokenizer, opt):
         syntactical_dist = syntax_distance_alignment(raw_tokens, dist, opt.max_seq_len, tokenizer)
     else:
         syntactical_dist = pad_syntax_based_srd(raw_tokens, dist, tokenizer, opt)[1]
-    return syntactical_dist
+    return syntactical_dist, max_dist
 
 
 def get_lca_ids_and_cdm_vec(opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None):
@@ -382,15 +382,23 @@ def calculate_dep_dist(sentence, aspect):
 
     dist = [0.0] * len(doc)
     text = [''] * len(doc)
+    max_dist_temp = []
     for i, word in enumerate(doc):
         source = '{}_{}'.format(word.lower_, word.i)
         sum = 0
+        flag = 1
+        max_dist = 0
         for term_id, term in zip(term_ids, terms):
             target = '{}_{}'.format(term, term_id)
             try:
                 sum += nx.shortest_path_length(graph, source=source, target=target)
             except:
                 sum += len(doc)  # No connection between source and target
+                flag = 0
         dist[i] = sum / len(terms)
         text[i] = word.text
-    return text, dist
+        if flag == 1:
+            max_dist_temp.append(sum/len(terms))
+        if dist[i] > max_dist:
+            max_dist = dist[i]
+    return text, dist, max_dist

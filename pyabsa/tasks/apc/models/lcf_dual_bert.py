@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @FileName: lcf_bert_large.py
+# @FileName: lcf_dual_bert.py
 # @Time    : 2021/6/20 9:29
 # @Author  : yangheng@m.scnu.edu.cn
 # @github  : https://github.com/yangheng95
@@ -13,9 +13,9 @@ from transformers.models.bert.modeling_bert import BertPooler
 from pyabsa.network.sa_encoder import Encoder
 
 
-class LCF_BERT_LARGE(nn.Module):
+class LCF_DUAL_BERT(nn.Module):
     def __init__(self, bert, opt):
-        super(LCF_BERT_LARGE, self).__init__()
+        super(LCF_DUAL_BERT, self).__init__()
         self.bert4global = bert
         self.bert4local = copy.deepcopy(bert)
         self.opt = opt
