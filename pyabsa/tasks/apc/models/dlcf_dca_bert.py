@@ -86,70 +86,19 @@ class DLCF_DCA_BERT(nn.Module):
         self.bert_pooler = BertPooler(bert.config)
         self.dense = nn.Linear(self.hidden, opt.polarities_dim)
 
-        if opt.dca_layer >= 1:
-            self.bert_d_sa1 = Encoder(bert.config, opt)
-            self.bert_d_pooler1 =  BertPooler(bert.config)
-            self.lin1 = nn.Sequential(
-                nn.Linear(opt.bert_dim, opt.bert_dim * 2),
-                nn.GELU(),
-                nn.Linear(opt.bert_dim * 2, 1),
-                nn.Sigmoid(),
-            )
-        if opt.dca_layer >= 2:
-            self.bert_d_sa2 = Encoder(bert.config, opt)
-            self.bert_d_pooler2 =  BertPooler(bert.config)
-            self.lin2 = nn.Sequential(
-                nn.Linear(opt.bert_dim, opt.bert_dim * 2),
-                nn.GELU(),
-                nn.Linear(opt.bert_dim * 2, 1),
-                nn.Sigmoid(),
-            )
-        if opt.dca_layer >= 3:
-            self.bert_d_sa3 = Encoder(bert.config, opt)
-            self.bert_d_pooler3 =  BertPooler(bert.config)
-            self.lin3 = nn.Sequential(
-                nn.Linear(opt.bert_dim, opt.bert_dim * 2),
-                nn.GELU(),
-                nn.Linear(opt.bert_dim * 2, 1),
-                nn.Sigmoid(),
-            )
-        if opt.dca_layer >= 4:
-            self.bert_d_sa4 = Encoder(bert.config, opt)
-            self.bert_d_pooler4 =  BertPooler(bert.config)
-            self.lin4 = nn.Sequential(
-                nn.Linear(opt.bert_dim, opt.bert_dim * 2),
-                nn.GELU(),
-                nn.Linear(opt.bert_dim * 2, 1),
-                nn.Sigmoid(),
-            )
-        if opt.dca_layer >= 5:
-            self.bert_d_sa5 = Encoder(bert.config, opt)
-            self.bert_d_pooler5 =  BertPooler(bert.config)
-            self.lin5 = nn.Sequential(
-                nn.Linear(opt.bert_dim, opt.bert_dim * 2),
-                nn.GELU(),
-                nn.Linear(opt.bert_dim * 2, 1),
-                nn.Sigmoid(),
-            )
-        if opt.dca_layer >= 6:
-            self.bert_d_sa6 = Encoder(bert.config, opt)
-            self.bert_d_pooler6 =  BertPooler(bert.config)
-            self.lin6 = nn.Sequential(
-                nn.Linear(opt.bert_dim, opt.bert_dim * 2),
-                nn.GELU(),
-                nn.Linear(opt.bert_dim * 2, 1),
-                nn.Sigmoid(),
-            )
-        if opt.dca_layer >= 7:
-            self.bert_d_sa7 = Encoder(bert.config, opt)
-            self.bert_d_pooler7 =  BertPooler(bert.config)
-            self.lin7 = nn.Sequential(
-                nn.Linear(opt.bert_dim, opt.bert_dim * 2),
-                nn.GELU(),
-                nn.Linear(opt.bert_dim * 2, 1),
-                nn.Sigmoid(),
-            )
+        self.dca_sa = []
+        self.dca_pool = []
+        self.dca_lin = []
 
+        for i in range(opt.dca_layer):
+            self.dca_sa.append(Encoder(bert.config, opt))
+            self.dca_pool.append(BertPooler(bert.config))
+            self.dca_lin.append(nn.Sequential(
+                nn.Linear(opt.bert_dim, opt.bert_dim * 2),
+                nn.GELU(),
+                nn.Linear(opt.bert_dim * 2, 1),
+                nn.Sigmoid())
+            )
 
     def weight_calculate(self, sa, pool, lin, d_w, ded_w, depend_out, depended_out):
         depend_sa_out = sa(depend_out)
@@ -202,51 +151,9 @@ class DLCF_DCA_BERT(nn.Module):
         depend_weight = torch.ones(bert_local_out.size()[0])
         depended_weight = torch.ones(bert_local_out.size()[0])
 
-        if self.opt.dca_layer >= 1:
+        for i in range(self.opt.dca_layer):
             depend_out, depended_out = dependency_hidden(bert_local_out, depend, depended)
-            depend_weight, depended_weight = self.weight_calculate(self.bert_d_sa1, self.bert_d_pooler1, self.lin1,
-                                                                   depend_weight, depended_weight, depend_out,
-                                                                   depended_out)
-            bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend, depended,
-                                                     self.opt, no_connect)
-        if self.opt.dca_layer >= 2:
-            depend_out, depended_out = dependency_hidden(bert_local_out, depend, depended)
-            depend_weight, depended_weight = self.weight_calculate(self.bert_d_sa2, self.bert_d_pooler2, self.lin2,
-                                                                   depend_weight, depended_weight, depend_out,
-                                                                   depended_out)
-            bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend, depended,
-                                                     self.opt, no_connect)
-        if self.opt.dca_layer >= 3:
-            depend_out, depended_out = dependency_hidden(bert_local_out, depend, depended)
-            depend_weight, depended_weight = self.weight_calculate(self.bert_d_sa3, self.bert_d_pooler3, self.lin3,
-                                                                   depend_weight, depended_weight, depend_out,
-                                                                   depended_out)
-            bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend, depended,
-                                                     self.opt, no_connect)
-        if self.opt.dca_layer >= 4:
-            depend_out, depended_out = dependency_hidden(bert_local_out, depend, depended)
-            depend_weight, depended_weight = self.weight_calculate(self.bert_d_sa4, self.bert_d_pooler4, self.lin4,
-                                                                   depend_weight, depended_weight, depend_out,
-                                                                   depended_out)
-            bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend, depended,
-                                                     self.opt, no_connect)
-        if self.opt.dca_layer >= 5:
-            depend_out, depended_out = dependency_hidden(bert_local_out, depend, depended)
-            depend_weight, depended_weight = self.weight_calculate(self.bert_d_sa5, self.bert_d_pooler5, self.lin5,
-                                                                   depend_weight, depended_weight, depend_out,
-                                                                   depended_out)
-            bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend, depended,
-                                                     self.opt, no_connect)
-        if self.opt.dca_layer >= 6:
-            depend_out, depended_out = dependency_hidden(bert_local_out, depend, depended)
-            depend_weight, depended_weight = self.weight_calculate(self.bert_d_sa6, self.bert_d_pooler6, self.lin6,
-                                                                   depend_weight, depended_weight, depend_out,
-                                                                   depended_out)
-            bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend, depended,
-                                                     self.opt, no_connect)
-        if self.opt.dca_layer >= 7:
-            depend_out, depended_out = dependency_hidden(bert_local_out, depend, depended)
-            depend_weight, depended_weight = self.weight_calculate(self.bert_d_sa7, self.bert_d_pooler7, self.lin7,
+            depend_weight, depended_weight = self.weight_calculate(self.dca_sa[i], self.dca_pool[i], self.dca_lin[i],
                                                                    depend_weight, depended_weight, depend_out,
                                                                    depended_out)
             bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend, depended,

@@ -86,6 +86,7 @@ python sentiment_inference_chinese.py
 9. [BERT-BASE](pyabsa/tasks/apc/models/bert_base.py)
 10. [BERT-SPC](pyabsa/tasks/apc/models/bert_spc.py)
 11. [LCA-Net](pyabsa/tasks/apc/models/lca_bert.py)
+12. [DLCF-DCA-BERT](pyabsa/tasks/apc/models/dlcf_dca_bert.py)
 
 * 版权所有，请等待我们的论文发表以获取详细的介绍。
 
