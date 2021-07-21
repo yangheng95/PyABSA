@@ -60,6 +60,12 @@ def init_config(config_dict, base_config_dict, auto_device=True):
         assert 0 <= base_config_dict['evaluate_begin'] < base_config_dict['num_epoch']
     if 'cross_validate_fold' in base_config_dict:
         assert base_config_dict['cross_validate_fold'] == -1 or 5 <= base_config_dict['cross_validate_fold'] <= 10
+    if 'dlcf_a' in base_config_dict:
+        assert base_config_dict['dlcf_a'] > 1
+    if 'dca_p' in base_config_dict:
+        assert base_config_dict['dca_p'] >= 1
+    if 'dca_layer' in base_config_dict:
+        assert base_config_dict['dca_layer'] >= 1
 
     base_config_dict['model_name'] = base_config_dict['model'].__name__.lower()
     base_config_dict['Version'] = __version__
