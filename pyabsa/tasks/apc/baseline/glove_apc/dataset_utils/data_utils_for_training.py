@@ -25,14 +25,12 @@ def prepare_glove840_embedding(glove_path):
         return glove_path
     elif os.path.isdir(glove_path):
         embedding_file = None
-        if find_target_file(glove_path, '.txt', exclude_key='.zip'):
-            embedding_file = find_target_file(glove_path, '.txt', exclude_key='.zip')
-        elif find_target_file(glove_path, 'glove.', exclude_key='.zip'):
-            embedding_file = find_target_file(glove_path, 'glove.', exclude_key='.zip')
-        elif find_target_file(os.path.dirname(glove_path), '.txt', exclude_key='.zip'):
-            embedding_file = find_target_file(os.path.dirname(glove_path), '.txt', exclude_key='.zip')
-        elif find_target_file(os.path.dirname(glove_path), 'glove.', exclude_key='.zip'):
-            embedding_file = find_target_file(os.path.dirname(glove_path), 'glove.', exclude_key='.zip')
+        if find_target_file(glove_path, 'glove.42B.300d.txt', exclude_key='.zip'):
+            embedding_file = find_target_file(glove_path, 'glove.42B.300d.txt', exclude_key='.zip')
+        elif find_target_file(glove_path, 'glove.840B.300d.txt', exclude_key='.zip'):
+            embedding_file = find_target_file(glove_path, 'glove.840B.300d.txt', exclude_key='.zip')
+        elif find_target_file(os.path.dirname(glove_path), 'glove.twitter.27B.txt', exclude_key='.zip'):
+            embedding_file = find_target_file(os.path.dirname(glove_path), 'glove.twitter.27B.txt', exclude_key='.zip')
 
         if embedding_file:
             print('Find potential embedding files: {}, select the 1st file'.format(embedding_file))
