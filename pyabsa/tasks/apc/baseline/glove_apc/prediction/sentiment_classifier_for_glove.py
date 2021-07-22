@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: sentiment_classifier.py
+# file: sentiment_classifier_for_glove.py
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # Copyright (C) 2020. All Rights Reserved.
 
@@ -10,7 +10,6 @@ import random
 import numpy
 import torch
 from torch.utils.data import DataLoader
-from transformers import BertModel, AutoTokenizer
 
 from pyabsa.tasks.apc.dataset_utils.data_utils_for_inferring import ABSADataset
 from pyabsa.tasks.apc.dataset_utils.apc_utils import SENTIMENT_PADDING
@@ -23,7 +22,7 @@ from termcolor import colored
 from pyabsa.model_utils import APCModelList
 
 
-class SentimentClassifier:
+class SentimentClassifier_for_glove:
     def __init__(self, model_arg=None, sentiment_map=None):
         '''
             from_train_model: load inferring_tutorials model from trained model
@@ -44,26 +43,16 @@ class SentimentClassifier:
             # load from a model path
             try:
                 print('Load sentiment classifier from', model_arg)
-                state_dict_path = find_target_file(model_arg, '.state_dict', find_all=True)
                 model_path = find_target_file(model_arg, '.model', find_all=True)
                 tokenizer_path = find_target_file(model_arg, '.tokenizer', find_all=True)
                 config_path = find_target_file(model_arg, '.config', find_all=True)
                 self.opt = pickle.load(open(config_path[0], 'rb'))
-
-                if state_dict_path:
-                    self.bert = BertModel.from_pretrained(self.opt.pretrained_bert_name)
-                    self.model = self.opt.model(self.bert, self.opt)
-                    self.model.load_state_dict(torch.load(state_dict_path[0]))
 
                 if model_path:
                     self.model = torch.load(model_path[0])
 
                 if tokenizer_path:
                     self.tokenizer = pickle.load(open(tokenizer_path[0], 'rb'))
-                else:
-                    self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
-                self.tokenizer.bos_token = self.tokenizer.bos_token if self.tokenizer.bos_token else '[CLS]'
-                self.tokenizer.eos_token = self.tokenizer.eos_token if self.tokenizer.eos_token else '[SEP]'
 
                 print('Config used in Training:')
                 self._log_write_args()

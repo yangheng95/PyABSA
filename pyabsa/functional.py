@@ -14,6 +14,7 @@ from pyabsa.dataset_utils import detect_dataset
 from pyabsa.model_utils import APCModelList
 
 from pyabsa.tasks.apc.prediction.sentiment_classifier import SentimentClassifier
+from pyabsa.tasks.apc.baseline.glove_apc.prediction.sentiment_classifier_for_glove import SentimentClassifier_for_glove
 from pyabsa.tasks.apc.training.apc_trainer import train4apc
 from pyabsa.tasks.apc.baseline.glove_apc.training.apc_trainer_glove import train4apc_glove
 
@@ -119,11 +120,17 @@ def train_apc(parameter_dict=None,
             model_path.append(train4apc_func(t_config, logger))
         else:
             # always return the last trained model if dont save trained models
-            sent_classifier = SentimentClassifier(model_arg=train4apc_func(t_config, logger))
+            if hasattr(APCModelList.GloVeAPCModelList, parameter_dict['model'].__name__):
+                sent_classifier = SentimentClassifier_for_glove(model_arg=train4apc_func(t_config, logger))
+            else:
+                sent_classifier = SentimentClassifier(model_arg=train4apc_func(t_config, logger))
     while logger.handlers:
         logger.removeHandler(logger.handlers[0])
     if model_path_to_save:
-        return SentimentClassifier(model_arg=max(model_path))
+        if hasattr(APCModelList.GloVeAPCModelList, parameter_dict['model'].__name__):
+            return SentimentClassifier_for_glove(model_arg=max(model_path))
+        else:
+            return SentimentClassifier(model_arg=max(model_path))
     else:
         return sent_classifier
 
