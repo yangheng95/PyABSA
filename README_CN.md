@@ -88,7 +88,24 @@ python sentiment_inference_chinese.py
 11. [LCA-Net](pyabsa/tasks/apc/models/lca_bert.py)
 12. [DLCF-DCA-BERT](pyabsa/tasks/apc/models/dlcf_dca_bert.py)
 
-* 版权所有，请等待我们的论文发表以获取详细的介绍。
+'*' * 版权所有，请等待我们的论文发表以获取详细的介绍。
+
+### GloVe-based APC models
+13. [AOA](pyabsa/tasks/apc/__glove__/models/aoa.py)
+14. [ASGCN](pyabsa/tasks/apc/__glove__/models/asgcn.py)
+15. [ATAE-LSTM](pyabsa/tasks/apc/__glove__/models/atae_lstm.py)
+16. [Cabasc](pyabsa/tasks/apc/__glove__/models/cabasc.py)
+17. [IAN](pyabsa/tasks/apc/__glove__/models/ian.py)
+18. [LSTM](pyabsa/tasks/apc/__glove__/models/lstm.py)
+19. [MemNet](pyabsa/tasks/apc/__glove__/models/memnet.py)
+20. [MGAN](pyabsa/tasks/apc/__glove__/models/mgan.py)
+21. [RAM](pyabsa/tasks/apc/__glove__/models/ram.py)
+22. [TD-LSTM](pyabsa/tasks/apc/__glove__/models/td_lstm.py)
+23. [TD-LSTM](pyabsa/tasks/apc/__glove__/models/tc_lstm.py)
+24. [TNet_LF](pyabsa/tasks/apc/__glove__/models/tnet_lf.py)
+
+
+
 
 ## 模型性能表现
 
@@ -227,7 +244,7 @@ from pyabsa import ABSADatasets
 ```
 ### 2. 选择一个基本的param_dict
 ```
-param_dict = apc_config_handler.get_atepc_param_dict_english()
+param_dict = apc_config_handler.get_apc_param_dict_english()
 ```
 
 ### 3. 指定一个APC模型并在您需要的情况下更改一些超参数
@@ -322,8 +339,8 @@ apc_param_search(parameter_dict=apc_param_dict_english,
 10. Multilingual (The sum of the above datasets.)
 11. TShirt
 12. Television
-您不需要手动下载数据集，PyABSA会自动下载数据集。
 
+您不需要手动下载数据集，PyABSA会自动下载数据集。
 
 # 致谢
 
@@ -332,7 +349,7 @@ apc_param_search(parameter_dict=apc_param_dict_english,
 欢迎提出疑问、意见和建议，或者帮助完善仓库，谢谢！
 
 # 未来计划
-1. 添加 BERT / glove 相关基础语言模型
+1. 添加 其他BERT 相关ABSA模型
 2. 增加更多的APIs
 3. 优化代码并添加更多注释
 
