@@ -233,13 +233,13 @@ def find_target_file(dir_path, file_type, exclude_key='', find_all=False):
         if not dir_path:
             return ''
         elif os.path.isfile(dir_path):
-            if file_type in dir_path.lower() and not (exclude_key and exclude_key in dir_path.lower()):
+            if file_type.lower() in dir_path.lower() and not (exclude_key and exclude_key in dir_path.lower()):
                 return dir_path
             else:
                 return ''
         elif os.path.isdir(dir_path):
             tmp_files = [p for p in os.listdir(dir_path)
-                         if file_type in p.lower()
+                         if file_type.lower() in p.lower()
                          and not (exclude_key and exclude_key in p.lower())]
             return os.path.join(dir_path, tmp_files[0]) if tmp_files else []
         else:
@@ -249,7 +249,7 @@ def find_target_file(dir_path, file_type, exclude_key='', find_all=False):
         if not dir_path:
             return []
         elif os.path.isfile(dir_path):
-            if file_type in dir_path.lower() and not (exclude_key and exclude_key in dir_path.lower()):
+            if file_type.lower() in dir_path.lower() and not (exclude_key and exclude_key in dir_path.lower()):
                 return [dir_path]
             else:
                 return []

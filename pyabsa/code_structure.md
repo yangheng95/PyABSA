@@ -12,16 +12,19 @@ PyABSA/
     ├── network    # neural network encoder 
     ├── research   # research-related entries
     │	├──benchmark   # benchmark manager
-    │	│   ├──apc_benchmark     # apc benchmark code
+    │	│   ├── apc_benchmark     # apc benchmark code
     │	│   └──	atepc_benchmark   # atepc benchmark code
     │	└── parameter_search  # hyper-parameter fine-tuning entry
-    │       ├──search_param_for_apc     # apc param search module
+    │       ├── search_param_for_apc     # apc param search module
     │       └──	search_param_for_atepc   # atepc param search module
     ├── tasks  # define the modeling process for a set of ABSA subtasks
     │	├── apc   # apc modeling module
+    │   │   ├── __glove__   # compatiable model from PyTorch-ABSA
+    │   │   │   ├── dataset_utils          	
+    │   │   │   └──	models      
     │   │   ├── dataset_utils   # data preprocess & model input preparation
     │	│   ├── models          # apc models
-    │   │   ├──prediction  	# sentiment inference module
+    │   │   ├── prediction  	# sentiment inference module
     │   │   └──	training        # apc trainer
     │   ├── ate   # in coming 
     │   └── atepc  # atepc modeling module

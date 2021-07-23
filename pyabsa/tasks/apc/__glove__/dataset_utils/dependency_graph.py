@@ -4,6 +4,7 @@ import numpy as np
 import spacy
 import pickle
 
+import tqdm
 from spacy.tokens import Doc
 
 from pyabsa.utils import find_target_file
@@ -69,7 +70,7 @@ def prepare_dependency_graph(dataset_list, graph_path):
             lines = fin.readlines()
             fin.close()
 
-            for i in range(0, len(lines), 3):
+            for i in tqdm.tqdm(range(0, len(lines), 3), postfix='Construct graph for {}'.format(filename)):
                 text_left, _, text_right = [s.strip() for s in lines[i].partition("$T$")]
                 aspect = lines[i + 1].strip()
                 adj_matrix = dependency_adj_matrix(text_left + ' ' + aspect + ' ' + text_right)

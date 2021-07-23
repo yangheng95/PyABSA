@@ -4,11 +4,12 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
+import sys
 
 import pyabsa.tasks.apc.models
 import pyabsa.tasks.atepc.models
 
-import pyabsa.tasks.apc.baseline.glove_apc.models
+import pyabsa.tasks.apc.__glove__.models
 
 from pyabsa import __version__
 
@@ -41,18 +42,18 @@ class APCModelList:
     LCF_TEMPLATE_BERT = pyabsa.tasks.apc.models.LCF_TEMPLATE_BERT
 
     class GloVeAPCModelList:
-        LSTM = pyabsa.tasks.apc.baseline.glove_apc.models.LSTM
-        IAN = pyabsa.tasks.apc.baseline.glove_apc.models.IAN
-        MemNet = pyabsa.tasks.apc.baseline.glove_apc.models.MemNet
-        RAM = pyabsa.tasks.apc.baseline.glove_apc.models.RAM
-        TD_LSTM = pyabsa.tasks.apc.baseline.glove_apc.models.TD_LSTM
-        TC_LSTM = pyabsa.tasks.apc.baseline.glove_apc.models.TC_LSTM
-        Cabasc = pyabsa.tasks.apc.baseline.glove_apc.models.Cabasc
-        ATAE_LSTM = pyabsa.tasks.apc.baseline.glove_apc.models.ATAE_LSTM
-        TNet_LF = pyabsa.tasks.apc.baseline.glove_apc.models.TNet_LF
-        AOA = pyabsa.tasks.apc.baseline.glove_apc.models.AOA
-        MGAN = pyabsa.tasks.apc.baseline.glove_apc.models.MGAN
-        ASGCN = pyabsa.tasks.apc.baseline.glove_apc.models.ASGCN
+        LSTM = pyabsa.tasks.apc.__glove__.models.LSTM
+        IAN = pyabsa.tasks.apc.__glove__.models.IAN
+        MemNet = pyabsa.tasks.apc.__glove__.models.MemNet
+        RAM = pyabsa.tasks.apc.__glove__.models.RAM
+        TD_LSTM = pyabsa.tasks.apc.__glove__.models.TD_LSTM
+        TC_LSTM = pyabsa.tasks.apc.__glove__.models.TC_LSTM
+        Cabasc = pyabsa.tasks.apc.__glove__.models.Cabasc
+        ATAE_LSTM = pyabsa.tasks.apc.__glove__.models.ATAE_LSTM
+        TNet_LF = pyabsa.tasks.apc.__glove__.models.TNet_LF
+        AOA = pyabsa.tasks.apc.__glove__.models.AOA
+        MGAN = pyabsa.tasks.apc.__glove__.models.MGAN
+        ASGCN = pyabsa.tasks.apc.__glove__.models.ASGCN
 
 
 class ATEPCModelList:
@@ -105,7 +106,7 @@ class APCTrainedModelManager:
             print(colored(
                 'Checkpoint:{} is not found, you can raise an issue for requesting shares of checkpoints'.format(
                     checkpoint_name), 'red'))
-            exit(-1)
+            sys.exit(-1)
         return download_pretrained_model(task='apc',
                                          language=checkpoint_name.lower(),
                                          archive_path=apc_checkpoint[checkpoint_name.lower()]['id'])
@@ -120,10 +121,57 @@ class ATEPCTrainedModelManager:
             print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint_name), 'green'))
         else:
             print(colored('Checkpoint:{} is not found.'.format(checkpoint_name), 'red'))
-            exit(-1)
+            sys.exit(-1)
         return download_pretrained_model(task='atepc',
                                          language=checkpoint_name.lower(),
                                          archive_path=atepc_checkpoint[checkpoint_name.lower()]['id'])
+
+
+def compare_version(version1, version2):
+    #  1 means greater, 0 means equal, -1 means lower
+    if version1 and not version2:
+        return 1
+    elif version2 and not version1:
+        return -1
+    else:
+        version1 = version1.split('.')
+        version2 = version2.split('.')
+        for v1, v2 in zip(version1, version2):
+            if len(v1) == len(v2):
+                if v1 > v2:
+                    return 1
+                if v2 > v1:
+                    return -1
+            else:
+                if v1.startswith(v2):
+                    return -1
+                elif v2.startswith(v1):
+                    return 1
+                elif v1 == v2:
+                    return 0
+                else:
+                    return int(v1 > v2)
+        return 0
+
+
+def parse_checkpoint_info(t_checkpoint_map, task='APC'):
+    print('*' * 23, colored('Available {} model checkpoints for Version:{}'.format(task, __version__), 'green'), '*' * 23)
+    for i, checkpoint in enumerate(t_checkpoint_map):
+        print('-' * 100)
+        print("{}. Checkpoint Name: {}\nDescription: {}\nComment: {} \nVersion: {}".format(
+            i + 1,
+            checkpoint,
+            t_checkpoint_map[checkpoint]['description']
+            if 'description' in t_checkpoint_map[checkpoint] else '',
+
+            t_checkpoint_map[checkpoint]['comment']
+            if 'comment' in t_checkpoint_map[checkpoint] else '',
+
+            t_checkpoint_map[checkpoint]['version']
+            if 'version' in t_checkpoint_map[checkpoint] else ''
+        ))
+    print('-' * 100)
+    return t_checkpoint_map
 
 
 def update_checkpoints(task=''):
@@ -131,57 +179,32 @@ def update_checkpoints(task=''):
         checkpoint_url = '1jjaAQM6F9s_IEXNpaY-bQF9EOrhq0PBD'
         if os.path.isfile('./checkpoints.json'):
             os.remove('./checkpoints.json')
-        gdd.download_file_from_google_drive(file_id=checkpoint_url,
-                                            dest_path='./checkpoints.json')
+        gdd.download_file_from_google_drive(file_id=checkpoint_url, dest_path='./checkpoints.json')
         checkpoint_map = json.load(open('./checkpoints.json', 'r'))
         current_version_map = {}
         for t_map in checkpoint_map:
             if '-' in t_map:
                 min_ver, _, max_ver = t_map.partition('-')
-                max_ver = max_ver if max_ver else 'N.A.'
-                if min_ver <= __version__ <= max_ver:
-                    current_version_map.update(checkpoint_map[t_map])
             elif '+' in t_map:
-                min_ver, _, max_ver = t_map.partition('+')
-                max_ver = max_ver if max_ver else 'N.A.'
-                if min_ver <= __version__ <= max_ver:
-                    current_version_map.update(checkpoint_map[t_map])
+                min_ver, _, max_ver = t_map.partition('-')
             else:
                 min_ver = t_map
-                if min_ver <= __version__:
-                    current_version_map.update(checkpoint_map[t_map])
-        APC_checkpoint_map = dict(current_version_map)['APC'] if 'APC' in current_version_map else {}
-        ATEPC_checkpoint_map = dict(current_version_map)['ATEPC'] if 'ATEPC' in current_version_map else {}
+                max_ver = ''
+            max_ver = max_ver if max_ver else 'N.A.'
+            if compare_version(min_ver, __version__) <= 0 and compare_version(__version__, max_ver) <= 0:
+                current_version_map.update(checkpoint_map[t_map])  # add checkpoint_map[t_map]
+        t_checkpoint_map = {}
+        if task:
+            t_checkpoint_map = dict(current_version_map)[task.upper()] if task in current_version_map else {}
+            parse_checkpoint_info(t_checkpoint_map, task)
+        else:
+            for task_map in current_version_map:
+                parse_checkpoint_info(current_version_map[task_map], task)
 
-        if not (task and 'APC' not in task.upper()):
-            print('*' * 23, colored('Available APC model checkpoints for Version:{}'.format(__version__), 'green'),
-                  '*' * 23)
-            for i, checkpoint in enumerate(APC_checkpoint_map):
-                print('-' * 100)
-                print("{}. Checkpoint Name: {}\nDescription: {}\nComment: {}".format(
-                    i + 1,
-                    checkpoint,
-                    APC_checkpoint_map[checkpoint]['description'],
-                    APC_checkpoint_map[checkpoint]['comment'],
-                ))
-            print('-' * 100)
-        if not (task and 'ATEPC' not in task.upper()):
-            print('-' * 100)
-            print('*' * 22, colored('Available ATEPC model checkpoints for Version:{}'.format(__version__), 'green'),
-                  '*' * 22)
-            for i, checkpoint in enumerate(ATEPC_checkpoint_map):
-                print('-' * 100)
-                print("{}. Checkpoint Name: {}\nDescription: {}\nComment: {}".format(
-                    i + 1,
-                    checkpoint,
-                    ATEPC_checkpoint_map[checkpoint]['description'],
-                    ATEPC_checkpoint_map[checkpoint]['comment']
-                ))
-            print('-' * 100)
         # os.remove('./checkpoints.json')
-        return APC_checkpoint_map if task.upper() == 'APC' else ATEPC_checkpoint_map
+        return t_checkpoint_map if task else current_version_map
     except Exception as e:
         print('\nFailed to query checkpoints, try manually download the checkpoints from: \n'
               '[1]\tGoogle Drive\t: https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC\n'
               '[2]\tBaidu NetDisk\t: https://pan.baidu.com/s/1K8aYQ4EIrPm1GjQv_mnxEg (Access Code: absa)\n')
-        exit()
+        sys.exit(-1)

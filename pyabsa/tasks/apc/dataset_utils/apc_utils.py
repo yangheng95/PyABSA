@@ -156,6 +156,7 @@ def load_datasets(fname):
 #     return inputs
 
 def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
+
     if hasattr(opt, 'dynamic_truncate') and opt.dynamic_truncate:
         _max_seq_len = opt.max_seq_len - len(aspect.split(' '))
         text_left = text_left.split(' ')
@@ -178,8 +179,10 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
     #     text_left = ' '.join(text_left.split(' ')[int(-(opt.max_seq_len - len(aspect.split())) / 2) - 1:])
     #     text_right = ' '.join(text_right.split(' ')[:int((opt.max_seq_len - len(aspect.split())) / 2) + 1])
 
-    bos_token = tokenizer.bos_token if tokenizer.bos_token else '[CLS]'
-    eos_token = tokenizer.eos_token if tokenizer.eos_token else '[SEP]'
+    tokenizer.bos_token = tokenizer.bos_token if tokenizer.bos_token else '[CLS]'
+    tokenizer.eos_token = tokenizer.eos_token if tokenizer.eos_token else '[SEP]'
+    bos_token = tokenizer.bos_token
+    eos_token = tokenizer.eos_token
 
     text_raw = text_left + ' ' + aspect + ' ' + text_right
     text_spc = bos_token + ' ' + text_raw + ' ' + eos_token + ' ' + aspect + ' ' + eos_token

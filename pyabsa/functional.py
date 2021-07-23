@@ -14,9 +14,7 @@ from pyabsa.dataset_utils import detect_dataset
 from pyabsa.model_utils import APCModelList
 
 from pyabsa.tasks.apc.prediction.sentiment_classifier import SentimentClassifier
-from pyabsa.tasks.apc.baseline.glove_apc.prediction.sentiment_classifier_for_glove import SentimentClassifier_for_glove
 from pyabsa.tasks.apc.training.apc_trainer import train4apc
-from pyabsa.tasks.apc.baseline.glove_apc.training.apc_trainer_glove import train4apc_glove
 
 from pyabsa.tasks.atepc.training.atepc_trainer import train4atepc
 from pyabsa.tasks.atepc.prediction.aspect_extractor import AspectExtractor
@@ -46,27 +44,29 @@ def init_config(config_dict, base_config_dict, auto_device=True):
         # reload hyper-parameter from parameter dict
         for key in config_dict:
             base_config_dict[key] = config_dict[key]
-
-    if 'SRD' in base_config_dict:
-        assert base_config_dict['SRD'] >= 0
-    if 'lcf' in base_config_dict:
-        assert base_config_dict['lcf'] in {'cdw', 'cdm', 'fusion'}
-    if 'window' in base_config_dict:
-        assert base_config_dict['window'] in {'l', 'r', 'lr'}
-    if 'eta' in base_config_dict:
-        assert base_config_dict['eta'] == -1 or 0 <= base_config_dict['eta'] <= 1
-    if 'similarity_threshold' in base_config_dict:
-        assert 0 <= base_config_dict['similarity_threshold'] <= 1
-    if 'num_epoch' in base_config_dict:
-        assert 0 <= base_config_dict['evaluate_begin'] < base_config_dict['num_epoch']
-    if 'cross_validate_fold' in base_config_dict:
-        assert base_config_dict['cross_validate_fold'] == -1 or 5 <= base_config_dict['cross_validate_fold'] <= 10
-    if 'dlcf_a' in base_config_dict:
-        assert base_config_dict['dlcf_a'] > 1
-    if 'dca_p' in base_config_dict:
-        assert base_config_dict['dca_p'] >= 1
-    if 'dca_layer' in base_config_dict:
-        assert base_config_dict['dca_layer'] >= 1
+    try:
+        if 'SRD' in base_config_dict:
+            assert base_config_dict['SRD'] >= 0
+        if 'lcf' in base_config_dict:
+            assert base_config_dict['lcf'] in {'cdw', 'cdm', 'fusion'}
+        if 'window' in base_config_dict:
+            assert base_config_dict['window'] in {'l', 'r', 'lr'}
+        if 'eta' in base_config_dict:
+            assert base_config_dict['eta'] == -1 or 0 <= base_config_dict['eta'] <= 1
+        if 'similarity_threshold' in base_config_dict:
+            assert 0 <= base_config_dict['similarity_threshold'] <= 1
+        if 'num_epoch' in base_config_dict:
+            assert 0 <= base_config_dict['evaluate_begin'] < base_config_dict['num_epoch']
+        if 'cross_validate_fold' in base_config_dict:
+            assert base_config_dict['cross_validate_fold'] == -1 or 5 <= base_config_dict['cross_validate_fold'] <= 10
+        if 'dlcf_a' in base_config_dict:
+            assert base_config_dict['dlcf_a'] > 1
+        if 'dca_p' in base_config_dict:
+            assert base_config_dict['dca_p'] >= 1
+        if 'dca_layer' in base_config_dict:
+            assert base_config_dict['dca_layer'] >= 1
+    except AssertionError:
+        raise RuntimeError('Some parameters are not valid, please see the config example.')
 
     base_config_dict['model_name'] = base_config_dict['model'].__name__.lower()
     base_config_dict['Version'] = __version__
@@ -99,11 +99,6 @@ def train_apc(parameter_dict=None,
     model_path = []
     sent_classifier = None
 
-    if hasattr(APCModelList.GloVeAPCModelList, parameter_dict['model'].__name__):
-        train4apc_func = train4apc_glove
-    else:
-        train4apc_func = train4apc
-
     if isinstance(config.seed, int):
         config.seed = [config.seed]
 
@@ -117,20 +112,14 @@ def train_apc(parameter_dict=None,
         t_config = Namespace(**vars(config))
         t_config.seed = s
         if model_path_to_save:
-            model_path.append(train4apc_func(t_config, logger))
+            model_path.append(train4apc(t_config, logger))
         else:
             # always return the last trained model if dont save trained models
-            if hasattr(APCModelList.GloVeAPCModelList, parameter_dict['model'].__name__):
-                sent_classifier = SentimentClassifier_for_glove(model_arg=train4apc_func(t_config, logger))
-            else:
-                sent_classifier = SentimentClassifier(model_arg=train4apc_func(t_config, logger))
+            sent_classifier = SentimentClassifier(model_arg=train4apc(t_config, logger))
     while logger.handlers:
         logger.removeHandler(logger.handlers[0])
     if model_path_to_save:
-        if hasattr(APCModelList.GloVeAPCModelList, parameter_dict['model'].__name__):
-            return SentimentClassifier_for_glove(model_arg=max(model_path))
-        else:
-            return SentimentClassifier(model_arg=max(model_path))
+        return SentimentClassifier(model_arg=max(model_path))
     else:
         return sent_classifier
 
@@ -174,7 +163,6 @@ def train_atepc(parameter_dict=None,
         t_config = Namespace(**vars(config))
         t_config.seed = s
         model_path.append(train4atepc(t_config, logger))
-    logger.disabled = True
     return AspectExtractor(max(model_path))
 
 

@@ -104,7 +104,7 @@ def detect_infer_dataset(dataset_path, task='apc_benchmark'):
             dataset_path = os.path.join('datasets', 'atepc_datasets')
         else:
             raise RuntimeError('No dataset was found!')
-        dataset_file = find_target_file(dataset_path, 'infer', find_all=True)
+        dataset_file = find_target_file(dataset_path, 'infer', exclude_key='train', find_all=True)
         dataset_file = [d for d in dataset_file if dataset_name.lower() in d.lower()]
         if len(dataset_file) == 0:
             raise RuntimeError('Can not load train set or test set! '
