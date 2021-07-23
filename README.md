@@ -21,6 +21,9 @@
 
 > PyTorch Implementations (CPU & CUDA supported).
 
+**PyABSA is an active project and under development, if you have the interest to integrate your models or datasets into PyABSA, 
+please do feel free to contact us for necessary support.**
+
 # Preface
 
 This is an ASBA research-oriented code repository. I notice that some Repos do not provide the inference script,
@@ -32,7 +35,7 @@ e.g., using efficient local context focus implementation from PyASBA.
 Please feel free to give me your interesting thoughts,
 to help me build an easy-to-use toolkit to reduce the cost of building models and reproduction in ABSA tasks.
 
-**Please star PyABSA in order to keep it developing and find latest released features or tutorials.**
+**If PyABSA helps you, please star PyABSA in order to keep it developing and find latest released features or tutorials.**
 
 # Notice
 The LCF is a simple and adoptive mechanism proposed for ABSA. 
@@ -54,7 +57,7 @@ To use PyABSA, install the latest version from pip or source code:
 pip install -U pyabsa
 ```
 
-Then clone our example and try our [tutorials](examples) and have fun! 
+Then clone our [tutorials](examples) and have fun! 
 ```
 git clone https://github.com/yangheng95/PyABSA --depth=1
 
@@ -96,17 +99,18 @@ or [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_template_atepc.py) model template.
 '*' Copyrights Reserved, please wait for the publishing of our paper to get the introduction of them in detail. 
 
 ### GloVe-based APC models
-13. AOA 
-14. ASGCN
-15. ATAE-LSTM
-16. Cabasc
-17. IAN
-18. LSTM
-19. MemNet
-20. MGAN
-21. RAM
-22. TC/TD-LSTM
-23. TNet_LF
+13. [AOA](pyabsa/tasks/apc/__glove__/models/aoa.py)
+14. [ASGCN](pyabsa/tasks/apc/__glove__/models/asgcn.py)
+15. [ATAE-LSTM](pyabsa/tasks/apc/__glove__/models/atae_lstm.py)
+16. [Cabasc](pyabsa/tasks/apc/__glove__/models/cabasc.py)
+17. [IAN](pyabsa/tasks/apc/__glove__/models/ian.py)
+18. [LSTM](pyabsa/tasks/apc/__glove__/models/lstm.py)
+19. [MemNet](pyabsa/tasks/apc/__glove__/models/memnet.py)
+20. [MGAN](pyabsa/tasks/apc/__glove__/models/mgan.py)
+21. [RAM](pyabsa/tasks/apc/__glove__/models/ram.py)
+22. [TD-LSTM](pyabsa/tasks/apc/__glove__/models/td_lstm.py)
+23. [TD-LSTM](pyabsa/tasks/apc/__glove__/models/tc_lstm.py)
+24. [TNet_LF](pyabsa/tasks/apc/__glove__/models/tnet_lf.py)
 
 
 ## Brief Performance Report
@@ -249,7 +253,7 @@ from pyabsa import ABSADatasets
 ```
 ### 2. Choose a base param_dict
 ```
-param_dict = apc_config_handler.get_atepc_param_dict_english()
+param_dict = apc_config_handler.get_apc_param_dict_english()
 ```
 
 ### 3. Specify an APC model and alter some hyper-parameters (if necessary)
@@ -300,7 +304,7 @@ text = 'everything is always cooked to perfection , the [ASP]service[ASP] is exc
 sent_classifier.infer(text, print_result=True)
 
 # batch inferring_tutorials returns the results, save the result if necessary using save_result=True
-inference_sets = ABSADatasets.semeval
+inference_sets = ABSADatasets.SemEval
 results = sent_classifier.batch_infer(target_file=inference_sets,
                                       print_result=True,
                                       save_result=True,
@@ -347,10 +351,9 @@ apc_param_search(parameter_dict=apc_param_dict_english,
 
 Basically, you don't have to download the datasets, as the datasets will be downloaded automatically. 
 
-
 # Acknowledgement
 
-This work build from LC-ABSA/LCF-ABSA and LCF-ATEPC, and other impressive works such as PyTorch-ABSA and LCFS-BERT. Feel free to help us optimize code or add new features!
+This work build from LC-ABSA/LCF-ABSA and LCF-ATEPC, and other impressive works such as PyTorch-ABSA and LCFS-BERT.
 
 欢迎提出疑问、意见和建议，或者帮助完善仓库，谢谢！
 
@@ -371,6 +374,7 @@ we hope you can help, thanks very much!
 
 # License 
 MIT
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):

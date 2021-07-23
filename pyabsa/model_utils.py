@@ -11,6 +11,8 @@ import pyabsa.tasks.atepc.models
 
 import pyabsa.tasks.apc.__glove__.models
 
+from pyabsa.utils import find_target_file
+
 from pyabsa import __version__
 
 from termcolor import colored
@@ -81,8 +83,11 @@ def download_pretrained_model(task='apc', language='chinese', archive_path='', m
     dest_path = os.path.join('./checkpoints', tmp_dir)
     if not os.path.exists(dest_path):
         os.mkdir(dest_path)
-    if len(os.listdir(dest_path)) > 1:
+
+    if find_target_file(dest_path, file_type='.model', find_all=True) \
+        and find_target_file(dest_path, file_type='.config', find_all=True):
         return dest_path
+
     save_path = os.path.join(dest_path, '{}.zip'.format(model_name))
     try:
         if '/' in archive_path:

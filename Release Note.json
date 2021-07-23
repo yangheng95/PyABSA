@@ -1,5 +1,8 @@
 {
   "0.8.9.3": {
+    "1": "Refactor some code"
+  },
+  "0.8.9.3rc1": {
     "1": "Add evaluation for glove-based APC models",
     "2": "fix some problems"
   },
