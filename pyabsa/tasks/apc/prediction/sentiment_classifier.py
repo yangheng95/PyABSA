@@ -13,6 +13,8 @@ from torch.utils.data import DataLoader
 from transformers import BertModel, AutoTokenizer
 
 from pyabsa.tasks.apc.dataset_utils.data_utils_for_inferring import ABSADataset
+from pyabsa.tasks.apc.__glove__.dataset_utils.data_utils_for_inferring import GloVeABSADataset
+
 from pyabsa.tasks.apc.dataset_utils.apc_utils import SENTIMENT_PADDING
 
 from pyabsa.utils.pyabsa_utils import find_target_file
@@ -62,20 +64,27 @@ class SentimentClassifier:
                     self.tokenizer = pickle.load(open(tokenizer_path[0], 'rb'))
                 else:
                     self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
-                self.tokenizer.bos_token = self.tokenizer.bos_token if self.tokenizer.bos_token else '[CLS]'
-                self.tokenizer.eos_token = self.tokenizer.eos_token if self.tokenizer.eos_token else '[SEP]'
 
                 print('Config used in Training:')
                 self._log_write_args()
 
             except Exception as e:
-                raise KeyError('Fail to load the model from {}'.format(model_arg),
-                               '\nplease check the path, or maybe the checkpoint is not compatible with this version.')
+                raise KeyError('Fail to load the model from {} \nplease check the path, '
+                               'or maybe the checkpoint is not compatible with this version.'.format(model_arg),
+                              )
 
-            if not hasattr(APCModelList, self.model.__class__.__name__):
+            if not hasattr(APCModelList, self.model.__class__.__name__) \
+                    and not hasattr(APCModelList.GloVeAPCModelList, self.model.__class__.__name__):
                 raise KeyError('The checkpoint you are loading is not from APC model.')
 
-        self.dataset = ABSADataset(tokenizer=self.tokenizer, opt=self.opt)
+        if not hasattr(APCModelList.GloVeAPCModelList, self.opt.model.__name__):
+            self.dataset = ABSADataset(tokenizer=self.tokenizer, opt=self.opt)
+            self.opt.inputs_cols = self.dataset.input_colses[self.opt.model]
+
+        else:
+            self.dataset = GloVeABSADataset(tokenizer=self.tokenizer, opt=self.opt)
+            self.opt.inputs_cols = self.dataset.glove_input_colses[self.opt.model_name]
+
         self.infer_dataloader = None
 
         if self.opt.seed is not None:
@@ -86,7 +95,6 @@ class SentimentClassifier:
             torch.backends.cudnn.deterministic = True
             torch.backends.cudnn.benchmark = False
 
-        self.opt.inputs_cols = self.dataset.input_colses[self.opt.model]
         self.opt.initializer = self.opt.initializer
 
         self.sentiment_map = None

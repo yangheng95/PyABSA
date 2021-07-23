@@ -57,7 +57,9 @@ pip install -U pyabsa
 Then clone our example and try our [tutorials](examples) and have fun! 
 ```
 git clone https://github.com/yangheng95/PyABSA --depth=1
+
 cd PyABSA/examples/aspect_polarity_classification
+
 python sentiment_inference_chinese.py
 ```
 
@@ -90,20 +92,22 @@ or [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_template_atepc.py) model template.
 10. [BERT-SPC](pyabsa/tasks/apc/models/bert_spc.py)
 11. [LCA-Net](pyabsa/tasks/apc/models/lca_bert.py)
 12. [DLCF-DCA-BERT](pyabsa/tasks/apc/models/dlcf_dca_bert.py)
-### GloVe-based APC models
-12. AOA 
-13. ASGCN
-14. ATAE-LSTM
-15. Cabasc
-16. IAN
-17. LSTM
-18. MemNet
-19. MGAN
-20. RAM
-21. TC/TD-LSTM
-22. TNet_LF
 
-* Copyrights Reserved, please wait for the publishing of our paper to get the introduction of them in detail. 
+'*' Copyrights Reserved, please wait for the publishing of our paper to get the introduction of them in detail. 
+
+### GloVe-based APC models
+13. AOA 
+14. ASGCN
+15. ATAE-LSTM
+16. Cabasc
+17. IAN
+18. LSTM
+19. MemNet
+20. MGAN
+21. RAM
+22. TC/TD-LSTM
+23. TNet_LF
+
 
 ## Brief Performance Report
 
@@ -340,6 +344,7 @@ apc_param_search(parameter_dict=apc_param_dict_english,
 10. Multilingual (The sum of the above datasets.)
 11. TShirt
 12. Television
+
 Basically, you don't have to download the datasets, as the datasets will be downloaded automatically. 
 
 
@@ -350,7 +355,7 @@ This work build from LC-ABSA/LCF-ABSA and LCF-ATEPC, and other impressive works 
 欢迎提出疑问、意见和建议，或者帮助完善仓库，谢谢！
 
 # To Do
-1. Add more BERT / glove based models
+1. Add more BERT models
 2. Add more APIs
 3. Optimize codes and add comments
 

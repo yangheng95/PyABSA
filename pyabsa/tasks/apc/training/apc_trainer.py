@@ -26,27 +26,62 @@ from pyabsa.utils.pyabsa_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args
 from pyabsa.utils import find_target_file
 
+from pyabsa.model_utils import APCModelList
+
+from pyabsa.tasks.apc.__glove__.dataset_utils.data_utils_for_training import (build_tokenizer,
+                                                                              build_embedding_matrix,
+                                                                              GloVeABSADataset)
+
+from pyabsa.dataset_utils import ABSADatasets
+
+
 class Instructor:
     def __init__(self, opt, logger):
         self.logger = logger
         self.opt = opt
-        self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
-        self.tokenizer.bos_token = self.tokenizer.bos_token if self.tokenizer.bos_token else '[CLS]'
-        self.tokenizer.eos_token = self.tokenizer.eos_token if self.tokenizer.eos_token else '[SEP]'
 
-        self.train_set = ABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
-        if 'test' in self.opt.dataset_file:
-            self.test_set = ABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
-            self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
+        # init BERT-based model and dataset
+        if not hasattr(APCModelList.GloVeAPCModelList, opt.model.__name__):
+            self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
 
+            self.train_set = ABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
+            if 'test' in self.opt.dataset_file:
+                self.test_set = ABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
+                self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
+            else:
+                self.test_set = None
+
+            self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert_name)
+            # init the model behind the construction of apc_datasets in case of updating polarities_dim
+            self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
         else:
-            self.test_set = None
-        self.train_dataloaders = []
-        self.val_dataloaders = []
+            # init GloVe-based model and dataset
+            if hasattr(ABSADatasets, opt.dataset_path):
+                opt.dataset_path = os.path.join(os.getcwd(), opt.dataset_path)
+                if not os.path.exists(os.path.join(os.getcwd(), opt.dataset_path)):
+                    os.mkdir(os.path.join(os.getcwd(), opt.dataset_path))
 
-        self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert_name)
-        # init the model behind the construction of apc_datasets in case of updating polarities_dim
-        self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
+            self.tokenizer = build_tokenizer(
+                dataset_list=opt.dataset_file,
+                max_seq_len=opt.max_seq_len,
+                dat_fname='{0}_tokenizer.dat'.format(os.path.basename(opt.dataset_path)),
+                opt=self.opt
+            )
+            self.embedding_matrix = build_embedding_matrix(
+                word2idx=self.tokenizer.word2idx,
+                embed_dim=opt.embed_dim,
+                dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(opt.embed_dim), os.path.basename(opt.dataset_path)),
+                opt=self.opt
+            )
+            self.model = opt.model(self.embedding_matrix, opt).to(opt.device)
+
+            self.train_set = GloVeABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
+            if 'test' in self.opt.dataset_file:
+                self.test_set = GloVeABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
+                self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
+
+            else:
+                self.test_set = None
 
         if self.opt.device.type == 'cuda':
             self.logger.info(
@@ -58,6 +93,10 @@ class Instructor:
             lr=self.opt.learning_rate,
             weight_decay=self.opt.l2reg
         )
+
+        self.train_dataloaders = []
+        self.val_dataloaders = []
+
         if os.path.exists('./init_state_dict.bin'):
             os.remove('./init_state_dict.bin')
         if self.opt.cross_validate_fold > 0:
@@ -421,7 +460,10 @@ def train4apc(opt, logger):
         'adamw': torch.optim.AdamW
     }
 
-    opt.inputs_cols = ABSADataset.input_colses[opt.model]
+    if not hasattr(APCModelList.GloVeAPCModelList, opt.model.__name__):
+        opt.inputs_cols = ABSADataset.input_colses[opt.model]
+    else:
+        opt.inputs_cols = GloVeABSADataset.glove_input_colses[opt.model.__name__.lower()]
     opt.optimizer = optimizers[opt.optimizer]
     opt.device = torch.device(opt.device)
 
@@ -430,7 +472,8 @@ def train4apc(opt, logger):
     while not trainer:
         try:
             trainer = Instructor(opt, logger)
-        except ValueError as e:
+        except Exception as e:
+            print(e)
             print('Seems to be ConnectionError, retry in {} seconds...'.format(60))
             time.sleep(60)
     return trainer.run()

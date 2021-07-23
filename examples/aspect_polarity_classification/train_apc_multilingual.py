@@ -17,7 +17,7 @@ from pyabsa import  APCModelList
 save_path = 'state_dict'
 apc_param_dict_multilingual = apc_config_handler.get_apc_param_dict_multilingual()
 apc_param_dict_multilingual['model'] = APCModelList.FAST_LCF_BERT
-apc_param_dict_multilingual['evaluate_begin'] = 4
+apc_param_dict_multilingual['evaluate_begin'] = 3
 
 datasets_path = 'datasets/apc_datasets/multilingual'  # file or dir are accepted for 'datasets_path'
 sent_classifier = train_apc(parameter_dict=apc_param_dict_multilingual,     # set param_dict=None to use default model

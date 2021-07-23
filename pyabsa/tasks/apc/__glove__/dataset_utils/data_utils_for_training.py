@@ -14,7 +14,7 @@ from google_drive_downloader.google_drive_downloader import GoogleDriveDownloade
 
 from pyabsa.utils.pyabsa_utils import find_target_file
 from pyabsa.tasks.apc.dataset_utils.apc_utils import load_datasets
-from pyabsa.tasks.apc.baseline.glove_apc.dataset_utils.dependency_graph import prepare_dependency_graph
+from pyabsa.tasks.apc.__glove__.dataset_utils.dependency_graph import prepare_dependency_graph
 
 
 def prepare_glove840_embedding(glove_path):
@@ -25,19 +25,20 @@ def prepare_glove840_embedding(glove_path):
         return glove_path
     elif os.path.isdir(glove_path):
         embedding_file = None
-        if find_target_file(glove_path, 'glove.42B.300d.txt', exclude_key='.zip'):
-            embedding_file = find_target_file(glove_path, 'glove.42B.300d.txt', exclude_key='.zip')
-        elif find_target_file(glove_path, 'glove.840B.300d.txt', exclude_key='.zip'):
-            embedding_file = find_target_file(glove_path, 'glove.840B.300d.txt', exclude_key='.zip')
-        elif find_target_file(os.path.dirname(glove_path), 'glove.twitter.27B.txt', exclude_key='.zip'):
-            embedding_file = find_target_file(os.path.dirname(glove_path), 'glove.twitter.27B.txt', exclude_key='.zip')
+        dir_path = os.path.dirname(glove_path)
+        if find_target_file(dir_path, 'glove.42B.300d.txt', exclude_key='.zip', find_all=True):
+            embedding_file = find_target_file(dir_path, 'glove.42B.300d.txt', exclude_key='.zip', find_all=True)[0]
+        elif find_target_file(dir_path, 'glove.840B.300d.txt', exclude_key='.zip', find_all=True):
+            embedding_file = find_target_file(dir_path, 'glove.840B.300d.txt', exclude_key='.zip', find_all=True)[0]
+        elif find_target_file(dir_path, 'glove.twitter.27B.txt', exclude_key='.zip', find_all=True):
+            embedding_file = find_target_file(dir_path, 'glove.twitter.27B.txt', exclude_key='.zip', find_all=True)[0]
 
         if embedding_file:
             print('Find potential embedding files: {}, select the 1st file'.format(embedding_file))
             return embedding_file
-        zip_glove_path = os.path.join(glove_path, 'glove_apc.840B.300d.txt.zip')
+        zip_glove_path = os.path.join(glove_path, '__glove__.840B.300d.txt.zip')
         print('No GloVe embedding found at {},'
-              ' downloading glove_apc.840B.300d.txt (2GB transferred / 5.5GB unzipped)...'.format(glove_path))
+              ' downloading __glove__.840B.300d.txt (2GB transferred / 5.5GB unzipped)...'.format(glove_path))
         gdd.download_file_from_google_drive(file_id=glove840_id,
                                             dest_path=zip_glove_path,
                                             unzip=True
@@ -145,8 +146,25 @@ class Tokenizer(object):
         return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
 
 
-class ABSADataset(Dataset):
+class GloVeABSADataset(Dataset):
+
+    glove_input_colses = {
+        'lstm': ['text_indices'],
+        'td_lstm': ['left_with_aspect_indices', 'right_with_aspect_indices'],
+        'tc_lstm': ['left_with_aspect_indices', 'right_with_aspect_indices', 'aspect_indices'],
+        'atae_lstm': ['text_indices', 'aspect_indices'],
+        'ian': ['text_indices', 'aspect_indices'],
+        'memnet': ['context_indices', 'aspect_indices'],
+        'ram': ['text_indices', 'aspect_indices', 'left_indices'],
+        'cabasc': ['text_indices', 'aspect_indices', 'left_with_aspect_indices', 'right_with_aspect_indices'],
+        'tnet_lf': ['text_indices', 'aspect_indices', 'aspect_boundary'],
+        'aoa': ['text_indices', 'aspect_indices'],
+        'mgan': ['text_indices', 'aspect_indices', 'left_indices'],
+        'asgcn': ['text_indices', 'aspect_indices', 'left_indices', 'dependency_graph'],
+    }
+
     def __init__(self, dataset_list, tokenizer, opt):
+
         lines = load_datasets(dataset_list)
 
         all_data = []
@@ -182,15 +200,33 @@ class ABSADataset(Dataset):
             dependency_graph = dependency_graph[range(0, opt.max_seq_len), :]
 
             data = {
-                'text_indices': text_indices,
-                'context_indices': context_indices,
-                'left_indices': left_indices,
-                'left_with_aspect_indices': left_with_aspect_indices,
-                'right_indices': right_indices,
-                'right_with_aspect_indices': right_with_aspect_indices,
-                'aspect_indices': aspect_indices,
-                'aspect_boundary': aspect_boundary,
-                'dependency_graph': dependency_graph,
+                'text_indices': text_indices
+                if 'text_indices' in self.glove_input_colses[opt.model_name] else 0,
+
+                'context_indices': context_indices
+                if 'context_indices' in self.glove_input_colses[opt.model_name] else 0,
+
+                'left_indices': left_indices
+                if 'left_indices' in self.glove_input_colses[opt.model_name] else 0,
+
+                'left_with_aspect_indices': left_with_aspect_indices
+                if 'left_with_aspect_indices' in self.glove_input_colses[opt.model_name] else 0,
+
+                'right_indices': right_indices
+                if 'right_indices' in self.glove_input_colses[opt.model_name] else 0,
+
+                'right_with_aspect_indices': right_with_aspect_indices
+                if 'right_with_aspect_indices' in self.glove_input_colses[opt.model_name] else 0,
+
+                'aspect_indices': aspect_indices
+                if 'aspect_indices' in self.glove_input_colses[opt.model_name] else 0,
+
+                'aspect_boundary': aspect_boundary
+                if 'aspect_boundary' in self.glove_input_colses[opt.model_name] else 0,
+
+                'dependency_graph': dependency_graph
+                if 'dependency_graph' in self.glove_input_colses[opt.model_name] else 0,
+
                 'polarity': polarity,
             }
 

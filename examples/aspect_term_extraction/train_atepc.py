@@ -19,8 +19,8 @@ from pyabsa.model_utils import ATEPCModelList
 save_path = 'state_dict'
 laptop14 = ABSADatasets.Laptop14
 atepc_param_dict_english = atepc_config_handler.get_atepc_param_dict_english()
-atepc_param_dict_english['num_epoch'] = 1
-atepc_param_dict_english['evaluate_begin'] = 0
+atepc_param_dict_english['num_epoch'] = 10
+atepc_param_dict_english['evaluate_begin'] = 4
 atepc_param_dict_english['lot_step'] = 100
 atepc_param_dict_english['model'] = ATEPCModelList.LCF_ATEPC
 aspect_extractor = train_atepc(parameter_dict=atepc_param_dict_english,      # set param_dict=None to use default model
