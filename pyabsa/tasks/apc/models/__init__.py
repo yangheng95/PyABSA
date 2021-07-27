@@ -20,4 +20,6 @@ from pyabsa.tasks.apc.models.lca_bert import LCA_BERT
 
 from pyabsa.tasks.apc.models.dlcf_dca_bert import DLCF_DCA_BERT
 
+from pyabsa.tasks.apc.models.fast_lcf_bert_att import FAST_LCF_BERT_ATT
+
 from pyabsa.tasks.apc.models.lcf_template_apc import LCF_TEMPLATE_BERT

@@ -230,8 +230,8 @@ class AspectExtractor:
                 _pred_iobs = pred_iobs[:]
                 _polarity = polarity[:]
                 for iob_idx in range(len(_pred_iobs) - 1):
-                    if 'B-ASP' == pred_iobs[iob_idx] and 'ASP' not in pred_iobs[iob_idx + 1] \
-                            or 'I-ASP' == pred_iobs[iob_idx] and 'ASP' not in pred_iobs[iob_idx + 1]:
+                    if 'B-ASP' == pred_iobs[iob_idx] and 'B-ASP' == pred_iobs[iob_idx + 1] \
+                            or 'I-ASP' == pred_iobs[iob_idx] and 'B-ASP' == pred_iobs[iob_idx + 1]:
                         _pred_iobs = _pred_iobs[:iob_idx + 1] + IOB_PADDING[iob_idx + 1:]
                         pred_iobs = IOB_PADDING[:iob_idx + 1] + pred_iobs[iob_idx + 1:]
                         _polarity = _polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]

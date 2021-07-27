@@ -1,4 +1,4 @@
-# PyABSA - Exploiting Fast LCF and BERT in Aspect-based Sentiment Analysis
+# PyABSA - An Open & Efficient for Framework for Aspect-based Sentiment Analysis 
 # [English](README.md) | [中文](README_CN.md)
 
 ![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg) 

@@ -10,19 +10,16 @@ from tqdm import tqdm
 from .apc_utils import build_sentiment_window
 from .apc_utils import build_spc_mask_vec
 from .apc_utils import load_datasets, prepare_input_for_apc
-
+from .apc_utils_for_dlcf_dca import prepare_input_for_dlcf_dca
 from .apc_utils import SENTIMENT_PADDING
 
 from pyabsa.tasks.apc.models import BERT_BASE, BERT_SPC
-
 from pyabsa.tasks.apc.models import LCF_BERT, FAST_LCF_BERT, LCF_DUAL_BERT
-
 from pyabsa.tasks.apc.models import LCFS_BERT, FAST_LCFS_BERT, LCFS_DUAL_BERT
-
 from pyabsa.tasks.apc.models import SLIDE_LCF_BERT, SLIDE_LCFS_BERT
-
 from pyabsa.tasks.apc.models import LCA_BERT
-
+from pyabsa.tasks.apc.models import DLCF_DCA_BERT
+from pyabsa.tasks.apc.models import FAST_LCF_BERT_ATT
 from pyabsa.tasks.apc.models import LCF_TEMPLATE_BERT
 
 
@@ -35,13 +32,16 @@ class ABSADataset(Dataset):
             LCA_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lca_ids', 'lcf_vec'],
             LCF_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
             FAST_LCF_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
+            FAST_LCF_BERT_ATT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
             LCF_DUAL_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
             LCFS_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
             FAST_LCFS_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
             LCFS_DUAL_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
             SLIDE_LCFS_BERT: ['text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec'],
             SLIDE_LCF_BERT: ['text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec'],
-            LCF_TEMPLATE_BERT: ['text_bert_indices', 'text_raw_bert_indices'],
+            DLCF_DCA_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'dlcf_vec', 'depend_ids', 'depended_ids',
+                            'no_connect'],
+            LCF_TEMPLATE_BERT: ['text_bert_indices', 'text_raw_bert_indices']
         }
 
         self.tokenizer = tokenizer
@@ -127,7 +127,20 @@ class ABSADataset(Dataset):
                 aspect_bert_indices = prepared_inputs['aspect_bert_indices']
                 lca_ids = prepared_inputs['lca_ids']
                 lcf_vec = prepared_inputs['lcf_cdm_vec'] if self.opt.lcf == 'cdm' else prepared_inputs['lcf_cdw_vec']
+
+                if self.opt.model_name == 'dlcf_dca_bert':
+                    prepared_inputs = prepare_input_for_dlcf_dca(self.opt, self.tokenizer, text_left, text_right, aspect)
+                    dlcf_vec = prepared_inputs['dlcf_cdm_vec'] if self.opt.lcf == 'cdm' else prepared_inputs['dlcf_cdw_vec']
+                    depend_ids = prepared_inputs['depend_ids']
+                    depended_ids = prepared_inputs['depended_ids']
+                    no_connect = prepared_inputs['no_connect']
                 data = {
+                    'depend_ids': depend_ids if 'depend_ids' in self.input_colses[self.opt.model] else 0,
+
+                    'depended_ids': depended_ids if 'depended_ids' in self.input_colses[self.opt.model] else 0,
+
+                    'no_connect': no_connect if 'no_connect' in self.input_colses[self.opt.model] else 0,
+
                     'text_raw': text_raw,
 
                     'aspect': aspect,
@@ -135,6 +148,8 @@ class ABSADataset(Dataset):
                     'lca_ids': lca_ids if 'lca_ids' in self.input_colses[self.opt.model] else 0,
 
                     'lcf_vec': lcf_vec if 'lcf_vec' in self.input_colses[self.opt.model] else 0,
+
+                    'dlcf_vec': dlcf_vec if 'dlcf_vec' in self.input_colses[self.opt.model] else 0,
 
                     'spc_mask_vec': build_spc_mask_vec(self.opt, text_raw_bert_indices)
                     if 'spc_mask_vec' in self.input_colses[self.opt.model] else 0,
@@ -150,7 +165,6 @@ class ABSADataset(Dataset):
 
                     'polarity': polarity,
                 }
-
                 all_data.append(data)
 
             except Exception as e:
