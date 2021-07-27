@@ -41,6 +41,8 @@ class APCModelList:
     BERT_BASE = pyabsa.tasks.apc.models.BERT_BASE
     BERT_SPC = pyabsa.tasks.apc.models.BERT_SPC
 
+    FAST_LCF_BERT_ATT = pyabsa.tasks.apc.models.FAST_LCF_BERT_ATT
+
     LCF_TEMPLATE_BERT = pyabsa.tasks.apc.models.LCF_TEMPLATE_BERT
 
     class GloVeAPCModelList:

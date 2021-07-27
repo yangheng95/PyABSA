@@ -1,4 +1,7 @@
-{
+{  "0.8.9.4": {
+    "1": "Fix a bug while predicting sentiment polarity using ATEPC model, refer to https://github.com/yangheng95/PyABSA/issues/47",
+    "2": "Fix the inference of DCLF_DCA model"
+  },
   "0.8.9.3": {
     "1": "Refactor some code"
   },

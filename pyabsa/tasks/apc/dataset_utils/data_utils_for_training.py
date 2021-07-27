@@ -15,17 +15,12 @@ from .apc_utils import load_datasets, prepare_input_for_apc
 from .apc_utils_for_dlcf_dca import prepare_input_for_dlcf_dca
 
 from pyabsa.tasks.apc.models import BERT_BASE, BERT_SPC
-
 from pyabsa.tasks.apc.models import LCF_BERT, FAST_LCF_BERT, LCF_DUAL_BERT
-
 from pyabsa.tasks.apc.models import LCFS_BERT, FAST_LCFS_BERT, LCFS_DUAL_BERT
-
 from pyabsa.tasks.apc.models import SLIDE_LCF_BERT, SLIDE_LCFS_BERT
-
 from pyabsa.tasks.apc.models import LCA_BERT
-
 from pyabsa.tasks.apc.models import DLCF_DCA_BERT
-
+from pyabsa.tasks.apc.models import FAST_LCF_BERT_ATT
 from pyabsa.tasks.apc.models import LCF_TEMPLATE_BERT
 
 from pyabsa.utils import check_and_fix_polarity_labels
@@ -38,6 +33,7 @@ class ABSADataset(Dataset):
         LCA_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lca_ids', 'lcf_vec'],
         LCF_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
         FAST_LCF_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
+        FAST_LCF_BERT_ATT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
         LCF_DUAL_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
         LCFS_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
         FAST_LCFS_BERT: ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec'],
