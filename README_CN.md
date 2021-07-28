@@ -171,7 +171,7 @@ Sentence with predicted labels:
 ### 1. 加载必要的包
 ```
 from pyabsa import train_atepc, atepc_config_handler
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 from pyabsa import ATEPCModelList
 ```
 
@@ -189,7 +189,7 @@ atepc_param_dict_chinese['evaluate_begin'] = 5
 ### 4. 配置运行时的设置和运行训练
 ```
 save_path = 'state_dict'
-chinese_sets = ABSADatasets.Chinese
+chinese_sets = ABSADatasetList.Chinese
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=chinese_sets,     # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
@@ -240,7 +240,7 @@ barack obama --> Positive  Real: Neutral (Wrong)
 ```
 from pyabsa import train_apc, apc_config_handler
 from pyabsa import APCModelList
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 ```
 ### 2. 选择一个基本的param_dict
 ```
@@ -263,7 +263,7 @@ apc_param_dict_english['srd_alignment'] = True
 
 ### 4.  配置运行时的设置和运行训练
 ```
-laptop14 = ABSADatasets.Laptop14  # Here I use the integrated dataset, you can use your dataset instead 
+laptop14 = ABSADatasetList.Laptop14  # Here I use the integrated dataset, you can use your dataset instead 
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english, # ignore this parameter will use defualt setting
                             dataset_path=laptop14,         # datasets will be recurrsively detected in this path
                             model_path_to_save=save_path,  # ignore this parameter to avoid saving model
@@ -274,7 +274,7 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english, # ignore this
 ### 5.  情感推断
 ```
 from pyabsa import load_sentiment_classifier
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 from pyabsa.models import APCTrainedModelManager
 
 # 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
@@ -295,7 +295,7 @@ text = 'everything is always cooked to perfection , the [ASP]service[ASP] is exc
 sent_classifier.infer(text, print_result=True)
 
 # 批处理inferring_tutorials返回结果, 如果需要保存结果，请设置 save_result=True
-inference_sets = ABSADatasets.semeval
+inference_sets = ABSADatasetList.semeval
 results = sent_classifier.batch_infer(target_file=inference_sets,
                                       print_result=True,
                                       save_result=True,
@@ -308,7 +308,7 @@ results = sent_classifier.batch_infer(target_file=inference_sets,
 ```
 from pyabsa.research.parameter_search.search_param_for_apc import apc_param_search
 
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 from pyabsa.config.apc_config import apc_config_handler
 
 apc_param_dict_english = apc_config_handler.get_apc_param_dict_english()
@@ -317,7 +317,7 @@ apc_param_dict_english['evaluate_begin'] = 2
 
 param_to_search = ['l2reg', [1e-5, 5e-5, 1e-4, 5e-4, 1e-3]]
 apc_param_search(parameter_dict=apc_param_dict_english,
-                 dataset_path=ABSADatasets.Laptop14,
+                 dataset_path=ABSADatasetList.Laptop14,
                  search_param=param_to_search,
                  auto_evaluate=True,
                  auto_device=True)
@@ -325,7 +325,7 @@ apc_param_search(parameter_dict=apc_param_dict_english,
 
 
 
-# [数据集](https://github.com/yangheng95/ABSADatasets)
+# [数据集](https://github.com/yangheng95/ABSADatasetList)
 
 1. Twitter 
 2. Laptop14

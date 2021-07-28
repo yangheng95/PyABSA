@@ -7,6 +7,8 @@ import torch.nn as nn
 
 
 class BERT_SPC(nn.Module):
+    inputs = ['text_bert_indices']
+
     def __init__(self, bert, opt):
         super(BERT_SPC, self).__init__()
         self.bert = bert

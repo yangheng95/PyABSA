@@ -8,7 +8,7 @@
 
 from pyabsa import train_apc, apc_config_handler
 
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 from pyabsa.model_utils import APCModelList
 
 import copy
@@ -28,25 +28,25 @@ def run_fast_lcfs_bert_cdw(param_dict=None):
     else:
         _apc_param_dict_english = param_dict
 
-    train_apc(dataset_path=ABSADatasets.Laptop14,
+    train_apc(dataset_path=ABSADatasetList.Laptop14,
               parameter_dict=_apc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
               auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
               auto_device=True  # automatic choose CUDA or CPU
               )
 
-    train_apc(dataset_path=ABSADatasets.Restaurant14,
+    train_apc(dataset_path=ABSADatasetList.Restaurant14,
               parameter_dict=_apc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
               auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
               auto_device=True  # automatic choose CUDA or CPU
               )
 
-    train_apc(dataset_path=ABSADatasets.Restaurant15,
+    train_apc(dataset_path=ABSADatasetList.Restaurant15,
               parameter_dict=_apc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
               auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
               auto_device=True  # automatic choose CUDA or CPU
               )
 
-    train_apc(dataset_path=ABSADatasets.Restaurant16,
+    train_apc(dataset_path=ABSADatasetList.Restaurant16,
               parameter_dict=_apc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
               auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
               auto_device=True  # automatic choose CUDA or CPU
@@ -68,25 +68,25 @@ def run_fast_lcfs_bert_cdm(param_dict=None):
     else:
         _apc_param_dict_english = param_dict
 
-    train_apc(dataset_path=ABSADatasets.Laptop14,
+    train_apc(dataset_path=ABSADatasetList.Laptop14,
               parameter_dict=_apc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
               auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
               auto_device=True  # automatic choose CUDA or CPU
               )
 
-    train_apc(dataset_path=ABSADatasets.Restaurant14,
+    train_apc(dataset_path=ABSADatasetList.Restaurant14,
               parameter_dict=_apc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
               auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
               auto_device=True  # automatic choose CUDA or CPU
               )
 
-    train_apc(dataset_path=ABSADatasets.Restaurant15,
+    train_apc(dataset_path=ABSADatasetList.Restaurant15,
               parameter_dict=_apc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
               auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
               auto_device=True  # automatic choose CUDA or CPU
               )
 
-    train_apc(dataset_path=ABSADatasets.Restaurant16,
+    train_apc(dataset_path=ABSADatasetList.Restaurant16,
               parameter_dict=_apc_param_dict_english,  # set param_dict=None will use the apc_param_dict as well
               auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
               auto_device=True  # automatic choose CUDA or CPU

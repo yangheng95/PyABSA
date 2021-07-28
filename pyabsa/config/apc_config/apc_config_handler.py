@@ -7,6 +7,7 @@
 
 from pyabsa.tasks.apc.models import BERT_SPC
 from pyabsa.tasks.apc.__glove__ import TNet_LF
+from pyabsa.tasks.apc.__bert__ import TNet_LF_BERT
 
 import copy
 
@@ -84,9 +85,9 @@ _apc_param_dict_english = {'model': BERT_SPC,
                            'use_bert_spc': True,
                            'max_seq_len': 80,
                            'SRD': 3,
-                           'dlcf_a': 2, # the a in dlcf_dca_bert
-                           'dca_p': 1, # the p in dlcf_dca_bert
-                           'dca_layer': 3, # the layer in dlcf_dca_bert
+                           'dlcf_a': 2,  # the a in dlcf_dca_bert
+                           'dca_p': 1,  # the p in dlcf_dca_bert
+                           'dca_layer': 3,  # the layer in dlcf_dca_bert
                            'use_syntax_based_SRD': False,
                            'sigma': 0.3,
                            'lcf': "cdw",
@@ -194,6 +195,27 @@ _apc_param_dict_glove = {'model': TNet_LF,
                          'cross_validate_fold': -1  # split train and test datasets into 5 folds and repeat 3 training
                          }
 
+_apc_param_dict_bert_baseline = {'model': TNet_LF_BERT,
+                                 'optimizer': "adam",
+                                 'learning_rate': 0.001,
+                                 'max_seq_len': 100,
+                                 'dropout': 0.1,
+                                 'l2reg': 0.0001,
+                                 'num_epoch': 20,
+                                 'batch_size': 16,
+                                 'initializer': 'xavier_uniform_',
+                                 'seed': {1, 2, 3},
+                                 'embed_dim': 768,
+                                 'hidden_dim': 768,
+                                 'polarities_dim': 3,
+                                 'log_step': 5,
+                                 'hops': 3,  # valid in MemNet and RAM only
+                                 'evaluate_begin': 0,
+                                 'dynamic_truncate': True,
+                                 'similarity_threshold': 1,  # disable same text check for different examples
+                                 'cross_validate_fold': -1  # split train and test datasets into 5 folds and repeat 3 training
+                                 }
+
 
 def get_apc_param_dict_template():
     return copy.deepcopy(_apc_param_dict_template)
@@ -217,3 +239,7 @@ def get_apc_param_dict_multilingual():
 
 def get_apc_param_dict_glove():
     return copy.deepcopy(_apc_param_dict_glove)
+
+
+def get_apc_param_dict_bert_baseline():
+    return copy.deepcopy(_apc_param_dict_bert_baseline)

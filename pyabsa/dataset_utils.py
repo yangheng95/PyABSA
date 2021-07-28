@@ -13,7 +13,7 @@ import tempfile
 from pyabsa.utils.pyabsa_utils import find_target_file
 
 
-class ABSADatasets:
+class ABSADatasetList:
     # SemEval
     Laptop14 = 'Laptop14'
     Restaurant14 = 'Restaurant14'
@@ -43,9 +43,13 @@ class ABSADatasets:
     ATEPC_Datasets = 'ATEPC_Datasets'
 
 
+class ABSADatasets(ABSADatasetList):
+    pass
+
+
 def detect_dataset(dataset_path, auto_evaluate=True, task='apc_benchmark'):
-    if hasattr(ABSADatasets, dataset_path) or not os.path.exists(dataset_path):
-        if hasattr(ABSADatasets, dataset_path):
+    if hasattr(ABSADatasetList, dataset_path) or not os.path.exists(dataset_path):
+        if hasattr(ABSADatasetList, dataset_path):
             print('{} is the integrated dataset, try to load the dataset '
                   'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
         else:
@@ -89,8 +93,8 @@ def detect_dataset(dataset_path, auto_evaluate=True, task='apc_benchmark'):
 
 def detect_infer_dataset(dataset_path, task='apc_benchmark'):
     dataset_file = []
-    if hasattr(ABSADatasets, dataset_path) or not os.path.exists(dataset_path):
-        if hasattr(ABSADatasets, dataset_path):
+    if hasattr(ABSADatasetList, dataset_path) or not os.path.exists(dataset_path):
+        if hasattr(ABSADatasetList, dataset_path):
             print('{} is the integrated dataset, try to load the dataset '
                   'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
         else:

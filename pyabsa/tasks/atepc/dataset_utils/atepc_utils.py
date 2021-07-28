@@ -81,3 +81,19 @@ def prepare_input_for_atepc(opt, tokenizer, text_left, text_right, aspect):
     }
 
     return inputs
+
+
+def load_atepc_datasets(fname):
+        lines = []
+        if isinstance(fname, str):
+            fname = [fname]
+
+        for f in fname:
+            print('loading: {}'.format(f))
+            fin = open(f, 'r', encoding='utf-8')
+            lines.extend(fin.readlines())
+            fin.close()
+        for i in range(len(lines)):
+            lines[i] = lines[i][:lines[i].find('!sent!')].replace('[ASP]', '')
+        return list(set(lines))
+

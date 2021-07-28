@@ -83,6 +83,7 @@ def init_config(config_dict, base_config_dict, auto_device=True):
 
 def train_apc(parameter_dict=None,
               dataset_path=None,
+              from_checkpoint_path='',
               model_path_to_save=None,
               auto_evaluate=True,
               auto_device=True):
@@ -112,10 +113,10 @@ def train_apc(parameter_dict=None,
         t_config = Namespace(**vars(config))
         t_config.seed = s
         if model_path_to_save:
-            model_path.append(train4apc(t_config, logger))
+            model_path.append(train4apc(t_config, from_checkpoint_path, logger))
         else:
             # always return the last trained model if dont save trained models
-            sent_classifier = SentimentClassifier(model_arg=train4apc(t_config, logger))
+            sent_classifier = SentimentClassifier(model_arg=train4apc(t_config, from_checkpoint_path, logger))
     while logger.handlers:
         logger.removeHandler(logger.handlers[0])
     if model_path_to_save:
@@ -134,6 +135,7 @@ def load_sentiment_classifier(trained_model_path=None,
 
 def train_atepc(parameter_dict=None,
                 dataset_path=None,
+                from_checkpoint_path='',
                 model_path_to_save=None,
                 auto_evaluate=True,
                 auto_device=True):
@@ -162,7 +164,7 @@ def train_atepc(parameter_dict=None,
     for _, s in enumerate(config.seed):
         t_config = Namespace(**vars(config))
         t_config.seed = s
-        model_path.append(train4atepc(t_config, logger))
+        model_path.append(train4atepc(t_config, from_checkpoint_path, logger))
     return AspectExtractor(max(model_path))
 
 

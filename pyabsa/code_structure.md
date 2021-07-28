@@ -1,4 +1,5 @@
 # Directory structure description
+
 ```
 PyABSA/
 ├── examples   #  usages of PyABSA

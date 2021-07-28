@@ -9,6 +9,8 @@ import torch.nn as nn
 
 
 class LSTM(nn.Module):
+    inputs = ['text_indices']
+
     def __init__(self, embedding_matrix, opt):
         super(LSTM, self).__init__()
         self.embed = nn.Embedding.from_pretrained(torch.tensor(embedding_matrix, dtype=torch.float))

@@ -32,7 +32,9 @@ from pyabsa.tasks.apc.__glove__.dataset_utils.data_utils_for_training import (bu
                                                                               build_embedding_matrix,
                                                                               GloVeABSADataset)
 
-from pyabsa.dataset_utils import ABSADatasets
+from pyabsa.tasks.apc.__bert__.dataset_utils.data_utils_for_training import (Tokenizer4Pretraining,
+                                                                             BERTBaselineABSADataset)
+from pyabsa.dataset_utils import ABSADatasetList
 
 
 class Instructor:
@@ -41,7 +43,7 @@ class Instructor:
         self.opt = opt
 
         # init BERT-based model and dataset
-        if not hasattr(APCModelList.GloVeAPCModelList, opt.model.__name__):
+        if hasattr(APCModelList, opt.model.__name__):
             self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
 
             self.train_set = ABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
@@ -54,9 +56,25 @@ class Instructor:
             self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert_name)
             # init the model behind the construction of apc_datasets in case of updating polarities_dim
             self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
-        else:
+
+        # elif hasattr(APCModelList.BERTAPCModelList, opt.model.__name__):
+        elif hasattr(APCModelList.BERTBaselineAPCModelList, opt.model.__name__):
+            self.tokenizer = Tokenizer4Pretraining(self.opt.max_seq_len, self.opt.pretrained_bert_name)
+
+            self.train_set = BERTBaselineABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
+            if 'test' in self.opt.dataset_file:
+                self.test_set = BERTBaselineABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
+                self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
+            else:
+                self.test_set = None
+
+            self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert_name)
+            # init the model behind the construction of apc_datasets in case of updating polarities_dim
+            self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
+
+        elif hasattr(APCModelList.GloVeAPCModelList, opt.model.__name__):
             # init GloVe-based model and dataset
-            if hasattr(ABSADatasets, opt.dataset_path):
+            if hasattr(ABSADatasetList, opt.dataset_path):
                 opt.dataset_path = os.path.join(os.getcwd(), opt.dataset_path)
                 if not os.path.exists(os.path.join(os.getcwd(), opt.dataset_path)):
                     os.mkdir(os.path.join(os.getcwd(), opt.dataset_path))
@@ -159,7 +177,7 @@ class Instructor:
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
                 # switch model to training_tutorials mode, clear gradient accumulators
-                self.model.train()
+                self.model.run()
                 self.optimizer.zero_grad()
                 inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
                 outputs = self.model(inputs)
@@ -285,7 +303,7 @@ class Instructor:
                 for i_batch, sample_batched in enumerate(iterator):
                     global_step += 1
                     # switch model to training_tutorials mode, clear gradient accumulators
-                    self.model.train()
+                    self.model.run()
                     self.optimizer.zero_grad()
                     inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
                     outputs = self.model(inputs)
@@ -440,7 +458,7 @@ class Instructor:
         return self._train(criterion, lca_criterion)
 
 
-def train4apc(opt, logger):
+def train4apc(opt, from_checkpoint_path, logger):
     if not isinstance(opt.seed, int):
         opt.logger.info('Please do not use multiple random seeds without evaluating.')
         opt.seed = list(opt.seed)[0]
@@ -460,10 +478,15 @@ def train4apc(opt, logger):
         'adamw': torch.optim.AdamW
     }
 
-    if not hasattr(APCModelList.GloVeAPCModelList, opt.model.__name__):
+    if hasattr(APCModelList, opt.model.__name__):
         opt.inputs_cols = ABSADataset.input_colses[opt.model]
-    else:
+
+    elif hasattr(APCModelList.BERTBaselineAPCModelList, opt.model.__name__):
+        opt.inputs_cols = BERTBaselineABSADataset.bert_baseline_input_colses[opt.model.__name__.lower()]
+
+    elif hasattr(APCModelList.GloVeAPCModelList, opt.model.__name__):
         opt.inputs_cols = GloVeABSADataset.glove_input_colses[opt.model.__name__.lower()]
+
     opt.optimizer = optimizers[opt.optimizer]
     opt.device = torch.device(opt.device)
 
@@ -472,6 +495,14 @@ def train4apc(opt, logger):
     while not trainer:
         try:
             trainer = Instructor(opt, logger)
+            if from_checkpoint_path:
+                model_path = find_target_file(from_checkpoint_path, '.model', find_all=True)
+                if from_checkpoint_path:
+                    trainer.model = torch.load(model_path[0])
+                    trainer.model.opt = opt
+                    trainer.model.to(opt.device)
+                else:
+                    print('No checkpoint found in {}'.format(from_checkpoint_path))
         except Exception as e:
             print(e)
             print('Seems to be ConnectionError, retry in {} seconds...'.format(60))

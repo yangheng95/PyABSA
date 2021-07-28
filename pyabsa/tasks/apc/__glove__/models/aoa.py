@@ -10,6 +10,8 @@ import torch.nn.functional as F
 
 
 class AOA(nn.Module):
+    inputs = ['text_indices', 'aspect_indices']
+
     def __init__(self, embedding_matrix, opt):
         super(AOA, self).__init__()
         self.opt = opt

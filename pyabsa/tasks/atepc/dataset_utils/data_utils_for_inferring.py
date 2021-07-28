@@ -210,7 +210,7 @@ def convert_apc_examples_to_features(examples, label_list, max_seq_len, tokenize
         lcf_cdw_vec = prepared_inputs['lcf_cdw_vec']
 
         label_lists = IOB_label
-        for i, word in enumerate(text_tokens):
+        for i, (word, _) in enumerate(zip(text_tokens, label_lists)):
             token = tokenizer.tokenize(word)
             tokens.extend(token)
             label_1 = label_lists[i]

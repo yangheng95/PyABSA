@@ -13,7 +13,7 @@ from torch.utils.data import Dataset
 from google_drive_downloader.google_drive_downloader import GoogleDriveDownloader as gdd
 
 from pyabsa.utils.pyabsa_utils import find_target_file
-from pyabsa.tasks.apc.dataset_utils.apc_utils import load_datasets
+from pyabsa.tasks.apc.dataset_utils.apc_utils import load_apc_datasets
 from pyabsa.tasks.apc.__glove__.dataset_utils.dependency_graph import prepare_dependency_graph
 
 
@@ -34,7 +34,7 @@ def prepare_glove840_embedding(glove_path):
             embedding_file = find_target_file(dir_path, 'glove.twitter.27B.txt', exclude_key='.zip', find_all=True)[0]
 
         if embedding_file:
-            print('Find potential embedding files: {}, select the 1st file'.format(embedding_file))
+            print('Find potential embedding files: {}'.format(embedding_file))
             return embedding_file
         zip_glove_path = os.path.join(glove_path, '__glove__.840B.300d.txt.zip')
         print('No GloVe embedding found at {},'
@@ -147,7 +147,6 @@ class Tokenizer(object):
 
 
 class GloVeABSADataset(Dataset):
-
     glove_input_colses = {
         'lstm': ['text_indices'],
         'td_lstm': ['left_with_aspect_indices', 'right_with_aspect_indices'],
@@ -165,13 +164,13 @@ class GloVeABSADataset(Dataset):
 
     def __init__(self, dataset_list, tokenizer, opt):
 
-        lines = load_datasets(dataset_list)
+        lines = load_apc_datasets(dataset_list)
 
         all_data = []
         if not os.path.exists(opt.dataset_path):
             os.mkdir(os.path.join(os.getcwd(), opt.dataset_path))
             opt.dataset_path = os.path.join(os.getcwd(), opt.dataset_path)
-        graph_path = prepare_dependency_graph(dataset_list, opt.dataset_path)
+        graph_path = prepare_dependency_graph(dataset_list, opt.dataset_path, opt.max_seq_len)
 
         fin = open(graph_path, 'rb')
         idx2graph = pickle.load(fin)
@@ -201,31 +200,31 @@ class GloVeABSADataset(Dataset):
 
             data = {
                 'text_indices': text_indices
-                if 'text_indices' in self.glove_input_colses[opt.model_name] else 0,
+                if 'text_indices' in opt.model.inputs else 0,
 
                 'context_indices': context_indices
-                if 'context_indices' in self.glove_input_colses[opt.model_name] else 0,
+                if 'context_indices' in opt.model.inputs else 0,
 
                 'left_indices': left_indices
-                if 'left_indices' in self.glove_input_colses[opt.model_name] else 0,
+                if 'left_indices' in opt.model.inputs else 0,
 
                 'left_with_aspect_indices': left_with_aspect_indices
-                if 'left_with_aspect_indices' in self.glove_input_colses[opt.model_name] else 0,
+                if 'left_with_aspect_indices' in opt.model.inputs else 0,
 
                 'right_indices': right_indices
-                if 'right_indices' in self.glove_input_colses[opt.model_name] else 0,
+                if 'right_indices' in opt.model.inputs else 0,
 
                 'right_with_aspect_indices': right_with_aspect_indices
-                if 'right_with_aspect_indices' in self.glove_input_colses[opt.model_name] else 0,
+                if 'right_with_aspect_indices' in opt.model.inputs else 0,
 
                 'aspect_indices': aspect_indices
-                if 'aspect_indices' in self.glove_input_colses[opt.model_name] else 0,
+                if 'aspect_indices' in opt.model.inputs else 0,
 
                 'aspect_boundary': aspect_boundary
-                if 'aspect_boundary' in self.glove_input_colses[opt.model_name] else 0,
+                if 'aspect_boundary' in opt.model.inputs else 0,
 
                 'dependency_graph': dependency_graph
-                if 'dependency_graph' in self.glove_input_colses[opt.model_name] else 0,
+                if 'dependency_graph' in opt.model.inputs else 0,
 
                 'polarity': polarity,
             }

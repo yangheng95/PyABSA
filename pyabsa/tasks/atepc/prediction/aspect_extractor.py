@@ -23,7 +23,8 @@ from ..dataset_utils.data_utils_for_inferring import (ATEPCProcessor,
 
 from pyabsa.utils.pyabsa_utils import find_target_file
 from pyabsa.model_utils import ATEPCModelList
-
+from pyabsa.tasks.atepc.dataset_utils.atepc_utils import load_atepc_datasets
+from pyabsa.dataset_utils import detect_infer_dataset
 
 class AspectExtractor:
 
@@ -95,8 +96,7 @@ class AspectExtractor:
             raise ValueError("Invalid gradient_accumulation_steps parameter: {}, should be >= 1".format(
                 self.opt.gradient_accumulation_steps))
 
-        self.opt.batch_size = self.opt.batch_size // self.opt.gradient_accumulation_steps
-
+        self.opt.batch_size = 1
         param_optimizer = list(self.model.named_parameters())
         no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
         optimizer_grouped_parameters = [
@@ -131,24 +131,30 @@ class AspectExtractor:
         self.opt.device = device
         self.model.to(device)
 
-    def extract_aspect(self, examples, print_result=True, pred_sentiment=True):
+    def extract_aspect(self, inference_source, save_result=True, print_result=True, pred_sentiment=True):
         extraction_res = None
         polarity_res = None
-        if isinstance(examples, str):
-            if os.path.isdir(examples) or os.path.isfile(examples):
-                raise NotImplementedError('Not implemented yet.')
-            else:
-                extraction_res = self._extract(examples, print_result)
+        if isinstance(inference_source, str):
+            inference_set = detect_infer_dataset(inference_source, task='apc_benchmark')
+            inference_source = load_atepc_datasets(inference_set)
+            # print(examples)
+            if not inference_source:
+                extraction_res = self._extract(inference_source, print_result)
                 if pred_sentiment:
                     polarity_res = self._infer(extraction_res, print_result)
                 return {'extraction_res': extraction_res, 'polarity_res': polarity_res}
-        elif isinstance(examples, list):
+        if isinstance(inference_source, list):
             results = []
-            for example in examples:
+            save_path = os.path.join(os.getcwd(), 'atepc_inference.result.txt')
+            fout = open(save_path, 'w', encoding='utf8') if save_result else None
+            for example in inference_source:
                 extraction_res = self._extract(example, print_result)
                 if pred_sentiment:
                     polarity_res = self._infer(extraction_res, print_result)
                 results.append({'extraction_res': extraction_res, 'polarity_res': polarity_res})
+                if fout:
+                    fout.write('extraction_res:{} polarity_res:{}\n'.format(extraction_res, polarity_res))
+
             return results
 
     # Temporal code, pending optimization
@@ -230,8 +236,7 @@ class AspectExtractor:
                 _pred_iobs = pred_iobs[:]
                 _polarity = polarity[:]
                 for iob_idx in range(len(_pred_iobs) - 1):
-                    if 'B-ASP' == pred_iobs[iob_idx] and 'B-ASP' == pred_iobs[iob_idx + 1] \
-                            or 'I-ASP' == pred_iobs[iob_idx] and 'B-ASP' == pred_iobs[iob_idx + 1]:
+                    if pred_iobs[iob_idx].endswith('ASP') and not pred_iobs[iob_idx + 1].endswith('I-ASP'):
                         _pred_iobs = _pred_iobs[:iob_idx + 1] + IOB_PADDING[iob_idx + 1:]
                         pred_iobs = IOB_PADDING[:iob_idx + 1] + pred_iobs[iob_idx + 1:]
                         _polarity = _polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]

@@ -11,6 +11,8 @@ from ..layers.attention import Attention
 
 
 class IAN(nn.Module):
+    inputs = ['text_indices', 'aspect_indices']
+
     def __init__(self, embedding_matrix, opt):
         super(IAN, self).__init__()
         self.opt = opt

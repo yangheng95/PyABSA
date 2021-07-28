@@ -70,7 +70,10 @@ class PointwiseFeedForward(nn.Module):
         output = self.dropout(output)
         return output
 
+
 class DLCF_DCA_BERT(nn.Module):
+    inputs = ['text_bert_indices', 'text_raw_bert_indices', 'dlcf_vec', 'depend_ids', 'depended_ids', 'no_connect']
+
     def __init__(self, bert, opt):
         super(DLCF_DCA_BERT, self).__init__()
         self.bert4global = bert

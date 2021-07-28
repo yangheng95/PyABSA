@@ -90,7 +90,7 @@ def pad_syntax_based_srd(text, dep_dist, tokenizer, opt):
     return sequence, dep_dist
 
 
-def load_datasets(fname):
+def load_apc_datasets(fname):
     lines = []
     if isinstance(fname, str):
         fname = [fname]
@@ -156,7 +156,6 @@ def load_datasets(fname):
 #     return inputs
 
 def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
-
     if hasattr(opt, 'dynamic_truncate') and opt.dynamic_truncate:
         _max_seq_len = opt.max_seq_len - len(aspect.split(' '))
         text_left = text_left.split(' ')
@@ -401,7 +400,7 @@ def calculate_dep_dist(sentence, aspect):
         dist[i] = sum / len(terms)
         text[i] = word.text
         if flag == 1:
-            max_dist_temp.append(sum/len(terms))
+            max_dist_temp.append(sum / len(terms))
         if dist[i] > max_dist:
             max_dist = dist[i]
     return text, dist, max_dist
