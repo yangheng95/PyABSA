@@ -177,7 +177,7 @@ class Instructor:
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
                 # switch model to training_tutorials mode, clear gradient accumulators
-                self.model.run()
+                self.model.train()
                 self.optimizer.zero_grad()
                 inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
                 outputs = self.model(inputs)
@@ -303,7 +303,7 @@ class Instructor:
                 for i_batch, sample_batched in enumerate(iterator):
                     global_step += 1
                     # switch model to training_tutorials mode, clear gradient accumulators
-                    self.model.run()
+                    self.model.train()
                     self.optimizer.zero_grad()
                     inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
                     outputs = self.model(inputs)

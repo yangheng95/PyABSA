@@ -16,7 +16,7 @@ from pyabsa import ABSADatasetList
 
 save_path = 'state_dict'
 apc_param_dict_english = apc_config_handler.get_apc_param_dict_bert_baseline()
-apc_param_dict_english['model'] = APCModelList.BERTBaselineAPCModelList.MGAN_BERT
+apc_param_dict_english['model'] = APCModelList.BERTBaselineAPCModelList.LSTM_BERT
 apc_param_dict_english['evaluate_begin'] = 2
 apc_param_dict_english['similarity_threshold'] = 1
 apc_param_dict_english['max_seq_len'] = 80
