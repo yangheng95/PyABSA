@@ -12,14 +12,14 @@
 
 from pyabsa import train_atepc, atepc_config_handler
 
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 
 from pyabsa.model_utils import ATEPCModelList
 
 
 save_path = 'state_dict'
 
-chinese_sets = ABSADatasets.Chinese
+chinese_sets = ABSADatasetList.Chinese
 atepc_param_dict_chinese = atepc_config_handler.get_atepc_param_dict_chinese()
 atepc_param_dict_chinese['log_step'] = 20
 atepc_param_dict_chinese['model'] = ATEPCModelList.LCF_ATEPC

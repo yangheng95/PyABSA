@@ -4,7 +4,7 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-
+import pyabsa
 from pyabsa import load_aspect_extractor
 
 from pyabsa import ATEPCTrainedModelManager
@@ -35,8 +35,9 @@ sentiment_map = {0: 'Negative', 1: "Neutral", 2: 'Positive', -999: ''}
 aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
                                          auto_device=True  # False means load model on CPU
                                          )
-
-atepc_result = aspect_extractor.extract_aspect(examples=examples,  # list-support only, for current
+inference_source = pyabsa.ABSADatasetList.SemEval
+atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source,  #
+                                               save_result=True,
                                                print_result=True,  # print the result
                                                pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
                                                )

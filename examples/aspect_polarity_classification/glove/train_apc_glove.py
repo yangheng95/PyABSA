@@ -9,19 +9,22 @@
 from pyabsa import train_apc, apc_config_handler
 
 from pyabsa.model_utils import APCModelList
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 
 ########################################################################################################################
 #                To use GloVe-based models, you should put the GloVe embedding into the dataset path                   #
 #              or if you can access to Google, it will automatic download GloVe embedding if necessary                 #
 ########################################################################################################################
 
+
+# Put glove embedding under current path first if you dont want to download GloVe embedding
 save_path = 'state_dict'
 apc_param_dict_english = apc_config_handler.get_apc_param_dict_glove()
 apc_param_dict_english['model'] = APCModelList.GloVeAPCModelList.ASGCN
+apc_param_dict_english['max_seq_len'] = 85
 apc_param_dict_english['cross_validate_fold'] = -1  # disable cross_validate, enable in {5, 10}
 
-Dataset = ABSADatasets.Restaurant14
+Dataset = ABSADatasetList.Restaurant14
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=Dataset,     # train set and test set will be automatically detected

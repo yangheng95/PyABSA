@@ -12,12 +12,12 @@
 
 
 from pyabsa import train_atepc, atepc_config_handler
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 from pyabsa.model_utils import ATEPCModelList
 
 
 save_path = 'state_dict'
-laptop14 = ABSADatasets.Laptop14
+laptop14 = ABSADatasetList.Laptop14
 atepc_param_dict_english = atepc_config_handler.get_atepc_param_dict_english()
 atepc_param_dict_english['num_epoch'] = 10
 atepc_param_dict_english['evaluate_begin'] = 4

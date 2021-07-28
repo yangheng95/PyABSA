@@ -35,7 +35,7 @@ aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
                                          auto_device=False  # False means load model on CPU
                                          )
 
-atepc_result = aspect_extractor.extract_aspect(examples=examples,  # list-support only, for now
+atepc_result = aspect_extractor.extract_aspect(inference_source=examples,  # list-support only, for now
                                                print_result=True,  # print the result
                                                pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
                                                )

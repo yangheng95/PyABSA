@@ -12,6 +12,8 @@ from pyabsa.network.sa_encoder import Encoder
 
 
 class LCFS_BERT(nn.Module):
+    inputs = ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec']
+
     def __init__(self, bert, opt):
         super(LCFS_BERT, self).__init__()
         self.bert4global = bert

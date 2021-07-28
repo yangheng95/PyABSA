@@ -9,7 +9,7 @@ from torch.utils.data import Dataset
 from tqdm import tqdm
 from .apc_utils import build_sentiment_window
 from .apc_utils import build_spc_mask_vec
-from .apc_utils import load_datasets, prepare_input_for_apc
+from .apc_utils import load_apc_datasets, prepare_input_for_apc
 from .apc_utils_for_dlcf_dca import prepare_input_for_dlcf_dca
 from .apc_utils import SENTIMENT_PADDING
 
@@ -86,7 +86,7 @@ class ABSADataset(Dataset):
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
 
-        lines = load_datasets(infer_file)
+        lines = load_apc_datasets(infer_file)
         samples = []
         for sample in lines:
             if sample:
@@ -135,33 +135,33 @@ class ABSADataset(Dataset):
                     depended_ids = prepared_inputs['depended_ids']
                     no_connect = prepared_inputs['no_connect']
                 data = {
-                    'depend_ids': depend_ids if 'depend_ids' in self.input_colses[self.opt.model] else 0,
+                    'depend_ids': depend_ids if 'depend_ids' in self.opt.model.inputs else 0,
 
-                    'depended_ids': depended_ids if 'depended_ids' in self.input_colses[self.opt.model] else 0,
+                    'depended_ids': depended_ids if 'depended_ids' in self.opt.model.inputs else 0,
 
-                    'no_connect': no_connect if 'no_connect' in self.input_colses[self.opt.model] else 0,
+                    'no_connect': no_connect if 'no_connect' in self.opt.model.inputs else 0,
 
                     'text_raw': text_raw,
 
                     'aspect': aspect,
 
-                    'lca_ids': lca_ids if 'lca_ids' in self.input_colses[self.opt.model] else 0,
+                    'lca_ids': lca_ids if 'lca_ids' in self.opt.model.inputs else 0,
 
-                    'lcf_vec': lcf_vec if 'lcf_vec' in self.input_colses[self.opt.model] else 0,
+                    'lcf_vec': lcf_vec if 'lcf_vec' in self.opt.model.inputs else 0,
 
-                    'dlcf_vec': dlcf_vec if 'dlcf_vec' in self.input_colses[self.opt.model] else 0,
+                    'dlcf_vec': dlcf_vec if 'dlcf_vec' in self.opt.model.inputs else 0,
 
                     'spc_mask_vec': build_spc_mask_vec(self.opt, text_raw_bert_indices)
-                    if 'spc_mask_vec' in self.input_colses[self.opt.model] else 0,
+                    if 'spc_mask_vec' in self.opt.model.inputs else 0,
 
                     'text_bert_indices': text_bert_indices
-                    if 'text_bert_indices' in self.input_colses[self.opt.model] else 0,
+                    if 'text_bert_indices' in self.opt.model.inputs else 0,
 
                     'aspect_bert_indices': aspect_bert_indices
-                    if 'aspect_bert_indices' in self.input_colses[self.opt.model] else 0,
+                    if 'aspect_bert_indices' in self.opt.model.inputs else 0,
 
                     'text_raw_bert_indices': text_raw_bert_indices
-                    if 'text_raw_bert_indices' in self.input_colses[self.opt.model] else 0,
+                    if 'text_raw_bert_indices' in self.opt.model.inputs else 0,
 
                     'polarity': polarity,
                 }

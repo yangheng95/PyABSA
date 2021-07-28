@@ -12,11 +12,11 @@
 
 from pyabsa import train_apc
 
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 
 param_dict = {'model_name': 'bert_base', 'batch_size': 16, 'device': 'cuda', 'num_epoch': 5}
 
-multilingual = ABSADatasets.Multilingual
+multilingual = ABSADatasetList.Multilingual
 save_path = 'state_dict'
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=multilingual,   # file or dir, dataset(s) will be automatically detected

@@ -14,6 +14,8 @@ from ..layers.dynamic_rnn import DynamicLSTM
 
 
 class Cabasc(nn.Module):
+    inputs = ['text_indices', 'aspect_indices', 'left_with_aspect_indices', 'right_with_aspect_indices']
+
     def __init__(self, embedding_matrix, opt, _type='c'):
         super(Cabasc, self).__init__()
         self.opt = opt

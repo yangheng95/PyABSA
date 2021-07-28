@@ -8,6 +8,8 @@ from transformers.models.bert.modeling_bert import BertPooler
 
 
 class BERT_BASE(nn.Module):
+    inputs = ['text_raw_bert_indices']
+
     def __init__(self, bert, opt):
         super(BERT_BASE, self).__init__()
         self.bert = bert

@@ -8,7 +8,7 @@
 
 from pyabsa import load_sentiment_classifier
 
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 
 from pyabsa import APCTrainedModelManager
 
@@ -28,7 +28,7 @@ sent_classifier.infer(chinese_text, print_result=True)
 
 infer_set_path = 'apc_datasets/multilingual'
 
-multilingual = ABSADatasets.Multilingual
+multilingual = ABSADatasetList.Multilingual
 sent_classifier.batch_infer(target_file=multilingual,
                             print_result=True,
                             save_result=True

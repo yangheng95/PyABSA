@@ -12,6 +12,7 @@ from ..layers.squeeze_embedding import SqueezeEmbedding
 
 
 class MemNet(nn.Module):
+    inputs = ['context_indices', 'aspect_indices']
 
     def locationed_memory(self, memory, memory_len):
         # here we just simply calculate the location vector in Model2's manner

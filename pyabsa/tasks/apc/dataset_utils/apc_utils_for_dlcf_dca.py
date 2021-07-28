@@ -16,11 +16,10 @@ from .apc_utils import pad_and_truncate
 from .apc_utils import text_to_sequence
 from .apc_utils import get_syntax_distance
 
-
 SENTIMENT_PADDING = -999
 
-def prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect):
 
+def prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect):
     if hasattr(opt, 'dynamic_truncate') and opt.dynamic_truncate:
         _max_seq_len = opt.max_seq_len - len(aspect.split(' '))
         text_left = text_left.split(' ')
@@ -67,9 +66,8 @@ def prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect):
         return inputs
 
 
-
 def get_dynamic_cdw_vec(opt, max_dist, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None):
-    #the function is used to set dynamic threshold and calculate cdm/cdw for DLCF_DCA_BERT
+    # the function is used to set dynamic threshold and calculate cdm/cdw for DLCF_DCA_BERT
     a = opt.dlcf_a
     if max_dist > 0:
         dynamic_threshold = math.log(max_dist, a) + a - 1
@@ -81,7 +79,7 @@ def get_dynamic_cdw_vec(opt, max_dist, bert_spc_indices, aspect_indices, aspect_
     text_len = np.count_nonzero(bert_spc_indices) - np.count_nonzero(aspect_indices) - 1
     if syntactical_dist is not None:
         for i in range(min(text_len, opt.max_seq_len)):
-            if max_dist >0:
+            if max_dist > 0:
                 if syntactical_dist[i] > dynamic_threshold:
                     w = 1 - syntactical_dist[i] / max_dist
                     cdw_vec[i] = w * np.ones((opt.embed_dim), dtype=np.float32)
@@ -106,8 +104,9 @@ def get_dynamic_cdw_vec(opt, max_dist, bert_spc_indices, aspect_indices, aspect_
             cdw_vec[i] = w * np.ones((opt.embed_dim), dtype=np.float32)
     return cdw_vec
 
+
 def get_dynamic_cdm_vec(opt, max_dist, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None):
-    #the function is used to set dynamic threshold and calculate cdm/cdw for DLCF_DCA_BERT
+    # the function is used to set dynamic threshold and calculate cdm/cdw for DLCF_DCA_BERT
     a = opt.dlcf_a
     if max_dist > 0:
         dynamic_threshold = math.log(max_dist, a) + a - 1
@@ -129,6 +128,7 @@ def get_dynamic_cdm_vec(opt, max_dist, bert_spc_indices, aspect_indices, aspect_
                 cdm_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
     return cdm_vec
 
+
 try:
     nlp = spacy.load("en_core_web_sm")
 except:
@@ -139,6 +139,7 @@ except:
         nlp = spacy.load("en_core_web_sm")
     except:
         raise RuntimeError('Download failed, you can download en_core_web_sm manually.')
+
 
 def calculate_cluster(sentence, aspect, opt):
     terms = [a.lower() for a in aspect.split()]

@@ -1,4 +1,10 @@
-{  "0.8.9.4": {
+{ "0.9.0.0rc0": {
+  "1": "Add BERT baseline models, not available until full test",
+  "2": "Refactor some code to allow add model easier",
+  "3": "Add re-fit feature to train on a pretrained PyABSA model",
+  "4": "Add batch inference (from file) for ATEPC"
+},
+  "0.8.9.4": {
     "1": "Fix a bug while predicting sentiment polarity using ATEPC model, refer to https://github.com/yangheng95/PyABSA/issues/47",
     "2": "Fix the inference of DCLF_DCA model"
   },

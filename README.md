@@ -1,4 +1,4 @@
-# PyABSA - An Open & Efficient for Framework for Aspect-based Sentiment Analysis 
+f# PyABSA - An Open & Efficient for Framework for Aspect-based Sentiment Analysis 
 # [English](README.md) | [中文](README_CN.md)
 
 ![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg) 
@@ -180,7 +180,7 @@ Check the detailed usages in [ATE examples](examples/aspect_term_extraction) dir
 ### 1. Import necessary entries
 ```
 from pyabsa import train_atepc, atepc_config_handler
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 from pyabsa import ATEPCModelList
 ```
 
@@ -198,7 +198,7 @@ atepc_param_dict_chinese['evaluate_begin'] = 5
 ### 4. Configure runtime setting and running training
 ```
 save_path = 'state_dict'
-chinese_sets = ABSADatasets.Chinese
+chinese_sets = ABSADatasetList.Chinese
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=chinese_sets,     # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
@@ -249,7 +249,7 @@ barack obama --> Positive  Real: Neutral (Wrong)
 ```
 from pyabsa import train_apc, apc_config_handler
 from pyabsa import APCModelList
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 ```
 ### 2. Choose a base param_dict
 ```
@@ -272,7 +272,7 @@ check [parameter introduction](examples/common_usages/param_dict_introduction.py
 
 ### 4. Configure runtime setting and running training
 ```
-laptop14 = ABSADatasets.Laptop14  # Here I use the integrated dataset, you can use your dataset instead 
+laptop14 = ABSADatasetList.Laptop14  # Here I use the integrated dataset, you can use your dataset instead 
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english, # ignore this parameter will use defualt setting
                             dataset_path=laptop14,         # datasets will be recurrsively detected in this path
                             model_path_to_save=save_path,  # ignore this parameter to avoid saving model
@@ -283,7 +283,7 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english, # ignore this
 ### 5. Sentiment inference
 ```
 from pyabsa import load_sentiment_classifier
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 from pyabsa.models import APCTrainedModelManager
 
 # 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
@@ -304,7 +304,7 @@ text = 'everything is always cooked to perfection , the [ASP]service[ASP] is exc
 sent_classifier.infer(text, print_result=True)
 
 # batch inferring_tutorials returns the results, save the result if necessary using save_result=True
-inference_sets = ABSADatasets.SemEval
+inference_sets = ABSADatasetList.SemEval
 results = sent_classifier.batch_infer(target_file=inference_sets,
                                       print_result=True,
                                       save_result=True,
@@ -317,7 +317,7 @@ results = sent_classifier.batch_infer(target_file=inference_sets,
 ```
 from pyabsa.research.parameter_search.search_param_for_apc import apc_param_search
 
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 from pyabsa.config.apc_config import apc_config_handler
 
 apc_param_dict_english = apc_config_handler.get_apc_param_dict_english()
@@ -326,7 +326,7 @@ apc_param_dict_english['evaluate_begin'] = 2
 
 param_to_search = ['l2reg', [1e-5, 5e-5, 1e-4, 5e-4, 1e-3]]
 apc_param_search(parameter_dict=apc_param_dict_english,
-                 dataset_path=ABSADatasets.Laptop14,
+                 dataset_path=ABSADatasetList.Laptop14,
                  search_param=param_to_search,
                  auto_evaluate=True,
                  auto_device=True)
@@ -334,7 +334,7 @@ apc_param_search(parameter_dict=apc_param_dict_english,
 
 
 
-# [Datasets](https://github.com/yangheng95/ABSADatasets)
+# [Datasets](https://github.com/yangheng95/ABSADatasetList)
 
 1. Twitter 
 2. Laptop14

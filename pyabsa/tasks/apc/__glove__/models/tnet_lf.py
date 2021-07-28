@@ -35,6 +35,8 @@ class Absolute_Position_Embedding(nn.Module):
 
 
 class TNet_LF(nn.Module):
+    inputs = ['text_indices', 'aspect_indices', 'aspect_boundary']
+
     def __init__(self, embedding_matrix, opt):
         super(TNet_LF, self).__init__()
         print("this is TNet_LF model")

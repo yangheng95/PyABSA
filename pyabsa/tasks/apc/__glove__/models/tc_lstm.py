@@ -10,6 +10,8 @@ from ..layers.dynamic_rnn import DynamicLSTM
 
 
 class TC_LSTM(nn.Module):
+    inputs = ['left_with_aspect_indices', 'right_with_aspect_indices', 'aspect_indices']
+
     def __init__(self, embedding_matrix, opt):
         super(TC_LSTM, self).__init__()
         self.embed = nn.Embedding.from_pretrained(torch.tensor(embedding_matrix, dtype=torch.float))

@@ -10,6 +10,7 @@ import pyabsa.tasks.apc.models
 import pyabsa.tasks.atepc.models
 
 import pyabsa.tasks.apc.__glove__.models
+import pyabsa.tasks.apc.__bert__.models
 
 from pyabsa.utils import find_target_file
 
@@ -59,6 +60,20 @@ class APCModelList:
         MGAN = pyabsa.tasks.apc.__glove__.models.MGAN
         ASGCN = pyabsa.tasks.apc.__glove__.models.ASGCN
 
+    class BERTBaselineAPCModelList:
+        LSTM_BERT = pyabsa.tasks.apc.__bert__.models.LSTM_BERT
+        IAN_BERT = pyabsa.tasks.apc.__bert__.models.IAN_BERT
+        MemNet_BERT = pyabsa.tasks.apc.__bert__.models.MemNet_BERT
+        RAM_BERT = pyabsa.tasks.apc.__bert__.models.RAM_BERT
+        TD_LSTM_BERT = pyabsa.tasks.apc.__bert__.models.TD_LSTM_BERT
+        TC_LSTM_BERT = pyabsa.tasks.apc.__bert__.models.TC_LSTM_BERT
+        Cabasc_BERT = pyabsa.tasks.apc.__bert__.models.Cabasc_BERT
+        ATAE_LSTM_BERT = pyabsa.tasks.apc.__bert__.models.ATAE_LSTM_BERT
+        TNet_LF_BERT = pyabsa.tasks.apc.__bert__.models.TNet_LF_BERT
+        AOA_BERT = pyabsa.tasks.apc.__bert__.models.AOA_BERT
+        MGAN_BERT = pyabsa.tasks.apc.__bert__.models.MGAN_BERT
+        ASGCN_BERT = pyabsa.tasks.apc.__bert__.models.ASGCN_BERT
+
 
 class ATEPCModelList:
     BERT_BASE_ATEPC = pyabsa.tasks.atepc.models.BERT_BASE_ATEPC
@@ -87,7 +102,7 @@ def download_pretrained_model(task='apc', language='chinese', archive_path='', m
         os.mkdir(dest_path)
 
     if find_target_file(dest_path, file_type='.model', find_all=True) \
-        and find_target_file(dest_path, file_type='.config', find_all=True):
+            and find_target_file(dest_path, file_type='.config', find_all=True):
         return dest_path
 
     save_path = os.path.join(dest_path, '{}.zip'.format(model_name))
@@ -211,7 +226,7 @@ def update_checkpoints(task=''):
         # os.remove('./checkpoints.json')
         return t_checkpoint_map if task else current_version_map
     except Exception as e:
-        print('\nFailed to query checkpoints, try manually download the checkpoints from: \n'
+        print('\nFailed to query checkpoints (may caused by connection failure), try manually download the checkpoints from: \n'
               '[1]\tGoogle Drive\t: https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC\n'
               '[2]\tBaidu NetDisk\t: https://pan.baidu.com/s/1K8aYQ4EIrPm1GjQv_mnxEg (Access Code: absa)\n')
         sys.exit(-1)

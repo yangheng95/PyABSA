@@ -13,7 +13,7 @@
 
 from pyabsa import train_apc, apc_config_handler
 
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 
 from pyabsa.model_utils import APCModelList
 
@@ -31,28 +31,28 @@ apc_param_dict_english['l2reg'] = 0.0001
 apc_param_dict_english['dynamic_truncate'] = True
 apc_param_dict_english['srd_alignment'] = True
 
-Laptop14 = ABSADatasets.Laptop14
+Laptop14 = ABSADatasetList.Laptop14
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,  # set param_dict=None to use default model
                             dataset_path=Laptop14,  # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
                             auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                             auto_device=True  # automatic choose CUDA or CPU
                             )
-Restaurant14 = ABSADatasets.Restaurant14
+Restaurant14 = ABSADatasetList.Restaurant14
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,  # set param_dict=None to use default model
                             dataset_path=Restaurant14,  # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
                             auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
                             auto_device=True  # automatic choose CUDA or CPU
                             )
-Restaurant15 = ABSADatasets.Restaurant15
+Restaurant15 = ABSADatasetList.Restaurant15
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,     # set param_dict=None to use default model
                             dataset_path=Restaurant15,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
                             auto_evaluate=True,            # evaluate model while training_tutorials if test set is available
                             auto_device=True               # automatic choose CUDA or CPU
                             )
-Restaurant16 = ABSADatasets.Restaurant16
+Restaurant16 = ABSADatasetList.Restaurant16
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,     # set param_dict=None to use default model
                             dataset_path=Restaurant16,    # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model

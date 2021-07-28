@@ -7,7 +7,7 @@
 # Usage: Evaluate on given text or inference dataset
 
 from pyabsa import load_sentiment_classifier
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 from pyabsa import APCTrainedModelManager, update_checkpoints
 
 # Assume the sent_classifier is loaded or obtained using train function
@@ -15,7 +15,6 @@ from pyabsa import APCTrainedModelManager, update_checkpoints
 sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
 
 model_path = APCTrainedModelManager.get_checkpoint(checkpoint_name='English')
-model_path = 'state_dict/dlcf_dca_bert_cdw_acc_53.45_f1_23.22'
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
                                             auto_device=True,  # Use CUDA if available
                                             sentiment_map=sentiment_map
@@ -25,7 +24,7 @@ text = 'everything is always cooked to perfection , the [ASP]service[ASP] is exc
 sent_classifier.infer(text, print_result=True)
 
 # batch inferring_tutorials returns the results, save the result if necessary using save_result=True
-inference_sets = ABSADatasets.SemEval
+inference_sets = ABSADatasetList.SemEval
 results = sent_classifier.batch_infer(target_file=inference_sets,
                                       print_result=True,
                                       save_result=True,

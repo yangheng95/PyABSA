@@ -13,6 +13,8 @@ from pyabsa.network.sa_encoder import Encoder
 
 
 class LCA_BERT(nn.Module):
+    inputs = ['text_bert_indices', 'text_raw_bert_indices', 'lca_ids', 'lcf_vec']
+
     def __init__(self, bert, opt):
         super(LCA_BERT, self).__init__()
         self.bert4global = bert

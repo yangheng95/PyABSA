@@ -14,6 +14,7 @@ from transformers import BertModel, AutoTokenizer
 
 from pyabsa.tasks.apc.dataset_utils.data_utils_for_inferring import ABSADataset
 from pyabsa.tasks.apc.__glove__.dataset_utils.data_utils_for_inferring import GloVeABSADataset
+from pyabsa.tasks.apc.__bert__.dataset_utils.data_utils_for_inferring import BERTBaselineABSADataset
 
 from pyabsa.tasks.apc.dataset_utils.apc_utils import SENTIMENT_PADDING
 
@@ -71,19 +72,23 @@ class SentimentClassifier:
             except Exception as e:
                 raise KeyError('Fail to load the model from {} \nplease check the path, '
                                'or maybe the checkpoint is not compatible with this version.'.format(model_arg),
-                              )
+                               )
 
             if not hasattr(APCModelList, self.model.__class__.__name__) \
-                    and not hasattr(APCModelList.GloVeAPCModelList, self.model.__class__.__name__):
+                    and not hasattr(APCModelList.GloVeAPCModelList, self.model.__class__.__name__) \
+                    and not hasattr(APCModelList.BERTBaselineAPCModelList, self.model.__class__.__name__):
                 raise KeyError('The checkpoint you are loading is not from APC model.')
 
-        if not hasattr(APCModelList.GloVeAPCModelList, self.opt.model.__name__):
+        if hasattr(APCModelList, self.opt.model.__name__):
             self.dataset = ABSADataset(tokenizer=self.tokenizer, opt=self.opt)
-            self.opt.inputs_cols = self.dataset.input_colses[self.opt.model]
 
-        else:
+        elif hasattr(APCModelList.BERTBaselineAPCModelList, self.opt.model.__name__):
+            self.dataset = BERTBaselineABSADataset(tokenizer=self.tokenizer, opt=self.opt)
+
+        elif hasattr(APCModelList.GloVeAPCModelList, self.opt.model.__name__):
             self.dataset = GloVeABSADataset(tokenizer=self.tokenizer, opt=self.opt)
-            self.opt.inputs_cols = self.dataset.glove_input_colses[self.opt.model_name]
+
+        self.opt.inputs_cols = self.model.inputs
 
         self.infer_dataloader = None
 
@@ -142,12 +147,13 @@ class SentimentClassifier:
             self.clear_input_samples()
 
         if os.path.isdir(target_file):
-            save_path = os.path.join(target_file, 'inference.results')
-            target_file = find_target_file(target_file, 'infer', exclude_key='result', find_all=True)
+
+            target_file = find_target_file(target_file, 'infer', exclude_key='.result', find_all=True)
             if not target_file:
                 raise FileNotFoundError('Can not find inference dataset!')
-        else:
-            save_path = target_file + '.apc.results'
+
+        save_path = os.path.join(os.getcwd(), 'apc_inference.result.txt')
+
         target_file = detect_infer_dataset(target_file, task='apc_benchmark')
         self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=1, shuffle=False)

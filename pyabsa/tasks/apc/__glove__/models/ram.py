@@ -11,6 +11,8 @@ from ..layers.dynamic_rnn import DynamicLSTM
 
 
 class RAM(nn.Module):
+    inputs = ['text_indices', 'aspect_indices', 'left_indices']
+
     def locationed_memory(self, memory, memory_len, left_len, aspect_len):
         batch_size = memory.shape[0]
         seq_len = memory.shape[1]

@@ -12,7 +12,7 @@
 
 from pyabsa import train_atepc, atepc_config_handler
 
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 
 from pyabsa import ATEPCModelList
 
@@ -23,7 +23,7 @@ param_dict['model'] = ATEPCModelList.LCF_ATEPC
 param_dict['evaluate_begin'] = 5
 param_dict['num_epoch'] = 6
 param_dict['log_step'] = 100
-semeval = ABSADatasets.SemEval
+semeval = ABSADatasetList.SemEval
 aspect_extractor = train_atepc(parameter_dict=param_dict,      # set param_dict=None to use default model
                                dataset_path=semeval,           # file or dir, dataset(s) will be automatically detected
                                model_path_to_save=save_path,   # set model_path_to_save=None to avoid save model

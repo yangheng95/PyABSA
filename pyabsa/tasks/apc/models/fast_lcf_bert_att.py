@@ -11,7 +11,10 @@ from transformers.models.bert.modeling_bert import BertPooler
 from pyabsa.network.sa_encoder import Encoder
 import torch.nn.functional as F
 
+
 class FAST_LCF_BERT_ATT(nn.Module):
+    inputs = ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec']
+
     def __init__(self, bert, opt):
         super(FAST_LCF_BERT_ATT, self).__init__()
         self.bert4global = bert

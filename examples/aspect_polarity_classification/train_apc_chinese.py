@@ -12,7 +12,7 @@
 
 from pyabsa import train_apc, apc_config_handler
 
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 
 from pyabsa import APCModelList
 
@@ -22,7 +22,7 @@ param_dict['dropout'] = 0.5
 param_dict['l2reg'] = 0.0001
 param_dict['model'] = APCModelList.FAST_LCF_BERT
 save_path = 'state_dict'
-chinese_sets = ABSADatasets.Chinese
+chinese_sets = ABSADatasetList.Chinese
 sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
                             dataset_path=chinese_sets,     # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model

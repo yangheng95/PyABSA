@@ -13,6 +13,8 @@ from ..layers.squeeze_embedding import SqueezeEmbedding
 
 
 class ATAE_LSTM(nn.Module):
+    inputs = ['text_indices', 'aspect_indices']
+
     def __init__(self, embedding_matrix, opt):
         super(ATAE_LSTM, self).__init__()
         self.opt = opt

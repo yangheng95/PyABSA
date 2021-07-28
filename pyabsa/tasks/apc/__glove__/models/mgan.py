@@ -61,6 +61,8 @@ class AlignmentMatrix(nn.Module):
 
 
 class MGAN(nn.Module):
+    inputs = ['text_indices', 'aspect_indices', 'left_indices']
+
     def __init__(self, embedding_matrix, opt):
         super(MGAN, self).__init__()
         self.opt = opt

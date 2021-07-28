@@ -24,6 +24,7 @@ from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_exam
 from pyabsa.utils.logger import get_logger
 from pyabsa.utils.pyabsa_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args
+from pyabsa.utils.pyabsa_utils import find_target_file
 
 
 class Instructor:
@@ -127,7 +128,7 @@ class Instructor:
                                                              weight_decay=self.opt.l2reg)
         print_args(self.opt, self.logger)
 
-    def train(self):
+    def run(self):
 
         self.logger.info("***** Running training for Aspect Term Extraction *****")
         self.logger.info("  Num examples = %d", len(self.train_examples))
@@ -148,7 +149,7 @@ class Instructor:
             nb_tr_examples, nb_tr_steps = 0, 0
             iterator = tqdm.tqdm(self.train_dataloader)
             for step, batch in enumerate(iterator):
-                self.model.train()
+                self.model.run()
                 batch = tuple(t.to(self.opt.device) for t in batch)
                 input_ids_spc, segment_ids, input_mask, label_ids, polarity, \
                 valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
@@ -345,13 +346,21 @@ class Instructor:
         return apc_result, ate_result
 
 
-def train4atepc(opt, logger):
+def train4atepc(opt, from_checkpoint_path, logger):
     # in case of handling ConnectionError exception
     trainer = None
     while not trainer:
         try:
             trainer = Instructor(opt, logger)
+            if from_checkpoint_path:
+                model_path = find_target_file(from_checkpoint_path, '.model', find_all=True)
+                if from_checkpoint_path:
+                    trainer.model = torch.load(model_path[0])
+                    trainer.model.opt = opt
+                    trainer.model.to(opt.device)
+                else:
+                    print('No checkpoint found in {}'.format(from_checkpoint_path))
         except ValueError as e:
             print('Seems to be ConnectionError, retry in {} seconds...'.format(60))
             time.sleep(60)
-    return trainer.train()
+    return trainer.run()

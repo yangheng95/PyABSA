@@ -12,7 +12,7 @@
 from pyabsa import train_apc, apc_config_handler
 
 from pyabsa.model_utils import APCModelList
-from pyabsa import ABSADatasets
+from pyabsa import ABSADatasetList
 
 save_path = 'state_dict'
 apc_param_dict_english = apc_config_handler.get_apc_param_dict_english()
@@ -29,7 +29,7 @@ apc_param_dict_english['seed'] = {1, 2, 3}
 apc_param_dict_english['cross_validate_fold'] = -1  # disable cross_validate
 #apc_param_dict_english['use_syntax_based_SRD'] = True
 
-laptop14 = ABSADatasets.Laptop14
+laptop14 = ABSADatasetList.Laptop14
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=laptop14,     # train set and test set will be automatically detected
@@ -37,7 +37,7 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             auto_evaluate=True,            # evaluate model if test set is available
                             auto_device=True               # automatic choose CUDA or CPU
                             )
-restaurant14 = ABSADatasets.Restaurant14
+restaurant14 = ABSADatasetList.Restaurant14
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=restaurant14,     # train set and test set will be automatically detected
@@ -45,7 +45,7 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             auto_evaluate=True,            # evaluate model if test set is available
                             auto_device=True               # automatic choose CUDA or CPU
                             )
-restaurant15 = ABSADatasets.Restaurant15
+restaurant15 = ABSADatasetList.Restaurant15
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=restaurant15,     # train set and test set will be automatically detected
@@ -53,7 +53,7 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             auto_evaluate=True,            # evaluate model if test set is available
                             auto_device=True               # automatic choose CUDA or CPU
                             )
-restaurant16 = ABSADatasets.Restaurant16
+restaurant16 = ABSADatasetList.Restaurant16
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=restaurant16,     # train set and test set will be automatically detected
@@ -63,7 +63,7 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             )
 
 apc_param_dict_english['lcf'] = 'cdm'
-laptop14 = ABSADatasets.Laptop14
+laptop14 = ABSADatasetList.Laptop14
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=laptop14,     # train set and test set will be automatically detected
@@ -71,7 +71,7 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             auto_evaluate=True,            # evaluate model if test set is available
                             auto_device=True               # automatic choose CUDA or CPU
                             )
-restaurant14 = ABSADatasets.Restaurant14
+restaurant14 = ABSADatasetList.Restaurant14
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=restaurant14,     # train set and test set will be automatically detected
@@ -79,7 +79,7 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             auto_evaluate=True,            # evaluate model if test set is available
                             auto_device=True               # automatic choose CUDA or CPU
                             )
-restaurant15 = ABSADatasets.Restaurant15
+restaurant15 = ABSADatasetList.Restaurant15
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=restaurant15,     # train set and test set will be automatically detected
@@ -87,7 +87,7 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             auto_evaluate=True,            # evaluate model if test set is available
                             auto_device=True               # automatic choose CUDA or CPU
                             )
-restaurant16 = ABSADatasets.Restaurant16
+restaurant16 = ABSADatasetList.Restaurant16
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,
                             # set param_dict=None will use the apc_param_dict as well
                             dataset_path=restaurant16,     # train set and test set will be automatically detected
