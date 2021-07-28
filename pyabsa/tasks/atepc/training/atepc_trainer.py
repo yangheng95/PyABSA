@@ -149,7 +149,7 @@ class Instructor:
             nb_tr_examples, nb_tr_steps = 0, 0
             iterator = tqdm.tqdm(self.train_dataloader)
             for step, batch in enumerate(iterator):
-                self.model.run()
+                self.model.train()
                 batch = tuple(t.to(self.opt.device) for t in batch)
                 input_ids_spc, segment_ids, input_mask, label_ids, polarity, \
                 valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
