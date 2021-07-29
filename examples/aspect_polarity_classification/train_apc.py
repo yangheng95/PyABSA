@@ -11,7 +11,7 @@
 ########################################################################################################################
 from pyabsa import train_apc, apc_config_handler
 
-from pyabsa.model_utils import APCModelList
+from pyabsa import APCModelList
 from pyabsa import ABSADatasetList
 
 save_path = 'state_dict'

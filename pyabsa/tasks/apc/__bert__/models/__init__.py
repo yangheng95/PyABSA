@@ -19,5 +19,5 @@ from .td_lstm_bert import TD_LSTM_BERT
 from .mgan_bert import MGAN_BERT
 from .tnet_lf_bert import TNet_LF_BERT
 
-print('The BERT-baseline models are derived base on replacing the GloVe embedding using BERT. '
-      'And the BERT-baseline models are under testing.')
+# print('The BERT-baseline models are derived base on replacing the GloVe embedding using BERT. '
+#       'And the BERT-baseline models are under testing.')

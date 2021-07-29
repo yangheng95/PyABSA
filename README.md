@@ -22,7 +22,8 @@
 > PyTorch Implementations (CPU & CUDA supported).
 
 **PyABSA is an active project and under development, if you have the interest to integrate your models or datasets into PyABSA, 
-please do feel free to contact us for necessary support.**
+please do feel free to contact us for necessary support.
+Any message would receive response at least in a day.**
 
 # Preface
 
@@ -74,10 +75,10 @@ or [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_template_atepc.py) model template.
 
 ## ATEPC
 1. [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_atepc.py) 
-2. [LCF-ATEPC-LARGE](pyabsa/tasks/atepc/models/lcf_atepc_large.py) 
+2. [LCF-ATEPC-LARGE](pyabsa/tasks/atepc/models/lcf_atepc_large.py) (Dual BERT)
 2. [FAST-LCF-ATEPC](pyabsa/tasks/atepc/models/fast_lcf_atepc.py) 
 3. [LCFS-ATEPC](pyabsa/tasks/atepc/models/lcfs_atepc.py) 
-4. [LCFS-ATEPC-LARGE](pyabsa/tasks/atepc/models/lcfs_atepc_large.py) 
+4. [LCFS-ATEPC-LARGE](pyabsa/tasks/atepc/models/lcfs_atepc_large.py) (Dual BERT)
 5. [FAST-LCFS-ATEPC](pyabsa/tasks/atepc/models/fast_lcfs_atepc.py) 
 6. [BERT-BASE](pyabsa/tasks/atepc/models/bert_base_atepc.py) 
 
@@ -112,7 +113,12 @@ or [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_template_atepc.py) model template.
 23. [TD-LSTM](pyabsa/tasks/apc/__glove__/models/tc_lstm.py)
 24. [TNet_LF](pyabsa/tasks/apc/__glove__/models/tnet_lf.py)
 
-
+### You can use $glove model name$_BERT to use the BERT version
+e.g., 
+```
+from pyabsa import APCModelList
+ASGCN_BERT = APCModelList.BERTBaselineAPCModelList.ASGCN_BERT
+```
 ## Brief Performance Report
 
 |      Models          | Laptop14 (acc) |  Rest14 (acc) | Rest15 (acc) | Rest16 (acc) |
