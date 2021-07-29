@@ -118,11 +118,11 @@ def download_pretrained_model(task='apc', language='chinese', archive_path='', m
     return dest_path
 
 
-class APCTrainedModelManager:
+class APCCheckpointManager:
     @staticmethod
     def get_checkpoint(checkpoint_name: str = 'Chinese'):
         apc_checkpoint = update_checkpoints('APC')
-        if checkpoint_name.lower() in apc_checkpoint:
+        if checkpoint_name.lower() in [k.lower() for k in apc_checkpoint.keys()]:
             print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint_name), 'green'))
         else:
             print(colored(
@@ -134,12 +134,17 @@ class APCTrainedModelManager:
                                          archive_path=apc_checkpoint[checkpoint_name.lower()]['id'])
 
 
-class ATEPCTrainedModelManager:
+class APCTrainedModelManager(APCCheckpointManager):
+    def __init__(self):
+        pass
+
+
+class ATEPCCheckpointManager:
 
     @staticmethod
     def get_checkpoint(checkpoint_name: str = 'Chinese'):
         atepc_checkpoint = update_checkpoints('ATEPC')
-        if checkpoint_name.lower() in atepc_checkpoint:
+        if checkpoint_name.lower() in [k.lower() for k in atepc_checkpoint.keys()]:
             print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint_name), 'green'))
         else:
             print(colored('Checkpoint:{} is not found.'.format(checkpoint_name), 'red'))
@@ -147,6 +152,11 @@ class ATEPCTrainedModelManager:
         return download_pretrained_model(task='atepc',
                                          language=checkpoint_name.lower(),
                                          archive_path=atepc_checkpoint[checkpoint_name.lower()]['id'])
+
+
+class ATEPCTrainedModelManager(ATEPCCheckpointManager):
+    def __init__(self):
+        pass
 
 
 def compare_version(version1, version2):

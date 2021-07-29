@@ -58,7 +58,7 @@ def prepare_input_for_atepc(opt, tokenizer, text_left, text_right, aspect):
     aspect_begin = len(tokenizer.tokenize(bos_token + ' ' + text_left))
 
     if 'lcfs' in opt.model_name or opt.use_syntax_based_SRD:
-        syntactical_dist = get_syntax_distance(text_raw, aspect, tokenizer, opt)
+        syntactical_dist, _ = get_syntax_distance(text_raw, aspect, tokenizer, opt)
     else:
         syntactical_dist = None
 

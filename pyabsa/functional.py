@@ -83,7 +83,7 @@ def init_config(config_dict, base_config_dict, auto_device=True):
 
 def train_apc(parameter_dict=None,
               dataset_path=None,
-              from_checkpoint_path='',
+              from_checkpoint_path=None,
               model_path_to_save=None,
               auto_evaluate=True,
               auto_device=True):
@@ -135,7 +135,7 @@ def load_sentiment_classifier(trained_model_path=None,
 
 def train_atepc(parameter_dict=None,
                 dataset_path=None,
-                from_checkpoint_path='',
+                from_checkpoint_path=None,
                 model_path_to_save=None,
                 auto_evaluate=True,
                 auto_device=True):

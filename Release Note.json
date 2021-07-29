@@ -1,7 +1,12 @@
-{  "0.9.0.1": {
-    "1": "optimize inference printing",
+{ "0.9.1.0": {
+    "1": "Add model type check before retraining",
+    "2": "Fix syntax distance measure for ATEPC models"
+  },
+  "0.9.0.6": {
+    "1": "Optimize inference printing",
     "2": "Set default encoding=utf-8",
-    "3": "Fix graph assigning for ASGCN"
+    "3": "Fix graph assigning for ASGCN",
+    "4": "Fix a problem may causing failure while search inference datasets"
   },
   "0.9.0.0": {
     "1": "Add BERT baseline models, not available until full test",

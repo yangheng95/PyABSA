@@ -201,12 +201,12 @@ sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None
 ### 5. 方面词抽取 & 情感推断
 ```
 from pyabsa import load_aspect_extractor
-from pyabsa import ATEPCTrainedModelManager
+from pyabsa import ATEPCCheckpointManager
 
 examples = ['相比较原系列锐度高了不少这一点好与不好大家有争议',
             '这款手机的大小真的很薄，但是颜色不太好看， 总体上我很满意啦。'
             ]
-model_path = ATEPCTrainedModelManager.get_checkpoint(checkpoint_name='Chinese')
+model_path = ATEPCCheckpointManager.get_checkpoint(checkpoint_name='Chinese')
 
 sentiment_map = {0: 'Bad', 1: 'Good', -999: ''}
 aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
@@ -275,14 +275,14 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english, # ignore this
 ```
 from pyabsa import load_sentiment_classifier
 from pyabsa import ABSADatasetList
-from pyabsa.models import APCTrainedModelManager
+from pyabsa.models import APCCheckpointManager
 
 # 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
 sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
 
 # 在没有资源来训练模型的情况下，我在这里提供了一些预先训练的模型，
 # 您可以训练模型并指定模型路径来进行推断 
-model_path = APCTrainedModelManager.get_checkpoint(checkpoint_name='English')
+model_path = APCCheckpointManager.get_checkpoint(checkpoint_name='English')
 
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
                                             auto_device=True,  # Use CUDA if available
