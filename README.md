@@ -100,18 +100,18 @@ or [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_template_atepc.py) model template.
 '*' Copyrights Reserved, please wait for the publishing of our paper to get the introduction of them in detail. 
 
 ### GloVe-based APC models
-13. [AOA](pyabsa/tasks/apc/__glove__/models/aoa.py)
-14. [ASGCN](pyabsa/tasks/apc/__glove__/models/asgcn.py)
-15. [ATAE-LSTM](pyabsa/tasks/apc/__glove__/models/atae_lstm.py)
-16. [Cabasc](pyabsa/tasks/apc/__glove__/models/cabasc.py)
-17. [IAN](pyabsa/tasks/apc/__glove__/models/ian.py)
-18. [LSTM](pyabsa/tasks/apc/__glove__/models/lstm.py)
-19. [MemNet](pyabsa/tasks/apc/__glove__/models/memnet.py)
-20. [MGAN](pyabsa/tasks/apc/__glove__/models/mgan.py)
-21. [RAM](pyabsa/tasks/apc/__glove__/models/ram.py)
-22. [TD-LSTM](pyabsa/tasks/apc/__glove__/models/td_lstm.py)
-23. [TD-LSTM](pyabsa/tasks/apc/__glove__/models/tc_lstm.py)
-24. [TNet_LF](pyabsa/tasks/apc/__glove__/models/tnet_lf.py)
+13. [AOA](pyabsa/tasks/apc/__glove__/models/aoa.py) (AOA_BERT)
+14. [ASGCN](pyabsa/tasks/apc/__glove__/models/asgcn.py) (ASGCN_BERT)
+15. [ATAE-LSTM](pyabsa/tasks/apc/__glove__/models/atae_lstm.py) (ATAE_LSTM_BERT)
+16. [Cabasc](pyabsa/tasks/apc/__glove__/models/cabasc.py) (Cabasc_BERT)
+17. [IAN](pyabsa/tasks/apc/__glove__/models/ian.py) (IAN_BERT)
+18. [LSTM](pyabsa/tasks/apc/__glove__/models/lstm.py) (LSTM_BERT)
+19. [MemNet](pyabsa/tasks/apc/__glove__/models/memnet.py) (MemNet_BERT)
+20. [MGAN](pyabsa/tasks/apc/__glove__/models/mgan.py) (MGAN_BERT)
+21. [RAM](pyabsa/tasks/apc/__glove__/models/ram.py) (RAM_BERT)
+22. [TD-LSTM](pyabsa/tasks/apc/__glove__/models/td_lstm.py) (TD_LSTM_BERT)
+23. [TD-LSTM](pyabsa/tasks/apc/__glove__/models/tc_lstm.py) (TC_LSTM_BERT)
+24. [TNet_LF](pyabsa/tasks/apc/__glove__/models/tnet_lf.py) (TNet_LF_BERT)
 
 ### You can use $glove model name$_BERT to use the BERT version
 e.g., 
