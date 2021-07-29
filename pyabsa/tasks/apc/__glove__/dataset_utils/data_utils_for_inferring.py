@@ -141,6 +141,8 @@ class GloVeABSADataset(Dataset):
                 # check for given polarity
                 if '!sent!' in text:
                     text, polarity = text.split('!sent!')[0].strip(), text.split('!sent!')[1].strip()
+                    text = text.replace('[PADDING]', '')
+
                     polarity = int(polarity) if polarity else SENTIMENT_PADDING
                     if polarity < 0:
                         raise RuntimeError(
@@ -167,8 +169,8 @@ class GloVeABSADataset(Dataset):
 
                 idx2graph = dependency_adj_matrix(text_left + ' ' + aspect + ' ' + text_right)
                 dependency_graph = np.pad(idx2graph,
-                                          ((0, max(0, self.tokenizer.max_seq_len - idx2graph.shape[0])),
-                                           (0, max(0, self.tokenizer.max_seq_len - idx2graph.shape[0]))),
+                                          ((0, max(0, self.opt.max_seq_len - idx2graph.shape[0])),
+                                           (0, max(0, self.opt.max_seq_len - idx2graph.shape[0]))),
                                           'constant')
                 dependency_graph = dependency_graph[:, range(0, self.opt.max_seq_len)]
                 dependency_graph = dependency_graph[range(0, self.opt.max_seq_len), :]

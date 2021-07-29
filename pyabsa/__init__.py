@@ -5,8 +5,10 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-__version__ = '0.9.0.0'
+__version__ = '0.9.0.1'
 __name__ = 'pyabsa'
+
+import os
 
 from .functional import train_apc, load_sentiment_classifier
 from .functional import train_atepc, load_aspect_extractor
@@ -41,3 +43,5 @@ if check_result:
     print('You can update via pip: {}'.format(colored('pip install -U {}'.format(__name__), 'green')))
     # print(colored('The version ends with letter-postfix is a test version,'
     #               ' please always update if you are using a test version.', 'red'))
+
+os.environ['PYTHONIOENCODING'] = 'utf-8'

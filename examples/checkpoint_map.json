@@ -31,6 +31,12 @@
         "comment": "origin tag: slide_lcfs_bert_cdw_acc_87.5_f1_80.35.zip",
         "version": "0.8.9.3rc0"
       },
+      "TNet_LF": {
+        "id": "https://drive.google.com/file/d/16hyzjBpw85G0Kgoz6d80e94Q0vZjwqVZ/view?usp=sharing",
+        "description": "trained on Restaurant14, RTX2080",
+        "comment": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
+        "version": "0.9.0.0"
+      },
       "HELP-WANTED": {
         "id": "",
         "description": "PLEASE NOTE THAT THIS IS NOT A REAL CHECKPOINT!",

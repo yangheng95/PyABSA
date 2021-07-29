@@ -70,7 +70,7 @@ class SentimentClassifier:
                 self._log_write_args()
 
             except Exception as e:
-                raise KeyError('Fail to load the model from {} \nplease check the path, '
+                raise KeyError('Fail to load the model from {}! the checkpoint is broken, '
                                'or maybe the checkpoint is not compatible with this version.'.format(model_arg),
                                )
 
