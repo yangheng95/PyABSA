@@ -26,6 +26,7 @@ from pyabsa.model_utils import ATEPCModelList
 from pyabsa.tasks.atepc.dataset_utils.atepc_utils import load_atepc_datasets
 from pyabsa.dataset_utils import detect_infer_dataset
 
+
 class AspectExtractor:
 
     def __init__(self, model_arg=None, sentiment_map=None):
@@ -154,7 +155,7 @@ class AspectExtractor:
                 results.append({'extraction_res': extraction_res, 'polarity_res': polarity_res})
                 if fout:
                     fout.write('extraction_res:{} polarity_res:{}\n'.format(extraction_res, polarity_res))
-
+            print('The results of aspect term extraction have been saved in {}'.format(save_path))
             return results
 
     # Temporal code, pending optimization

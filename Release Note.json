@@ -1,12 +1,13 @@
-{ "0.9.0.0rc2": {
-  "1": "Add BERT baseline models, not available until full test",
-  "2": "Refactor some code to allow add model easier",
-  "3": "Add post-training feature: to train on a pretrained PyABSA model",
-  "4": "Add batch inference (from file) for ATEPC"
-},
+{
+  "0.9.0.0": {
+    "1": "Add BERT baseline models, not available until full test",
+    "2": "Refactor some code to allow add model easier",
+    "3": "Add post-training feature: to train based on a pretrained PyABSA model",
+    "4": "Add batch inference (from file) for ATEPC",
+    "5": "Fix a bug while predicting sentiment polarity using ATEPC model, refer to https://github.com/yangheng95/PyABSA/issues/47"
+  },
   "0.8.9.4": {
-    "1": "Fix a bug while predicting sentiment polarity using ATEPC model, refer to https://github.com/yangheng95/PyABSA/issues/47",
-    "2": "Fix the inference of DCLF_DCA model"
+    "1": "Fix the inference of DCLF_DCA model"
   },
   "0.8.9.3": {
     "1": "Refactor some code"
@@ -15,7 +16,7 @@
     "1": "Add evaluation for glove-based APC models",
     "2": "fix some problems"
   },
- "0.8.9.3rc0": {
+  "0.8.9.3rc0": {
     "1": "Add DLCF_DCA_BERT models"
   },
   "0.8.9.2": {
