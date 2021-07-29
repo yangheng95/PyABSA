@@ -6,12 +6,14 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 from pyabsa import train_atepc, atepc_config_handler
-from pyabsa import ATEPCTrainedModelManager
+from pyabsa import ATEPCCheckpointManager
 from pyabsa import ABSADatasetList
+from pyabsa import ATEPCModelList
 
 param_dict = atepc_config_handler.get_atepc_param_dict_english()
-checkpoint_path = ATEPCTrainedModelManager.get_checkpoint(checkpoint_name='english')
+checkpoint_path = ATEPCCheckpointManager.get_checkpoint(checkpoint_name='english')
 
+param_dict['model'] = ATEPCModelList.LCFS_ATEPC
 param_dict['evaluate_begin'] = 0
 save_path = 'state_dict'
 SemEval = ABSADatasetList.Laptop14

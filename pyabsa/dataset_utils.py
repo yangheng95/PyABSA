@@ -37,6 +37,7 @@ class ABSADatasetList:
     # assembled dataset
     Chinese = 'Chinese'
     SemEval = 'SemEval'
+    Restaurant = 'Restaurant'
     Multilingual = 'Multilingual'
 
     APC_Datasets = 'APC_Datasets'
@@ -44,7 +45,8 @@ class ABSADatasetList:
 
 
 class ABSADatasets(ABSADatasetList):
-    pass
+    def __init__(self):
+        pass
 
 
 def detect_dataset(dataset_path, auto_evaluate=True, task='apc_benchmark'):

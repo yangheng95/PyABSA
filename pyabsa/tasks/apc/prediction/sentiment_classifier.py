@@ -6,6 +6,7 @@
 import os
 import pickle
 import random
+import sys
 
 import numpy
 import torch
@@ -146,15 +147,12 @@ class SentimentClassifier:
         if clear_input_samples:
             self.clear_input_samples()
 
-        if os.path.isdir(target_file):
-
-            target_file = find_target_file(target_file, 'infer', exclude_key='.result', find_all=True)
-            if not target_file:
-                raise FileNotFoundError('Can not find inference dataset!')
-
         save_path = os.path.join(os.getcwd(), 'apc_inference.result.txt')
 
         target_file = detect_infer_dataset(target_file, task='apc_benchmark')
+        if not target_file:
+            raise FileNotFoundError('Can not find inference dataset!')
+
         self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=1, shuffle=False)
         return self._infer(save_path=save_path if save_result else None, print_result=print_result)
@@ -202,6 +200,7 @@ class SentimentClassifier:
                 sent = int(t_probs.argmax(axis=-1))
                 real_sent = int(sample['polarity'])
                 aspect = sample['aspect'][0]
+                text_raw = sample['text_raw'][0]
 
                 result['text'] = sample['text_raw'][0]
                 result['aspect'] = sample['aspect'][0]
@@ -209,7 +208,6 @@ class SentimentClassifier:
                 result['ref_sentiment'] = sentiment_map[real_sent]
                 result['infer result'] = correct[sent == real_sent]
                 results.append(result)
-                text_raw = sample['text_raw'][0]
                 if real_sent == -999:
                     colored_pred_info = '{} --> {}'.format(aspect, sentiment_map[sent])
                 else:
@@ -235,11 +233,13 @@ class SentimentClassifier:
                                                                       )
                         fout.write(pred_info + '\n')
                 except:
-                    raise IOError('Can not save result!')
-                if print_result:
-                    print(text_raw)
-                    print(colored_pred_info)
-
+                    print('Can not save result: {}'.format(text_raw))
+                try:
+                    if print_result:
+                        print(text_raw)
+                        print(colored_pred_info)
+                except UnicodeError as e:
+                    print(colored('Encoding Error, you should use UTF8 encoding, e.g., use: os.environ["PYTHONIOENCODING"]="UTF8"'))
             print('Total samples:{}'.format(n_total))
             print('Labeled samples:{}'.format(n_labeled))
             print('Prediction Accuracy:{}%'.format(100 * n_correct / n_labeled if n_labeled else 'N.A.'))

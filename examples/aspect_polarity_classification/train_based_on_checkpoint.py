@@ -11,7 +11,7 @@ from pyabsa import train_apc, apc_config_handler
 from pyabsa import ABSADatasetList
 
 from pyabsa.model_utils import APCModelList
-from pyabsa import APCTrainedModelManager
+from pyabsa import APCCheckpointManager
 save_path = 'state_dict'
 apc_param_dict_english = apc_config_handler.get_apc_param_dict_english()
 apc_param_dict_english['model'] = APCModelList.SLIDE_LCF_BERT
@@ -24,7 +24,7 @@ apc_param_dict_english['l2reg'] = 0.0001
 apc_param_dict_english['dynamic_truncate'] = True
 apc_param_dict_english['srd_alignment'] = True
 
-checkpoint_path = APCTrainedModelManager.get_checkpoint('english')
+checkpoint_path = APCCheckpointManager.get_checkpoint('english')
 SemEval = ABSADatasetList.SemEval
 
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english,     # set param_dict=None to use default model

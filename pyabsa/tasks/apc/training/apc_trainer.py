@@ -7,6 +7,7 @@
 
 
 import os
+import pickle
 import random
 
 import numpy
@@ -15,6 +16,7 @@ import torch.nn as nn
 import shutil
 import time
 
+from termcolor import colored
 from tqdm import tqdm
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, AutoModel
@@ -497,13 +499,21 @@ def train4apc(opt, from_checkpoint_path, logger):
             trainer = Instructor(opt, logger)
             if from_checkpoint_path:
                 model_path = find_target_file(from_checkpoint_path, '.model', find_all=True)
+                config_path = find_target_file(from_checkpoint_path, '.config', find_all=True)
+
                 if from_checkpoint_path:
-                    trainer.model = torch.load(model_path[0])
-                    trainer.model.opt = opt
-                    trainer.model.to(opt.device)
+                    if model_path and config_path:
+                        config = pickle.load(open(config_path[0], 'rb'))
+                        if config.model != opt.model:
+                            print(colored('Warning, the checkpoint was not trained using {} from param_dict'.format(opt.model.__name__)), 'red')
+                        trainer.model = torch.load(model_path[0])
+                        trainer.model.opt = opt
+                        trainer.model.to(opt.device)
+                    else:
+                        print('Error while loading checkpoint, the checkpoint is broken!')
                 else:
                     print('No checkpoint found in {}'.format(from_checkpoint_path))
-        except Exception as e:
+        except ValueError as e:
             print(e)
             print('Seems to be ConnectionError, retry in {} seconds...'.format(60))
             time.sleep(60)

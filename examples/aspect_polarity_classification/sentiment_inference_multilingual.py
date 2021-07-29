@@ -10,10 +10,10 @@ from pyabsa import load_sentiment_classifier
 
 from pyabsa import ABSADatasetList
 
-from pyabsa import APCTrainedModelManager
+from pyabsa import APCCheckpointManager
 
 # Assume the sent_classifier is loaded or obtained using train function
-model_path = APCTrainedModelManager.get_checkpoint(checkpoint_name='Multilingual')
+model_path = APCCheckpointManager.get_checkpoint(checkpoint_name='Multilingual')
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
                                             auto_device=True  # Use CUDA if available
                                             )

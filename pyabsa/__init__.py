@@ -3,12 +3,12 @@
 # time: 2021/4/22 0022
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
+
 # Copyright (C) 2021. All Rights Reserved.
 
-__version__ = '0.9.0.1'
+__version__ = '0.9.1.0'
 __name__ = 'pyabsa'
 
-import os
 
 from .functional import train_apc, load_sentiment_classifier
 from .functional import train_atepc, load_aspect_extractor
@@ -20,7 +20,9 @@ from pyabsa.utils.pyabsa_utils import (find_target_file,
 from pyabsa.config.apc_config import apc_config_handler
 from pyabsa.config.atepc_config import atepc_config_handler
 
-from pyabsa.dataset_utils import ABSADatasetList, detect_dataset
+from pyabsa.dataset_utils import ABSADatasetList, ABSADatasets, detect_dataset
+
+from pyabsa.model_utils import APCCheckpointManager, ATEPCCheckpointManager
 
 from pyabsa.model_utils import APCTrainedModelManager, ATEPCTrainedModelManager
 
@@ -34,6 +36,7 @@ from termcolor import colored
 
 from pyabsa.utils import check_update_log
 
+
 checker = UpdateChecker()
 check_result = checker.check(__name__, __version__)
 
@@ -44,4 +47,3 @@ if check_result:
     # print(colored('The version ends with letter-postfix is a test version,'
     #               ' please always update if you are using a test version.', 'red'))
 
-os.environ['PYTHONIOENCODING'] = 'utf-8'

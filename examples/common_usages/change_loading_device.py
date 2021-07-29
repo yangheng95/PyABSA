@@ -8,9 +8,9 @@
 
 from pyabsa import load_sentiment_classifier
 
-from pyabsa import APCTrainedModelManager
+from pyabsa import APCCheckpointManager
 
-model_path = APCTrainedModelManager.get_checkpoint('Chinese')
+model_path = APCCheckpointManager.get_checkpoint('Chinese')
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
                                             auto_device=True,  # Use CUDA if available
                                             )
