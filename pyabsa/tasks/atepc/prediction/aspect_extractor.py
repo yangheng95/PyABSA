@@ -75,8 +75,9 @@ class AspectExtractor:
                 self.tokenizer.eos_token = self.tokenizer.eos_token if self.tokenizer.eos_token else '[SEP]'
 
             except Exception as e:
-                raise KeyError('Fail to load the model from {}'.format(model_arg),
-                               '\nplease check the path, or maybe the checkpoint is not compatible with this version.')
+                raise KeyError('Fail to load the model from {}! the checkpoint is broken, '
+                               'or maybe the checkpoint is not compatible with this version.'.format(model_arg),
+                               )
 
             if not hasattr(ATEPCModelList, self.model.__class__.__name__):
                 raise KeyError('The checkpoint you are loading is not from ATEPC model.')

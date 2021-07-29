@@ -208,8 +208,8 @@ class BERTBaselineABSADataset(Dataset):
             polarity = int(polarity)
 
             dependency_graph = np.pad(idx2graph[i],
-                                      ((0, max(0, tokenizer.max_seq_len - idx2graph[i].shape[0])),
-                                       (0, max(0, tokenizer.max_seq_len - idx2graph[i].shape[0]))),
+                                      ((0, max(0, opt.max_seq_len - idx2graph[i].shape[0])),
+                                       (0, max(0, opt.max_seq_len - idx2graph[i].shape[0]))),
                                       'constant')
             dependency_graph = dependency_graph[:, range(0, opt.max_seq_len)]
             dependency_graph = dependency_graph[range(0, opt.max_seq_len), :]

@@ -157,6 +157,8 @@ class BERTBaselineABSADataset(Dataset):
                 if '!sent!' in text:
                     text, polarity = text.split('!sent!')[0].strip(), text.split('!sent!')[1].strip()
                     polarity = int(polarity) if polarity else SENTIMENT_PADDING
+                    text = text.replace('[PADDING]', '')
+
                     if polarity < 0:
                         raise RuntimeError(
                             'Invalid sentiment label detected, only please label the sentiment between {0, N-1} '
@@ -182,8 +184,8 @@ class BERTBaselineABSADataset(Dataset):
 
                 idx2graph = dependency_adj_matrix(text_left + ' ' + aspect + ' ' + text_right)
                 dependency_graph = np.pad(idx2graph,
-                                          ((0, max(0, self.tokenizer.max_seq_len - idx2graph.shape[0])),
-                                           (0, max(0, self.tokenizer.max_seq_len - idx2graph.shape[0]))),
+                                          ((0, max(0, self.opt.max_seq_len - idx2graph.shape[0])),
+                                           (0, max(0, self.opt.max_seq_len - idx2graph.shape[0]))),
                                           'constant')
                 dependency_graph = dependency_graph[:, range(0, self.opt.max_seq_len)]
                 dependency_graph = dependency_graph[range(0, self.opt.max_seq_len), :]

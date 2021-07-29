@@ -1,8 +1,12 @@
-{
+{  "0.9.0.1": {
+    "1": "optimize inference printing",
+    "2": "Set default encoding=utf-8",
+    "3": "Fix graph assigning for ASGCN"
+  },
   "0.9.0.0": {
     "1": "Add BERT baseline models, not available until full test",
     "2": "Refactor some code to allow add model easier",
-    "3": "Add post-training feature: to train based on a pretrained PyABSA model",
+    "3": "Add post-training feature: to train based on a pretrained PyABSA model, refer to https://github.com/yangheng95/PyABSA/issues/48",
     "4": "Add batch inference (from file) for ATEPC",
     "5": "Fix a bug while predicting sentiment polarity using ATEPC model, refer to https://github.com/yangheng95/PyABSA/issues/47"
   },
