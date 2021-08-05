@@ -6,8 +6,8 @@
 import torch
 import torch.nn as nn
 
-from ..layers.dynamic_rnn import DynamicLSTM
 from ..layers.attention import Attention
+from ..layers.dynamic_rnn import DynamicLSTM
 
 
 class IAN_BERT(nn.Module):

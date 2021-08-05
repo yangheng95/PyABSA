@@ -3,10 +3,11 @@
 # author: gene_zc <gene_zhangchen@163.com>
 # Copyright (C) 2018. All Rights Reserved.
 
-from ..layers.dynamic_rnn import DynamicLSTM
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
+from ..layers.dynamic_rnn import DynamicLSTM
 
 
 class AOA_BERT(nn.Module):

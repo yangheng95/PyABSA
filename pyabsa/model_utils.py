@@ -4,23 +4,21 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
+import json
+import os.path
 import sys
 
+from findfile import find_files
+from google_drive_downloader import GoogleDriveDownloader as gdd
+from termcolor import colored
+
+import pyabsa.tasks.apc.__bert__.models
+import pyabsa.tasks.apc.__glove__.models
 import pyabsa.tasks.apc.models
 import pyabsa.tasks.atepc.models
-
-import pyabsa.tasks.apc.__glove__.models
-import pyabsa.tasks.apc.__bert__.models
-
-from pyabsa.utils import find_target_file
-
+import pyabsa.tasks.text_classification.__bert__.models
+import pyabsa.tasks.text_classification.__glove__.models
 from pyabsa import __version__
-
-from termcolor import colored
-import os.path
-import json
-
-from google_drive_downloader import GoogleDriveDownloader as gdd
 
 
 class APCModelList:
@@ -89,6 +87,14 @@ class ATEPCModelList:
     LCF_TEMPLATE_ATEPC = pyabsa.tasks.atepc.models.LCF_TEMPLATE_ATEPC
 
 
+class ClassificationModelList:
+    class GloVeClassificationModelList:
+        LSTM = pyabsa.tasks.text_classification.__glove__.models.LSTM
+
+    class BERTClassificationModelList:
+        BERT = pyabsa.tasks.text_classification.__bert__.models.BERT
+
+
 def download_pretrained_model(task='apc', language='chinese', archive_path='', model_name='any_model'):
     print(colored('Notice: The pretrained models are used for testing, '
                   'neither trained using fine-tuned the hyper-parameters nor trained with enough steps, '
@@ -101,8 +107,8 @@ def download_pretrained_model(task='apc', language='chinese', archive_path='', m
     if not os.path.exists(dest_path):
         os.mkdir(dest_path)
 
-    if find_target_file(dest_path, file_type='.model', find_all=True) \
-            and find_target_file(dest_path, file_type='.config', find_all=True):
+    if find_files(dest_path, '.model') \
+            and find_files(dest_path, '.config'):
         return dest_path
 
     save_path = os.path.join(dest_path, '{}.zip'.format(model_name))
@@ -111,7 +117,8 @@ def download_pretrained_model(task='apc', language='chinese', archive_path='', m
             archive_path = archive_path.split('/')[-2]
         gdd.download_file_from_google_drive(file_id=archive_path,
                                             dest_path=save_path,
-                                            unzip=True)
+                                            unzip=True,
+                                            showsize=True)
     except:
         raise ConnectionError("Fail to download checkpoint, seems to be a connection error.")
     os.remove(save_path)

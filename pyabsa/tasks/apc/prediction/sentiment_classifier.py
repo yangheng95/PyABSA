@@ -6,25 +6,20 @@
 import os
 import pickle
 import random
-import sys
 
 import numpy
 import torch
+from findfile import find_file
+from termcolor import colored
 from torch.utils.data import DataLoader
 from transformers import BertModel, AutoTokenizer
 
-from pyabsa.tasks.apc.dataset_utils.data_utils_for_inferring import ABSADataset
-from pyabsa.tasks.apc.__glove__.dataset_utils.data_utils_for_inferring import GloVeABSADataset
-from pyabsa.tasks.apc.__bert__.dataset_utils.data_utils_for_inferring import BERTBaselineABSADataset
-
-from pyabsa.tasks.apc.dataset_utils.apc_utils import SENTIMENT_PADDING
-
-from pyabsa.utils.pyabsa_utils import find_target_file
-
 from pyabsa.dataset_utils import detect_infer_dataset
-
-from termcolor import colored
 from pyabsa.model_utils import APCModelList
+from pyabsa.tasks.apc.__bert__.dataset_utils.data_utils_for_inferring import BERTBaselineABSADataset
+from pyabsa.tasks.apc.__glove__.dataset_utils.data_utils_for_inferring import GloVeABSADataset
+from pyabsa.tasks.apc.dataset_utils.apc_utils import LABEL_PADDING
+from pyabsa.tasks.apc.dataset_utils.data_utils_for_inferring import ABSADataset
 
 
 class SentimentClassifier:
@@ -48,22 +43,22 @@ class SentimentClassifier:
             # load from a model path
             try:
                 print('Load sentiment classifier from', model_arg)
-                state_dict_path = find_target_file(model_arg, '.state_dict', find_all=True)
-                model_path = find_target_file(model_arg, '.model', find_all=True)
-                tokenizer_path = find_target_file(model_arg, '.tokenizer', find_all=True)
-                config_path = find_target_file(model_arg, '.config', find_all=True)
-                self.opt = pickle.load(open(config_path[0], 'rb'))
+                state_dict_path = find_file(model_arg, '.state_dict')
+                model_path = find_file(model_arg, '.model')
+                tokenizer_path = find_file(model_arg, '.tokenizer')
+                config_path = find_file(model_arg, '.config')
+                self.opt = pickle.load(open(config_path, 'rb'))
 
                 if state_dict_path:
                     self.bert = BertModel.from_pretrained(self.opt.pretrained_bert_name)
                     self.model = self.opt.model(self.bert, self.opt)
-                    self.model.load_state_dict(torch.load(state_dict_path[0]))
+                    self.model.load_state_dict(torch.load(state_dict_path))
 
                 if model_path:
-                    self.model = torch.load(model_path[0])
+                    self.model = torch.load(model_path)
 
                 if tokenizer_path:
-                    self.tokenizer = pickle.load(open(tokenizer_path[0], 'rb'))
+                    self.tokenizer = pickle.load(open(tokenizer_path, 'rb'))
                 else:
                     self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
 
@@ -71,6 +66,7 @@ class SentimentClassifier:
                 self._log_write_args()
 
             except Exception as e:
+                print(e)
                 raise KeyError('Fail to load the model from {}! the checkpoint is broken, '
                                'or maybe the checkpoint is not compatible with this version.'.format(model_arg),
                                )
@@ -107,8 +103,8 @@ class SentimentClassifier:
         self.set_sentiment_map(sentiment_map)
 
     def set_sentiment_map(self, sentiment_map):
-        if sentiment_map and SENTIMENT_PADDING not in sentiment_map:
-            sentiment_map[SENTIMENT_PADDING] = ''
+        if sentiment_map and LABEL_PADDING not in sentiment_map:
+            sentiment_map[LABEL_PADDING] = ''
         self.sentiment_map = sentiment_map
 
     def to(self, device=None):
@@ -177,10 +173,10 @@ class SentimentClassifier:
         if self.sentiment_map:
             sentiment_map = self.sentiment_map
         elif self.opt.polarities_dim == 3:
-            sentiment_map = {0: 'Negative', 1: "Neutral", 2: 'Positive', SENTIMENT_PADDING: ''}
+            sentiment_map = {0: 'Negative', 1: "Neutral", 2: 'Positive', LABEL_PADDING: ''}
         else:
             sentiment_map = {p: p for p in range(self.opt.polarities_dim)}
-            sentiment_map[SENTIMENT_PADDING] = ''
+            sentiment_map[LABEL_PADDING] = ''
         correct = {True: 'Correct', False: 'Wrong'}
         results = []
         if save_path:

@@ -5,9 +5,9 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
+import numpy as np
 import torch
 import torch.nn as nn
-import numpy as np
 from transformers.models.bert.modeling_bert import BertSelfAttention
 
 

@@ -9,8 +9,7 @@ import tqdm
 
 # from pyabsa.tasks.apc.dataset_utils.apc_utils import prepare_input_for_apc
 from pyabsa.tasks.atepc.dataset_utils.atepc_utils import prepare_input_for_atepc
-
-from pyabsa.utils import check_and_fix_polarity_labels
+from pyabsa.utils import check_and_fix_labels
 
 SENTIMENT_PADDING = -999
 
@@ -264,7 +263,7 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
                           lcf_cdm_vec=lcf_cdm_vec,
                           lcf_cdw_vec=lcf_cdw_vec)
         )
-    check_and_fix_polarity_labels(polarities_set, features)
+    check_and_fix_labels(polarities_set, 'polarity', features)
     opt.polarities_dim = len(polarities_set)
 
     return features

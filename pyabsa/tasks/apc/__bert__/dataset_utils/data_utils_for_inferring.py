@@ -3,19 +3,13 @@
 # author: songyouwei <youwei0314@gmail.com>
 # Copyright (C) 2018. All Rights Reserved.
 
-import os
-import pickle
 import numpy as np
 import tqdm
-
 from torch.utils.data import Dataset
-
-from pyabsa.tasks.apc.dataset_utils.apc_utils import load_apc_datasets
-from pyabsa.tasks.apc.__glove__.dataset_utils.dependency_graph import (prepare_dependency_graph,
-                                                                       dependency_adj_matrix)
-
-from pyabsa.tasks.apc.dataset_utils.apc_utils import SENTIMENT_PADDING
 from transformers import AutoTokenizer
+
+from pyabsa.tasks.apc.__glove__.dataset_utils.dependency_graph import (dependency_adj_matrix)
+from pyabsa.tasks.apc.dataset_utils.apc_utils import load_apc_datasets, LABEL_PADDING
 
 
 def pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating='post', value=0):
@@ -156,7 +150,7 @@ class BERTBaselineABSADataset(Dataset):
                 # check for given polarity
                 if '!sent!' in text:
                     text, polarity = text.split('!sent!')[0].strip(), text.split('!sent!')[1].strip()
-                    polarity = int(polarity) if polarity else SENTIMENT_PADDING
+                    polarity = int(polarity) if polarity else LABEL_PADDING
                     text = text.replace('[PADDING]', '')
 
                     if polarity < 0:
@@ -164,7 +158,7 @@ class BERTBaselineABSADataset(Dataset):
                             'Invalid sentiment label detected, only please label the sentiment between {0, N-1} '
                             '(assume there are N types of sentiment polarities.)')
                 else:
-                    polarity = SENTIMENT_PADDING
+                    polarity = LABEL_PADDING
 
                 # simply add padding in case of some aspect is at the beginning or ending of a sentence
                 text_left, aspect, text_right = text.split('[ASP]')

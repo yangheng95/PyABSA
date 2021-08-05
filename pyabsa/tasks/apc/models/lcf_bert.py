@@ -6,6 +6,7 @@
 import torch
 import torch.nn as nn
 from transformers.models.bert.modeling_bert import BertPooler
+
 from pyabsa.network.sa_encoder import Encoder
 
 

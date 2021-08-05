@@ -5,9 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa.tasks.atepc.dataset_utils.atepc_utils import prepare_input_for_atepc
-
-from pyabsa.tasks.atepc.dataset_utils.atepc_utils import split_text
+from pyabsa.tasks.atepc.dataset_utils.atepc_utils import prepare_input_for_atepc, split_text
 
 SENTIMENT_PADDING = -999
 

@@ -5,17 +5,18 @@
 
 import os
 import pickle
+
 import numpy as np
 import tqdm
-
-from torch.utils.data import Dataset
-
 from google_drive_downloader.google_drive_downloader import GoogleDriveDownloader as gdd
-
-from pyabsa.utils.pyabsa_utils import find_target_file
-from pyabsa.tasks.apc.dataset_utils.apc_utils import load_apc_datasets
-from pyabsa.tasks.apc.__glove__.dataset_utils.dependency_graph import prepare_dependency_graph
+from torch.utils.data import Dataset
 from transformers import AutoTokenizer
+
+from pyabsa.tasks.apc.__glove__.dataset_utils.dependency_graph import prepare_dependency_graph
+from pyabsa.tasks.apc.dataset_utils.apc_utils import load_apc_datasets
+from pyabsa.utils.pyabsa_utils import check_and_fix_labels
+
+from findfile import find_file
 
 
 def prepare_glove840_embedding(glove_path):
@@ -27,12 +28,12 @@ def prepare_glove840_embedding(glove_path):
     elif os.path.isdir(glove_path):
         embedding_file = None
         dir_path = os.path.dirname(glove_path)
-        if find_target_file(dir_path, 'glove.42B.300d.txt', exclude_key='.zip', find_all=True):
-            embedding_file = find_target_file(dir_path, 'glove.42B.300d.txt', exclude_key='.zip', find_all=True)[0]
-        elif find_target_file(dir_path, 'glove.840B.300d.txt', exclude_key='.zip', find_all=True):
-            embedding_file = find_target_file(dir_path, 'glove.840B.300d.txt', exclude_key='.zip', find_all=True)[0]
-        elif find_target_file(dir_path, 'glove.twitter.27B.txt', exclude_key='.zip', find_all=True):
-            embedding_file = find_target_file(dir_path, 'glove.twitter.27B.txt', exclude_key='.zip', find_all=True)[0]
+        if find_file(dir_path, 'glove.42B.300d.txt', exclude_key='.zip'):
+            embedding_file = find_file(dir_path, 'glove.42B.300d.txt', exclude_key='.zip')[0]
+        elif find_file(dir_path, 'glove.840B.300d.txt', exclude_key='.zip'):
+            embedding_file = find_file(dir_path, 'glove.840B.300d.txt', exclude_key='.zip')[0]
+        elif find_file(dir_path, 'glove.twitter.27B.txt', exclude_key='.zip'):
+            embedding_file = find_file(dir_path, 'glove.twitter.27B.txt', exclude_key='.zip')[0]
 
         if embedding_file:
             print('Find potential embedding files: {}'.format(embedding_file))
@@ -44,7 +45,7 @@ def prepare_glove840_embedding(glove_path):
                                             dest_path=zip_glove_path,
                                             unzip=True
                                             )
-        glove_path = find_target_file(glove_path, 'txt', exclude_key='.zip')
+        glove_path = find_file(glove_path, 'txt', exclude_key='.zip')
     return glove_path
 
 
@@ -182,13 +183,15 @@ class BERTBaselineABSADataset(Dataset):
         lines = load_apc_datasets(dataset_list)
 
         all_data = []
+        label_set = set()
+
         if not os.path.exists(opt.dataset_path):
             os.mkdir(os.path.join(os.getcwd(), opt.dataset_path))
             opt.dataset_path = os.path.join(os.getcwd(), opt.dataset_path)
         graph_path = prepare_dependency_graph(dataset_list, opt.dataset_path, opt.max_seq_len)
-
         fin = open(graph_path, 'rb')
         idx2graph = pickle.load(fin)
+
         for i in tqdm.tqdm(range(0, len(lines), 3), postfix='building word indices...'):
             text_left, _, text_right = [s.lower().strip() for s in lines[i].partition("$T$")]
             aspect = lines[i + 1].lower().strip()
@@ -245,7 +248,13 @@ class BERTBaselineABSADataset(Dataset):
                 'polarity': polarity,
             }
 
+            label_set.add(polarity)
+
             all_data.append(data)
+
+        check_and_fix_labels(label_set, 'polarity', all_data)
+        opt.polarities_dim = len(label_set)
+
         self.data = all_data
 
     def __getitem__(self, index):

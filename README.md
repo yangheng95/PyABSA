@@ -1,7 +1,8 @@
-# PyABSA - An Open & Efficient for Framework for Aspect-based Sentiment Analysis 
+# PyABSA - An Open & Efficient for Framework for Aspect-based Sentiment Analysis
+
 # [English](README.md) | [中文](README_CN.md)
 
-![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg) 
+![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg)
 [![PyPI](https://img.shields.io/pypi/v/pyabsa)](https://pypi.org/project/pyabsa/)
 ![Repo Size](https://img.shields.io/github/repo-size/yangheng95/pyabsa)
 [![PyPI_downloads](https://img.shields.io/pypi/dm/pyabsa)](https://pypi.org/project/pyabsa/)
@@ -21,34 +22,30 @@
 
 > PyTorch Implementations (CPU & CUDA supported).
 
-**PyABSA is an active project and under development, if you have the interest to integrate your models or datasets into PyABSA, 
-please do feel free to contact us for necessary support.
-Any message would receive response at least in a day.**
+**PyABSA is an active project and under development, if you have the interest to integrate your models or datasets into
+PyABSA, please do feel free to contact us for necessary support. Any message would receive response at least in a day.**
 
 # Preface
 
-This is an ASBA research-oriented code repository. I notice that some Repos do not provide the inference script,
-and the codes may be redundant or hard to use, so I build PyABSA to make the training and inference easier.
-PyABSA contains ATEPC and APC models now.
-Except for providing SOTA models for both ATEPC and APC, some source codes in PyABSA are reusable. 
-In another word, you can develop your model based on PyABSA. 
-e.g., using efficient local context focus implementation from PyASBA.
-Please feel free to give me your interesting thoughts,
-to help me build an easy-to-use toolkit to reduce the cost of building models and reproduction in ABSA tasks.
+This is an ASBA research-oriented code repository. I notice that some Repos do not provide the inference script, and the
+codes may be redundant or hard to use, so I build PyABSA to make the training and inference easier. PyABSA contains
+ATEPC and APC models now. Except for providing SOTA models for both ATEPC and APC, some source codes in PyABSA are
+reusable. In another word, you can develop your model based on PyABSA. e.g., using efficient local context focus
+implementation from PyASBA. Please feel free to give me your interesting thoughts, to help me build an easy-to-use
+toolkit to reduce the cost of building models and reproduction in ABSA tasks.
 
-**If PyABSA helps you, please star PyABSA in order to keep it developing and find latest released features or tutorials.**
+**If PyABSA helps you, please star PyABSA in order to keep it developing and find latest released features or
+tutorials.**
 
 # Notice
-The LCF is a simple and adoptive mechanism proposed for ABSA. 
-Many models based on LCF has been proposed and achieved SOTA performance. 
-Developing your models based on LCF will significantly improve your ABSA models.
-If you are looking for the original proposal of local context focus, 
-please redirect to the introduction of 
-[LCF](https://github.com/yangheng95/PyABSA/tree/release/examples/local_context_focus).
-If you are looking for the original codes of the LCF-related papers, 
-please redirect to [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/LC-ABSA)
-or [LCF-ATEPC](https://github.com/XuMayi/LCF-ATEPC).
 
+The LCF is a simple and adoptive mechanism proposed for ABSA. Many models based on LCF has been proposed and achieved
+SOTA performance. Developing your models based on LCF will significantly improve your ABSA models. If you are looking
+for the original proposal of local context focus, please redirect to the introduction of
+[LCF](https://github.com/yangheng95/PyABSA/tree/release/examples/local_context_focus). If you are looking for the
+original codes of the LCF-related papers, please redirect
+to [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/LC-ABSA)
+or [LCF-ATEPC](https://github.com/XuMayi/LCF-ATEPC).
 
 # Preliminaries
 
@@ -58,7 +55,8 @@ To use PyABSA, install the latest version from pip or source code:
 pip install -U pyabsa
 ```
 
-Then clone our [tutorials](examples) and have fun! 
+Then clone our [tutorials](examples) and have fun!
+
 ```
 git clone https://github.com/yangheng95/PyABSA --depth=1
 
@@ -69,18 +67,19 @@ python sentiment_inference_chinese.py
 
 # Model Support
 
-Except for the following models, we provide a template model involving LCF vec, 
-you can develop your model based on the [LCF-APC](pyabsa/tasks/apc/models/lcf_template_apc.py) model template 
+Except for the following models, we provide a template model involving LCF vec, you can develop your model based on
+the [LCF-APC](pyabsa/tasks/apc/models/lcf_template_apc.py) model template
 or [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_template_atepc.py) model template.
 
 ## ATEPC
-1. [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_atepc.py) 
+
+1. [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_atepc.py)
 2. [LCF-ATEPC-LARGE](pyabsa/tasks/atepc/models/lcf_atepc_large.py) (Dual BERT)
-2. [FAST-LCF-ATEPC](pyabsa/tasks/atepc/models/fast_lcf_atepc.py) 
-3. [LCFS-ATEPC](pyabsa/tasks/atepc/models/lcfs_atepc.py) 
+2. [FAST-LCF-ATEPC](pyabsa/tasks/atepc/models/fast_lcf_atepc.py)
+3. [LCFS-ATEPC](pyabsa/tasks/atepc/models/lcfs_atepc.py)
 4. [LCFS-ATEPC-LARGE](pyabsa/tasks/atepc/models/lcfs_atepc_large.py) (Dual BERT)
-5. [FAST-LCFS-ATEPC](pyabsa/tasks/atepc/models/fast_lcfs_atepc.py) 
-6. [BERT-BASE](pyabsa/tasks/atepc/models/bert_base_atepc.py) 
+5. [FAST-LCFS-ATEPC](pyabsa/tasks/atepc/models/fast_lcfs_atepc.py)
+6. [BERT-BASE](pyabsa/tasks/atepc/models/bert_base_atepc.py)
 
 ## APC
 
@@ -97,9 +96,10 @@ or [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_template_atepc.py) model template.
 11. [LCA-Net](pyabsa/tasks/apc/models/lca_bert.py)
 12. [DLCF-DCA-BERT](pyabsa/tasks/apc/models/dlcf_dca_bert.py)
 
-'*' Copyrights Reserved, please wait for the publishing of our paper to get the introduction of them in detail. 
+'*' Copyrights Reserved, please wait for the publishing of our paper to get the introduction of them in detail.
 
 ### GloVe-based APC models
+
 13. [AOA](pyabsa/tasks/apc/__glove__/models/aoa.py) (AOA_BERT)
 14. [ASGCN](pyabsa/tasks/apc/__glove__/models/asgcn.py) (ASGCN_BERT)
 15. [ATAE-LSTM](pyabsa/tasks/apc/__glove__/models/atae_lstm.py) (ATAE_LSTM_BERT)
@@ -114,11 +114,14 @@ or [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_template_atepc.py) model template.
 24. [TNet_LF](pyabsa/tasks/apc/__glove__/models/tnet_lf.py) (TNet_LF_BERT)
 
 ### You can use $glove model name$_BERT to use the BERT version
-e.g., 
+
+e.g.,
+
 ```
 from pyabsa import APCModelList
 ASGCN_BERT = APCModelList.BERTBaselineAPCModelList.ASGCN_BERT
 ```
+
 ## Brief Performance Report
 
 |      Models          | Laptop14 (acc) |  Rest14 (acc) | Rest15 (acc) | Rest16 (acc) |
@@ -128,15 +131,16 @@ ASGCN_BERT = APCModelList.BERTBaselineAPCModelList.ASGCN_BERT
 | SLIDE-LCF-BERT (CDW) |      81.66     |      87.59    |     84.81    |    92.03     |
 | SLIDE-LCF-BERT (CDM) |      80.25     |      86.86    |     85.74    |    91.71     |
 
-The optimal performance result among three random seeds. Note that with the update of this repo, 
-the results could be updated. We are working on the construction of
-**[leaderboard](examples/aspect_polarity_classification/leaderboard.md)**, 
-you can help us by reporting performance of other models.
-
+The optimal performance result among three random seeds. Note that with the update of this repo, the results could be
+updated. We are working on the construction of
+**[leaderboard](examples/aspect_polarity_classification/leaderboard.md)**, you can help us by reporting performance of
+other models.
 
 ## How to get available checkpoints from Google Drive
-PyABSA will check the latest available checkpoints before and load the latest checkpoint from Google Drive. 
-To view available checkpoints, you can use the following code and load the checkpoint by name:
+
+PyABSA will check the latest available checkpoints before and load the latest checkpoint from Google Drive. To view
+available checkpoints, you can use the following code and load the checkpoint by name:
+
 ```
 from pyabsa import update_checkpoints
 
@@ -144,18 +148,17 @@ checkpoint_map = update_checkpoints()
 ```
 
 If you can not access to Google Drive, you can download our checkpoints and load the unzipped checkpoint manually.
-如果您无法访问谷歌Drive，您可以下载我们预训练的模型，并手动解压缩并加载模型。
-模型下载[地址](https://pan.baidu.com/s/1oKkO7RJ6Ob9vY6flnJk3Sg) 提取码：ABSA
+如果您无法访问谷歌Drive，您可以下载我们预训练的模型，并手动解压缩并加载模型。 模型下载[地址](https://pan.baidu.com/s/1oKkO7RJ6Ob9vY6flnJk3Sg) 提取码：ABSA
 
 ## How to share checkpoints (e.g., checkpoints trained on your custom dataset) with community
 
-For resource limitation, we do not provide diversities of checkpoints, 
-we hope you can share your checkpoints with those who have not enough resource to train their model.
+For resource limitation, we do not provide diversities of checkpoints, we hope you can share your checkpoints with those
+who have not enough resource to train their model.
 
 1. Upload your zipped checkpoint to Google Drive **in a shared folder**.
 
-2. Register the checkpoint in the [checkpoint_map](examples/checkpoint_map.json), 
-   then make a pull request. We will update the checkpoints index as soon as we can, Thanks for your help!
+2. Register the checkpoint in the [checkpoint_map](examples/checkpoint_map.json), then make a pull request. We will
+   update the checkpoints index as soon as we can, Thanks for your help!
 
 # Aspect Term Extraction (ATE)
 
@@ -184,6 +187,7 @@ Check the detailed usages in [ATE examples](examples/aspect_term_extraction) dir
 ## Quick Start
 
 ### 1. Import necessary entries
+
 ```
 from pyabsa import train_atepc, atepc_config_handler
 from pyabsa import ABSADatasetList
@@ -191,17 +195,21 @@ from pyabsa import ATEPCModelList
 ```
 
 ### 2. Choose a base param_dict
+
 ```
 param_dict = atepc_config_handler.get_apc_param_dict_chinese()
 ```
 
 ### 3. Specify an ATEPC model and alter some hyper-parameters (if necessary)
+
 ```
 atepc_param_dict_chinese['model'] = ATEPCModelList.LCF_ATEPC
 atepc_param_dict_chinese['log_step'] = 20
 atepc_param_dict_chinese['evaluate_begin'] = 5
 ```
+
 ### 4. Configure runtime setting and running training
+
 ```
 save_path = 'state_dict'
 chinese_sets = ABSADatasetList.Chinese
@@ -213,7 +221,9 @@ sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None
                             )
 
 ```
+
 ### 5. Aspect term extraction & sentiment inference
+
 ```
 from pyabsa import load_aspect_extractor
 from pyabsa import ATEPCCheckpointManager
@@ -241,6 +251,7 @@ atepc_result = aspect_extractor.extract_aspect(examples=examples,    # list-supp
 Check the detailed usages in [APC examples](examples/aspect_polarity_classification) directory.
 
 ## Aspect-Polarity Classification Output Format (方面极性分类输出示例如下):
+
 ```
 love  selena gomez  !!!! she rock !!!!!!!!!!!!!!!! and she 's cool she 's my idol 
 selena gomez --> Positive  Real: Positive (Correct)
@@ -251,18 +262,23 @@ barack obama --> Positive  Real: Neutral (Wrong)
 ```
 
 ## Quick Start
+
 ### 1. Import necessary entries
+
 ```
 from pyabsa import train_apc, apc_config_handler
 from pyabsa import APCModelList
 from pyabsa import ABSADatasetList
 ```
+
 ### 2. Choose a base param_dict
+
 ```
 param_dict = apc_config_handler.get_apc_param_dict_english()
 ```
 
 ### 3. Specify an APC model and alter some hyper-parameters (if necessary)
+
 ```
 apc_param_dict_english['model'] = APCModelList.SLIDE_LCF_BERT
 apc_param_dict_english['evaluate_begin'] = 2  # to reduce evaluation times and save resources 
@@ -274,9 +290,11 @@ apc_param_dict_english['l2reg'] = 0.0001
 apc_param_dict_english['dynamic_truncate'] = True
 apc_param_dict_english['srd_alignment'] = True
 ```
+
 check [parameter introduction](examples/common_usages/param_dict_introduction.py) and learn how to set them
 
 ### 4. Configure runtime setting and running training
+
 ```
 laptop14 = ABSADatasetList.Laptop14  # Here I use the integrated dataset, you can use your dataset instead 
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english, # ignore this parameter will use defualt setting
@@ -286,7 +304,9 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english, # ignore this
                             auto_device=True               # automatic choose CUDA if any, False means always use CPU
                             )
 ```
+
 ### 5. Sentiment inference
+
 ```
 from pyabsa import load_sentiment_classifier
 from pyabsa import ABSADatasetList
@@ -318,8 +338,10 @@ results = sent_classifier.batch_infer(target_file=inference_sets,
                                       )
 ```
 
-### Searching optimal hyper-parameter in the alternative parameter set. 
-   You use this function to search the optimal setting of some params, e.g., learning_rate.
+### Searching optimal hyper-parameter in the alternative parameter set.
+
+You use this function to search the optimal setting of some params, e.g., learning_rate.
+
 ```
 from pyabsa.research.parameter_search.search_param_for_apc import apc_param_search
 
@@ -338,11 +360,9 @@ apc_param_search(parameter_dict=apc_param_dict_english,
                  auto_device=True)
 ```
 
-
-
 # [Datasets](https://github.com/yangheng95/ABSADatasetList)
 
-1. Twitter 
+1. Twitter
 2. Laptop14
 3. Restaurant14
 4. Restaurant15
@@ -355,7 +375,7 @@ apc_param_search(parameter_dict=apc_param_dict_english,
 11. TShirt
 12. Television
 
-Basically, you don't have to download the datasets, as the datasets will be downloaded automatically. 
+Basically, you don't have to download the datasets, as the datasets will be downloaded automatically.
 
 # Acknowledgement
 
@@ -364,21 +384,22 @@ This work build from LC-ABSA/LCF-ABSA and LCF-ATEPC, and other impressive works 
 欢迎提出疑问、意见和建议，或者帮助完善仓库，谢谢！
 
 # To Do
+
 1. Add more BERT models
 2. Add more APIs
 3. Optimize codes and add comments
 
 # Calling for Contribution
-We hope you can help us to improve this work, e.g.,
-provide new datasets. Or, if you **develop your model using this PyABSA**,
-It is highly recommended to **release your model in PyABSA** by pull request, 
-as open-source projects make your work much more valuable!
+
+We hope you can help us to improve this work, e.g., provide new datasets. Or, if you **develop your model using this
+PyABSA**, It is highly recommended to **release your model in PyABSA** by pull request, as open-source projects make
+your work much more valuable!
 We will help you to do this, only if we have some free time.
 
-The copyrights of contributed resources belong to the contributors, 
-we hope you can help, thanks very much!
+The copyrights of contributed resources belong to the contributors, we hope you can help, thanks very much!
 
-# License 
+# License
+
 MIT
 
 ## Contributors ✨
@@ -400,4 +421,5 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification.
+Contributions of any kind welcome!

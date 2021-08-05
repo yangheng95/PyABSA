@@ -7,20 +7,11 @@
 
 from torch.utils.data import Dataset
 from tqdm import tqdm
-from .apc_utils import build_sentiment_window
-from .apc_utils import build_spc_mask_vec
-from .apc_utils import load_apc_datasets, prepare_input_for_apc
-from .apc_utils_for_dlcf_dca import prepare_input_for_dlcf_dca
-from .apc_utils import SENTIMENT_PADDING
 
-from pyabsa.tasks.apc.models import BERT_BASE, BERT_SPC
-from pyabsa.tasks.apc.models import LCF_BERT, FAST_LCF_BERT, LCF_DUAL_BERT
-from pyabsa.tasks.apc.models import LCFS_BERT, FAST_LCFS_BERT, LCFS_DUAL_BERT
-from pyabsa.tasks.apc.models import SLIDE_LCF_BERT, SLIDE_LCFS_BERT
-from pyabsa.tasks.apc.models import LCA_BERT
-from pyabsa.tasks.apc.models import DLCF_DCA_BERT
-from pyabsa.tasks.apc.models import FAST_LCF_BERT_ATT
-from pyabsa.tasks.apc.models import LCF_TEMPLATE_BERT
+from pyabsa.tasks.apc.models import BERT_BASE, BERT_SPC, LCF_BERT, FAST_LCF_BERT, LCF_DUAL_BERT, LCFS_BERT, FAST_LCFS_BERT, LCFS_DUAL_BERT, SLIDE_LCF_BERT, SLIDE_LCFS_BERT, LCA_BERT, DLCF_DCA_BERT, \
+    FAST_LCF_BERT_ATT, LCF_TEMPLATE_BERT
+from .apc_utils import build_sentiment_window, build_spc_mask_vec, load_apc_datasets, prepare_input_for_apc, LABEL_PADDING
+from .apc_utils_for_dlcf_dca import prepare_input_for_dlcf_dca
 
 
 class ABSADataset(Dataset):
@@ -105,7 +96,7 @@ class ABSADataset(Dataset):
                 # check for given polarity
                 if '!sent!' in text:
                     text, polarity = text.split('!sent!')[0].strip(), text.split('!sent!')[1].strip()
-                    polarity = int(polarity) if polarity else SENTIMENT_PADDING
+                    polarity = int(polarity) if polarity else LABEL_PADDING
                     text = text.replace('[PADDING]', '')
 
                     if polarity < 0:
@@ -113,7 +104,7 @@ class ABSADataset(Dataset):
                             'Invalid sentiment label detected, only please label the sentiment between {0, N-1} '
                             '(assume there are N types of sentiment polarities.)')
                 else:
-                    polarity = SENTIMENT_PADDING
+                    polarity = LABEL_PADDING
 
                 # simply add padding in case of some aspect is at the beginning or ending of a sentence
                 text_left, aspect, text_right = text.split('[ASP]')

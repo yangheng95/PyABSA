@@ -7,10 +7,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from ..layers.attention import Attention
-
-from ..layers.squeeze_embedding import SqueezeEmbedding
 from ..layers.dynamic_rnn import DynamicLSTM
+from ..layers.squeeze_embedding import SqueezeEmbedding
 
 
 class Cabasc_BERT(nn.Module):

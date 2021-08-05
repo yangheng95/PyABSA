@@ -6,11 +6,11 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 import os
-import git
 import shutil
 import tempfile
 
-from pyabsa.utils.pyabsa_utils import find_target_file
+import git
+from findfile import find_files
 
 
 class ABSADatasetList:
@@ -49,30 +49,35 @@ class ABSADatasets(ABSADatasetList):
         pass
 
 
+class ClassificationDatasetList:
+    SST1 = 'SST1'
+    SST2 = 'SST2'
+
+
 def detect_dataset(dataset_path, auto_evaluate=True, task='apc_benchmark'):
-    if hasattr(ABSADatasetList, dataset_path) or not os.path.exists(dataset_path):
-        if hasattr(ABSADatasetList, dataset_path):
-            print('{} is the integrated dataset, try to load the dataset '
+    if hasattr(ABSADatasetList, dataset_path)  or hasattr(ClassificationDatasetList, dataset_path) or not os.path.exists(dataset_path):
+        if hasattr(ABSADatasetList, dataset_path) or hasattr(ClassificationDatasetList, dataset_path):
+            print('{} is the integrated dataset, load the dataset '
                   'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
         else:
             print('Invalid dataset path {}, try to load the dataset '
                   'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
         dataset_name = dataset_path
         download_datasets_from_github()
-        if task == 'apc_benchmark':
+        if task == 'apc_benchmark' or task == 'apc':
             dataset_path = os.path.join('datasets', 'apc_datasets')
-        elif task == 'atepc_benchmark':
+        elif task == 'atepc_benchmark' or task == 'atepc':
             dataset_path = os.path.join('datasets', 'atepc_datasets')
+        elif task == 'text_classification':
+            dataset_path = os.path.join('datasets', 'text_classification')
         else:
             raise RuntimeError('No dataset was found!')
 
         dataset_file = dict()
-        dataset_file['train'] = find_target_file(dataset_path, 'train', exclude_key='infer', find_all=True)
-        dataset_file['train'] = [d for d in dataset_file['train'] if dataset_name.lower() in d.lower()]
-        if auto_evaluate and find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
-            dataset_file['test'] = find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True)
-            dataset_file['test'] = [d for d in dataset_file['test'] if dataset_name.lower() in d.lower()]
-        if auto_evaluate and not find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
+        dataset_file['train'] = find_files(dataset_path, ['train', dataset_name], exclude_key='infer')
+        if auto_evaluate and find_files(dataset_path, ['test', dataset_name], exclude_key='infer'):
+            dataset_file['test'] = find_files(dataset_path, ['test', dataset_name], exclude_key='infer')
+        if auto_evaluate and not find_files(dataset_path, ['test', dataset_name], exclude_key='infer'):
             print('Can not find test set using for evaluating!')
         if len(dataset_file) == 0:
             raise RuntimeError('Can not load train set or test set! '
@@ -81,10 +86,10 @@ def detect_dataset(dataset_path, auto_evaluate=True, task='apc_benchmark'):
 
     else:
         dataset_file = dict()
-        dataset_file['train'] = find_target_file(dataset_path, 'train', exclude_key='infer', find_all=True)
-        if auto_evaluate and find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
-            dataset_file['test'] = find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True)
-        if auto_evaluate and not find_target_file(dataset_path, 'test', exclude_key='infer', find_all=True):
+        dataset_file['train'] = find_files(dataset_path, 'train', exclude_key='infer')
+        if auto_evaluate and find_files(dataset_path, 'test', exclude_key='infer'):
+            dataset_file['test'] = find_files(dataset_path, 'test', exclude_key='infer')
+        if auto_evaluate and not find_files(dataset_path, 'test', exclude_key='infer'):
             print('Cna not find test set using for evaluating!')
         if len(dataset_file) == 0:
             raise RuntimeError('Can not load train set or test set! '
@@ -93,10 +98,10 @@ def detect_dataset(dataset_path, auto_evaluate=True, task='apc_benchmark'):
     return dataset_file
 
 
-def detect_infer_dataset(dataset_path, task='apc_benchmark'):
+def detect_infer_dataset(dataset_path, task='apc'):
     dataset_file = []
-    if hasattr(ABSADatasetList, dataset_path) or not os.path.exists(dataset_path):
-        if hasattr(ABSADatasetList, dataset_path):
+    if hasattr(ABSADatasetList, dataset_path) or hasattr(ClassificationDatasetList, dataset_path) or not os.path.exists(dataset_path):
+        if hasattr(ABSADatasetList, dataset_path) or hasattr(ClassificationDatasetList, dataset_path):
             print('{} is the integrated dataset, try to load the dataset '
                   'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
         else:
@@ -104,14 +109,15 @@ def detect_infer_dataset(dataset_path, task='apc_benchmark'):
                   'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
         dataset_name = dataset_path
         download_datasets_from_github()
-        if task == 'apc_benchmark':
+        if task == 'apc_benchmark' or task == 'apc':
             dataset_path = os.path.join('datasets', 'apc_datasets')
-        elif task == 'atepc_benchmark':
+        elif task == 'atepc_benchmark' or task == 'atepc':
             dataset_path = os.path.join('datasets', 'atepc_datasets')
+        elif task == 'text_classification':
+            dataset_path = os.path.join('datasets', 'text_classification')
         else:
             raise RuntimeError('No dataset was found!')
-        dataset_file = find_target_file(dataset_path, 'infer', exclude_key='train', find_all=True)
-        dataset_file = [d for d in dataset_file if dataset_name.lower() in d.lower()]
+        dataset_file = find_files(dataset_path, ['infer', dataset_name], exclude_key='train')
         if len(dataset_file) == 0:
             raise RuntimeError('Can not load train set or test set! '
                                'Make sure there are (only) one trainset and (only) one testset in the path:',

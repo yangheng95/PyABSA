@@ -6,6 +6,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 import re
+
 from pyabsa.tasks.apc.dataset_utils.apc_utils import get_syntax_distance, get_cdw_vec, get_lca_ids_and_cdm_vec
 
 

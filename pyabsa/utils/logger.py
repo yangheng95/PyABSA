@@ -4,10 +4,10 @@
 
 # Copyright from https://www.cnblogs.com/c-x-a/p/9072234.html
 
-import os
-import time
 import logging
+import os
 import sys
+import time
 
 today = time.strftime('%Y%m%d %H%M%S', time.localtime(time.time()))
 

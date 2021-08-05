@@ -4,26 +4,28 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-import warnings
 
 import tqdm
 from torch.utils.data import Dataset
 
-from .apc_utils import build_sentiment_window
-from .apc_utils import build_spc_mask_vec
-from .apc_utils import load_apc_datasets, prepare_input_for_apc
+from pyabsa.tasks.apc.models import (BERT_BASE,
+                                     BERT_SPC,
+                                     LCF_BERT,
+                                     FAST_LCF_BERT,
+                                     LCF_DUAL_BERT,
+                                     LCFS_BERT,
+                                     FAST_LCFS_BERT,
+                                     LCFS_DUAL_BERT,
+                                     SLIDE_LCF_BERT,
+                                     SLIDE_LCFS_BERT,
+                                     LCA_BERT,
+                                     DLCF_DCA_BERT,
+                                     FAST_LCF_BERT_ATT,
+                                     LCF_TEMPLATE_BERT)
+
+from pyabsa.utils import check_and_fix_labels
+from .apc_utils import build_sentiment_window, build_spc_mask_vec, load_apc_datasets, prepare_input_for_apc
 from .apc_utils_for_dlcf_dca import prepare_input_for_dlcf_dca
-
-from pyabsa.tasks.apc.models import BERT_BASE, BERT_SPC
-from pyabsa.tasks.apc.models import LCF_BERT, FAST_LCF_BERT, LCF_DUAL_BERT
-from pyabsa.tasks.apc.models import LCFS_BERT, FAST_LCFS_BERT, LCFS_DUAL_BERT
-from pyabsa.tasks.apc.models import SLIDE_LCF_BERT, SLIDE_LCFS_BERT
-from pyabsa.tasks.apc.models import LCA_BERT
-from pyabsa.tasks.apc.models import DLCF_DCA_BERT
-from pyabsa.tasks.apc.models import FAST_LCF_BERT_ATT
-from pyabsa.tasks.apc.models import LCF_TEMPLATE_BERT
-
-from pyabsa.utils import check_and_fix_polarity_labels
 
 
 class ABSADataset(Dataset):
@@ -52,16 +54,15 @@ class ABSADataset(Dataset):
         lines = load_apc_datasets(fname)
 
         all_data = []
-
         # record polarities type to update polarities_dim
-        polarities_set = set()
+        label_set = set()
 
         for i in tqdm.tqdm(range(0, len(lines), 3), postfix='building word indices...'):
             text_left, _, text_right = [s.strip() for s in lines[i].partition("$T$")]
             aspect = lines[i + 1].lower().strip()
             polarity = lines[i + 2].strip()
             polarity = int(polarity)
-            polarities_set.add(polarity)
+            label_set.add(polarity)
 
             prepared_inputs = prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect)
 
@@ -110,10 +111,12 @@ class ABSADataset(Dataset):
                 'polarity': polarity,
             }
 
+            label_set.add(polarity)
+
             all_data.append(data)
 
-        check_and_fix_polarity_labels(polarities_set, all_data)
-        opt.polarities_dim = len(polarities_set)
+        check_and_fix_labels(label_set, 'polarity', all_data)
+        opt.polarities_dim = len(label_set)
 
         if 'slide' in opt.model_name:
             all_data = build_sentiment_window(all_data, tokenizer, opt.similarity_threshold)

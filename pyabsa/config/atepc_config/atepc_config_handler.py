@@ -5,9 +5,9 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa.tasks.atepc.models import LCF_ATEPC
-
 import copy
+
+from pyabsa.tasks.atepc.models import LCF_ATEPC
 
 # if you find the optimal param set of some situation, e.g., some model on some datasets
 # please share the config use template param_dict

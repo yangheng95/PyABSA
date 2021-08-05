@@ -20,7 +20,6 @@ class Absolute_Position_Embedding(nn.Module):
         x = weight.unsqueeze(2) * x
         return x
 
-
     def weight_matrix(self, pos_inx, batch_size, seq_len):
         pos_inx = pos_inx.cpu().numpy()
         weight = [[] for i in range(batch_size)]

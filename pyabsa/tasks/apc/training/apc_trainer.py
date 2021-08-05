@@ -9,34 +9,29 @@
 import os
 import pickle
 import random
+import shutil
+import time
 
 import numpy
 import torch
 import torch.nn as nn
-import shutil
-import time
-
-from termcolor import colored
-from tqdm import tqdm
-from torch.utils.data import DataLoader
-from transformers import AutoTokenizer, AutoModel
+from findfile import find_file, find_files
 from sklearn import metrics
-from torch.utils.data import random_split, ConcatDataset
+from termcolor import colored
+from torch.utils.data import DataLoader, random_split, ConcatDataset
+from tqdm import tqdm
+from transformers import AutoTokenizer, AutoModel
 
-from pyabsa.tasks.apc.dataset_utils.data_utils_for_training import ABSADataset
-from pyabsa.utils.pyabsa_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args
-from pyabsa.utils import find_target_file
-
+from pyabsa.dataset_utils import ABSADatasetList
 from pyabsa.model_utils import APCModelList
-
+from pyabsa.tasks.apc.__bert__.dataset_utils.data_utils_for_training import (Tokenizer4Pretraining,
+                                                                             BERTBaselineABSADataset)
 from pyabsa.tasks.apc.__glove__.dataset_utils.data_utils_for_training import (build_tokenizer,
                                                                               build_embedding_matrix,
                                                                               GloVeABSADataset)
-
-from pyabsa.tasks.apc.__bert__.dataset_utils.data_utils_for_training import (Tokenizer4Pretraining,
-                                                                             BERTBaselineABSADataset)
-from pyabsa.dataset_utils import ABSADatasetList
+from pyabsa.tasks.apc.dataset_utils.data_utils_for_training import ABSADataset
+from pyabsa.utils.file_utils import save_model
+from pyabsa.utils.pyabsa_utils import print_args
 
 
 class Instructor:
@@ -93,7 +88,6 @@ class Instructor:
                 dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(opt.embed_dim), os.path.basename(opt.dataset_path)),
                 opt=self.opt
             )
-            self.model = opt.model(self.embedding_matrix, opt).to(opt.device)
 
             self.train_set = GloVeABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
             if 'test' in self.opt.dataset_file:
@@ -102,6 +96,8 @@ class Instructor:
 
             else:
                 self.test_set = None
+
+            self.model = opt.model(self.embedding_matrix, opt).to(opt.device)
 
         if self.opt.device.type == 'cuda':
             self.logger.info(
@@ -374,7 +370,7 @@ class Instructor:
 
                         iterator.postfix = postfix
                         iterator.refresh()
-            self.model = torch.load(find_target_file(save_path, 'model')).to(self.opt.device)
+            self.model = torch.load(find_file(save_path, 'model')).to(self.opt.device)
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
             if max_fold_acc > max_fold_acc_k_fold:
                 save_path_k_fold = save_path
@@ -498,8 +494,8 @@ def train4apc(opt, from_checkpoint_path, logger):
         try:
             trainer = Instructor(opt, logger)
             if from_checkpoint_path:
-                model_path = find_target_file(from_checkpoint_path, '.model', find_all=True)
-                config_path = find_target_file(from_checkpoint_path, '.config', find_all=True)
+                model_path = find_files(from_checkpoint_path, '.model')
+                config_path = find_files(from_checkpoint_path, '.config')
 
                 if from_checkpoint_path:
                     if model_path and config_path:
