@@ -6,7 +6,9 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 from setuptools import setup, find_packages
+
 from pyabsa import __name__, __version__
+
 setup(
     name=__name__,
     version=__version__,
@@ -23,6 +25,6 @@ setup(
     exclude_package_date={'': ['.gitignore']},
     # Choose your license
     license='MIT',
-    install_requires=['transformers>4.5', 'spacy', 'networkx', 'seqeval', 'update_checker',
+    install_requires=['findfile', 'transformers>4.5', 'spacy', 'networkx', 'seqeval', 'update_checker',
                       'tqdm', 'termcolor', 'gitpython', 'googledrivedownloader', 'torch'],
 )

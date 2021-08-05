@@ -7,11 +7,9 @@
 
 from pyabsa.research.parameter_search.search_param_for_apc import apc_param_search
 
-from pyabsa.dataset_utils import ABSADatasetList
-
-from pyabsa.config.apc_config import apc_config_handler
-
 from pyabsa import APCModelList
+from pyabsa.config.apc_config import apc_config_handler
+from pyabsa.dataset_utils import ABSADatasetList
 
 ###############################################################
 

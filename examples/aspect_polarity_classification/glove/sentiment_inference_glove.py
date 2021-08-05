@@ -7,18 +7,13 @@
 # Copyright (C) 2021. All Rights Reserved.
 import os
 
-from pyabsa import train_apc, apc_config_handler
-
-from pyabsa.model_utils import APCModelList, APCCheckpointManager
-from pyabsa import ABSADatasetList
+from pyabsa import load_sentiment_classifier, ABSADatasetList
+from pyabsa.model_utils import APCCheckpointManager
 
 ########################################################################################################################
 #                To use GloVe-based models, you should put the GloVe embedding into the dataset path                   #
 #              or if you can access to Google, it will automatic download GloVe embedding if necessary                 #
 ########################################################################################################################
-
-from pyabsa import load_sentiment_classifier
-from pyabsa import ABSADatasetList
 
 os.environ['PYTHONIOENCODING'] = 'UTF8'
 

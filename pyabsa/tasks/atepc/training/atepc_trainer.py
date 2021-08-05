@@ -9,24 +9,23 @@
 import os
 import pickle
 import random
-import tqdm
 import time
 
 import numpy as np
 import torch
 import torch.nn.functional as F
+import tqdm
+from findfile import find_files
 from seqeval.metrics import classification_report
 from sklearn.metrics import f1_score
 from termcolor import colored
 from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler, TensorDataset)
-from transformers import AutoTokenizer
-from transformers import AutoModel
+from transformers import AutoTokenizer, AutoModel
 
-from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
+from pyabsa.utils.file_utils import save_model
 from pyabsa.utils.logger import get_logger
-from pyabsa.utils.pyabsa_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args
-from pyabsa.utils.pyabsa_utils import find_target_file
+from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
 
 
 class Instructor:
@@ -356,8 +355,8 @@ def train4atepc(opt, from_checkpoint_path, logger):
         try:
             trainer = Instructor(opt, logger)
             if from_checkpoint_path:
-                model_path = find_target_file(from_checkpoint_path, '.model', find_all=True)
-                config_path = find_target_file(from_checkpoint_path, '.config', find_all=True)
+                model_path = find_files(from_checkpoint_path, '.model')
+                config_path = find_files(from_checkpoint_path, '.config')
 
                 if from_checkpoint_path:
                     if model_path and config_path:
@@ -375,4 +374,3 @@ def train4atepc(opt, from_checkpoint_path, logger):
             print('Seems to be ConnectionError, retry in {} seconds...'.format(60))
             time.sleep(60)
     return trainer.run()
-

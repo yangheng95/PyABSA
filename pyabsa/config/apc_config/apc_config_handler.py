@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
-# file: apc_config_handler.py
+# file: classification_config_handler.py
 # time: 2021/5/26 0026
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa.tasks.apc.models import BERT_SPC
-from pyabsa.tasks.apc.__glove__ import TNet_LF
-from pyabsa.tasks.apc.__bert__ import TNet_LF_BERT
-
 import copy
+
+from pyabsa.tasks.apc.__bert__ import TNet_LF_BERT
+from pyabsa.tasks.apc.__glove__ import TNet_LF
+from pyabsa.tasks.apc.models import BERT_SPC
 
 # if you find the optimal param set of some situation, e.g., some model on some datasets
 # please share the config use template param_dict

@@ -1,13 +1,10 @@
 import os.path
+import pickle
 
 import numpy as np
 import spacy
-import pickle
-
 import tqdm
 from spacy.tokens import Doc
-
-from pyabsa.utils import find_target_file
 
 
 class WhitespaceTokenizer(object):

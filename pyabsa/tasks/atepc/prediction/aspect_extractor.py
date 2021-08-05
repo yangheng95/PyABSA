@@ -6,25 +6,24 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 import os
-import random
 import pickle
+import random
 
 import numpy as np
 import torch
 import torch.nn.functional as F
+from findfile import find_file
 from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
 from transformers import BertTokenizer
 from transformers.models.bert.modeling_bert import BertModel
 
+from pyabsa.dataset_utils import detect_infer_dataset
+from pyabsa.model_utils import ATEPCModelList
+from pyabsa.tasks.atepc.dataset_utils.atepc_utils import load_atepc_datasets
 from ..dataset_utils.data_utils_for_inferring import (ATEPCProcessor,
                                                       convert_ate_examples_to_features,
                                                       convert_apc_examples_to_features,
                                                       SENTIMENT_PADDING)
-
-from pyabsa.utils.pyabsa_utils import find_target_file
-from pyabsa.model_utils import ATEPCModelList
-from pyabsa.tasks.atepc.dataset_utils.atepc_utils import load_atepc_datasets
-from pyabsa.dataset_utils import detect_infer_dataset
 
 
 class AspectExtractor:
@@ -52,22 +51,22 @@ class AspectExtractor:
             # load from a model path
             print('Load aspect extractor from', model_arg)
             try:
-                state_dict_path = find_target_file(model_arg, '.state_dict', find_all=True)
-                model_path = find_target_file(model_arg, '.model', find_all=True)
-                tokenizer_path = find_target_file(model_arg, '.tokenizer', find_all=True)
-                config_path = find_target_file(model_arg, '.config', find_all=True)
-                self.opt = pickle.load(open(config_path[0], 'rb'))
+                state_dict_path = find_file(model_arg, '.state_dict')
+                model_path = find_file(model_arg, '.model')
+                tokenizer_path = find_file(model_arg, '.tokenizer')
+                config_path = find_file(model_arg, '.config')
+                self.opt = pickle.load(open(config_path, 'rb'))
 
                 if state_dict_path:
                     bert_base_model = BertModel.from_pretrained(self.opt.pretrained_bert_name)
                     bert_base_model.config.num_labels = self.opt.num_labels
                     self.model = self.opt.model(bert_base_model, self.opt)
-                    self.model.load_state_dict(torch.load(state_dict_path[0]))
+                    self.model.load_state_dict(torch.load(state_dict_path))
                 if model_path:
-                    self.model = torch.load(model_path[0])
+                    self.model = torch.load(model_path)
                     self.model.opt = self.opt
                 if tokenizer_path:
-                    self.tokenizer = pickle.load(open(tokenizer_path[0], 'rb'))
+                    self.tokenizer = pickle.load(open(tokenizer_path, 'rb'))
                 else:
                     self.tokenizer = BertTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
 

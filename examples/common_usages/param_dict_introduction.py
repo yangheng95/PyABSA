@@ -5,7 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa.model_utils import APCModelList, ATEPCModelList
+from pyabsa.model_utils import APCModelList
 
 # Here are the parameters you can alter
 param_dict = {

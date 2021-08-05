@@ -5,9 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa import load_aspect_extractor
-
-from pyabsa import ATEPCCheckpointManager
+from pyabsa import load_aspect_extractor, ATEPCCheckpointManager
 
 # 本工具提供的所有功能均属于测试功能，供学习所用， 欢迎帮助维护及提出意见
 # 仅仅实现了单条文本抽取方面及分类情感， 后面有精力会实现批量抽取方面

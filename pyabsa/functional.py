@@ -6,26 +6,20 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 import os
-
 from argparse import Namespace
 
+from pyabsa import __version__
+from pyabsa.config.apc_config import apc_config_handler
+from pyabsa.config.atepc_config import atepc_config_handler
 from pyabsa.dataset_utils import detect_dataset
-
-from pyabsa.model_utils import APCModelList
-
 from pyabsa.tasks.apc.prediction.sentiment_classifier import SentimentClassifier
 from pyabsa.tasks.apc.training.apc_trainer import train4apc
-
-from pyabsa.tasks.atepc.training.atepc_trainer import train4atepc
 from pyabsa.tasks.atepc.prediction.aspect_extractor import AspectExtractor
-
-from pyabsa.config.atepc_config import atepc_config_handler
-from pyabsa.config.apc_config import apc_config_handler
-
+from pyabsa.tasks.atepc.training.atepc_trainer import train4atepc
+from pyabsa.tasks.text_classification.prediction.text_classifier import TextClassifier
+from pyabsa.tasks.text_classification.training.classifier_trainer import train4classification
 from pyabsa.utils.logger import get_logger
 from pyabsa.utils.pyabsa_utils import get_auto_device
-
-from pyabsa import __version__
 
 gpu_name, choice = get_auto_device()
 
@@ -174,3 +168,46 @@ def load_aspect_extractor(trained_model_path=None,
     aspect_extractor = AspectExtractor(trained_model_path, sentiment_map=sentiment_map)
     aspect_extractor.to('cuda:' + str(choice)) if auto_device and choice >= 0 else aspect_extractor.cpu()
     return aspect_extractor
+
+
+def train_text_classifier(parameter_dict=None,
+                          dataset_path=None,
+                          from_checkpoint_path=None,
+                          model_path_to_save=None,
+                          auto_evaluate=True,
+                          auto_device=True):
+    '''
+    evaluate model performance while training_tutorials model in order to obtain best benchmarked model
+    '''
+
+    dataset_file = detect_dataset(dataset_path, auto_evaluate, task='text_classification')
+
+    config = init_config(parameter_dict, atepc_config_handler.get_atepc_param_dict_base(), auto_device)
+    config.dataset_path = dataset_path
+    config.model_path_to_save = model_path_to_save
+    config.dataset_file = dataset_file
+    model_path = []
+
+    if isinstance(config.seed, int):
+        config.seed = [config.seed]
+
+    if os.path.exists(config.dataset_path):
+        log_name = '{}_custom_dataset'.format(config.model_name)
+    else:
+        log_name = '{}_{}'.format(config.model_name, config.dataset_path)
+    logger = get_logger(os.getcwd(), log_name=log_name, log_type='training')
+    # always save all trained models in case of obtaining best performance
+    # in different metrics among ATE and APC tasks.
+    for _, s in enumerate(config.seed):
+        t_config = Namespace(**vars(config))
+        t_config.seed = s
+        model_path.append(train4classification(t_config, from_checkpoint_path, logger))
+    return TextClassifier(max(model_path))
+
+
+def load_text_classifier(trained_model_path=None,
+                         label_map=None,
+                         auto_device=True):
+    text_classifier = TextClassifier(trained_model_path, label_map=label_map)
+    text_classifier.to('cuda:' + str(choice)) if auto_device and choice >= 0 else text_classifier.cpu()
+    return text_classifier

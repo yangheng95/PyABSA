@@ -3,10 +3,10 @@
 # author:  <gene_zhangchen@163.com>
 # Copyright (C) 2020. All Rights Reserved.
 
-import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
 from ..layers.dynamic_rnn import DynamicLSTM
 
 

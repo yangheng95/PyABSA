@@ -6,9 +6,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 
-from pyabsa import load_sentiment_classifier
-
-from pyabsa import APCCheckpointManager
+from pyabsa import load_sentiment_classifier, APCCheckpointManager
 
 model_path = APCCheckpointManager.get_checkpoint('Chinese')
 sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
@@ -23,4 +21,3 @@ sent_classifier.cuda()
 
 # # load the model to CPU or CUDA, like cpu, cuda:0, cuda:1, etc.
 sent_classifier.to('cuda:0')
-

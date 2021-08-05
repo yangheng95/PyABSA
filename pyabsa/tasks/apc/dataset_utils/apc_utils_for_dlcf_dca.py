@@ -5,16 +5,15 @@
 # github: https://github.com/XuMayi
 # Copyright (C) 2021. All Rights Reserved.
 
-import spacy
-import termcolor
+import math
+import os
+
 import networkx as nx
 import numpy as np
-import os
-import math
+import spacy
+import termcolor
 
-from .apc_utils import pad_and_truncate
-from .apc_utils import text_to_sequence
-from .apc_utils import get_syntax_distance
+from .apc_utils import pad_and_truncate, text_to_sequence, get_syntax_distance
 
 SENTIMENT_PADDING = -999
 

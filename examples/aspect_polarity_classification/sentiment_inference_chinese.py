@@ -6,11 +6,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 # Usage: Evaluate on given text or inference dataset
 
-from pyabsa import load_sentiment_classifier
-
-from pyabsa import ABSADatasetList
-
-from pyabsa import APCCheckpointManager
+from pyabsa import load_sentiment_classifier, ABSADatasetList, APCCheckpointManager
 
 # Assume the sent_classifier is loaded or obtained using train function
 model_path = APCCheckpointManager.get_checkpoint(checkpoint_name='Chinese')

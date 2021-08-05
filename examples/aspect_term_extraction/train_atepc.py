@@ -11,10 +11,8 @@
 ########################################################################################################################
 
 
-from pyabsa import train_atepc, atepc_config_handler
-from pyabsa import ABSADatasetList
+from pyabsa import train_atepc, atepc_config_handler, ABSADatasetList
 from pyabsa.model_utils import ATEPCModelList
-
 
 save_path = 'state_dict'
 laptop14 = ABSADatasetList.Laptop14
@@ -23,12 +21,9 @@ atepc_param_dict_english['num_epoch'] = 10
 atepc_param_dict_english['evaluate_begin'] = 4
 atepc_param_dict_english['lot_step'] = 100
 atepc_param_dict_english['model'] = ATEPCModelList.LCF_ATEPC
-aspect_extractor = train_atepc(parameter_dict=atepc_param_dict_english,      # set param_dict=None to use default model
-                               dataset_path=laptop14,          # file or dir, dataset(s) will be automatically detected
-                               model_path_to_save=save_path,   # set model_path_to_save=None to avoid save model
-                               auto_evaluate=True,             # evaluate model while training_tutorials if test set is available
-                               auto_device=True                # Auto choose CUDA or CPU
+aspect_extractor = train_atepc(parameter_dict=atepc_param_dict_english,  # set param_dict=None to use default model
+                               dataset_path=laptop14,  # file or dir, dataset(s) will be automatically detected
+                               model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
+                               auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
+                               auto_device=True  # Auto choose CUDA or CPU
                                )
-
-
-

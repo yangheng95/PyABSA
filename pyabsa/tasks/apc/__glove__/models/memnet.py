@@ -7,7 +7,6 @@ import torch
 import torch.nn as nn
 
 from ..layers.attention import Attention
-
 from ..layers.squeeze_embedding import SqueezeEmbedding
 
 

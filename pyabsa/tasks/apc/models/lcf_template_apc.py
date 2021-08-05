@@ -5,10 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-import torch
 import torch.nn as nn
-from transformers.models.bert.modeling_bert import BertPooler
-from pyabsa.network.sa_encoder import Encoder
 
 
 class LCF_TEMPLATE_BERT(nn.Module):

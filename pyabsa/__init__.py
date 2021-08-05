@@ -6,36 +6,31 @@
 
 # Copyright (C) 2021. All Rights Reserved.
 
-__version__ = '0.9.1.0'
+__version__ = '0.9.2.0'
 __name__ = 'pyabsa'
 
-
-from .functional import train_apc, load_sentiment_classifier
-from .functional import train_atepc, load_aspect_extractor
-
-from pyabsa.utils.pyabsa_utils import (find_target_file,
-                                       generate_inferrence_set_for_apc,
-                                       convert_apc_set_to_atepc_set)
+from termcolor import colored
+from update_checker import UpdateChecker
 
 from pyabsa.config.apc_config import apc_config_handler
 from pyabsa.config.atepc_config import atepc_config_handler
-
-from pyabsa.dataset_utils import ABSADatasetList, ABSADatasets, detect_dataset
-
-from pyabsa.model_utils import APCCheckpointManager, ATEPCCheckpointManager
-
-from pyabsa.model_utils import APCTrainedModelManager, ATEPCTrainedModelManager
-
-from pyabsa.model_utils import APCModelList, ATEPCModelList
-
-from pyabsa.model_utils import update_checkpoints
-
-from update_checker import UpdateChecker
-
-from termcolor import colored
-
+from pyabsa.config.classification_config import classification_config_handler
+from pyabsa.dataset_utils import ABSADatasetList, ABSADatasets, ClassificationDatasetList, detect_dataset
+from pyabsa.functional import (train_apc,
+                               load_sentiment_classifier,
+                               train_atepc,
+                               load_aspect_extractor,
+                               train_text_classifier,
+                               load_text_classifier)
+from pyabsa.model_utils import (APCCheckpointManager,
+                                ATEPCCheckpointManager,
+                                APCTrainedModelManager,
+                                ATEPCTrainedModelManager,
+                                APCModelList,
+                                ATEPCModelList,
+                                ClassificationModelList,
+                                update_checkpoints)
 from pyabsa.utils import check_update_log
-
 
 checker = UpdateChecker()
 check_result = checker.check(__name__, __version__)
@@ -46,4 +41,3 @@ if check_result:
     print('You can update via pip: {}'.format(colored('pip install -U {}'.format(__name__), 'green')))
     # print(colored('The version ends with letter-postfix is a test version,'
     #               ' please always update if you are using a test version.', 'red'))
-

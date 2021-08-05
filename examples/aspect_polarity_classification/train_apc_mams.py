@@ -10,10 +10,7 @@
 #              your custom dataset should have the continue polarity labels like [0,N-1] for N categories              #
 ########################################################################################################################
 
-from pyabsa import train_apc, apc_config_handler
-
-from pyabsa import ABSADatasetList
-
+from pyabsa import train_apc, apc_config_handler, ABSADatasetList
 from pyabsa.model_utils import APCModelList
 
 save_path = 'state_dict'
@@ -29,11 +26,11 @@ apc_param_dict_english['dynamic_truncate'] = True
 apc_param_dict_english['srd_alignment'] = True
 
 Laptop14 = ABSADatasetList.MAMS
-sent_classifier = train_apc(parameter_dict=apc_param_dict_english,     # set param_dict=None to use default model
-                            dataset_path=Laptop14,    # train set and test set will be automatically detected
+sent_classifier = train_apc(parameter_dict=apc_param_dict_english,  # set param_dict=None to use default model
+                            dataset_path=Laptop14,  # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
-                            auto_evaluate=True,            # evaluate model while training_tutorials if test set is available
-                            auto_device=True               # automatic choose CUDA or CPU
+                            auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
+                            auto_device=True  # automatic choose CUDA or CPU
                             )
 
 save_path = 'state_dict'
@@ -49,11 +46,11 @@ apc_param_dict_english['dynamic_truncate'] = True
 apc_param_dict_english['srd_alignment'] = True
 
 Laptop14 = ABSADatasetList.MAMS
-sent_classifier = train_apc(parameter_dict=apc_param_dict_english,     # set param_dict=None to use default model
-                            dataset_path=Laptop14,    # train set and test set will be automatically detected
+sent_classifier = train_apc(parameter_dict=apc_param_dict_english,  # set param_dict=None to use default model
+                            dataset_path=Laptop14,  # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
-                            auto_evaluate=True,            # evaluate model while training_tutorials if test set is available
-                            auto_device=True               # automatic choose CUDA or CPU
+                            auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
+                            auto_device=True  # automatic choose CUDA or CPU
                             )
 
 save_path = 'state_dict'
@@ -69,11 +66,11 @@ apc_param_dict_english['dynamic_truncate'] = True
 apc_param_dict_english['srd_alignment'] = True
 
 Laptop14 = ABSADatasetList.MAMS
-sent_classifier = train_apc(parameter_dict=apc_param_dict_english,     # set param_dict=None to use default model
-                            dataset_path=Laptop14,    # train set and test set will be automatically detected
+sent_classifier = train_apc(parameter_dict=apc_param_dict_english,  # set param_dict=None to use default model
+                            dataset_path=Laptop14,  # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
-                            auto_evaluate=True,            # evaluate model while training_tutorials if test set is available
-                            auto_device=True               # automatic choose CUDA or CPU
+                            auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
+                            auto_device=True  # automatic choose CUDA or CPU
                             )
 
 save_path = 'state_dict'
@@ -89,10 +86,9 @@ apc_param_dict_english['dynamic_truncate'] = True
 apc_param_dict_english['srd_alignment'] = True
 
 Laptop14 = ABSADatasetList.MAMS
-sent_classifier = train_apc(parameter_dict=apc_param_dict_english,     # set param_dict=None to use default model
-                            dataset_path=Laptop14,    # train set and test set will be automatically detected
+sent_classifier = train_apc(parameter_dict=apc_param_dict_english,  # set param_dict=None to use default model
+                            dataset_path=Laptop14,  # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
-                            auto_evaluate=True,            # evaluate model while training_tutorials if test set is available
-                            auto_device=True               # automatic choose CUDA or CPU
+                            auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
+                            auto_device=True  # automatic choose CUDA or CPU
                             )
-

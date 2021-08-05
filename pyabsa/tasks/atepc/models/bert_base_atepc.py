@@ -6,16 +6,16 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 
-from torch.nn import CrossEntropyLoss
+import copy
+
+import numpy as np
 import torch
 import torch.nn as nn
-import copy
-import numpy as np
-
+from torch.nn import CrossEntropyLoss
 from transformers.models.bert.modeling_bert import BertForTokenClassification, BertPooler
 
-from pyabsa.tasks.atepc.dataset_utils.data_utils_for_training import SENTIMENT_PADDING
 from pyabsa.network.sa_encoder import Encoder
+from pyabsa.tasks.atepc.dataset_utils.data_utils_for_training import SENTIMENT_PADDING
 
 
 class BERT_BASE_ATEPC(BertForTokenClassification):

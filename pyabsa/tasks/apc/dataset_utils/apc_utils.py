@@ -5,13 +5,14 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-import spacy
-import termcolor
-import networkx as nx
-import numpy as np
 import os
 
-SENTIMENT_PADDING = -999
+import networkx as nx
+import numpy as np
+import spacy
+import termcolor
+
+LABEL_PADDING = -999
 
 
 def pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating='post', value=0):

@@ -6,9 +6,8 @@
 import torch
 import torch.nn as nn
 
-from ..layers.attention import Attention, NoQueryAttention
+from ..layers.attention import NoQueryAttention
 from ..layers.dynamic_rnn import DynamicLSTM
-
 from ..layers.squeeze_embedding import SqueezeEmbedding
 
 

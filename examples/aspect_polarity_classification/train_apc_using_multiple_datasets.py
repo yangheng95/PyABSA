@@ -9,9 +9,7 @@
 #                    train and evaluate on your own apc_datasets (need train and test apc_datasets)                    #
 #              your custom dataset should have the continue polarity labels like [0,N-1] for N categories              #
 ########################################################################################################################
-from pyabsa import train_apc, apc_config_handler
-
-from pyabsa import ABSADatasetList
+from pyabsa import train_apc, apc_config_handler, ABSADatasetList
 
 # You can place multiple atepc_datasets file in one dir to easily train using some atepc_datasets
 
@@ -38,8 +36,8 @@ from pyabsa import ABSADatasetList
 save_path = 'state_dict'
 semeval = ABSADatasetList.SemEval
 sent_classifier = train_apc(parameter_dict=apc_config_handler.get_apc_param_dict_english(),
-                            dataset_path=semeval,    # train set and test set will be automatically detected
+                            dataset_path=semeval,  # train set and test set will be automatically detected
                             model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
-                            auto_evaluate=True,            # evaluate model while training_tutorials if test set is available
-                            auto_device=True               # automatic choose CUDA or CPU
+                            auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
+                            auto_device=True  # automatic choose CUDA or CPU
                             )

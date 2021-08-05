@@ -1,7 +1,8 @@
-# PyABSA - An Open & Efficient for Framework for Aspect-based Sentiment Analysis 
+# PyABSA - An Open & Efficient for Framework for Aspect-based Sentiment Analysis
+
 # [English](README.md) | [中文](README_CN.md)
 
-![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg) 
+![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg)
 [![PyPI](https://img.shields.io/pypi/v/pyabsa)](https://pypi.org/project/pyabsa/)
 ![Repo Size](https://img.shields.io/github/repo-size/yangheng95/pyabsa)
 [![PyPI_downloads](https://img.shields.io/pypi/dm/pyabsa)](https://pypi.org/project/pyabsa/)
@@ -23,24 +24,16 @@
 
 # 前言
 
-这是一个面向ABSA研究的代码库。我注意到有些repo不提供推理脚本，
-并且代码存在冗余以及难以使用的问题，为了使模型训练和推理更容易，我们构建了PyABSA。
-PyABSA现在包含ATEPC和APC模型。
-除了为ATEPC和APC提供SOTA模型之外，PyABSA中的一些源代码是可以作为您构建自己的模型的基础。
-您可以基于PyABSA快捷且高效地开发您的模型。
-例如，从PyABSA中使用高效的局部上下文聚焦机制作为您开发的基础。
-如果您有有趣的想法以及任何问题，欢迎随时告知我们，
-欢迎帮助我们构建一个易于使用的工具包，以降低在ABSA任务中构建和复制模型的成本。
+这是一个面向ABSA研究的代码库。我注意到有些repo不提供推理脚本， 并且代码存在冗余以及难以使用的问题，为了使模型训练和推理更容易，我们构建了PyABSA。 PyABSA现在包含ATEPC和APC模型。
+除了为ATEPC和APC提供SOTA模型之外，PyABSA中的一些源代码是可以作为您构建自己的模型的基础。 您可以基于PyABSA快捷且高效地开发您的模型。 例如，从PyABSA中使用高效的局部上下文聚焦机制作为您开发的基础。
+如果您有有趣的想法以及任何问题，欢迎随时告知我们， 欢迎帮助我们构建一个易于使用的工具包，以降低在ABSA任务中构建和复制模型的成本。
 
 # 公告
-LCF是为ABSA提出的一个简单高效且易于使用的机制。
-许多基于LCF的模型已经被提出并实现了SOTA性能。
-基于LCF开发模型将显著改进ABSA模型。
-如果您在寻找LCF介绍，请查看 [LCF](https://github.com/yangheng95/PyABSA/tree/release/examples/local_context_focus) 的介绍. 
-如果您正在寻找与LCF相关的论文的原始代码，
-请跳转到 [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/LC-ABSA)
-或者[LCF-ATEPC](https://github.com/XuMayi/LCF-ATEPC).
 
+LCF是为ABSA提出的一个简单高效且易于使用的机制。 许多基于LCF的模型已经被提出并实现了SOTA性能。 基于LCF开发模型将显著改进ABSA模型。
+如果您在寻找LCF介绍，请查看 [LCF](https://github.com/yangheng95/PyABSA/tree/release/examples/local_context_focus) 的介绍.
+如果您正在寻找与LCF相关的论文的原始代码， 请跳转到 [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/LC-ABSA)
+或者[LCF-ATEPC](https://github.com/XuMayi/LCF-ATEPC).
 
 # 试用
 
@@ -52,6 +45,7 @@ pip install -U pyabsa
 ```
 
 然后复制我们的示例并尝试我们的教程(示例)，并获得乐趣!
+
 ```
 git clone https://github.com/yangheng95/PyABSA --depth=1
 cd PyABSA/examples/aspect_polarity_classification
@@ -60,18 +54,18 @@ python sentiment_inference_chinese.py
 
 # 模型支持
 
-除了下面的模型之外，我们提供了一个包含LCF vec的模板模型，
-您可以基于 [LCF-APC](pyabsa/tasks/apc/models/lcf_template_apc.py) 模型模板 
+除了下面的模型之外，我们提供了一个包含LCF vec的模板模型， 您可以基于 [LCF-APC](pyabsa/tasks/apc/models/lcf_template_apc.py) 模型模板
 或 [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_template_atepc.py) 模型模版来开始你的创新.
 
 ## ATEPC
-1. [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_atepc.py) 
-2. [LCF-ATEPC-LARGE](pyabsa/tasks/atepc/models/lcf_atepc_large.py) 
-2. [FAST-LCF-ATEPC](pyabsa/tasks/atepc/models/fast_lcf_atepc.py) 
-3. [LCFS-ATEPC](pyabsa/tasks/atepc/models/lcfs_atepc.py) 
-4. [LCFS-ATEPC-LARGE](pyabsa/tasks/atepc/models/lcfs_atepc_large.py) 
-5. [FAST-LCFS-ATEPC](pyabsa/tasks/atepc/models/fast_lcfs_atepc.py) 
-6. [BERT-BASE](pyabsa/tasks/atepc/models/bert_base_atepc.py) 
+
+1. [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_atepc.py)
+2. [LCF-ATEPC-LARGE](pyabsa/tasks/atepc/models/lcf_atepc_large.py)
+2. [FAST-LCF-ATEPC](pyabsa/tasks/atepc/models/fast_lcf_atepc.py)
+3. [LCFS-ATEPC](pyabsa/tasks/atepc/models/lcfs_atepc.py)
+4. [LCFS-ATEPC-LARGE](pyabsa/tasks/atepc/models/lcfs_atepc_large.py)
+5. [FAST-LCFS-ATEPC](pyabsa/tasks/atepc/models/fast_lcfs_atepc.py)
+6. [BERT-BASE](pyabsa/tasks/atepc/models/bert_base_atepc.py)
 
 ## APC
 
@@ -91,6 +85,7 @@ python sentiment_inference_chinese.py
 '*' * 版权所有，请等待我们的论文发表以获取详细的介绍。
 
 ### GloVe-based APC models
+
 13. [AOA](pyabsa/tasks/apc/__glove__/models/aoa.py)
 14. [ASGCN](pyabsa/tasks/apc/__glove__/models/asgcn.py)
 15. [ATAE-LSTM](pyabsa/tasks/apc/__glove__/models/atae_lstm.py)
@@ -104,9 +99,6 @@ python sentiment_inference_chinese.py
 23. [TD-LSTM](pyabsa/tasks/apc/__glove__/models/tc_lstm.py)
 24. [TNet_LF](pyabsa/tasks/apc/__glove__/models/tnet_lf.py)
 
-
-
-
 ## 模型性能表现
 
 |         模型          | Laptop14 (acc) |  Rest14 (acc) | Rest15 (acc) | Rest16 (acc) |
@@ -117,30 +109,27 @@ python sentiment_inference_chinese.py
 | SLIDE-LCF-BERT (CDM) |      80.25     |      86.86    |     85.74    |    91.71     |
 
 上述结果取自三种随机种子的最佳性能结果。 我们会在版本更新的过程中及时更新上述性能表现。我们正在构建一个面向APC的
-**[leaderboard](examples/aspect_polarity_classification/leaderboard.md)**, 
-您可以通过告知我们其他模型的性能来帮助我们完善这个排行榜.
-
+**[leaderboard](examples/aspect_polarity_classification/leaderboard.md)**, 您可以通过告知我们其他模型的性能来帮助我们完善这个排行榜.
 
 ## 如何从谷歌驱动器获得可用的checkpoints
-PyABSA将检查最新可用checkpoints，并从谷歌驱动器加载最新checkpoints。
-要查看可用checkpoints，可以使用以下代码并按名称加载checkpoints:
+
+PyABSA将检查最新可用checkpoints，并从谷歌驱动器加载最新checkpoints。 要查看可用checkpoints，可以使用以下代码并按名称加载checkpoints:
+
 ```
 from pyabsa import update_checkpoints
 
 checkpoint_map = update_checkpoints()
 ```
 
-如果您无法访问谷歌Drive，您可以下载我们预训练的模型，并手动解压缩并加载模型。
-模型下载[地址](https://pan.baidu.com/s/1oKkO7RJ6Ob9vY6flnJk3Sg) 提取码：ABSA
+如果您无法访问谷歌Drive，您可以下载我们预训练的模型，并手动解压缩并加载模型。 模型下载[地址](https://pan.baidu.com/s/1oKkO7RJ6Ob9vY6flnJk3Sg) 提取码：ABSA
+
 ## 如何分享你的checkpoints (例如在您构建的数据集上训练的checkpoints)到社区之中
 
-由于资源限制，我们无法提供充足的checkpoints，
-我们希望您能与那些没有足够资源来训练他们的模型的人分享您的checkpoints。
+由于资源限制，我们无法提供充足的checkpoints， 我们希望您能与那些没有足够资源来训练他们的模型的人分享您的checkpoints。
 
 1. 上传你的压缩的checkpoint 到 Google Drive **至 shared folder**.
 
-2. 在[checkpoint_map](examples/checkpoint_map.json)中注册您的checkpoints, 
-  然后提交pull request。我们会尽快更新checkpoint索引，谢谢您的帮助!
+2. 在[checkpoint_map](examples/checkpoint_map.json)中注册您的checkpoints, 然后提交pull request。我们会尽快更新checkpoint索引，谢谢您的帮助!
 
 # 方面词抽取 (ATE)
 
@@ -169,6 +158,7 @@ Sentence with predicted labels:
 ## 快速启动
 
 ### 1. 加载必要的包
+
 ```
 from pyabsa import train_atepc, atepc_config_handler
 from pyabsa import ABSADatasetList
@@ -176,17 +166,21 @@ from pyabsa import ATEPCModelList
 ```
 
 ### 2. 选择一个基本的param_dict
+
 ```
 param_dict = atepc_config_handler.get_apc_param_dict_chinese()
 ```
 
 ### 3. 指定一个ATEPC模型并在您需要的情况下更改一些超参数
+
 ```
 atepc_param_dict_chinese['model'] = ATEPCModelList.LCF_ATEPC
 atepc_param_dict_chinese['log_step'] = 20
 atepc_param_dict_chinese['evaluate_begin'] = 5
 ```
+
 ### 4. 配置运行时的设置和运行训练
+
 ```
 save_path = 'state_dict'
 chinese_sets = ABSADatasetList.Chinese
@@ -198,7 +192,9 @@ sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None
                             )
 
 ```
+
 ### 5. 方面词抽取 & 情感推断
+
 ```
 from pyabsa import load_aspect_extractor
 from pyabsa import ATEPCCheckpointManager
@@ -226,6 +222,7 @@ atepc_result = aspect_extractor.extract_aspect(examples=examples,    # list-supp
 在 [APC examples](examples/aspect_polarity_classification) 目录中查看详细的用法.
 
 ## 方面极性分类输出示例如下:
+
 ```
 love  selena gomez  !!!! she rock !!!!!!!!!!!!!!!! and she 's cool she 's my idol 
 selena gomez --> Positive  Real: Positive (Correct)
@@ -236,18 +233,23 @@ barack obama --> Positive  Real: Neutral (Wrong)
 ```
 
 ## 快速启动
+
 ### 1. 加载必要的包
+
 ```
 from pyabsa import train_apc, apc_config_handler
 from pyabsa import APCModelList
 from pyabsa import ABSADatasetList
 ```
+
 ### 2. 选择一个基本的param_dict
+
 ```
 param_dict = apc_config_handler.get_apc_param_dict_english()
 ```
 
 ### 3. 指定一个APC模型并在您需要的情况下更改一些超参数
+
 ```
 apc_param_dict_english['model'] = APCModelList.SLIDE_LCF_BERT
 apc_param_dict_english['evaluate_begin'] = 2  # to reduce evaluation times and save resources 
@@ -259,9 +261,11 @@ apc_param_dict_english['l2reg'] = 0.0001
 apc_param_dict_english['dynamic_truncate'] = True
 apc_param_dict_english['srd_alignment'] = True
 ```
+
 查看 [parameter introduction](examples/common_usages/param_dict_introduction.py) 并学习如何设置它们
 
-### 4.  配置运行时的设置和运行训练
+### 4. 配置运行时的设置和运行训练
+
 ```
 laptop14 = ABSADatasetList.Laptop14  # Here I use the integrated dataset, you can use your dataset instead 
 sent_classifier = train_apc(parameter_dict=apc_param_dict_english, # ignore this parameter will use defualt setting
@@ -271,7 +275,9 @@ sent_classifier = train_apc(parameter_dict=apc_param_dict_english, # ignore this
                             auto_device=True               # automatic choose CUDA if any, False means always use CPU
                             )
 ```
-### 5.  情感推断
+
+### 5. 情感推断
+
 ```
 from pyabsa import load_sentiment_classifier
 from pyabsa import ABSADatasetList
@@ -304,7 +310,9 @@ results = sent_classifier.batch_infer(target_file=inference_sets,
 ```
 
 ### 在备选参数集中寻找最优超参数。
-   您可以使用此函数搜索一些参数的最佳设置，例如learning_rate。
+
+您可以使用此函数搜索一些参数的最佳设置，例如learning_rate。
+
 ```
 from pyabsa.research.parameter_search.search_param_for_apc import apc_param_search
 
@@ -323,11 +331,9 @@ apc_param_search(parameter_dict=apc_param_dict_english,
                  auto_device=True)
 ```
 
-
-
 # [数据集](https://github.com/yangheng95/ABSADatasetList)
 
-1. Twitter 
+1. Twitter
 2. Laptop14
 3. Restaurant14
 4. Restaurant15
@@ -349,22 +355,23 @@ apc_param_search(parameter_dict=apc_param_dict_english,
 欢迎提出疑问、意见和建议，或者帮助完善仓库，谢谢！
 
 # 未来计划
+
 1. 添加 其他BERT 相关ABSA模型
 2. 增加更多的APIs
 3. 优化代码并添加更多注释
 
 # 期待您的贡献
+
 我们期待您能帮助我们改进这项工作，例如:
-提供新的数据集。或者使用**PyABSA开发你的模型**，
-我们非常欢迎您**在PyABSA中通过pull request开源您的模型**，
-开源项目会让您的工作更有价值!
+提供新的数据集。或者使用**PyABSA开发你的模型**， 我们非常欢迎您**在PyABSA中通过pull request开源您的模型**， 开源项目会让您的工作更有价值!
 只要我们有空闲时间，我们非常乐意协助您完成您的开源工作。
 
-供稿资源的著作权属于供稿人，
-希望能得到您的帮助，非常感谢!
+供稿资源的著作权属于供稿人， 希望能得到您的帮助，非常感谢!
 
 # 许可证
+
 MIT
+
 ## 贡献者 ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
@@ -384,4 +391,5 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification.
+Contributions of any kind welcome!
