@@ -27,8 +27,8 @@ from pyabsa.model_utils import ClassificationModelList
 from pyabsa.tasks.text_classification.__bert__.dataset_utils.data_utils_for_training import (Tokenizer4Pretraining,
                                                                                              BERTClassificationDataset)
 from pyabsa.tasks.text_classification.__glove__.dataset_utils.data_utils_for_training import (build_tokenizer,
-                                                                              build_embedding_matrix,
-                                                                              GloVeClassificationDataset)
+                                                                                              build_embedding_matrix,
+                                                                                              GloVeClassificationDataset)
 from pyabsa.utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args
 
@@ -164,7 +164,6 @@ class Instructor:
                 inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
                 outputs = self.model(inputs)
                 targets = sample_batched['label'].to(self.opt.device)
-
 
                 sen_logits = outputs
                 loss = criterion(sen_logits, targets)

@@ -348,7 +348,6 @@ class Instructor:
 
 
 def train4atepc(opt, from_checkpoint_path, logger):
-
     # in case of handling ConnectionError exception
     trainer = None
     while not trainer:

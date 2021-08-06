@@ -8,13 +8,14 @@ import pickle
 
 import numpy as np
 import tqdm
+from findfile import find_file
 from google_drive_downloader.google_drive_downloader import GoogleDriveDownloader as gdd
 from torch.utils.data import Dataset
 from transformers import AutoTokenizer
 
 from pyabsa.tasks.apc.dataset_utils.apc_utils import load_apc_datasets
 from pyabsa.utils.pyabsa_utils import check_and_fix_labels
-from findfile import find_file
+
 
 def prepare_glove840_embedding(glove_path):
     glove840_id = '1G-vd6W1oF9ByyJ-pzp9dcqKnr_plh4Em'

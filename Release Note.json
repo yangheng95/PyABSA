@@ -1,5 +1,8 @@
-{ "0.9.2.0": {
-    "1": "Add text classification (training & inference)support and SST datasets"
+{  "0.9.2.1": {
+    "1": "fix path of #49"
+  },
+  "0.9.2.0": {
+    "1": "Add text classification (training & inference) support and SST datasets"
   },
   "0.9.1.0": {
     "1": "Add model type check before retraining",

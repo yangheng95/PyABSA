@@ -7,7 +7,7 @@
 # Usage: Evaluate on given text or inference dataset
 import os
 
-from pyabsa import load_sentiment_classifier, ABSADatasetList, APCCheckpointManager
+from pyabsa import load_sentiment_classifier, ABSADatasetList
 
 os.environ['PYTHONIOENCODING'] = 'UTF8'
 
