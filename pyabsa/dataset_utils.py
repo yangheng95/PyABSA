@@ -55,7 +55,7 @@ class ClassificationDatasetList:
 
 
 def detect_dataset(dataset_path, auto_evaluate=True, task='apc_benchmark'):
-    if hasattr(ABSADatasetList, dataset_path)  or hasattr(ClassificationDatasetList, dataset_path) or not os.path.exists(dataset_path):
+    if hasattr(ABSADatasetList, dataset_path) or hasattr(ClassificationDatasetList, dataset_path) or not os.path.exists(dataset_path):
         if hasattr(ABSADatasetList, dataset_path) or hasattr(ClassificationDatasetList, dataset_path):
             print('{} is the integrated dataset, load the dataset '
                   'from github: {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
