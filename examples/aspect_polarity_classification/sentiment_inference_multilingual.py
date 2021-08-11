@@ -4,15 +4,12 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-# Usage: Evaluate on given text or inference dataset
+# Usage: Evaluate on given text or inference dataset_utils
 
-from pyabsa import load_sentiment_classifier, ABSADatasetList, APCCheckpointManager
+from pyabsa import ABSADatasetList, APCCheckpointManager
 
 # Assume the sent_classifier is loaded or obtained using train function
-model_path = APCCheckpointManager.get_checkpoint(checkpoint_name='Multilingual')
-sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
-                                            auto_device=True  # Use CUDA if available
-                                            )
+sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='Multilingual')
 
 text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent ,' \
        ' the [ASP]decor[ASP] cool and understated . !sent! 1 1'

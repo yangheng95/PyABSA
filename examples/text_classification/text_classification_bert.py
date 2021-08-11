@@ -7,7 +7,7 @@
 
 import os
 
-from pyabsa import load_text_classifier, ClassificationDatasetList
+from pyabsa import APCCheckpointManager, ClassificationDatasetList
 
 os.environ['PYTHONIOENCODING'] = 'UTF8'
 
@@ -15,9 +15,9 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 
 
 model_path = 'state_dict/bert_acc_48.37_f1_45.03'
-text_classifier = load_text_classifier(trained_model_path=model_path,
-                                       auto_device=True,  # Use CUDA if available
-                                       )
+text_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint=model_path,
+                                                                auto_device=True,  # Use CUDA if available
+                                                                )
 
 # batch inferring_tutorials returns the results, save the result if necessary using save_result=True
 inference_sets = ClassificationDatasetList.SST2

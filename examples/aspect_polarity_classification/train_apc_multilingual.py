@@ -7,20 +7,23 @@
 
 ########################################################################################################################
 #                    train and evaluate on your own apc_datasets (need train and test apc_datasets)                    #
-#              your custom dataset should have the continue polarity labels like [0,N-1] for N categories              #
+#              your custom dataset_utils should have the continue polarity labels like [0,N-1] for N categories              #
 ########################################################################################################################
 
-from pyabsa import train_apc, apc_config_handler, APCModelList
+
+from pyabsa.functional import Trainer
+from pyabsa.functional import APCConfigManager
+from pyabsa.functional import ABSADatasetList
+from pyabsa.functional import APCModelList
 
 save_path = 'state_dict'
-apc_param_dict_multilingual = apc_config_handler.get_apc_param_dict_multilingual()
-apc_param_dict_multilingual['model'] = APCModelList.FAST_LCF_BERT
-apc_param_dict_multilingual['evaluate_begin'] = 3
+apc_config_multilingual = APCConfigManager.get_apc_config_multilingual()
+apc_config_multilingual.model = APCModelList.FAST_LCF_BERT
+apc_config_multilingual.evaluate_begin = 3
 
 datasets_path = 'datasets/apc_datasets/multilingual'  # file or dir are accepted for 'datasets_path'
-sent_classifier = train_apc(parameter_dict=apc_param_dict_multilingual,  # set param_dict=None to use default model
-                            dataset_path=datasets_path,  # train set and test set will be automatically detected
-                            model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
-                            auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
-                            auto_device=True  # automatic choose CUDA or CPU
-                            )
+sent_classifier = Trainer(config=apc_config_multilingual,  # set config=None to use default model
+                          dataset=datasets_path,  # train set and test set will be automatically detected
+                          save_checkpoint=True,  # set model_path_to_save=None to avoid save model
+                          auto_device=True  # automatic choose CUDA or CPU
+                          )

@@ -54,50 +54,50 @@ python sentiment_inference_chinese.py
 
 # 模型支持
 
-除了下面的模型之外，我们提供了一个包含LCF vec的模板模型， 您可以基于 [LCF-APC](pyabsa/tasks/apc/models/lcf_template_apc.py) 模型模板
-或 [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_template_atepc.py) 模型模版来开始你的创新.
+除了下面的模型之外，我们提供了一个包含LCF vec的模板模型， 您可以基于 [LCF-APC](pyabsa/core/apc/models/lcf_template_apc.py) 模型模板
+或 [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) 模型模版来开始你的创新.
 
 ## ATEPC
 
-1. [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_atepc.py)
-2. [LCF-ATEPC-LARGE](pyabsa/tasks/atepc/models/lcf_atepc_large.py)
-2. [FAST-LCF-ATEPC](pyabsa/tasks/atepc/models/fast_lcf_atepc.py)
-3. [LCFS-ATEPC](pyabsa/tasks/atepc/models/lcfs_atepc.py)
-4. [LCFS-ATEPC-LARGE](pyabsa/tasks/atepc/models/lcfs_atepc_large.py)
-5. [FAST-LCFS-ATEPC](pyabsa/tasks/atepc/models/fast_lcfs_atepc.py)
-6. [BERT-BASE](pyabsa/tasks/atepc/models/bert_base_atepc.py)
+1. [LCF-ATEPC](pyabsa/core/atepc/models/lcf_atepc.py)
+2. [LCF-ATEPC-LARGE](pyabsa/core/atepc/models/lcf_atepc_large.py)
+2. [FAST-LCF-ATEPC](pyabsa/core/atepc/models/fast_lcf_atepc.py)
+3. [LCFS-ATEPC](pyabsa/core/atepc/models/lcfs_atepc.py)
+4. [LCFS-ATEPC-LARGE](pyabsa/core/atepc/models/lcfs_atepc_large.py)
+5. [FAST-LCFS-ATEPC](pyabsa/core/atepc/models/fast_lcfs_atepc.py)
+6. [BERT-BASE](pyabsa/core/atepc/models/bert_base_atepc.py)
 
 ## APC
 
-1. [SLIDE-LCF-BERT *](pyabsa/tasks/apc/models/slide_lcf_bert.py) (Faster & Performs Better than LCF/LCFS-BERT)
-2. [SLIDE-LCFS-BERT *](pyabsa/tasks/apc/models/slide_lcfs_bert.py) (Faster & Performs Better than LCF/LCFS-BERT)
-3. [LCF-BERT](pyabsa/tasks/apc/models/lcf_bert.py) (Reimplemented & Enhanced)
-4. [LCFS-BERT](pyabsa/tasks/apc/models/lcfs_bert.py) (Reimplemented & Enhanced)
-5. [FAST-LCF-BERT](pyabsa/tasks/apc/models/fast_lcf_bert.py) (Faster with slightly performance loss)
-6. [FAST_LCFS-BERT](pyabsa/tasks/apc/models/fast_lcfs_bert.py) (Faster with slightly performance loss)
-7. [LCF-DUAL-BERT](pyabsa/tasks/apc/models/lcf_dual_bert.py) (Dual BERT)
-8. [LCFS-DUAL-BERT](pyabsa/tasks/apc/models/lcfs_dual_bert.py) (Dual BERT)
-9. [BERT-BASE](pyabsa/tasks/apc/models/bert_base.py)
-10. [BERT-SPC](pyabsa/tasks/apc/models/bert_spc.py)
-11. [LCA-Net](pyabsa/tasks/apc/models/lca_bert.py)
-12. [DLCF-DCA-BERT](pyabsa/tasks/apc/models/dlcf_dca_bert.py)
+1. [SLIDE-LCF-BERT *](pyabsa/core/apc/models/slide_lcf_bert.py) (Faster & Performs Better than LCF/LCFS-BERT)
+2. [SLIDE-LCFS-BERT *](pyabsa/core/apc/models/slide_lcfs_bert.py) (Faster & Performs Better than LCF/LCFS-BERT)
+3. [LCF-BERT](pyabsa/core/apc/models/lcf_bert.py) (Reimplemented & Enhanced)
+4. [LCFS-BERT](pyabsa/core/apc/models/lcfs_bert.py) (Reimplemented & Enhanced)
+5. [FAST-LCF-BERT](pyabsa/core/apc/models/fast_lcf_bert.py) (Faster with slightly performance loss)
+6. [FAST_LCFS-BERT](pyabsa/core/apc/models/fast_lcfs_bert.py) (Faster with slightly performance loss)
+7. [LCF-DUAL-BERT](pyabsa/core/apc/models/lcf_dual_bert.py) (Dual BERT)
+8. [LCFS-DUAL-BERT](pyabsa/core/apc/models/lcfs_dual_bert.py) (Dual BERT)
+9. [BERT-BASE](pyabsa/core/apc/models/bert_base.py)
+10. [BERT-SPC](pyabsa/core/apc/models/bert_spc.py)
+11. [LCA-Net](pyabsa/core/apc/models/lca_bert.py)
+12. [DLCF-DCA-BERT](pyabsa/core/apc/models/dlcf_dca_bert.py)
 
 '*' * 版权所有，请等待我们的论文发表以获取详细的介绍。
 
 ### GloVe-based APC models
 
-13. [AOA](pyabsa/tasks/apc/__glove__/models/aoa.py)
-14. [ASGCN](pyabsa/tasks/apc/__glove__/models/asgcn.py)
-15. [ATAE-LSTM](pyabsa/tasks/apc/__glove__/models/atae_lstm.py)
-16. [Cabasc](pyabsa/tasks/apc/__glove__/models/cabasc.py)
-17. [IAN](pyabsa/tasks/apc/__glove__/models/ian.py)
-18. [LSTM](pyabsa/tasks/apc/__glove__/models/lstm.py)
-19. [MemNet](pyabsa/tasks/apc/__glove__/models/memnet.py)
-20. [MGAN](pyabsa/tasks/apc/__glove__/models/mgan.py)
-21. [RAM](pyabsa/tasks/apc/__glove__/models/ram.py)
-22. [TD-LSTM](pyabsa/tasks/apc/__glove__/models/td_lstm.py)
-23. [TD-LSTM](pyabsa/tasks/apc/__glove__/models/tc_lstm.py)
-24. [TNet_LF](pyabsa/tasks/apc/__glove__/models/tnet_lf.py)
+13. [AOA](pyabsa/core/apc/__glove__/models/aoa.py)
+14. [ASGCN](pyabsa/core/apc/__glove__/models/asgcn.py)
+15. [ATAE-LSTM](pyabsa/core/apc/__glove__/models/atae_lstm.py)
+16. [Cabasc](pyabsa/core/apc/__glove__/models/cabasc.py)
+17. [IAN](pyabsa/core/apc/__glove__/models/ian.py)
+18. [LSTM](pyabsa/core/apc/__glove__/models/lstm.py)
+19. [MemNet](pyabsa/core/apc/__glove__/models/memnet.py)
+20. [MGAN](pyabsa/core/apc/__glove__/models/mgan.py)
+21. [RAM](pyabsa/core/apc/__glove__/models/ram.py)
+22. [TD-LSTM](pyabsa/core/apc/__glove__/models/td_lstm.py)
+23. [TD-LSTM](pyabsa/core/apc/__glove__/models/tc_lstm.py)
+24. [TNet_LF](pyabsa/core/apc/__glove__/models/tnet_lf.py)
 
 ## 模型性能表现
 
