@@ -68,50 +68,50 @@ python sentiment_inference_chinese.py
 # Model Support
 
 Except for the following models, we provide a template model involving LCF vec, you can develop your model based on
-the [LCF-APC](pyabsa/tasks/apc/models/lcf_template_apc.py) model template
-or [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_template_atepc.py) model template.
+the [LCF-APC](pyabsa/core/apc/models/lcf_template_apc.py) model template
+or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
 
 ## ATEPC
 
-1. [LCF-ATEPC](pyabsa/tasks/atepc/models/lcf_atepc.py)
-2. [LCF-ATEPC-LARGE](pyabsa/tasks/atepc/models/lcf_atepc_large.py) (Dual BERT)
-2. [FAST-LCF-ATEPC](pyabsa/tasks/atepc/models/fast_lcf_atepc.py)
-3. [LCFS-ATEPC](pyabsa/tasks/atepc/models/lcfs_atepc.py)
-4. [LCFS-ATEPC-LARGE](pyabsa/tasks/atepc/models/lcfs_atepc_large.py) (Dual BERT)
-5. [FAST-LCFS-ATEPC](pyabsa/tasks/atepc/models/fast_lcfs_atepc.py)
-6. [BERT-BASE](pyabsa/tasks/atepc/models/bert_base_atepc.py)
+1. [LCF-ATEPC](pyabsa/core/atepc/models/lcf_atepc.py)
+2. [LCF-ATEPC-LARGE](pyabsa/core/atepc/models/lcf_atepc_large.py) (Dual BERT)
+2. [FAST-LCF-ATEPC](pyabsa/core/atepc/models/fast_lcf_atepc.py)
+3. [LCFS-ATEPC](pyabsa/core/atepc/models/lcfs_atepc.py)
+4. [LCFS-ATEPC-LARGE](pyabsa/core/atepc/models/lcfs_atepc_large.py) (Dual BERT)
+5. [FAST-LCFS-ATEPC](pyabsa/core/atepc/models/fast_lcfs_atepc.py)
+6. [BERT-BASE](pyabsa/core/atepc/models/bert_base_atepc.py)
 
 ## APC
 
-1. [SLIDE-LCF-BERT *](pyabsa/tasks/apc/models/slide_lcf_bert.py) (Faster & Performs Better than LCF/LCFS-BERT)
-2. [SLIDE-LCFS-BERT *](pyabsa/tasks/apc/models/slide_lcfs_bert.py) (Faster & Performs Better than LCF/LCFS-BERT)
-3. [LCF-BERT](pyabsa/tasks/apc/models/lcf_bert.py) (Reimplemented & Enhanced)
-4. [LCFS-BERT](pyabsa/tasks/apc/models/lcfs_bert.py) (Reimplemented & Enhanced)
-5. [FAST-LCF-BERT](pyabsa/tasks/apc/models/fast_lcf_bert.py) (Faster with slightly performance loss)
-6. [FAST_LCFS-BERT](pyabsa/tasks/apc/models/fast_lcfs_bert.py) (Faster with slightly performance loss)
-7. [LCF-DUAL-BERT](pyabsa/tasks/apc/models/lcf_dual_bert.py) (Dual BERT)
-8. [LCFS-DUAL-BERT](pyabsa/tasks/apc/models/lcfs_dual_bert.py) (Dual BERT)
-9. [BERT-BASE](pyabsa/tasks/apc/models/bert_base.py)
-10. [BERT-SPC](pyabsa/tasks/apc/models/bert_spc.py)
-11. [LCA-Net](pyabsa/tasks/apc/models/lca_bert.py)
-12. [DLCF-DCA-BERT](pyabsa/tasks/apc/models/dlcf_dca_bert.py)
+1. [SLIDE-LCF-BERT *](pyabsa/core/apc/models/slide_lcf_bert.py) (Faster & Performs Better than LCF/LCFS-BERT)
+2. [SLIDE-LCFS-BERT *](pyabsa/core/apc/models/slide_lcfs_bert.py) (Faster & Performs Better than LCF/LCFS-BERT)
+3. [LCF-BERT](pyabsa/core/apc/models/lcf_bert.py) (Reimplemented & Enhanced)
+4. [LCFS-BERT](pyabsa/core/apc/models/lcfs_bert.py) (Reimplemented & Enhanced)
+5. [FAST-LCF-BERT](pyabsa/core/apc/models/fast_lcf_bert.py) (Faster with slightly performance loss)
+6. [FAST_LCFS-BERT](pyabsa/core/apc/models/fast_lcfs_bert.py) (Faster with slightly performance loss)
+7. [LCF-DUAL-BERT](pyabsa/core/apc/models/lcf_dual_bert.py) (Dual BERT)
+8. [LCFS-DUAL-BERT](pyabsa/core/apc/models/lcfs_dual_bert.py) (Dual BERT)
+9. [BERT-BASE](pyabsa/core/apc/models/bert_base.py)
+10. [BERT-SPC](pyabsa/core/apc/models/bert_spc.py)
+11. [LCA-Net](pyabsa/core/apc/models/lca_bert.py)
+12. [DLCF-DCA-BERT](pyabsa/core/apc/models/dlcf_dca_bert.py)
 
 '*' Copyrights Reserved, please wait for the publishing of our paper to get the introduction of them in detail.
 
 ### GloVe-based APC models
 
-13. [AOA](pyabsa/tasks/apc/__glove__/models/aoa.py) (AOA_BERT)
-14. [ASGCN](pyabsa/tasks/apc/__glove__/models/asgcn.py) (ASGCN_BERT)
-15. [ATAE-LSTM](pyabsa/tasks/apc/__glove__/models/atae_lstm.py) (ATAE_LSTM_BERT)
-16. [Cabasc](pyabsa/tasks/apc/__glove__/models/cabasc.py) (Cabasc_BERT)
-17. [IAN](pyabsa/tasks/apc/__glove__/models/ian.py) (IAN_BERT)
-18. [LSTM](pyabsa/tasks/apc/__glove__/models/lstm.py) (LSTM_BERT)
-19. [MemNet](pyabsa/tasks/apc/__glove__/models/memnet.py) (MemNet_BERT)
-20. [MGAN](pyabsa/tasks/apc/__glove__/models/mgan.py) (MGAN_BERT)
-21. [RAM](pyabsa/tasks/apc/__glove__/models/ram.py) (RAM_BERT)
-22. [TD-LSTM](pyabsa/tasks/apc/__glove__/models/td_lstm.py) (TD_LSTM_BERT)
-23. [TD-LSTM](pyabsa/tasks/apc/__glove__/models/tc_lstm.py) (TC_LSTM_BERT)
-24. [TNet_LF](pyabsa/tasks/apc/__glove__/models/tnet_lf.py) (TNet_LF_BERT)
+13. [AOA](pyabsa/core/apc/__glove__/models/aoa.py) (AOA_BERT)
+14. [ASGCN](pyabsa/core/apc/__glove__/models/asgcn.py) (ASGCN_BERT)
+15. [ATAE-LSTM](pyabsa/core/apc/__glove__/models/atae_lstm.py) (ATAE_LSTM_BERT)
+16. [Cabasc](pyabsa/core/apc/__glove__/models/cabasc.py) (Cabasc_BERT)
+17. [IAN](pyabsa/core/apc/__glove__/models/ian.py) (IAN_BERT)
+18. [LSTM](pyabsa/core/apc/__glove__/models/lstm.py) (LSTM_BERT)
+19. [MemNet](pyabsa/core/apc/__glove__/models/memnet.py) (MemNet_BERT)
+20. [MGAN](pyabsa/core/apc/__glove__/models/mgan.py) (MGAN_BERT)
+21. [RAM](pyabsa/core/apc/__glove__/models/ram.py) (RAM_BERT)
+22. [TD-LSTM](pyabsa/core/apc/__glove__/models/td_lstm.py) (TD_LSTM_BERT)
+23. [TD-LSTM](pyabsa/core/apc/__glove__/models/tc_lstm.py) (TC_LSTM_BERT)
+24. [TNet_LF](pyabsa/core/apc/__glove__/models/tnet_lf.py) (TNet_LF_BERT)
 
 ### You can use $glove model name$_BERT to use the BERT version
 
@@ -189,49 +189,49 @@ Check the detailed usages in [ATE examples](examples/aspect_term_extraction) dir
 ### 1. Import necessary entries
 
 ```
-from pyabsa import train_atepc, atepc_config_handler
-from pyabsa import ABSADatasetList
-from pyabsa import ATEPCModelList
+from pyabsa.functional import ATEPCModelList
+from pyabsa.functional import Trainer, ATEPCTrainer
+from pyabsa.functional import ABSADatasetList
+from pyabsa.functional import ATEPCConfigManager
 ```
 
 ### 2. Choose a base param_dict
 
 ```
-param_dict = atepc_config_handler.get_apc_param_dict_chinese()
+config = ATEPCConfigManager.get_atepc_config_english()
 ```
 
 ### 3. Specify an ATEPC model and alter some hyper-parameters (if necessary)
 
 ```
-atepc_param_dict_chinese['model'] = ATEPCModelList.LCF_ATEPC
-atepc_param_dict_chinese['log_step'] = 20
-atepc_param_dict_chinese['evaluate_begin'] = 5
+atepc_config_english = ATEPCConfigManager.get_atepc_config_english()
+atepc_config_english.num_epoch = 10
+atepc_config_english.evaluate_begin = 4
+atepc_config_english.lot_step = 100
+atepc_config_english.model = ATEPCModelList.LCF_ATEPC
 ```
 
 ### 4. Configure runtime setting and running training
 
 ```
-save_path = 'state_dict'
-chinese_sets = ABSADatasetList.Chinese
-sent_classifier = train_apc(parameter_dict=param_dict,     # set param_dict=None to use default model
-                            dataset_path=chinese_sets,     # train set and test set will be automatically detected
-                            model_path_to_save=save_path,  # set model_path_to_save=None to avoid save model
-                            auto_evaluate=True,            # evaluate model while training_tutorials if test set is available
-                            auto_device=True               # automatic choose CUDA or CPU
-                            )
+laptop14 = ABSADatasetList.Laptop14
 
+aspect_extractor = ATEPCTrainer(config=atepc_config_english,  # set config=None to use default model
+                                dataset=laptop14,  # file or dir, dataset_utils(s) will be automatically detected
+                                save_checkpoint=True,  # set model_path_to_save=None to avoid save model
+                                auto_device=True  # Auto choose CUDA or CPU
+                                )
 ```
 
 ### 5. Aspect term extraction & sentiment inference
 
 ```
-from pyabsa import load_aspect_extractor
 from pyabsa import ATEPCCheckpointManager
 
 examples = ['相比较原系列锐度高了不少这一点好与不好大家有争议',
             '这款手机的大小真的很薄，但是颜色不太好看， 总体上我很满意啦。'
             ]
-model_path = ATEPCCheckpointManager.get_checkpoint(checkpoint_name='Chinese')
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint_name='Chinese')
 
 sentiment_map = {0: 'Bad', 1: 'Good', -999: ''}
 aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
@@ -243,121 +243,6 @@ atepc_result = aspect_extractor.extract_aspect(examples=examples,    # list-supp
                                                print_result=True,    # print the result
                                                pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
                                                )
-
-```
-
-# Aspect Polarity Classification (APC)
-
-Check the detailed usages in [APC examples](examples/aspect_polarity_classification) directory.
-
-## Aspect-Polarity Classification Output Format (方面极性分类输出示例如下):
-
-```
-love  selena gomez  !!!! she rock !!!!!!!!!!!!!!!! and she 's cool she 's my idol 
-selena gomez --> Positive  Real: Positive (Correct)
-thehils Heard great things about the  ipad  for speech/communication . Educational discounts are problem best bet . Maybe Thanksgiving ? 
-ipad --> Neutral  Real: Neutral (Correct)
-Jamie fox , Eddie Murphy , and  barack obama  because they all are exciting , cute , and inspirational to lots of people including me !!! 
-barack obama --> Positive  Real: Neutral (Wrong)
-```
-
-## Quick Start
-
-### 1. Import necessary entries
-
-```
-from pyabsa import train_apc, apc_config_handler
-from pyabsa import APCModelList
-from pyabsa import ABSADatasetList
-```
-
-### 2. Choose a base param_dict
-
-```
-param_dict = apc_config_handler.get_apc_param_dict_english()
-```
-
-### 3. Specify an APC model and alter some hyper-parameters (if necessary)
-
-```
-apc_param_dict_english['model'] = APCModelList.SLIDE_LCF_BERT
-apc_param_dict_english['evaluate_begin'] = 2  # to reduce evaluation times and save resources 
-apc_param_dict_english['similarity_threshold'] = 1
-apc_param_dict_english['max_seq_len'] = 80
-apc_param_dict_english['dropout'] = 0.5
-apc_param_dict_english['log_step'] = 5
-apc_param_dict_english['l2reg'] = 0.0001
-apc_param_dict_english['dynamic_truncate'] = True
-apc_param_dict_english['srd_alignment'] = True
-```
-
-check [parameter introduction](examples/common_usages/param_dict_introduction.py) and learn how to set them
-
-### 4. Configure runtime setting and running training
-
-```
-laptop14 = ABSADatasetList.Laptop14  # Here I use the integrated dataset, you can use your dataset instead 
-sent_classifier = train_apc(parameter_dict=apc_param_dict_english, # ignore this parameter will use defualt setting
-                            dataset_path=laptop14,         # datasets will be recurrsively detected in this path
-                            model_path_to_save=save_path,  # ignore this parameter to avoid saving model
-                            auto_evaluate=True,            # evaluate model if testset is available
-                            auto_device=True               # automatic choose CUDA if any, False means always use CPU
-                            )
-```
-
-### 5. Sentiment inference
-
-```
-from pyabsa import load_sentiment_classifier
-from pyabsa import ABSADatasetList
-from pyabsa.models import APCCheckpointManager
-
-# 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
-sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
-
-# Here I provided some pre-trained models in case of having no resource to train a model,
-# you can train a model and specify the model path to infer instead 
-model_path = APCCheckpointManager.get_checkpoint(checkpoint_name='English')
-
-sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
-                                            auto_device=True,  # Use CUDA if available
-                                            sentiment_map=sentiment_map  # define polarity2name map
-                                            )
-
-text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated . !sent! 1 1'       
-# Note reference sentiment like '!sent! 1 1' are not mandatory
-
-sent_classifier.infer(text, print_result=True)
-
-# batch inferring_tutorials returns the results, save the result if necessary using save_result=True
-inference_sets = ABSADatasetList.SemEval
-results = sent_classifier.batch_infer(target_file=inference_sets,
-                                      print_result=True,
-                                      save_result=True,
-                                      ignore_error=True,  # some data are broken so ignore them
-                                      )
-```
-
-### Searching optimal hyper-parameter in the alternative parameter set.
-
-You use this function to search the optimal setting of some params, e.g., learning_rate.
-
-```
-from pyabsa.research.parameter_search.search_param_for_apc import apc_param_search
-
-from pyabsa import ABSADatasetList
-from pyabsa.config.apc_config import apc_config_handler
-
-apc_param_dict_english = apc_config_handler.get_apc_param_dict_english()
-apc_param_dict_english['log_step'] = 10
-apc_param_dict_english['evaluate_begin'] = 2
-
-param_to_search = ['l2reg', [1e-5, 5e-5, 1e-4, 5e-4, 1e-3]]
-apc_param_search(parameter_dict=apc_param_dict_english,
-                 dataset_path=ABSADatasetList.Laptop14,
-                 search_param=param_to_search,
-                 auto_evaluate=True,
-                 auto_device=True)
 ```
 
 # [Datasets](https://github.com/yangheng95/ABSADatasetList)
