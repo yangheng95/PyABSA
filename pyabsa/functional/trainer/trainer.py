@@ -53,7 +53,7 @@ class Trainer:
         """
 
         :param config: PyABSA.config.ConfigManager
-        :param dataset: Dataset name or path
+        :param dataset: Dataset name, or a dataset path, or a list of dataset paths
         :param from_checkpoint: A checkpoint path to train based on
         :param save_checkpoint: Save trained model to checkpoint, otherwise return the checkpoint
         :param auto_device: Auto choose cuda device if any
@@ -78,8 +78,7 @@ class Trainer:
         self.config.dataset_path = dataset
         self.from_checkpoint = from_checkpoint
         self.save_checkpoint = save_checkpoint
-        log_name = '_'.join([self.config.model_name if 'model_name' in self.config.args else '',
-                             os.path.basename(self.config.dataset_path)])
+        log_name = self.config.model_name
         self.logger = get_logger(os.getcwd(), log_name=log_name, log_type='training')
 
         if save_checkpoint:

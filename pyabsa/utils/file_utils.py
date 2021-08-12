@@ -24,8 +24,8 @@ from pyabsa.utils.pyabsa_utils import save_args
 
 
 def generate_inference_set_for_apc(dataset_path):
-    train_datasets = find_files(dataset_path, 'train', exclude_key='infer')
-    test_datasets = find_files(dataset_path, 'test', exclude_key='infer')
+    train_datasets = find_files(dataset_path, ['dataset', 'train', 'apc'], exclude_key='infer')
+    test_datasets = find_files(dataset_path, ['dataset', 'test', 'apc'], exclude_key='infer')
     for file in train_datasets + test_datasets:
         try:
             fin = open(file, 'r', newline='\n', encoding='utf-8')
@@ -145,8 +145,12 @@ def convert_atepc(fname):
 
 # 将数据集中的aspect切割出来
 def convert_apc_set_to_atepc_set(path):
-    files = find_files(path, '')
-    print('Find dataset_utils files at {}:'.format(path))
+    if not os.path.exists(path):
+        files = find_files(os.getcwd(), [path, 'dataset', 'apc'], exclude_key='infer')
+    else:
+        files = find_files(path, '', exclude_key='infer')
+
+    print('Find datasets files at {}:'.format(path))
     for f in files:
         print(f)
     for target_file in files:

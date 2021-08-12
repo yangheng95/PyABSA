@@ -33,11 +33,6 @@ class Instructor:
     def __init__(self, opt, logger):
         self.opt = opt
         self.logger = logger
-        if os.path.exists(self.opt.dataset_path):
-            log_name = '{}_{}_srd{}_unknown'.format(self.opt.model_name, self.opt.lcf, self.opt.SRD)
-        else:
-            log_name = '{}_{}_srd{}_{}'.format(self.opt.model_name, self.opt.lcf, self.opt.SRD, self.opt.dataset_path)
-        self.logger = get_logger(os.getcwd(), log_name=log_name, log_type='training')
         if opt.use_bert_spc:
             self.logger.info('Warning: The use_bert_spc is disabled for extracting aspect,'
                              ' reset use_bert_spc=False and go on... ')
@@ -353,6 +348,8 @@ class Instructor:
 
 def train4atepc(opt, from_checkpoint_path, logger):
     # in case of handling ConnectionError exception
+    trainer = Instructor(opt, logger)
+
     trainer = None
     while not trainer:
         try:
