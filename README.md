@@ -1,4 +1,4 @@
-# PyABSA - An Open & Efficient for Framework for Aspect-based Sentiment Analysis
+# PyABSA - Open & Efficient for Framework for Aspect-based Sentiment Analysis
 
 # [English](README.md) | [中文](README_CN.md)
 
@@ -118,8 +118,8 @@ or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
 e.g.,
 
 ```
-from pyabsa import APCModelList
-ASGCN_BERT = APCModelList.BERTBaselineAPCModelList.ASGCN_BERT
+from pyabsa.functional import BERTBaselineAPCModelList
+ASGCN_BERT = BERTBaselineAPCModelList.ASGCN_BERT
 ```
 
 ## Brief Performance Report
@@ -142,9 +142,9 @@ PyABSA will check the latest available checkpoints before and load the latest ch
 available checkpoints, you can use the following code and load the checkpoint by name:
 
 ```
-from pyabsa import update_checkpoints
+from pyabsa import available_checkpoints
 
-checkpoint_map = update_checkpoints()
+checkpoint_map = available_checkpoints()
 ```
 
 If you can not access to Google Drive, you can download our checkpoints and load the unzipped checkpoint manually.
@@ -231,16 +231,14 @@ from pyabsa import ATEPCCheckpointManager
 examples = ['相比较原系列锐度高了不少这一点好与不好大家有争议',
             '这款手机的大小真的很薄，但是颜色不太好看， 总体上我很满意啦。'
             ]
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint_name='Chinese')
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='chinese',
+                                                               auto_device=True  # False means load model on CPU
+                                                               )
 
-sentiment_map = {0: 'Bad', 1: 'Good', -999: ''}
-aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
-                                         sentiment_map=sentiment_map,  # optional
-                                         auto_device=False             # False means load model on CPU
-                                         )
-
-atepc_result = aspect_extractor.extract_aspect(examples=examples,    # list-support only, for now
-                                               print_result=True,    # print the result
+inference_source = pyabsa.ABSADatasetList.SemEval
+atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source,  #
+                                               save_result=True,
+                                               print_result=True,  # print the result
                                                pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
                                                )
 ```

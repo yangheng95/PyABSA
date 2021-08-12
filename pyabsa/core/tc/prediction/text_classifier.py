@@ -22,6 +22,7 @@ from ..classic.__bert__.dataset_utils.data_utils_for_inferring import BERTClassi
 
 from ..classic.__glove__.dataset_utils.data_utils_for_training import LABEL_PADDING
 
+from pyabsa.utils.pyabsa_utils import print_args
 
 class TextClassifier:
     def __init__(self, model_arg=None, label_map=None):
@@ -64,7 +65,7 @@ class TextClassifier:
                     self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
 
                 print('Config used in Training:')
-                self._log_write_args()
+                print_args(self.opt)
 
             except Exception as e:
                 print(e)
@@ -142,7 +143,7 @@ class TextClassifier:
 
         save_path = os.path.join(os.getcwd(), 'inference.result.txt')
 
-        target_file = detect_infer_dataset(target_file, task='tc')
+        target_file = detect_infer_dataset(target_file, task='text_classification')
         if not target_file:
             raise FileNotFoundError('Can not find inference dataset_utils!')
 
