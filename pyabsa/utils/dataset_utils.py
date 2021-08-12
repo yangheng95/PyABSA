@@ -38,10 +38,10 @@ class ABSADatasetList:
     Chinese = 'Chinese'
     SemEval = ['laptop14', 'restaurant14', 'restaurant16']  # Abandon rest15 dataset due to data leakage, See https://github.com/yangheng95/PyABSA/issues/53
     Restaurant = ['restaurant14', 'restaurant16']
-    Multilingual = ['Multilingual']
+    Multilingual = 'Multilingual'
 
-    APC_Datasets = ['APC_Datasets']
-    ATEPC_Datasets = ['ATEPC_Datasets']
+    APC_Datasets = 'APC_Datasets'
+    ATEPC_Datasets = 'ATEPC_Datasets'
 
 
 class ClassificationDatasetList:
