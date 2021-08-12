@@ -4,24 +4,45 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
+import os
 
+import torch
 from termcolor import colored
 
-
-def get_auto_device():
-    import torch
-    gpu_name = ''
-    choice = -1
-    if torch.cuda.is_available():
-        from pyabsa.utils.Pytorch_GPUManager import GPUManager
-        gpu_name, choice = GPUManager().auto_choice()
-    return gpu_name, choice
+SENTIMENT_PADDING = -999
 
 
-def print_args(opt, logger):
-    for arg in vars(opt):
-        if getattr(opt, arg) is not None:
-            logger.info('>>> {0}: {1}'.format(arg, getattr(opt, arg)))
+def save_args(config, save_path):
+    f = open(os.path.join(save_path), mode='w', encoding='utf8')
+    for arg in config.args:
+        if config.args_call_count[arg]:
+            f.write('{}: {}\n'.format(arg, config.args[arg]))
+    f.close()
+
+
+def print_args(config, logger=None, mode=0):
+    activated_args = []
+    default_args = []
+    for arg in config.args:
+        if config.args_call_count[arg]:
+            activated_args.append('>>> {0}: {1}  --> Active'.format(arg, config.args[arg]))
+        else:
+            if mode == 0:
+                default_args.append('>>> {0}: {1}  --> Default'.format(arg, config.args[arg]))
+            else:
+                default_args.append('>>> {0}: {1}  --> Not Used'.format(arg, config.args[arg]))
+
+    for line in activated_args:
+        if logger:
+            logger.info(line)
+        else:
+            print(colored(line, 'green'))
+
+    for line in default_args:
+        if logger:
+            logger.info(line)
+        else:
+            print(colored(line, 'yellow'))
 
 
 def check_and_fix_labels(label_set, label_name, all_data):
@@ -45,3 +66,15 @@ def check_and_fix_labels(label_set, label_name, all_data):
         print('new labels:{}'.format(new_label_dict))
         print(colored('Polarity label-fixing done, PLEASE DO RECORD THE NEW POLARITY LABEL MAP, '
                       'as the label inferred by model also changed!', 'green'))
+
+
+optimizers = {
+    'adadelta': torch.optim.Adadelta,  # default lr=1.0
+    'adagrad': torch.optim.Adagrad,  # default lr=0.01
+    'adam': torch.optim.Adam,  # default lr=0.001
+    'adamax': torch.optim.Adamax,  # default lr=0.002
+    'asgd': torch.optim.ASGD,  # default lr=0.01
+    'rmsprop': torch.optim.RMSprop,  # default lr=0.01
+    'sgd': torch.optim.SGD,
+    'adamw': torch.optim.AdamW
+}

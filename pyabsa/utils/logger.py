@@ -9,6 +9,8 @@ import os
 import sys
 import time
 
+import termcolor
+
 today = time.strftime('%Y%m%d %H%M%S', time.localtime(time.time()))
 
 
@@ -22,7 +24,7 @@ def get_logger(log_path, log_name='', log_type='training_log'):
     if not os.path.exists(full_path):
         os.makedirs(full_path)
     log_path = os.path.join(full_path, "{}.log".format(log_type))
-    logger = logging.getLogger()
+    logger = logging.getLogger(log_name)
     if not logger.handlers:
         # 指定logger输出格式
         formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')

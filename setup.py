@@ -12,7 +12,7 @@ from pyabsa import __name__, __version__
 setup(
     name=__name__,
     version=__version__,
-    description='This tool provides the sota models for aspect term extraction (ATE) '
+    description='This tool provides the sota model for aspect term extraction (ATE) '
                 'and aspect polarity classification (APC)',
     # The project's main homepage.
     url='https://github.com/yangheng95/pyabsa',
@@ -25,6 +25,6 @@ setup(
     exclude_package_date={'': ['.gitignore']},
     # Choose your license
     license='MIT',
-    install_requires=['findfile', 'transformers>4.5', 'spacy', 'networkx', 'seqeval', 'update_checker',
+    install_requires=['findfile', 'autocuda', 'transformers>4.5', 'spacy', 'networkx', 'seqeval', 'update_checker',
                       'tqdm', 'termcolor', 'gitpython', 'googledrivedownloader', 'torch'],
 )

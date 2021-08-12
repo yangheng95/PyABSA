@@ -20,6 +20,9 @@ from pyabsa import __version__
 
 
 # convert atepc_datasets in this repo for inferring_tutorials
+from pyabsa.utils.pyabsa_utils import save_args
+
+
 def generate_inference_set_for_apc(dataset_path):
     train_datasets = find_files(dataset_path, 'train', exclude_key='infer')
     test_datasets = find_files(dataset_path, 'test', exclude_key='infer')
@@ -143,7 +146,7 @@ def convert_atepc(fname):
 # 将数据集中的aspect切割出来
 def convert_apc_set_to_atepc_set(path):
     files = find_files(path, '')
-    print('Find dataset files at {}:'.format(path))
+    print('Find dataset_utils files at {}:'.format(path))
     for f in files:
         print(f)
     for target_file in files:
@@ -221,7 +224,7 @@ def detect_error_in_dataset(dataset):
 
 def save_model(opt, model, tokenizer, save_path, mode=0):
     # Save a trained model, configuration and tokenizer
-    model_to_save = model.module if hasattr(model, 'tasks') else model  # Only save the model it-self
+    model_to_save = model.module if hasattr(model, 'core') else model  # Only save the model it-self
 
     if mode == 0 or 'bert' not in opt.model_name:
         if not os.path.exists(save_path):
@@ -230,7 +233,7 @@ def save_model(opt, model, tokenizer, save_path, mode=0):
         torch.save(model.cpu(), save_path + opt.model_name + '.model')  # save the state dict
         pickle.dump(opt, open(save_path + opt.model_name + '.config', 'wb'))
         pickle.dump(tokenizer, open(save_path + opt.model_name + '.tokenizer', 'wb'))
-
+        save_args(opt, save_path + opt.model_name + '.args')
     else:
         # save the fine-tuned bert model
         model_output_dir = save_path + '-fine-tuned'
