@@ -1,242 +1,116 @@
-  Boot time  is super fast , around anywhere from 35 seconds to 1 minute .  
-Boot time --> Positive  Real: Positive (Correct)
-  tech support  would not fix the problem unless I bought your plan for $ 150 plus .  
-tech support --> Negative  Real: Negative (Correct)
-  Set up  was easy .  
-Set up --> Positive  Real: Positive (Correct)
- Did not enjoy the new  Windows 8  and touchscreen functions .  
-Windows 8 --> Negative  Real: Negative (Correct)
- Did not enjoy the new Windows 8 and  touchscreen functions  .  
-touchscreen functions --> Negative  Real: Negative (Correct)
- Other than not being a fan of click pads -LRB- industry standard these days -RRB- and the lousy  internal speakers  , it 's hard for me to find things about this notebook I do n't like , especially considering the $ 350 price tag .  
-internal speakers --> Negative  Real: Negative (Correct)
-being a fan of click pads -LRB- industry standard these days -RRB- and the lousy internal speakers , it 's hard for me to find things about this notebook I do n't like , especially considering the $ 350  price tag  .  
-price tag --> Negative  Real: Positive (Wrong)
- Other than not being a fan of  click pads  -LRB- industry standard these days -RRB- and the lousy internal speakers , it 's hard for me to find things about this notebook I do n't like , especially considering the $ 350 price tag .  
-click pads --> Neutral  Real: Negative (Wrong)
- No  installation disk (DVD)  is included .  
-installation disk (DVD) --> Negative  Real: Neutral (Wrong)
- It 's fast , light , and simple to  use  .  
-use --> Positive  Real: Positive (Correct)
-  Works  well , and I am extremely happy to be back to an apple OS .  
-Works --> Positive  Real: Positive (Correct)
- Works well , and I am extremely happy to be back to an  apple OS  .  
-apple OS --> Positive  Real: Positive (Correct)
- Sure it 's not light and slim but the  features  make up for it 100 % .  
-features --> Positive  Real: Positive (Correct)
- I am pleased with the fast  log on  , speedy WiFi connection and the long battery life -LRB- > 6 hrs -RRB- .  
-log on --> Positive  Real: Positive (Correct)
- I am pleased with the fast log on , speedy  WiFi connection  and the long battery life -LRB- > 6 hrs -RRB- .  
-WiFi connection --> Positive  Real: Positive (Correct)
- I am pleased with the fast log on , speedy WiFi connection and the long  battery life  -LRB- > 6 hrs -RRB- .  
-battery life --> Positive  Real: Positive (Correct)
- The Apple engineers have not yet discovered the  delete key  .  
-delete key --> Negative  Real: Negative (Correct)
- Made  interneting  -LRB- part of my business -RRB- very difficult to maintain .  
-interneting --> Negative  Real: Negative (Correct)
- Luckily , for all of us contemplating the decision , the Mac Mini is  priced  just right .  
-priced --> Positive  Real: Positive (Correct)
- Super light , super sexy and everything just  works  .  
-works --> Positive  Real: Positive (Correct)
- Only problem that I had was that the  track pad  was not very good for me , I only had a problem once or twice with it , But probably my computer was a bit defective .  
-track pad --> Negative  Real: Negative (Correct)
- It is super fast and has outstanding  graphics  .  
-graphics --> Positive  Real: Positive (Correct)
- But the  mountain lion  is just too slow .  
-mountain lion --> Negative  Real: Negative (Correct)
- Strong build though which really adds to its  durability  .  
-durability --> Positive  Real: Positive (Correct)
- Strong  build  though which really adds to its durability .  
-build --> Positive  Real: Positive (Correct)
- The  battery life  is excellent - 6-7 hours without charging .  
-battery life --> Positive  Real: Positive (Correct)
- I 've had my computer for 2 weeks already and it  works  perfectly .  
-works --> Positive  Real: Positive (Correct)
- And I may be the only one but I am really liking  Windows 8  .  
-Windows 8 --> Positive  Real: Positive (Correct)
- The  baterry  is very longer .  
-baterry --> Negative  Real: Positive (Wrong)
- Its  size  is ideal and the weight is acceptable .  
-size --> Positive  Real: Positive (Correct)
- Its size is ideal and the  weight  is acceptable .  
-weight --> Positive  Real: Positive (Correct)
- I can say that I am fully satisfied with the  performance  that the computer has supplied .  
-performance --> Positive  Real: Positive (Correct)
- This laptop has only 2  USB ports  , and they are both on the same side .  
-USB ports --> Negative  Real: Negative (Correct)
- It has so much more  speed  and the screen is very sharp .  
-speed --> Positive  Real: Positive (Correct)
- It has so much more speed and the  screen  is very sharp .  
-screen --> Negative  Real: Positive (Wrong)
- Everything I wanted and everything I needed and the  price  was great !  
-price --> Positive  Real: Positive (Correct)
- It 's not inexpensive but the  Hardware performance  is impressive for a computer this small .  
-Hardware performance --> Positive  Real: Positive (Correct)
- This thing is awesome , everything always  works  , everything is always easy to set up , everything is compatible , its literally everything I could ask for .  
-works --> Positive  Real: Positive (Correct)
- This thing is awesome , everything always works , everything is always easy to  set up  , everything is compatible , its literally everything I could ask for .  
-set up --> Positive  Real: Positive (Correct)
-  Keyboard  responds well to presses .  
-Keyboard --> Positive  Real: Positive (Correct)
- Lastly ,  Windows 8  is annoying .  
-Windows 8 --> Negative  Real: Negative (Correct)
- Everything is so easy and intuitive to  setup  or configure .  
-setup --> Positive  Real: Positive (Correct)
- Everything is so easy and intuitive to setup or  configure  .  
-configure --> Positive  Real: Positive (Correct)
- Biggest complaint is  Windows 8  .  
-Windows 8 --> Negative  Real: Negative (Correct)
- Only 2  usb ports  ... seems kind of ... limited .  
-usb ports --> Negative  Real: Negative (Correct)
- It has all the expected  features  and more + plus a wide screen and more than roomy keyboard .  
-features --> Positive  Real: Positive (Correct)
- It has all the expected features and more + plus a wide  screen  and more than roomy keyboard .  
-screen --> Positive  Real: Positive (Correct)
- It has all the expected features and more + plus a wide screen and more than roomy  keyboard  .  
-keyboard --> Positive  Real: Positive (Correct)
- Amazing  Performance  for anything I throw at it .  
-Performance --> Positive  Real: Positive (Correct)
- The receiver was full of superlatives for the  quality  and performance .  
-quality --> Positive  Real: Positive (Correct)
- The receiver was full of superlatives for the quality and  performance  .  
-performance --> Positive  Real: Positive (Correct)
- I was extremely happy with the  OS  itself .  
-OS --> Positive  Real: Positive (Correct)
- The new MBP offers great  portability  and gives us confidence that we are not going to need to purchase a new laptop in 18 months .  
-portability --> Positive  Real: Positive (Correct)
- The criticism has waned , and now I 'd be the first to recommend an Air for truly  portable computing  .  
-portable computing --> Positive  Real: Positive (Correct)
- I would have given it 5 starts was it not for the fact that it had  Windows 8   
-Windows 8 --> Positive  Real: Negative (Wrong)
-  MS Office 2011 for Mac  is wonderful , well worth it .  
-MS Office 2011 for Mac --> Positive  Real: Positive (Correct)
- But the  performance  of Mac Mini is a huge disappointment .  
-performance --> Negative  Real: Negative (Correct)
- They do n't just  look  good ; they deliver excellent performance .  
-look --> Negative  Real: Positive (Wrong)
- They do n't just look good ; they deliver excellent  performance  .  
-performance --> Positive  Real: Positive (Correct)
- I have had it over a year now with out a Glitch of any kind . . I love the  lit up keys  and screen display ... this thing is Fast and clear as can be .  
-lit up keys --> Positive  Real: Positive (Correct)
- I have had it over a year now with out a Glitch of any kind . . I love the lit up keys and  screen display  ... this thing is Fast and clear as can be .  
-screen display --> Positive  Real: Positive (Correct)
- The  Mountain Lion OS  is not hard to figure out if you are familiar with Microsoft Windows .  
-Mountain Lion OS --> Negative  Real: Positive (Wrong)
- The Mountain Lion OS is not hard to figure out if you are familiar with  Microsoft Windows  .  
-Microsoft Windows --> Neutral  Real: Neutral (Correct)
- However , I can refute that  OSX  is `` FAST '' .  
-OSX --> Positive  Real: Negative (Wrong)
- Enjoy using  Microsoft Office  !  
-Microsoft Office --> Positive  Real: Positive (Correct)
- Incredible  graphics  and brilliant colors .  
-graphics --> Positive  Real: Positive (Correct)
- Incredible graphics and brilliant  colors  .  
-colors --> Positive  Real: Positive (Correct)
-  Built-in apps  are purely amazing .  
-Built-in apps --> Positive  Real: Positive (Correct)
- Cons :  Screen resolution  .  
-Screen resolution --> Negative  Real: Negative (Correct)
- From the speed to the multi touch gestures this  operating system  beats Windows easily .  
-operating system --> Positive  Real: Positive (Correct)
- From the speed to the multi touch gestures this operating system beats  Windows  easily .  
-Windows --> Negative  Real: Negative (Correct)
- From the  speed  to the multi touch gestures this operating system beats Windows easily .  
-speed --> Positive  Real: Positive (Correct)
- From the speed to the  multi touch gestures  this operating system beats Windows easily .  
-multi touch gestures --> Positive  Real: Positive (Correct)
- I really like the  size  and I 'm a fan of the ACERS .  
-size --> Positive  Real: Positive (Correct)
- I opted for the  SquareTrade 3-Year Computer Accidental Protection Warranty  -LRB- $ 1500-2000 -RRB- which also support `` accidents '' like drops and spills that are NOT covered by AppleCare .  
-SquareTrade 3-Year Computer Accidental Protection Warranty --> Positive  Real: Positive (Correct)
- I opted for the SquareTrade 3-Year Computer Accidental Protection Warranty -LRB- $ 1500-2000 -RRB- which also support `` accidents '' like drops and spills that are NOT covered by  AppleCare  .  
-AppleCare --> Negative  Real: Negative (Correct)
- It 's light and easy to  transport  .  
-transport --> Positive  Real: Positive (Correct)
- Once you get past learning how to use the poorly designed  Windows 8 Set-Up  you may feel frustrated .  
-Windows 8 Set-Up --> Negative  Real: Negative (Correct)
- It 's been time for a new laptop , and the only debate was which  size  of the Mac laptops , and whether to spring for the retina display .  
-size --> Negative  Real: Neutral (Wrong)
- It 's been time for a new laptop , and the only debate was which size of the Mac laptops , and whether to spring for the  retina display  .  
-retina display --> Negative  Real: Neutral (Wrong)
- The reason why I choose apple MacBook because of their  design  and the aluminum casing .  
-design --> Positive  Real: Positive (Correct)
- The reason why I choose apple MacBook because of their design and the  aluminum casing  .  
-aluminum casing --> Positive  Real: Positive (Correct)
- The  aluminum body  sure makes it stand out .  
-aluminum body --> Positive  Real: Positive (Correct)
- It is very easy to  integrate bluetooth devices  , and USB devices are recognized almost instantly .  
-integrate bluetooth devices --> Positive  Real: Positive (Correct)
- It is very easy to integrate bluetooth devices , and  USB devices  are recognized almost instantly .  
-USB devices --> Positive  Real: Positive (Correct)
- And the fact that Apple is driving the 13 '' RMBP with the  Intel4000 graphic chip  seems underpowered -LRB- to me .  
-Intel4000 graphic chip --> Negative  Real: Negative (Correct)
- Apple removed the  DVD drive Firewire port  -LRB- will work with adapter -RRB- and put the SDXC slot in a silly position on the back .  
-DVD drive Firewire port --> Negative  Real: Neutral (Wrong)
- Apple removed the DVD drive Firewire port -LRB- will work with  adapter  -RRB- and put the SDXC slot in a silly position on the back .  
-adapter --> Neutral  Real: Neutral (Correct)
- Apple removed the DVD drive Firewire port -LRB- will work with adapter -RRB- and put the  SDXC slot  in a silly position on the back .  
-SDXC slot --> Negative  Real: Negative (Correct)
- The  durability  of the laptop will make it worth the money .  
-durability --> Positive  Real: Positive (Correct)
- Well  designed  and fast .  
-designed --> Positive  Real: Positive (Correct)
- But I was completely wrong , this computer is UNBELIEVABLE amazing and easy to  use  .  
-use --> Positive  Real: Positive (Correct)
- Exactly as posted plus a great  value  .  
-value --> Positive  Real: Positive (Correct)
- The  specs  are pretty good too .  
-specs --> Positive  Real: Positive (Correct)
- Apple is unmatched in  product quality  , aesthetics , craftmanship , and customer service .  
-product quality --> Positive  Real: Positive (Correct)
- Apple is unmatched in product quality ,  aesthetics  , craftmanship , and customer service .  
-aesthetics --> Positive  Real: Positive (Correct)
- Apple is unmatched in product quality , aesthetics ,  craftmanship  , and customer service .  
-craftmanship --> Positive  Real: Positive (Correct)
- Apple is unmatched in product quality , aesthetics , craftmanship , and  customer service  .  
-customer service --> Positive  Real: Positive (Correct)
- It is a great  size  and amazing windows 8 included !  
-size --> Positive  Real: Positive (Correct)
- It is a great size and amazing  windows 8  included !  
-windows 8 --> Positive  Real: Positive (Correct)
- I do not like too much  Windows 8  .  
-Windows 8 --> Positive  Real: Negative (Wrong)
-  Startup times  are incredibly long : over two minutes .  
-Startup times --> Positive  Real: Negative (Wrong)
- Also stunning  colors  and speedy  
-colors --> Positive  Real: Positive (Correct)
- great  price  free shipping what else can i ask for !!  
-price --> Positive  Real: Positive (Correct)
- great price free  shipping  what else can i ask for !!  
-shipping --> Positive  Real: Positive (Correct)
- This  mouse  is terrific .  
-mouse --> Positive  Real: Positive (Correct)
- It is really thick around the  battery  .  
-battery --> Negative  Real: Neutral (Wrong)
- And  windows 7  works like a charm .  
-windows 7 --> Positive  Real: Positive (Correct)
- :-RRB- Great product , great  price  , great delivery , and great service .  
-price --> Positive  Real: Positive (Correct)
- :-RRB- Great product , great price , great  delivery  , and great service .  
-delivery --> Positive  Real: Positive (Correct)
- :-RRB- Great product , great price , great delivery , and great  service  .  
+ judging from previous posts this used to be a good  place  , but not any longer .  
+place --> Negative  Real: Negative (Correct)
+ we , there were four of us , arrived at noon - the place was empty - and the  staff  acted like we were imposing on them and they were very rude .  
+staff --> Negative  Real: Negative (Correct)
+ the  food  was lousy - too sweet or too salty and the portions tiny .  
+food --> Negative  Real: Negative (Correct)
+ the food was lousy - too sweet or too salty and the  portions  tiny .  
+portions --> Negative  Real: Negative (Correct)
+ avoid this  place  !  
+place --> Negative  Real: Negative (Correct)
+ i have eaten at saul , many times , the  food  is always consistently , outrageously good .  
+food --> Positive  Real: Positive (Correct)
+  saul  is the best restaurant on smith street and in brooklyn .  
+saul --> Positive  Real: Positive (Correct)
+ the duck confit is always amazing and the  foie gras terrine with figs  was out of this world .  
+foie gras terrine with figs --> Positive  Real: Positive (Correct)
+ the  duck confit  is always amazing and the foie gras terrine with figs was out of this world .  
+duck confit --> Positive  Real: Positive (Correct)
+ the  wine list  is interesting and has many good values .  
+wine list --> Positive  Real: Positive (Correct)
+ i was very disappointed with this  restaurant  .  
+restaurant --> Negative  Real: Negative (Correct)
+ i ve asked a  cart attendant  for a lotus leaf wrapped rice and she replied back rice and just walked away .  
+cart attendant --> Negative  Real: Negative (Correct)
+  food  was okay , nothing great .  
+food --> Neutral  Real: Neutral (Correct)
+  chow fun  was dry ; pork shu mai was more than usually greasy and had to share a table with loud and rude family .  
+chow fun --> Negative  Real: Negative (Correct)
+ chow fun was dry ;  pork shu mai  was more than usually greasy and had to share a table with loud and rude family .  
+pork shu mai --> Negative  Real: Negative (Correct)
+ i / we will never go back to this  place  again .  
+place --> Negative  Real: Negative (Correct)
+ went on a 3 day oyster binge , with  fish  bringing up the closing , and i am so glad this was the place it o trip ended , because it was so great !  
+fish --> Positive  Real: Positive (Correct)
+  service  was devine , oysters where a sensual as they come , and the price ca n't be beat ! ! !  
 service --> Positive  Real: Positive (Correct)
- :] It arrived so fast and  customer service  was great .  
-customer service --> Positive  Real: Positive (Correct)
- tried  windows 8  and hated it !!!  
-windows 8 --> Negative  Real: Negative (Correct)
-  Set up  was a breeze .  
-Set up --> Positive  Real: Positive (Correct)
- But I do NOT like  Win8  .  
-Win8 --> Negative  Real: Negative (Correct)
- I am still in the process of learning about its  features  .  
-features --> Neutral  Real: Neutral (Correct)
- I had the same reasons as most PC users : the  price  , the overbearing restrictions of OSX and lack of support for games .  
-price --> Negative  Real: Negative (Correct)
- I had the same reasons as most PC users : the price , the overbearing restrictions of  OSX  and lack of support for games .  
-OSX --> Negative  Real: Negative (Correct)
- I had the same reasons as most PC users : the price , the overbearing restrictions of OSX and lack of  support for games  .  
-support for games --> Negative  Real: Negative (Correct)
- I wanted it for it 's  mobility  and man , this little bad boy is very nice .  
-mobility --> Positive  Real: Positive (Correct)
- I found the mini to be : Exceptionally easy to  set up   
-set up --> Positive  Real: Positive (Correct)
+ service was devine ,  oysters  where a sensual as they come , and the price ca n't be beat ! ! !  
+oysters --> Positive  Real: Positive (Correct)
+ every time in new york i make it a point to visit  restaurant saul  on smith street .  
+restaurant saul --> Positive  Real: Positive (Correct)
+ everything is always cooked to perfection , the  service  is excellent , the decor cool and understated .  
+service --> Positive  Real: Positive (Correct)
+ everything is always cooked to perfection , the service is excellent , the  decor  cool and understated .  
+decor --> Positive  Real: Positive (Correct)
+ i had the  duck breast special  on my last visit and it was incredible .  
+duck breast special --> Positive  Real: Positive (Correct)
+ the  food  is very average ... the thai fusion stuff is a bit too sweet , every thing they serve is too sweet here .  
+food --> Negative  Real: Negative (Correct)
+ the food is very average ... the  thai fusion stuff  is a bit too sweet , every thing they serve is too sweet here .  
+thai fusion stuff --> Negative  Real: Negative (Correct)
+ the only thing i moderately enjoyed was their  grilled chicken special with edamame puree  .  
+grilled chicken special with edamame puree --> Positive  Real: Positive (Correct)
+ i had never had  edamame pureed  before but i thought it was innovative and tasty ( could 've used a bit more salt ) .  
+edamame pureed --> Positive  Real: Positive (Correct)
+ the decor is night tho ... but they really need to clean that vent in the ceiling ... its quite un - appetizing , and kills your effort to make this  place  look sleek and modern .  
+place --> Negative  Real: Negative (Correct)
+ the  decor  is night tho ... but they really need to clean that vent in the ceiling ... its quite un - appetizing , and kills your effort to make this place look sleek and modern .  
+decor --> Positive  Real: Positive (Correct)
+ the decor is night tho ... but they really need to clean that  vent  in the ceiling ... its quite un - appetizing , and kills your effort to make this place look sleek and modern .  
+vent --> Negative  Real: Negative (Correct)
+ their  sake list  was extensive , but we were looking for purple haze , which was n't listed but made for us upon request !  
+sake list --> Positive  Real: Positive (Correct)
+ the  spicy tuna roll  was unusually good and the rock shrimp tempura was awesome , great appetizer to share !  
+spicy tuna roll --> Positive  Real: Positive (Correct)
+ the spicy tuna roll was unusually good and the  rock shrimp tempura  was awesome , great appetizer to share !  
+rock shrimp tempura --> Positive  Real: Positive (Correct)
+ we went around 9:30 on a friday and it had died down a bit by then so the  service  was great !  
+service --> Positive  Real: Positive (Correct)
+ we love th  pink pony  .  
+pink pony --> Positive  Real: Positive (Correct)
+ the perfect  spot  .  
+spot --> Positive  Real: Positive (Correct)
+  food  -awesome .  
+food --> Positive  Real: Positive (Correct)
+  service  - friendly and attentive .  
+service --> Positive  Real: Positive (Correct)
+  ambiance  - relaxed and stylish .  
+ambiance --> Positive  Real: Positive (Correct)
+ do n't judge this  place  prima facie , you have to try it to believe it , a home away from home for the literate heart .  
+place --> Positive  Real: Positive (Correct)
+ the  food  is decent .  
+food --> Neutral  Real: Neutral (Correct)
+ however , it 's the  service  that leaves a bad taste in my mouth .  
+service --> Negative  Real: Negative (Correct)
+ i happen to have a policy that goes along with a little bit of self - respect , which includes not letting a  waiter  intimidate me , i.e. make me feel bad asking for trivialities like water , or the check .  
+waiter --> Negative  Real: Negative (Correct)
+ this  place  has got to be the best japanese restaurant in the new york area .  
+place --> Positive  Real: Positive (Correct)
+  food  is great .  
+food --> Positive  Real: Positive (Correct)
+  service  is top notch .  
+service --> Positive  Real: Positive (Correct)
+ i tend to judge a sushi restaurant by its  sea urchin  , which was heavenly at sushi rose .  
+sea urchin --> Positive  Real: Positive (Correct)
+ the  sushi  seemed pretty fresh and was adequately proportioned .  
+sushi --> Positive  Real: Positive (Correct)
+ the  rice to fish ration  was also good -- they did n't try to overpack the rice .  
+rice to fish ration --> Positive  Real: Positive (Correct)
+ we took advanatage of the  half price sushi deal  on saturday so it was well worth it .  
+half price sushi deal --> Positive  Real: Positive (Correct)
+ in the evening , this place attracted a well dressed , with it , ny  crowd  .  
+crowd --> Positive  Real: Positive (Correct)
+ the  food  was well prepared and the service impecable .  
+food --> Positive  Real: Positive (Correct)
+ the food was well prepared and the  service  impecable .  
+service --> Positive  Real: Positive (Correct)
+ the  prix fixe menu  is worth every penny and you get more than enough ( both in quantity and quality ) .  
+prix fixe menu --> Positive  Real: Positive (Correct)
+ $ 6 and there is much tasty  food  , all of it fresh and continually refilled .  
+food --> Positive  Real: Positive (Correct)
+ i am not a vegetarian but , almost all the  dishes  were great .  
+dishes --> Positive  Real: Positive (Correct)
+ the  food  here is rather good , but only if you like to wait for it .  
+food --> Positive  Real: Positive (Correct)
+ i like the  somosas  , chai , and the chole , but the dhosas and dhal were kinda dissapointing .  
+somosas --> Positive  Real: Positive (Correct)
