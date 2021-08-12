@@ -5,9 +5,9 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa import update_checkpoints
+from pyabsa import available_checkpoints
 
-checkpoint_map = update_checkpoints()
+checkpoint_map = available_checkpoints()
 # You can find the latest checkpoints and use them according to their name, e.g.:
 # from pyabsa import APCTrainedModelManager
 # model_path = APCTrainedModelManager.get_checkpoint(checkpoint_name='Chinese')

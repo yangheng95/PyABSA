@@ -6,6 +6,7 @@ datasets/
 *.tokenizer
 *.model
 *.config
+*.args
 *.zip
 *.gz
 *.bin
@@ -22,7 +23,7 @@ glove.840B.300d.txt
 glove.42B.300d.txt
 glove.twitter.27B.txt
 
-# project config files
+# project main files
 checkpoints.json
 release_note.json
 

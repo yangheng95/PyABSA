@@ -5,7 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa import load_aspect_extractor, ATEPCCheckpointManager
+from pyabsa import ATEPCCheckpointManager
 
 # 本工具提供的所有功能均属于测试功能，供学习所用， 欢迎帮助维护及提出意见
 # 仅仅实现了列表抽取方面及分类情感， 后面有精力会实现从文件中批量抽取方面
@@ -23,15 +23,11 @@ examples = ['尤 其 是 照 的 大 尺 寸 照 片 时 效 果 也 是 非 常
             ]
 
 # 从Google Drive下载提供的预训练模型
-model_path = ATEPCCheckpointManager.get_checkpoint(checkpoint_name='Chinese')
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='Chinese')
 # model_path = 'state_dict/lcf_atepc_cdw_apcacc_96.88_apcf1_96.35_atef1_91.2'
 
 # 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
 sentiment_map = {0: 'Bad', 1: 'Good', -999: ''}
-aspect_extractor = load_aspect_extractor(trained_model_path=model_path,
-                                         sentiment_map=sentiment_map,  # optional
-                                         auto_device=False  # False means load model on CPU
-                                         )
 
 atepc_result = aspect_extractor.extract_aspect(inference_source=examples,  # list-support only, for now
                                                print_result=True,  # print the result

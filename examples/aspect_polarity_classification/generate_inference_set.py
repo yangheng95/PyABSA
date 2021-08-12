@@ -5,6 +5,10 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-# This function coverts a ABSA dataset to inference set, try to convert every dataset found in the dir
+# This function coverts a ABSA dataset_utils to inference set, try to convert every dataset_utils found in the dir
 # please do check the output file!
-# generate_inferrence_set_for_apc(dataset_path=ABSADatasets.APC_Datasets)
+from pyabsa.dataset import ABSADatasetList
+
+from pyabsa.utils.file_utils import generate_inference_set_for_apc
+
+generate_inference_set_for_apc(dataset_path=ABSADatasetList.APC_Datasets)

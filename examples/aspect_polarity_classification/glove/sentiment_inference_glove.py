@@ -8,10 +8,10 @@
 import os
 
 from pyabsa import load_sentiment_classifier, ABSADatasetList
-from pyabsa.model_utils import APCCheckpointManager
+from pyabsa import APCCheckpointManager
 
 ########################################################################################################################
-#                To use GloVe-based models, you should put the GloVe embedding into the dataset path                   #
+#                To use GloVe-based model, you should put the GloVe embedding into the dataset_utils path                   #
 #              or if you can access to Google, it will automatic download GloVe embedding if necessary                 #
 ########################################################################################################################
 
@@ -21,8 +21,9 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 
 sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
 
-model_path = APCCheckpointManager.get_checkpoint(checkpoint_name='TNet_LF')
-sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
+# model_path = APCCheckpointManager.get_checkpoint(checkpoint_name='TNet_LF')
+model_path = 'checkpoint/asgcn_acc_79.46_f1_68.72'
+sent_classifier = load_sentiment_classifier(checkpoint=model_path,
                                             auto_device=True,  # Use CUDA if available
                                             sentiment_map=sentiment_map
                                             )

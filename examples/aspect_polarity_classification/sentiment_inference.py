@@ -4,10 +4,10 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-# Usage: Evaluate on given text or inference dataset
+# Usage: Evaluate on given text or inference dataset_utils
 import os
 
-from pyabsa import load_sentiment_classifier, ABSADatasetList
+from pyabsa import APCCheckpointManager, ABSADatasetList
 
 os.environ['PYTHONIOENCODING'] = 'UTF8'
 
@@ -15,12 +15,10 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 
 sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
 
-# model_path = APCCheckpointManager.get_checkpoint(checkpoint_name='English')
-model_path = 'state_dict/fast_lcf_bert_att_cdw_acc_78.68_f1_72.76'
-sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
-                                            auto_device=True,  # Use CUDA if available
-                                            sentiment_map=sentiment_map
-                                            )
+sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='slide_lcf_bert_acc_86.85_f1_77.97',
+                                                                auto_device=True,  # Use CUDA if available
+                                                                sentiment_map=sentiment_map
+                                                                )
 
 text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated . !sent! 1 1'
 sent_classifier.infer(text, print_result=True)

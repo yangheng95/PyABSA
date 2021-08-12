@@ -4,21 +4,18 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-# Usage: Evaluate on given text or inference dataset
+# Usage: Evaluate on given text or inference dataset_utils
 
-from pyabsa import load_sentiment_classifier, ABSADatasetList
+from pyabsa import APCCheckpointManager, ABSADatasetList
 
 # Assume the sent_classifier is loaded or obtained using train function
 
 sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
-
-# model_path = APCTrainedModelManager.get_checkpoint(checkpoint_name='English')
-model_path = 'state_dict/tnet_lf_bert_cdw_acc_56.11_f1_32.64'
-
-sent_classifier = load_sentiment_classifier(trained_model_path=model_path,
-                                            auto_device=True,  # Use CUDA if available
-                                            sentiment_map=sentiment_map
-                                            )
+checkpoint = 'tnet_lf_bert_acc_80.41_f1_77.24'
+sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint=checkpoint,
+                                                                auto_device=True,  # Use CUDA if available
+                                                                sentiment_map=sentiment_map
+                                                                )
 
 text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated . !sent! 1 1'
 sent_classifier.infer(text, print_result=True)

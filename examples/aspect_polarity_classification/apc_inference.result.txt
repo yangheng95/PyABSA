@@ -13,7 +13,7 @@ internal speakers --> Negative  Real: Negative (Correct)
 being a fan of click pads -LRB- industry standard these days -RRB- and the lousy internal speakers , it 's hard for me to find things about this notebook I do n't like , especially considering the $ 350  price tag  .  
 price tag --> Negative  Real: Positive (Wrong)
  Other than not being a fan of  click pads  -LRB- industry standard these days -RRB- and the lousy internal speakers , it 's hard for me to find things about this notebook I do n't like , especially considering the $ 350 price tag .  
-click pads --> Negative  Real: Negative (Correct)
+click pads --> Neutral  Real: Negative (Wrong)
  No  installation disk (DVD)  is included .  
 installation disk (DVD) --> Negative  Real: Neutral (Wrong)
  It 's fast , light , and simple to  use  .  
@@ -55,7 +55,7 @@ works --> Positive  Real: Positive (Correct)
  And I may be the only one but I am really liking  Windows 8  .  
 Windows 8 --> Positive  Real: Positive (Correct)
  The  baterry  is very longer .  
-baterry --> Positive  Real: Positive (Correct)
+baterry --> Negative  Real: Positive (Wrong)
  Its  size  is ideal and the weight is acceptable .  
 size --> Positive  Real: Positive (Correct)
  Its size is ideal and the  weight  is acceptable .  
@@ -63,15 +63,15 @@ weight --> Positive  Real: Positive (Correct)
  I can say that I am fully satisfied with the  performance  that the computer has supplied .  
 performance --> Positive  Real: Positive (Correct)
  This laptop has only 2  USB ports  , and they are both on the same side .  
-USB ports --> Neutral  Real: Negative (Wrong)
+USB ports --> Negative  Real: Negative (Correct)
  It has so much more  speed  and the screen is very sharp .  
 speed --> Positive  Real: Positive (Correct)
  It has so much more speed and the  screen  is very sharp .  
-screen --> Positive  Real: Positive (Correct)
+screen --> Negative  Real: Positive (Wrong)
  Everything I wanted and everything I needed and the  price  was great !  
 price --> Positive  Real: Positive (Correct)
  It 's not inexpensive but the  Hardware performance  is impressive for a computer this small .  
-Hardware performance --> Negative  Real: Positive (Wrong)
+Hardware performance --> Positive  Real: Positive (Correct)
  This thing is awesome , everything always  works  , everything is always easy to set up , everything is compatible , its literally everything I could ask for .  
 works --> Positive  Real: Positive (Correct)
  This thing is awesome , everything always works , everything is always easy to  set up  , everything is compatible , its literally everything I could ask for .  
@@ -107,13 +107,13 @@ portability --> Positive  Real: Positive (Correct)
  The criticism has waned , and now I 'd be the first to recommend an Air for truly  portable computing  .  
 portable computing --> Positive  Real: Positive (Correct)
  I would have given it 5 starts was it not for the fact that it had  Windows 8   
-Windows 8 --> Neutral  Real: Negative (Wrong)
+Windows 8 --> Positive  Real: Negative (Wrong)
   MS Office 2011 for Mac  is wonderful , well worth it .  
 MS Office 2011 for Mac --> Positive  Real: Positive (Correct)
  But the  performance  of Mac Mini is a huge disappointment .  
 performance --> Negative  Real: Negative (Correct)
  They do n't just  look  good ; they deliver excellent performance .  
-look --> Positive  Real: Positive (Correct)
+look --> Negative  Real: Positive (Wrong)
  They do n't just look good ; they deliver excellent  performance  .  
 performance --> Positive  Real: Positive (Correct)
  I have had it over a year now with out a Glitch of any kind . . I love the  lit up keys  and screen display ... this thing is Fast and clear as can be .  
@@ -121,9 +121,9 @@ lit up keys --> Positive  Real: Positive (Correct)
  I have had it over a year now with out a Glitch of any kind . . I love the lit up keys and  screen display  ... this thing is Fast and clear as can be .  
 screen display --> Positive  Real: Positive (Correct)
  The  Mountain Lion OS  is not hard to figure out if you are familiar with Microsoft Windows .  
-Mountain Lion OS --> Positive  Real: Positive (Correct)
+Mountain Lion OS --> Negative  Real: Positive (Wrong)
  The Mountain Lion OS is not hard to figure out if you are familiar with  Microsoft Windows  .  
-Microsoft Windows --> Positive  Real: Neutral (Wrong)
+Microsoft Windows --> Neutral  Real: Neutral (Correct)
  However , I can refute that  OSX  is `` FAST '' .  
 OSX --> Positive  Real: Negative (Wrong)
  Enjoy using  Microsoft Office  !  
@@ -135,11 +135,11 @@ colors --> Positive  Real: Positive (Correct)
   Built-in apps  are purely amazing .  
 Built-in apps --> Positive  Real: Positive (Correct)
  Cons :  Screen resolution  .  
-Screen resolution --> Positive  Real: Negative (Wrong)
+Screen resolution --> Negative  Real: Negative (Correct)
  From the speed to the multi touch gestures this  operating system  beats Windows easily .  
 operating system --> Positive  Real: Positive (Correct)
  From the speed to the multi touch gestures this operating system beats  Windows  easily .  
-Windows --> Positive  Real: Negative (Wrong)
+Windows --> Negative  Real: Negative (Correct)
  From the  speed  to the multi touch gestures this operating system beats Windows easily .  
 speed --> Positive  Real: Positive (Correct)
  From the speed to the  multi touch gestures  this operating system beats Windows easily .  
@@ -147,7 +147,7 @@ multi touch gestures --> Positive  Real: Positive (Correct)
  I really like the  size  and I 'm a fan of the ACERS .  
 size --> Positive  Real: Positive (Correct)
  I opted for the  SquareTrade 3-Year Computer Accidental Protection Warranty  -LRB- $ 1500-2000 -RRB- which also support `` accidents '' like drops and spills that are NOT covered by AppleCare .  
-SquareTrade 3-Year Computer Accidental Protection Warranty --> Neutral  Real: Positive (Wrong)
+SquareTrade 3-Year Computer Accidental Protection Warranty --> Positive  Real: Positive (Correct)
  I opted for the SquareTrade 3-Year Computer Accidental Protection Warranty -LRB- $ 1500-2000 -RRB- which also support `` accidents '' like drops and spills that are NOT covered by  AppleCare  .  
 AppleCare --> Negative  Real: Negative (Correct)
  It 's light and easy to  transport  .  
@@ -155,9 +155,9 @@ transport --> Positive  Real: Positive (Correct)
  Once you get past learning how to use the poorly designed  Windows 8 Set-Up  you may feel frustrated .  
 Windows 8 Set-Up --> Negative  Real: Negative (Correct)
  It 's been time for a new laptop , and the only debate was which  size  of the Mac laptops , and whether to spring for the retina display .  
-size --> Neutral  Real: Neutral (Correct)
+size --> Negative  Real: Neutral (Wrong)
  It 's been time for a new laptop , and the only debate was which size of the Mac laptops , and whether to spring for the  retina display  .  
-retina display --> Neutral  Real: Neutral (Correct)
+retina display --> Negative  Real: Neutral (Wrong)
  The reason why I choose apple MacBook because of their  design  and the aluminum casing .  
 design --> Positive  Real: Positive (Correct)
  The reason why I choose apple MacBook because of their design and the  aluminum casing  .  
@@ -173,7 +173,7 @@ Intel4000 graphic chip --> Negative  Real: Negative (Correct)
  Apple removed the  DVD drive Firewire port  -LRB- will work with adapter -RRB- and put the SDXC slot in a silly position on the back .  
 DVD drive Firewire port --> Negative  Real: Neutral (Wrong)
  Apple removed the DVD drive Firewire port -LRB- will work with  adapter  -RRB- and put the SDXC slot in a silly position on the back .  
-adapter --> Negative  Real: Neutral (Wrong)
+adapter --> Neutral  Real: Neutral (Correct)
  Apple removed the DVD drive Firewire port -LRB- will work with adapter -RRB- and put the  SDXC slot  in a silly position on the back .  
 SDXC slot --> Negative  Real: Negative (Correct)
  The  durability  of the laptop will make it worth the money .  
@@ -199,7 +199,7 @@ size --> Positive  Real: Positive (Correct)
  It is a great size and amazing  windows 8  included !  
 windows 8 --> Positive  Real: Positive (Correct)
  I do not like too much  Windows 8  .  
-Windows 8 --> Negative  Real: Negative (Correct)
+Windows 8 --> Positive  Real: Negative (Wrong)
   Startup times  are incredibly long : over two minutes .  
 Startup times --> Positive  Real: Negative (Wrong)
  Also stunning  colors  and speedy  
@@ -211,7 +211,7 @@ shipping --> Positive  Real: Positive (Correct)
  This  mouse  is terrific .  
 mouse --> Positive  Real: Positive (Correct)
  It is really thick around the  battery  .  
-battery --> Positive  Real: Neutral (Wrong)
+battery --> Negative  Real: Neutral (Wrong)
  And  windows 7  works like a charm .  
 windows 7 --> Positive  Real: Positive (Correct)
  :-RRB- Great product , great  price  , great delivery , and great service .  
@@ -229,7 +229,7 @@ Set up --> Positive  Real: Positive (Correct)
  But I do NOT like  Win8  .  
 Win8 --> Negative  Real: Negative (Correct)
  I am still in the process of learning about its  features  .  
-features --> Positive  Real: Neutral (Wrong)
+features --> Neutral  Real: Neutral (Correct)
  I had the same reasons as most PC users : the  price  , the overbearing restrictions of OSX and lack of support for games .  
 price --> Negative  Real: Negative (Correct)
  I had the same reasons as most PC users : the price , the overbearing restrictions of  OSX  and lack of support for games .  
@@ -240,256 +240,3 @@ support for games --> Negative  Real: Negative (Correct)
 mobility --> Positive  Real: Positive (Correct)
  I found the mini to be : Exceptionally easy to  set up   
 set up --> Positive  Real: Positive (Correct)
- Having  USB3  is why I bought this Mini .  
-USB3 --> Positive  Real: Positive (Correct)
- The  sound  is nice and loud ; I do n't have any problems with hearing anything .  
-sound --> Positive  Real: Positive (Correct)
- It is very slim , the  track pad  is very much impressed with me .  
-track pad --> Positive  Real: Positive (Correct)
- The  settings  are not user-friendly either .  
-settings --> Negative  Real: Negative (Correct)
- Thank goodness for  OpenOffice  !  
-OpenOffice --> Positive  Real: Positive (Correct)
- Awesome  form factor  , great battery life , wonderful UX .  
-form factor --> Positive  Real: Positive (Correct)
- Awesome form factor , great  battery life  , wonderful UX .  
-battery life --> Positive  Real: Positive (Correct)
- Awesome form factor , great battery life , wonderful  UX  .  
-UX --> Positive  Real: Positive (Correct)
- i love the  keyboard  and the screen .  
-keyboard --> Positive  Real: Positive (Correct)
- i love the keyboard and the  screen  .  
-screen --> Positive  Real: Positive (Correct)
- However , there are MAJOR issues with the  touchpad  which render the device nearly useless .  
-touchpad --> Negative  Real: Negative (Correct)
- I 've already upgraded o  Mavericks  and I am impressed with everything about this computer .  
-Mavericks --> Positive  Real: Positive (Correct)
- Not as fast as I would have expect for an  i5  .  
-i5 --> Negative  Real: Negative (Correct)
- thanks for great  service  and shipping !  
-service --> Positive  Real: Positive (Correct)
- thanks for great service and  shipping  !  
-shipping --> Positive  Real: Positive (Correct)
- The  performance  seems quite good , and built-in applications like iPhoto work great with my phone and camera .  
-performance --> Positive  Real: Positive (Correct)
- The performance seems quite good , and  built-in applications  like iPhoto work great with my phone and camera .  
-built-in applications --> Positive  Real: Positive (Correct)
- The performance seems quite good , and built-in applications like  iPhoto  work great with my phone and camera .  
-iPhoto --> Positive  Real: Positive (Correct)
- I did swap out the  hard drive  for a Samsung 830 SSD which I highly recommend .  
-hard drive --> Positive  Real: Neutral (Wrong)
- I did swap out the hard drive for a  Samsung 830 SSD  which I highly recommend .  
-Samsung 830 SSD --> Positive  Real: Positive (Correct)
-  Starts up  in a hurry and everything is ready to go .  
-Starts up --> Positive  Real: Positive (Correct)
- Yes , that 's a good thing , but it 's made from  aluminum  that scratches easily .  
-aluminum --> Negative  Real: Negative (Correct)
- Quick and has  built in virus control  .  
-built in virus control --> Positive  Real: Positive (Correct)
- Took a long time trying to decide between one with  retina display  and one without .  
-retina display --> Negative  Real: Neutral (Wrong)
- I was also informed that the  components  of the Mac Book were dirty .  
-components --> Negative  Real: Negative (Correct)
- the  hardware  problems have been so bad , i ca n't wait till it completely dies in 3 years , TOPS !  
-hardware --> Negative  Real: Negative (Correct)
- It 's so nice that the  battery  last so long and that this machine has the snow lion !  
-battery --> Positive  Real: Positive (Correct)
- It 's so nice that the battery last so long and that this machine has the  snow lion  !  
-snow lion --> Positive  Real: Positive (Correct)
- HOWEVER I chose two day  shipping  and it took over a week to arrive .  
-shipping --> Neutral  Real: Negative (Wrong)
- it 's exactly what i wanted , and it has all the new  features  and whatnot .  
-features --> Positive  Real: Positive (Correct)
- Can you buy any laptop that matches the  quality  of a MacBook ?  
-quality --> Positive  Real: Positive (Correct)
- It feels cheap , the  keyboard  is not very sensitive .  
-keyboard --> Negative  Real: Negative (Correct)
- Though please note that sometimes it crashes , and the  sound quality  isnt superb .  
-sound quality --> Negative  Real: Negative (Correct)
- It is very easy to  navigate  even for a novice .  
-navigate --> Positive  Real: Positive (Correct)
- Does everything I need it to , has a wonderful  battery life  and I could n't be happier .  
-battery life --> Positive  Real: Positive (Correct)
- Great  Performance  and Quality .  
-Performance --> Positive  Real: Positive (Correct)
- Great Performance and  Quality  .  
-Quality --> Positive  Real: Positive (Correct)
- I used  windows XP  , windows Vista , and Windows 7 extensively .  
-windows XP --> Neutral  Real: Neutral (Correct)
- I used windows XP ,  windows Vista  , and Windows 7 extensively .  
-windows Vista --> Neutral  Real: Neutral (Correct)
- I used windows XP , windows Vista , and  Windows 7  extensively .  
-Windows 7 --> Neutral  Real: Neutral (Correct)
- I did add a  SSD drive  and memory  
-SSD drive --> Neutral  Real: Neutral (Correct)
- I did add a SSD drive and  memory   
-memory --> Neutral  Real: Neutral (Correct)
- On  start up  it asks endless questions just so itune can sell you more of their products .  
-start up --> Positive  Real: Negative (Wrong)
- On start up it asks endless questions just so  itune  can sell you more of their products .  
-itune --> Positive  Real: Negative (Wrong)
- I Have been a Pc user for a very long time now but I will get used to this new  OS  .  
-OS --> Positive  Real: Neutral (Wrong)
- One more thing , this mac does NOT come with  restore disks  and I am not sure if you can make them direct from the mac like you can with newer PC 's , also the charging cables are made of the same cheap material as the iPhone/iPod touch cables .
-restore disks --> Negative  Real: Negative (Correct)
- One more thing , this mac does NOT come with restore disks and I am not sure if you can make them direct from the mac like you can with newer PC 's , also the  charging cables  are made of the same cheap material as the iPhone/iPod touch cables .  
-charging cables --> Negative  Real: Negative (Correct)
-mac does NOT come with restore disks and I am not sure if you can make them direct from the mac like you can with newer PC 's , also the charging cables are made of the same cheap  material  as the iPhone/iPod touch cables .  
-material --> Negative  Real: Negative (Correct)
- I bought it to my son who uses it for  graphic design  .  
-graphic design --> Neutral  Real: Neutral (Correct)
- I never tried any  external mics  with that iMac .  
-external mics --> Negative  Real: Neutral (Wrong)
- The new  os  is great on my macbook pro !  
-os --> Positive  Real: Positive (Correct)
- I have experienced no problems ,  works  as anticipated .  
-works --> Positive  Real: Positive (Correct)
-  System  is running great .  
-System --> Positive  Real: Positive (Correct)
- Easy to  customize setting  and even create your own bookmarks .  
-customize setting --> Positive  Real: Positive (Correct)
- Easy to customize setting and even  create your own bookmarks  .  
-create your own bookmarks --> Positive  Real: Positive (Correct)
- The MAC Mini ,  wireless keyboard / mouse  and a HDMI cable is all I need to get some real work done .  
-wireless keyboard / mouse --> Positive  Real: Neutral (Wrong)
- The MAC Mini , wireless keyboard / mouse and a  HDMI cable  is all I need to get some real work done .  
-HDMI cable --> Positive  Real: Neutral (Wrong)
- it has all the  features  that we expected and the price was good , working well so far .  
-features --> Positive  Real: Positive (Correct)
- it has all the features that we expected and the  price  was good , working well so far .  
-price --> Positive  Real: Positive (Correct)
- it has all the features that we expected and the price was good ,  working  well so far .  
-working --> Positive  Real: Positive (Correct)
- I work as a designer and coder and I needed a new buddy to work with , not  gaming  .  
-gaming --> Neutral  Real: Neutral (Correct)
- The new  operating system  makes this computer into a super iPad .  
-operating system --> Positive  Real: Positive (Correct)
- Easy to  set up  and go !  
-set up --> Positive  Real: Positive (Correct)
- I ca n't believe how quiet the  hard drive  is and how quick this thing boots up .  
-hard drive --> Positive  Real: Positive (Correct)
- I ca n't believe how quiet the hard drive is and how quick this thing  boots up  .  
-boots up --> Positive  Real: Positive (Correct)
- The only issue came when I tried  scanning  to the mac .  
-scanning --> Negative  Real: Negative (Correct)
- I think this is about as good as it gets at anything close to this  price point  .  
-price point --> Positive  Real: Neutral (Wrong)
- It 's just what we were looking for and it  works  great .  
-works --> Positive  Real: Positive (Correct)
- It 's so quick and responsive that it makes  working  / surfing on a computer so much more pleasurable !  
-working --> Positive  Real: Positive (Correct)
- It 's so quick and responsive that it makes working /  surfing  on a computer so much more pleasurable !  
-surfing --> Positive  Real: Positive (Correct)
- It  works  fine , and all the software seems to run pretty well .  
-works --> Positive  Real: Positive (Correct)
- It works fine , and all the  software  seems to run pretty well .  
-software --> Positive  Real: Positive (Correct)
- I 'm using this computer for  word processing  , web browsing , some gaming , and I 'm learning programming .  
-word processing --> Neutral  Real: Neutral (Correct)
- I 'm using this computer for word processing ,  web browsing  , some gaming , and I 'm learning programming .  
-web browsing --> Neutral  Real: Neutral (Correct)
- I 'm using this computer for word processing , web browsing , some  gaming  , and I 'm learning programming .  
-gaming --> Neutral  Real: Neutral (Correct)
- I 'm using this computer for word processing , web browsing , some gaming , and I 'm learning  programming  .  
-programming --> Neutral  Real: Neutral (Correct)
- My wife was so excited to open the box , but quickly came to see that it did not  function  as it should .  
-function --> Negative  Real: Negative (Correct)
- I wanted a computer that was quite , fast , and that had overall great  performance  .  
-performance --> Positive  Real: Neutral (Wrong)
-  Apple "Help"  is a mixed bag .  
-Apple "Help" --> Neutral  Real: Negative (Wrong)
- It suddenly can not  work  .  
-work --> Negative  Real: Negative (Correct)
-  Harddrive  was in poor condition , had to replace it .  
-Harddrive --> Negative  Real: Negative (Correct)
- The  on/off switch  is a bit obscure in the rear corner .  
-on/off switch --> Negative  Real: Negative (Correct)
- My only complaint is the total lack of  instructions  that come with the mac mini .  
-instructions --> Negative  Real: Negative (Correct)
- The only task that this computer would not be good enough for would be  gaming  , otherwise the integrated Intel 4000 graphics work well for other tasks .  
-gaming --> Negative  Real: Negative (Correct)
- I use it mostly for  content creation  -LRB- Audio , video , photo editing -RRB- and its reliable .  
-content creation --> Positive  Real: Positive (Correct)
- I use it mostly for content creation -LRB-  Audio  , video , photo editing -RRB- and its reliable .  
-Audio --> Positive  Real: Positive (Correct)
- I use it mostly for content creation -LRB- Audio ,  video  , photo editing -RRB- and its reliable .  
-video --> Positive  Real: Positive (Correct)
- I use it mostly for content creation -LRB- Audio , video ,  photo editing  -RRB- and its reliable .  
-photo editing --> Positive  Real: Positive (Correct)
-  Screen  is bright and gorgeous .  
-Screen --> Positive  Real: Positive (Correct)
- The only solution is to turn the  brightness  down , etc. .  
-brightness --> Negative  Real: Neutral (Wrong)
- If you want more information on macs I suggest going to apple.com and heading towards the macbook page for more information on the  applications  .  
-applications --> Neutral  Real: Neutral (Correct)
- It is robust , with a friendly  use  as all Apple products .  
-use --> Positive  Real: Positive (Correct)
- It is fast and easy to  use  .  
-use --> Positive  Real: Positive (Correct)
- And the fact that it comes with an  i5 processor  definitely speeds things up  
-i5 processor --> Positive  Real: Positive (Correct)
- I have been PC for years but this computer is intuitive and its  built in features  are a great help  
-built in features --> Positive  Real: Positive (Correct)
- Nice  screen  , keyboard works great !  
-screen --> Positive  Real: Positive (Correct)
- Nice screen ,  keyboard  works great !  
-keyboard --> Positive  Real: Positive (Correct)
- I was amazed at how fast the  delivery  was .  
-delivery --> Positive  Real: Positive (Correct)
- I 've installed to it additional  SSD  and 16Gb RAM .  
-SSD --> Neutral  Real: Neutral (Correct)
- I 've installed to it additional SSD and  16Gb RAM  .  
-16Gb RAM --> Neutral  Real: Neutral (Correct)
- The  memory  was gone and it was not able to be used .  
-memory --> Negative  Real: Negative (Correct)
- It  works  great and I am so happy I bought it .  
-works --> Positive  Real: Positive (Correct)
- I like the  design  and ease of use with the keyboard , plenty of ports .  
-design --> Positive  Real: Positive (Correct)
- I like the design and ease of use with the  keyboard  , plenty of ports .  
-keyboard --> Positive  Real: Positive (Correct)
- I like the design and ease of use with the keyboard , plenty of  ports  .  
-ports --> Positive  Real: Positive (Correct)
- it definitely beats my old mac and the  service  was great .  
-service --> Positive  Real: Positive (Correct)
-  Web browsing  is very quick with Safari browser .  
-Web browsing --> Positive  Real: Positive (Correct)
- Web browsing is very quick with  Safari browser  .  
-Safari browser --> Positive  Real: Positive (Correct)
- I like the  lighted screen  at night .  
-lighted screen --> Positive  Real: Positive (Correct)
- It is really easy to  use  and it is quick to start up .  
-use --> Positive  Real: Positive (Correct)
- It is really easy to use and it is quick to  start up  .  
-start up --> Positive  Real: Positive (Correct)
- I 've lived with the crashes and slow  operation  and restarts .  
-operation --> Negative  Real: Negative (Correct)
-  USB3 Peripherals  are noticably less expensive than the ThunderBolt ones .  
-USB3 Peripherals --> Positive  Real: Positive (Correct)
- USB3 Peripherals are noticably less expensive than the  ThunderBolt  ones .  
-ThunderBolt --> Negative  Real: Negative (Correct)
- And mine had broke but I sent it in under  warranty  - no problems .  
-warranty --> Neutral  Real: Positive (Wrong)
- It 's fast , light , and is perfect for  media editing  , which is mostly why I bought it in the first place .  
-media editing --> Positive  Real: Positive (Correct)
- The  battery  lasts as advertised -LRB- give or take 15-20 minutes -RRB- , and the entire user experience is very elegant .  
-battery --> Positive  Real: Positive (Correct)
- The battery lasts as advertised -LRB- give or take 15-20 minutes -RRB- , and the entire  user experience  is very elegant .  
-user experience --> Positive  Real: Positive (Correct)
- Thanks for the fast  shipment  and great price .  
-shipment --> Positive  Real: Positive (Correct)
- Thanks for the fast shipment and great  price  .  
-price --> Positive  Real: Positive (Correct)
- ! Excelent  performance  , usability , presentation and time response .  
-performance --> Positive  Real: Positive (Correct)
- ! Excelent performance ,  usability  , presentation and time response .  
-usability --> Positive  Real: Positive (Correct)
- ! Excelent performance , usability ,  presentation  and time response .  
-presentation --> Positive  Real: Positive (Correct)
- ! Excelent performance , usability , presentation and  time response  .  
-time response --> Positive  Real: Positive (Correct)
- The smaller  size  was a bonus because of space restrictions .  
-size --> Positive  Real: Positive (Correct)
- I blame the  Mac OS  .  
-Mac OS --> Negative  Real: Negative (Correct)
- In fact I still use many  Legacy programs  -LRB- Appleworks , FileMaker Pro , Quicken , Photoshop etc -RRB- !  
