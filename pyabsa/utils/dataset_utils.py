@@ -36,12 +36,12 @@ class ABSADatasetList:
 
     # assembled dataset_utils
     Chinese = 'Chinese'
-    SemEval = 'SemEval'
-    Restaurant = 'Restaurant'
-    Multilingual = 'Multilingual'
+    SemEval = ['laptop14', 'restaurant14', 'restaurant16']  # Abandon rest15 dataset due to data leakage, See https://github.com/yangheng95/PyABSA/issues/53
+    Restaurant = ['restaurant14', 'restaurant16']
+    Multilingual = ['Multilingual']
 
-    APC_Datasets = 'APC_Datasets'
-    ATEPC_Datasets = 'ATEPC_Datasets'
+    APC_Datasets = ['APC_Datasets']
+    ATEPC_Datasets = ['ATEPC_Datasets']
 
 
 class ClassificationDatasetList:
@@ -50,19 +50,22 @@ class ClassificationDatasetList:
 
 
 def detect_dataset(dataset_path, task='apc'):
-    dataset_file = {}
-    if hasattr(ABSADatasetList, dataset_path) or hasattr(ClassificationDatasetList, dataset_path):
-        print('Find {} at {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
-        download_datasets_from_github(os.getcwd())
-        search_path = find_dir(os.getcwd(), [dataset_path, task], exclude_key=['infer', 'test.'], disable_alert=True)
-        dataset_file['train'] = find_files(search_path, ['dataset', 'train', dataset_path, task], exclude_key=['infer', 'test.'])
-        dataset_file['test'] = find_files(search_path, ['dataset', 'test', dataset_path, task], exclude_key=['infer', 'train.'])
-    else:
-        dataset_file['train'] = find_files(dataset_path, ['dataset', 'train', task], exclude_key=['infer', 'test.'])
-        dataset_file['test'] = find_files(dataset_path, ['dataset', 'test', task], exclude_key=['infer', 'train.'])
+    if not isinstance(dataset_path, list):
+        dataset_path = [dataset_path]
+    dataset_file = {'train': [], 'test': []}
+    for d in dataset_path:
+        if not os.path.exists(d):
+            print('{} dataset is not found locally, search at {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
+            download_datasets_from_github(os.getcwd())
+            search_path = find_dir(os.getcwd(), ['dataset', task], exclude_key=['infer', 'test.'], disable_alert=True)
+            dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['infer', 'test.'])
+            dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['infer', 'train.'])
+        else:
+            dataset_file['train'] = find_files(d, ['dataset', 'train', task], exclude_key=['infer', 'test.'])
+            dataset_file['test'] = find_files(d, ['dataset', 'test', task], exclude_key=['infer', 'train.'])
 
     if len(dataset_file['train']) == 0:
-        raise RuntimeError('Can not load training dataset at {}!'.format(dataset_path))
+        raise RuntimeError('{} is not an integrated dataset, and it is not a path containing datasets!'.format(dataset_path))
     if len(dataset_file['test']) == 0:
         print('Waring, auto_evaluate=True, however cannot find test set using for evaluating!')
 
@@ -70,16 +73,21 @@ def detect_dataset(dataset_path, task='apc'):
 
 
 def detect_infer_dataset(dataset_path, task='apc'):
-    if hasattr(ABSADatasetList, dataset_path) or hasattr(ClassificationDatasetList, dataset_path):
-        print('Find {} at {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
-        download_datasets_from_github(os.getcwd())
-        search_path = find_dir(os.getcwd(), [dataset_path, task], disable_alert=True)
-        dataset_file = find_files(search_path, ['infer', dataset_path], 'test.')
-    else:
-        dataset_file = find_files(dataset_path, ['infer', task], 'test.')
+    if not isinstance(dataset_path, list):
+        dataset_path = [dataset_path]
+    dataset_file = []
+    for d in dataset_path:
+        if not os.path.exists(d):
+            print('{} dataset is not found locally, search at {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
+            download_datasets_from_github(os.getcwd())
+            download_datasets_from_github(os.getcwd())
+            search_path = find_dir(os.getcwd(), ['dataset', d, task], disable_alert=True)
+            dataset_file += find_files(search_path, ['infer', d], 'train.')
+        else:
+            dataset_file += find_files(d, ['infer', task], 'train.')
 
     if len(dataset_file) == 0:
-        raise RuntimeError('Can not load inference dataset at {}!'.format(dataset_path))
+        raise RuntimeError('{} is not an integrated dataset, and it is not a path containing datasets!'.format(dataset_path))
 
     return dataset_file
 
