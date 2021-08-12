@@ -74,9 +74,9 @@ def detect_infer_dataset(dataset_path, task='apc'):
         print('Find {} at {}'.format(dataset_path, 'https://github.com/yangheng95/ABSADatasets'))
         download_datasets_from_github(os.getcwd())
         search_path = find_dir(os.getcwd(), [dataset_path, task], disable_alert=True)
-        dataset_file = find_files(search_path, ['infer', task, dataset_path], 'train')
+        dataset_file = find_files(search_path, ['infer', dataset_path], 'test.')
     else:
-        dataset_file = find_files(dataset_path, ['infer', task], 'train')
+        dataset_file = find_files(dataset_path, ['infer', task], 'test.')
 
     if len(dataset_file) == 0:
         raise RuntimeError('Can not load inference dataset at {}!'.format(dataset_path))

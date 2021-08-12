@@ -37,6 +37,13 @@ class APCCheckpointManager:
     def get_sentiment_classifier(checkpoint: str = None,
                                  sentiment_map: dict = None,
                                  auto_device: bool = True):
+        """
+
+        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
+        :param label_map: label to text index map
+        :param auto_device:
+        :return:
+        """
         if find_dir(os.getcwd(), checkpoint):
             checkpoint = find_dir(os.getcwd(), checkpoint)
 
@@ -52,7 +59,7 @@ class APCCheckpointManager:
 
     @staticmethod
     def get_checkpoint(checkpoint: str = 'Chinese'):
-        aspect_sentiment_classification_checkpoint = update_checkpoints('APC')
+        aspect_sentiment_classification_checkpoint = available_checkpoints('APC')
         if checkpoint.lower() in [k.lower() for k in aspect_sentiment_classification_checkpoint.keys()]:
             print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint), 'green'))
         else:
@@ -70,6 +77,13 @@ class ATEPCCheckpointManager:
     def get_aspect_extractor(checkpoint: str = None,
                              sentiment_map: dict = None,
                              auto_device: bool = True):
+        """
+
+        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
+        :param label_map: label to text index map
+        :param auto_device:
+        :return:
+        """
         if find_dir(os.getcwd(), checkpoint):
             checkpoint = find_dir(os.getcwd(), checkpoint)
 
@@ -85,7 +99,7 @@ class ATEPCCheckpointManager:
 
     @staticmethod
     def get_checkpoint(checkpoint: str = 'Chinese'):
-        atepc_checkpoint = update_checkpoints('ATEPC')
+        atepc_checkpoint = available_checkpoints('ATEPC')
         if checkpoint.lower() in [k.lower() for k in atepc_checkpoint.keys()]:
             print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint), 'green'))
         else:
@@ -101,6 +115,13 @@ class TextClassifierCheckpointManager:
     def get_text_classifier(checkpoint=None,
                             label_map=None,
                             auto_device=True):
+        """
+
+        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
+        :param label_map: label to text index map
+        :param auto_device:
+        :return:
+        """
         if find_dir(os.getcwd(), checkpoint):
             checkpoint = find_dir(os.getcwd(), checkpoint)
 
@@ -116,7 +137,7 @@ class TextClassifierCheckpointManager:
 
     @staticmethod
     def get_checkpoint(checkpoint: str = 'Chinese'):
-        text_classification_checkpoint = update_checkpoints('TextClassification')
+        text_classification_checkpoint = available_checkpoints('TextClassification')
         if checkpoint.lower() in [k.lower() for k in text_classification_checkpoint.keys()]:
             print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint), 'green'))
         else:
@@ -174,7 +195,7 @@ def parse_checkpoint_info(t_checkpoint_map, task='APC'):
     return t_checkpoint_map
 
 
-def update_checkpoints(task=''):
+def available_checkpoints(task=''):
     try:
         checkpoint_url = '1jjaAQM6F9s_IEXNpaY-bQF9EOrhq0PBD'
         if os.path.isfile('./checkpoints.json'):
