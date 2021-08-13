@@ -1,4 +1,7 @@
 {
+  "1.0.6": {
+    "1": "Fix potential error loading GloVe-based model's checkpoint."
+  },
   "1.0.5": {
     "1": "Fix potential error loading ATEPC checkpoint."
   },

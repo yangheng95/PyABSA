@@ -4,7 +4,7 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-
+import math
 import os
 import pickle
 import random
@@ -19,7 +19,7 @@ from sklearn import metrics
 from termcolor import colored
 from torch.utils.data import DataLoader, random_split, ConcatDataset
 from tqdm import tqdm
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModel, BertModel
 
 from pyabsa.utils.dataset_utils import ABSADatasetList
 from pyabsa.utils.file_utils import save_model
@@ -104,6 +104,13 @@ class Instructor:
 
         print_args(self.opt, self.logger)
 
+        initializers = {
+            'xavier_uniform_': torch.nn.init.xavier_uniform_,
+            'xavier_normal_': torch.nn.init.xavier_normal_,
+            'orthogonal_': torch.nn.init.orthogonal_,
+        }
+        self.initializer = initializers[self.opt.initializer]
+
         self.optimizer = optimizers[self.opt.optimizer](
             self.model.parameters(),
             lr=self.opt.learning_rate,
@@ -116,6 +123,17 @@ class Instructor:
             os.remove('./init_state_dict.bin')
         if self.opt.cross_validate_fold > 0:
             torch.save(self.model.state_dict(), './init_state_dict.bin')
+
+    def _reset_params(self):
+        for child in self.model.children():
+            if type(child) != BertModel:  # skip bert params
+                for p in child.parameters():
+                    if p.requires_grad:
+                        if len(p.shape) > 1:
+                            self.initializer(p)
+                        else:
+                            stdv = 1. / math.sqrt(p.shape[0])
+                            torch.nn.init.uniform_(p, a=-stdv, b=stdv)
 
     def reload_model(self):
         self.model.load_state_dict(torch.load('./init_state_dict.bin'))
@@ -447,6 +465,7 @@ class Instructor:
         # Loss and Optimizer
         criterion = nn.CrossEntropyLoss()
         lca_criterion = nn.CrossEntropyLoss()
+        self._reset_params()
         return self._train(criterion, lca_criterion)
 
 
