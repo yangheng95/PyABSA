@@ -32,7 +32,7 @@ apc_config_english.srd_alignment = True
 
 Laptop14 = ABSADatasetList.Laptop14
 sent_classifier = Trainer(config=apc_config_english,
-                          dataset=Laptop14, 
+                          dataset=Laptop14,
                           checkpoint_save_mode=1,
-                          auto_device=True  
+                          auto_device=True
                           )

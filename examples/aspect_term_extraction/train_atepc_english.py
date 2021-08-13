@@ -14,7 +14,6 @@ from pyabsa.functional import Trainer, ATEPCTrainer
 from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import ATEPCConfigManager
 
-save_path = 'state_dict'
 
 config = ATEPCConfigManager.get_atepc_config_english()
 config.model = ATEPCModelList.LCF_ATEPC
