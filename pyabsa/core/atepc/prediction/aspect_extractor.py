@@ -20,6 +20,7 @@ from transformers.models.bert.modeling_bert import BertModel
 from pyabsa.utils.dataset_utils import detect_infer_dataset
 from pyabsa.core.atepc.models import ATEPCModelList
 from pyabsa.core.atepc.dataset_utils.atepc_utils import load_atepc_datasets
+from pyabsa.utils.pyabsa_utils import print_args
 from ..dataset_utils.data_utils_for_inferring import (ATEPCProcessor,
                                                       convert_ate_examples_to_features,
                                                       convert_apc_examples_to_features,
@@ -89,9 +90,7 @@ class AspectExtractor:
         torch.manual_seed(self.opt.seed)
 
         print('Config used in Training:')
-        for arg in vars(self.opt):
-            if getattr(self.opt, arg) is not None:
-                print('>>> {0}: {1}'.format(arg, getattr(self.opt, arg)))
+        print_args(self.opt)
 
         if self.opt.gradient_accumulation_steps < 1:
             raise ValueError("Invalid gradient_accumulation_steps parameter: {}, should be >= 1".format(

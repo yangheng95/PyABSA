@@ -1,5 +1,5 @@
 {
-  "1.0.2": {
+  "1.0.3": {
     "1": "Add checkpoint save options, default to save the state_dict instead the whole model",
     "2": "Update documentation of some examples",
     "3": "Fix a dataset selection problem"

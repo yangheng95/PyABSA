@@ -18,7 +18,6 @@ from termcolor import colored
 
 from pyabsa import __version__
 
-
 # convert atepc_datasets in this repo for inferring_tutorials
 from pyabsa.utils.pyabsa_utils import save_args
 

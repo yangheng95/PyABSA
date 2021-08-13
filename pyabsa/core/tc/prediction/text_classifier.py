@@ -24,6 +24,7 @@ from ..classic.__glove__.dataset_utils.data_utils_for_training import LABEL_PADD
 
 from pyabsa.utils.pyabsa_utils import print_args
 
+
 class TextClassifier:
     def __init__(self, model_arg=None, label_map=None):
         '''

@@ -23,7 +23,6 @@ from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler, Tens
 from transformers import AutoTokenizer, AutoModel
 
 from pyabsa.utils.file_utils import save_model
-from pyabsa.utils.logger import get_logger
 from pyabsa.utils.pyabsa_utils import print_args
 from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
 
@@ -348,7 +347,6 @@ class Instructor:
 
 def train4atepc(opt, from_checkpoint_path, logger):
     # in case of handling ConnectionError exception
-    trainer = Instructor(opt, logger)
 
     trainer = None
     while not trainer:
