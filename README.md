@@ -216,10 +216,8 @@ atepc_config_english.model = ATEPCModelList.LCF_ATEPC
 ```
 laptop14 = ABSADatasetList.Laptop14
 
-aspect_extractor = ATEPCTrainer(config=atepc_config_english,  # set config=None to use default model
-                                dataset=laptop14,  # file or dir, dataset_utils(s) will be automatically detected
-                                save_checkpoint=True,  # set model_path_to_save=None to avoid save model
-                                auto_device=True  # Auto choose CUDA or CPU
+aspect_extractor = ATEPCTrainer(config=atepc_config_english, 
+                                dataset=laptop14
                                 )
 ```
 
@@ -236,7 +234,7 @@ aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='chine
                                                                )
 
 inference_source = pyabsa.ABSADatasetList.SemEval
-atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source,  #
+atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source, 
                                                save_result=True,
                                                print_result=True,  # print the result
                                                pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
