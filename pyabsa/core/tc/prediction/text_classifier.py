@@ -20,7 +20,7 @@ from ..models import GloVeClassificationModelList, BERTClassificationModelList
 from ..classic.__glove__.dataset_utils.data_utils_for_inferring import GloVeClassificationDataset
 from ..classic.__bert__.dataset_utils.data_utils_for_inferring import BERTClassificationDataset
 
-from ..classic.__glove__.dataset_utils.data_utils_for_training import LABEL_PADDING
+from ..classic.__glove__.dataset_utils.data_utils_for_training import LABEL_PADDING, build_embedding_matrix, build_tokenizer
 
 from pyabsa.utils.pyabsa_utils import print_args
 
@@ -51,11 +51,27 @@ class TextClassifier:
                 tokenizer_path = find_file(model_arg, '.tokenizer')
                 config_path = find_file(model_arg, '.config')
                 self.opt = pickle.load(open(config_path, 'rb'))
-                if 'pretrained_bert_name' in self.opt.args:
-                    self.opt.pretrained_bert = self.opt.pretrained_bert_name
                 if state_dict_path:
-                    self.bert = BertModel.from_pretrained(self.opt.pretrained_bert)
-                    self.model = self.opt.model(self.bert, self.opt)
+                    if 'pretrained_bert_name' in self.opt.args or 'pretrained_bert' in self.opt.args:
+                        if 'pretrained_bert_name' in self.opt.args:
+                            self.opt.pretrained_bert = self.opt.pretrained_bert_name
+                        self.bert = BertModel.from_pretrained(self.opt.pretrained_bert)
+                        self.model = self.opt.model(self.bert, self.opt)
+                    else:
+                        self.tokenizer = build_tokenizer(
+                            dataset_list=self.opt.dataset_file,
+                            max_seq_len=self.opt.max_seq_len,
+                            dat_fname='{0}_tokenizer.dat'.format(os.path.basename(self.opt.dataset_path)),
+                            opt=self.opt
+                        )
+                        self.embedding_matrix = build_embedding_matrix(
+                            word2idx=self.tokenizer.word2idx,
+                            embed_dim=self.opt.embed_dim,
+                            dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(self.opt.embed_dim), os.path.basename(self.opt.dataset_path)),
+                            opt=self.opt
+                        )
+                        self.model = self.opt.model(self.embedding_matrix, self.opt).to(self.opt.device)
+
                     self.model.load_state_dict(torch.load(state_dict_path))
 
                 if model_path:

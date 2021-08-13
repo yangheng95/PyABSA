@@ -14,7 +14,7 @@ from pyabsa.functional import Trainer, ATEPCTrainer
 from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import ATEPCConfigManager
 
-SemEval = ABSADatasetList.SemEval
+SemEval = ABSADatasetList.TShirt
 atepc_config_english = ATEPCConfigManager.get_atepc_config_english()
 atepc_config_english.num_epoch = 10
 atepc_config_english.evaluate_begin = 4
