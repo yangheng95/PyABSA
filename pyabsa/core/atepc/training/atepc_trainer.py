@@ -207,7 +207,7 @@ class Instructor:
                                     self.opt.max_test_metrics['max_apc_test_f1'] = apc_result['apc_test_f1']
                                 if ate_result > self.opt.max_test_metrics['max_ate_test_f1']:
                                     self.opt.max_test_metrics['max_ate_test_f1'] = ate_result
-                                save_model(self.opt, self.model, self.tokenizer, save_path, mode=0)
+                                save_model(self.opt, self.model, self.tokenizer, save_path)
 
                         current_apc_test_acc = apc_result['apc_test_acc']
                         current_apc_test_f1 = apc_result['apc_test_f1']
@@ -260,7 +260,7 @@ class Instructor:
                                                   self.opt.model_name,
                                                   self.opt.lcf,
                                                   )
-                save_model(self.opt, self.model, self.tokenizer, save_path, mode=0)
+                save_model(self.opt, self.model, self.tokenizer, save_path)
             return self.model, self.opt, self.tokenizer, sum_apc_test_acc, sum_apc_test_f1, sum_ate_test_f1
 
     def evaluate(self, eval_ATE=True, eval_APC=True):

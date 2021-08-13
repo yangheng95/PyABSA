@@ -35,7 +35,7 @@ class ABSADatasetList:
     TShirt = 'TShirt'
 
     # assembled dataset_utils
-    Chinese = 'Chinese'
+    Chinese = ['Chinese']
     SemEval = ['laptop14', 'restaurant14', 'restaurant16']  # Abandon rest15 dataset due to data leakage, See https://github.com/yangheng95/PyABSA/issues/53
     Restaurant = ['restaurant14', 'restaurant16']
     Multilingual = 'Multilingual'
@@ -54,7 +54,7 @@ def detect_dataset(dataset_path, task='apc'):
         dataset_path = [dataset_path]
     dataset_file = {'train': [], 'test': []}
     for d in dataset_path:
-        if not os.path.exists(d):
+        if not os.path.exists(d) or hasattr(ABSADatasetList, d):
             print('{} dataset is not found locally, search at {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
             search_path = find_dir(os.getcwd(), ['dataset', task], exclude_key=['infer', 'test.'], disable_alert=True)
@@ -77,7 +77,7 @@ def detect_infer_dataset(dataset_path, task='apc'):
         dataset_path = [dataset_path]
     dataset_file = []
     for d in dataset_path:
-        if not os.path.exists(d):
+        if not os.path.exists(d) or hasattr(ABSADatasetList, d):
             print('{} dataset is not found locally, search at {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
             download_datasets_from_github(os.getcwd())

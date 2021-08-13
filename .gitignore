@@ -5,6 +5,7 @@ datasets/
 *.results
 *.tokenizer
 *.model
+*.state_dict
 *.config
 *.args
 *.zip

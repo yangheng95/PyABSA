@@ -206,7 +206,7 @@ class Instructor:
                                 if f1 > self.opt.max_test_metrics['max_apc_test_f1']:
                                     self.opt.max_test_metrics['max_apc_test_f1'] = f1
 
-                                save_model(self.opt, self.model, self.tokenizer, save_path, mode=0)
+                                save_model(self.opt, self.model, self.tokenizer, save_path)
                         if f1 > max_fold_f1:
                             max_fold_f1 = f1
                         postfix = ('Epoch:{} | Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) |'
@@ -243,7 +243,7 @@ class Instructor:
                 save_path = '{0}/{1}/'.format(self.opt.model_path_to_save,
                                               self.opt.model_name,
                                               )
-                save_model(self.opt, self.model, self.tokenizer, save_path, mode=0)
+                save_model(self.opt, self.model, self.tokenizer, save_path)
             return self.model, self.opt, self.tokenizer, sum_acc, sum_f1
 
     def _k_fold_train_and_evaluate(self, criterion, lca_criterion):
@@ -330,7 +330,7 @@ class Instructor:
                                     if f1 > self.opt.max_test_metrics['max_apc_test_f1']:
                                         self.opt.max_test_metrics['max_apc_test_f1'] = f1
 
-                                    save_model(self.opt, self.model, self.tokenizer, save_path, mode=0)
+                                    save_model(self.opt, self.model, self.tokenizer, save_path)
                             if f1 > max_fold_f1:
                                 max_fold_f1 = f1
                             postfix = ('Epoch:{} | Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) |'
@@ -390,7 +390,7 @@ class Instructor:
                 save_path_k_fold = '{0}/{1}/'.format(self.opt.model_path_to_save,
                                                      self.opt.model_name,
                                                      )
-                save_model(self.opt, self.model, self.tokenizer, save_path_k_fold, mode=0)
+                save_model(self.opt, self.model, self.tokenizer, save_path_k_fold)
             return self.model, self.opt, self.tokenizer, sum_acc, sum_f1
 
     def _evaluate_acc_f1(self, test_dataloader):
