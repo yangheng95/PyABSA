@@ -226,11 +226,21 @@ def detect_error_in_dataset(dataset):
                 print(lines[i + 3].replace('$T$', lines[i + 4].replace('\n', '')))
 
 
-def save_model(opt, model, tokenizer, save_path, mode=0):
+def save_model(opt, model, tokenizer, save_path):
+    if not opt.save_mode:
+        return
     # Save a trained model, configuration and tokenizer
     model_to_save = model.module if hasattr(model, 'core') else model  # Only save the model it-self
 
-    if mode == 0 or 'bert' not in opt.model_name:
+    if opt.save_mode == 1 or 'bert' not in opt.model_name:
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
+            # torch.save(self.model.cpu().state_dict(), save_path + self.opt.model_name + '.state_dict')  # save the state dict
+        torch.save(model.state_dict(), save_path + opt.model_name + '.state_dict')  # save the state dict
+        pickle.dump(opt, open(save_path + opt.model_name + '.config', 'wb'))
+        pickle.dump(tokenizer, open(save_path + opt.model_name + '.tokenizer', 'wb'))
+        save_args(opt, save_path + opt.model_name + '.args')
+    elif opt.save_mode == 2 or 'bert' not in opt.model_name:
         if not os.path.exists(save_path):
             os.makedirs(save_path)
         # torch.save(self.model.cpu().state_dict(), save_path + self.opt.model_name + '.state_dict')  # save the state dict
@@ -238,9 +248,10 @@ def save_model(opt, model, tokenizer, save_path, mode=0):
         pickle.dump(opt, open(save_path + opt.model_name + '.config', 'wb'))
         pickle.dump(tokenizer, open(save_path + opt.model_name + '.tokenizer', 'wb'))
         save_args(opt, save_path + opt.model_name + '.args')
-    else:
+
+    elif opt.save_mode == 3:
         # save the fine-tuned bert model
-        model_output_dir = save_path + '-fine-tuned'
+        model_output_dir = save_path + '-fine-tuned-bert'
         if not os.path.exists(model_output_dir):
             os.makedirs(model_output_dir)
         output_model_file = os.path.join(model_output_dir, 'pytorch_model.bin')

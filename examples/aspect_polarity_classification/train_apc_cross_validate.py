@@ -19,8 +19,7 @@ apc_config_english.cross_validate_fold = -1
 
 laptop14 = ABSADatasetList.Laptop14
 sent_classifier = Trainer(config=apc_config_english,
-                          # set config=None will use the apc_config as well
-                          dataset=laptop14,  # train set and test set will be automatically detected
-                          save_checkpoint=True,  # set model_path_to_save=None to avoid save model
-                          auto_device=True  # automatic choose CUDA or CPU
+                          dataset=laptop14,
+                          checkpoint_save_mode=True,
+                          auto_device=True
                           )

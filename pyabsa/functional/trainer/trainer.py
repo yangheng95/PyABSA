@@ -48,14 +48,18 @@ class Trainer:
                  config: ConfigManager = None,
                  dataset: str = None,
                  from_checkpoint: str = None,
-                 save_checkpoint: bool = True,
+                 checkpoint_save_mode: int = 1,
                  auto_device: bool = True):
         """
 
         :param config: PyABSA.config.ConfigManager
         :param dataset: Dataset name, or a dataset path, or a list of dataset paths
         :param from_checkpoint: A checkpoint path to train based on
-        :param save_checkpoint: Save trained model to checkpoint, otherwise return the checkpoint
+        :param checkpoint_save_mode: Save trained model to checkpoint,
+                                     "save_checkpoint=1" to save the state_dict,
+                                     "save_checkpoint=2" to save the whole model,
+                                     "save_checkpoint=3" to save the fine-tuned BERT,
+                                     otherwise avoid to save checkpoint but return the trained model after training
         :param auto_device: Auto choose cuda device if any
         """
         if isinstance(config, APCConfigManager):
@@ -77,11 +81,12 @@ class Trainer:
         self.config = init_config(self.config, auto_device)
         self.config.dataset_path = dataset
         self.from_checkpoint = from_checkpoint
-        self.save_checkpoint = save_checkpoint
+        self.checkpoint_save_mode = checkpoint_save_mode
+        self.config.save_mode = checkpoint_save_mode
         log_name = self.config.model_name
         self.logger = get_logger(os.getcwd(), log_name=log_name, log_type='training')
 
-        if save_checkpoint:
+        if checkpoint_save_mode:
             config.model_path_to_save = os.path.join(os.getcwd(), 'checkpoints')
         else:
             config.model_path_to_save = None
@@ -96,7 +101,7 @@ class Trainer:
         seeds = self.config.seed
         for _, s in enumerate(seeds):
             self.config.seed = s
-            if self.save_checkpoint:
+            if self.checkpoint_save_mode:
                 model_path.append(self.train_func(self.config, self.from_checkpoint, self.logger))
             else:
                 # always return the last trained model if dont save trained model
@@ -104,7 +109,7 @@ class Trainer:
         while self.logger.handlers:
             self.logger.removeHandler(self.logger.handlers[0])
 
-        if self.save_checkpoint:
+        if self.checkpoint_save_mode:
             return self.model_class(max(model_path))
         else:
             return model

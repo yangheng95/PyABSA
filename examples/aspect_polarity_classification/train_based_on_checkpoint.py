@@ -25,9 +25,9 @@ apc_config_english.srd_alignment = True
 checkpoint_path = APCCheckpointManager.get_checkpoint('english')
 SemEval = ABSADatasetList.SemEval
 
-sent_classifier = Trainer(config=apc_config_english,  # set config=None to use default model
-                          dataset=SemEval,  # train set and test set will be automatically detected
+sent_classifier = Trainer(config=apc_config_english,
+                          dataset=SemEval,
                           from_checkpoint=checkpoint_path,
-                          save_checkpoint=True,  # set model_path_to_save=None to avoid save model
-                          auto_device=True  # automatic choose CUDA or CPU
+                          checkpoint_save_mode=1,
+                          auto_device=True
                           )

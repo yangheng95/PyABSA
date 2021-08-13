@@ -37,11 +37,9 @@ from pyabsa.functional import APCModelList
 # ------restaurant16
 
 
-save_path = 'state_dict'
 semeval = ABSADatasetList.SemEval
-sent_classifier = Trainer(config_dict=APCConfigManager.get_apc_config_english(),
-                          dataset=semeval,  # train set and test set will be automatically detected
-                          save_checkpoint=save_path,  # set model_path_to_save=None to avoid save model
-                          auto_evaluate=True,  # evaluate model while training_tutorials if test set is available
-                          auto_device=True  # automatic choose CUDA or CPU
+sent_classifier = Trainer(config=APCConfigManager.get_apc_config_english(),
+                          dataset=semeval,
+                          checkpoint_save_mode=1,
+                          auto_device=True
                           )

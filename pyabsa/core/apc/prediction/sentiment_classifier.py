@@ -54,7 +54,7 @@ class SentimentClassifier:
                 self.opt = pickle.load(open(config_path, 'rb'))
 
                 if state_dict_path:
-                    self.bert = BertModel.from_pretrained(self.opt.pretrained_bert_name)
+                    self.bert = BertModel.from_pretrained(self.opt.pretrained_bert)
                     self.model = self.opt.model(self.bert, self.opt)
                     self.model.load_state_dict(torch.load(state_dict_path))
 
@@ -64,7 +64,7 @@ class SentimentClassifier:
                 if tokenizer_path:
                     self.tokenizer = pickle.load(open(tokenizer_path, 'rb'))
                 else:
-                    self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
+                    self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case=True)
 
                 print('Config used in Training:')
                 print_args(self.opt, mode=1)

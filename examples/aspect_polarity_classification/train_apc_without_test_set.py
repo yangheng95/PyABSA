@@ -16,8 +16,8 @@ config = APCConfigManager.get_apc_config_base()
 
 multilingual = ABSADatasetList.Multilingual
 
-sent_classifier = APCTrainer(config=config,  # set config=None to use default model
-                             dataset=multilingual,  # file or dir, dataset_utils(s) will be automatically detected
-                             save_checkpoint=True,  # set model_path_to_save=None to avoid save model
-                             auto_device=True  # Auto choose CUDA or CPU
+sent_classifier = APCTrainer(config=config,
+                             dataset=multilingual,
+                             checkpoint_save_mode=1,
+                             auto_device=True
                              )

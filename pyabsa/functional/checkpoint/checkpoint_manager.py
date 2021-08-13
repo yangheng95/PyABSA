@@ -19,17 +19,17 @@ from pyabsa.core.apc.prediction.sentiment_classifier import SentimentClassifier
 from pyabsa.core.atepc.prediction.aspect_extractor import AspectExtractor
 from pyabsa.core.tc.prediction.text_classifier import TextClassifier
 
-def unzip_checkpoint(zip_path):
 
-        try:
-            print('Find zipped checkpoint: {}, unzipping...'.format(zip_path))
-            sys.stdout.flush()
-            with zipfile.ZipFile(zip_path, 'r') as z:
-                z.extractall(zip_path.replace('.zip', ''))
-            print('Done.')
-        except zipfile.BadZipfile:
-            print('Unzip failed'.format(zip_path))
-        return zip_path.replace('.zip', '')
+def unzip_checkpoint(zip_path):
+    try:
+        print('Find zipped checkpoint: {}, unzipping...'.format(zip_path))
+        sys.stdout.flush()
+        with zipfile.ZipFile(zip_path, 'r') as z:
+            z.extractall(zip_path.replace('.zip', ''))
+        print('Done.')
+    except zipfile.BadZipfile:
+        print('Unzip failed'.format(zip_path))
+    return zip_path.replace('.zip', '')
 
 
 class APCCheckpointManager:
@@ -266,4 +266,3 @@ def load_sentiment_classifier(checkpoint: str = None,
     infer_model = SentimentClassifier(checkpoint, sentiment_map=sentiment_map)
     infer_model.to(auto_cuda()) if auto_device else infer_model.cpu()
     return infer_model
-

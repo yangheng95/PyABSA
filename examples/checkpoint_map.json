@@ -25,20 +25,20 @@
       }
     }
   },
-  "1.0": {
+  "1.0.2": {
     "APC": {
       "english": {
-        "id": "https://drive.google.com/file/d/1pXDZnWaGNBVS-eMx8g9mBHLfwdBMLsGR/view?usp=sharing",
+        "id": "",
         "description": "",
-        "comment": "Trained on RTX2080",
+        "comment": "",
         "version": ""
       }
     },
     "ATEPC": {
       "chinese": {
-        "id": "https://drive.google.com/file/d/1wCA3bfA69GXTFGX1EoKgePsxT1vawc_J/view?usp=sharing",
-        "description": "Trained on SemEval-2014, 2015 datasets.",
-        "comment": "origin tag: fast_lcf_atepc_cdw_apcacc_85.62_apcf1_76.87_atef1_81.1.zip Trained on RTX2080 Ti",
+        "id": "",
+        "description": "",
+        "comment": "origin tag: ",
         "version": ""
       }
     },
@@ -51,7 +51,7 @@
       }
     }
   },
-  "0.8.8.0-1.0.0": {
+  "0.8.8.0-0.9.9.9": {
     "APC": {
       "chinese": {
         "id": "https://drive.google.com/file/d/12UPwGEOWcBToEmpiKAyeKTmXZ-38LDuo/view?usp=sharing",

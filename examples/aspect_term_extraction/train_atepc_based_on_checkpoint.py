@@ -17,9 +17,9 @@ config.model = ATEPCModelList.LCFS_ATEPC
 config.evaluate_begin = 0
 
 SemEval = ABSADatasetList.Laptop14
-aspect_extractor = Trainer(config=config,  # set config=None to use default model
-                           dataset=SemEval,  # file or dir, dataset_utils(s) will be automatically detected
+aspect_extractor = Trainer(config=config,
+                           dataset=SemEval,
                            from_checkpoint=checkpoint_path,
-                           save_checkpoint=True,  # set model_path_to_save=None to avoid save model
-                           auto_device=True  # Auto choose CUDA or CPU
+                           checkpoint_save_mode=1,
+                           auto_device=True
                            )

@@ -21,9 +21,9 @@ apc_config_multilingual = APCConfigManager.get_apc_config_multilingual()
 apc_config_multilingual.model = APCModelList.FAST_LCF_BERT
 apc_config_multilingual.evaluate_begin = 3
 
-datasets_path = 'datasets/apc_datasets/multilingual'  # file or dir are accepted for 'datasets_path'
-sent_classifier = Trainer(config=apc_config_multilingual,  # set config=None to use default model
-                          dataset=datasets_path,  # train set and test set will be automatically detected
-                          save_checkpoint=True,  # set model_path_to_save=None to avoid save model
-                          auto_device=True  # automatic choose CUDA or CPU
+datasets_path = 'datasets/apc_datasets/multilingual'  # file or dir are acceptable for 'datasets_path'
+sent_classifier = Trainer(config=apc_config_multilingual,
+                          dataset=datasets_path,
+                          checkpoint_save_mode=1,
+                          auto_device=True
                           )

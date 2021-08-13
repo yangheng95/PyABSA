@@ -22,8 +22,8 @@ config.evaluate_begin = 5
 config.num_epoch = 6
 config.log_step = 100
 semeval = ABSADatasetList.SemEval
-aspect_extractor = Trainer(config=config,  # set config=None to use default model
-                           dataset=semeval,  # file or dir, dataset_utils(s) will be automatically detected
-                           save_checkpoint=True,  # set model_path_to_save=None to avoid save model
-                           auto_device=True  # Auto choose CUDA or CPU
+aspect_extractor = Trainer(config=config,
+                           dataset=semeval,
+                           checkpoint_save_mode=1,
+                           auto_device=True
                            )

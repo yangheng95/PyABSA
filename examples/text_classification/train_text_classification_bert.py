@@ -19,8 +19,8 @@ classification_config_english.log_step = 5
 classification_config_english.l2reg = 0.0001
 
 SST2 = ClassificationDatasetList.SST2
-text_classifier = TextClassificationTrainer(config=classification_config_english,  # set config=None to use default model
-                                            dataset=SST2,  # train set and test set will be automatically detected
-                                            save_checkpoint=True,  # set model_path_to_save=None to avoid save model
-                                            auto_device=True  # automatic choose CUDA or CPU
+text_classifier = TextClassificationTrainer(config=classification_config_english,
+                                            dataset=SST2,
+                                            checkpoint_save_mode=1,
+                                            auto_device=True
                                             )

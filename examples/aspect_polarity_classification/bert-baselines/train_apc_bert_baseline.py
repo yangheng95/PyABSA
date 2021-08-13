@@ -26,8 +26,8 @@ apc_config_english.similarity_threshold = 1
 apc_config_english.cross_validate_fold = -1  # disable cross_validate
 
 laptop14 = ABSADatasetList.Laptop14
-sent_classifier = APCTrainer(config=apc_config_english,  # set config=None will use the apc_config as well
+sent_classifier = APCTrainer(config=apc_config_english,
                              dataset=laptop14,  # train set and test set will be automatically detected
-                             save_checkpoint=True,  # set model_path_to_save=None to avoid save model
+                             checkpoint_save_mode=1,  # None to avoid save model
                              auto_device=True  # automatic choose CUDA or CPU
                              )
