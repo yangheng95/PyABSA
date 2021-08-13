@@ -57,7 +57,8 @@ class AspectExtractor:
                 tokenizer_path = find_file(model_arg, '.tokenizer')
                 config_path = find_file(model_arg, '.config')
                 self.opt = pickle.load(open(config_path, 'rb'))
-
+                if 'pretrained_bert_name' in self.opt.args:
+                    self.opt.pretrained_bert = self.opt.pretrained_bert_name
                 if state_dict_path:
                     bert_base_model = BertModel.from_pretrained(self.opt.pretrained_bert)
                     bert_base_model.config.num_labels = self.opt.num_labels
