@@ -40,7 +40,7 @@ class Instructor:
 
         # init BERT-based model and dataset_utils
         if hasattr(BERTClassificationModelList, opt.model.__name__):
-            self.tokenizer = Tokenizer4Pretraining(self.opt.max_seq_len, self.opt.pretrained_bert_name)
+            self.tokenizer = Tokenizer4Pretraining(self.opt.max_seq_len, self.opt.pretrained_bert)
 
             self.train_set = BERTClassificationDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
             if 'test' in self.opt.dataset_file:
@@ -49,7 +49,7 @@ class Instructor:
             else:
                 self.test_set = None
 
-            self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert_name)
+            self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
             # init the model behind the construction of apc_datasets in case of updating polarities_dim
             self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
 

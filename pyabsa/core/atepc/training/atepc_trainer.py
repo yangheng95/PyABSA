@@ -57,8 +57,8 @@ class Instructor:
             'adamw': torch.optim.AdamW
         }
 
-        self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert_name, do_lower_case=True)
-        bert_base_model = AutoModel.from_pretrained(self.opt.pretrained_bert_name)
+        self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case=True)
+        bert_base_model = AutoModel.from_pretrained(self.opt.pretrained_bert)
         processor = ATEPCProcessor(self.tokenizer)
         self.label_list = processor.get_labels()
         self.opt.num_labels = len(self.label_list) + 1
