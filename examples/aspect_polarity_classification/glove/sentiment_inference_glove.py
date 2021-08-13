@@ -7,7 +7,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 import os
 
-from pyabsa import load_sentiment_classifier, ABSADatasetList
+from pyabsa import ABSADatasetList
 from pyabsa import APCCheckpointManager
 
 ########################################################################################################################
@@ -22,11 +22,11 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
 
 # model_path = APCCheckpointManager.get_checkpoint(checkpoint_name='TNet_LF')
-model_path = 'checkpoint/asgcn_acc_79.46_f1_68.72'
-sent_classifier = load_sentiment_classifier(checkpoint=model_path,
-                                            auto_device=True,  # Use CUDA if available
-                                            sentiment_map=sentiment_map
-                                            )
+model_path = 'asgcn_acc_81.34_f1_73.15'
+sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint=model_path,
+                                                                auto_device=True,  # Use CUDA if available
+                                                                sentiment_map=sentiment_map
+                                                                )
 
 text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated . !sent! 1 1'
 sent_classifier.infer(text, print_result=True)

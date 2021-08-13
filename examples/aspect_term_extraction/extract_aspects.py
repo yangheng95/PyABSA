@@ -28,7 +28,7 @@ examples = ['But the staff was so nice to us .',
 # 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
 sentiment_map = {0: 'Negative', 1: "Neutral", 2: 'Positive', -999: ''}
 
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='lcf_atepc_cdw_apcacc_83.32_apcf1_75.49_atef1_81.4',
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='english',
                                                                auto_device=True  # False means load model on CPU
                                                                )
 
