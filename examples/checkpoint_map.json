@@ -25,21 +25,21 @@
       }
     }
   },
-  "1.0.2": {
+  "1.0.7": {
     "APC": {
       "english": {
-        "id": "",
+        "id": "https://drive.google.com/drive/folders/1qR4MgjWV0Wmn1RLAWOn9SGYI0fdp1dQv?usp=sharing",
         "description": "",
-        "comment": "",
-        "version": ""
+        "comment": "Trained on T4",
+        "version": "1.x"
       }
     },
     "ATEPC": {
       "chinese": {
-        "id": "",
+        "id": "https://drive.google.com/drive/folders/1HPjLiaKBSoN68zI0_pHoKqyopEarNBqm?usp=sharing",
         "description": "",
-        "comment": "origin tag: ",
-        "version": ""
+        "comment": "Trained on T4",
+        "version": "1.x"
       }
     },
     "TC": {
