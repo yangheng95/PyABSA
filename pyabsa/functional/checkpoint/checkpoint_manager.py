@@ -36,7 +36,7 @@ class APCCheckpointManager:
     @staticmethod
     def get_sentiment_classifier(checkpoint: str = None,
                                  sentiment_map: dict = None,
-                                 auto_device: bool = True):
+                                 auto_device=True):
         """
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
@@ -54,7 +54,13 @@ class APCCheckpointManager:
             checkpoint = APCCheckpointManager.get_checkpoint(checkpoint)
 
         sent_classifier = SentimentClassifier(find_dir(os.getcwd(), checkpoint), sentiment_map=sentiment_map)
-        sent_classifier.to(auto_cuda()) if auto_device else sent_classifier.cpu()
+        if isinstance(auto_device, str):
+            device = auto_device
+        elif isinstance(auto_device, bool):
+            device = auto_cuda() if auto_device else 'cpu'
+        else:
+            device = auto_cuda()
+        sent_classifier.to(device)
         return sent_classifier
 
     @staticmethod
@@ -76,7 +82,7 @@ class ATEPCCheckpointManager:
     @staticmethod
     def get_aspect_extractor(checkpoint: str = None,
                              sentiment_map: dict = None,
-                             auto_device: bool = True):
+                             auto_device=True):
         """
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
@@ -94,7 +100,13 @@ class ATEPCCheckpointManager:
             checkpoint = ATEPCCheckpointManager.get_checkpoint(checkpoint)
 
         aspect_extractor = AspectExtractor(find_dir(os.getcwd(), checkpoint), sentiment_map=sentiment_map)
-        aspect_extractor.to(auto_cuda()) if auto_device else aspect_extractor.cpu()
+        if isinstance(auto_device, str):
+            device = auto_device
+        elif isinstance(auto_device, bool):
+            device = auto_cuda() if auto_device else 'cpu'
+        else:
+            device = auto_cuda()
+        aspect_extractor.to(device)
         return aspect_extractor
 
     @staticmethod
@@ -132,11 +144,18 @@ class TextClassifierCheckpointManager:
             checkpoint = TextClassifierCheckpointManager.get_checkpoint(checkpoint)
 
         text_classifier = TextClassifier(find_dir(os.getcwd(), checkpoint), label_map=label_map)
-        text_classifier.to(auto_cuda()) if auto_device else text_classifier.cpu()
+        if isinstance(auto_device, str):
+            device = auto_device
+        elif isinstance(auto_device, bool):
+            device = auto_cuda() if auto_device else text_classifier.cpu()
+        else:
+            device = auto_cuda()
+        text_classifier.to(device)
         return text_classifier
 
     @staticmethod
     def get_checkpoint(checkpoint: str = 'Chinese'):
+
         text_classification_checkpoint = available_checkpoints('TextClassification')
         if checkpoint.lower() in [k.lower() for k in text_classification_checkpoint.keys()]:
             print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint), 'green'))
@@ -225,7 +244,7 @@ def available_checkpoints(task=''):
         # os.remove('./checkpoints.json')
         return t_checkpoint_map if task else current_version_map
     except Exception as e:
-        print('\nFailed to query checkpoints (Error: {}), try manually download the checkpoints from: \n'.format(e),
+        print('\nFailed to query checkpoints (Error: {}), try manually download the checkpoints from: \n'.format(e) +
               '[1]\tGoogle Drive\t: https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC\n'
               '[2]\tBaidu NetDisk\t: https://pan.baidu.com/s/1K8aYQ4EIrPm1GjQv_mnxEg (Access Code: absa)\n')
         sys.exit(-1)
@@ -254,8 +273,8 @@ def download_pretrained_model(task='apc', language='chinese', archive_path='', m
                                             dest_path=save_path,
                                             unzip=True,
                                             showsize=True)
-    except:
-        raise ConnectionError("Fail to download checkpoint, seems to be a connection error.")
+    except ConnectionError as e:
+        raise ConnectionError("Fail to download checkpoint: {}".format(e))
     os.remove(save_path)
     return dest_path
 

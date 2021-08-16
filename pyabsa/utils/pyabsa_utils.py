@@ -53,7 +53,7 @@ def check_and_fix_labels(label_set, label_name, all_data):
     elif not sorted(list(label_set)) == sorted(list(range(p_max - p_min + 1))):
         print(colored('Warning! Invalid label detected, '
                       'the labels should be continuous and positive!', 'red'))
-        print('Label-fixing triggered! (You can manually refactor the labels instead.)')
+        print('Label-fixing is triggered! (You can manually refactor the labels instead.)')
         new_label_dict = {}
         for l1, l2 in zip(sorted(list(label_set)), list(range(p_max - p_min + 1))):
             new_label_dict[l1] = l2
