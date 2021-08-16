@@ -56,9 +56,9 @@ class Trainer:
         :param dataset: Dataset name, or a dataset path, or a list of dataset paths
         :param from_checkpoint: A checkpoint path to train based on
         :param checkpoint_save_mode: Save trained model to checkpoint,
-                                     "save_checkpoint=1" to save the state_dict,
-                                     "save_checkpoint=2" to save the whole model,
-                                     "save_checkpoint=3" to save the fine-tuned BERT,
+                                     "checkpoint_save_mode=1" to save the state_dict,
+                                     "checkpoint_save_mode=2" to save the whole model,
+                                     "checkpoint_save_mode=3" to save the fine-tuned BERT,
                                      otherwise avoid to save checkpoint but return the trained model after training
         :param auto_device: Auto choose cuda device if any
         """

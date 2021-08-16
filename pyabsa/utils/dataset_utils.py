@@ -101,7 +101,7 @@ def download_datasets_from_github(save_path='./'):
         # Clone into temporary dir
         git.Repo.clone_from('https://github.com/yangheng95/ABSADatasets.git', t, branch='master', depth=1)
     except Exception as e:
-        raise e
+        raise print('Fail to download datasets: {}, please check your connection to GitHub and retry.'.format(e))
 
     try:
         # Copy desired file from temporary dir

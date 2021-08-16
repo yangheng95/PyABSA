@@ -15,7 +15,7 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 
 sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
 
-sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='english',
+sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='slide_lcfs_bert_acc_82.6_f1_79.85.zip',
                                                                 auto_device=True,  # Use CUDA if available
                                                                 sentiment_map=sentiment_map
                                                                 )

@@ -1,3 +1,0 @@
-extraction_res:[] polarity_res:[]
-extraction_res:[(['restaurant', '1', '4'], ['B-ASP', 'O', 'O'], [999, -999, -999])] polarity_res:[{'aspect': 'restaurant', 'position': '0', 'sentiment': 'Neutral'}]
-extraction_res:[(['restaurant', '1', '6'], ['B-ASP', 'O', 'O'], [999, -999, -999])] polarity_res:[{'aspect': 'restaurant', 'position': '0', 'sentiment': 'Neutral'}]
