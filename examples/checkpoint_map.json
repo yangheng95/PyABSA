@@ -27,17 +27,17 @@
   },
   "1.0.7": {
     "APC": {
-      "english": {
-        "id": "https://drive.google.com/drive/folders/1qR4MgjWV0Wmn1RLAWOn9SGYI0fdp1dQv?usp=sharing",
-        "description": "",
+      "SLIDE_LCFS_BERT": {
+        "id": "https://drive.google.com/file/d/1bRTozW9u7GSyZpWbe75jbK6IvKh0_GM9/view?usp=sharing",
+        "description": "Trained and tested on Laptop 14 dataset",
         "comment": "Trained on T4",
         "version": "1.x"
       }
     },
     "ATEPC": {
-      "chinese": {
-        "id": "https://drive.google.com/drive/folders/1HPjLiaKBSoN68zI0_pHoKqyopEarNBqm?usp=sharing",
-        "description": "",
+      "LCF_ATEPC": {
+        "id": "https://drive.google.com/file/d/1-1lkoaePxXemm8jtqTLTLI5LEr6pXMTe/view?usp=sharing",
+        "description": "Trained and tested on Laptop 14 dataset",
         "comment": "Trained on T4",
         "version": "1.x"
       }
