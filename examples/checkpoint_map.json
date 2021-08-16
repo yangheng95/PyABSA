@@ -5,7 +5,8 @@
         "id": "url or file-id on your Google Drive",
         "description": "some notice",
         "comment": "whatever you want us to know",
-        "version": "0.0.0"
+        "version": "0.0.0",
+        "author": ""
       }
     },
     "ATEPC": {
@@ -13,33 +14,77 @@
         "id": "url or file-id on your Google Drive",
         "description": "some notice",
         "comment": "whatever you want us to know",
-        "version": "0.0.0"
+        "version": "0.0.0",
+        "author": ""
       },
       "TextClassification": {
         "checkpoint_name": {
           "id": "url or file-id on your Google Drive",
           "description": "some notice",
           "comment": "whatever you want us to know",
-          "version": "0.0.0"
+          "version": "0.0.0",
+          "author": ""
         }
       }
     }
   },
-  "1.0.7": {
+  "1.0.5": {
     "APC": {
-      "SLIDE_LCFS_BERT": {
+      "english": {
+        "id": "https://drive.google.com/file/d/1GAIR1CJEBOJxkb-op9QOasvpTI-pgPyQ/view?usp=sharing",
+        "description": "Rest 14, 16, Laptop 14",
+        "comment": "Trained on RTX2080",
+        "version": "",
+        "author": "H, Yang (yangheng@m.scnu.edu.cn)"
+      },
+      "slide-lcf-bert": {
         "id": "https://drive.google.com/file/d/1bRTozW9u7GSyZpWbe75jbK6IvKh0_GM9/view?usp=sharing",
-        "description": "Trained and tested on Laptop 14 dataset",
-        "comment": "Trained on T4",
-        "version": "1.x"
+        "description": "Laptop 14",
+        "comment": "Trained on RTX2080",
+        "version": "",
+        "author": "M, Xu (xumayi@m.scnu.edu.cn)"
+      },
+      "chinese": {
+        "id": "https://drive.google.com/file/d/1ZsVCFYpBEznBedVZEUdqbfWWiTJCFzuS/view?usp=sharing",
+        "description": "",
+        "comment": "Trained on RTX2080",
+        "version": "",
+        "author": "H, Yang (yangheng@m.scnu.edu.cn)"
+      },
+      "HELP-WANTED": {
+        "id": "",
+        "description": "PLEASE NOTE THAT THIS IS NOT A REAL CHECKPOINT!",
+        "comment": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
+        "version": "0.0.0"
       }
     },
     "ATEPC": {
+      "chinese": {
+        "id": "https://drive.google.com/file/d/1YGAdoRdtmv6h5ti4oOo0pNozYucoi-1B/view?usp=sharing",
+        "description": "",
+        "comment": "",
+        "version": "",
+        "author": "H, Yang (yangheng@m.scnu.edu.cn)"
+      },
       "LCF_ATEPC": {
         "id": "https://drive.google.com/file/d/1-1lkoaePxXemm8jtqTLTLI5LEr6pXMTe/view?usp=sharing",
         "description": "Trained and tested on Laptop 14 dataset",
         "comment": "Trained on T4",
-        "version": "1.x"
+        "version": "1.0.7.1",
+        "author": "M, Xu (xumayi@m.scnu.edu.cn)"
+      },
+      "english": {
+        "id": "https://drive.google.com/file/d/1Gt_avh34T-Y1ga6KYcy7AjsXta_3n_sF/view?usp=sharing",
+        "description": "Rest 14, 16, Laptop 14",
+        "comment": "",
+        "version": "",
+        "author": "H, Yang (yangheng@m.scnu.edu.cn)"
+      },
+      "HELP-WANTED": {
+        "id": "",
+        "description": "PLEASE NOTE THAT THIS IS NOT A REAL CHECKPOINT!",
+        "comment": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
+        "version": "0.0.0"
       }
     },
     "TC": {
@@ -47,11 +92,17 @@
         "id": "",
         "description": "",
         "comment": "Trained on RTX2080",
-        "version": "0.8.8.x"
+        "version": "1.0.7"
+      },
+      "HELP-WANTED": {
+        "id": "",
+        "description": "PLEASE NOTE THAT THIS IS NOT A REAL CHECKPOINT!",
+        "comment": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
+        "version": "0.0.0"
       }
     }
   },
-  "0.8.8.0-0.9.9.9": {
+  "0.8.8.0-0.9.2.1": {
     "APC": {
       "chinese": {
         "id": "https://drive.google.com/file/d/12UPwGEOWcBToEmpiKAyeKTmXZ-38LDuo/view?usp=sharing",

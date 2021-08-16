@@ -198,7 +198,7 @@ def parse_checkpoint_info(t_checkpoint_map, task='APC'):
     print('*' * 23, colored('Available {} model checkpoints for Version:{}'.format(task, __version__), 'green'), '*' * 23)
     for i, checkpoint in enumerate(t_checkpoint_map):
         print('-' * 100)
-        print("{}. Checkpoint Name: {}\nDescription: {}\nComment: {} \nVersion: {}".format(
+        print("{}. Checkpoint Name: {}\nDescription: {}\nComment: {} \nVersion: {} \nAuthor: {}".format(
             i + 1,
             checkpoint,
             t_checkpoint_map[checkpoint]['description']
@@ -208,7 +208,10 @@ def parse_checkpoint_info(t_checkpoint_map, task='APC'):
             if 'comment' in t_checkpoint_map[checkpoint] else '',
 
             t_checkpoint_map[checkpoint]['version']
-            if 'version' in t_checkpoint_map[checkpoint] else ''
+            if 'version' in t_checkpoint_map[checkpoint] else '',
+
+            t_checkpoint_map[checkpoint]['author']
+            if 'author' in t_checkpoint_map[checkpoint] else ''
         ))
     print('-' * 100)
     return t_checkpoint_map
