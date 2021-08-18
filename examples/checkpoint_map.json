@@ -37,10 +37,31 @@
         "version": "",
         "author": "H, Yang (yangheng@m.scnu.edu.cn)"
       },
-      "slide-lcf-bert": {
+      "slide-lcfs-bert": {
         "id": "https://drive.google.com/file/d/1bRTozW9u7GSyZpWbe75jbK6IvKh0_GM9/view?usp=sharing",
         "description": "Laptop 14",
-        "comment": "Trained on RTX2080",
+        "comment": "Trained on T4",
+        "version": "",
+        "author": "M, Xu (xumayi@m.scnu.edu.cn)"
+      },
+      "slide-lcf-bert": {
+        "id": "https://drive.google.com/file/d/1dX_nd3kfWJ_3l8ul1kjVnrExrWzVLdg1/view?usp=sharing",
+        "description": "Laptop 14",
+        "comment": "Trained on T4",
+        "version": "",
+        "author": "M, Xu (xumayi@m.scnu.edu.cn)"
+      },
+      "dlcf-dca-bert1": {
+        "id": "https://drive.google.com/file/d/1w-NtWujPglsvZu4-jC6Vmu8Iz8CvX-1u/view?usp=sharing",
+        "description": "Laptop 14",
+        "comment": "Trained on T4",
+        "version": "",
+        "author": "M, Xu (xumayi@m.scnu.edu.cn)"
+      },
+      "dlcf-dca-bert2": {
+        "id": "https://drive.google.com/file/d/1py52V7GmkvjWxrpKICY6h7XaUh9Anw7A/view?usp=sharing",
+        "description": "Restaurant 14",
+        "comment": "Trained on T4",
         "version": "",
         "author": "M, Xu (xumayi@m.scnu.edu.cn)"
       },
