@@ -27,9 +27,13 @@ from autocuda import auto_cuda, auto_cuda_name
 
 def init_config(config, auto_device=True):
     if config:
-        if auto_device:
-            config.device = auto_cuda()
-            config.device_name = auto_cuda_name()
+        if isinstance(auto_device, str):
+            device = auto_device
+        elif isinstance(auto_device, bool):
+            device = auto_cuda() if auto_device else 'cpu'
+        else:
+            device = auto_cuda()
+        config.device_name = auto_cuda_name()
         # reload hyper-parameter from parameter dict
 
     config.model_name = config.model.__name__.lower()
