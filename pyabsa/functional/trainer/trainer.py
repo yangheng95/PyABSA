@@ -33,6 +33,7 @@ def init_config(config, auto_device=True):
             device = auto_cuda() if auto_device else 'cpu'
         else:
             device = auto_cuda()
+        config.device = device
         config.device_name = auto_cuda_name()
         # reload hyper-parameter from parameter dict
 
