@@ -40,8 +40,8 @@ class APCCheckpointManager:
         """
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
-        :param label_map: label to text index map
-        :param auto_device:
+        :param sentiment_map: label to text index map
+        :param auto_device: True or False, otherwise 'cuda', 'cpu' works
         :return:
         """
         if find_dir(os.getcwd(), checkpoint):
@@ -86,8 +86,8 @@ class ATEPCCheckpointManager:
         """
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
-        :param label_map: label to text index map
-        :param auto_device:
+        :param sentiment_map: label to text index map
+        :param auto_device: True or False, otherwise 'cuda', 'cpu' works
         :return:
         """
         if find_dir(os.getcwd(), checkpoint):
@@ -131,7 +131,7 @@ class TextClassifierCheckpointManager:
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
         :param label_map: label to text index map
-        :param auto_device:
+        :param auto_device: True or False, otherwise 'cuda', 'cpu' works
         :return:
         """
         if find_dir(os.getcwd(), checkpoint):
@@ -198,17 +198,21 @@ def parse_checkpoint_info(t_checkpoint_map, task='APC'):
     print('*' * 23, colored('Available {} model checkpoints for Version:{}'.format(task, __version__), 'green'), '*' * 23)
     for i, checkpoint in enumerate(t_checkpoint_map):
         print('-' * 100)
-        print("{}. Checkpoint Name: {}\nDescription: {}\nComment: {} \nVersion: {} \nAuthor: {}".format(
+        print("{}. Checkpoint Name: {}\nModel: {}\nDataset: {} \nVersion: {} \nDescription:{} \nAuthor: {}".format(
             i + 1,
             checkpoint,
-            t_checkpoint_map[checkpoint]['description']
-            if 'description' in t_checkpoint_map[checkpoint] else '',
 
-            t_checkpoint_map[checkpoint]['comment']
-            if 'comment' in t_checkpoint_map[checkpoint] else '',
+            t_checkpoint_map[checkpoint]['model']
+            if 'model' in t_checkpoint_map[checkpoint] else '',
+
+            t_checkpoint_map[checkpoint]['dataset']
+            if 'dataset' in t_checkpoint_map[checkpoint] else '',
 
             t_checkpoint_map[checkpoint]['version']
             if 'version' in t_checkpoint_map[checkpoint] else '',
+
+            t_checkpoint_map[checkpoint]['description']
+            if 'description' in t_checkpoint_map[checkpoint] else '',
 
             t_checkpoint_map[checkpoint]['author']
             if 'author' in t_checkpoint_map[checkpoint] else ''

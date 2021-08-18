@@ -27,6 +27,7 @@ from autocuda import auto_cuda, auto_cuda_name
 
 def init_config(config, auto_device=True):
     if config:
+
         if isinstance(auto_device, str):
             device = auto_device
         elif isinstance(auto_device, bool):
@@ -34,7 +35,8 @@ def init_config(config, auto_device=True):
         else:
             device = auto_cuda()
         config.device = device
-        config.device_name = auto_cuda_name()
+        if 'cuda' in device:
+            config.device_name = auto_cuda_name()
         # reload hyper-parameter from parameter dict
 
     config.model_name = config.model.__name__.lower()
@@ -54,7 +56,7 @@ class Trainer:
                  dataset: str = None,
                  from_checkpoint: str = None,
                  checkpoint_save_mode: int = 1,
-                 auto_device: bool = True):
+                 auto_device=True):
         """
 
         :param config: PyABSA.config.ConfigManager
@@ -65,7 +67,8 @@ class Trainer:
                                      "checkpoint_save_mode=2" to save the whole model,
                                      "checkpoint_save_mode=3" to save the fine-tuned BERT,
                                      otherwise avoid to save checkpoint but return the trained model after training
-        :param auto_device: Auto choose cuda device if any
+        :param auto_device: True or False, otherwise 'cuda', 'cpu' works
+
         """
         if isinstance(config, APCConfigManager):
             self.train_func = train4apc
