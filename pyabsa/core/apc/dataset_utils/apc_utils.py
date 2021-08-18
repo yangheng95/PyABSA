@@ -37,38 +37,41 @@ def syntax_distance_alignment(tokens, dist, max_seq_len, tokenizer):
     align_dist = []
     if bert_tokens != text:
         while text or bert_tokens:
-            if text[0] == ' ' or text[0] == '\xa0':  # bad case handle
-                text = text[1:]
-                dep_dist = dep_dist[1:]
-            elif text[0] == bert_tokens[0]:
-                text = text[1:]
-                bert_tokens = bert_tokens[1:]
-                align_dist.append(dep_dist[0])
-                dep_dist = dep_dist[1:]
-            elif len(text[0]) < len(bert_tokens[0]):
-                tmp_str = text[0]
-                while len(tmp_str) < len(bert_tokens[0]):
+            try:
+                if text[0] == ' ' or text[0] == '\xa0':  # bad case handle
                     text = text[1:]
-                    tmp_str += text[0]
                     dep_dist = dep_dist[1:]
-                align_dist.append(dep_dist[0])
-                dep_dist = dep_dist[1:]
-                text = text[1:]
-                bert_tokens = bert_tokens[1:]
-            elif len(text[0]) > len(bert_tokens[0]):
-                tmp_tokens = tokenizer.tokenize(text[0])
-                for jx, tmp_token in enumerate(tmp_tokens):
+                elif text[0] == bert_tokens[0]:
+                    text = text[1:]
+                    bert_tokens = bert_tokens[1:]
                     align_dist.append(dep_dist[0])
+                    dep_dist = dep_dist[1:]
+                elif len(text[0]) < len(bert_tokens[0]):
+                    tmp_str = text[0]
+                    while len(tmp_str) < len(bert_tokens[0]):
+                        text = text[1:]
+                        tmp_str += text[0]
+                        dep_dist = dep_dist[1:]
+                    align_dist.append(dep_dist[0])
+                    dep_dist = dep_dist[1:]
+                    text = text[1:]
+                    bert_tokens = bert_tokens[1:]
+                elif len(text[0]) > len(bert_tokens[0]):
+                    tmp_tokens = tokenizer.tokenize(text[0])
+                    for jx, tmp_token in enumerate(tmp_tokens):
+                        align_dist.append(dep_dist[0])
 
-                text = text[1:]
-                dep_dist = dep_dist[1:]
-                bert_tokens = bert_tokens[len(tmp_tokens):]
-            else:
-                text = text[1:]
-                bert_tokens = bert_tokens[1:]
-                align_dist.append(dep_dist[0])
-                dep_dist = dep_dist[1:]
-
+                    text = text[1:]
+                    dep_dist = dep_dist[1:]
+                    bert_tokens = bert_tokens[len(tmp_tokens):]
+                else:
+                    text = text[1:]
+                    bert_tokens = bert_tokens[1:]
+                    align_dist.append(dep_dist[0])
+                    dep_dist = dep_dist[1:]
+            except:
+                align_dist = pad_and_truncate(align_dist, max_seq_len, value=max_seq_len)
+                return align_dist
     else:
         align_dist = dep_dist
 
