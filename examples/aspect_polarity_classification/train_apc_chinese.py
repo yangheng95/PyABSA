@@ -17,7 +17,7 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import APCModelList
 
 config = APCConfigManager.get_apc_config_chinese()
-config.evaluate_begin = 3
+config.evaluate_begin = 4
 config.dropout = 0.5
 config.l2reg = 0.0001
 config.model = APCModelList.FAST_LCF_BERT

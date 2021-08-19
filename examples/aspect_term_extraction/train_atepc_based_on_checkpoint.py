@@ -11,14 +11,18 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import ATEPCConfigManager
 
 config = ATEPCConfigManager.get_atepc_config_english()
+
 checkpoint_path = ATEPCCheckpointManager.get_checkpoint(checkpoint='english')
+# or
+# checkpoint_path = 'lcfs_atepc_cdw_apcacc_86.17_apcf1_58.3_atef1_70.86'
 
 config.model = ATEPCModelList.LCFS_ATEPC
-config.evaluate_begin = 0
+config.evaluate_begin = 4
+config.num_epoch = 5
 
-SemEval = ABSADatasetList.Laptop14
+TShirt = ABSADatasetList.TShirt
 aspect_extractor = Trainer(config=config,
-                           dataset=SemEval,
+                           dataset=TShirt,
                            from_checkpoint=checkpoint_path,
                            checkpoint_save_mode=1,
                            auto_device=True

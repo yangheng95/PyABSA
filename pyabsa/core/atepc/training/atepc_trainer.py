@@ -7,7 +7,6 @@
 
 
 import os
-import pickle
 import random
 import time
 
@@ -15,15 +14,13 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import tqdm
-from findfile import find_files
 from seqeval.metrics import classification_report
 from sklearn.metrics import f1_score
-from termcolor import colored
 from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler, TensorDataset)
 from transformers import AutoTokenizer, AutoModel
 
 from pyabsa.utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args
+from pyabsa.utils.pyabsa_utils import print_args, load_checkpoint
 from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
 
 
@@ -352,22 +349,7 @@ def train4atepc(opt, from_checkpoint_path, logger):
     while not trainer:
         try:
             trainer = Instructor(opt, logger)
-            if from_checkpoint_path:
-                model_path = find_files(from_checkpoint_path, '.model')
-                config_path = find_files(from_checkpoint_path, '.config')
-
-                if from_checkpoint_path:
-                    if model_path and config_path:
-                        config = pickle.load(open(config_path[0], 'rb'))
-                        if config.model != opt.model:
-                            print(colored('Warning, the checkpoint was not trained using {} from param_dict'.format(opt.model.__name__)), 'red')
-                        trainer.model = torch.load(model_path[0])
-                        trainer.model.opt = opt
-                        trainer.model.to(opt.device)
-                    else:
-                        print('Error while loading checkpoint, the checkpoint is broken!')
-                else:
-                    print('No checkpoint found in {}'.format(from_checkpoint_path))
+            load_checkpoint(trainer, from_checkpoint_path)
         except ValueError as e:
             print('Seems to be ConnectionError, retry in {} seconds...'.format(60))
             time.sleep(60)

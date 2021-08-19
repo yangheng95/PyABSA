@@ -7,6 +7,7 @@
 
 import os
 
+import findfile
 import torch
 
 from pyabsa import __version__
@@ -39,7 +40,7 @@ def init_config(config, auto_device=True):
         try:
             torch.device(device)
         except RuntimeError as e:
-            print(e)
+            print('Device assignment error: {}, redirect to CPU'.format(e))
             device = 'cpu'
         config.device = device
         if 'cuda' in device:
@@ -95,7 +96,7 @@ class Trainer:
         self.config.dataset_file = self.dataset_file
         self.config = init_config(self.config, auto_device)
         self.config.dataset_path = dataset
-        self.from_checkpoint = from_checkpoint
+        self.from_checkpoint = findfile.find_dir(os.getcwd(), from_checkpoint)
         self.checkpoint_save_mode = checkpoint_save_mode
         self.config.save_mode = checkpoint_save_mode
         log_name = self.config.model_name

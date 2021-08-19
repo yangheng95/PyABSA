@@ -9,6 +9,7 @@ import os.path
 import sys
 import zipfile
 
+import torch
 from autocuda import auto_cuda
 from findfile import find_files, find_dir, find_file
 from google_drive_downloader import GoogleDriveDownloader as gdd
@@ -60,6 +61,11 @@ class APCCheckpointManager:
             device = auto_cuda() if auto_device else 'cpu'
         else:
             device = auto_cuda()
+        try:
+            torch.device(device)
+        except RuntimeError as e:
+            print('Device assignment error: {}, redirect to CPU'.format(e))
+            device = 'cpu'
         sent_classifier.to(device)
         return sent_classifier
 
@@ -106,6 +112,12 @@ class ATEPCCheckpointManager:
             device = auto_cuda() if auto_device else 'cpu'
         else:
             device = auto_cuda()
+        try:
+            torch.device(device)
+        except RuntimeError as e:
+            print('Device assignment error: {}, redirect to CPU'.format(e))
+            device = 'cpu'
+
         aspect_extractor.to(device)
         return aspect_extractor
 
@@ -150,6 +162,11 @@ class TextClassifierCheckpointManager:
             device = auto_cuda() if auto_device else text_classifier.cpu()
         else:
             device = auto_cuda()
+        try:
+            torch.device(device)
+        except RuntimeError as e:
+            print('Device assignment error: {}, redirect to CPU'.format(e))
+            device = 'cpu'
         text_classifier.to(device)
         return text_classifier
 
@@ -251,7 +268,7 @@ def available_checkpoints(task=''):
         # os.remove('./checkpoints.json')
         return t_checkpoint_map if task else current_version_map
     except Exception as e:
-        print('\nFailed to query checkpoints (Error: {}), try manually download the checkpoints from: \n'.format(e) +
+        print('\nFailed to query checkpoints (Error: {}), you can try manually download the checkpoints from: \n'.format(e) +
               '[1]\tGoogle Drive\t: https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC\n'
               '[2]\tBaidu NetDisk\t: https://pan.baidu.com/s/1K8aYQ4EIrPm1GjQv_mnxEg (Access Code: absa)\n')
         sys.exit(-1)
@@ -269,7 +286,8 @@ def download_pretrained_model(task='apc', language='chinese', archive_path='', m
     if not os.path.exists(dest_path):
         os.makedirs(dest_path)
 
-    if find_files(dest_path, '.model') and find_files(dest_path, '.config'):
+    if (find_files(dest_path, '.model') or find_files(dest_path, '.state_dict')) and find_files(dest_path, '.config'):
+        print('Checkpoint already downloaded, skip...')
         return dest_path
 
     save_path = os.path.join(dest_path, '{}.zip'.format(model_name))

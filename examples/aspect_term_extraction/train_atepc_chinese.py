@@ -18,7 +18,7 @@ chinese_sets = ABSADatasetList.Chinese
 atepc_config_chinese = ATEPCConfigManager.get_atepc_config_chinese()
 atepc_config_chinese.log_step = 50
 atepc_config_chinese.model = ATEPCModelList.LCF_ATEPC
-atepc_config_chinese.evaluate_begin = 5
+atepc_config_chinese.evaluate_begin = 4
 
 aspect_extractor = Trainer(config=atepc_config_chinese,
                            dataset=chinese_sets,

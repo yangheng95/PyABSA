@@ -25,6 +25,6 @@ setup(
     exclude_package_date={'': ['.gitignore']},
     # Choose your license
     license='MIT',
-    install_requires=['findfile', 'autocuda', 'transformers>4.5', 'spacy', 'networkx', 'seqeval', 'update_checker',
+    install_requires=['findfile', 'autocuda>=0.8', 'transformers>4.5', 'spacy', 'networkx', 'seqeval', 'update_checker',
                       'tqdm', 'termcolor', 'gitpython', 'googledrivedownloader', 'torch'],
 )
