@@ -53,7 +53,7 @@ class APCCheckpointManager:
         elif not find_dir(os.getcwd(), checkpoint):
             checkpoint = APCCheckpointManager.get_checkpoint(checkpoint)
 
-        sent_classifier = SentimentClassifier(find_dir(os.getcwd(), checkpoint), sentiment_map=sentiment_map)
+        sent_classifier = SentimentClassifier(checkpoint, sentiment_map=sentiment_map)
         if isinstance(auto_device, str):
             device = auto_device
         elif isinstance(auto_device, bool):
@@ -99,7 +99,7 @@ class ATEPCCheckpointManager:
         elif not find_dir(os.getcwd(), checkpoint):
             checkpoint = ATEPCCheckpointManager.get_checkpoint(checkpoint)
 
-        aspect_extractor = AspectExtractor(find_dir(os.getcwd(), checkpoint), sentiment_map=sentiment_map)
+        aspect_extractor = AspectExtractor(checkpoint, sentiment_map=sentiment_map)
         if isinstance(auto_device, str):
             device = auto_device
         elif isinstance(auto_device, bool):
@@ -143,7 +143,7 @@ class TextClassifierCheckpointManager:
         elif not find_dir(os.getcwd(), checkpoint):
             checkpoint = TextClassifierCheckpointManager.get_checkpoint(checkpoint)
 
-        text_classifier = TextClassifier(find_dir(os.getcwd(), checkpoint), label_map=label_map)
+        text_classifier = TextClassifier(checkpoint, label_map=label_map)
         if isinstance(auto_device, str):
             device = auto_device
         elif isinstance(auto_device, bool):

@@ -7,6 +7,8 @@
 
 import os
 
+import torch
+
 from pyabsa import __version__
 from pyabsa.functional.config.config_manager import ConfigManager
 from pyabsa.utils.dataset_utils import detect_dataset
@@ -34,6 +36,11 @@ def init_config(config, auto_device=True):
             device = auto_cuda() if auto_device else 'cpu'
         else:
             device = auto_cuda()
+        try:
+            torch.device(device)
+        except RuntimeError as e:
+            print(e)
+            device = 'cpu'
         config.device = device
         if 'cuda' in device:
             config.device_name = auto_cuda_name()
