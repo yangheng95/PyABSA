@@ -5,8 +5,10 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 import os
+import pickle
 
 import torch
+from findfile import find_files
 from termcolor import colored
 
 SENTIMENT_PADDING = -999
@@ -66,6 +68,31 @@ def check_and_fix_labels(label_set, label_name, all_data):
         print('new labels:{}'.format(new_label_dict))
         print(colored('Polarity label-fixing done, PLEASE DO RECORD THE NEW POLARITY LABEL MAP, '
                       'as the label inferred by model also changed!', 'green'))
+
+
+def load_checkpoint(trainer, from_checkpoint_path):
+    if from_checkpoint_path:
+        model_path = find_files(from_checkpoint_path, '.model')
+        state_dict_path = find_files(from_checkpoint_path, '.state_dict')
+        config_path = find_files(from_checkpoint_path, '.config')
+
+        if from_checkpoint_path:
+            if not config_path:
+                raise FileNotFoundError('.config file is missing!')
+            config = pickle.load(open(config_path[0], 'rb'))
+            if model_path:
+                if config.model != trainer.opt.model:
+                    print(colored('Warning, the checkpoint was not trained using {} from param_dict'.format(trainer.opt.model.__name__)), 'red')
+                trainer.model = torch.load(model_path[0])
+            if state_dict_path:
+                trainer.model.load_state_dict(torch.load(state_dict_path[0]))
+                trainer.model.opt = trainer.opt
+                trainer.model.to(trainer.opt.device)
+            else:
+                print('.model or .state_dict file is missing!')
+        else:
+            print('No checkpoint found in {}'.format(from_checkpoint_path))
+        print('Checkpoint loaded!')
 
 
 optimizers = {
