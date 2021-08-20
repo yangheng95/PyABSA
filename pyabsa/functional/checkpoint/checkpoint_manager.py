@@ -9,7 +9,6 @@ import os.path
 import sys
 import zipfile
 
-import torch
 from autocuda import auto_cuda
 from findfile import find_files, find_dir, find_file
 from google_drive_downloader import GoogleDriveDownloader as gdd
@@ -19,6 +18,7 @@ from pyabsa import __version__
 from pyabsa.core.apc.prediction.sentiment_classifier import SentimentClassifier
 from pyabsa.core.atepc.prediction.aspect_extractor import AspectExtractor
 from pyabsa.core.tc.prediction.text_classifier import TextClassifier
+from pyabsa.utils.pyabsa_utils import get_device
 
 
 def unzip_checkpoint(zip_path):
@@ -33,7 +33,11 @@ def unzip_checkpoint(zip_path):
     return zip_path.replace('.zip', '')
 
 
-class APCCheckpointManager:
+class CheckpointManager:
+    pass
+
+
+class APCCheckpointManager(CheckpointManager):
     @staticmethod
     def get_sentiment_classifier(checkpoint: str = None,
                                  sentiment_map: dict = None,
@@ -55,17 +59,7 @@ class APCCheckpointManager:
             checkpoint = APCCheckpointManager.get_checkpoint(checkpoint)
 
         sent_classifier = SentimentClassifier(checkpoint, sentiment_map=sentiment_map)
-        if isinstance(auto_device, str):
-            device = auto_device
-        elif isinstance(auto_device, bool):
-            device = auto_cuda() if auto_device else 'cpu'
-        else:
-            device = auto_cuda()
-        try:
-            torch.device(device)
-        except RuntimeError as e:
-            print('Device assignment error: {}, redirect to CPU'.format(e))
-            device = 'cpu'
+        device, device_name = get_device(auto_device)
         sent_classifier.to(device)
         return sent_classifier
 
@@ -84,7 +78,7 @@ class APCCheckpointManager:
                                          archive_path=aspect_sentiment_classification_checkpoint[checkpoint.lower()]['id'])
 
 
-class ATEPCCheckpointManager:
+class ATEPCCheckpointManager(CheckpointManager):
     @staticmethod
     def get_aspect_extractor(checkpoint: str = None,
                              sentiment_map: dict = None,
@@ -106,18 +100,7 @@ class ATEPCCheckpointManager:
             checkpoint = ATEPCCheckpointManager.get_checkpoint(checkpoint)
 
         aspect_extractor = AspectExtractor(checkpoint, sentiment_map=sentiment_map)
-        if isinstance(auto_device, str):
-            device = auto_device
-        elif isinstance(auto_device, bool):
-            device = auto_cuda() if auto_device else 'cpu'
-        else:
-            device = auto_cuda()
-        try:
-            torch.device(device)
-        except RuntimeError as e:
-            print('Device assignment error: {}, redirect to CPU'.format(e))
-            device = 'cpu'
-
+        device, device_name = get_device(auto_device)
         aspect_extractor.to(device)
         return aspect_extractor
 
@@ -134,7 +117,7 @@ class ATEPCCheckpointManager:
                                          archive_path=atepc_checkpoint[checkpoint.lower()]['id'])
 
 
-class TextClassifierCheckpointManager:
+class TextClassifierCheckpointManager(CheckpointManager):
     @staticmethod
     def get_text_classifier(checkpoint=None,
                             label_map=None,
@@ -156,17 +139,7 @@ class TextClassifierCheckpointManager:
             checkpoint = TextClassifierCheckpointManager.get_checkpoint(checkpoint)
 
         text_classifier = TextClassifier(checkpoint, label_map=label_map)
-        if isinstance(auto_device, str):
-            device = auto_device
-        elif isinstance(auto_device, bool):
-            device = auto_cuda() if auto_device else text_classifier.cpu()
-        else:
-            device = auto_cuda()
-        try:
-            torch.device(device)
-        except RuntimeError as e:
-            print('Device assignment error: {}, redirect to CPU'.format(e))
-            device = 'cpu'
+        device, device_name = get_device(auto_device)
         text_classifier.to(device)
         return text_classifier
 
@@ -212,7 +185,7 @@ def compare_version(version1, version2):
 
 
 def parse_checkpoint_info(t_checkpoint_map, task='APC'):
-    print('*' * 23, colored('Available {} model checkpoints for Version:{}'.format(task, __version__), 'green'), '*' * 23)
+    print('*' * 23, colored('Available {} model checkpoints for Version:{} (this version)'.format(task, __version__), 'green'), '*' * 23)
     for i, checkpoint in enumerate(t_checkpoint_map):
         print('-' * 100)
         print("{}. Checkpoint Name: {}\nModel: {}\nDataset: {} \nVersion: {} \nDescription:{} \nAuthor: {}".format(
@@ -238,12 +211,13 @@ def parse_checkpoint_info(t_checkpoint_map, task='APC'):
     return t_checkpoint_map
 
 
-def available_checkpoints(task=''):
+def available_checkpoints(task='', from_local=False):
     try:
-        checkpoint_url = '1jjaAQM6F9s_IEXNpaY-bQF9EOrhq0PBD'
-        if os.path.isfile('./checkpoints.json'):
-            os.remove('./checkpoints.json')
-        gdd.download_file_from_google_drive(file_id=checkpoint_url, dest_path='./checkpoints.json')
+        if not from_local:
+            checkpoint_url = '1jjaAQM6F9s_IEXNpaY-bQF9EOrhq0PBD'
+            if os.path.isfile('./checkpoints.json'):
+                os.remove('./checkpoints.json')
+            gdd.download_file_from_google_drive(file_id=checkpoint_url, dest_path='./checkpoints.json')
         checkpoint_map = json.load(open('./checkpoints.json', 'r'))
         current_version_map = {}
         for t_map in checkpoint_map:

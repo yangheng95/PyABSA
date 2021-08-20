@@ -83,7 +83,7 @@ class TextClassifier:
                     self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case=True)
 
                 print('Config used in Training:')
-                print_args(self.opt)
+                print_args(self.opt, mode=1)
 
             except Exception as e:
                 print(e)

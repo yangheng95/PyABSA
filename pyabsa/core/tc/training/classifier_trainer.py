@@ -462,7 +462,7 @@ def train4classification(opt, from_checkpoint_path, logger):
         try:
             trainer = Instructor(opt, logger)
             load_checkpoint(trainer, from_checkpoint_path)
-        except ValueError as e:
-            print('Seems to be ConnectionError, retry in {} seconds...'.format(60))
+        except Exception as e:
+            print('Error while initializing trainer {}, retry in {} seconds'.format(e, 60))
             time.sleep(60)
-        return trainer.run()
+    return trainer.run()

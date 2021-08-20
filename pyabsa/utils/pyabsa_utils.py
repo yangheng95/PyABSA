@@ -8,6 +8,7 @@ import os
 import pickle
 
 import torch
+from autocuda import auto_cuda, auto_cuda_name
 from findfile import find_files
 from termcolor import colored
 
@@ -68,6 +69,22 @@ def check_and_fix_labels(label_set, label_name, all_data):
         print('new labels:{}'.format(new_label_dict))
         print(colored('Polarity label-fixing done, PLEASE DO RECORD THE NEW POLARITY LABEL MAP, '
                       'as the label inferred by model also changed!', 'green'))
+
+
+def get_device(auto_device):
+    if isinstance(auto_device, str):
+        device = auto_device
+    elif isinstance(auto_device, bool):
+        device = auto_cuda() if auto_device else 'cpu'
+    else:
+        device = auto_cuda()
+        try:
+            torch.device(device)
+        except RuntimeError as e:
+            print('Device assignment error: {}, redirect to CPU'.format(e))
+            device = 'cpu'
+    device_name = auto_cuda_name()
+    return device, device_name
 
 
 def load_checkpoint(trainer, from_checkpoint_path):

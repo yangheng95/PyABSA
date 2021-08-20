@@ -4,7 +4,7 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-
+import copy
 import os
 
 import findfile
@@ -25,27 +25,12 @@ from pyabsa.functional.config.atepc_config_manager import ATEPCConfigManager
 from pyabsa.functional.config.classification_config_manager import ClassificationConfigManager
 from pyabsa.utils.logger import get_logger
 
-from autocuda import auto_cuda, auto_cuda_name
+
+from pyabsa.utils.pyabsa_utils import get_device
 
 
-def init_config(config, auto_device=True):
-    if config:
-
-        if isinstance(auto_device, str):
-            device = auto_device
-        elif isinstance(auto_device, bool):
-            device = auto_cuda() if auto_device else 'cpu'
-        else:
-            device = auto_cuda()
-        try:
-            torch.device(device)
-        except RuntimeError as e:
-            print('Device assignment error: {}, redirect to CPU'.format(e))
-            device = 'cpu'
-        config.device = device
-        if 'cuda' in device:
-            config.device_name = auto_cuda_name()
-        # reload hyper-parameter from parameter dict
+def init_config(config, auto_device):
+    config.device, config.device_name = get_device(auto_device)
 
     config.model_name = config.model.__name__.lower()
     config.Version = __version__
@@ -116,12 +101,13 @@ class Trainer:
         model_path = []
         seeds = self.config.seed
         for _, s in enumerate(seeds):
-            self.config.seed = s
+            config = copy.deepcopy(self.config)
+            config.seed = s
             if self.checkpoint_save_mode:
-                model_path.append(self.train_func(self.config, self.from_checkpoint, self.logger))
+                model_path.append(self.train_func(config, self.from_checkpoint, self.logger))
             else:
                 # always return the last trained model if dont save trained model
-                model = self.model_class(model_arg=self.train_func(self.config, self.from_checkpoint, self.logger))
+                model = self.model_class(model_arg=self.train_func(config, self.from_checkpoint, self.logger))
         while self.logger.handlers:
             self.logger.removeHandler(self.logger.handlers[0])
 

@@ -26,7 +26,6 @@ glove.42B.300d.txt
 glove.twitter.27B.txt
 
 # project main files
-checkpoints.json
 release_note.json
 
 # C extensions

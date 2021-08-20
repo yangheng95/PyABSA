@@ -91,7 +91,7 @@ class AspectExtractor:
         torch.manual_seed(self.opt.seed)
 
         print('Config used in Training:')
-        print_args(self.opt)
+        print_args(self.opt, mode=1)
 
         if self.opt.gradient_accumulation_steps < 1:
             raise ValueError("Invalid gradient_accumulation_steps parameter: {}, should be >= 1".format(

@@ -177,32 +177,35 @@ class Instructor:
                         self.opt.metrics_of_this_checkpoint['apc_acc'] = apc_result['apc_test_acc']
                         self.opt.metrics_of_this_checkpoint['apc_f1'] = apc_result['apc_test_f1']
                         self.opt.metrics_of_this_checkpoint['ate_f1'] = ate_result
-                        # if save_path:
-                        #     try:
-                        #         shutil.rmtree(save_path)
-                        #         # self.logger.info('Remove sub-self.optimal trained model:', save_path)
-                        #     except:
-                        #         self.logger.info('Can not remove sub-self.optimal trained model:', save_path)
 
-                        if self.opt.model_path_to_save:
-                            save_path = '{0}/{1}_{2}_apcacc_{3}_apcf1_{4}_atef1_{5}/'.format(
-                                self.opt.model_path_to_save,
-                                self.opt.model_name,
-                                self.opt.lcf,
-                                round(apc_result['apc_test_acc'], 2),
-                                round(apc_result['apc_test_f1'], 2),
-                                round(ate_result, 2)
-                            )
-                            if apc_result['apc_test_acc'] > self.opt.max_test_metrics['max_apc_test_acc'] or \
-                                    apc_result['apc_test_f1'] > self.opt.max_test_metrics['max_apc_test_f1'] or \
-                                    ate_result > self.opt.max_test_metrics['max_ate_test_f1']:
+                        if apc_result['apc_test_acc'] > self.opt.max_test_metrics['max_apc_test_acc'] or \
+                                apc_result['apc_test_f1'] > self.opt.max_test_metrics['max_apc_test_f1'] or \
+                                ate_result > self.opt.max_test_metrics['max_ate_test_f1']:
 
-                                if apc_result['apc_test_acc'] > self.opt.max_test_metrics['max_apc_test_acc']:
-                                    self.opt.max_test_metrics['max_apc_test_acc'] = apc_result['apc_test_acc']
-                                if apc_result['apc_test_f1'] > self.opt.max_test_metrics['max_apc_test_f1']:
-                                    self.opt.max_test_metrics['max_apc_test_f1'] = apc_result['apc_test_f1']
-                                if ate_result > self.opt.max_test_metrics['max_ate_test_f1']:
-                                    self.opt.max_test_metrics['max_ate_test_f1'] = ate_result
+                            if apc_result['apc_test_acc'] > self.opt.max_test_metrics['max_apc_test_acc']:
+                                self.opt.max_test_metrics['max_apc_test_acc'] = apc_result['apc_test_acc']
+                            if apc_result['apc_test_f1'] > self.opt.max_test_metrics['max_apc_test_f1']:
+                                self.opt.max_test_metrics['max_apc_test_f1'] = apc_result['apc_test_f1']
+                            if ate_result > self.opt.max_test_metrics['max_ate_test_f1']:
+                                self.opt.max_test_metrics['max_ate_test_f1'] = ate_result
+
+                            if self.opt.model_path_to_save:
+                                # if save_path:
+                                #     try:
+                                #         shutil.rmtree(save_path)
+                                #         # self.logger.info('Remove sub-self.optimal trained model:', save_path)
+                                #     except:
+                                #         self.logger.info('Can not remove sub-self.optimal trained model:', save_path)
+
+                                save_path = '{0}/{1}_{2}_apcacc_{3}_apcf1_{4}_atef1_{5}/'.format(
+                                    self.opt.model_path_to_save,
+                                    self.opt.model_name,
+                                    self.opt.lcf,
+                                    round(apc_result['apc_test_acc'], 2),
+                                    round(apc_result['apc_test_f1'], 2),
+                                    round(ate_result, 2)
+                                )
+
                                 save_model(self.opt, self.model, self.tokenizer, save_path)
 
                         current_apc_test_acc = apc_result['apc_test_acc']
@@ -350,7 +353,7 @@ def train4atepc(opt, from_checkpoint_path, logger):
         try:
             trainer = Instructor(opt, logger)
             load_checkpoint(trainer, from_checkpoint_path)
-        except ValueError as e:
-            print('Seems to be ConnectionError, retry in {} seconds...'.format(60))
+        except Exception as e:
+            print('Error while initializing trainer {}, retry in {} seconds'.format(e, 60))
             time.sleep(60)
     return trainer.run()
