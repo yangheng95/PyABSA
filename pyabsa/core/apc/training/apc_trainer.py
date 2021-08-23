@@ -19,7 +19,7 @@ from torch.utils.data import DataLoader, random_split, ConcatDataset
 from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModel, BertModel
 
-from pyabsa.utils.dataset_utils import ABSADatasetList
+from pyabsa.functional.dataset import ABSADatasetList
 from pyabsa.utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args, optimizers, load_checkpoint
 
@@ -37,7 +37,7 @@ class Instructor:
         self.logger = logger
         self.opt = opt
 
-        # init BERT-based model and dataset
+        # init BERT-based model and dataset_manager
         if hasattr(APCModelList, opt.model.__name__):
             self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case=True)
 
@@ -67,22 +67,23 @@ class Instructor:
             self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
 
         elif hasattr(GloVeAPCModelList, opt.model.__name__):
-            # init GloVe-based model and dataset
-            if hasattr(ABSADatasetList, opt.dataset_path):
-                opt.dataset_path = os.path.join(os.getcwd(), opt.dataset_path)
-                if not os.path.exists(os.path.join(os.getcwd(), opt.dataset_path)):
-                    os.mkdir(os.path.join(os.getcwd(), opt.dataset_path))
+            # init GloVe-based model and dataset_manager
+
+            if hasattr(ABSADatasetList, opt.dataset_name):
+                opt.dataset_name = os.path.join(os.getcwd(), opt.dataset_name)
+                if not os.path.exists(os.path.join(os.getcwd(), opt.dataset_name)):
+                    os.mkdir(os.path.join(os.getcwd(), opt.dataset_name))
 
             self.tokenizer = build_tokenizer(
                 dataset_list=opt.dataset_file,
                 max_seq_len=opt.max_seq_len,
-                dat_fname='{0}_tokenizer.dat'.format(os.path.basename(opt.dataset_path)),
+                dat_fname='{0}_tokenizer.dat'.format(os.path.basename(opt.dataset_name)),
                 opt=self.opt
             )
             self.embedding_matrix = build_embedding_matrix(
                 word2idx=self.tokenizer.word2idx,
                 embed_dim=opt.embed_dim,
-                dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(opt.embed_dim), os.path.basename(opt.dataset_path)),
+                dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(opt.embed_dim), os.path.basename(opt.dataset_name)),
                 opt=self.opt
             )
 
@@ -489,6 +490,8 @@ def train4apc(opt, from_checkpoint_path, logger):
 
     # in case of handling ConnectionError exception
     trainer = None
+    trainer = Instructor(opt, logger)
+
     while not trainer:
         try:
             trainer = Instructor(opt, logger)

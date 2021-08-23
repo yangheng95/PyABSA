@@ -50,9 +50,9 @@ def prepare_glove840_embedding(glove_path):
 
 
 def build_tokenizer(dataset_list, max_seq_len, dat_fname, opt):
-    if os.path.exists(os.path.join(opt.dataset_path, dat_fname)):
-        print('Loading tokenizer on {}'.format(os.path.join(opt.dataset_path, dat_fname)))
-        tokenizer = pickle.load(open(os.path.join(opt.dataset_path, dat_fname), 'rb'))
+    if os.path.exists(os.path.join(opt.dataset_name, dat_fname)):
+        print('Loading tokenizer on {}'.format(os.path.join(opt.dataset_name, dat_fname)))
+        tokenizer = pickle.load(open(os.path.join(opt.dataset_name, dat_fname), 'rb'))
     else:
         text = ''
         for dataset_type in dataset_list:
@@ -68,7 +68,7 @@ def build_tokenizer(dataset_list, max_seq_len, dat_fname, opt):
 
         tokenizer = Tokenizer(max_seq_len)
         tokenizer.fit_on_text(text)
-        pickle.dump(tokenizer, open(os.path.join(opt.dataset_path, dat_fname), 'wb'))
+        pickle.dump(tokenizer, open(os.path.join(opt.dataset_name, dat_fname), 'wb'))
     return tokenizer
 
 
@@ -84,12 +84,12 @@ def _load_word_vec(path, word2idx=None, embed_dim=300):
 
 
 def build_embedding_matrix(word2idx, embed_dim, dat_fname, opt):
-    if os.path.exists(os.path.join(opt.dataset_path, dat_fname)):
-        print('Loading cached embedding_matrix for {}'.format(os.path.join(opt.dataset_path, dat_fname)))
-        embedding_matrix = pickle.load(open(os.path.join(opt.dataset_path, dat_fname), 'rb'))
+    if os.path.exists(os.path.join(opt.dataset_name, dat_fname)):
+        print('Loading cached embedding_matrix for {}'.format(os.path.join(opt.dataset_name, dat_fname)))
+        embedding_matrix = pickle.load(open(os.path.join(opt.dataset_name, dat_fname), 'rb'))
     else:
         print('Extracting embedding_matrix for {}'.format(dat_fname))
-        glove_path = prepare_glove840_embedding(opt.dataset_path)
+        glove_path = prepare_glove840_embedding(opt.dataset_name)
         embedding_matrix = np.zeros((len(word2idx) + 2, embed_dim))  # idx 0 and len(word2idx)+1 are all-zeros
 
         word_vec = _load_word_vec(glove_path, word2idx=word2idx, embed_dim=embed_dim)
@@ -99,7 +99,7 @@ def build_embedding_matrix(word2idx, embed_dim, dat_fname, opt):
             if vec is not None:
                 # words not found in embedding index will be all-zeros.
                 embedding_matrix[i] = vec
-        pickle.dump(embedding_matrix, open(os.path.join(opt.dataset_path, dat_fname), 'wb'))
+        pickle.dump(embedding_matrix, open(os.path.join(opt.dataset_name, dat_fname), 'wb'))
     return embedding_matrix
 
 

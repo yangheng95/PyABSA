@@ -17,9 +17,9 @@ from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
 from transformers import BertTokenizer
 from transformers.models.bert.modeling_bert import BertModel
 
-from pyabsa.utils.dataset_utils import detect_infer_dataset
+from pyabsa.functional.dataset import detect_infer_dataset, DatasetItem
 from pyabsa.core.atepc.models import ATEPCModelList
-from pyabsa.core.atepc.dataset_utils.atepc_utils import load_atepc_datasets
+from pyabsa.core.atepc.dataset_utils.atepc_utils import load_atepc_inference_datasets
 from pyabsa.utils.pyabsa_utils import print_args
 from ..dataset_utils.data_utils_for_inferring import (ATEPCProcessor,
                                                       convert_ate_examples_to_features,
@@ -52,11 +52,17 @@ class AspectExtractor:
             # load from a model path
             print('Load aspect extractor from', model_arg)
             try:
-                state_dict_path = find_file(model_arg, '.state_dict')
-                model_path = find_file(model_arg, '.model')
-                tokenizer_path = find_file(model_arg, '.tokenizer')
-                config_path = find_file(model_arg, '.config')
-                self.opt = pickle.load(open(config_path, 'rb'))
+                state_dict_path = find_file(model_arg, '.state_dict', exclude_key=['__MACOSX'])
+                model_path = find_file(model_arg, '.model', exclude_key=['__MACOSX'])
+                tokenizer_path = find_file(model_arg, '.tokenizer', exclude_key=['__MACOSX'])
+                config_path = find_file(model_arg, '.config', exclude_key=['__MACOSX'])
+
+                print('config: {}'.format(config_path))
+                print('state_dict: {}'.format(state_dict_path))
+                print('model: {}'.format(model_path))
+                print('tokenizer: {}'.format(tokenizer_path))
+
+                self.opt = pickle.load(open(config_path, mode='rb'))
                 if 'pretrained_bert_name' in self.opt.args:
                     self.opt.pretrained_bert = self.opt.pretrained_bert_name
                 if state_dict_path:
@@ -68,7 +74,7 @@ class AspectExtractor:
                     self.model = torch.load(model_path)
                     self.model.opt = self.opt
                 if tokenizer_path:
-                    self.tokenizer = pickle.load(open(tokenizer_path, 'rb'))
+                    self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
                 else:
                     self.tokenizer = BertTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case=True)
 
@@ -135,19 +141,43 @@ class AspectExtractor:
     def extract_aspect(self, inference_source, save_result=True, print_result=True, pred_sentiment=True):
         extraction_res = None
         polarity_res = None
-        if isinstance(inference_source, str):
-            inference_set = detect_infer_dataset(inference_source, task='apc')
-            inference_source = load_atepc_datasets(inference_set)
-            # print(examples)
-            if not inference_source:
-                extraction_res = self._extract(inference_source, print_result)
-                if pred_sentiment:
-                    polarity_res = self._infer(extraction_res, print_result)
-                return {'extraction_res': extraction_res, 'polarity_res': polarity_res}
-        if isinstance(inference_source, list):
+
+        save_path = os.path.join(os.getcwd(), 'atepc_inference.result.txt')
+        fout = open(save_path, 'w', encoding='utf8') if save_result else None
+
+        if isinstance(inference_source, DatasetItem):
+            # using integrated inference dataset
             results = []
-            save_path = os.path.join(os.getcwd(), 'atepc_inference.result.txt')
-            fout = open(save_path, 'w', encoding='utf8') if save_result else None
+            for d in inference_source:
+                inference_set = detect_infer_dataset(d, task='apc')
+                inference_source = load_atepc_inference_datasets(inference_set)
+                if inference_source:
+                    for example in inference_source:
+                        extraction_res = self._extract(example, print_result)
+                        if pred_sentiment:
+                            polarity_res = self._infer(extraction_res, print_result)
+                        results.append({'extraction_res': extraction_res, 'polarity_res': polarity_res})
+                        if fout:
+                            fout.write('extraction_res:{} polarity_res:{}\n'.format(extraction_res, polarity_res))
+                    return results
+        elif isinstance(inference_source, str):
+            inference_source = DatasetItem(inference_source)
+            # using custom inference dataset
+            results = []
+            inference_set = detect_infer_dataset(inference_source, task='apc')
+            inference_source = load_atepc_inference_datasets(inference_set)
+            if inference_source:
+                for example in inference_source:
+                    extraction_res = self._extract(example, print_result)
+                    if pred_sentiment:
+                        polarity_res = self._infer(extraction_res, print_result)
+                    results.append({'extraction_res': extraction_res, 'polarity_res': polarity_res})
+                    if fout:
+                        fout.write('extraction_res:{} polarity_res:{}\n'.format(extraction_res, polarity_res))
+                return results
+        elif isinstance(inference_source, list):
+            # using example list
+            results = []
             for example in inference_source:
                 extraction_res = self._extract(example, print_result)
                 if pred_sentiment:
@@ -157,6 +187,8 @@ class AspectExtractor:
                     fout.write('extraction_res:{} polarity_res:{}\n'.format(extraction_res, polarity_res))
             print('The results of aspect term extraction have been saved in {}'.format(save_path))
             return results
+        else:
+            print('Please run inference using examples list or inference dataset path (list)!')
 
     # Temporal code, pending optimization
     def _extract(self, example, print_result):

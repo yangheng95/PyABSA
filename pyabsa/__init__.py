@@ -6,7 +6,7 @@
 
 # Copyright (C) 2021. All Rights Reserved.
 
-__version__ = '1.1.2'
+__version__ = '1.1.6'
 __name__ = 'pyabsa'
 
 from termcolor import colored
@@ -25,7 +25,7 @@ from pyabsa.functional import (TextClassifierCheckpointManager,
 from pyabsa.functional.checkpoint.checkpoint_manager import (APCCheckpointManager,
                                                              ATEPCCheckpointManager,
                                                              available_checkpoints)
-from pyabsa.utils.dataset_utils import ABSADatasetList, ClassificationDatasetList
+from pyabsa.functional.dataset import ABSADatasetList, ClassificationDatasetList
 from pyabsa.functional.config import APCConfigManager
 from pyabsa.functional.config import ATEPCConfigManager
 from pyabsa.functional.config import ClassificationConfigManager

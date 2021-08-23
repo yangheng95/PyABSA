@@ -8,11 +8,11 @@ import copy
 import os
 
 import findfile
-import torch
-
 from pyabsa import __version__
+
+from pyabsa.functional.dataset import DatasetItem
 from pyabsa.functional.config.config_manager import ConfigManager
-from pyabsa.utils.dataset_utils import detect_dataset
+from pyabsa.functional.dataset import detect_dataset
 from pyabsa.core.apc.prediction.sentiment_classifier import SentimentClassifier
 from pyabsa.core.apc.training.apc_trainer import train4apc
 from pyabsa.core.atepc.prediction.aspect_extractor import AspectExtractor
@@ -23,8 +23,9 @@ from pyabsa.core.tc.training.classifier_trainer import train4classification
 from pyabsa.functional.config.apc_config_manager import APCConfigManager
 from pyabsa.functional.config.atepc_config_manager import ATEPCConfigManager
 from pyabsa.functional.config.classification_config_manager import ClassificationConfigManager
-from pyabsa.utils.logger import get_logger
+from pyabsa.functional.dataset import ABSADatasetList
 
+from pyabsa.utils.logger import get_logger
 
 from pyabsa.utils.pyabsa_utils import get_device
 
@@ -47,13 +48,13 @@ class Trainer:
     def __init__(self,
                  config: ConfigManager = None,
                  dataset: str = None,
-                 from_checkpoint: str = None,
+                 from_checkpoint: str = '',
                  checkpoint_save_mode: int = 1,
                  auto_device=True):
         """
 
         :param config: PyABSA.config.ConfigManager
-        :param dataset: Dataset name, or a dataset path, or a list of dataset paths
+        :param dataset: Dataset name, or a dataset_manager path, or a list of dataset_manager paths
         :param from_checkpoint: A checkpoint path to train based on
         :param checkpoint_save_mode: Save trained model to checkpoint,
                                      "checkpoint_save_mode=1" to save the state_dict,
@@ -77,11 +78,18 @@ class Trainer:
             self.task = 'classification'
 
         self.config = config
+        if isinstance(dataset, DatasetItem):
+            self.config.dataset_item = list(dataset)
+            self.config.dataset_name = dataset.dataset_name
+        else:
+            custom_dataset = DatasetItem('custom_dataset', dataset)
+            self.config.dataset_item = list(custom_dataset)
+            self.config.dataset_name = custom_dataset.dataset_name
         self.dataset_file = detect_dataset(dataset, task=self.task)
         self.config.dataset_file = self.dataset_file
         self.config = init_config(self.config, auto_device)
-        self.config.dataset_path = dataset
-        self.from_checkpoint = findfile.find_dir(os.getcwd(), from_checkpoint)
+
+        self.from_checkpoint = findfile.find_dir(os.getcwd(), from_checkpoint) if from_checkpoint else ''
         self.checkpoint_save_mode = checkpoint_save_mode
         self.config.save_mode = checkpoint_save_mode
         log_name = self.config.model_name

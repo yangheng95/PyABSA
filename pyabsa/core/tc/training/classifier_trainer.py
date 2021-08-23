@@ -20,7 +20,7 @@ from torch.utils.data import DataLoader, random_split, ConcatDataset
 from tqdm import tqdm
 from transformers import AutoModel
 
-from pyabsa.utils.dataset_utils import ClassificationDatasetList
+from pyabsa.functional.dataset import ClassificationDatasetList
 from ..models import GloVeClassificationModelList, BERTClassificationModelList
 from ..classic.__bert__.dataset_utils.data_utils_for_training import (Tokenizer4Pretraining,
                                                                       BERTClassificationDataset)
@@ -53,21 +53,21 @@ class Instructor:
 
         elif hasattr(GloVeClassificationModelList, opt.model.__name__):
             # init GloVe-based model and dataset_utils
-            if hasattr(ClassificationDatasetList, opt.dataset_path):
-                opt.dataset_path = os.path.join(os.getcwd(), opt.dataset_path)
-                if not os.path.exists(os.path.join(os.getcwd(), opt.dataset_path)):
-                    os.mkdir(os.path.join(os.getcwd(), opt.dataset_path))
+            if hasattr(ClassificationDatasetList, opt.dataset_name):
+                opt.dataset_name = os.path.join(os.getcwd(), opt.dataset_name)
+                if not os.path.exists(os.path.join(os.getcwd(), opt.dataset_name)):
+                    os.mkdir(os.path.join(os.getcwd(), opt.dataset_name))
 
             self.tokenizer = build_tokenizer(
                 dataset_list=opt.dataset_file,
                 max_seq_len=opt.max_seq_len,
-                dat_fname='{0}_tokenizer.dat'.format(os.path.basename(opt.dataset_path)),
+                dat_fname='{0}_tokenizer.dat'.format(os.path.basename(opt.dataset_name)),
                 opt=self.opt
             )
             self.embedding_matrix = build_embedding_matrix(
                 word2idx=self.tokenizer.word2idx,
                 embed_dim=opt.embed_dim,
-                dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(opt.embed_dim), os.path.basename(opt.dataset_path)),
+                dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(opt.embed_dim), os.path.basename(opt.dataset_name)),
                 opt=self.opt
             )
 

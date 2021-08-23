@@ -1,7 +1,7 @@
 # dev files
 *.dev.py
 state_dict/
-datasets/
+integrated_datasets/
 *.results
 *.tokenizer
 *.model

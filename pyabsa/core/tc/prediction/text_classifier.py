@@ -14,7 +14,7 @@ from termcolor import colored
 from torch.utils.data import DataLoader
 from transformers import BertModel, AutoTokenizer
 
-from pyabsa.utils.dataset_utils import detect_infer_dataset
+from pyabsa.functional.dataset import detect_infer_dataset
 
 from ..models import GloVeClassificationModelList, BERTClassificationModelList
 from ..classic.__glove__.dataset_utils.data_utils_for_inferring import GloVeClassificationDataset
@@ -46,11 +46,18 @@ class TextClassifier:
             # load from a model path
             try:
                 print('Load text classifier from', model_arg)
-                state_dict_path = find_file(model_arg, '.state_dict')
-                model_path = find_file(model_arg, '.model')
-                tokenizer_path = find_file(model_arg, '.tokenizer')
-                config_path = find_file(model_arg, '.config')
-                self.opt = pickle.load(open(config_path, 'rb'))
+                state_dict_path = find_file(model_arg, '.state_dict', exclude_key=['__MACOSX'])
+                model_path = find_file(model_arg, '.model', exclude_key=['__MACOSX'])
+                tokenizer_path = find_file(model_arg, '.tokenizer', exclude_key=['__MACOSX'])
+                config_path = find_file(model_arg, '.config', exclude_key=['__MACOSX'])
+
+                print('config: {}'.format(config_path))
+                print('state_dict: {}'.format(state_dict_path))
+                print('model: {}'.format(model_path))
+                print('tokenizer: {}'.format(tokenizer_path))
+
+                self.opt = pickle.load(open(config_path, mode='rb'))
+
                 if state_dict_path:
                     if 'pretrained_bert_name' in self.opt.args or 'pretrained_bert' in self.opt.args:
                         if 'pretrained_bert_name' in self.opt.args:
@@ -61,13 +68,13 @@ class TextClassifier:
                         self.tokenizer = build_tokenizer(
                             dataset_list=self.opt.dataset_file,
                             max_seq_len=self.opt.max_seq_len,
-                            dat_fname='{0}_tokenizer.dat'.format(os.path.basename(self.opt.dataset_path)),
+                            dat_fname='{0}_tokenizer.dat'.format(os.path.basename(self.opt.dataset_name)),
                             opt=self.opt
                         )
                         self.embedding_matrix = build_embedding_matrix(
                             word2idx=self.tokenizer.word2idx,
                             embed_dim=self.opt.embed_dim,
-                            dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(self.opt.embed_dim), os.path.basename(self.opt.dataset_path)),
+                            dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(self.opt.embed_dim), os.path.basename(self.opt.dataset_name)),
                             opt=self.opt
                         )
                         self.model = self.opt.model(self.embedding_matrix, self.opt).to(self.opt.device)
@@ -78,7 +85,7 @@ class TextClassifier:
                     self.model = torch.load(model_path)
 
                 if tokenizer_path:
-                    self.tokenizer = pickle.load(open(tokenizer_path, 'rb'))
+                    self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
                 else:
                     self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case=True)
 
