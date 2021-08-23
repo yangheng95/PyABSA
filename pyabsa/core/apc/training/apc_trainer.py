@@ -489,14 +489,7 @@ def train4apc(opt, from_checkpoint_path, logger):
     opt.device = torch.device(opt.device)
 
     # in case of handling ConnectionError exception
-    trainer = None
     trainer = Instructor(opt, logger)
+    load_checkpoint(trainer, from_checkpoint_path)
 
-    while not trainer:
-        try:
-            trainer = Instructor(opt, logger)
-            load_checkpoint(trainer, from_checkpoint_path)
-        except Exception as e:
-            print('Error while initializing trainer {}, retry in {} seconds'.format(e, 60))
-            time.sleep(60)
     return trainer.run()

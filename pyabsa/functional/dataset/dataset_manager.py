@@ -58,7 +58,6 @@ class ABSADatasetList:
 
 
 class ClassificationDatasetList:
-
     SST1 = DatasetItem('SST1', 'SST1')
     SST2 = DatasetItem('SST2', 'SST2')
 
