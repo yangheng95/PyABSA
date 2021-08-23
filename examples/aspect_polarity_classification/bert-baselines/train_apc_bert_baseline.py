@@ -7,7 +7,7 @@
 
 ########################################################################################################################
 #                    train and evaluate on your own apc_datasets (need train and test apc_datasets)                    #
-#              your custom dataset should have the continue polarity labels like [0,N-1] for N categories              #
+#              your custom dataset_manager should have the continue polarity labels like [0,N-1] for N categories              #
 ########################################################################################################################
 
 from pyabsa import APCTrainer, APCConfigManager, BERTBaselineAPCModelList, ABSADatasetList

@@ -12,9 +12,8 @@ from pyabsa.functional import ATEPCConfigManager
 
 config = ATEPCConfigManager.get_atepc_config_english()
 
-checkpoint_path = ATEPCCheckpointManager.get_checkpoint(checkpoint='english')
-# or
-# checkpoint_path = 'lcfs_atepc_cdw_apcacc_86.17_apcf1_58.3_atef1_70.86'
+# checkpoint_path = ATEPCCheckpointManager.get_checkpoint(checkpoint='english')  # or
+checkpoint_path = 'lcfs_atepc_cdw_apcacc_86.17_apcf1_58.3_atef1_70.86'
 
 config.model = ATEPCModelList.LCFS_ATEPC
 config.evaluate_begin = 4

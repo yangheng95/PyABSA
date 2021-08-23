@@ -49,9 +49,9 @@ def prepare_glove840_embedding(glove_path):
 
 
 def build_tokenizer(dataset_list, max_seq_len, dat_fname, opt):
-    if os.path.exists(os.path.join(opt.dataset_path, dat_fname)):
-        print('Loading tokenizer on {}'.format(os.path.join(opt.dataset_path, dat_fname)))
-        tokenizer = pickle.load(open(os.path.join(opt.dataset_path, dat_fname), 'rb'))
+    if os.path.exists(os.path.join(opt.dataset_name, dat_fname)):
+        print('Loading tokenizer on {}'.format(os.path.join(opt.dataset_name, dat_fname)))
+        tokenizer = pickle.load(open(os.path.join(opt.dataset_name, dat_fname), 'rb'))
     else:
         text = ''
         for dataset_type in dataset_list:
@@ -67,7 +67,7 @@ def build_tokenizer(dataset_list, max_seq_len, dat_fname, opt):
 
         tokenizer = Tokenizer(max_seq_len)
         tokenizer.fit_on_text(text)
-        pickle.dump(tokenizer, open(os.path.join(opt.dataset_path, dat_fname), 'wb'))
+        pickle.dump(tokenizer, open(os.path.join(opt.dataset_name, dat_fname), 'wb'))
     return tokenizer
 
 
@@ -83,12 +83,12 @@ def _load_word_vec(path, word2idx=None, embed_dim=300):
 
 
 def build_embedding_matrix(word2idx, embed_dim, dat_fname, opt):
-    if os.path.exists(os.path.join(opt.dataset_path, dat_fname)):
-        print('Loading cached embedding_matrix for {}'.format(os.path.join(opt.dataset_path, dat_fname)))
-        embedding_matrix = pickle.load(open(os.path.join(opt.dataset_path, dat_fname), 'rb'))
+    if os.path.exists(os.path.join(opt.dataset_name, dat_fname)):
+        print('Loading cached embedding_matrix for {}'.format(os.path.join(opt.dataset_name, dat_fname)))
+        embedding_matrix = pickle.load(open(os.path.join(opt.dataset_name, dat_fname), 'rb'))
     else:
         print('Extracting embedding_matrix for {}'.format(dat_fname))
-        glove_path = prepare_glove840_embedding(opt.dataset_path)
+        glove_path = prepare_glove840_embedding(opt.dataset_name)
         embedding_matrix = np.zeros((len(word2idx) + 2, embed_dim))  # idx 0 and len(word2idx)+1 are all-zeros
 
         word_vec = _load_word_vec(glove_path, word2idx=word2idx, embed_dim=embed_dim)
@@ -98,7 +98,7 @@ def build_embedding_matrix(word2idx, embed_dim, dat_fname, opt):
             if vec is not None:
                 # words not found in embedding index will be all-zeros.
                 embedding_matrix[i] = vec
-        pickle.dump(embedding_matrix, open(os.path.join(opt.dataset_path, dat_fname), 'wb'))
+        pickle.dump(embedding_matrix, open(os.path.join(opt.dataset_name, dat_fname), 'wb'))
     return embedding_matrix
 
 
@@ -162,20 +162,6 @@ class Tokenizer4Pretraining:
 
 
 class BERTBaselineABSADataset(Dataset):
-    bert_baseline_input_colses = {
-        'lstm_bert': ['text_indices'],
-        'td_lstm_bert': ['left_with_aspect_indices', 'right_with_aspect_indices'],
-        'tc_lstm_bert': ['left_with_aspect_indices', 'right_with_aspect_indices', 'aspect_indices'],
-        'atae_lstm_bert': ['text_indices', 'aspect_indices'],
-        'ian_bert': ['text_indices', 'aspect_indices'],
-        'memnet_bert': ['context_indices', 'aspect_indices'],
-        'ram_bert': ['text_indices', 'aspect_indices', 'left_indices'],
-        'cabasc_bert': ['text_indices', 'aspect_indices', 'left_with_aspect_indices', 'right_with_aspect_indices'],
-        'tnet_lf_bert': ['text_indices', 'aspect_indices', 'aspect_boundary'],
-        'aoa_bert': ['text_indices', 'aspect_indices'],
-        'mgan_bert': ['text_indices', 'aspect_indices', 'left_indices'],
-        'asgcn_bert': ['text_indices', 'aspect_indices', 'left_indices', 'dependency_graph'],
-    }
 
     def __init__(self, dataset_list, tokenizer, opt):
 
@@ -184,10 +170,11 @@ class BERTBaselineABSADataset(Dataset):
         all_data = []
         label_set = set()
 
-        if not os.path.exists(opt.dataset_path):
-            os.mkdir(os.path.join(os.getcwd(), opt.dataset_path))
-            opt.dataset_path = os.path.join(os.getcwd(), opt.dataset_path)
-        graph_path = prepare_dependency_graph(dataset_list, opt.dataset_path, opt.max_seq_len)
+        dataset_name = opt.dataset_name
+        if not os.path.exists(dataset_name):
+            os.mkdir(dataset_name)
+            opt.dataset_name = os.path.join(os.getcwd(), dataset_name)
+        graph_path = prepare_dependency_graph(dataset_list, dataset_name, opt.max_seq_len)
         fin = open(graph_path, 'rb')
         idx2graph = pickle.load(fin)
 

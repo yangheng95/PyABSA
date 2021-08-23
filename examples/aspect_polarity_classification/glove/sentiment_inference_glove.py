@@ -22,7 +22,7 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
 
 # model_path = APCCheckpointManager.get_checkpoint(checkpoint_name='TNet_LF')
-model_path = 'asgcn_acc_81.34_f1_73.15'
+model_path = 'tnet_lf_acc_76.65_f1_72.32'  # test checkpoint
 sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint=model_path,
                                                                 auto_device=True,  # Use CUDA if available
                                                                 sentiment_map=sentiment_map

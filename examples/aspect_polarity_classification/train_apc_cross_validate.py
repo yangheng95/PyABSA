@@ -15,7 +15,7 @@ apc_config_english.model = APCModelList.SLIDE_LCF_BERT
 apc_config_english.evaluate_begin = 2
 apc_config_english.num_epoch = 6
 apc_config_english.max_seq_len = 80
-apc_config_english.cross_validate_fold = -1
+apc_config_english.cross_validate_fold = 5
 
 laptop14 = ABSADatasetList.Laptop14
 sent_classifier = Trainer(config=apc_config_english,

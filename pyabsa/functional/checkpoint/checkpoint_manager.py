@@ -5,7 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 import json
-import os.path
+import os
 import sys
 import zipfile
 
@@ -49,13 +49,14 @@ class APCCheckpointManager(CheckpointManager):
         :param auto_device: True or False, otherwise 'cuda', 'cpu' works
         :return:
         """
-        if find_dir(os.getcwd(), checkpoint):
-            checkpoint = find_dir(os.getcwd(), checkpoint)
+        checkpoint_config = find_file(os.getcwd(), [checkpoint, '.config'])
+        if checkpoint_config:
+            checkpoint = os.path.dir_name(checkpoint_config)
 
         elif checkpoint.endswith('.zip'):
             checkpoint = unzip_checkpoint(find_file(os.getcwd(), checkpoint))
 
-        elif not find_dir(os.getcwd(), checkpoint):
+        else:
             checkpoint = APCCheckpointManager.get_checkpoint(checkpoint)
 
         sent_classifier = SentimentClassifier(checkpoint, sentiment_map=sentiment_map)
@@ -90,13 +91,14 @@ class ATEPCCheckpointManager(CheckpointManager):
         :param auto_device: True or False, otherwise 'cuda', 'cpu' works
         :return:
         """
-        if find_dir(os.getcwd(), checkpoint):
-            checkpoint = find_dir(os.getcwd(), checkpoint)
+        checkpoint_config = find_file(os.getcwd(), [checkpoint, '.config'])
+        if checkpoint_config:
+            checkpoint = os.path.dir_name(checkpoint_config)
 
         elif checkpoint.endswith('.zip'):
             checkpoint = unzip_checkpoint(find_file(os.getcwd(), checkpoint))
 
-        elif not find_dir(os.getcwd(), checkpoint):
+        else:
             checkpoint = ATEPCCheckpointManager.get_checkpoint(checkpoint)
 
         aspect_extractor = AspectExtractor(checkpoint, sentiment_map=sentiment_map)
@@ -114,7 +116,7 @@ class ATEPCCheckpointManager(CheckpointManager):
             sys.exit(-1)
         return download_pretrained_model(task='atepc',
                                          language=checkpoint.lower(),
-                                         archive_path=atepc_checkpoint[checkpoint.lower()]['id'])
+                                         archive_path=atepc_checkpoint[checkpoint]['id'])
 
 
 class TextClassifierCheckpointManager(CheckpointManager):
@@ -129,13 +131,14 @@ class TextClassifierCheckpointManager(CheckpointManager):
         :param auto_device: True or False, otherwise 'cuda', 'cpu' works
         :return:
         """
-        if find_dir(os.getcwd(), checkpoint):
-            checkpoint = find_dir(os.getcwd(), checkpoint)
+        checkpoint_config = find_file(os.getcwd(), [checkpoint, '.config'])
+        if checkpoint_config:
+            checkpoint = os.path.dir_name(checkpoint_config)
 
         elif checkpoint.endswith('.zip'):
             checkpoint = unzip_checkpoint(find_file(os.getcwd(), checkpoint))
 
-        elif not find_dir(os.getcwd(), checkpoint):
+        else:
             checkpoint = TextClassifierCheckpointManager.get_checkpoint(checkpoint)
 
         text_classifier = TextClassifier(checkpoint, label_map=label_map)
@@ -195,8 +198,8 @@ def parse_checkpoint_info(t_checkpoint_map, task='APC'):
             t_checkpoint_map[checkpoint]['model']
             if 'model' in t_checkpoint_map[checkpoint] else '',
 
-            t_checkpoint_map[checkpoint]['dataset']
-            if 'dataset' in t_checkpoint_map[checkpoint] else '',
+            t_checkpoint_map[checkpoint]['dataset_manager']
+            if 'dataset_manager' in t_checkpoint_map[checkpoint] else '',
 
             t_checkpoint_map[checkpoint]['version']
             if 'version' in t_checkpoint_map[checkpoint] else '',

@@ -84,7 +84,7 @@ def prepare_input_for_atepc(opt, tokenizer, text_left, text_right, aspect):
     return inputs
 
 
-def load_atepc_datasets(fname):
+def load_atepc_inference_datasets(fname):
     lines = []
     if isinstance(fname, str):
         fname = [fname]

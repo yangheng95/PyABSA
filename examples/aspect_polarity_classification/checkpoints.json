@@ -1,12 +1,14 @@
 {
+
   "1.0.5": {
     "APC": {
       "english": {
-        "id": "https://drive.google.com/file/d/1GAIR1CJEBOJxkb-op9QOasvpTI-pgPyQ/view?usp=sharing",
-        "model": "",
+        "id": "https://drive.google.com/file/d/1_fwXMthAzFSctLn1qq9FoSg_8uTU_rdz/view?usp=sharing",
+        "model": "Slide-LCF-BERT",
         "dataset": "Rest 14, 16, Laptop 14",
         "description": "Trained on RTX2080",
-        "version": "",
+                "version": "1.1",
+        "tag": "slide_lcf_bert_acc_83.4_f1_73.42.zip",
         "author": "H, Yang (yangheng@m.scnu.edu.cn)"
       },
       "slide-lcfs-bert": {
@@ -42,48 +44,51 @@
         "author": "M, Xu (xumayi@m.scnu.edu.cn)"
       },
       "chinese": {
-        "id": "https://drive.google.com/file/d/1ZsVCFYpBEznBedVZEUdqbfWWiTJCFzuS/view?usp=sharing",
-        "model": "",
+        "id": "https://drive.google.com/file/d/1Xm2USp1VylbzwQizgLqaRYpdznb8Vxyj/view?usp=sharing",
+        "model": "Fast-LCF-BERT",
         "dataset": "Chinese",
         "description": "Trained on RTX2080",
-        "version": "",
+        "version": "1.1",
+                "tag": "fast_lcf_bert_acc_96.77_f1_96.16.zip",
         "author": "H, Yang (yangheng@m.scnu.edu.cn)"
       },
       "HELP-WANTED": {
         "id": "",
-        "description": "PLEASE NOTE THAT THIS IS NOT A REAL CHECKPOINT!",
-        "comment": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
+        "description": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
+        "tag": "PLEASE NOTE THAT THIS IS NOT A REAL CHECKPOINT!",
         "version": "0.0.0"
       }
     },
     "ATEPC": {
       "chinese": {
-        "id": "https://drive.google.com/file/d/1YGAdoRdtmv6h5ti4oOo0pNozYucoi-1B/view?usp=sharing",
-        "model": "",
+        "id": "https://drive.google.com/file/d/1vJ6qwCptDGQ0FLvnuPttpwvPJYpIaHw1/view?usp=sharing",
+        "model": "LCF-ATEPC",
         "dataset": "Chinese",
         "description": "",
-        "version": "",
+        "version": "1.1",
+        "tag": "lcf_atepc_cdw_apcacc_96.76_apcf1_96.2_atef1_90.08.zip",
         "author": "H, Yang (yangheng@m.scnu.edu.cn)"
       },
-      "LCF_ATEPC": {
+      "Laptop14": {
         "id": "https://drive.google.com/file/d/1-1lkoaePxXemm8jtqTLTLI5LEr6pXMTe/view?usp=sharing",
-        "description": "Trained and tested on Laptop 14 dataset",
-        "comment": "Trained on T4",
+        "description": "Trained on T4",
+                "dataset": "Laptop 14",
         "version": "1.0.7.1",
         "author": "M, Xu (xumayi@m.scnu.edu.cn)"
       },
       "english": {
-        "id": "https://drive.google.com/file/d/1Gt_avh34T-Y1ga6KYcy7AjsXta_3n_sF/view?usp=sharing",
-        "model": "",
+        "id": "https://drive.google.com/file/d/14LYNXGO9BJFPXvXX4u6bGXNqhalPEjiC/view?usp=sharing",
+        "model": "LCF-ATEPC",
         "dataset": "Rest 14, 16, Laptop 14",
         "description": "",
-        "version": "",
+        "tag": "lcf_atepc_cdw_apcacc_82.77_apcf1_72.41_atef1_80.97.zip",
+        "version": "1.1",
         "author": "H, Yang (yangheng@m.scnu.edu.cn)"
       },
       "HELP-WANTED": {
         "id": "",
-        "description": "PLEASE NOTE THAT THIS IS NOT A REAL CHECKPOINT!",
-        "comment": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
+        "description": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
+        "tag": "PLEASE NOTE THAT THIS IS NOT A REAL CHECKPOINT!",
         "version": "0.0.0"
       }
     },
@@ -97,8 +102,8 @@
       },
       "HELP-WANTED": {
         "id": "",
-        "description": "PLEASE NOTE THAT THIS IS NOT A REAL CHECKPOINT!",
-        "comment": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
+        "description": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
+        "tag": "PLEASE NOTE THAT THIS IS NOT A REAL CHECKPOINT!",
         "version": "0.0.0"
       }
     }

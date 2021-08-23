@@ -9,7 +9,7 @@ from pyabsa.functional.trainer import APCTrainer, ATEPCTrainer, TextClassificati
 from pyabsa.functional.config import APCConfigManager
 from pyabsa.functional.config import ATEPCConfigManager
 from pyabsa.functional.config import ClassificationConfigManager
-from pyabsa.utils.dataset_utils import ABSADatasetList, ClassificationDatasetList
+from pyabsa.functional.dataset import ABSADatasetList, ClassificationDatasetList
 from pyabsa.functional.checkpoint import APCCheckpointManager
 from pyabsa.functional.checkpoint import ATEPCCheckpointManager
 from pyabsa.functional.checkpoint import TextClassifierCheckpointManager
