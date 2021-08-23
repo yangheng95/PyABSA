@@ -51,7 +51,7 @@ class APCCheckpointManager(CheckpointManager):
         """
         checkpoint_config = find_file(os.getcwd(), [checkpoint, '.config'])
         if checkpoint_config:
-            checkpoint = os.path.dir_name(checkpoint_config)
+            checkpoint = os.path.dirname(checkpoint_config)
 
         elif checkpoint.endswith('.zip'):
             checkpoint = unzip_checkpoint(find_file(os.getcwd(), checkpoint))
@@ -93,7 +93,7 @@ class ATEPCCheckpointManager(CheckpointManager):
         """
         checkpoint_config = find_file(os.getcwd(), [checkpoint, '.config'])
         if checkpoint_config:
-            checkpoint = os.path.dir_name(checkpoint_config)
+            checkpoint = os.path.dirname(checkpoint_config)
 
         elif checkpoint.endswith('.zip'):
             checkpoint = unzip_checkpoint(find_file(os.getcwd(), checkpoint))
@@ -133,7 +133,7 @@ class TextClassifierCheckpointManager(CheckpointManager):
         """
         checkpoint_config = find_file(os.getcwd(), [checkpoint, '.config'])
         if checkpoint_config:
-            checkpoint = os.path.dir_name(checkpoint_config)
+            checkpoint = os.path.dirname(checkpoint_config)
 
         elif checkpoint.endswith('.zip'):
             checkpoint = unzip_checkpoint(find_file(os.getcwd(), checkpoint))

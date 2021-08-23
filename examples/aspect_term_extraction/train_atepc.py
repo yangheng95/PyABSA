@@ -23,7 +23,7 @@ atepc_config_english.model = ATEPCModelList.LCF_ATEPC
 dataset_path = r'integrated_datasets/datasets/atepc_datasets/TShirt'
 aspect_extractor = ATEPCTrainer(config=atepc_config_english,
                                 dataset=dataset_path,
-                                from_checkpoint='ATEPC_ENGLISH_TRAINED_MODEL',
+                                from_checkpoint='lcf_atepc_cdw_apcacc_80.7_apcf1_68.67_atef1_80.55',
                                 checkpoint_save_mode=1,
                                 auto_device=True
                                 )

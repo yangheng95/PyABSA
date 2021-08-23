@@ -11,7 +11,7 @@ from pyabsa import APCCheckpointManager, ABSADatasetList
 # Assume the sent_classifier is loaded or obtained using train function
 
 sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
-checkpoint = 'lstm_bert_acc_55.96_f1_36.52'   # test checkpoint
+checkpoint = 'lstm_bert_acc_55.96_f1_36.52'  # test checkpoint
 sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint=checkpoint,
                                                                 auto_device=True,  # Use CUDA if available
                                                                 sentiment_map=sentiment_map

@@ -348,12 +348,8 @@ class Instructor:
 def train4atepc(opt, from_checkpoint_path, logger):
     # in case of handling ConnectionError exception
 
-    trainer = None
-    while not trainer:
-        try:
-            trainer = Instructor(opt, logger)
-            load_checkpoint(trainer, from_checkpoint_path)
-        except Exception as e:
-            print('Error while initializing trainer {}, retry in {} seconds'.format(e, 60))
-            time.sleep(60)
+    # in case of handling ConnectionError exception
+    trainer = Instructor(opt, logger)
+    load_checkpoint(trainer, from_checkpoint_path)
+
     return trainer.run()
