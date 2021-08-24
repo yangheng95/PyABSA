@@ -1,6 +1,6 @@
 # PyABSA - Open & Efficient for Framework for Aspect-based Sentiment Analysis
 
-# [English](README.md) | [中文](README_CN.md)
+# [English](README.md) | [中文](README_CN.md)    
 
 ![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg)
 [![PyPI](https://img.shields.io/pypi/v/pyabsa)](https://pypi.org/project/pyabsa/)
@@ -22,20 +22,9 @@
 
 > PyTorch Implementations (CPU & CUDA supported).
 
-**PyABSA is an active project and under development, if you have the interest to integrate your models or datasets into
-PyABSA, please do feel free to contact us for necessary support. Any message would receive response at least in a day.**
+**PyABSA is an active project and under development, if you are interested in integrating your models or datasets into
+PyABSA, please do feel free to contact us for necessary support. Any message would receive response at most in a day.**
 
-# Preface
-
-This is an ASBA research-oriented code repository. I notice that some Repos do not provide the inference script, and the
-codes may be redundant or hard to use, so I build PyABSA to make the training and inference easier. PyABSA contains
-ATEPC and APC models now. Except for providing SOTA models for both ATEPC and APC, some source codes in PyABSA are
-reusable. In another word, you can develop your model based on PyABSA. e.g., using efficient local context focus
-implementation from PyASBA. Please feel free to give me your interesting thoughts, to help me build an easy-to-use
-toolkit to reduce the cost of building models and reproduction in ABSA tasks.
-
-**If PyABSA helps you, please star PyABSA in order to keep it developing and find latest released features or
-tutorials.**
 
 # Notice
 
@@ -100,18 +89,18 @@ or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
 
 ### GloVe-based APC models
 
-13. [AOA](pyabsa/core/apc/__glove__/models/aoa.py) (AOA_BERT)
-14. [ASGCN](pyabsa/core/apc/__glove__/models/asgcn.py) (ASGCN_BERT)
-15. [ATAE-LSTM](pyabsa/core/apc/__glove__/models/atae_lstm.py) (ATAE_LSTM_BERT)
-16. [Cabasc](pyabsa/core/apc/__glove__/models/cabasc.py) (Cabasc_BERT)
-17. [IAN](pyabsa/core/apc/__glove__/models/ian.py) (IAN_BERT)
-18. [LSTM](pyabsa/core/apc/__glove__/models/lstm.py) (LSTM_BERT)
-19. [MemNet](pyabsa/core/apc/__glove__/models/memnet.py) (MemNet_BERT)
-20. [MGAN](pyabsa/core/apc/__glove__/models/mgan.py) (MGAN_BERT)
-21. [RAM](pyabsa/core/apc/__glove__/models/ram.py) (RAM_BERT)
-22. [TD-LSTM](pyabsa/core/apc/__glove__/models/td_lstm.py) (TD_LSTM_BERT)
-23. [TD-LSTM](pyabsa/core/apc/__glove__/models/tc_lstm.py) (TC_LSTM_BERT)
-24. [TNet_LF](pyabsa/core/apc/__glove__/models/tnet_lf.py) (TNet_LF_BERT)
+13. [AOA](pyabsa/core/apc/classic/__glove__/models/aoa.py) ([AOA_BERT](pyabsa/core/apc/classic/__bert__/models/aoa.py))
+14. [ASGCN](pyabsa/core/apc/classic/__glove__/models/asgcn.py) ([ASGCN_BERT](pyabsa/core/apc/classic/__bert__/models/asgcn.py))
+15. [ATAE-LSTM](pyabsa/core/apc/classic/__glove__/models/atae_lstm.py) ([ATAE_LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/atae_lstm.py))
+16. [Cabasc](pyabsa/core/apc/classic/__glove__/models/cabasc.py) ([Cabasc_BERT](pyabsa/core/apc/classic/__bert__/models/cabasc.py))
+17. [IAN](pyabsa/core/apc/classic/__glove__/models/ian.py) ([IAN_BERT](pyabsa/core/apc/classic/__bert__/models/ian.py))
+18. [LSTM](pyabsa/core/apc/classic/__glove__/models/lstm.py) ([LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/lstm.py))
+19. [MemNet](pyabsa/core/apc/classic/__glove__/models/memnet.py) ([MemNet_BERT](pyabsa/core/apc/classic/__bert__/models/memnet.py))
+20. [MGAN](pyabsa/core/apc/classic/__glove__/models/mgan.py) ([MGAN_BERT](pyabsa/core/apc/classic/__bert__/models/mgan.py))
+21. [RAM](pyabsa/core/apc/classic/__glove__/models/ram.py) ([RAM_BERT](pyabsa/core/apc/classic/__bert__/models/ram.py))
+22. [TD-LSTM](pyabsa/core/apc/classic/__glove__/models/td_lstm.py) ([TD_LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/td_lstm.py))
+23. [TD-LSTM](pyabsa/core/apc/classic/__glove__/models/tc_lstm.py) ([TC_LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/tc_lstm.py))
+24. [TNet_LF](pyabsa/core/apc/classic/__glove__/models/tnet_lf.py) ([TNet_LF_BERT](pyabsa/core/apc/classic/__bert__/models/tnet_lf.py))
 
 ### You can use $glove model name$_BERT to use the BERT version
 
@@ -144,7 +133,7 @@ available checkpoints, you can use the following code and load the checkpoint by
 ```
 from pyabsa import available_checkpoints
 
-checkpoint_map = available_checkpoints()
+checkpoint_map = available_checkpoinbertts()
 ```
 
 If you can not access to Google Drive, you can download our checkpoints and load the unzipped checkpoint manually.
@@ -161,6 +150,7 @@ who have not enough resource to train their model.
    update the checkpoints index as soon as we can, Thanks for your help!
 
 # Aspect Term Extraction (ATE)
+You can find aspect polarity classification usages in [APC examples](examples/aspect_polarity_classification) directory.
 
 ## Aspect Extraction & Sentiment Inference Output Format (方面抽取及情感分类结果示例如下):
 
@@ -207,7 +197,7 @@ config = ATEPCConfigManager.get_atepc_config_english()
 atepc_config_english = ATEPCConfigManager.get_atepc_config_english()
 atepc_config_english.num_epoch = 10
 atepc_config_english.evaluate_begin = 4
-atepc_config_english.lot_step = 100
+atepc_config_english.log_step = 100
 atepc_config_english.model = ATEPCModelList.LCF_ATEPC
 ```
 
@@ -258,28 +248,11 @@ atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source
 
 Basically, you don't have to download the datasets, as the datasets will be downloaded automatically.
 
-# Acknowledgement
 
+## Acknowledgement 用❤发电，感谢陪伴
 This work build from LC-ABSA/LCF-ABSA and LCF-ATEPC, and other impressive works such as PyTorch-ABSA and LCFS-BERT.
 
-欢迎提出疑问、意见和建议，或者帮助完善仓库，谢谢！
-
-# To Do
-
-1. Add more BERT models
-2. Add more APIs
-3. Optimize codes and add comments
-
-# Calling for Contribution
-
-We hope you can help us to improve this work, e.g., provide new datasets. Or, if you **develop your model using this
-PyABSA**, It is highly recommended to **release your model in PyABSA** by pull request, as open-source projects make
-your work much more valuable!
-We will help you to do this, only if we have some free time.
-
-The copyrights of contributed resources belong to the contributors, we hope you can help, thanks very much!
-
-# License
+## License
 
 MIT
 

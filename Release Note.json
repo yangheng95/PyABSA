@@ -1,8 +1,18 @@
 {
+  "1.1.7": {
+    "1": "Fix the inference of ATEPC using internal datasets, if you are using 1.1.5 or 1.1.6, please update to this version",
+    "2": "Improve stablity and test all examples"
+  },
+  "1.1.3": {
+    "1": "Fix the feature to resume/retrain from a checkpoint"
+  },
+  "1.1.2": {
+    "1": "Fix https://github.com/yangheng95/PyABSA/issues/59#issuecomment-902531502"
+  },
   "1.1": {
     "1": "Fix some problems"
   },
-  "1.0.7(.1)": {
+  "1.0.7(.1.2.3)": {
     "1": "Fix all examples.",
     "2": "Fix patch of #58 (https://github.com/yangheng95/PyABSA/issues/58)"
   },
