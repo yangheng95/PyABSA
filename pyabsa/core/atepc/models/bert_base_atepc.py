@@ -26,6 +26,7 @@ class BERT_BASE_ATEPC(BertForTokenClassification):
         config = bert_base_model.config
         self.bert4global = bert_base_model
         self.opt = opt
+        # the dual-bert option is removed due to efficiency consideration
         self.bert4local = self.bert4global
 
         self.dropout = nn.Dropout(self.opt.dropout)
