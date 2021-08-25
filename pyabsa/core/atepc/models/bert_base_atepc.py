@@ -26,10 +26,7 @@ class BERT_BASE_ATEPC(BertForTokenClassification):
         config = bert_base_model.config
         self.bert4global = bert_base_model
         self.opt = opt
-        if self.opt.use_dual_bert:
-            self.bert4local = copy.deepcopy(self.bert4global)
-        else:
-            self.bert4local = self.bert4global
+        self.bert4local = self.bert4global
 
         self.dropout = nn.Dropout(self.opt.dropout)
         self.SA1 = Encoder(config, opt)
