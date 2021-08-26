@@ -14,5 +14,6 @@ other models are welcome.
 | BERT-BASE-ATEPC|    78.83      |      74.56    |    78.34     |
 | LCF-ATEPC-LARGE (CDW)|    78.51      |      74.57    |    79.68     |
 | FAST-LCFS-ATEPC (CDW)|    78.35      |      74.13    |    78.27    |
+
 **The above results were obtained in the 1.1.9 version of PyABSA, and all experiments were performed on the Nvidia
 Tesla T4 GPU.**
