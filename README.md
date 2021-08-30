@@ -408,6 +408,51 @@ atepc_result = aspect_extractor.extract_aspect(inference_source=inference_datase
                                                )
 ```
 
+### 3. Train based on checkpoint
+#### 3.1 Import necessary entries
+```
+from pyabsa.functional import APCCheckpointManager
+from pyabsa.functional import Trainer
+from pyabsa.functional import APCConfigManager
+from pyabsa.functional import ABSADatasetList
+from pyabsa.functional import APCModelList
+```
+#### 3.2 Choose a base param_dict
+
+```
+apc_config_english = APCConfigManager.get_apc_config_english()
+```
+#### 3.3 Specify an APC model and alter some hyper-parameters (if necessary)
+
+```
+apc_config_english.model = APCModelList.SLIDE_LCF_BERT
+apc_config_english.evaluate_begin = 2
+apc_config_english.similarity_threshold = 1
+apc_config_english.max_seq_len = 80
+apc_config_english.dropout = 0.5
+apc_config_english.log_step = 5
+apc_config_english.l2reg = 0.0001
+apc_config_english.dynamic_truncate = True
+apc_config_english.srd_alignment = True
+```
+#### 3.4 Configure checkpoint
+```
+# Ensure the corresponding checkpoint of trained model
+checkpoint_path = APCCheckpointManager.get_checkpoint('slide-lcf-bert')
+```
+
+#### 3.5 Configure runtime setting and running training
+
+```
+dataset_path = ABSADatasetList.SemEval #or set your local dataset
+sent_classifier = Trainer(config=apc_config_english,
+                          dataset=dataset_path,
+                          from_checkpoint=checkpoint_path,
+                          checkpoint_save_mode=1,
+                          auto_device=True
+                          )
+```
+
 # [Datasets](https://github.com/yangheng95/ABSADatasetList)
 
 1. Twitter
