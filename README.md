@@ -230,10 +230,6 @@ windows 8 --> Positive  Real: Positive (Correct)
 Windows 8 --> Negative  Real: Negative (Correct)
 Took a long time trying to decide between one with  retina display  and one without .  
 retina display --> Neutral  Real: Neutral (Correct)
- I was also informed that the  components  of the Mac Book were dirty .  
-components --> Negative  Real: Negative (Correct)
- the  hardware  problems have been so bad , i ca n't wait till it completely dies in 3 years , TOPS !  
-hardware --> Negative  Real: Negative (Correct)
  It 's so nice that the  battery  last so long and that this machine has the snow lion !  
 battery --> Positive  Real: Positive (Correct)
  It 's so nice that the battery last so long and that this machine has the  snow lion  !  
@@ -402,7 +398,7 @@ aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='Lapto
                                                                auto_device=True  # False means load model on CPU
                                                                )
 ```
-#### 3.3 Configure extraction and inferring setting
+#### 2.3 Configure extraction and inferring setting
 ```
 # inference_dataset = ABSADatasetList.SemEval # or set your local dataset
 atepc_result = aspect_extractor.extract_aspect(inference_source=inference_dataset,
