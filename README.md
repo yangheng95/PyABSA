@@ -118,14 +118,6 @@ or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
 11. [TD-LSTM](pyabsa/core/apc/classic/__glove__/models/tc_lstm.py) 
 12. [TNet_LF](pyabsa/core/apc/classic/__glove__/models/tnet_lf.py) 
 
-### You can use $glove model name$_BERT to use the BERT version
-
-e.g.,
-
-```
-from pyabsa.functional import BERTBaselineAPCModelList
-ASGCN_BERT = BERTBaselineAPCModelList.ASGCN_BERT
-```
 
 ## Brief Performance Report
 
@@ -159,7 +151,7 @@ from pyabsa.functional import APCModelList
 # Get model list for GloVe-based APC baseline models
 # from pyabsa.functional import GloVeAPCModelList
 ```
-### 2. Choose a base param_dict
+### 2. Choose a base param config
 
 ```
 # Choose a Bert-based APC models param_dict
@@ -249,7 +241,7 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import ATEPCConfigManager
 ```
 
-### 2. Choose a base param_dict
+### 2. Choose a base param config
 
 ```
 config = ATEPCConfigManager.get_atepc_config_english()
@@ -471,7 +463,7 @@ sent_classifier = Trainer(config=apc_config_english,
 Basically, you don't have to download the datasets, as the datasets will be downloaded automatically.
 
 
-## Acknowledgement 用❤发电，感谢陪伴
+## Acknowledgement 
 This work build from LC-ABSA/LCF-ABSA and LCF-ATEPC, and other impressive works such as PyTorch-ABSA and LCFS-BERT.
 
 ## License
