@@ -12,8 +12,9 @@ from pyabsa.functional import APCModelList
 
 apc_config_english = APCConfigManager.get_apc_config_english()
 apc_config_english.model = APCModelList.SLIDE_LCF_BERT
-apc_config_english.evaluate_begin = 2
-apc_config_english.num_epoch = 6
+apc_config_english.evaluate_begin = 0
+apc_config_english.num_epoch = 1
+apc_config_english.log_step = 100
 apc_config_english.max_seq_len = 80
 apc_config_english.cross_validate_fold = 5
 

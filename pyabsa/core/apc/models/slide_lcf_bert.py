@@ -35,9 +35,9 @@ class SLIDE_LCF_BERT(nn.Module):
     def forward(self, inputs):
         text_bert_indices = inputs[0]
         spc_mask_vec = inputs[1]
-        lcf_matrix = inputs[2]
-        left_lcf_matrix = inputs[3]
-        right_lcf_matrix = inputs[4]
+        lcf_matrix = inputs[2].unsqueeze(2)
+        left_lcf_matrix = inputs[3].unsqueeze(2)
+        right_lcf_matrix = inputs[4].unsqueeze(2)
 
         global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
         masked_global_context_features = torch.mul(spc_mask_vec, global_context_features)

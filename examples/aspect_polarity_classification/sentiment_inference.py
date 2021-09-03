@@ -34,5 +34,5 @@ inference_sets = ABSADatasetList.SemEval
 results = sent_classifier.batch_infer(target_file=inference_sets,
                                       print_result=True,
                                       save_result=True,
-                                      ignore_error=True,
+                                      ignore_error=False,
                                       )

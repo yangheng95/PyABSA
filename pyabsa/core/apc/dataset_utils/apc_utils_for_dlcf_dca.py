@@ -71,7 +71,7 @@ def get_dynamic_cdw_vec(opt, max_dist, bert_spc_indices, aspect_indices, aspect_
     else:
         dynamic_threshold = 3
 
-    cdw_vec = np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
+    cdw_vec = np.zeros((opt.max_seq_len), dtype=np.float32)
     aspect_len = np.count_nonzero(aspect_indices)
     text_len = np.count_nonzero(bert_spc_indices) - np.count_nonzero(aspect_indices) - 1
     if syntactical_dist is not None:
@@ -79,11 +79,11 @@ def get_dynamic_cdw_vec(opt, max_dist, bert_spc_indices, aspect_indices, aspect_
             if max_dist > 0:
                 if syntactical_dist[i] > dynamic_threshold:
                     w = 1 - syntactical_dist[i] / max_dist
-                    cdw_vec[i] = w * np.ones((opt.embed_dim), dtype=np.float32)
+                    cdw_vec[i] = 1
                 else:
-                    cdw_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
+                    cdw_vec[i] = 1
             else:
-                cdw_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
+                cdw_vec[i] = 1
     else:
         local_context_begin = max(0, aspect_begin - dynamic_threshold)
         local_context_end = min(aspect_begin + aspect_len + dynamic_threshold - 1, opt.max_seq_len)
@@ -98,7 +98,7 @@ def get_dynamic_cdw_vec(opt, max_dist, bert_spc_indices, aspect_indices, aspect_
                 assert 0 <= w <= 1  # exception
             except:
                 print('Warning! invalid CDW weight:', w)
-            cdw_vec[i] = w * np.ones((opt.embed_dim), dtype=np.float32)
+            cdw_vec[i] = 1
     return cdw_vec
 
 
@@ -110,19 +110,19 @@ def get_dynamic_cdm_vec(opt, max_dist, bert_spc_indices, aspect_indices, aspect_
     else:
         dynamic_threshold = 3
 
-    cdm_vec = np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
+    cdm_vec = np.zeros((opt.max_seq_len), dtype=np.float32)
     aspect_len = np.count_nonzero(aspect_indices)
     text_len = np.count_nonzero(bert_spc_indices) - np.count_nonzero(aspect_indices) - 1
     if syntactical_dist is not None:
         for i in range(min(text_len, opt.max_seq_len)):
             if syntactical_dist[i] <= dynamic_threshold:
-                cdm_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
+                cdm_vec[i] = 1
     else:
         local_context_begin = max(0, aspect_begin - dynamic_threshold)
         local_context_end = min(aspect_begin + aspect_len + dynamic_threshold - 1, opt.max_seq_len)
         for i in range(min(text_len, opt.max_seq_len)):
             if local_context_begin <= i <= local_context_end:
-                cdm_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
+                cdm_vec[i] = 1
     return cdm_vec
 
 

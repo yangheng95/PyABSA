@@ -118,10 +118,10 @@ class Instructor:
         self.train_dataloaders = []
         self.val_dataloaders = []
 
-        if os.path.exists('./init_state_dict.bin'):
-            os.remove('./init_state_dict.bin')
+        if os.path.exists('init_state_dict.tmp'):
+            os.remove('init_state_dict.tmp')
         if self.opt.cross_validate_fold > 0:
-            torch.save(self.model.state_dict(), './init_state_dict.bin')
+            torch.save(self.model.state_dict(), 'init_state_dict.tmp')
 
     def _reset_params(self):
         for child in self.model.children():
@@ -137,7 +137,7 @@ class Instructor:
     def reload_model(self):
         self.model.load_state_dict(torch.load('./init_state_dict.bin'))
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
-        self.optimizer = self.opt.optimizer(_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
+        self.optimizer = optimizers[self.opt.optimizer](_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
     def prepare_dataloader(self, train_set):
         if self.opt.cross_validate_fold < 1:
@@ -160,14 +160,14 @@ class Instructor:
                 self.val_dataloaders.append(
                     DataLoader(dataset=val_set, batch_size=self.opt.batch_size, shuffle=True))
 
-    def _train(self, criterion, lca_criterion):
+    def _train(self, criterion):
         self.prepare_dataloader(self.train_set)
         if self.val_dataloaders:
-            return self._k_fold_train_and_evaluate(criterion, lca_criterion)
+            return self._k_fold_train_and_evaluate(criterion)
         else:
-            return self._train_and_evaluate(criterion, lca_criterion)
+            return self._train_and_evaluate(criterion)
 
-    def _train_and_evaluate(self, criterion, lca_criterion):
+    def _train_and_evaluate(self, criterion):
 
         sum_loss = 0
         sum_acc = 0
@@ -197,14 +197,12 @@ class Instructor:
                 outputs = self.model(inputs)
                 targets = sample_batched['polarity'].to(self.opt.device)
 
-                if 'lca' in self.opt.model_name:
-                    sen_logits, lca_logits, lca_ids = outputs
-                    sen_loss = criterion(sen_logits, targets)
-                    lcp_loss = lca_criterion(lca_logits, lca_ids)
-                    loss = (1 - self.opt.sigma) * sen_loss + self.opt.sigma * lcp_loss
+                if isinstance(outputs, dict):
+                    loss = outputs['loss']
                 else:
                     sen_logits = outputs
                     loss = criterion(sen_logits, targets)
+
                 sum_loss += loss.item()
                 loss.backward()
                 self.optimizer.step()
@@ -284,7 +282,7 @@ class Instructor:
                 save_model(self.opt, self.model, self.tokenizer, save_path)
             return self.model, self.opt, self.tokenizer, sum_acc, sum_f1
 
-    def _k_fold_train_and_evaluate(self, criterion, lca_criterion):
+    def _k_fold_train_and_evaluate(self, criterion):
         sum_loss = 0
         sum_acc = 0
         sum_f1 = 0
@@ -321,14 +319,12 @@ class Instructor:
                     outputs = self.model(inputs)
                     targets = sample_batched['polarity'].to(self.opt.device)
 
-                    if 'lca' in self.opt.model_name:
-                        sen_logits, lca_logits, lca_ids = outputs
-                        sen_loss = criterion(sen_logits, targets)
-                        lcp_loss = lca_criterion(lca_logits, lca_ids)
-                        loss = (1 - self.opt.sigma) * sen_loss + self.opt.sigma * lcp_loss
+                    if isinstance(outputs, dict):
+                        loss = outputs['loss']
                     else:
                         sen_logits = outputs
                         loss = criterion(sen_logits, targets)
+
                     sum_loss += loss.item()
                     loss.backward()
                     self.optimizer.step()
@@ -383,7 +379,7 @@ class Instructor:
 
                         iterator.postfix = postfix
                         iterator.refresh()
-            self.model = torch.load(find_file(save_path, 'model')).to(self.opt.device)
+            self.model.load_state_dict(torch.load(find_file(None, 'state_dict')))
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
             if max_fold_acc > max_fold_acc_k_fold:
                 save_path_k_fold = save_path
@@ -440,10 +436,12 @@ class Instructor:
                 t_inputs = [t_sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
                 t_targets = t_sample_batched['polarity'].to(self.opt.device)
 
-                if 'lca' in self.opt.model_name:
-                    sen_outputs, _, _ = self.model(t_inputs)
+                t_outputs = self.model(t_inputs)
+
+                if isinstance(t_outputs, dict):
+                    sen_outputs = t_outputs['logits']
                 else:
-                    sen_outputs = self.model(t_inputs)
+                    sen_outputs = t_outputs
 
                 n_test_correct += (torch.argmax(sen_outputs, -1) == t_targets).sum().item()
                 n_test_total += len(sen_outputs)
@@ -463,9 +461,8 @@ class Instructor:
     def run(self):
         # Loss and Optimizer
         criterion = nn.CrossEntropyLoss()
-        lca_criterion = nn.CrossEntropyLoss()
         self._reset_params()
-        return self._train(criterion, lca_criterion)
+        return self._train(criterion)
 
 
 def train4apc(opt, from_checkpoint_path, logger):

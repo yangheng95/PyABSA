@@ -40,12 +40,15 @@ class CheckpointManager:
 class APCCheckpointManager(CheckpointManager):
     @staticmethod
     def get_sentiment_classifier(checkpoint: str = None,
+                                 from_drive_url: str = '',
                                  sentiment_map: dict = None,
                                  auto_device=True):
         """
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
         :param sentiment_map: label to text index map
+        :param from_drive_url: for loading shared checkpoint on google drive from a direct url, this param disable the 'checkpoint' param.
+        This param is for someone want load a checkpoint not registered in PyABSA
         :param auto_device: True or False, otherwise 'cuda', 'cpu' works
         :return:
         """
@@ -57,7 +60,7 @@ class APCCheckpointManager(CheckpointManager):
             checkpoint = unzip_checkpoint(find_file(os.getcwd(), checkpoint))
 
         else:
-            checkpoint = APCCheckpointManager.get_checkpoint(checkpoint)
+            checkpoint = APCCheckpointManager.get_checkpoint(checkpoint, from_drive_url=from_drive_url)
 
         sent_classifier = SentimentClassifier(checkpoint, sentiment_map=sentiment_map)
         device, device_name = get_device(auto_device)
@@ -65,28 +68,43 @@ class APCCheckpointManager(CheckpointManager):
         return sent_classifier
 
     @staticmethod
-    def get_checkpoint(checkpoint: str = 'Chinese'):
-        aspect_sentiment_classification_checkpoint = available_checkpoints('APC')
-        if checkpoint.lower() in [k.lower() for k in aspect_sentiment_classification_checkpoint.keys()]:
-            print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint), 'green'))
+    def get_checkpoint(checkpoint: str = 'Chinese', from_drive_url=''):
+        """
+        download the checkpoint and return the path of the downloaded checkpoint
+        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
+        :param from_drive_url: for loading shared checkpoint on google drive from a direct url, this param disable the 'checkpoint' param.
+        This param is for someone want load a checkpoint not registered in PyABSA
+        :return:
+        """
+        if not from_drive_url:
+            aspect_sentiment_classification_checkpoint = available_checkpoints('APC')
+            if checkpoint.lower() in [k.lower() for k in aspect_sentiment_classification_checkpoint.keys()]:
+                print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint), 'green'))
+            else:
+                print(colored(
+                    'Checkpoint:{} is not found, you can raise an issue for requesting shares of checkpoints'.format(
+                        checkpoint), 'red'))
+                sys.exit(-1)
+            return download_checkpoint(task='apc',
+                                       language=checkpoint.lower(),
+                                       archive_path=aspect_sentiment_classification_checkpoint[checkpoint.lower()]['id'])
         else:
-            print(colored(
-                'Checkpoint:{} is not found, you can raise an issue for requesting shares of checkpoints'.format(
-                    checkpoint), 'red'))
-            sys.exit(-1)
-        return download_pretrained_model(task='apc',
-                                         language=checkpoint.lower(),
-                                         archive_path=aspect_sentiment_classification_checkpoint[checkpoint.lower()]['id'])
+            return download_checkpoint_from_drive_url(task='apc',
+                                                      language=checkpoint.lower(),
+                                                      archive_path=from_drive_url)
 
 
 class ATEPCCheckpointManager(CheckpointManager):
     @staticmethod
     def get_aspect_extractor(checkpoint: str = None,
+                             from_drive_url: str = '',
                              sentiment_map: dict = None,
                              auto_device=True):
         """
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
+        :param from_drive_url: for loading shared checkpoint on google drive from a direct url, this param disable the 'checkpoint' param.
+        This param is for someone want load a checkpoint not registered in PyABSA
         :param sentiment_map: label to text index map
         :param auto_device: True or False, otherwise 'cuda', 'cpu' works
         :return:
@@ -99,7 +117,7 @@ class ATEPCCheckpointManager(CheckpointManager):
             checkpoint = unzip_checkpoint(find_file(os.getcwd(), checkpoint))
 
         else:
-            checkpoint = ATEPCCheckpointManager.get_checkpoint(checkpoint)
+            checkpoint = ATEPCCheckpointManager.get_checkpoint(checkpoint, from_drive_url=from_drive_url)
 
         aspect_extractor = AspectExtractor(checkpoint, sentiment_map=sentiment_map)
         device, device_name = get_device(auto_device)
@@ -107,26 +125,42 @@ class ATEPCCheckpointManager(CheckpointManager):
         return aspect_extractor
 
     @staticmethod
-    def get_checkpoint(checkpoint: str = 'Chinese'):
-        atepc_checkpoint = available_checkpoints('ATEPC')
-        if checkpoint.lower() in [k.lower() for k in atepc_checkpoint.keys()]:
-            print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint), 'green'))
+    def get_checkpoint(checkpoint: str = 'Chinese', from_drive_url=''):
+        """
+        download the checkpoint and return the path of the downloaded checkpoint
+        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
+        :param from_drive_url: for loading shared checkpoint on google drive from a direct url, this param disable the 'checkpoint' param.
+        This param is for someone want load a checkpoint not registered in PyABSA
+        :return:
+        """
+        if not from_drive_url:
+            atepc_checkpoint = available_checkpoints('ATEPC')
+            if checkpoint.lower() in [k.lower() for k in atepc_checkpoint.keys()]:
+                print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint), 'green'))
+            else:
+                print(colored('Checkpoint:{} is not found.'.format(checkpoint), 'red'))
+                sys.exit(-1)
+            return download_checkpoint(task='atepc',
+                                       language=checkpoint.lower(),
+                                       archive_path=atepc_checkpoint[checkpoint]['id'])
         else:
-            print(colored('Checkpoint:{} is not found.'.format(checkpoint), 'red'))
-            sys.exit(-1)
-        return download_pretrained_model(task='atepc',
-                                         language=checkpoint.lower(),
-                                         archive_path=atepc_checkpoint[checkpoint]['id'])
+
+            return download_checkpoint(task='atepc',
+                                       language=checkpoint.lower(),
+                                       archive_path=from_drive_url)
 
 
 class TextClassifierCheckpointManager(CheckpointManager):
     @staticmethod
-    def get_text_classifier(checkpoint=None,
-                            label_map=None,
+    def get_text_classifier(checkpoint: str = None,
+                            from_drive_url: str = '',
+                            label_map: dict = None,
                             auto_device=True):
         """
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
+        :param from_drive_url: for loading shared checkpoint on google drive from a direct url, this param disable the 'checkpoint' param.
+        This param is for someone want load a checkpoint not registered in PyABSA
         :param label_map: label to text index map
         :param auto_device: True or False, otherwise 'cuda', 'cpu' works
         :return:
@@ -139,7 +173,7 @@ class TextClassifierCheckpointManager(CheckpointManager):
             checkpoint = unzip_checkpoint(find_file(os.getcwd(), checkpoint))
 
         else:
-            checkpoint = TextClassifierCheckpointManager.get_checkpoint(checkpoint)
+            checkpoint = TextClassifierCheckpointManager.get_checkpoint(checkpoint, from_drive_url=from_drive_url)
 
         text_classifier = TextClassifier(checkpoint, label_map=label_map)
         device, device_name = get_device(auto_device)
@@ -147,17 +181,28 @@ class TextClassifierCheckpointManager(CheckpointManager):
         return text_classifier
 
     @staticmethod
-    def get_checkpoint(checkpoint: str = 'Chinese'):
-
-        text_classification_checkpoint = available_checkpoints('TextClassification')
-        if checkpoint.lower() in [k.lower() for k in text_classification_checkpoint.keys()]:
-            print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint), 'green'))
+    def get_checkpoint(checkpoint: str = 'Chinese', from_drive_url=''):
+        """
+        download the checkpoint and return the path of the downloaded checkpoint
+        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
+        :param from_drive_url: for loading shared checkpoint on google drive from a direct url, this param disable the 'checkpoint' param.
+        This param is for someone want load a checkpoint not registered in PyABSA
+        :return:
+        """
+        if not from_drive_url:
+            text_classification_checkpoint = available_checkpoints('TextClassification')
+            if checkpoint.lower() in [k.lower() for k in text_classification_checkpoint.keys()]:
+                print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint), 'green'))
+            else:
+                print(colored('Checkpoint:{} is not found.'.format(checkpoint), 'red'))
+                sys.exit(-1)
+            return download_checkpoint(task='atepc',
+                                       language=checkpoint.lower(),
+                                       archive_path=text_classification_checkpoint[checkpoint.lower()]['id'])
         else:
-            print(colored('Checkpoint:{} is not found.'.format(checkpoint), 'red'))
-            sys.exit(-1)
-        return download_pretrained_model(task='atepc',
-                                         language=checkpoint.lower(),
-                                         archive_path=text_classification_checkpoint[checkpoint.lower()]['id'])
+            return download_checkpoint(task='atepc',
+                                       language=checkpoint.lower(),
+                                       archive_path=from_drive_url)
 
 
 def compare_version(version1, version2):
@@ -251,14 +296,44 @@ def available_checkpoints(task='', from_local=False):
         sys.exit(-1)
 
 
-def download_pretrained_model(task='apc', language='chinese', archive_path='', model_name='any_model'):
+def download_checkpoint(task='apc', language='chinese', archive_path='', model_name='any_model'):
     print(colored('Notice: The pretrained model are used for testing, '
                   'neither trained using fine-tuned the hyper-parameters nor trained with enough steps, '
                   'it is recommended to train the model on your own custom datasets', 'red')
           )
     # if not os.path.exists('./checkpoints'):
     #     os.mkdir('./checkpoints')
-    tmp_dir = '{}_{}_TRAINED_MODEL'.format(task.upper(), language.upper())
+    tmp_dir = '{}_{}_CHECKPOINT'.format(task.upper(), language.upper())
+    dest_path = os.path.join('./checkpoints', tmp_dir)
+    if not os.path.exists(dest_path):
+        os.makedirs(dest_path)
+
+    if (find_files(dest_path, '.model') or find_files(dest_path, '.state_dict')) and find_files(dest_path, '.config'):
+        print('Checkpoint already downloaded, skip...')
+        return dest_path
+
+    save_path = os.path.join(dest_path, '{}.zip'.format(model_name))
+    try:
+        if '/' in archive_path:
+            archive_path = archive_path.split('/')[-2]
+        gdd.download_file_from_google_drive(file_id=archive_path,
+                                            dest_path=save_path,
+                                            unzip=True,
+                                            showsize=True)
+    except ConnectionError as e:
+        raise ConnectionError("Fail to download checkpoint: {}".format(e))
+    os.remove(save_path)
+    return dest_path
+
+
+def download_checkpoint_from_drive_url(task='apc', language='unknown_lang', archive_path='', model_name='any_model'):
+    print(colored('Notice: The pretrained model are used for testing, '
+                  'neither trained using fine-tuned the hyper-parameters nor trained with enough steps, '
+                  'it is recommended to train the model on your own custom datasets', 'red')
+          )
+    # if not os.path.exists('./checkpoints'):
+    #     os.mkdir('./checkpoints')
+    tmp_dir = '{}_{}_CHECKPOINT'.format(task.upper(), language.upper())
     dest_path = os.path.join('./checkpoints', tmp_dir)
     if not os.path.exists(dest_path):
         os.makedirs(dest_path)

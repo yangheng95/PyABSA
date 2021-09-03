@@ -1,7 +1,23 @@
 {
+  "1.1.12a0": {
+    "1": "Enable downloading shared checkpoint from a google drive url, this is for downloading checkpoint not registered in PyABSA",
+    "2": "Refine LCF vec memory occupation",
+    "3": "Add LCF-BERT2  and LCFS-BERT2 demo models",
+    "4": "Fix a bug report (https://github.com/yangheng95/PyABSA/issues/73)",
+    "5": "### We plan to enable batch inference, but may delay due to schedule ###"
+  },
+  "1.1.9": {
+    "1": "Fix a problem in BERT-ATEPC model"
+  },
+  "1.1.8": {
+    "1": "Fix a problem may cuase checkpoint saving failure"
+  },
   "1.1.7": {
     "1": "Fix the inference of ATEPC using internal datasets, if you are using 1.1.5 or 1.1.6, please update to this version",
     "2": "Improve stablity and test all examples"
+  },
+  "1.1.6": {
+    "1": "deprecated"
   },
   "1.1.3": {
     "1": "Fix the feature to resume/retrain from a checkpoint"

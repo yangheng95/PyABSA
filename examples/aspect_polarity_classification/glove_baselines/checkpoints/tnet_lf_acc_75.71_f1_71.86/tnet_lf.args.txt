@@ -1,0 +1,27 @@
+model: <class 'pyabsa.core.apc.classic.__glove__.models.tnet_lf.TNet_LF'>
+optimizer: adam
+learning_rate: 0.001
+max_seq_len: 100
+l2reg: 0.0001
+num_epoch: 20
+batch_size: 16
+initializer: xavier_uniform_
+seed: 52
+embed_dim: 300
+hidden_dim: 300
+polarities_dim: 3
+log_step: 5
+evaluate_begin: 0
+cross_validate_fold: -1
+dataset_item: ['Laptop14']
+dataset_name: E:\PyABSA-Workspace\pyabsa-paper-branch\PyABSA\examples\aspect_polarity_classification\glove_baselines\Laptop14
+dataset_file: {'train': ['E:\\PyABSA-Workspace\\pyabsa-paper-branch\\PyABSA\\examples\\aspect_polarity_classification\\glove_baselines\\integrated_datasets\\apc_datasets\\SemEval\\laptop14\\Laptops_Train.xml.seg'], 'test': ['E:\\PyABSA-Workspace\\pyabsa-paper-branch\\PyABSA\\examples\\aspect_polarity_classification\\glove_baselines\\integrated_datasets\\apc_datasets\\SemEval\\laptop14\\Laptops_Test_Gold.xml.seg']}
+device: cuda:0
+device_name: NVIDIA GeForce RTX 2080
+model_name: tnet_lf
+Version: 1.1.12
+save_mode: 1
+model_path_to_save: E:\PyABSA-Workspace\pyabsa-paper-branch\PyABSA\examples\aspect_polarity_classification\glove_baselines\checkpoints
+inputs_cols: ['text_indices', 'aspect_indices', 'aspect_boundary']
+metrics_of_this_checkpoint: {'acc': 0.7570532915360502, 'f1': 0.718639464345579}
+max_test_metrics: {'max_apc_test_acc': 0.7570532915360502, 'max_apc_test_f1': 0.718639464345579, 'max_ate_test_f1': 0}

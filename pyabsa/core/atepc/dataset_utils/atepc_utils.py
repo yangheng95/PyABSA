@@ -63,7 +63,7 @@ def prepare_input_for_atepc(opt, tokenizer, text_left, text_right, aspect):
     else:
         syntactical_dist = None
 
-    lca_ids, lcf_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices,
+    lcf_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices,
                                                    aspect_begin, syntactical_dist)
 
     lcf_cdw_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices,
@@ -76,7 +76,6 @@ def prepare_input_for_atepc(opt, tokenizer, text_left, text_right, aspect):
         'text_bert_indices': text_bert_indices,
         'text_raw_bert_indices': text_raw_bert_indices,
         'aspect_bert_indices': aspect_bert_indices,
-        'lca_ids': lca_ids,
         'lcf_cdm_vec': lcf_cdm_vec,
         'lcf_cdw_vec': lcf_cdw_vec,
     }

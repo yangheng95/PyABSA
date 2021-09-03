@@ -15,20 +15,20 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import APCModelList
 
 apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = APCModelList.SLIDE_LCF_BERT
+apc_config_english.model = APCModelList.LCFS_DUAL_BERT
 apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
 
 apc_config_english.dropout = 0.5
-apc_config_english.log_step = 5
+apc_config_english.log_step = 500
 apc_config_english.num_epoch = 10
-apc_config_english.evaluate_begin = 4
+apc_config_english.evaluate_begin = 9
 apc_config_english.l2reg = 0.0005
 apc_config_english.seed = {1, 2, 3}
 apc_config_english.cross_validate_fold = -1  # disable cross_validate
 # apc_config_english.use_syntax_based_SRD = True
 
-SemEval = ABSADatasetList.SemEval
+SemEval = ABSADatasetList.Restaurant16
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=SemEval,  # train set and test set will be automatically detected
                           checkpoint_save_mode=1,  # =None to avoid save model

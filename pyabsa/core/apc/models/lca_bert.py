@@ -13,7 +13,7 @@ from pyabsa.network.sa_encoder import Encoder
 
 
 class LCA_BERT(nn.Module):
-    inputs = ['text_bert_indices', 'text_raw_bert_indices', 'lca_ids', 'lcf_vec']
+    inputs = ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec', 'polarity']
 
     def __init__(self, bert, opt):
         super(LCA_BERT, self).__init__()
@@ -29,6 +29,8 @@ class LCA_BERT(nn.Module):
         self.pool = BertPooler(bert.config)
         self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
         self.classifier = nn.Linear(opt.embed_dim, 2)
+        self.lca_criterion = nn.CrossEntropyLoss()
+        self.classification_criterion = nn.CrossEntropyLoss()
 
     def forward(self, inputs):
         if self.opt.use_bert_spc:
@@ -36,13 +38,14 @@ class LCA_BERT(nn.Module):
         else:
             text_global_indices = inputs[1]
         text_local_indices = inputs[1]
-        lca_ids = inputs[2]
-        lcf_matrix = inputs[3]
+        lca_ids = inputs[3]
+        lcf_matrix = lca_ids.unsqueeze(2) # lca_ids is the same as lcf_matrix
+        polarity = inputs[4]
 
         bert_global_out = self.bert4global(text_global_indices)['last_hidden_state']
         bert_local_out = self.bert4local(text_local_indices)['last_hidden_state']
 
-        lc_embedding = self.lc_embed(lca_ids)
+        lc_embedding = self.lc_embed(lcf_matrix)
         bert_global_out = self.lc_linear(torch.cat((bert_global_out, lc_embedding), -1))
 
         # # LCF-layer
@@ -59,6 +62,9 @@ class LCA_BERT(nn.Module):
         cat_features = self.dropout(cat_features)
 
         pooled_out = self.pool(cat_features)
-        dense_out = self.dense(pooled_out)
+        sent_logits = self.dense(pooled_out)
 
-        return dense_out, lca_logits, lca_ids
+        lcp_loss = self.lca_criterion(lca_logits, lca_ids)
+        sent_loss = self.classification_criterion(sent_logits, polarity)
+
+        return {'logits': sent_logits, 'loss': (1 - self.opt.sigma) * sent_loss + self.opt.sigma * lcp_loss}
