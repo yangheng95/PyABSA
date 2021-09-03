@@ -23,18 +23,18 @@
 # Instruction
 
 - [Installation](#installation)
-- [Package-Overview](#Package-Overview)
-- [Quick-Start](#Quick-Start)
-    - Aspect Term Extraction and Polarity Classification (ATEPC)
-    - Aspect Polarity Classification (APC)
-- [Model-Support](#Model-Support)
+- [Package Overview](#package-overview)
+- [Quick-Start](#quick-start)
+    - [Aspect Term Extraction and Polarity Classification (ATEPC)](#install-via-pip)
+    - [Aspect Polarity Classification (APC)](#install-via-source)
+- [Model-Support](#model-support)
 - [Dataset Support](https://github.com/yangheng95/ABSADatasetList)
 - [All Examples](examples)
-- [Notice for LCF-BERT & LCF-ATEPC](#Notice)
+- [Notice for LCF-BERT & LCF-ATEPC](#notice)
 
 # Installation
 
-## install via pip (recommend)
+## install via pip
 
 To use PyABSA, install the latest version from pip or source code:
 
@@ -50,7 +50,7 @@ cd PyABSA
 python setup.py install
 ```
 
-#Package-Overview
+# Package Overview
 
 <table>
 <tr>
@@ -80,7 +80,7 @@ python setup.py install
 
 </table>
 
-#Quick-Start
+# Quick Start
 
 ## Aspect Polarity Classification (APC)
 
