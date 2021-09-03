@@ -61,6 +61,8 @@ class FAST_LCF_ATEPC(BertForTokenClassification):
                 lcf_cdm_vec=None,
                 lcf_cdw_vec=None
                 ):
+        lcf_cdm_vec = lcf_cdm_vec.unsqueeze(2) if lcf_cdm_vec is not None else None
+        lcf_cdw_vec = lcf_cdw_vec.unsqueeze(2) if lcf_cdw_vec is not None else None
         if not self.opt.use_bert_spc:
             input_ids = self.get_ids_for_local_context_extractor(input_ids_spc)
             labels = self.get_batch_token_labels_bert_base_indices(labels)

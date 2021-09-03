@@ -50,5 +50,7 @@ class LCF_TEMPLATE_ATEPC(BertForTokenClassification):
                 lcf_cdm_vec=None,
                 lcf_cdw_vec=None
                 ):
+        lcf_cdm_vec = lcf_cdm_vec.unsqueeze(2) if lcf_cdm_vec is not None else None
+        lcf_cdw_vec = lcf_cdw_vec.unsqueeze(2) if lcf_cdw_vec is not None else None
         raise NotImplementedError('This is a template ATEPC model based on LCF, '
                                   'please implement your model use this template.')

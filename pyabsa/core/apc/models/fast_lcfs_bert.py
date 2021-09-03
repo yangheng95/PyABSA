@@ -32,7 +32,7 @@ class FAST_LCFS_BERT(nn.Module):
         else:
             text_bert_indices = inputs[1]
         text_local_indices = inputs[1]
-        lcf_matrix = inputs[2]
+        lcf_matrix = inputs[2].unsqueeze(2)
         global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
 
         # LCF layer

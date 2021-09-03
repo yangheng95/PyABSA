@@ -7,6 +7,7 @@
 
 import os
 
+import copy
 import networkx as nx
 import numpy as np
 import spacy
@@ -194,12 +195,14 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
     aspect_bert_indices = text_to_sequence(tokenizer, aspect, opt.max_seq_len)
 
     aspect_begin = len(tokenizer.tokenize(bos_token + ' ' + text_left))
-    if 'lcfs' in opt.model_name or opt.use_syntax_based_SRD:
+    aspect_position = set(range(aspect_begin, aspect_begin + np.count_nonzero(aspect_bert_indices)))
+
+    if 'lcfs' in opt.model_name or 'ssw_s' in opt.model_name or opt.use_syntax_based_SRD:
         syntactical_dist, _ = get_syntax_distance(text_raw, aspect, tokenizer, opt)
     else:
         syntactical_dist = None
 
-    lca_ids, lcf_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices,
+    lcf_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices,
                                                    aspect_begin, syntactical_dist)
 
     lcf_cdw_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices,
@@ -209,10 +212,10 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
         'text_raw': text_raw,
         'text_spc': text_spc,
         'aspect': aspect,
+        'aspect_position': aspect_position,
         'text_bert_indices': text_bert_indices,
         'text_raw_bert_indices': text_raw_bert_indices,
         'aspect_bert_indices': aspect_bert_indices,
-        'lca_ids': lca_ids,
         'lcf_cdm_vec': lcf_cdm_vec,
         'lcf_cdw_vec': lcf_cdw_vec,
     }
@@ -250,37 +253,34 @@ def get_syntax_distance(text_raw, aspect, tokenizer, opt):
 
 def get_lca_ids_and_cdm_vec(opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None):
     SRD = opt.SRD
-    lca_ids = np.zeros((opt.max_seq_len), dtype=np.int64)
-    cdm_vec = np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
+    cdm_vec = np.zeros((opt.max_seq_len), dtype=np.int64)
     aspect_len = np.count_nonzero(aspect_indices)
     text_len = np.count_nonzero(bert_spc_indices) - np.count_nonzero(aspect_indices) - 1
     if syntactical_dist is not None:
         for i in range(min(text_len, opt.max_seq_len)):
             if syntactical_dist[i] <= SRD:
-                lca_ids[i] = 1
-                cdm_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
+                cdm_vec[i] = 1
     else:
         local_context_begin = max(0, aspect_begin - SRD)
         local_context_end = min(aspect_begin + aspect_len + SRD - 1, opt.max_seq_len)
         for i in range(min(text_len, opt.max_seq_len)):
             if local_context_begin <= i <= local_context_end:
-                lca_ids[i] = 1
-                cdm_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
-    return lca_ids, cdm_vec
+                cdm_vec[i] = 1
+    return cdm_vec
 
 
 def get_cdw_vec(opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None):
     SRD = opt.SRD
-    cdw_vec = np.zeros((opt.max_seq_len, opt.embed_dim), dtype=np.float32)
+    cdw_vec = np.zeros((opt.max_seq_len), dtype=np.float32)
     aspect_len = np.count_nonzero(aspect_indices)
     text_len = np.count_nonzero(bert_spc_indices) - np.count_nonzero(aspect_indices) - 1
     if syntactical_dist is not None:
         for i in range(min(text_len, opt.max_seq_len)):
             if syntactical_dist[i] > SRD:
                 w = 1 - syntactical_dist[i] / text_len
-                cdw_vec[i] = w * np.ones((opt.embed_dim), dtype=np.float32)
+                cdw_vec[i] = w
             else:
-                cdw_vec[i] = np.ones((opt.embed_dim), dtype=np.float32)
+                cdw_vec[i] = 1
     else:
         local_context_begin = max(0, aspect_begin - SRD)
         local_context_end = min(aspect_begin + aspect_len + SRD - 1, opt.max_seq_len)
@@ -295,7 +295,7 @@ def get_cdw_vec(opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical
                 assert 0 <= w <= 1  # exception
             except:
                 print('Warning! invalid CDW weight:', w)
-            cdw_vec[i] = w * np.ones((opt.embed_dim), dtype=np.float32)
+            cdw_vec[i] = w
     return cdw_vec
 
 
@@ -307,25 +307,44 @@ def build_spc_mask_vec(opt, text_ids):
 
 
 def build_sentiment_window(examples, tokenizer, similarity_threshold):
-    copy_side_aspect('left', examples[0], examples[0])
+    copy_side_aspect('left', examples[0], examples[0], examples)
     for idx in range(1, len(examples)):
         if is_similar(examples[idx - 1]['text_bert_indices'],
                       examples[idx]['text_bert_indices'],
                       tokenizer=tokenizer,
                       similarity_threshold=similarity_threshold):
-            copy_side_aspect('right', examples[idx - 1], examples[idx])
-            copy_side_aspect('left', examples[idx], examples[idx - 1])
+            copy_side_aspect('right', examples[idx - 1], examples[idx], examples)
+            copy_side_aspect('left', examples[idx], examples[idx - 1], examples)
         else:
-            copy_side_aspect('right', examples[idx - 1], examples[idx - 1])
-            copy_side_aspect('left', examples[idx], examples[idx])
-    copy_side_aspect('right', examples[-1], examples[-1])
+            copy_side_aspect('right', examples[idx - 1], examples[idx - 1], examples)
+            copy_side_aspect('left', examples[idx], examples[idx], examples)
+    copy_side_aspect('right', examples[-1], examples[-1], examples)
     return examples
 
 
-def copy_side_aspect(direct='left', target=None, source=None):
+def copy_side_aspect(direct, target, source, examples):
+    if 'cluster_ids' not in target:
+        target['cluster_ids'] = copy.deepcopy(target['aspect_position'])
+        target['side_ex_ids'] = copy.deepcopy(set([target['ex_id']]))
+    if 'cluster_ids' not in source:
+        source['cluster_ids'] = copy.deepcopy(source['aspect_position'])
+        source['side_ex_ids'] = copy.deepcopy(set([source['ex_id']]))
+
+    if target['polarity'] == source['polarity']:
+
+        target['side_ex_ids'] |= source['side_ex_ids']
+        source['side_ex_ids'] |= target['side_ex_ids']
+        target['cluster_ids'] |= source['cluster_ids']
+        source['cluster_ids'] |= target['cluster_ids']
+
+        for ex_id in target['side_ex_ids']:
+            examples[ex_id]['cluster_ids'] |= source['cluster_ids']
+            examples[ex_id]['side_ex_ids'] |= target['side_ex_ids']
+
     for data_item in ['lcf_vec']:
         target[direct + '_' + data_item] = source[data_item]
-
+    target[direct + '_dist'] = int(abs(np.average(list(source['aspect_position'])) - np.average(list(target['aspect_position']))))
+    # target[direct + '_dist'] = 0 if id(source['lcf_vec']) == id(target['lcf_vec']) else 1
 
 def is_similar(s1, s2, tokenizer, similarity_threshold):
     # some reviews in the datasets are broken and can not use s1 == s2 to distinguish

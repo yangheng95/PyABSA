@@ -1,7 +1,5 @@
 # PyABSA - Open & Efficient for Framework for Aspect-based Sentiment Analysis
 
-# [English](README.md) | [中文](README_CN.md)    
-
 ![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg)
 [![PyPI](https://img.shields.io/pypi/v/pyabsa)](https://pypi.org/project/pyabsa/)
 ![Repo Size](https://img.shields.io/github/repo-size/yangheng95/pyabsa)
@@ -15,28 +13,28 @@
 
 
 > Fast & Low Memory requirement & Enhanced implementation of Local Context Focus.
-
+>
 > Build from LC-ABSA / LCF-ABSA / LCF-BERT and LCF-ATEPC.
-
+>
 > Provide tutorials of training and usages of ATE and APC models.
-
+>
 > PyTorch Implementations (CPU & CUDA supported).
 
-**PyABSA is an active project and under development, if you are interested in integrating your models or datasets into
-PyABSA, please do feel free to contact us for necessary support. Any message would receive response at most in a day.**
+# Instruction
 
+- [Installation](#installation)
+- [Package Overview](#Entry Overview)
+- [Quick Start](#Quick Start)
+    - Aspect Term Extraction and Polarity Classification (ATEPC)
+    - Aspect Polarity Classification (APC)
+- [Model Support](#Model Support)
+- [Dataset Support](https://github.com/yangheng95/ABSADatasetList)
+- [All Examples](examples)
+- [Notice for LCF-BERT & LCF-ATEPC](#Notice)
 
-# Notice
+# Installation
 
-The LCF is a simple and adoptive mechanism proposed for ABSA. Many models based on LCF has been proposed and achieved
-SOTA performance. Developing your models based on LCF will significantly improve your ABSA models. If you are looking
-for the original proposal of local context focus, please redirect to the introduction of
-[LCF](https://github.com/yangheng95/PyABSA/tree/release/examples/local_context_focus). If you are looking for the
-original codes of the LCF-related papers, please redirect
-to [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/LC-ABSA)
-or [LCF-ATEPC](https://github.com/XuMayi/LCF-ATEPC).
-
-# Preliminaries
+## install via pip (recommend)
 
 To use PyABSA, install the latest version from pip or source code:
 
@@ -44,107 +42,50 @@ To use PyABSA, install the latest version from pip or source code:
 pip install -U pyabsa
 ```
 
-Then clone our [tutorials](examples) and have fun!
+## install via source
 
 ```
 git clone https://github.com/yangheng95/PyABSA --depth=1
-
-cd PyABSA/examples/aspect_polarity_classification
-
-python sentiment_inference_chinese.py
+cd PyABSA 
+python setup.py install
 ```
 
-# Model Support
+# Entry Overview
 
-Except for the following models, we provide a template model involving LCF vec, you can develop your model based on
-the [LCF-APC](pyabsa/core/apc/models/lcf_template_apc.py) model template
-or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
+<table>
+<tr>
+    <td><b> pyabsa </b></td>
+    <td> package root (including all interfaces) </td>
+</tr>
+<tr>
+    <td><b> pyabsa.functional </b></td>
+    <td> recommend interface entry</td>
+</tr>
+<tr>
+    <td><b> pyabsa.functional.checkpoint </b></td>
+    <td> checkpoint manager entry, inference model entry</td>
+</tr>
+<tr>
+    <td><b> pyabsa.functional.dataset </b></td>
+    <td> datasets entry </td>
+</tr>
+<tr>
+    <td><b> pyabsa.functional.config </b></td>
+    <td> predefined config manager </td>
+</tr>
+<tr>
+    <td><b> pyabsa.functional.trainer </b></td>
+    <td> training module, every trainer return a inference model </td>
+</tr>
 
-## ATEPC
+</table>
 
-1. [LCF-ATEPC](pyabsa/core/atepc/models/lcf_atepc.py)
-2. [LCF-ATEPC-LARGE](pyabsa/core/atepc/models/lcf_atepc_large.py) (Dual BERT)
-2. [FAST-LCF-ATEPC](pyabsa/core/atepc/models/fast_lcf_atepc.py)
-3. [LCFS-ATEPC](pyabsa/core/atepc/models/lcfs_atepc.py)
-4. [LCFS-ATEPC-LARGE](pyabsa/core/atepc/models/lcfs_atepc_large.py) (Dual BERT)
-5. [FAST-LCFS-ATEPC](pyabsa/core/atepc/models/fast_lcfs_atepc.py)
-6. [BERT-BASE](pyabsa/core/atepc/models/bert_base_atepc.py)
+# Quick Start
 
-## APC
-
-### Bert-based APC models
-1. [SLIDE-LCF-BERT *](pyabsa/core/apc/models/slide_lcf_bert.py) (Faster & Performs Better than LCF/LCFS-BERT)
-2. [SLIDE-LCFS-BERT *](pyabsa/core/apc/models/slide_lcfs_bert.py) (Faster & Performs Better than LCF/LCFS-BERT)
-3. [LCF-BERT](pyabsa/core/apc/models/lcf_bert.py) (Reimplemented & Enhanced)
-4. [LCFS-BERT](pyabsa/core/apc/models/lcfs_bert.py) (Reimplemented & Enhanced)
-5. [FAST-LCF-BERT](pyabsa/core/apc/models/fast_lcf_bert.py) (Faster with slightly performance loss)
-6. [FAST_LCFS-BERT](pyabsa/core/apc/models/fast_lcfs_bert.py) (Faster with slightly performance loss)
-7. [LCF-DUAL-BERT](pyabsa/core/apc/models/lcf_dual_bert.py) (Dual BERT)
-8. [LCFS-DUAL-BERT](pyabsa/core/apc/models/lcfs_dual_bert.py) (Dual BERT)
-9. [BERT-BASE](pyabsa/core/apc/models/bert_base.py)
-10. [BERT-SPC](pyabsa/core/apc/models/bert_spc.py)
-11. [LCA-Net](pyabsa/core/apc/models/lca_bert.py)
-12. [DLCF-DCA-BERT *](pyabsa/core/apc/models/dlcf_dca_bert.py)
-
-'*' Copyrights Reserved, please wait for the publishing of our paper to get the introduction of them in detail.
-
-### Bert-based APC baseline models
-1. [AOA_BERT](pyabsa/core/apc/classic/__bert__/models/aoa.py)
-2. [ASGCN_BERT](pyabsa/core/apc/classic/__bert__/models/asgcn.py)
-3. [ATAE_LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/atae_lstm.py)
-4. [Cabasc_BERT](pyabsa/core/apc/classic/__bert__/models/cabasc.py)
-5. [IAN_BERT](pyabsa/core/apc/classic/__bert__/models/ian.py)
-6. [LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/lstm.py)
-7. [MemNet_BERT](pyabsa/core/apc/classic/__bert__/models/memnet.py)
-8. [MGAN_BERT](pyabsa/core/apc/classic/__bert__/models/mgan.py)
-9. [RAM_BERT](pyabsa/core/apc/classic/__bert__/models/ram.py)
-10. [TD_LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/td_lstm.py)
-11. [TC_LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/tc_lstm.py)
-12. [TNet_LF_BERT](pyabsa/core/apc/classic/__bert__/models/tnet_lf.py)
-
-
-### GloVe-based APC baseline models
-
-1. [AOA](pyabsa/core/apc/classic/__glove__/models/aoa.py) 
-2. [ASGCN](pyabsa/core/apc/classic/__glove__/models/asgcn.py)
-3. [ATAE-LSTM](pyabsa/core/apc/classic/__glove__/models/atae_lstm.py)
-4. [Cabasc](pyabsa/core/apc/classic/__glove__/models/cabasc.py) 
-5. [IAN](pyabsa/core/apc/classic/__glove__/models/ian.py)
-6. [LSTM](pyabsa/core/apc/classic/__glove__/models/lstm.py)
-7. [MemNet](pyabsa/core/apc/classic/__glove__/models/memnet.py) 
-8. [MGAN](pyabsa/core/apc/classic/__glove__/models/mgan.py) 
-9. [RAM](pyabsa/core/apc/classic/__glove__/models/ram.py)
-10. [TD-LSTM](pyabsa/core/apc/classic/__glove__/models/td_lstm.py) 
-11. [TD-LSTM](pyabsa/core/apc/classic/__glove__/models/tc_lstm.py) 
-12. [TNet_LF](pyabsa/core/apc/classic/__glove__/models/tnet_lf.py) 
-
-### You can use $glove model name$_BERT to use the BERT version
-
-e.g.,
-
-```
-from pyabsa.functional import BERTBaselineAPCModelList
-ASGCN_BERT = BERTBaselineAPCModelList.ASGCN_BERT
-```
-
-## Brief Performance Report
-
-|      Models          | Laptop14 (acc) |  Rest14 (acc) | Rest15 (acc) | Rest16 (acc) |
-| :------------------: | :------------: | :-----------: |:------------:|:------------:|
-| SLIDE-LCFS-BERT (CDW)|      81.66     |      86.68    |     85.19    |    92.36     | 
-| SLIDE-LCFS-BERT (CDM)|      81.35     |      88.21    |     85.19    |    92.20     |
-| SLIDE-LCF-BERT (CDW) |      81.66     |      87.59    |     84.81    |    92.03     |
-| SLIDE-LCF-BERT (CDM) |      80.25     |      86.86    |     85.74    |    91.71     |
-
-The optimal performance result among three random seeds. Note that with the update of this repo, the results could be
-updated. We are working on the construction of
-**[APC leaderboard](examples/aspect_polarity_classification/leaderboard.md)** and **[ATEPC leaderboard](examples/aspect_term_extraction/leaderboard.md)**, you can help us by reporting performance of
-other models.
-
-# Aspect Polarity Classification (APC)
-## Quick Start
+## Aspect Polarity Classification (APC)
 
 ### 1. Import necessary entries
+
 ```
 from pyabsa.functional import Trainer
 from pyabsa.functional import APCConfigManager
@@ -159,7 +100,8 @@ from pyabsa.functional import APCModelList
 # Get model list for GloVe-based APC baseline models
 # from pyabsa.functional import GloVeAPCModelList
 ```
-### 2. Choose a base param_dict
+
+### 2. Choose a base param config
 
 ```
 # Choose a Bert-based APC models param_dict
@@ -171,6 +113,7 @@ apc_config_english = APCConfigManager.get_apc_config_english()
 # Choose a GloVe-based APC baseline models param_dict
 # apc_config_english = APCConfigManager.get_apc_config_glove()
 ```
+
 ### 3. Specify an APC model and alter some hyper-parameters (if necessary)
 
 ```
@@ -193,6 +136,7 @@ apc_config_english.l2reg = 0.0005
 apc_config_english.seed = {1, 2, 3}
 apc_config_english.cross_validate_fold = -1
 ```
+
 ### 4. Configure runtime setting and running training
 
 ```
@@ -203,7 +147,9 @@ sent_classifier = Trainer(config=apc_config_english,
                           auto_device=True  # automatic choose CUDA or CPU
                           )
 ```
+
 ### 5. Sentiment inference
+
 ```
 # batch inferring_tutorials returns the results, save the result if necessary using save_result=True
 inference_dataset = ABSADatasetList.SemEval # or set your local dataset
@@ -215,6 +161,7 @@ results = sent_classifier.batch_infer(target_file=inference_dataset,
 ```
 
 ### 6. Sentiment inference output format (情感分类结果示例如下)
+
 ```
 Apple is unmatched in  product quality  , aesthetics , craftmanship , and customer service .  
 product quality --> Positive  Real: Positive (Correct)
@@ -235,10 +182,10 @@ battery --> Positive  Real: Positive (Correct)
  It 's so nice that the battery last so long and that this machine has the  snow lion  !  
 snow lion --> Positive  Real: Positive (Correct)
 ```
+
 Check the detailed usages in [APC examples](examples/aspect_polarity_classification) directory.
 
-# Aspect Term Extraction and Polarity Classification (ATEPC)
-## Quick Start
+## Aspect Term Extraction and Polarity Classification (ATEPC)
 
 ### 1. Import necessary entries
 
@@ -249,7 +196,7 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import ATEPCConfigManager
 ```
 
-### 2. Choose a base param_dict
+### 2. Choose a base param config
 
 ```
 config = ATEPCConfigManager.get_atepc_config_english()
@@ -294,6 +241,7 @@ atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source
                                                pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
                                                )
 ```
+
 ### 6. Aspect term extraction & sentiment inference output format (方面抽取及情感分类结果示例如下):
 
 ```
@@ -313,9 +261,11 @@ It(O) was(O) pleasantly(O) uncrowded(O) ,(O) the(O) service(B-ASP) was(O) deligh
 {'aspect': 'entrees', 'position': '21', 'sentiment': 'Positive'}
 Sentence with predicted labels:
 ```
+
 Check the detailed usages in [ATE examples](examples/aspect_term_extraction) directory.
 
 # Checkpoint
+
 ## How to get available checkpoints from Google Drive
 
 PyABSA will check the latest available checkpoints before and load the latest checkpoint from Google Drive. To view
@@ -336,13 +286,14 @@ For resource limitation, we do not provide diversities of checkpoints, we hope y
 who have not enough resource to train their model.
 
 1. Upload your zipped checkpoint to Google Drive **in a shared folder**.
-![123](examples/local_context_focus/pic/pic1.png)
+   ![123](examples/local_context_focus/pic/pic1.png)
 
 2. Get the link of your checkpoint.
-![123](examples/local_context_focus/pic/pic2.png)
+   ![123](examples/local_context_focus/pic/pic2.png)
 
 3. Register the checkpoint in the [checkpoint_map](examples/checkpoint_map.json), then make a pull request. We will
    update the checkpoints index as soon as we can, Thanks for your help!
+
 ```
 "checkpoint name": {
         "id": "your checkpoint link",
@@ -353,9 +304,13 @@ who have not enough resource to train their model.
         "author": "name (email)"
       }
 ```
+
 ## How to use checkpoints
+
 ### 1. Sentiment inference
+
 #### 1.1 Import necessary entries
+
 ```
 import os
 from pyabsa import APCCheckpointManager, ABSADatasetList
@@ -363,6 +318,7 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 ```
 
 #### 1.2 Assume the sent_classifier and checkpoint
+
 ```
 sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
 
@@ -371,7 +327,9 @@ sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='dlcf
                                                                 sentiment_map=sentiment_map
                                                                 )
 ```
+
 #### 1.3 Configure inferring setting
+
 ```
 # batch inferring_tutorials returns the results, save the result if necessary using save_result=True
 inference_datasets = ABSADatasetList.Laptop14 # or set your local dataset
@@ -381,8 +339,11 @@ results = sent_classifier.batch_infer(target_file=inference_datasets,
                                       ignore_error=True,
                                       )
 ```
+
 ### 2. Aspect term extraction & sentiment inference
+
 #### 2.1 Import necessary entries
+
 ```
 import os
 from pyabsa import ABSADatasetList
@@ -391,6 +352,7 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 ```
 
 #### 2.2 Assume the sent_classifier and checkpoint
+
 ```
 sentiment_map = {0: 'Negative', 1: "Neutral", 2: 'Positive', -999: ''}
 
@@ -398,7 +360,9 @@ aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='Lapto
                                                                auto_device=True  # False means load model on CPU
                                                                )
 ```
+
 #### 2.3 Configure extraction and inferring setting
+
 ```
 # inference_dataset = ABSADatasetList.SemEval # or set your local dataset
 atepc_result = aspect_extractor.extract_aspect(inference_source=inference_dataset,
@@ -409,7 +373,9 @@ atepc_result = aspect_extractor.extract_aspect(inference_source=inference_datase
 ```
 
 ### 3. Train based on checkpoint
+
 #### 3.1 Import necessary entries
+
 ```
 from pyabsa.functional import APCCheckpointManager
 from pyabsa.functional import Trainer
@@ -417,11 +383,13 @@ from pyabsa.functional import APCConfigManager
 from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import APCModelList
 ```
+
 #### 3.2 Choose a base param_dict
 
 ```
 apc_config_english = APCConfigManager.get_apc_config_english()
 ```
+
 #### 3.3 Specify an APC model and alter some hyper-parameters (if necessary)
 
 ```
@@ -435,7 +403,9 @@ apc_config_english.l2reg = 0.0001
 apc_config_english.dynamic_truncate = True
 apc_config_english.srd_alignment = True
 ```
+
 #### 3.4 Configure checkpoint
+
 ```
 # Ensure the corresponding checkpoint of trained model
 checkpoint_path = APCCheckpointManager.get_checkpoint('slide-lcf-bert')
@@ -453,7 +423,9 @@ sent_classifier = Trainer(config=apc_config_english,
                           )
 ```
 
-# [Datasets](https://github.com/yangheng95/ABSADatasetList)
+# Datasets
+
+More datasets are available at [ABSADatasets](https://github.com/yangheng95/ABSADatasetList).
 
 1. Twitter
 2. Laptop14
@@ -470,8 +442,81 @@ sent_classifier = Trainer(config=apc_config_english,
 
 Basically, you don't have to download the datasets, as the datasets will be downloaded automatically.
 
+# Model Support
 
-## Acknowledgement 用❤发电，感谢陪伴
+Except for the following models, we provide a template model involving LCF vec, you can develop your model based on
+the [LCF-APC](pyabsa/core/apc/models/lcf_template_apc.py) model template
+or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
+
+## ATEPC
+
+1. [LCF-ATEPC](pyabsa/core/atepc/models/lcf_atepc.py)
+2. [LCF-ATEPC-LARGE](pyabsa/core/atepc/models/lcf_atepc_large.py) (Dual BERT)
+2. [FAST-LCF-ATEPC](pyabsa/core/atepc/models/fast_lcf_atepc.py)
+3. [LCFS-ATEPC](pyabsa/core/atepc/models/lcfs_atepc.py)
+4. [LCFS-ATEPC-LARGE](pyabsa/core/atepc/models/lcfs_atepc_large.py) (Dual BERT)
+5. [FAST-LCFS-ATEPC](pyabsa/core/atepc/models/fast_lcfs_atepc.py)
+6. [BERT-BASE](pyabsa/core/atepc/models/bert_base_atepc.py)
+
+## APC
+
+### Bert-based APC models
+
+1. [SLIDE-LCF-BERT](pyabsa/core/apc/models/slide_lcf_bert.py) (Faster & Performs Better than LCF/LCFS-BERT)
+2. [SLIDE-LCFS-BERT](pyabsa/core/apc/models/slide_lcfs_bert.py) (Faster & Performs Better than LCF/LCFS-BERT)
+3. [LCF-BERT](pyabsa/core/apc/models/lcf_bert.py) (Reimplemented & Enhanced)
+4. [LCFS-BERT](pyabsa/core/apc/models/lcfs_bert.py) (Reimplemented & Enhanced)
+5. [FAST-LCF-BERT](pyabsa/core/apc/models/fast_lcf_bert.py) (Faster with slightly performance loss)
+6. [FAST_LCFS-BERT](pyabsa/core/apc/models/fast_lcfs_bert.py) (Faster with slightly performance loss)
+7. [LCF-DUAL-BERT](pyabsa/core/apc/models/lcf_dual_bert.py) (Dual BERT)
+8. [LCFS-DUAL-BERT](pyabsa/core/apc/models/lcfs_dual_bert.py) (Dual BERT)
+9. [BERT-BASE](pyabsa/core/apc/models/bert_base.py)
+10. [BERT-SPC](pyabsa/core/apc/models/bert_spc.py)
+11. [LCA-Net](pyabsa/core/apc/models/lca_bert.py)
+12. [DLCF-DCA-BERT *](pyabsa/core/apc/models/dlcf_dca_bert.py)
+
+### Bert-based APC baseline models
+
+1. [AOA_BERT](pyabsa/core/apc/classic/__bert__/models/aoa.py)
+2. [ASGCN_BERT](pyabsa/core/apc/classic/__bert__/models/asgcn.py)
+3. [ATAE_LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/atae_lstm.py)
+4. [Cabasc_BERT](pyabsa/core/apc/classic/__bert__/models/cabasc.py)
+5. [IAN_BERT](pyabsa/core/apc/classic/__bert__/models/ian.py)
+6. [LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/lstm.py)
+7. [MemNet_BERT](pyabsa/core/apc/classic/__bert__/models/memnet.py)
+8. [MGAN_BERT](pyabsa/core/apc/classic/__bert__/models/mgan.py)
+9. [RAM_BERT](pyabsa/core/apc/classic/__bert__/models/ram.py)
+10. [TD_LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/td_lstm.py)
+11. [TC_LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/tc_lstm.py)
+12. [TNet_LF_BERT](pyabsa/core/apc/classic/__bert__/models/tnet_lf.py)
+
+### GloVe-based APC baseline models
+
+1. [AOA](pyabsa/core/apc/classic/__glove__/models/aoa.py)
+2. [ASGCN](pyabsa/core/apc/classic/__glove__/models/asgcn.py)
+3. [ATAE-LSTM](pyabsa/core/apc/classic/__glove__/models/atae_lstm.py)
+4. [Cabasc](pyabsa/core/apc/classic/__glove__/models/cabasc.py)
+5. [IAN](pyabsa/core/apc/classic/__glove__/models/ian.py)
+6. [LSTM](pyabsa/core/apc/classic/__glove__/models/lstm.py)
+7. [MemNet](pyabsa/core/apc/classic/__glove__/models/memnet.py)
+8. [MGAN](pyabsa/core/apc/classic/__glove__/models/mgan.py)
+9. [RAM](pyabsa/core/apc/classic/__glove__/models/ram.py)
+10. [TD-LSTM](pyabsa/core/apc/classic/__glove__/models/td_lstm.py)
+11. [TD-LSTM](pyabsa/core/apc/classic/__glove__/models/tc_lstm.py)
+12. [TNet_LF](pyabsa/core/apc/classic/__glove__/models/tnet_lf.py)
+
+# Notice
+
+The LCF is a simple and adoptive mechanism proposed for ABSA. Many models based on LCF has been proposed and achieved
+SOTA performance. Developing your models based on LCF will significantly improve your ABSA models. If you are looking
+for the original proposal of local context focus, please redirect to the introduction of
+[LCF](https://github.com/yangheng95/PyABSA/tree/release/examples/local_context_focus). If you are looking for the
+original codes of the LCF-related papers, please redirect
+to [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/LC-ABSA)
+or [LCF-ATEPC](https://github.com/XuMayi/LCF-ATEPC).
+
+## Acknowledgement
+
 This work build from LC-ABSA/LCF-ABSA and LCF-ATEPC, and other impressive works such as PyTorch-ABSA and LCFS-BERT.
 
 ## License

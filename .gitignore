@@ -13,6 +13,8 @@ integrated_datasets/
 *.bin
 *.result.txt
 *.DS_Store
+*.tmp
+*.args.txt
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

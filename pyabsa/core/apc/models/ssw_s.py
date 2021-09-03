@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: slide_lcf_bert.py
+# file: ssw_s.py
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # Copyright (C) 2021. All Rights Reserved.
 
@@ -10,11 +10,11 @@ from transformers.models.bert.modeling_bert import BertPooler
 from pyabsa.network.sa_encoder import Encoder
 
 
-class SLIDE_LCF_BERT(nn.Module):
-    inputs = ['text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec']
+class SSW_S(nn.Module):
+    inputs = ['text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec', 'polarity', 'left_dist', 'right_dist']
 
     def __init__(self, bert, opt):
-        super(SLIDE_LCF_BERT, self).__init__()
+        super(SSW_S, self).__init__()
         self.bert4global = bert
         self.opt = opt
         self.dropout = nn.Dropout(opt.dropout)
@@ -27,10 +27,17 @@ class SLIDE_LCF_BERT(nn.Module):
         self.linear_window_3h = nn.Linear(opt.embed_dim * 3, opt.embed_dim)
         self.linear_window_2h = nn.Linear(opt.embed_dim * 2, opt.embed_dim)
 
+        self.dist_embed = nn.Embedding(opt.max_seq_len, opt.embed_dim)
+
         self.post_encoder = Encoder(bert.config, opt)
         self.post_encoder_ = Encoder(bert.config, opt)
         self.bert_pooler = BertPooler(bert.config)
-        self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
+
+        self.linear_left_ = nn.Linear(opt.embed_dim * 2, opt.embed_dim)
+        self.linear_right_ = nn.Linear(opt.embed_dim * 2, opt.embed_dim)
+
+        self.classification_criterion = nn.CrossEntropyLoss()
+        self.sent_dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
 
     def forward(self, inputs):
         text_bert_indices = inputs[0]
@@ -38,6 +45,9 @@ class SLIDE_LCF_BERT(nn.Module):
         lcf_matrix = inputs[2].unsqueeze(2)
         left_lcf_matrix = inputs[3].unsqueeze(2)
         right_lcf_matrix = inputs[4].unsqueeze(2)
+        polarity = inputs[5]
+        left_dist = self.dist_embed(inputs[6].unsqueeze(1))
+        right_dist = self.dist_embed(inputs[7].unsqueeze(1))
 
         global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
         masked_global_context_features = torch.mul(spc_mask_vec, global_context_features)
@@ -47,10 +57,10 @@ class SLIDE_LCF_BERT(nn.Module):
         lcf_features = self.encoder(lcf_features)
         # # --------------------------------------------------- #
         left_lcf_features = torch.mul(masked_global_context_features, left_lcf_matrix)
-        left_lcf_features = self.encoder_left(left_lcf_features)
+        left_lcf_features = left_dist * self.encoder_left(left_lcf_features)
         # # --------------------------------------------------- #
         right_lcf_features = torch.mul(masked_global_context_features, right_lcf_matrix)
-        right_lcf_features = self.encoder_right(right_lcf_features)
+        right_lcf_features = right_dist * self.encoder_right(right_lcf_features)
         # # --------------------------------------------------- #
 
         if 'lr' == self.opt.window or 'rl' == self.opt.window:
@@ -58,20 +68,21 @@ class SLIDE_LCF_BERT(nn.Module):
                 cat_features = torch.cat(
                     (lcf_features, self.opt.eta * left_lcf_features, (1 - self.opt.eta) * right_lcf_features), -1)
             else:
-                cat_features = torch.cat((lcf_features, left_lcf_features, right_lcf_features), -1)
+                cat_features = torch.cat((left_lcf_features, lcf_features, right_lcf_features), -1)
             sent_out = self.linear_window_3h(cat_features)
         elif 'l' == self.opt.window:
             sent_out = self.linear_window_2h(torch.cat((lcf_features, left_lcf_features), -1))
         elif 'r' == self.opt.window:
             sent_out = self.linear_window_2h(torch.cat((lcf_features, right_lcf_features), -1))
         else:
-            raise KeyError('Invalid parameter:', self.opt.window)
+            sent_out = lcf_features
 
         sent_out = torch.cat((global_context_features, sent_out), -1)
         sent_out = self.post_linear(sent_out)
         sent_out = self.dropout(sent_out)
         sent_out = self.post_encoder_(sent_out)
         sent_out = self.bert_pooler(sent_out)
-        dense_out = self.dense(sent_out)
+        sent_logits = self.sent_dense(sent_out)
+        sent_loss = self.classification_criterion(sent_logits, polarity)
 
-        return dense_out
+        return {'logits': sent_logits, 'loss': sent_loss}

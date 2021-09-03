@@ -4,7 +4,7 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-
+import numpy as np
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
@@ -72,7 +72,7 @@ class ABSADataset(Dataset):
     def process_data(self, samples, ignore_error=True):
         all_data = []
 
-        for text in tqdm(samples, postfix='building word indices...'):
+        for ex_id, text in enumerate(tqdm(samples, postfix='building word indices...')):
             try:
                 # handle for empty lines in inferring_tutorials dataset_utils
                 if text is None or '' == text.strip():
@@ -100,10 +100,10 @@ class ABSADataset(Dataset):
 
                 text_raw = prepared_inputs['text_raw']
                 aspect = prepared_inputs['aspect']
+                aspect_position = prepared_inputs['aspect_position']
                 text_bert_indices = prepared_inputs['text_bert_indices']
                 text_raw_bert_indices = prepared_inputs['text_raw_bert_indices']
                 aspect_bert_indices = prepared_inputs['aspect_bert_indices']
-                lca_ids = prepared_inputs['lca_ids']
                 lcf_vec = prepared_inputs['lcf_cdm_vec'] if self.opt.lcf == 'cdm' else prepared_inputs['lcf_cdw_vec']
 
                 if self.opt.model_name == 'dlcf_dca_bert':
@@ -113,17 +113,14 @@ class ABSADataset(Dataset):
                     depended_ids = prepared_inputs['depended_ids']
                     no_connect = prepared_inputs['no_connect']
                 data = {
-                    'depend_ids': depend_ids if 'depend_ids' in self.opt.model.inputs else 0,
 
-                    'depended_ids': depended_ids if 'depended_ids' in self.opt.model.inputs else 0,
-
-                    'no_connect': no_connect if 'no_connect' in self.opt.model.inputs else 0,
+                    'ex_id': ex_id,
 
                     'text_raw': text_raw,
 
                     'aspect': aspect,
 
-                    'lca_ids': lca_ids if 'lca_ids' in self.opt.model.inputs else 0,
+                    'aspect_position': aspect_position,
 
                     'lcf_vec': lcf_vec if 'lcf_vec' in self.opt.model.inputs else 0,
 
@@ -151,9 +148,25 @@ class ABSADataset(Dataset):
                 else:
                     raise e
 
-        if all_data and 'slide' in self.opt.model_name:
-            if 'slide' in self.opt.model_name:
-                all_data = build_sentiment_window(all_data, self.tokenizer, self.opt.similarity_threshold)
+        if self.opt.model_name in ['slide_lcf_bert', 'slide_lcfs_bert', 'ssw_t', 'ssw_s']:
+            all_data = build_sentiment_window(all_data, self.tokenizer, self.opt.similarity_threshold)
+            for data in all_data:
+
+                cluster_ids = []
+                for pad_idx in range(self.opt.max_seq_len):
+                    if pad_idx in data['cluster_ids']:
+                        cluster_ids.append(data['polarity'])
+                    else:
+                        cluster_ids.append(-100)
+                        # cluster_ids.append(3)
+
+                data['cluster_ids'] = np.asarray(cluster_ids, dtype=np.int64)
+                data['side_ex_ids'] = np.array(0)
+                data['aspect_position'] = np.array(0)
+
+        else:
+            for data in all_data:
+                data['aspect_position'] = np.array(0)
 
         self.all_data = all_data
         return all_data
