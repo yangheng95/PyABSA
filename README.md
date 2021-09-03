@@ -23,11 +23,11 @@
 # Instruction
 
 - [Installation](#installation)
-- [Package Overview](#Entry Overview)
-- [Quick Start](#Quick Start)
+- [Package-Overview](#Package-Overview)
+- [Quick-Start](#Quick-Start)
     - Aspect Term Extraction and Polarity Classification (ATEPC)
     - Aspect Polarity Classification (APC)
-- [Model Support](#Model Support)
+- [Model-Support](#Model-Support)
 - [Dataset Support](https://github.com/yangheng95/ABSADatasetList)
 - [All Examples](examples)
 - [Notice for LCF-BERT & LCF-ATEPC](#Notice)
@@ -50,7 +50,7 @@ cd PyABSA
 python setup.py install
 ```
 
-# Entry Overview
+#Package-Overview
 
 <table>
 <tr>
@@ -80,7 +80,7 @@ python setup.py install
 
 </table>
 
-# Quick Start
+#Quick-Start
 
 ## Aspect Polarity Classification (APC)
 
@@ -442,7 +442,7 @@ More datasets are available at [ABSADatasets](https://github.com/yangheng95/ABSA
 
 Basically, you don't have to download the datasets, as the datasets will be downloaded automatically.
 
-# Model Support
+# Model-Support
 
 Except for the following models, we provide a template model involving LCF vec, you can develop your model based on
 the [LCF-APC](pyabsa/core/apc/models/lcf_template_apc.py) model template
