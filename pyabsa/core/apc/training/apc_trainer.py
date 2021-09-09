@@ -21,7 +21,7 @@ from transformers import AutoTokenizer, AutoModel, BertModel
 
 from pyabsa.functional.dataset import ABSADatasetList
 from pyabsa.utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args, optimizers, load_checkpoint
+from pyabsa.utils.pyabsa_utils import print_args, optimizers, load_checkpoint, retry
 
 from ..models import BERTBaselineAPCModelList, GloVeAPCModelList, APCModelList
 from ..classic.__bert__.dataset_utils.data_utils_for_training import (Tokenizer4Pretraining,
@@ -465,6 +465,7 @@ class Instructor:
         return self._train(criterion)
 
 
+@retry
 def train4apc(opt, from_checkpoint_path, logger):
     if not isinstance(opt.seed, int):
         opt.logger.info('Please do not use multiple random seeds without evaluating.')

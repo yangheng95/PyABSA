@@ -142,8 +142,10 @@ class AspectExtractor:
         extraction_res = None
         polarity_res = None
 
-        save_path = os.path.join(os.getcwd(), 'atepc_inference.result.txt')
-        fout = open(save_path, 'w', encoding='utf8') if save_result else None
+        if save_result:
+            save_path = os.path.join(os.getcwd(), 'atepc_inference.result.txt')
+            fout = open(save_path, 'w', encoding='utf8') if save_result else None
+            print('The results of aspect term extraction have been saved in {}'.format(save_path))
 
         if isinstance(inference_source, DatasetItem):
             # using integrated inference dataset
@@ -152,13 +154,15 @@ class AspectExtractor:
                 inference_set = detect_infer_dataset(d, task='apc')
                 inference_source = load_atepc_inference_datasets(inference_set)
                 if inference_source:
-                    for example in inference_source:
-                        extraction_res = self._extract(example, print_result)
-                        if pred_sentiment:
-                            polarity_res = self._infer(extraction_res, print_result)
-                        results.append({'extraction_res': extraction_res, 'polarity_res': polarity_res})
-                        if fout:
-                            fout.write('extraction_res:{} polarity_res:{}\n'.format(extraction_res, polarity_res))
+                    extraction_res = self._extract(inference_source)
+                    if pred_sentiment:
+                        polarity_res = self._infer(extraction_res)
+                    results.append({'extraction_res': extraction_res, 'polarity_res': polarity_res})
+                    if save_result:
+                        fout.write('extraction_res:{} polarity_res:{}\n'.format(extraction_res, polarity_res))
+                    if print_result:
+                        for r in results:
+                            print(r)
                     return results
         elif isinstance(inference_source, str):
             inference_source = DatasetItem(inference_source)
@@ -167,37 +171,41 @@ class AspectExtractor:
             inference_set = detect_infer_dataset(inference_source, task='apc')
             inference_source = load_atepc_inference_datasets(inference_set)
             if inference_source:
-                for example in inference_source:
-                    extraction_res = self._extract(example, print_result)
-                    if pred_sentiment:
-                        polarity_res = self._infer(extraction_res, print_result)
-                    results.append({'extraction_res': extraction_res, 'polarity_res': polarity_res})
-                    if fout:
-                        fout.write('extraction_res:{} polarity_res:{}\n'.format(extraction_res, polarity_res))
+                # for example in inference_source:
+                extraction_res = self._extract(inference_source)
+                if pred_sentiment:
+                    polarity_res = self._infer(extraction_res)
+                results.append({'extraction_res': extraction_res, 'polarity_res': polarity_res})
+                if save_result:
+                    fout.write('extraction_res:{} polarity_res:{}\n'.format(extraction_res, polarity_res))
+                if print_result:
+                    for r in results:
+                        print(r)
                 return results
         elif isinstance(inference_source, list):
             # using example list
             results = []
-            for example in inference_source:
-                extraction_res = self._extract(example, print_result)
-                if pred_sentiment:
-                    polarity_res = self._infer(extraction_res, print_result)
-                results.append({'extraction_res': extraction_res, 'polarity_res': polarity_res})
-                if fout:
-                    fout.write('extraction_res:{} polarity_res:{}\n'.format(extraction_res, polarity_res))
-            print('The results of aspect term extraction have been saved in {}'.format(save_path))
+            extraction_res = self._extract(inference_source)
+            if pred_sentiment:
+                polarity_res = self._infer(extraction_res)
+            results.append({'extraction_res': extraction_res, 'polarity_res': polarity_res})
+            if save_result:
+                fout.write('extraction_res:{} polarity_res:{}\n'.format(extraction_res, polarity_res))
+            if print_result:
+                for r in results:
+                    print(r)
             return results
         else:
             print('Please run inference using examples list or inference dataset path (list)!')
 
     # Temporal code, pending optimization
-    def _extract(self, example, print_result):
+    def _extract(self, examples):
 
         res = []  # extraction result
 
         self.eval_dataloader = None
-        example = self.processor.get_examples_for_aspect_extraction(example)
-        eval_features = convert_ate_examples_to_features(example,
+        examples = self.processor.get_examples_for_aspect_extraction(examples)
+        eval_features = convert_ate_examples_to_features(examples,
                                                          self.label_list,
                                                          self.opt.max_seq_len,
                                                          self.tokenizer,
@@ -215,7 +223,7 @@ class AspectExtractor:
                                   all_polarities, all_valid_ids, all_lmask_ids)
         # Run prediction for full data
         eval_sampler = SequentialSampler(eval_data)
-        self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=1)
+        self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=128)
 
         # extract_aspects
         self.model.eval()
@@ -241,52 +249,51 @@ class AspectExtractor:
             ate_logits = ate_logits.detach().cpu().numpy()
             label_ids = label_ids.to('cpu').numpy()
             input_mask = input_mask.to('cpu').numpy()
-            pred_iobs = []
-            for j, m in enumerate(label_ids[0]):
-                if j == 0:
-                    continue
-                elif len(pred_iobs) == len(all_tokens[0]):
-                    break
-                else:
-                    pred_iobs.append(label_map.get(ate_logits[0][j], 'O'))
+            for i, i_ate_logits in enumerate(ate_logits):
+                pred_iobs = []
 
-            ate_result = []
-            polarity = []
-            for t, l in zip(all_tokens[0], pred_iobs):
-                ate_result.append('{}({})'.format(t, l))
-                if 'ASP' in l:
-                    polarity.append(-SENTIMENT_PADDING)
-                else:
-                    polarity.append(SENTIMENT_PADDING)
-            if print_result:
-                print('Sentence with predicted labels:')
-                print(' '.join(ate_result))
-            asp_idx = 0
-            asp_num = pred_iobs.count('B-ASP')
-            IOB_PADDING = ['O'] * len(pred_iobs)
-            POLARITY_PADDING = [SENTIMENT_PADDING] * len(pred_iobs)
-            while asp_idx < asp_num:
-                _pred_iobs = pred_iobs[:]
-                _polarity = polarity[:]
-                for iob_idx in range(len(_pred_iobs) - 1):
-                    if pred_iobs[iob_idx].endswith('ASP') and not pred_iobs[iob_idx + 1].endswith('I-ASP'):
-                        _pred_iobs = _pred_iobs[:iob_idx + 1] + IOB_PADDING[iob_idx + 1:]
-                        pred_iobs = IOB_PADDING[:iob_idx + 1] + pred_iobs[iob_idx + 1:]
-                        _polarity = _polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
-                        polarity = POLARITY_PADDING[:iob_idx + 1] + polarity[iob_idx + 1:]
+                for j, m in enumerate(label_ids[i]):
+                    if j == 0:
+                        continue
+                    elif len(pred_iobs) == len(all_tokens[i]):
                         break
+                    else:
+                        pred_iobs.append(label_map.get(i_ate_logits[j], 'O'))
 
-                res.append((all_tokens[0], _pred_iobs, _polarity))
-                asp_idx += 1
+                ate_result = []
+                polarity = []
+                for t, l in zip(all_tokens[i], pred_iobs):
+                    ate_result.append('{}({})'.format(t, l))
+                    if 'ASP' in l:
+                        polarity.append(-SENTIMENT_PADDING)
+                    else:
+                        polarity.append(SENTIMENT_PADDING)
+                asp_idx = 0
+                asp_num = pred_iobs.count('B-ASP')
+                IOB_PADDING = ['O'] * len(pred_iobs)
+                POLARITY_PADDING = [SENTIMENT_PADDING] * len(pred_iobs)
+                while asp_idx < asp_num:
+                    _pred_iobs = pred_iobs[:]
+                    _polarity = polarity[:]
+                    for iob_idx in range(len(_pred_iobs) - 1):
+                        if pred_iobs[iob_idx].endswith('ASP') and not pred_iobs[iob_idx + 1].endswith('I-ASP'):
+                            _pred_iobs = _pred_iobs[:iob_idx + 1] + IOB_PADDING[iob_idx + 1:]
+                            pred_iobs = IOB_PADDING[:iob_idx + 1] + pred_iobs[iob_idx + 1:]
+                            _polarity = _polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
+                            polarity = POLARITY_PADDING[:iob_idx + 1] + polarity[iob_idx + 1:]
+                            break
+
+                    res.append((all_tokens[i], _pred_iobs, _polarity))
+                    asp_idx += 1
         return res
 
-    def _infer(self, example, print_result):
+    def _infer(self, examples):
 
         res = []  # sentiment classification result
 
         self.eval_dataloader = None
-        example = self.processor.get_examples_for_sentiment_classification(example)
-        eval_features = convert_apc_examples_to_features(example,
+        examples = self.processor.get_examples_for_sentiment_classification(examples)
+        eval_features = convert_apc_examples_to_features(examples,
                                                          self.label_list,
                                                          self.opt.max_seq_len,
                                                          self.tokenizer,
@@ -295,17 +302,18 @@ class AspectExtractor:
         all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
         all_segment_ids = torch.tensor([f.segment_ids for f in eval_features], dtype=torch.long)
         all_label_ids = torch.tensor([f.label_id for f in eval_features], dtype=torch.long)
-        all_polarities = torch.tensor([f.polarity for f in eval_features], dtype=torch.long)
         all_valid_ids = torch.tensor([f.valid_ids for f in eval_features], dtype=torch.long)
         all_lmask_ids = torch.tensor([f.label_mask for f in eval_features], dtype=torch.long)
         lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in eval_features], dtype=torch.float32)
         lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in eval_features], dtype=torch.float32)
         all_tokens = [f.tokens for f in eval_features]
+        all_aspects = [f.aspect for f in eval_features]
+        all_positions = [f.positions for f in eval_features]
         eval_data = TensorDataset(all_spc_input_ids, all_input_mask, all_segment_ids, all_label_ids,
-                                  all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
+                                  all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
         # Run prediction for full data
         eval_sampler = SequentialSampler(eval_data)
-        self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=1)
+        self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=128)
 
         # extract_aspects
         self.model.eval()
@@ -318,41 +326,35 @@ class AspectExtractor:
             sentiments[-999] = ''
 
         # Correct = {True: 'Correct', False: 'Wrong'}
-        for i, batch in enumerate(self.eval_dataloader):
-            input_ids_spc, segment_ids, input_mask, label_ids, polarity, \
+        for i_batch, batch in enumerate(self.eval_dataloader):
+            input_ids_spc, segment_ids, input_mask, label_ids, \
             valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
             input_ids_spc = input_ids_spc.to(self.opt.device)
             input_mask = input_mask.to(self.opt.device)
             segment_ids = segment_ids.to(self.opt.device)
             valid_ids = valid_ids.to(self.opt.device)
             label_ids = label_ids.to(self.opt.device)
-            polarity = polarity.to(self.opt.device)
             l_mask = l_mask.to(self.opt.device)
             lcf_cdm_vec = lcf_cdm_vec.to(self.opt.device)
             lcf_cdw_vec = lcf_cdw_vec.to(self.opt.device)
-            result = {}
             with torch.no_grad():
                 ate_logits, apc_logits = self.model(input_ids_spc,
                                                     token_type_ids=segment_ids,
                                                     attention_mask=input_mask,
                                                     labels=None,
-                                                    polarity=polarity,
                                                     valid_ids=valid_ids,
                                                     attention_mask_label=l_mask,
                                                     lcf_cdm_vec=lcf_cdm_vec,
                                                     lcf_cdw_vec=lcf_cdw_vec)
+                for i, i_apc_logits in enumerate(apc_logits):
+                    sent = int(torch.argmax(i_apc_logits, -1))
+                    result = {}
 
-                sent = int(torch.argmax(apc_logits, -1))
-                aspect_idx = torch.where(polarity[0] > 0)
-                aspect = []
-                positions = []
-                for idx in list(aspect_idx[0].cpu().numpy()):
-                    positions.append(str(idx))
-                    aspect.append(all_tokens[0][int(idx)])
-                result['aspect'] = ' '.join(aspect)
-                result['position'] = ','.join(positions)
-                result['sentiment'] = sentiments[sent]
-                if print_result:
-                    print(result)
-                res.append(result)
+                    result['sentence'] = ' '.join(all_tokens[i])
+                    result['tokens'] = all_tokens[i]
+                    result['aspect'] = all_aspects[i]
+                    result['positions'] = all_positions[i]
+                    result['sentiment'] = sentiments[sent]
+                    res.append(result)
+
         return res

@@ -163,7 +163,7 @@ class SentimentClassifier:
             raise FileNotFoundError('Can not find inference dataset_utils!')
 
         self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
-        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=1, shuffle=False)
+        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=128, shuffle=False)
         return self._infer(save_path=save_path if save_result else None, print_result=print_result)
 
     def infer(self, text: str = None,
@@ -176,7 +176,7 @@ class SentimentClassifier:
             self.dataset.prepare_infer_sample(text)
         else:
             raise RuntimeError('Please specify your dataset_utils path!')
-        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=1, shuffle=False)
+        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=128, shuffle=False)
         return self._infer(print_result=print_result)
 
     def _infer(self, save_path=None, print_result=True):
@@ -206,49 +206,50 @@ class SentimentClassifier:
                 outputs = self.model(inputs)
                 sen_logits = outputs
                 t_probs = torch.softmax(sen_logits, dim=-1).cpu().numpy()
-                sent = int(t_probs.argmax(axis=-1))
-                real_sent = int(sample['polarity'])
-                aspect = sample['aspect'][0]
-                text_raw = sample['text_raw'][0]
+                for i, i_probs in enumerate(t_probs):
+                    sent = int(i_probs.argmax(axis=-1))
+                    real_sent = int(sample['polarity'][i])
+                    aspect = sample['aspect'][i]
+                    text_raw = sample['text_raw'][i]
 
-                result['text'] = sample['text_raw'][0]
-                result['aspect'] = sample['aspect'][0]
-                result['sentiment'] = int(t_probs.argmax(axis=-1))
-                result['ref_sentiment'] = sentiment_map[real_sent]
-                result['infer result'] = correct[sent == real_sent]
-                results.append(result)
-                if real_sent == -999:
-                    colored_pred_info = '{} --> {}'.format(aspect, sentiment_map[sent])
-                else:
-                    n_labeled += 1
-                    if sent == real_sent:
-                        n_correct += 1
-                    pred_res = correct[sent == real_sent]
-                    colored_pred_res = colored(pred_res, 'green') if pred_res == 'Correct' else colored(pred_res, 'red')
-                    colored_aspect = colored(aspect, 'magenta')
-                    colored_pred_info = '{} --> {}  Real: {} ({})'.format(colored_aspect,
+                    result['text'] = sample['text_raw'][i]
+                    result['aspect'] = sample['aspect'][i]
+                    result['sentiment'] = int(i_probs.argmax(axis=-1))
+                    result['ref_sentiment'] = sentiment_map[real_sent]
+                    result['infer result'] = correct[sent == real_sent]
+                    results.append(result)
+                    if real_sent == -999:
+                        colored_pred_info = '{} --> {}'.format(aspect, sentiment_map[sent])
+                    else:
+                        n_labeled += 1
+                        if sent == real_sent:
+                            n_correct += 1
+                        pred_res = correct[sent == real_sent]
+                        colored_pred_res = colored(pred_res, 'green') if pred_res == 'Correct' else colored(pred_res, 'red')
+                        colored_aspect = colored(aspect, 'magenta')
+                        colored_pred_info = '{} --> {}  Real: {} ({})'.format(colored_aspect,
+                                                                              sentiment_map[sent],
+                                                                              sentiment_map[real_sent],
+                                                                              colored_pred_res
+                                                                              )
+                    n_total += 1
+                    try:
+                        if save_path:
+                            fout.write(text_raw + '\n')
+                            pred_info = '{} --> {}  Real: {} ({})'.format(aspect,
                                                                           sentiment_map[sent],
                                                                           sentiment_map[real_sent],
-                                                                          colored_pred_res
+                                                                          pred_res
                                                                           )
-                n_total += 1
-                try:
-                    if save_path:
-                        fout.write(text_raw + '\n')
-                        pred_info = '{} --> {}  Real: {} ({})'.format(aspect,
-                                                                      sentiment_map[sent],
-                                                                      sentiment_map[real_sent],
-                                                                      pred_res
-                                                                      )
-                        fout.write(pred_info + '\n')
-                except:
-                    print('Can not save result: {}'.format(text_raw))
-                try:
-                    if print_result:
-                        print(text_raw)
-                        print(colored_pred_info)
-                except UnicodeError as e:
-                    print(colored('Encoding Error, you should use UTF8 encoding, e.g., use: os.environ["PYTHONIOENCODING"]="UTF8"'))
+                            fout.write(pred_info + '\n')
+                    except:
+                        print('Can not save result: {}'.format(text_raw))
+                    try:
+                        if print_result:
+                            print(text_raw)
+                            print(colored_pred_info)
+                    except UnicodeError as e:
+                        print(colored('Encoding Error, you should use UTF8 encoding, e.g., use: os.environ["PYTHONIOENCODING"]="UTF8"'))
             print('Total samples:{}'.format(n_total))
             print('Labeled samples:{}'.format(n_labeled))
             print('Prediction Accuracy:{}%'.format(100 * n_correct / n_labeled if n_labeled else 'N.A.'))
@@ -259,8 +260,8 @@ class SentimentClassifier:
                     fout.write('Labeled samples:{}\n'.format(n_labeled))
                     fout.write('Prediction Accuracy:{}%\n'.format(100 * n_correct / n_labeled))
                     print('inference result saved in: {}'.format(save_path))
-            except:
-                pass
+            except Exception as e:
+                print(e)
         if save_path:
             fout.close()
         return results

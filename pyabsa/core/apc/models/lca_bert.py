@@ -39,7 +39,7 @@ class LCA_BERT(nn.Module):
             text_global_indices = inputs[1]
         text_local_indices = inputs[1]
         lca_ids = inputs[3]
-        lcf_matrix = lca_ids.unsqueeze(2) # lca_ids is the same as lcf_matrix
+        lcf_matrix = lca_ids.unsqueeze(2)  # lca_ids is the same as lcf_matrix
         polarity = inputs[4]
 
         bert_global_out = self.bert4global(text_global_indices)['last_hidden_state']

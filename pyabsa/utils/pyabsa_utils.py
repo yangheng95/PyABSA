@@ -6,11 +6,13 @@
 # Copyright (C) 2021. All Rights Reserved.
 import os
 import pickle
+import time
 
 import torch
 from autocuda import auto_cuda, auto_cuda_name
 from findfile import find_files
 from termcolor import colored
+from functools import wraps
 
 SENTIMENT_PADDING = -999
 
@@ -110,6 +112,19 @@ def load_checkpoint(trainer, from_checkpoint_path):
         else:
             print('No checkpoint found in {}'.format(from_checkpoint_path))
         print('Checkpoint loaded!')
+
+
+def retry(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        while True:
+            try:
+                return f(*args, **kwargs)
+            except Exception as e:
+                print('Exception occurs while running {}, retry later...'.format(f))
+                time.sleep(5)
+
+    return decorated
 
 
 optimizers = {
