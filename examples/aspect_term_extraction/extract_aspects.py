@@ -28,12 +28,18 @@ examples = ['But the staff was so nice to us .',
 # 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
 sentiment_map = {0: 'Negative', 1: "Neutral", 2: 'Positive', -999: ''}
 
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='english',
+# aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='english',
+#                                                                auto_device=True  # False means load model on CPU
+#                                                                )
+
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='ATEPC_ENGLISH_TRAINED_MODEL',
                                                                auto_device=True  # False means load model on CPU
                                                                )
 
 # inference_source = ABSADatasetList.SemEval
-inference_source = r'E:\PyABSA-Workspace\latest\PyABSA\examples\aspect_polarity_classification\integrated_datasets\datasets\apc_datasets\TShirt'
+# inference_source = r'E:\PyABSA-Workspace\latest\PyABSA\examples\aspect_polarity_classification\integrated_datasets\datasets\apc_datasets\TShirt'
+# inference_source = ABSADatasetList.TShirt
+inference_source = examples
 atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source,  #
                                                save_result=True,
                                                print_result=True,  # print the result

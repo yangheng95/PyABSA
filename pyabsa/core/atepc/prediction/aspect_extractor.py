@@ -9,6 +9,7 @@ import os
 import pickle
 import random
 
+import json
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -20,7 +21,7 @@ from transformers.models.bert.modeling_bert import BertModel
 from pyabsa.functional.dataset import detect_infer_dataset, DatasetItem
 from pyabsa.core.atepc.models import ATEPCModelList
 from pyabsa.core.atepc.dataset_utils.atepc_utils import load_atepc_inference_datasets
-from pyabsa.utils.pyabsa_utils import print_args
+from pyabsa.utils.pyabsa_utils import print_args, save_json
 from ..dataset_utils.data_utils_for_inferring import (ATEPCProcessor,
                                                       convert_ate_examples_to_features,
                                                       convert_apc_examples_to_features,
@@ -139,64 +140,40 @@ class AspectExtractor:
         self.model.to(device)
 
     def extract_aspect(self, inference_source, save_result=True, print_result=True, pred_sentiment=True):
-        extraction_res = None
-        polarity_res = None
-
-        if save_result:
-            save_path = os.path.join(os.getcwd(), 'atepc_inference.result.txt')
-            fout = open(save_path, 'w', encoding='utf8') if save_result else None
-            print('The results of aspect term extraction have been saved in {}'.format(save_path))
+        results = {'extraction_res': None, 'polarity_res': None}
 
         if isinstance(inference_source, DatasetItem):
             # using integrated inference dataset
-            results = []
             for d in inference_source:
                 inference_set = detect_infer_dataset(d, task='apc')
                 inference_source = load_atepc_inference_datasets(inference_set)
-                if inference_source:
-                    extraction_res = self._extract(inference_source)
-                    if pred_sentiment:
-                        polarity_res = self._infer(extraction_res)
-                    results.append({'extraction_res': extraction_res, 'polarity_res': polarity_res})
-                    if save_result:
-                        fout.write('extraction_res:{} polarity_res:{}\n'.format(extraction_res, polarity_res))
-                    if print_result:
-                        for r in results:
-                            print(r)
-                    return results
+
         elif isinstance(inference_source, str):
             inference_source = DatasetItem(inference_source)
             # using custom inference dataset
             results = []
             inference_set = detect_infer_dataset(inference_source, task='apc')
             inference_source = load_atepc_inference_datasets(inference_set)
-            if inference_source:
-                # for example in inference_source:
-                extraction_res = self._extract(inference_source)
-                if pred_sentiment:
-                    polarity_res = self._infer(extraction_res)
-                results.append({'extraction_res': extraction_res, 'polarity_res': polarity_res})
-                if save_result:
-                    fout.write('extraction_res:{} polarity_res:{}\n'.format(extraction_res, polarity_res))
-                if print_result:
-                    for r in results:
-                        print(r)
-                return results
-        elif isinstance(inference_source, list):
-            # using example list
-            results = []
-            extraction_res = self._extract(inference_source)
-            if pred_sentiment:
-                polarity_res = self._infer(extraction_res)
-            results.append({'extraction_res': extraction_res, 'polarity_res': polarity_res})
-            if save_result:
-                fout.write('extraction_res:{} polarity_res:{}\n'.format(extraction_res, polarity_res))
-            if print_result:
-                for r in results:
-                    print(r)
-            return results
+
         else:
             print('Please run inference using examples list or inference dataset path (list)!')
+
+        if inference_source:
+            results['extraction_res'] = self._extract(inference_source)
+            if pred_sentiment:
+                results['polarity_res'] = self._infer(results['extraction_res'])
+            if save_result:
+                save_path = os.path.join(os.getcwd(), 'atepc_inference.result.json')
+                print('The results of aspect term extraction have been saved in {}'.format(save_path))
+                json.dump(json.JSONEncoder().encode({'results': results}), open(save_path, 'w'), ensure_ascii=False)
+            if print_result:
+                if 'polarity_res' in results:
+                    for r in results['polarity_res']:
+                        print(r)
+                else:
+                    for r in results['extraction_res']:
+                        print(r)
+            return results
 
     # Temporal code, pending optimization
     def _extract(self, examples):
