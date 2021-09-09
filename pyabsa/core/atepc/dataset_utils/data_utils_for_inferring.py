@@ -4,6 +4,7 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
+import numpy as np
 
 from pyabsa.core.atepc.dataset_utils.atepc_utils import prepare_input_for_atepc, split_text
 
@@ -36,9 +37,10 @@ class InputExample(object):
 class InputFeatures(object):
     """A single set of features of data."""
 
-    def __init__(self, input_ids_spc, input_mask, segment_ids, label_id, polarity=None, valid_ids=None,
+    def __init__(self, input_ids_spc, input_mask, segment_ids, label_id, aspect=None, positions=None, polarity=None, valid_ids=None,
                  label_mask=None, tokens=None, lcf_cdm_vec=None, lcf_cdw_vec=None):
         self.input_ids_spc = input_ids_spc
+        self.aspect = aspect
         self.input_mask = input_mask
         self.segment_ids = segment_ids
         self.label_id = label_id
@@ -46,6 +48,7 @@ class InputFeatures(object):
         self.label_mask = label_mask
         self.polarity = polarity
         self.tokens = tokens
+        self.positions = positions
         self.lcf_cdm_vec = lcf_cdm_vec
         self.lcf_cdw_vec = lcf_cdw_vec
 
@@ -195,6 +198,7 @@ def convert_apc_examples_to_features(examples, label_list, max_seq_len, tokenize
         aspect_tokens = example.text_b[:]
         IOB_label = example.IOB_label
         polarity = example.polarity
+        positions = list(np.where(np.array(polarity) > 0))
         tokens = []
         labels = []
         valid = []
@@ -246,6 +250,7 @@ def convert_apc_examples_to_features(examples, label_list, max_seq_len, tokenize
         input_ids_spc = tokenizer.convert_tokens_to_ids(ntokens)
         input_mask = [1] * len(input_ids_spc)
         label_mask = [1] * len(label_ids)
+
         while len(input_ids_spc) < max_seq_len:
             input_ids_spc.append(0)
             input_mask.append(0)
@@ -269,11 +274,13 @@ def convert_apc_examples_to_features(examples, label_list, max_seq_len, tokenize
                           input_mask=input_mask,
                           segment_ids=segment_ids,
                           label_id=label_ids,
-                          polarity=polarity,
                           valid_ids=valid,
                           label_mask=label_mask,
-                          tokens=example.text_a,
                           lcf_cdm_vec=lcf_cdm_vec,
-                          lcf_cdw_vec=lcf_cdw_vec)
+                          lcf_cdw_vec=lcf_cdw_vec,
+                          tokens=example.text_a,
+                          aspect=aspect,
+                          positions=positions
+                          )
         )
     return features

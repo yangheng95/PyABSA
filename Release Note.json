@@ -1,5 +1,9 @@
-{
-  "1.1.12a0": {
+{  "1.1.13a0": {
+    "1": "Refactor ATEPC inference code",
+    "2": "Add batch inference for APC and ATEPC, temporarily using freeze batch size"
+
+  },
+  "1.1.12": {
     "1": "Enable downloading shared checkpoint from a google drive url, this is for downloading checkpoint not registered in PyABSA",
     "2": "Refine LCF vec memory occupation",
     "3": "Add LCF-BERT2  and LCFS-BERT2 demo models",
@@ -10,11 +14,11 @@
     "1": "Fix a problem in BERT-ATEPC model"
   },
   "1.1.8": {
-    "1": "Fix a problem may cuase checkpoint saving failure"
+    "1": "Fix a problem may cause checkpoint saving failure"
   },
   "1.1.7": {
     "1": "Fix the inference of ATEPC using internal datasets, if you are using 1.1.5 or 1.1.6, please update to this version",
-    "2": "Improve stablity and test all examples"
+    "2": "Improve stability and test all examples"
   },
   "1.1.6": {
     "1": "deprecated"
@@ -70,7 +74,7 @@
     "5": "Fix a bug while predicting sentiment polarity using ATEPC model, refer to https://github.com/yangheng95/PyABSA/issues/47"
   },
   "0.8.9.4": {
-    "1": "Fix the inference of DCLF_DCA model"
+    "1": "Fix the inference of DLCF_DCA model"
   },
   "0.8.9.3": {
     "1": "Refactor some code"

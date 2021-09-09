@@ -28,7 +28,7 @@ from ..classic.__glove__.dataset_utils.data_utils_for_training import (build_tok
                                                                        build_embedding_matrix,
                                                                        GloVeClassificationDataset)
 from pyabsa.utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args, load_checkpoint
+from pyabsa.utils.pyabsa_utils import print_args, load_checkpoint, retry
 
 
 class Instructor:
@@ -427,6 +427,7 @@ class Instructor:
         return self._train(criterion, lca_criterion)
 
 
+@retry
 def train4classification(opt, from_checkpoint_path, logger):
     if not isinstance(opt.seed, int):
         opt.logger.info('Please do not use multiple random seeds without evaluating.')

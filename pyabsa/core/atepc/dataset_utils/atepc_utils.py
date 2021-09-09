@@ -64,7 +64,7 @@ def prepare_input_for_atepc(opt, tokenizer, text_left, text_right, aspect):
         syntactical_dist = None
 
     lcf_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices,
-                                                   aspect_begin, syntactical_dist)
+                                          aspect_begin, syntactical_dist)
 
     lcf_cdw_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices,
                               aspect_begin, syntactical_dist)

@@ -16,10 +16,10 @@ from pyabsa.functional import ATEPCConfigManager
 
 atepc_config_english = ATEPCConfigManager.get_atepc_config_english()
 atepc_config_english.num_epoch = 10
-atepc_config_english.evaluate_begin = 4
+atepc_config_english.evaluate_begin = 5
 atepc_config_english.log_step = 5
 atepc_config_english.model = ATEPCModelList.LCF_ATEPC
-dataset_path = ABSADatasetList.SemEval
+dataset_path = ABSADatasetList.Multilingual
 # or your local dataset: dataset_path = r'your local dataset path'
 aspect_extractor = ATEPCTrainer(config=atepc_config_english,
                                 dataset=dataset_path,

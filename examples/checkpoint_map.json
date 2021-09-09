@@ -1,4 +1,5 @@
 {
+
   "1.0.5": {
     "APC": {
       "english": {
@@ -48,7 +49,7 @@
         "dataset": "Chinese",
         "description": "Trained on RTX2080",
         "version": "1.1",
-        "tag": "fast_lcf_bert_acc_96.77_f1_96.16.zip",
+                "tag": "fast_lcf_bert_acc_96.77_f1_96.16.zip",
         "author": "H, Yang (yangheng@m.scnu.edu.cn)"
       },
       "HELP-WANTED": {
@@ -71,7 +72,7 @@
       "Laptop14": {
         "id": "https://drive.google.com/file/d/1-1lkoaePxXemm8jtqTLTLI5LEr6pXMTe/view?usp=sharing",
         "description": "Trained on T4",
-        "dataset": "Laptop 14",
+                "dataset": "Laptop 14",
         "version": "1.0.7.1",
         "author": "M, Xu (xumayi@m.scnu.edu.cn)"
       },
@@ -82,6 +83,15 @@
         "description": "",
         "tag": "lcf_atepc_cdw_apcacc_82.77_apcf1_72.41_atef1_80.97.zip",
         "version": "1.1",
+        "author": "H, Yang (yangheng@m.scnu.edu.cn)"
+      },
+      "multilingual": {
+        "id": "https://drive.google.com/file/d/1vDr85mflnZofpzIsnwffgQVwqE1U0QoO/view?usp=sharing",
+        "model": "LCF-ATEPC",
+        "dataset": "multilingual",
+        "description": "",
+        "tag": "lcf_atepc_cdw_apcacc_83.66_apcf1_75.18_atef1_83.27.zip",
+        "version": "1.1.12",
         "author": "H, Yang (yangheng@m.scnu.edu.cn)"
       },
       "HELP-WANTED": {

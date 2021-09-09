@@ -203,7 +203,7 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
         syntactical_dist = None
 
     lcf_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices,
-                                                   aspect_begin, syntactical_dist)
+                                          aspect_begin, syntactical_dist)
 
     lcf_cdw_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices,
                               aspect_begin, syntactical_dist)
@@ -238,7 +238,8 @@ def get_syntax_distance(text_raw, aspect, tokenizer, opt):
         raw_tokens, dist, max_dist = calculate_dep_dist(text_raw, aspect)
     except Exception as e:
         print(e)
-        raise RuntimeError('Are you using syntax-based SRD on a dataset_utils containing Chinese text?')
+        raise RuntimeError('Are you using syntax-based SRD on a dataset containing Chinese text?')
+
     raw_tokens.insert(0, tokenizer.bos_token)
     dist.insert(0, max(dist))
     raw_tokens.append(tokenizer.eos_token)
@@ -345,6 +346,7 @@ def copy_side_aspect(direct, target, source, examples):
         target[direct + '_' + data_item] = source[data_item]
     target[direct + '_dist'] = int(abs(np.average(list(source['aspect_position'])) - np.average(list(target['aspect_position']))))
     # target[direct + '_dist'] = 0 if id(source['lcf_vec']) == id(target['lcf_vec']) else 1
+
 
 def is_similar(s1, s2, tokenizer, similarity_threshold):
     # some reviews in the datasets are broken and can not use s1 == s2 to distinguish
