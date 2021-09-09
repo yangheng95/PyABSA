@@ -1,7 +1,7 @@
 {  "1.1.13a0": {
     "1": "Refactor ATEPC inference code",
-    "2": "Add batch inference for APC and ATEPC, temporarily using freeze batch size"
-
+    "2": "Add batch inference for APC and ATEPC, temporarily using freeze batch size",
+    "3": "Define the English dataset"
   },
   "1.1.12": {
     "1": "Enable downloading shared checkpoint from a google drive url, this is for downloading checkpoint not registered in PyABSA",

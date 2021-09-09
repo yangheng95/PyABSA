@@ -4,6 +4,7 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
+import json
 import os
 import pickle
 import time
@@ -125,6 +126,23 @@ def retry(f):
                 time.sleep(5)
 
     return decorated
+
+
+def save_json(dic, save_path):
+    if isinstance(dic, str):
+        dic = eval(dic)
+    with open(save_path, 'w', encoding='utf-8') as f:
+        # f.write(str(dict))
+        str_ = json.dumps(dic, ensure_ascii=False)
+        f.write(str_)
+
+
+def load_json(save_path):
+    with open(save_path, 'r', encoding='utf-8') as f:
+        data = f.readline().strip()
+        print(type(data), data)
+        dic = json.loads(data)
+    return dic
 
 
 optimizers = {
