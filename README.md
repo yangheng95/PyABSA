@@ -425,7 +425,7 @@ sent_classifier = Trainer(config=apc_config_english,
 
 # Datasets
 
-More datasets are available at [ABSADatasets](https://github.com/yangheng95/ABSADatasetList).
+More datasets are available at [ABSADatasets](https://github.com/yangheng95/ABSADatasets).
 
 1. Twitter
 2. Laptop14
