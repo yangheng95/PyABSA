@@ -26,8 +26,8 @@ from pyabsa.utils.pyabsa_utils import save_args
 def generate_inference_set_for_apc(dataset_path):
     if isinstance(dataset_path, DatasetItem):
         dataset_path = dataset_path.dataset_name
-    train_datasets = find_files(dataset_path, ['dataset_manager', 'train', 'apc'], exclude_key='infer')
-    test_datasets = find_files(dataset_path, ['dataset_manager', 'test', 'apc'], exclude_key='infer')
+    train_datasets = find_files(os.getcwd(), ['dataset', 'train', 'apc', dataset_path], exclude_key='infer')
+    test_datasets = find_files(os.getcwd(), ['dataset', 'test', 'apc', dataset_path], exclude_key='infer')
     for file in train_datasets + test_datasets:
         try:
             fin = open(file, 'r', newline='\n', encoding='utf-8')
@@ -150,7 +150,7 @@ def convert_apc_set_to_atepc_set(path):
     if isinstance(path, DatasetItem):
         path = path.dataset_name
     if not os.path.exists(path):
-        files = find_files(os.getcwd(), [path, 'dataset_manager', 'apc'], exclude_key='infer')
+        files = find_files(os.getcwd(), [path, 'dataset', 'apc'], exclude_key='infer')
     else:
         files = find_files(path, '', exclude_key='infer')
 

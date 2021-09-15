@@ -12,3 +12,4 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.utils.file_utils import generate_inference_set_for_apc
 
 generate_inference_set_for_apc(dataset_path=ABSADatasetList.TShirt)
+generate_inference_set_for_apc(dataset_path=ABSADatasetList.Television)
