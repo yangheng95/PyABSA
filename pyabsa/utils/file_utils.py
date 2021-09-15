@@ -19,10 +19,13 @@ from termcolor import colored
 from pyabsa import __version__
 
 # convert atepc_datasets in this repo for inferring_tutorials
+from pyabsa.functional.dataset import DatasetItem
 from pyabsa.utils.pyabsa_utils import save_args
 
 
 def generate_inference_set_for_apc(dataset_path):
+    if isinstance(dataset_path, DatasetItem):
+        dataset_path = dataset_path.dataset_name
     train_datasets = find_files(dataset_path, ['dataset_manager', 'train', 'apc'], exclude_key='infer')
     test_datasets = find_files(dataset_path, ['dataset_manager', 'test', 'apc'], exclude_key='infer')
     for file in train_datasets + test_datasets:
@@ -144,6 +147,8 @@ def convert_atepc(fname):
 
 # 将数据集中的aspect切割出来
 def convert_apc_set_to_atepc_set(path):
+    if isinstance(path, DatasetItem):
+        path = path.dataset_name
     if not os.path.exists(path):
         files = find_files(os.getcwd(), [path, 'dataset_manager', 'apc'], exclude_key='infer')
     else:
