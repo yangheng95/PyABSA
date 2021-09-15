@@ -122,7 +122,7 @@ def retry(f):
             try:
                 return f(*args, **kwargs)
             except Exception as e:
-                print('Exception occurs while running {}, retry later...'.format(f))
+                print('Catch exception: {} in {}, retry soon if you dont terminate process...'.format(e, f))
                 time.sleep(5)
 
     return decorated
