@@ -21,6 +21,7 @@
 > PyTorch Implementations (CPU & CUDA supported).
 
 # Instruction
+Please star this repository as your contribution to support the PyABSA project. 
 
 - [Installation](#installation)
 - [Package Overview](#package-overview)
@@ -34,6 +35,7 @@
 
 # Installation
 
+Please do not install the version without corresponding release note to avoid installing a test version.
 ## install via pip
 
 To use PyABSA, install the latest version from pip or source code:
