@@ -79,14 +79,36 @@ def readfile(filename):
             continue
         splits = line.split(' ')
         if len(splits) != 3:
-            print('warning! detected error line(s) in input file:{}'.format(line))
+            print('warning! ignore detected error line(s) in input file:{}'.format(line))
+            sentence = []
+            break
         sentence.append(splits[0])
         tag.append(splits[-2])
         polarity.append(int(splits[-1][:-1]))
 
-    if len(sentence) > 0:
-        data.append((sentence, tag, polarity))
-    return data
+    prepared_data = []
+    for s, t, p in data:
+        if len(s) > 0:
+            # prepare the atepc dataset, refer to https://github.com/yangheng95/PyABSA/issues/78
+            asp_idx = 0
+            asp_num = t.count('B-ASP')
+            IOB_PADDING = ['O'] * len(t)
+            POLARITY_PADDING = [SENTIMENT_PADDING] * len(t)
+            while asp_idx < asp_num:
+                _t = t[:]
+                _p = p[:]
+                for iob_idx in range(len(_t) - 1):
+                    if t[iob_idx].endswith('ASP') and not t[iob_idx + 1].endswith('I-ASP'):
+                        _t = _t[:iob_idx + 1] + IOB_PADDING[iob_idx + 1:]
+                        t = IOB_PADDING[:iob_idx + 1] + t[iob_idx + 1:]
+                        _p = _p[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
+                        p = POLARITY_PADDING[:iob_idx + 1] + p[iob_idx + 1:]
+                        break
+
+                asp_idx += 1
+                prepared_data.append((s, _t, _p))
+
+    return prepared_data
 
 
 class DataProcessor(object):
