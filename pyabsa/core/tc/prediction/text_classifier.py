@@ -79,10 +79,10 @@ class TextClassifier:
                         )
                         self.model = self.opt.model(self.embedding_matrix, self.opt).to(self.opt.device)
 
-                    self.model.load_state_dict(torch.load(state_dict_path))
+                    self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
 
                 if model_path:
-                    self.model = torch.load(model_path)
+                    self.model = torch.load(model_path, map_location='cpu')
 
                 if tokenizer_path:
                     self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
@@ -93,10 +93,7 @@ class TextClassifier:
                 print_args(self.opt, mode=1)
 
             except Exception as e:
-                print(e)
-                raise KeyError('Fail to load the model from {}! the checkpoint is broken, '
-                               'or maybe the checkpoint is not compatible with this version.'.format(model_arg),
-                               )
+                raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, model_arg))
 
             if not hasattr(GloVeClassificationModelList, self.model.__class__.__name__) \
                     and not hasattr(BERTClassificationModelList, self.model.__class__.__name__):

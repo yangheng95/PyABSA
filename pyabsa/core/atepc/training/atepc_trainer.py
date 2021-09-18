@@ -345,9 +345,8 @@ class Instructor:
         return apc_result, ate_result
 
 
-@retry
+# @retry
 def train4atepc(opt, from_checkpoint_path, logger):
-    # in case of handling ConnectionError exception
 
     # in case of handling ConnectionError exception
     trainer = Instructor(opt, logger)

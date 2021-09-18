@@ -9,11 +9,16 @@ import os
 import pickle
 import time
 
+import requests
 import torch
 from autocuda import auto_cuda, auto_cuda_name
 from findfile import find_files
 from termcolor import colored
 from functools import wraps
+
+from update_checker import parse_version
+
+from pyabsa import __version__
 
 SENTIMENT_PADDING = -999
 
@@ -143,6 +148,20 @@ def load_json(save_path):
         print(type(data), data)
         dic = json.loads(data)
     return dic
+
+
+def validate_version():
+    try:
+        response = requests.get("https://pypi.org/pypi/pyabsa/json", timeout=1)
+    except requests.exceptions.RequestException:
+        return
+    if response.status_code == 200:
+        data = response.json()
+        versions = list(data["releases"].keys())
+        versions.sort(key=parse_version, reverse=True)
+        if __version__ not in versions:
+            print(colored('You are using a DEPRECATED / TEST version of PyABSA which may contain severe bug!'
+                          ' Please update using pip install -U pyabsa!', 'red'))
 
 
 optimizers = {

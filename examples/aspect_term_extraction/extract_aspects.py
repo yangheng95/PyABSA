@@ -32,7 +32,7 @@ sentiment_map = {0: 'Negative', 1: "Neutral", 2: 'Positive', -999: ''}
 #                                                                auto_device=True  # False means load model on CPU
 #                                                                )
 
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='ATEPC_ENGLISH_TRAINED_MODEL',
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='english',
                                                                auto_device=True  # False means load model on CPU
                                                                )
 
