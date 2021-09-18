@@ -243,8 +243,8 @@ def parse_checkpoint_info(t_checkpoint_map, task='APC'):
             t_checkpoint_map[checkpoint]['model']
             if 'model' in t_checkpoint_map[checkpoint] else '',
 
-            t_checkpoint_map[checkpoint]['dataset_manager']
-            if 'dataset_manager' in t_checkpoint_map[checkpoint] else '',
+            t_checkpoint_map[checkpoint]['dataset']
+            if 'dataset' in t_checkpoint_map[checkpoint] else '',
 
             t_checkpoint_map[checkpoint]['version']
             if 'version' in t_checkpoint_map[checkpoint] else '',

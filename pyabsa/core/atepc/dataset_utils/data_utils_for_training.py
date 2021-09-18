@@ -90,23 +90,13 @@ def readfile(filename):
     for s, t, p in data:
         if len(s) > 0:
             # prepare the atepc dataset, refer to https://github.com/yangheng95/PyABSA/issues/78
-            asp_idx = 0
-            asp_num = t.count('B-ASP')
-            IOB_PADDING = ['O'] * len(t)
-            POLARITY_PADDING = [SENTIMENT_PADDING] * len(t)
-            while asp_idx < asp_num:
-                _t = t[:]
-                _p = p[:]
-                for iob_idx in range(len(_t) - 1):
-                    if t[iob_idx].endswith('ASP') and not t[iob_idx + 1].endswith('I-ASP'):
-                        _t = _t[:iob_idx + 1] + IOB_PADDING[iob_idx + 1:]
-                        t = IOB_PADDING[:iob_idx + 1] + t[iob_idx + 1:]
-                        _p = _p[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
-                        p = POLARITY_PADDING[:iob_idx + 1] + p[iob_idx + 1:]
-                        break
-
-                asp_idx += 1
-                prepared_data.append((s, _t, _p))
+            polarity_padding = [SENTIMENT_PADDING] * len(t)
+            for p_idx in range(len(p) - 1):
+                if (p[p_idx] != p[p_idx + 1] and p[p_idx] >= 0 and p[p_idx + 1] >= 0) \
+                        or (p[p_idx] >= 0 and p[p_idx + 1] == SENTIMENT_PADDING):
+                    _p = p[:p_idx + 1] + polarity_padding[p_idx + 1:]
+                    p = polarity_padding[:p_idx + 1] + p[p_idx + 1:]
+                    prepared_data.append((s, t, _p))
 
     return prepared_data
 

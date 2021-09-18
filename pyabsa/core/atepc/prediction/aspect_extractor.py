@@ -70,9 +70,9 @@ class AspectExtractor:
                     bert_base_model = BertModel.from_pretrained(self.opt.pretrained_bert)
                     bert_base_model.config.num_labels = self.opt.num_labels
                     self.model = self.opt.model(bert_base_model, self.opt)
-                    self.model.load_state_dict(torch.load(state_dict_path))
+                    self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
                 if model_path:
-                    self.model = torch.load(model_path)
+                    self.model = torch.load(model_path, map_location='cpu')
                     self.model.opt = self.opt
                 if tokenizer_path:
                     self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
@@ -83,9 +83,7 @@ class AspectExtractor:
                 self.tokenizer.eos_token = self.tokenizer.eos_token if self.tokenizer.eos_token else '[SEP]'
 
             except Exception as e:
-                raise KeyError('Fail to load the model from {}! the checkpoint is broken, '
-                               'or maybe the checkpoint is not compatible with this version.'.format(model_arg),
-                               )
+                raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, model_arg))
 
             if not hasattr(ATEPCModelList, self.model.__class__.__name__):
                 raise KeyError('The checkpoint you are loading is not from ATEPC model.')
@@ -245,23 +243,14 @@ class AspectExtractor:
                         polarity.append(-SENTIMENT_PADDING)
                     else:
                         polarity.append(SENTIMENT_PADDING)
-                asp_idx = 0
-                asp_num = pred_iobs.count('B-ASP')
-                IOB_PADDING = ['O'] * len(pred_iobs)
-                POLARITY_PADDING = [SENTIMENT_PADDING] * len(pred_iobs)
-                while asp_idx < asp_num:
-                    _pred_iobs = pred_iobs[:]
-                    _polarity = polarity[:]
-                    for iob_idx in range(len(_pred_iobs) - 1):
-                        if pred_iobs[iob_idx].endswith('ASP') and not pred_iobs[iob_idx + 1].endswith('I-ASP'):
-                            _pred_iobs = _pred_iobs[:iob_idx + 1] + IOB_PADDING[iob_idx + 1:]
-                            pred_iobs = IOB_PADDING[:iob_idx + 1] + pred_iobs[iob_idx + 1:]
-                            _polarity = _polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
-                            polarity = POLARITY_PADDING[:iob_idx + 1] + polarity[iob_idx + 1:]
-                            break
 
-                    res.append((all_tokens[i], _pred_iobs, _polarity))
-                    asp_idx += 1
+                POLARITY_PADDING = [SENTIMENT_PADDING] * len(polarity)
+                for iob_idx in range(len(polarity) - 1):
+                    if pred_iobs[iob_idx].endswith('ASP') and not pred_iobs[iob_idx + 1].endswith('I-ASP'):
+                        _polarity = polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
+                        polarity = POLARITY_PADDING[:iob_idx + 1] + polarity[iob_idx + 1:]
+                        res.append((all_tokens[i], pred_iobs, _polarity))
+
         return res
 
     def _infer(self, examples):
