@@ -5,7 +5,6 @@
 ![Repo Size](https://img.shields.io/github/repo-size/yangheng95/pyabsa)
 [![PyPI_downloads](https://img.shields.io/pypi/dm/pyabsa)](https://pypi.org/project/pyabsa/)
 ![License](https://img.shields.io/pypi/l/pyabsa?logo=PyABSA)
-![welcome](https://img.shields.io/badge/Contribution-Welcome-brightgreen)
 [![Gitter](https://badges.gitter.im/PyABSA/community.svg)](https://gitter.im/PyABSA/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg)](#contributors-)
@@ -30,6 +29,7 @@ Please star this repository as your contribution to support the PyABSA project.
     - [Aspect Polarity Classification (APC)](#install-via-source)
 - [Model Support](#model-support)
 - [Dataset Support](https://github.com/yangheng95/ABSADatasets)
+- [Make Contributions](#)
 - [All Examples](examples)
 - [Notice for LCF-BERT & LCF-ATEPC](#notice)
 
@@ -438,9 +438,10 @@ More datasets are available at [ABSADatasets](https://github.com/yangheng95/ABSA
 7. Car
 8. Camera
 9. Notebook
-10. Multilingual (The sum of the above datasets.)
-11. TShirt
-12. Television
+10. MAMS
+11. Multilingual (The sum of the above datasets.)
+12. TShirt
+13. Television
 
 Basically, you don't have to download the datasets, as the datasets will be downloaded automatically.
 
@@ -506,6 +507,17 @@ or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
 10. [TD-LSTM](pyabsa/core/apc/classic/__glove__/models/td_lstm.py)
 11. [TD-LSTM](pyabsa/core/apc/classic/__glove__/models/tc_lstm.py)
 12. [TNet_LF](pyabsa/core/apc/classic/__glove__/models/tnet_lf.py)
+
+# Contribution
+We expect that you can help us improve this project, and your contributions are welcome. 
+You can make a contribution in many ways, including:
+
+- Share your custom dataset in PyABSA and [ABSADatasets](https://github.com/yangheng95/ABSADatasets)
+- Integrates your models in PyABSA. (We will help you)
+- Raise a bug report while you use PyABSA or review the code
+- Give us some advice about feature design/refactor
+- Correct/Rewrite some error-messages or code comment
+- Star this repository to keep it active
 
 # Notice
 
