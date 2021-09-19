@@ -29,7 +29,7 @@ Please star this repository as your contribution to support the PyABSA project.
     - [Aspect Polarity Classification (APC)](#install-via-source)
 - [Model Support](#model-support)
 - [Dataset Support](https://github.com/yangheng95/ABSADatasets)
-- [Make Contributions](#)
+- [Make Contributions](#contribution)
 - [All Examples](examples)
 - [Notice for LCF-BERT & LCF-ATEPC](#notice)
 
