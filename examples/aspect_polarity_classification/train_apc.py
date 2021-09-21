@@ -15,7 +15,8 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import APCModelList
 
 apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = APCModelList.SLIDE_LCFS_BERT
+apc_config_english.model = APCModelList.LCA_BERT
+apc_config_english.lcf = 'cdm'
 apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
 

@@ -21,8 +21,8 @@ config.evaluate_begin = 4
 config.dropout = 0.5
 config.l2reg = 0.0001
 config.model = APCModelList.FAST_LCF_BERT
-save_path = 'state_dict'
-chinese_sets = ABSADatasetList.Chinese
+# chinese_sets = ABSADatasetList.Chinese
+chinese_sets = ABSADatasetList.Shampoo
 sent_classifier = Trainer(config=config,  # set config=None to use default model
                           dataset=chinese_sets,  # train set and test set will be automatically detected
                           auto_device=True  # automatic choose CUDA or CPU

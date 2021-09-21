@@ -1,6 +1,13 @@
-{ "1.1.16": {
+{ "1.1.17": {
+    "1": "Fix the training and inferring LCA-Net model",
+    "2": "Add a new Chinese shampoo dataset, thanks to brightgems@github",
+    "3": "Fix the inference of DLCF_DCA",
+    "4": "Add Shampoo dataset, upgrade ABSADatasets to version: 2021.09.21"
+  },
+  "1.1.16": {
     "1": "Enable flexible dataset format for ATEPC dataset, see https://github.com/yangheng95/PyABSA/issues/78",
-    "2": "Fix a bug may cause checkpoint loading problem on no cuda device"
+    "2": "Fix a bug may cause checkpoint loading problem on no-cuda device",
+    "3": "Add package version validation"
   },
   "1.1.14": {
     "1": "Fix the dataset processing functions"

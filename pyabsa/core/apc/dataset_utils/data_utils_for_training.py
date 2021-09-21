@@ -55,6 +55,8 @@ class ABSADataset(Dataset):
 
                 'aspect_position': aspect_position,
 
+                'lca_ids': lcf_vec,  # the lca indices are the same as the refactored CDM (lcf != CDW or Fusion) lcf vec
+
                 'lcf_vec': lcf_vec if 'lcf_vec' in opt.model.inputs else 0,
 
                 'dlcf_vec': dlcf_vec if 'dlcf_vec' in opt.model.inputs else 0,

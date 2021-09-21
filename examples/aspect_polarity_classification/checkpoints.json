@@ -76,13 +76,31 @@
         "version": "1.0.7.1",
         "author": "M, Xu (xumayi@m.scnu.edu.cn)"
       },
-      "english": {
+      "semeval": {
         "id": "https://drive.google.com/file/d/14LYNXGO9BJFPXvXX4u6bGXNqhalPEjiC/view?usp=sharing",
         "model": "LCF-ATEPC",
         "dataset": "Rest 14, 16, Laptop 14",
         "description": "",
         "tag": "lcf_atepc_cdw_apcacc_82.77_apcf1_72.41_atef1_80.97.zip",
         "version": "1.1",
+        "author": "H, Yang (yangheng@m.scnu.edu.cn)"
+      },
+      "english": {
+        "id": "https://drive.google.com/file/d/14LYNXGO9BJFPXvXX4u6bGXNqhalPEjiC/view?usp=sharing",
+        "model": "LCF-ATEPC",
+        "dataset": "Rest 14, 16, Laptop 14, MAMS, twitter, tshirt, television",
+        "description": "",
+        "tag": "lcf_atepc_cdw_apcacc_80.5_apcf1_77.31_atef1_74.65.zip",
+        "version": "1.1.13",
+        "author": "H, Yang (yangheng@m.scnu.edu.cn)"
+      },
+      "multilingual": {
+        "id": "https://drive.google.com/file/d/1vDr85mflnZofpzIsnwffgQVwqE1U0QoO/view?usp=sharing",
+        "model": "LCF-ATEPC",
+        "dataset": "multilingual",
+        "description": "",
+        "tag": "lcf_atepc_cdw_apcacc_83.66_apcf1_75.18_atef1_83.27.zip",
+        "version": "1.1.12",
         "author": "H, Yang (yangheng@m.scnu.edu.cn)"
       },
       "HELP-WANTED": {
