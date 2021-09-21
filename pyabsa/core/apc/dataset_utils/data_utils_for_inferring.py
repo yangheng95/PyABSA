@@ -8,6 +8,7 @@ import numpy as np
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
+from pyabsa.utils.pyabsa_utils import check_and_fix_labels
 from .apc_utils import (build_sentiment_window,
                         build_spc_mask_vec,
                         load_apc_datasets,
@@ -71,7 +72,7 @@ class ABSADataset(Dataset):
 
     def process_data(self, samples, ignore_error=True):
         all_data = []
-
+        label_set = set()
         for ex_id, text in enumerate(tqdm(samples, postfix='building word indices...')):
             try:
                 # handle for empty lines in inferring_tutorials dataset_utils
@@ -113,14 +114,21 @@ class ABSADataset(Dataset):
                     depended_ids = prepared_inputs['depended_ids']
                     no_connect = prepared_inputs['no_connect']
                 data = {
-
                     'ex_id': ex_id,
+
+                    'depend_ids': depend_ids if 'depend_ids' in self.opt.model.inputs else 0,
+
+                    'depended_ids': depended_ids if 'depended_ids' in self.opt.model.inputs else 0,
+
+                    'no_connect': no_connect if 'no_connect' in self.opt.model.inputs else 0,
 
                     'text_raw': text_raw,
 
                     'aspect': aspect,
 
                     'aspect_position': aspect_position,
+
+                    'lca_ids': lcf_vec,  # the lca indices are the same as the refactored CDM (lcf != CDW or Fusion) lcf vec
 
                     'lcf_vec': lcf_vec if 'lcf_vec' in self.opt.model.inputs else 0,
 
@@ -140,6 +148,9 @@ class ABSADataset(Dataset):
 
                     'polarity': polarity,
                 }
+
+                label_set.add(polarity)
+
                 all_data.append(data)
 
             except Exception as e:
@@ -147,6 +158,8 @@ class ABSADataset(Dataset):
                     print('Ignore error while processing:', text)
                 else:
                     raise e
+
+        self.opt.polarities_dim = len(label_set)
 
         if self.opt.model_name in ['slide_lcf_bert', 'slide_lcfs_bert', 'ssw_t', 'ssw_s']:
             all_data = build_sentiment_window(all_data, self.tokenizer, self.opt.similarity_threshold)

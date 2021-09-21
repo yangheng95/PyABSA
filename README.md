@@ -517,6 +517,7 @@ You can make a contribution in many ways, including:
 - Raise a bug report while you use PyABSA or review the code
 - Give us some advice about feature design/refactor
 - Correct/Rewrite some error-messages or code comment
+- Create an example script in a particular situation
 - Star this repository to keep it active
 
 # Notice

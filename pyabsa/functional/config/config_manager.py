@@ -6,6 +6,8 @@
 # Copyright (C) 2021. All Rights Reserved.
 from argparse import Namespace
 
+import pyabsa
+
 
 def config_check(args):
     try:
@@ -29,6 +31,9 @@ def config_check(args):
             assert args['dca_p'] >= 1
         if 'dca_layer' in args:
             assert args['dca_layer'] >= 1
+        if args['model'] == pyabsa.APCModelList.LCA_BERT:
+            assert args['lcf'] == 'cdm'  # LCA-Net only support CDM mode
+
     except AssertionError:
         raise RuntimeError('Some parameters are not valid, please see the main example.')
 
@@ -43,8 +48,6 @@ class ConfigManager(Namespace):
         """
         if not args:
             args = {}
-        config_check(args)
-
         super().__init__(**kwargs)
 
         if isinstance(args, Namespace):
@@ -79,14 +82,13 @@ class ConfigManager(Namespace):
             args_call_count = super().__getattribute__('args_call_count')
 
             if arg_name in args_call_count:
-
-                args_call_count[arg_name] += 1
+                # args_call_count[arg_name] += 1
                 super().__setattr__('args_call_count', args_call_count)
 
             else:
-
-                args_call_count[arg_name] = 1
+                args_call_count[arg_name] = 0
                 super().__setattr__('args_call_count', args_call_count)
 
+            config_check(args)
         except Exception as e:
             super().__setattr__(arg_name, value)

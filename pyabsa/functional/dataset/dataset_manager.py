@@ -44,6 +44,10 @@ class ABSADatasetList:
     Car = DatasetItem('Car', 'Car')
     Notebook = DatasetItem('Notebook', 'Notebook')
     Camera = DatasetItem('Camera', 'Camera')
+
+    # https://github.com/brightgems
+    Shampoo = DatasetItem('Shampoo', 'Shampoo')
+
     MAMS = DatasetItem('MAMS', 'MAMS')
 
     # @R Mukherjee et al.

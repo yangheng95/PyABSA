@@ -38,14 +38,14 @@ class LCA_BERT(nn.Module):
         else:
             text_global_indices = inputs[1]
         text_local_indices = inputs[1]
-        lca_ids = inputs[3]
+        lca_ids = inputs[2]
         lcf_matrix = lca_ids.unsqueeze(2)  # lca_ids is the same as lcf_matrix
-        polarity = inputs[4]
+        polarity = inputs[3]
 
         bert_global_out = self.bert4global(text_global_indices)['last_hidden_state']
         bert_local_out = self.bert4local(text_local_indices)['last_hidden_state']
 
-        lc_embedding = self.lc_embed(lcf_matrix)
+        lc_embedding = self.lc_embed(lca_ids)
         bert_global_out = self.lc_linear(torch.cat((bert_global_out, lc_embedding), -1))
 
         # # LCF-layer
