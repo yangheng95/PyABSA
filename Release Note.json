@@ -1,8 +1,8 @@
 { "1.1.17": {
-    "1": "Fix the training and inferring LCA-Net model",
-    "2": "Add a new Chinese shampoo dataset, thanks to brightgems@github",
+    "1": "Add a new Chinese shampoo dataset, thanks to brightgems@github",
+    "2": "Upgrade ABSADatasets to version: 2021.09.21",
     "3": "Fix the inference of DLCF_DCA",
-    "4": "Add Shampoo dataset, upgrade ABSADatasets to version: 2021.09.21"
+    "4": "Fix the training and inferring LCA-Net model"
   },
   "1.1.16": {
     "1": "Enable flexible dataset format for ATEPC dataset, see https://github.com/yangheng95/PyABSA/issues/78",

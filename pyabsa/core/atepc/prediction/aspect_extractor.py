@@ -137,6 +137,37 @@ class AspectExtractor:
         self.opt.device = device
         self.model.to(device)
 
+    def merge_result(self, results):
+        merged_results = []
+
+        if results['polarity_res'] is not None:
+            for item1, item2 in zip(results['extraction_res'], results['polarity_res']):
+                if not merged_results or ' '.join(item1[0]) != merged_results[-1]['sentence']:
+                    merged_results.append(
+                        {'sentence': item2['sentence'],
+                         'IOB': item1[1],
+                         'tokens': item2['tokens'],
+                         'aspect': [item2['aspect']],
+                         'position': [item2['positions']],
+                         'sentiment': [item2['sentiment']],
+                         }
+                    )
+                else:
+                    merged_results[-1]['aspect'].append(item2['aspect'])
+                    merged_results[-1]['position'].append(item2['positions'])
+                    merged_results[-1]['sentiment'].append(item2['sentiment'])
+
+        else:
+            for item in results['extraction_res']:
+                if not merged_results or ' '.join(item[0]) != merged_results[-1]['sentence']:
+                    merged_results.append(
+                        {'sentence': ' '.join(item[0]),
+                         'IOB': item[1],
+                         'tokens': item[0],
+                         }
+                    )
+        return merged_results
+
     def extract_aspect(self, inference_source, save_result=True, print_result=True, pred_sentiment=True):
         results = {'extraction_res': None, 'polarity_res': None}
 
@@ -146,7 +177,7 @@ class AspectExtractor:
                 inference_set = detect_infer_dataset(d, task='apc')
                 inference_source = load_atepc_inference_datasets(inference_set)
 
-        elif isinstance(inference_source, str):
+        elif isinstance(inference_source, str):  # for dataset path
             inference_source = DatasetItem(inference_source)
             # using custom inference dataset
             results = []
@@ -160,17 +191,15 @@ class AspectExtractor:
             results['extraction_res'] = self._extract(inference_source)
             if pred_sentiment:
                 results['polarity_res'] = self._infer(results['extraction_res'])
+            results = self.merge_result(results)
             if save_result:
                 save_path = os.path.join(os.getcwd(), 'atepc_inference.result.json')
                 print('The results of aspect term extraction have been saved in {}'.format(save_path))
                 json.dump(json.JSONEncoder().encode({'results': results}), open(save_path, 'w'), ensure_ascii=False)
             if print_result:
-                if 'polarity_res' in results:
-                    for r in results['polarity_res']:
-                        print(r)
-                else:
-                    for r in results['extraction_res']:
-                        print(r)
+                for r in results:
+                    print(r)
+
             return results
 
     # Temporal code, pending optimization
