@@ -96,9 +96,14 @@ class ATEPCProcessor:
         examples = []
         for i, (sentence, tag, polarity) in enumerate(lines):
             aspect = []
-            for j, (t, s) in enumerate(zip(tag, sentence)):
-                if 'ASP' in t:
-                    aspect.append(s)
+            if isinstance(polarity, int):
+                for j, (t, s) in enumerate(zip(tag, sentence)):
+                    if 'ASP' in t:
+                        aspect.append(s)
+            else:
+                for j, (t, s, p) in enumerate(zip(tag, sentence, polarity)):
+                    if 999 == p:
+                        aspect.append(s)
             examples.append(InputExample(guid=str(i), text_a=sentence, text_b=aspect, IOB_label=tag,
                                          aspect_label=[], polarity=polarity))
         return examples

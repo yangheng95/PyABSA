@@ -347,7 +347,6 @@ class Instructor:
 
 # @retry
 def train4atepc(opt, from_checkpoint_path, logger):
-
     # in case of handling ConnectionError exception
     trainer = Instructor(opt, logger)
     load_checkpoint(trainer, from_checkpoint_path)
