@@ -1,8 +1,17 @@
-{ "1.1.17": {
+{
+  "1.1.19": {
+    "1": "Fix training without testset in APC",
+    "2": "Add SpaCy model setting option"
+  },
+  "1.1.18": {
+    "1": "Reformat and fix a bug of ATEPC output"
+  },
+  "1.1.17": {
     "1": "Add a new Chinese shampoo dataset, thanks to brightgems@github",
     "2": "Upgrade ABSADatasets to version: 2021.09.21",
     "3": "Fix the inference of DLCF_DCA",
-    "4": "Fix the training and inferring LCA-Net model"
+    "4": "Fix the training and inferring LCA-Net model",
+    "5": "Improve the config check function"
   },
   "1.1.16": {
     "1": "Enable flexible dataset format for ATEPC dataset, see https://github.com/yangheng95/PyABSA/issues/78",

@@ -234,11 +234,12 @@ def get_syntax_distance(text_raw, aspect, tokenizer, opt):
 
     if isinstance(aspect, list):
         aspect = ' '.join(aspect)
+
     try:
         raw_tokens, dist, max_dist = calculate_dep_dist(text_raw, aspect)
     except Exception as e:
-        print(e)
-        raise RuntimeError('Are you using syntax-based SRD on a dataset containing Chinese text?')
+        print('Text: {} Aspect: {}'.format(text_raw, aspect))
+        raise RuntimeError('Ignore failure in calculate the syntax based SRD: {}, maybe the aspect is None'.format(e))
 
     raw_tokens.insert(0, tokenizer.bos_token)
     dist.insert(0, max(dist))
@@ -373,16 +374,20 @@ def is_similar(s1, s2, tokenizer, similarity_threshold):
         return False
 
 
-try:
-    nlp = spacy.load("en_core_web_sm")
-except:
-    print('Can not load en_core_web_sm from spacy, try to download it in order to parse syntax tree:',
-          termcolor.colored('\npython -m spacy download en_core_web_sm', 'green'))
+def configure_spacy_model(opt):
+    if not hasattr(opt, 'spacy_model'):
+        opt.spacy_model = 'en_core_web_sm'
+    global nlp
     try:
-        os.system('python -m spacy download en_core_web_sm')
-        nlp = spacy.load("en_core_web_sm")
+        nlp = spacy.load(opt.spacy_model)
     except:
-        raise RuntimeError('Download failed, you can download en_core_web_sm manually.')
+        print('Can not load {} from spacy, try to download it in order to parse syntax tree:'.format(opt.spacy_model),
+              termcolor.colored('\npython -m spacy download {}'.format(opt.spacy_model), 'green'))
+        try:
+            os.system('python -m spacy download {}'.format(opt.spacy_model))
+            nlp = spacy.load(opt.spacy_model)
+        except:
+            raise RuntimeError('Download failed, you can download {} manually.'.format(opt.spacy_model))
 
 
 def calculate_dep_dist(sentence, aspect):

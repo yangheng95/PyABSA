@@ -6,6 +6,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 import numpy as np
 
+from pyabsa.core.apc.dataset_utils.apc_utils import configure_spacy_model
 from pyabsa.core.atepc.dataset_utils.atepc_utils import prepare_input_for_atepc, split_text
 
 SENTIMENT_PADDING = -999
@@ -111,6 +112,8 @@ class ATEPCProcessor:
 
 def convert_ate_examples_to_features(examples, label_list, max_seq_len, tokenizer, opt=None):
     """Loads a data file into a list of `InputBatch`s."""
+
+    configure_spacy_model(opt)
 
     label_map = {label: i for i, label in enumerate(label_list, 1)}
     features = []
