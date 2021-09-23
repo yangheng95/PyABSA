@@ -42,7 +42,7 @@ class Instructor:
             self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case=True)
 
             self.train_set = ABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
-            if 'test' in self.opt.dataset_file:
+            if self.opt.dataset_file['test']:
                 self.test_set = ABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
                 self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
             else:
@@ -56,7 +56,7 @@ class Instructor:
             self.tokenizer = Tokenizer4Pretraining(self.opt.max_seq_len, self.opt.pretrained_bert)
 
             self.train_set = BERTBaselineABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
-            if 'test' in self.opt.dataset_file:
+            if self.opt.dataset_file['test']:
                 self.test_set = BERTBaselineABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
                 self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
             else:
@@ -88,7 +88,7 @@ class Instructor:
             )
 
             self.train_set = GloVeABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
-            if 'test' in self.opt.dataset_file:
+            if self.opt.dataset_file['test']:
                 self.test_set = GloVeABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
                 self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
 
@@ -182,7 +182,8 @@ class Instructor:
 
         self.logger.info("***** Running training for Aspect Polarity Classification *****")
         self.logger.info("Training set examples = %d", len(self.train_set))
-        self.logger.info("Test set examples = %d", len(self.test_set))
+        if self.test_set:
+            self.logger.info("Test set examples = %d", len(self.test_set))
         self.logger.info("Batch size = %d", self.opt.batch_size)
         self.logger.info("Num steps = %d", len(self.train_dataloaders[0]) // self.opt.batch_size * self.opt.num_epoch)
 
@@ -208,7 +209,7 @@ class Instructor:
                 self.optimizer.step()
 
                 # evaluate if test set is available
-                if 'test' in self.opt.dataset_file and global_step % self.opt.log_step == 0:
+                if self.opt.dataset_file['test'] and global_step % self.opt.log_step == 0:
                     if epoch >= self.opt.evaluate_begin:
 
                         test_acc, f1 = self._evaluate_acc_f1(self.test_dataloader)
@@ -299,7 +300,8 @@ class Instructor:
         for f, (train_dataloader, val_dataloader) in enumerate(zip(self.train_dataloaders, self.val_dataloaders)):
             self.logger.info("***** Running training for Aspect Polarity Classification *****")
             self.logger.info("Training set examples = %d", len(self.train_set))
-            self.logger.info("Test set examples = %d", len(self.test_set))
+            if self.test_set:
+                self.logger.info("Test set examples = %d", len(self.test_set))
             self.logger.info("Batch size = %d", self.opt.batch_size)
             self.logger.info("Num steps = %d", len(train_dataloader) // self.opt.batch_size * self.opt.num_epoch)
             if len(self.train_dataloaders) > 1:
@@ -330,7 +332,7 @@ class Instructor:
                     self.optimizer.step()
 
                     # evaluate if test set is available
-                    if 'test' in self.opt.dataset_file and global_step % self.opt.log_step == 0:
+                    if self.opt.dataset_file['test'] and global_step % self.opt.log_step == 0:
                         if epoch >= self.opt.evaluate_begin:
 
                             test_acc, f1 = self._evaluate_acc_f1(val_dataloader)

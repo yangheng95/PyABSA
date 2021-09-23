@@ -7,11 +7,6 @@
 
 from pyabsa import ATEPCCheckpointManager
 
-# 本工具提供的所有功能均属于测试功能，供学习所用， 欢迎帮助维护及提出意见
-# 仅仅实现了列表抽取方面及分类情感， 后面有精力会实现从文件中批量抽取方面
-
-# All the functions provided by this tool are experimental and for learning purpose only,
-# welcome to help maintain and put forward suggestions
 # There might batch extraction function in the future
 
 examples = ['尤 其 是 照 的 大 尺 寸 照 片 时 效 果 也 是 非 常 不 错 的',

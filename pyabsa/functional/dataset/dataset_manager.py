@@ -86,7 +86,7 @@ def detect_dataset(dataset_path, task='apc'):
         raise RuntimeError('{} is not an integrated dataset or not downloaded automatically,'
                            ' or it is not a path containing datasets!'.format(dataset_path))
     if len(dataset_file['test']) == 0:
-        print('Waring, auto_evaluate=True, however cannot find test set using for evaluating!')
+        print('Warning, auto_evaluate=True, however cannot find test set using for evaluating!')
 
     return dataset_file
 

@@ -20,7 +20,8 @@ config = APCConfigManager.get_apc_config_chinese()
 config.evaluate_begin = 4
 config.dropout = 0.5
 config.l2reg = 0.0001
-config.model = APCModelList.FAST_LCF_BERT
+config.model = APCModelList.FAST_LCFS_BERT
+config.spacy_model = 'zh_core_web_sm'
 # chinese_sets = ABSADatasetList.Chinese
 chinese_sets = ABSADatasetList.Shampoo
 sent_classifier = Trainer(config=config,  # set config=None to use default model

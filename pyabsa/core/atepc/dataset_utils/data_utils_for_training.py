@@ -7,6 +7,7 @@
 
 import tqdm
 
+from pyabsa.core.apc.dataset_utils.apc_utils import configure_spacy_model
 from pyabsa.core.atepc.dataset_utils.atepc_utils import prepare_input_for_atepc
 from pyabsa.utils.pyabsa_utils import check_and_fix_labels, SENTIMENT_PADDING
 
@@ -170,6 +171,9 @@ class ATEPCProcessor(DataProcessor):
 
 def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, opt=None):
     """Loads a data file into a list of `InputBatch`s."""
+
+    configure_spacy_model(opt)
+
     bos_token = tokenizer.bos_token
     eos_token = tokenizer.eos_token
     label_map = {label: i for i, label in enumerate(label_list, 1)}

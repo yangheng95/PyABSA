@@ -9,13 +9,14 @@ import tqdm
 from torch.utils.data import Dataset
 
 from pyabsa.utils.pyabsa_utils import check_and_fix_labels
-from .apc_utils import build_sentiment_window, build_spc_mask_vec, load_apc_datasets, prepare_input_for_apc
+from .apc_utils import build_sentiment_window, build_spc_mask_vec, load_apc_datasets, prepare_input_for_apc, configure_spacy_model
 from .apc_utils_for_dlcf_dca import prepare_input_for_dlcf_dca
 
 
 class ABSADataset(Dataset):
 
     def __init__(self, fname, tokenizer, opt):
+        configure_spacy_model(opt)
         ABSADataset.opt = opt
 
         lines = load_apc_datasets(fname)
