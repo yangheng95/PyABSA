@@ -10,6 +10,7 @@ import copy
 import json
 import os
 import pickle
+import urllib.request
 
 import torch
 from findfile import find_files
@@ -272,7 +273,7 @@ def check_update_log():
     try:
         if os.path.exists('./release_note.json'):
             os.remove('./release_note.json')
-        gdd.download_file_from_google_drive('1nOppewL8L1mGy9i6HQnJrEWrfaqQhC_2', './release_note.json')
+        gdd.download_file_from_google_drive('1nOppewL8L1mGy9i6HQnJrEWrfaqQhC_2', './release-note.json')
         update_logs = json.load(open('release_note.json'))
         for v in update_logs:
             if v > __version__:
@@ -280,4 +281,26 @@ def check_update_log():
                 for i, line in enumerate(update_logs[v]):
                     print('{}.\t{}'.format(i + 1, update_logs[v][line]))
     except:
-        print('Fail to load release note of this version')
+        print(colored('Fail to load release note, you can check it on https://github.com/yangheng95/PyABSA/blob/release/release-note.json', 'red'))
+
+
+def check_dataset(dataset_path='./integrated_datasets', retry_count=3):  # retry_count is for unstable conn to GitHub
+    try:
+        local_version = open(os.path.join(dataset_path, '__init__.py')).read().split('\'')[-2]
+
+        if retry_count:
+            def query_datasets():
+                dataset_url = 'https://raw.githubusercontent.com/yangheng95/ABSADatasets/master/datasets/__init__.py'
+                content = urllib.request.urlopen(dataset_url, timeout=int(5 / retry_count))
+                version = content.read().decode("utf-8").split('\'')[-2]
+                return version
+
+            try:
+                result = query_datasets() > local_version
+                if result:
+                    print(colored('There is a new version of ABSADatasets, please remove the downloaded datasets to automatically download the new version.', 'green'))
+            except Exception:
+                retry_count -= 1
+                check_dataset(retry_count=retry_count)
+    except Exception as e:
+        print(colored('ABSADataset version check failed, maybe the datasets have not been download yet. Exception: {}'.format(e), 'red'))

@@ -1,4 +1,7 @@
 {
+  "1.1.20": {
+    "1": "Add automatic ABSADatasets update check"
+  },
   "1.1.19": {
     "1": "Fix training without testset in APC",
     "2": "Add SpaCy model setting option"

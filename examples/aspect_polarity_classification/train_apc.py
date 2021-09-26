@@ -9,6 +9,7 @@
 #                    train and evaluate on your own apc_datasets (need train and test apc_datasets)                    #
 #              your custom dataset should have the continue polarity labels like [0,N-1] for N categories              #
 ########################################################################################################################
+
 from pyabsa.functional import Trainer
 from pyabsa.functional import APCConfigManager
 from pyabsa.functional import ABSADatasetList
@@ -29,8 +30,7 @@ apc_config_english.seed = {1, 2, 3}
 apc_config_english.cross_validate_fold = -1  # disable cross_validate
 # apc_config_english.use_syntax_based_SRD = True
 
-# SemEval = ABSADatasetList.Restaurant16
-SemEval = 'train.apc.txt'
+SemEval = ABSADatasetList.Restaurant16
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=SemEval,  # train set and test set will be automatically detected
                           checkpoint_save_mode=1,  # =None to avoid save model
