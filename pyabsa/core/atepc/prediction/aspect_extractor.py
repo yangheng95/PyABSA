@@ -180,7 +180,6 @@ class AspectExtractor:
         elif isinstance(inference_source, str):  # for dataset path
             inference_source = DatasetItem(inference_source)
             # using custom inference dataset
-            results = []
             inference_set = detect_infer_dataset(inference_source, task='apc')
             inference_source = load_atepc_inference_datasets(inference_set)
 
@@ -342,14 +341,17 @@ class AspectExtractor:
                                                     lcf_cdm_vec=lcf_cdm_vec,
                                                     lcf_cdw_vec=lcf_cdw_vec)
                 for i, i_apc_logits in enumerate(apc_logits):
-                    sent = int(torch.argmax(i_apc_logits, -1))
+                    if 'origin_label_map' in self.opt.args:
+                        sent = self.opt.origin_label_map[int(i_apc_logits.argmax(axis=-1))]
+                    else:
+                        sent = int(torch.argmax(i_apc_logits, -1))
                     result = {}
 
                     result['sentence'] = ' '.join(all_tokens[i])
                     result['tokens'] = all_tokens[i]
                     result['aspect'] = all_aspects[i]
                     result['positions'] = all_positions[i]
-                    result['sentiment'] = sentiments[sent]
+                    result['sentiment'] = sentiments[sent] if sent in sentiments else sent
                     res.append(result)
 
         return res

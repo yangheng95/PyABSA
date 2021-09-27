@@ -8,6 +8,8 @@ import copy
 import os
 
 import findfile
+from findfile import find_dir
+
 from pyabsa import __version__
 
 from pyabsa.functional.dataset import DatasetItem

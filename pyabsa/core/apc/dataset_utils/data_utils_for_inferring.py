@@ -8,7 +8,6 @@ import numpy as np
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
-from pyabsa.utils.pyabsa_utils import check_and_fix_labels
 from .apc_utils import (build_sentiment_window,
                         build_spc_mask_vec,
                         load_apc_datasets,

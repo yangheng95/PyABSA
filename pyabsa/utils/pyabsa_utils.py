@@ -56,27 +56,29 @@ def print_args(config, logger=None, mode=0):
             print(colored(line, 'yellow'))
 
 
-def check_and_fix_labels(label_set, label_name, all_data):
+def check_and_fix_labels(label_set, label_name, all_data, opt):
     # update polarities_dim, init model behind this function!
     p_min, p_max = min(label_set), max(label_set)
-    if len(sorted(list(label_set))) != len(sorted(list(range(p_max - p_min + 1)))):
-        raise RuntimeError('Error! Labels are not continuous!')
-    elif not sorted(list(label_set)) == sorted(list(range(p_max - p_min + 1))):
-        print(colored('Warning! Invalid label detected, '
-                      'the labels should be continuous and positive!', 'red'))
-        print('Label-fixing is triggered! (You can manually refactor the labels instead.)')
-        new_label_dict = {}
-        for l1, l2 in zip(sorted(list(label_set)), list(range(p_max - p_min + 1))):
-            new_label_dict[l1] = l2
+    if not sorted(list(label_set)) == sorted(list(range(p_max - p_min + 1))) or \
+            len(sorted(list(label_set))) != len(sorted(list(range(p_max - p_min + 1)))):
+        print('Warning! Invalid label detected, label-fixing is triggered! (You can manually refactor the labels instead.)')
+        new_label_dict = {origin_label: idx for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+        origin_label_map = {idx: origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+        if 'origin_label_map' not in opt.args:
+            opt.origin_label_map = origin_label_map
+
+        if opt.origin_label_map != origin_label_map:
+            raise KeyError('Fail to fix the labels, the number of labels are not equal among all datasets!')
+
         for item in all_data:
             try:
                 item[label_name] = new_label_dict[item[label_name]]
             except:
                 item.polarity = new_label_dict[item.polarity]
         print('original labels:{}'.format(list(label_set)))
-        print('new labels:{}'.format(new_label_dict))
-        print(colored('Polarity label-fixing done, PLEASE DO RECORD THE NEW POLARITY LABEL MAP, '
-                      'as the label inferred by model also changed!', 'green'))
+        print('mapped new labels:{}'.format(new_label_dict))
+    else:
+        opt.origin_label_map = {idx: origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
 
 
 def get_device(auto_device):

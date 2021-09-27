@@ -303,4 +303,4 @@ def check_dataset(dataset_path='./integrated_datasets', retry_count=3):  # retry
                 retry_count -= 1
                 check_dataset(retry_count=retry_count)
     except Exception as e:
-        print(colored('ABSADataset version check failed, maybe the datasets have not been download yet. Exception: {}'.format(e), 'red'))
+        print(colored('ABSADatasets version check failed, please check the latest datasets on GitHub manually.', 'red'))
