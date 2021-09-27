@@ -14,7 +14,7 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 # Assume the text_classifier is loaded or obtained using train function
 
 
-model_path = 'bert_acc_91.65_f1_91.64'
+model_path = 'bert_acc_91.46_f1_91.46'
 text_classifier = TextClassifierCheckpointManager.get_text_classifier(checkpoint=model_path,
                                                                       auto_device=True,  # Use CUDA if available
                                                                       )

@@ -14,7 +14,8 @@ from pyabsa.functional import Trainer, ATEPCTrainer
 from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import ATEPCConfigManager
 
-chinese_sets = ABSADatasetList.Chinese
+# chinese_sets = ABSADatasetList.Chinese
+chinese_sets = 'MOOC'
 atepc_config_chinese = ATEPCConfigManager.get_atepc_config_chinese()
 atepc_config_chinese.log_step = 50
 atepc_config_chinese.model = ATEPCModelList.LCF_ATEPC

@@ -8,4 +8,4 @@
 from pyabsa.utils.file_utils import convert_apc_set_to_atepc_set
 from pyabsa.functional import ABSADatasetList
 
-convert_apc_set_to_atepc_set(ABSADatasetList.Shampoo)  # for custom dataset_utils, absolute path recommended for this function
+convert_apc_set_to_atepc_set('mooc')  # for custom dataset_utils, absolute path recommended for this function

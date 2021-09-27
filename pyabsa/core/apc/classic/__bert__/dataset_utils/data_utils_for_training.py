@@ -238,7 +238,7 @@ class BERTBaselineABSADataset(Dataset):
 
             all_data.append(data)
 
-        check_and_fix_labels(label_set, 'polarity', all_data)
+        check_and_fix_labels(label_set, 'polarity', all_data, opt)
         opt.polarities_dim = len(label_set)
 
         self.data = all_data

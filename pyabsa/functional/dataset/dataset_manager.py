@@ -72,10 +72,10 @@ def detect_dataset(dataset_path, task='apc'):
         dataset_path = DatasetItem(dataset_path)
     dataset_file = {'train': [], 'test': []}
     for d in dataset_path:
-        if not os.path.exists(d) or hasattr(ABSADatasetList, d):
-            print('{} dataset is integrated dataset from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
+        if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(ClassificationDatasetList, d):
+            print('{} dataset is cached from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
-            search_path = find_dir(os.getcwd(), ['integrated_dataset'], exclude_key=['infer', 'test.'], disable_alert=True)
+            search_path = find_dir(os.getcwd(), [d], exclude_key=['infer', 'test.'], disable_alert=True)
             dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['infer', 'test.', '.py'])
             dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['infer', 'train.', '.py'])
         else:
@@ -96,10 +96,10 @@ def detect_infer_dataset(dataset_path, task='apc'):
         dataset_path = DatasetItem(dataset_path)
     dataset_file = []
     for d in dataset_path:
-        if not os.path.exists(d) or hasattr(ABSADatasetList, d):
-            print('{} dataset is integrated dataset from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
+        if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(ClassificationDatasetList, d):
+            print('{} dataset is cached from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
-            search_path = find_dir(os.getcwd(), ['integrated_dataset', d, task], disable_alert=True)
+            search_path = find_dir(os.getcwd(), [d, task], disable_alert=True)
             dataset_file += find_files(search_path, ['infer', d], 'train.', '.py')
         else:
             dataset_file += find_files(d, ['infer', task], 'train.', '.py')

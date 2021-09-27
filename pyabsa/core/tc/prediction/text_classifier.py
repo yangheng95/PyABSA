@@ -213,50 +213,53 @@ class TextClassifier:
                 outputs = self.model(inputs)
                 sen_logits = outputs
                 t_probs = torch.softmax(sen_logits, dim=-1).cpu().numpy()
-                sent = int(t_probs.argmax(axis=-1))
-                real_sent = int(sample['label'])
-                text_raw = sample['text_raw'][0]
+                for i, i_probs in enumerate(t_probs):
+                    if 'origin_label_map' in self.opt.args:
+                        label = self.opt.origin_label_map[int(i_probs.argmax(axis=-1))]
+                        real_label = self.opt.origin_label_map[int(sample['label'][i])]
+                    else:
+                        label = int(i_probs.argmax(axis=-1))
+                        real_label = int(sample['polarity'][i])
+                    text_raw = sample['text_raw'][i]
 
-                result['text'] = sample['text_raw'][0]
-                result['label'] = int(t_probs.argmax(axis=-1))
-                result['ref_label'] = label_map[real_sent]
-                result['infer result'] = correct[sent == real_sent]
-                results.append(result)
-                if real_sent == -999:
-                    colored_pred_info = '{} --> {}'.format('Label', label_map[sent])
-                else:
-                    n_labeled += 1
-                    if sent == real_sent:
-                        n_correct += 1
-                    pred_res = correct[sent == real_sent]
-                    colored_pred_res = colored(pred_res, 'green') if pred_res == 'Correct' else colored(pred_res, 'red')
-                    colored_label = colored('Label', 'magenta')
-                    colored_pred_info = '{} --> {}  Real: {} ({})'.format(colored_label,
-                                                                          label_map[sent],
-                                                                          label_map[real_sent],
-                                                                          colored_pred_res
+                    result['text'] = sample['text_raw'][i]
+                    label = int(i_probs.argmax(axis=-1))
+                    result['label'] = label_map[label] if label in label_map else label
+                    result['ref_label'] = label_map[real_label] if real_label in label_map else real_label
+                    result['infer result'] = correct[label == real_label]
+                    results.append(result)
+                    if real_label == -999:
+                        colored_pred_info = '{} --> {}'.format('Label', label_map[label])
+                    else:
+                        n_labeled += 1
+                        if label == real_label:
+                            n_correct += 1
+                        pred_res = correct[label == real_label]
+                        colored_pred_res = colored(pred_res, 'green') if pred_res == 'Correct' else colored(pred_res, 'red')
+                        colored_label = colored('Label', 'magenta')
+                        colored_pred_info = '{} --> {}  Real: {} ({})'.format(colored_label,
+                                                                              label,
+                                                                              real_label,
+                                                                              colored_pred_res
+                                                                              )
+                    n_total += 1
+                    try:
+                        if save_path:
+                            fout.write(text_raw + '\n')
+                            pred_info = '{} --> {}  Real: {} ({})'.format('Label',
+                                                                          label,
+                                                                          real_label,
+                                                                          pred_res
                                                                           )
-                n_total += 1
-                try:
-                    if save_path:
-                        fout.write(text_raw + '\n')
-                        pred_info = '{} --> {}  Real: {} ({})'.format('Label',
-                                                                      label_map[sent],
-                                                                      label_map[real_sent],
-                                                                      pred_res
-                                                                      )
-                        fout.write(pred_info + '\n')
-                except:
-                    print('Can not save result: {}'.format(text_raw))
-                try:
-                    if print_result:
-                        print(text_raw)
-                        print(colored_pred_info)
-                except UnicodeError as e:
-                    print(colored('Encoding Error, you should use UTF8 encoding, e.g., use: os.environ["PYTHONIOENCODING"]="UTF8"'))
-            print('Total samples:{}'.format(n_total))
-            print('Labeled samples:{}'.format(n_labeled))
-            print('Prediction Accuracy:{}%'.format(100 * n_correct / n_labeled if n_labeled else 'N.A.'))
+                            fout.write(pred_info + '\n')
+                    except:
+                        print('Can not save result: {}'.format(text_raw))
+                    try:
+                        if print_result:
+                            print(text_raw)
+                            print(colored_pred_info)
+                    except UnicodeError as e:
+                        print(colored('Encoding Error, you should use UTF8 encoding, e.g., use: os.environ["PYTHONIOENCODING"]="UTF8"'))
 
             try:
                 if save_path:

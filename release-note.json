@@ -1,4 +1,12 @@
 {
+  "1.1.21": {
+    "1": "Improve dataset search to be more flexible",
+    "2": "Refactor label fix trigger, enable auto label transformation in training and testing while the labels are invalid. This feature is developed based on the mooc dataset: https://github.com/jmc-123/ABSADatasets/tree/master/datasets/apc_datasets/Chinese/mooc",
+    "3": "Fix the batch inference of text classification",
+    "4": "Fix the text classification dataset downloading problem",
+    "5": "Fix a problem may cause failure of ATEPC inference",
+    "6": "Add the dependency declaration of typing_extensions"
+  },
   "1.1.20": {
     "1": "Add automatic ABSADatasets update check"
   },

@@ -20,7 +20,9 @@
 > PyTorch Implementations (CPU & CUDA supported).
 
 # Instruction
-Please star this repository as your contribution to support the PyABSA project. 
+PyABSA use the FindFile package to find the target file which means you can specify a dataset/checkpoint by keywords
+instead of using absolute path. 
+If you are willing to support PyABSA project, please star this repository as your contribution. 
 
 - [Installation](#installation)
 - [Package Overview](#package-overview)

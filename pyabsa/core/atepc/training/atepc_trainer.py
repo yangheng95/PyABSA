@@ -131,9 +131,6 @@ class Instructor:
         sum_apc_test_acc = 0
         sum_apc_test_f1 = 0
         sum_ate_test_f1 = 0
-        # max_apc_test_acc = 0
-        # max_apc_test_f1 = 0
-        # max_ate_test_f1 = 0
         self.opt.max_test_metrics = {'max_apc_test_acc': 0, 'max_apc_test_f1': 0, 'max_ate_test_f1': 0}
         self.opt.metrics_of_this_checkpoint = {'apc_acc': 0, 'apc_f1': 0, 'ate_f1': 0}
         global_step = 0
@@ -158,7 +155,7 @@ class Instructor:
                                                 )
                 # loss_ate = loss_ate.item() / (loss_ate.item() + loss_apc.item()) * loss_ate
                 # loss_apc = loss_apc.item() / (loss_ate.item() + loss_apc.item()) * loss_apc
-                loss = loss_ate + 2 * loss_apc
+                loss = 3 * loss_ate + loss_apc
                 sum_loss += loss.item()
                 loss.backward()
                 nb_tr_examples += input_ids_spc.size(0)

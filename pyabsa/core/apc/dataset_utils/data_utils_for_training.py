@@ -87,7 +87,7 @@ class ABSADataset(Dataset):
 
             all_data.append(data)
 
-        check_and_fix_labels(label_set, 'polarity', all_data)
+        check_and_fix_labels(label_set, 'polarity', all_data, opt)
         opt.polarities_dim = len(label_set)
 
         if opt.model_name in ['slide_lcf_bert', 'slide_lcfs_bert', 'ssw_t', 'ssw_s']:

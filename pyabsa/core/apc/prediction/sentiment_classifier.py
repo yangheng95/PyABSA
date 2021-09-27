@@ -204,19 +204,27 @@ class SentimentClassifier:
                 sen_logits = outputs
                 t_probs = torch.softmax(sen_logits, dim=-1).cpu().numpy()
                 for i, i_probs in enumerate(t_probs):
-                    sent = int(i_probs.argmax(axis=-1))
-                    real_sent = int(sample['polarity'][i])
+                    if 'origin_label_map' in self.opt.args:
+                        sent = self.opt.origin_label_map[int(i_probs.argmax(axis=-1))]
+                        real_sent = self.opt.origin_label_map[int(sample['polarity'][i])]
+                    else:
+                        sent = int(i_probs.argmax(axis=-1))
+                        real_sent = int(sample['polarity'][i])
+
+                    sent = sentiment_map[sent] if sent in sentiment_map else sent,
+                    real_sent = sentiment_map[real_sent] if real_sent in sentiment_map else real_sent,
+
                     aspect = sample['aspect'][i]
                     text_raw = sample['text_raw'][i]
 
                     result['text'] = sample['text_raw'][i]
                     result['aspect'] = sample['aspect'][i]
-                    result['sentiment'] = int(i_probs.argmax(axis=-1))
-                    result['ref_sentiment'] = sentiment_map[real_sent]
+                    result['sentiment'] = sent
+                    result['ref_sentiment'] = real_sent
                     result['infer result'] = correct[sent == real_sent]
                     results.append(result)
                     if real_sent == -999:
-                        colored_pred_info = '{} --> {}'.format(aspect, sentiment_map[sent])
+                        colored_pred_info = '{} --> {}'.format(aspect, sent)
                     else:
                         n_labeled += 1
                         if sent == real_sent:
@@ -225,8 +233,8 @@ class SentimentClassifier:
                         colored_pred_res = colored(pred_res, 'green') if pred_res == 'Correct' else colored(pred_res, 'red')
                         colored_aspect = colored(aspect, 'magenta')
                         colored_pred_info = '{} --> {}  Real: {} ({})'.format(colored_aspect,
-                                                                              sentiment_map[sent],
-                                                                              sentiment_map[real_sent],
+                                                                              sent,
+                                                                              real_sent,
                                                                               colored_pred_res
                                                                               )
                     n_total += 1
@@ -234,8 +242,8 @@ class SentimentClassifier:
                         if save_path:
                             fout.write(text_raw + '\n')
                             pred_info = '{} --> {}  Real: {} ({})'.format(aspect,
-                                                                          sentiment_map[sent],
-                                                                          sentiment_map[real_sent],
+                                                                          sent,
+                                                                          real_sent,
                                                                           pred_res
                                                                           )
                             fout.write(pred_info + '\n')

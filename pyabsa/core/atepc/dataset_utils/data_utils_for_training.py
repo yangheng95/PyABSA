@@ -78,23 +78,23 @@ def readfile(filename):
                 tag = []
                 polarity = []
             continue
-        splits = line.split(' ')
+        splits = line.strip().split(' ')
         if len(splits) != 3:
             print('warning! ignore detected error line(s) in input file:{}'.format(line))
-            sentence = []
             break
         sentence.append(splits[0])
         tag.append(splits[-2])
-        polarity.append(int(splits[-1][:-1]))
+        polarity.append(int(splits[-1]))
 
     prepared_data = []
     for s, t, p in data:
+
         if len(s) > 0:
             # prepare the atepc dataset, refer to https://github.com/yangheng95/PyABSA/issues/78
             polarity_padding = [SENTIMENT_PADDING] * len(t)
             for p_idx in range(len(p) - 1):
-                if (p[p_idx] != p[p_idx + 1] and p[p_idx] >= 0 and p[p_idx + 1] >= 0) \
-                        or (p[p_idx] >= 0 and p[p_idx + 1] == SENTIMENT_PADDING):
+                if (p[p_idx] != p[p_idx + 1] and p[p_idx] != SENTIMENT_PADDING and p[p_idx + 1] != SENTIMENT_PADDING) \
+                        or (p[p_idx] != SENTIMENT_PADDING and p[p_idx + 1] == SENTIMENT_PADDING):
                     _p = p[:p_idx + 1] + polarity_padding[p_idx + 1:]
                     p = polarity_padding[:p_idx + 1] + p[p_idx + 1:]
                     prepared_data.append((s, t, _p))
@@ -276,7 +276,7 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
                           lcf_cdm_vec=lcf_cdm_vec,
                           lcf_cdw_vec=lcf_cdw_vec)
         )
-    check_and_fix_labels(polarities_set, 'polarity', features)
+    check_and_fix_labels(polarities_set, 'polarity', features, opt)
     opt.polarities_dim = len(polarities_set)
 
     return features
