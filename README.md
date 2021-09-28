@@ -533,11 +533,11 @@ We expect that you can help us improve this project, and your contributions are 
 You can make a contribution in many ways, including:
 
 - Share your custom dataset in PyABSA and [ABSADatasets](https://github.com/yangheng95/ABSADatasets)
-- Integrates your models in PyABSA. (We will help you)
-- Raise a bug report while you use PyABSA or review the code
-- Give us some advice about feature design/refactor
-- Correct/Rewrite some error-messages or code comment
-- Create an example script in a particular situation
+- Integrates your models in PyABSA. (You can share your models whether it is or not based on PyABSA. if you are interested, we will help you)
+- Raise a bug report while you use PyABSA or review the code (PyABSA is a individual project driven by enthusiasm so your help is needed)
+- Give us some advice about feature design/refactor (You can advise to improve some feature)
+- Correct/Rewrite some error-messages or code comment (The comments are not written by native english speaker, you can help us improve documents)
+- Create an example script in a particular situation (Such as specify a SpaCy model, pretrainedbert type, some hyperparameters)
 - Star this repository to keep it active
 
 # Notice
