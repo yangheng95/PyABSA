@@ -137,35 +137,54 @@ class AspectExtractor:
         self.opt.device = device
         self.model.to(device)
 
-    def merge_result(self, results):
-        merged_results = []
+    def merge_result(self, sentence_res, results):
+        """ merge ate sentence result and apc results, and restore to original sentence order
+
+        Args:
+            sentence_res ([tuple]): list of ate sentence results, which has (tokens, iobs)
+            results ([dict]): list of apc results
+
+        Returns:
+            [dict]: merged extraction/polarity results for each input example
+        """
+        merged_results = {}
 
         if results['polarity_res'] is not None:
             for item1, item2 in zip(results['extraction_res'], results['polarity_res']):
-                if not merged_results or ' '.join(item1[0]) != merged_results[-1]['sentence']:
-                    merged_results.append(
+                if not merged_results or item1[3] != item2['example_id'] or ' '.join(item1[0]) != merged_results[-1]['sentence']:
+                    merged_results[item2['example_id']] = \
                         {'sentence': item2['sentence'],
                          'IOB': item1[1],
                          'tokens': item2['tokens'],
                          'aspect': [item2['aspect']],
                          'position': [item2['positions']],
-                         'sentiment': [item2['sentiment']],
+                         'sentiment': [item2['sentiment']]
                          }
-                    )
                 else:
                     merged_results[-1]['aspect'].append(item2['aspect'])
                     merged_results[-1]['position'].append(item2['positions'])
                     merged_results[-1]['sentiment'].append(item2['sentiment'])
-
         else:
             for item in results['extraction_res']:
                 if not merged_results or ' '.join(item[0]) != merged_results[-1]['sentence']:
-                    merged_results.append(
+                    merged_results[item[3]] = \
                         {'sentence': ' '.join(item[0]),
                          'IOB': item[1],
-                         'tokens': item[0],
+                         'tokens': item[0]
                          }
-                    )
+        final_res = []
+        for i, sent in enumerate(sentence_res):
+            asp_res = merged_results.get(i)
+            final_res.append(
+                {
+                    'sentence': item2['sentence'],
+                    'IOB': item1[1],
+                    'tokens': item2['tokens'],
+                    'aspect': [item2['aspect']],
+                    'position': [item2['positions']],
+                    'sentiment': [item2['sentiment']]
+                }
+            )
         return merged_results
 
     def extract_aspect(self, inference_source, save_result=True, print_result=True, pred_sentiment=True):
@@ -187,10 +206,11 @@ class AspectExtractor:
             print('Please run inference using examples list or inference dataset path (list)!')
 
         if inference_source:
-            results['extraction_res'] = self._extract(inference_source)
+            extraction_res, sentence_res = self._extract(inference_source)
+            results['extraction_res'] = extraction_res
             if pred_sentiment:
                 results['polarity_res'] = self._infer(results['extraction_res'])
-            results = self.merge_result(results)
+            results = self.merge_result(sentence_res, results)
             if save_result:
                 save_path = os.path.join(os.getcwd(), 'atepc_inference.result.json')
                 print('The results of aspect term extraction have been saved in {}'.format(save_path))
@@ -203,8 +223,8 @@ class AspectExtractor:
 
     # Temporal code, pending optimization
     def _extract(self, examples):
-
-        res = []  # extraction result
+        sentence_res = [] # extraction result by sentence
+        extraction_res = []  # extraction result flatten by aspect
 
         self.eval_dataloader = None
         examples = self.processor.get_examples_for_aspect_extraction(examples)
@@ -254,7 +274,7 @@ class AspectExtractor:
             input_mask = input_mask.to('cpu').numpy()
             for i, i_ate_logits in enumerate(ate_logits):
                 pred_iobs = []
-
+                sentence_res.append((all_tokens[i], pred_iobs))
                 for j, m in enumerate(label_ids[i]):
                     if j == 0:
                         continue
@@ -277,9 +297,9 @@ class AspectExtractor:
                     if pred_iobs[iob_idx].endswith('ASP') and not pred_iobs[iob_idx + 1].endswith('I-ASP'):
                         _polarity = polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
                         polarity = POLARITY_PADDING[:iob_idx + 1] + polarity[iob_idx + 1:]
-                        res.append((all_tokens[i], pred_iobs, _polarity,i))
+                        extraction_res.append((all_tokens[i], pred_iobs, _polarity,i))
         
-        return res
+        return extraction_res, sentence_res
 
     def _infer(self, examples):
 
