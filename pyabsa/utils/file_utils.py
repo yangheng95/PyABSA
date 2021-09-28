@@ -274,14 +274,14 @@ def check_update_log():
         if os.path.exists('./release_note.json'):
             os.remove('./release_note.json')
         gdd.download_file_from_google_drive('1nOppewL8L1mGy9i6HQnJrEWrfaqQhC_2', './release-note.json')
-        update_logs = json.load(open('release_note.json'))
+        update_logs = json.load(open('release-note.json'))
         for v in update_logs:
             if v > __version__:
                 print(colored('*' * 20 + ' Release Note of Version {} '.format(v) + '*' * 20, 'green'))
                 for i, line in enumerate(update_logs[v]):
                     print('{}.\t{}'.format(i + 1, update_logs[v][line]))
-    except:
-        print(colored('Fail to load release note, you can check it on https://github.com/yangheng95/PyABSA/blob/release/release-note.json', 'red'))
+    except Exception as e:
+        print(colored('Fail to load release note: {}, you can check it on https://github.com/yangheng95/PyABSA/blob/release/release-note.json'.format(e), 'red'))
 
 
 def check_dataset(dataset_path='./integrated_datasets', retry_count=3):  # retry_count is for unstable conn to GitHub
