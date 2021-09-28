@@ -10,7 +10,6 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-
 > Fast & Low Memory requirement & Enhanced implementation of Local Context Focus.
 >
 > Build from LC-ABSA / LCF-ABSA / LCF-BERT and LCF-ATEPC.
@@ -19,9 +18,28 @@
 >
 > PyTorch Implementations (CPU & CUDA supported).
 
+## Tips
+
+- PyABSA use the [FindFile](https://github.com/yangheng95/findfile) to find the target file which means you can specify a dataset/checkpoint by keywords
+instead of using absolute path. e.g.,
+
+```bash
+dataset = 'laptop' # instead of './SemEeval/LAPTOP' case doesn't matter
+checkpoint = 'lcfs' # any checkpoint whose absoulte path contains lcfs
+```
+
+- PyABSA use the [AutoCuda](https://github.com/yangheng95/autocuda) to support automatic cuda assignment, but you can still set a preferred device.
+```python3
+auto_device=True  # to auto assign a cuda device for training / inference
+auto_device='cuda:1'  # to specify a prefered device
+auto_device='cpu'  # to specify a prefered device
+```
+
+- PyABSA support auto label fixing which means you can set the labels to any number (greater than -999), e.g., sentiment labels = {-9. -1, 0, 199}
+- Other features are available to be found
+
 # Instruction
-PyABSA use the FindFile package to find the target file which means you can specify a dataset/checkpoint by keywords
-instead of using absolute path. 
+
 If you are willing to support PyABSA project, please star this repository as your contribution. 
 
 - [Installation](#installation)
@@ -515,11 +533,11 @@ We expect that you can help us improve this project, and your contributions are 
 You can make a contribution in many ways, including:
 
 - Share your custom dataset in PyABSA and [ABSADatasets](https://github.com/yangheng95/ABSADatasets)
-- Integrates your models in PyABSA. (We will help you)
-- Raise a bug report while you use PyABSA or review the code
-- Give us some advice about feature design/refactor
-- Correct/Rewrite some error-messages or code comment
-- Create an example script in a particular situation
+- Integrates your models in PyABSA. (You can share your models whether it is or not based on PyABSA. if you are interested, we will help you)
+- Raise a bug report while you use PyABSA or review the code (PyABSA is a individual project driven by enthusiasm so your help is needed)
+- Give us some advice about feature design/refactor (You can advise to improve some feature)
+- Correct/Rewrite some error-messages or code comment (The comments are not written by native english speaker, you can help us improve documents)
+- Create an example script in a particular situation (Such as specify a SpaCy model, pretrainedbert type, some hyperparameters)
 - Star this repository to keep it active
 
 # Notice
