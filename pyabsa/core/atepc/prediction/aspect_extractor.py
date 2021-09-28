@@ -277,8 +277,8 @@ class AspectExtractor:
                     if pred_iobs[iob_idx].endswith('ASP') and not pred_iobs[iob_idx + 1].endswith('I-ASP'):
                         _polarity = polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
                         polarity = POLARITY_PADDING[:iob_idx + 1] + polarity[iob_idx + 1:]
-                        res.append((all_tokens[i], pred_iobs, _polarity))
-
+                        res.append((all_tokens[i], pred_iobs, _polarity,i))
+        
         return res
 
     def _infer(self, examples):
@@ -318,7 +318,8 @@ class AspectExtractor:
         else:
             sentiments = {p: str(p) for p in range(self.opt.polarities_dim + 1)}
             sentiments[-999] = ''
-
+        # ate example id map to apc example id
+        example_id_map = dict([(apc_id, ex[3]) for apc_id, ex in enumerate(examples)])
         # Correct = {True: 'Correct', False: 'Wrong'}
         for i_batch, batch in enumerate(self.eval_dataloader):
             input_ids_spc, segment_ids, input_mask, label_ids, \
@@ -352,6 +353,7 @@ class AspectExtractor:
                     result['aspect'] = all_aspects[i]
                     result['positions'] = all_positions[i]
                     result['sentiment'] = sentiments[sent] if sent in sentiments else sent
+                    result['example_id'] = example_id_map[i_batch]
                     res.append(result)
 
         return res
