@@ -249,12 +249,13 @@ class AspectExtractor:
                                   all_polarities, all_valid_ids, all_lmask_ids)
         # Run prediction for full data
         eval_sampler = SequentialSampler(eval_data)
-        self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=128)
+        EVAL_BATCH_SIZE = 128
+        self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=EVAL_BATCH_SIZE)
 
         # extract_aspects
         self.model.eval()
         label_map = {i: label for i, label in enumerate(self.label_list, 1)}
-        for input_ids_spc, input_mask, segment_ids, label_ids, polarity, valid_ids, l_mask in self.eval_dataloader:
+        for i_batch, (input_ids_spc, input_mask, segment_ids, label_ids, polarity, valid_ids, l_mask) in enumerate(self.eval_dataloader):
             input_ids_spc = input_ids_spc.to(self.opt.device)
             input_mask = input_mask.to(self.opt.device)
             segment_ids = segment_ids.to(self.opt.device)
@@ -297,10 +298,11 @@ class AspectExtractor:
 
                 POLARITY_PADDING = [SENTIMENT_PADDING] * len(polarity)
                 for iob_idx in range(len(polarity) - 1):
+                    example_id = i_batch*EVAL_BATCH_SIZE + i
                     if pred_iobs[iob_idx].endswith('ASP') and not pred_iobs[iob_idx + 1].endswith('I-ASP'):
                         _polarity = polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
                         polarity = POLARITY_PADDING[:iob_idx + 1] + polarity[iob_idx + 1:]
-                        extraction_res.append((all_tokens[i], pred_iobs, _polarity,i))
+                        extraction_res.append((all_tokens[i], pred_iobs, _polarity,example_id))
         
         return extraction_res, sentence_res
 
