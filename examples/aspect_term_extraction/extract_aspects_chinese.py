@@ -5,7 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa import ATEPCCheckpointManager
+from pyabsa import ATEPCCheckpointManager, ABSADatasetList
 
 # There might batch extraction function in the future
 
@@ -18,12 +18,13 @@ examples = ['尤 其 是 照 的 大 尺 寸 照 片 时 效 果 也 是 非 常
             ]
 
 # 从Google Drive下载提供的预训练模型
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='chinese2')
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='lcf_atepc_cdw_apcacc_96.37_apcf1_94.63_atef1_47.26')
 # model_path = 'state_dict/lcf_atepc_cdw_apcacc_96.88_apcf1_96.35_atef1_91.2'
 
 # 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
 sentiment_map = {0: 'Bad', 1: 'Good', -999: ''}
 
+examples = ABSADatasetList.MOOC
 atepc_result = aspect_extractor.extract_aspect(inference_source=examples,  # list-support only, for now
                                                print_result=True,  # print the result
                                                pred_sentiment=True,  # Predict the sentiment of extracted aspect terms

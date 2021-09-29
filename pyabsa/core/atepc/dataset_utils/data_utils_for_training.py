@@ -186,6 +186,8 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
         aspect_label = example.aspect_label
         polarity = example.polarity
         if polarity != SENTIMENT_PADDING:  # bad case handle in Chinese atepc_datasets
+            if polarity == -1:
+                print(text_spc_tokens)
             polarities_set.add(polarity)  # ignore samples without polarities
         tokens = []
         labels = []
