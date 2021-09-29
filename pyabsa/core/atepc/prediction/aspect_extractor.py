@@ -151,9 +151,7 @@ class AspectExtractor:
         if results['polarity_res'] is not None:
             merged_results = {}
             pre_example_id = None
-            # merge ate and apc results, assume they are same ordered
-            # print(results['extraction_res'], results['polarity_res'])
-            print([x['example_id'] for x in results['polarity_res']])
+            # merge ate and apc results, assume they are same ordered           
             for item1, item2 in zip(results['extraction_res'], results['polarity_res']):
                 cur_example_id = item1[3]
                 assert cur_example_id == item2['example_id'], "ate and apc results should be same ordered"
