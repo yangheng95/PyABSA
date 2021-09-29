@@ -13,7 +13,7 @@ import pickle
 import urllib.request
 
 import torch
-from findfile import find_files
+from findfile import find_files, find_dir
 from google_drive_downloader import GoogleDriveDownloader as gdd
 from termcolor import colored
 
@@ -303,4 +303,5 @@ def check_dataset(dataset_path='./integrated_datasets', retry_count=3):  # retry
                 retry_count -= 1
                 check_dataset(retry_count=retry_count)
     except Exception as e:
-        print(colored('ABSADatasets version check failed, please check the latest datasets on GitHub manually.', 'red'))
+        if find_dir('integrated_datasets'):
+            print(colored('ABSADatasets version check failed, please check the latest datasets on GitHub manually.', 'red'))

@@ -211,8 +211,8 @@ class SentimentClassifier:
                         sent = int(i_probs.argmax(axis=-1))
                         real_sent = int(sample['polarity'][i])
 
-                    sent = sentiment_map[sent] if sent in sentiment_map else sent,
-                    real_sent = sentiment_map[real_sent] if real_sent in sentiment_map else real_sent,
+                    sent = sentiment_map[sent] if sent in sentiment_map else sent
+                    real_sent = sentiment_map[real_sent] if real_sent in sentiment_map else real_sent
 
                     aspect = sample['aspect'][i]
                     text_raw = sample['text_raw'][i]

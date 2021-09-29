@@ -103,7 +103,10 @@ def load_apc_datasets(fname):
     for f in fname:
         print('loading: {}'.format(f))
         fin = open(f, 'r', encoding='utf-8')
-        lines.extend(fin.readlines())
+        if len(lines) % 3 == 0:
+            lines.extend(fin.readlines())
+        else:
+            print('Ignore {} due to illegal dataset format!'.format(f))
         fin.close()
     return lines
 

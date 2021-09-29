@@ -223,7 +223,6 @@ class TextClassifier:
                     text_raw = sample['text_raw'][i]
 
                     result['text'] = sample['text_raw'][i]
-                    label = int(i_probs.argmax(axis=-1))
                     result['label'] = label_map[label] if label in label_map else label
                     result['ref_label'] = label_map[real_label] if real_label in label_map else real_label
                     result['infer result'] = correct[label == real_label]

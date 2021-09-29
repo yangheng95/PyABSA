@@ -45,8 +45,11 @@ class ABSADatasetList:
     Notebook = DatasetItem('Notebook', 'Notebook')
     Camera = DatasetItem('Camera', 'Camera')
 
-    # https://github.com/brightgems
+    # brightgems@github https://github.com/brightgems
     Shampoo = DatasetItem('Shampoo', 'Shampoo')
+
+    # jmc123@github https://github.com/jmc-123
+    MOOC = DatasetItem('MOOC', 'MOOC')
 
     MAMS = DatasetItem('MAMS', 'MAMS')
 
@@ -73,14 +76,14 @@ def detect_dataset(dataset_path, task='apc'):
     dataset_file = {'train': [], 'test': []}
     for d in dataset_path:
         if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(ClassificationDatasetList, d):
-            print('{} dataset is cached from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
+            print('{} dataset is loading from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
-            search_path = find_dir(os.getcwd(), [d], exclude_key=['infer', 'test.'], disable_alert=True)
-            dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['infer', 'test.', '.py'])
-            dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['infer', 'train.', '.py'])
+            search_path = find_dir(os.getcwd(), [d, task], exclude_key=['infer', 'test.'], disable_alert=True)
+            dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['infer', 'test.', '.py', '.ignore'])
+            dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['infer', 'train.', '.py', '.ignore'])
         else:
-            dataset_file['train'] = find_files(d, ['train', task], exclude_key=['infer', 'test.', '.py'])
-            dataset_file['test'] = find_files(d, ['test', task], exclude_key=['infer', 'train.', '.py'])
+            dataset_file['train'] = find_files(d, ['train', task], exclude_key=['infer', 'test.', '.py', '.ignore'])
+            dataset_file['test'] = find_files(d, ['test', task], exclude_key=['infer', 'train.', '.py', '.ignore'])
 
     if len(dataset_file['train']) == 0:
         raise RuntimeError('{} is not an integrated dataset or not downloaded automatically,'
@@ -97,12 +100,12 @@ def detect_infer_dataset(dataset_path, task='apc'):
     dataset_file = []
     for d in dataset_path:
         if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(ClassificationDatasetList, d):
-            print('{} dataset is cached from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
+            print('{} dataset is loading from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
             search_path = find_dir(os.getcwd(), [d, task], disable_alert=True)
-            dataset_file += find_files(search_path, ['infer', d], 'train.', '.py')
+            dataset_file += find_files(search_path, ['infer', d], ['train.', '.ignore'], '.py')
         else:
-            dataset_file += find_files(d, ['infer', task], 'train.', '.py')
+            dataset_file += find_files(d, ['infer', task], ['train.', '.ignore'], '.py')
 
     if len(dataset_file) == 0:
         raise RuntimeError('{} is not an integrated dataset or not downloaded automatically,'
@@ -116,7 +119,6 @@ def download_datasets_from_github(save_path):
         save_path = os.path.join(save_path, 'integrated_datasets')
 
     if find_files(save_path, 'integrated_datasets', exclude_key='.git'):
-        print('Seems datasets downloaded {}'.format(save_path))
         return
 
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -127,6 +129,6 @@ def download_datasets_from_github(save_path):
             except IOError as e:
                 pass
         except Exception as e:
-            print('Fail to download datasets: {}, please check your connection to GitHub, we will retry in 3 seconds...'.format(e))
+            print('Fail to download datasets: {}, please check your connection to GitHub, we will keep retrying...'.format(e))
             time.sleep(3)
             download_datasets_from_github(save_path)
