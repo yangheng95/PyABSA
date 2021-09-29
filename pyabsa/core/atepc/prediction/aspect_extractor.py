@@ -147,45 +147,50 @@ class AspectExtractor:
         Returns:
             [dict]: merged extraction/polarity results for each input example
         """
-        merged_results = {}
-
+        final_res = []
         if results['polarity_res'] is not None:
+            merged_results = {}
+            pre_example_id = None
+            # merge ate and apc results, assume they are same ordered
+            # print(results['extraction_res'], results['polarity_res'])
+            print([x['example_id'] for x in results['polarity_res']])
             for item1, item2 in zip(results['extraction_res'], results['polarity_res']):
-                if not merged_results or item1[3] != item2['example_id'] or ' '.join(item1[0]) != merged_results[-1]['sentence']:
-                    merged_results[item2['example_id']] = \
+                cur_example_id = item1[3]
+                assert cur_example_id == item2['example_id'], "ate and apc results should be same ordered"
+                if pre_example_id is None or cur_example_id != pre_example_id:
+                    merged_results[cur_example_id] = \
                         {'sentence': item2['sentence'],
-                         'IOB': item1[1],
-                         'tokens': item2['tokens'],
                          'aspect': [item2['aspect']],
                          'position': [item2['positions']],
                          'sentiment': [item2['sentiment']]
                          }
                 else:
-                    merged_results[-1]['aspect'].append(item2['aspect'])
-                    merged_results[-1]['position'].append(item2['positions'])
-                    merged_results[-1]['sentiment'].append(item2['sentiment'])
+                    merged_results[cur_example_id]['aspect'].append(item2['aspect'])
+                    merged_results[cur_example_id]['position'].append(item2['positions'])
+                    merged_results[cur_example_id]['sentiment'].append(item2['sentiment'])
+                # remember example id
+                pre_example_id = item1[3]
+            for i, item in enumerate(sentence_res):
+                asp_res = merged_results.get(i)
+                final_res.append(
+                    {
+                        'sentence': ''.join(item[0]),
+                        'IOB': item[1],
+                        'tokens': item[0],
+                        'aspect': asp_res['aspect'] if asp_res else [],
+                        'position': asp_res['position'] if asp_res else [],
+                        'sentiment': asp_res['sentiment'] if asp_res else [],
+                    }
+                )
         else:
-            for item in results['extraction_res']:
-                if not merged_results or ' '.join(item[0]) != merged_results[-1]['sentence']:
-                    merged_results[item[3]] = \
-                        {'sentence': ' '.join(item[0]),
-                         'IOB': item[1],
-                         'tokens': item[0]
-                         }
-        final_res = []
-        for i, sent in enumerate(sentence_res):
-            asp_res = merged_results.get(i)
-            final_res.append(
-                {
-                    'sentence': item2['sentence'],
-                    'IOB': item1[1],
-                    'tokens': item2['tokens'],
-                    'aspect': [item2['aspect']],
-                    'position': [item2['positions']],
-                    'sentiment': [item2['sentiment']]
-                }
-            )
-        return merged_results
+            for item in sentence_res:
+                final_res[item[3]] = \
+                    {'sentence': ' '.join(item[0]),
+                        'IOB': item[1],
+                        'tokens': item[0]
+                        }
+
+        return final_res
 
     def extract_aspect(self, inference_source, save_result=True, print_result=True, pred_sentiment=True):
         results = {'extraction_res': None, 'polarity_res': None}
@@ -304,6 +309,8 @@ class AspectExtractor:
     def _infer(self, examples):
 
         res = []  # sentiment classification result
+         # ate example id map to apc example id
+        example_id_map = dict([(apc_id, ex[3]) for apc_id, ex in enumerate(examples)])
 
         self.eval_dataloader = None
         examples = self.processor.get_examples_for_sentiment_classification(examples)
@@ -326,8 +333,9 @@ class AspectExtractor:
         eval_data = TensorDataset(all_spc_input_ids, all_input_mask, all_segment_ids, all_label_ids,
                                   all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
         # Run prediction for full data
+        EVAL_BATCH_SIZE = 128
         eval_sampler = SequentialSampler(eval_data)
-        self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=128)
+        self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=EVAL_BATCH_SIZE)
 
         # extract_aspects
         self.model.eval()
@@ -338,8 +346,7 @@ class AspectExtractor:
         else:
             sentiments = {p: str(p) for p in range(self.opt.polarities_dim + 1)}
             sentiments[-999] = ''
-        # ate example id map to apc example id
-        example_id_map = dict([(apc_id, ex[3]) for apc_id, ex in enumerate(examples)])
+       
         # Correct = {True: 'Correct', False: 'Wrong'}
         for i_batch, batch in enumerate(self.eval_dataloader):
             input_ids_spc, segment_ids, input_mask, label_ids, \
@@ -367,13 +374,13 @@ class AspectExtractor:
                     else:
                         sent = int(torch.argmax(i_apc_logits, -1))
                     result = {}
-
-                    result['sentence'] = ' '.join(all_tokens[i])
-                    result['tokens'] = all_tokens[i]
-                    result['aspect'] = all_aspects[i]
-                    result['positions'] = all_positions[i]
+                    apc_id = i_batch*EVAL_BATCH_SIZE + i
+                    result['sentence'] = ' '.join(all_tokens[apc_id])
+                    result['tokens'] = all_tokens[apc_id]
+                    result['aspect'] = all_aspects[apc_id]
+                    result['positions'] = all_positions[apc_id]
                     result['sentiment'] = sentiments[sent] if sent in sentiments else sent
-                    result['example_id'] = example_id_map[i_batch]
+                    result['example_id'] = example_id_map[apc_id]
                     res.append(result)
 
         return res

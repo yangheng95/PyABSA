@@ -95,7 +95,9 @@ class ATEPCProcessor:
 
     def _create_examples(self, lines):
         examples = []
-        for i, (sentence, tag, polarity) in enumerate(lines):
+        for i, line in enumerate(lines):
+            # prevent error if extracted line has has more than 3 elements,  which should include example_id  as 4th element
+            (sentence, tag, polarity) = line[:3]
             aspect = []
             if isinstance(polarity, int):
                 for j, (t, s) in enumerate(zip(tag, sentence)):
