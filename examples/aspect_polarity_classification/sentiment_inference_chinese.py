@@ -24,3 +24,4 @@ results = sent_classifier.batch_infer(target_file=infer_set,
                                       save_result=True,
                                       ignore_error=True,
                                       )
+print(results)
