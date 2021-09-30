@@ -1,4 +1,8 @@
 {
+  "1.1.24": {
+    "1": "Add the parameters statistics function",
+    "2": "Optimize the DLCF_DCA model",
+  },
   "1.1.23": {
     "1": "Improve atepc aspect_extractor result, ensure final output is same length and order as original input examples",
     "2": "Fix a problem may merge all aspects of different example into 1 line if duplicate example is fed",

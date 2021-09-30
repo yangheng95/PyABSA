@@ -244,10 +244,15 @@ def get_syntax_distance(text_raw, aspect, tokenizer, opt):
         print('Text: {} Aspect: {}'.format(text_raw, aspect))
         raise RuntimeError('Ignore failure in calculate the syntax based SRD: {}, maybe the aspect is None'.format(e))
 
+    if opt.model_name == 'dlcf_dca_bert':
+        dist.insert(0, 0)
+        dist.append(0)
+    else:
+        dist.insert(0, max(dist))
+        dist.append(max(dist))
     raw_tokens.insert(0, tokenizer.bos_token)
-    dist.insert(0, max(dist))
     raw_tokens.append(tokenizer.eos_token)
-    dist.append(max(dist))
+
     # the following two functions are both designed to calculate syntax-based distances
     if opt.srd_alignment:
         syntactical_dist = syntax_distance_alignment(raw_tokens, dist, opt.max_seq_len, tokenizer)

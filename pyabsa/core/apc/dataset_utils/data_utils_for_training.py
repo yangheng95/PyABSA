@@ -44,9 +44,8 @@ class ABSADataset(Dataset):
             if opt.model_name == 'dlcf_dca_bert':
                 prepared_inputs = prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect)
                 dlcf_vec = prepared_inputs['dlcf_cdm_vec'] if opt.lcf == 'cdm' else prepared_inputs['dlcf_cdw_vec']
-                depend_ids = prepared_inputs['depend_ids']
-                depended_ids = prepared_inputs['depended_ids']
-                no_connect = prepared_inputs['no_connect']
+                depend_vec = prepared_inputs['depend_vec']
+                depended_vec = prepared_inputs['depended_vec']
             data = {
                 'ex_id': i // 3,
 
@@ -74,11 +73,9 @@ class ABSADataset(Dataset):
                 'text_raw_bert_indices': text_raw_bert_indices
                 if 'text_raw_bert_indices' in opt.model.inputs else 0,
 
-                'depend_ids': depend_ids if 'depend_ids' in opt.model.inputs else 0,
+                'depend_vec': depend_vec if 'depend_vec' in opt.model.inputs else 0,
 
-                'depended_ids': depended_ids if 'depended_ids' in opt.model.inputs else 0,
-
-                'no_connect': no_connect if 'no_connect' in opt.model.inputs else 0,
+                'depended_vec': depended_vec if 'depended_vec' in opt.model.inputs else 0,
 
                 'polarity': polarity,
             }

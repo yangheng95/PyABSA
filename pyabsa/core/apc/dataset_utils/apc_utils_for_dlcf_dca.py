@@ -42,6 +42,7 @@ def prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect):
         aspect_bert_indices = text_to_sequence(tokenizer, aspect, opt.max_seq_len)
 
         aspect_begin = len(tokenizer.tokenize(bos_token + ' ' + text_left))
+
         if 'dlcf' in opt.model_name or opt.use_syntax_based_SRD:
             syntactical_dist, max_dist = get_syntax_distance(text_raw, aspect, tokenizer, opt)
         else:
@@ -51,14 +52,13 @@ def prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect):
                                            aspect_begin, syntactical_dist)
         dlcf_cdw_vec = get_dynamic_cdw_vec(opt, max_dist, text_bert_indices, aspect_bert_indices,
                                            aspect_begin, syntactical_dist)
-        depend_ids, depended_ids, no_connect = calculate_cluster(text_raw, aspect, opt)
+        depend_vec, depended_vec = calculate_cluster(text_raw, aspect, opt)
 
         inputs = {
             'dlcf_cdm_vec': dlcf_cdm_vec,
             'dlcf_cdw_vec': dlcf_cdw_vec,
-            'depend_ids': depend_ids,
-            'depended_ids': depended_ids,
-            'no_connect': no_connect,
+            'depend_vec': depend_vec,
+            'depended_vec': depended_vec,
         }
         return inputs
 
@@ -79,7 +79,7 @@ def get_dynamic_cdw_vec(opt, max_dist, bert_spc_indices, aspect_indices, aspect_
             if max_dist > 0:
                 if syntactical_dist[i] > dynamic_threshold:
                     w = 1 - syntactical_dist[i] / max_dist
-                    cdw_vec[i] = 1
+                    cdw_vec[i] = w
                 else:
                     cdw_vec[i] = 1
             else:
@@ -206,14 +206,19 @@ def calculate_cluster(sentence, aspect, opt):
         if temp_aspcet_ids in depended_ids:
             depended_ids.remove(temp_aspcet_ids)
 
-    depend_ids.sort()
-    depended_ids.sort()
-
     for i in range(len(no_connect)):
         if no_connect[i] in depended_ids:
             depended_ids.remove(no_connect[i])
 
-    depend_ids = pad_and_truncate(depend_ids, opt.max_seq_len, value=-1)
-    depended_ids = pad_and_truncate(depended_ids, opt.max_seq_len, value=-1)
-    no_connect = pad_and_truncate(no_connect, opt.max_seq_len, value=-1)
-    return depend_ids, depended_ids, no_connect
+    depend_vec = np.zeros((opt.max_seq_len), dtype=np.float32)
+    depended_vec = np.zeros((opt.max_seq_len), dtype=np.float32)
+
+    depended_vec[0] = 1
+    depend_vec[0] = 1
+    for i in range(len(depend_ids)):
+        if depend_ids[i] < (opt.max_seq_len - 1):
+            depend_vec[depend_ids[i] + 1] = 1
+    for i in range(len(depended_ids)):
+        if depended_ids[i] < (opt.max_seq_len - 1):
+            depended_vec[depended_ids[i] + 1] = 1
+    return depend_vec, depended_vec
