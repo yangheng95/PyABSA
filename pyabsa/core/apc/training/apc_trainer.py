@@ -180,10 +180,24 @@ class Instructor:
         self.opt.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
         self.opt.max_test_metrics = {'max_apc_test_acc': 0, 'max_apc_test_f1': 0, 'max_ate_test_f1': 0}
 
+        Total_params = 0
+        Trainable_params = 0
+        NonTrainable_params = 0
+
+        for param in self.model.parameters():
+            mulValue = numpy.prod(param.size())  # 使用numpy prod接口计算参数数组所有元素之积
+            Total_params += mulValue  # 总参数量
+            if param.requires_grad:
+                Trainable_params += mulValue  # 可训练参数量
+            else:
+                NonTrainable_params += mulValue  # 非可训练参数量
+
         self.logger.info("***** Running training for Aspect Polarity Classification *****")
         self.logger.info("Training set examples = %d", len(self.train_set))
         if self.test_set:
             self.logger.info("Test set examples = %d", len(self.test_set))
+        self.logger.info("Total params = %d, Trainable params = %d, Non-trainable params = %d", Total_params,
+                         Trainable_params, NonTrainable_params)
         self.logger.info("Batch size = %d", self.opt.batch_size)
         self.logger.info("Num steps = %d", len(self.train_dataloaders[0]) // self.opt.batch_size * self.opt.num_epoch)
 

@@ -11,42 +11,13 @@ from transformers.models.bert.modeling_bert import BertPooler
 
 from pyabsa.network.sa_encoder import Encoder
 
-
-def dependency_hidden(bert_local_out, depend, depended):
-    depend_out = bert_local_out.clone()
-    depended_out = bert_local_out.clone()
-    for i in range(bert_local_out.size()[0]):
-        for j in range(1, bert_local_out.size()[1]):
-            if j - 1 not in depend[i]:
-                depend_out[i][j] = depend_out[i][j] * 0
-    for i in range(bert_local_out.size()[0]):
-        for j in range(1, bert_local_out.size()[1]):
-            if j - 1 not in depended[i]:
-                depended_out[i][j] = depended_out[i][j] * 0
-    return depend_out, depended_out
-
-
-def weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend, depended, opt, no_connect):
+def weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend_vec, depended_vec, opt):
     bert_local_out2 = torch.zeros_like(bert_local_out)
-    for j in range(depend.size()[0]):
-        bert_local_out2[j][0] = bert_local_out[j][0]
-
-    for j in range(depend.size()[0]):
-        for i in range(depend.size()[1]):
-            if depend[j][i] != -1 and (depend[j][i] + 1) < opt.max_seq_len:
-                bert_local_out2[j][depend[j][i] + 1] = depend_weight[j].item() * bert_local_out[j][depend[j][i] + 1]
-
-    for j in range(depended.size()[0]):
-        for i in range(depended.size()[1]):
-            if depended[j][i] != -1 and (depended[j][i] + 1) < opt.max_seq_len:
-                bert_local_out2[j][depended[j][i] + 1] = depended_weight[j].item() * bert_local_out[j][
-                    depended[j][i] + 1]
-
-    for j in range(no_connect.size()[0]):
-        for i in range(no_connect.size()[1]):
-            if no_connect[j][i] != -1 and (no_connect[j][i] + 1) < opt.max_seq_len:
-                bert_local_out2[j][no_connect[j][i] + 1] = 0
-
+    depend_vec2 = torch.mul(depend_vec, depend_weight.unsqueeze(2))
+    depended_vec2 = torch.mul(depended_vec, depended_weight.unsqueeze(2))
+    bert_local_out2 = bert_local_out2 + torch.mul(bert_local_out, depend_vec2) + torch.mul(bert_local_out, depended_vec2)
+    for j in range(depend_weight.size()[0]):
+         bert_local_out2[j][0] = bert_local_out[j][0]
     return bert_local_out2
 
 
@@ -72,7 +43,7 @@ class PointwiseFeedForward(nn.Module):
 
 
 class DLCF_DCA_BERT(nn.Module):
-    inputs = ['text_bert_indices', 'text_raw_bert_indices', 'dlcf_vec', 'depend_ids', 'depended_ids', 'no_connect']
+    inputs = ['text_bert_indices', 'text_raw_bert_indices', 'dlcf_vec', 'depend_vec', 'depended_vec']
 
     def __init__(self, bert, opt):
         super(DLCF_DCA_BERT, self).__init__()
@@ -142,9 +113,8 @@ class DLCF_DCA_BERT(nn.Module):
             text_bert_indices = inputs[1]
         text_local_indices = inputs[1]
         lcf_matrix = inputs[2].unsqueeze(2)
-        depend = inputs[3]
-        depended = inputs[4]
-        no_connect = inputs[5]
+        depend_vec = inputs[3].unsqueeze(2)
+        depended_vec = inputs[4].unsqueeze(2)
 
         global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
         local_context_features = self.bert4local(text_local_indices)['last_hidden_state']
@@ -155,12 +125,13 @@ class DLCF_DCA_BERT(nn.Module):
         depended_weight = torch.ones(bert_local_out.size()[0])
 
         for i in range(self.opt.dca_layer):
-            depend_out, depended_out = dependency_hidden(bert_local_out, depend, depended)
+            depend_out = torch.mul(bert_local_out,depend_vec)
+            depended_out = torch.mul(bert_local_out,depended_vec)
             depend_weight, depended_weight = self.weight_calculate(self.dca_sa[i], self.dca_pool[i], self.dca_lin[i],
                                                                    depend_weight, depended_weight, depend_out,
                                                                    depended_out)
-            bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend, depended,
-                                                     self.opt, no_connect)
+            bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend_vec, depended_vec,
+                                                      self.opt)
 
         out_cat = torch.cat((bert_local_out, global_context_features), dim=-1)
         out_cat = self.mean_pooling_double(out_cat)
