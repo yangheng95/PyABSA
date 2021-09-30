@@ -181,7 +181,9 @@ class BERTBaselineABSADataset(Dataset):
         for i in tqdm.tqdm(range(0, len(lines), 3), postfix='building word indices...'):
             text_left, _, text_right = [s.lower().strip() for s in lines[i].partition("$T$")]
             aspect = lines[i + 1].lower().strip()
+            text_raw = text_left + ' ' + aspect + ' ' + text_right
             polarity = lines[i + 2].strip()
+            # polarity = int(polarity)
 
             text_indices = tokenizer.text_to_sequence('[CLS] ' + text_left + ' ' + aspect + ' ' + text_right + " [SEP]")
             context_indices = tokenizer.text_to_sequence(text_left + text_right)
@@ -194,11 +196,10 @@ class BERTBaselineABSADataset(Dataset):
             left_len = min(opt.max_seq_len - aspect_len, np.sum(left_indices != 0))
             left_indices = np.concatenate((left_indices[:left_len], np.asarray([0] * (opt.max_seq_len - left_len))))
             aspect_boundary = np.asarray([left_len, left_len + aspect_len - 1], dtype=np.int64)
-            polarity = int(polarity)
 
-            dependency_graph = np.pad(idx2graph[i],
-                                      ((0, max(0, opt.max_seq_len - idx2graph[i].shape[0])),
-                                       (0, max(0, opt.max_seq_len - idx2graph[i].shape[0]))),
+            dependency_graph = np.pad(idx2graph[text_raw],
+                                      ((0, max(0, opt.max_seq_len - idx2graph[text_raw].shape[0])),
+                                       (0, max(0, opt.max_seq_len - idx2graph[text_raw].shape[0]))),
                                       'constant')
             dependency_graph = dependency_graph[:, range(0, opt.max_seq_len)]
             dependency_graph = dependency_graph[range(0, opt.max_seq_len), :]

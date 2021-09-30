@@ -12,8 +12,7 @@ from pyabsa import __name__, __version__
 setup(
     name=__name__,
     version=__version__,
-    description='This tool provides the sota model for aspect term extraction (ATE) '
-                'and aspect polarity classification (APC)',
+    description='This tool provides the state-of-the-art models for aspect term extraction (ATE), aspect polarity classification (APC), and text classification.',
     # The project's main homepage.
     url='https://github.com/yangheng95/pyabsa',
     # Author details

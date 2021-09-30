@@ -12,6 +12,7 @@ import time
 
 import git
 from findfile import find_files, find_dir
+from termcolor import colored
 
 
 class DatasetItem(list):
@@ -39,15 +40,15 @@ class ABSADatasetList:
     # Twitter
     ACL_Twitter = DatasetItem('Twitter', 'Twitter')
 
-    # Chinese
+    # Chinese (binary polarity)
     Phone = DatasetItem('Phone', 'Phone')
     Car = DatasetItem('Car', 'Car')
     Notebook = DatasetItem('Notebook', 'Notebook')
     Camera = DatasetItem('Camera', 'Camera')
 
+    # Chinese (triple polarity)
     # brightgems@github https://github.com/brightgems
     Shampoo = DatasetItem('Shampoo', 'Shampoo')
-
     # jmc123@github https://github.com/jmc-123
     MOOC = DatasetItem('MOOC', 'MOOC')
 
@@ -58,7 +59,7 @@ class ABSADatasetList:
     TShirt = DatasetItem('TShirt', 'TShirt')
 
     # assembled dataset_utils
-    Chinese = DatasetItem('Chinese', ['Chinese'])
+    Chinese = DatasetItem('Chinese', ['Phone', 'Camera', 'Notebook', 'Car'])
     English = DatasetItem('English', ['laptop14', 'restaurant14', 'restaurant16', 'twitter', 'MAMS', 'Television', 'TShirt'])
     SemEval = DatasetItem('SemEval', ['laptop14', 'restaurant14', 'restaurant16'])  # Abandon rest15 dataset due to data leakage, See https://github.com/yangheng95/PyABSA/issues/53
     Restaurant = DatasetItem('Restaurant', ['restaurant14', 'restaurant16'])
@@ -78,7 +79,7 @@ def detect_dataset(dataset_path, task='apc'):
         if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(ClassificationDatasetList, d):
             print('{} dataset is loading from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
-            search_path = find_dir(os.getcwd(), [d, task], exclude_key=['infer', 'test.'], disable_alert=True)
+            search_path = find_dir(os.getcwd(), [d, task], exclude_key=['infer', 'test.'], disable_alert=False)
             dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['infer', 'test.', '.py', '.ignore'])
             dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['infer', 'train.', '.py', '.ignore'])
         else:
@@ -91,6 +92,8 @@ def detect_dataset(dataset_path, task='apc'):
     if len(dataset_file['test']) == 0:
         print('Warning, auto_evaluate=True, however cannot find test set using for evaluating!')
 
+    print(colored('Never mix datasets with different sentiment labels!', 'yellow'))
+
     return dataset_file
 
 
@@ -102,7 +105,7 @@ def detect_infer_dataset(dataset_path, task='apc'):
         if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(ClassificationDatasetList, d):
             print('{} dataset is loading from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
-            search_path = find_dir(os.getcwd(), [d, task], disable_alert=True)
+            search_path = find_dir(os.getcwd(), [d, task], disable_alert=False)
             dataset_file += find_files(search_path, ['infer', d], ['train.', '.ignore'], '.py')
         else:
             dataset_file += find_files(d, ['infer', task], ['train.', '.ignore'], '.py')
@@ -110,6 +113,8 @@ def detect_infer_dataset(dataset_path, task='apc'):
     if len(dataset_file) == 0:
         raise RuntimeError('{} is not an integrated dataset or not downloaded automatically,'
                            ' or it is not a path containing datasets!'.format(dataset_path))
+
+    print(colored('Never mix datasets with different sentiment labels!', 'yellow'))
 
     return dataset_file
 

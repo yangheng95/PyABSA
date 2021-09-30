@@ -11,13 +11,14 @@ from transformers.models.bert.modeling_bert import BertPooler
 
 from pyabsa.network.sa_encoder import Encoder
 
+
 def weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend_vec, depended_vec, opt):
     bert_local_out2 = torch.zeros_like(bert_local_out)
     depend_vec2 = torch.mul(depend_vec, depend_weight.unsqueeze(2))
     depended_vec2 = torch.mul(depended_vec, depended_weight.unsqueeze(2))
     bert_local_out2 = bert_local_out2 + torch.mul(bert_local_out, depend_vec2) + torch.mul(bert_local_out, depended_vec2)
     for j in range(depend_weight.size()[0]):
-         bert_local_out2[j][0] = bert_local_out[j][0]
+        bert_local_out2[j][0] = bert_local_out[j][0]
     return bert_local_out2
 
 
@@ -125,13 +126,13 @@ class DLCF_DCA_BERT(nn.Module):
         depended_weight = torch.ones(bert_local_out.size()[0])
 
         for i in range(self.opt.dca_layer):
-            depend_out = torch.mul(bert_local_out,depend_vec)
-            depended_out = torch.mul(bert_local_out,depended_vec)
+            depend_out = torch.mul(bert_local_out, depend_vec)
+            depended_out = torch.mul(bert_local_out, depended_vec)
             depend_weight, depended_weight = self.weight_calculate(self.dca_sa[i], self.dca_pool[i], self.dca_lin[i],
                                                                    depend_weight, depended_weight, depend_out,
                                                                    depended_out)
             bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend_vec, depended_vec,
-                                                      self.opt)
+                                                     self.opt)
 
         out_cat = torch.cat((bert_local_out, global_context_features), dim=-1)
         out_cat = self.mean_pooling_double(out_cat)

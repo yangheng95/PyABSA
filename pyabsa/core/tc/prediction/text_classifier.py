@@ -124,6 +124,7 @@ class TextClassifier:
 
     def set_label_map(self, label_map):
         if label_map and LABEL_PADDING not in label_map:
+            print('Warning: sentiment map is deprecated, please directly set labels within dataset.')
             label_map[LABEL_PADDING] = ''
         self.label_map = label_map
 
@@ -190,13 +191,6 @@ class TextClassifier:
 
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
 
-        if self.label_map:
-            label_map = self.label_map
-        elif self.opt.polarities_dim == 3:
-            label_map = {0: 'Negative', 1: "Neutral", 2: 'Positive', LABEL_PADDING: ''}
-        else:
-            label_map = {p: p for p in range(self.opt.polarities_dim)}
-            label_map[LABEL_PADDING] = ''
         correct = {True: 'Correct', False: 'Wrong'}
         results = []
         if save_path:
@@ -215,20 +209,18 @@ class TextClassifier:
                 t_probs = torch.softmax(sen_logits, dim=-1).cpu().numpy()
                 for i, i_probs in enumerate(t_probs):
                     if 'origin_label_map' in self.opt.args:
-                        label = self.opt.origin_label_map[int(i_probs.argmax(axis=-1))]
-                        real_label = self.opt.origin_label_map[int(sample['label'][i])]
+                        label = self.opt.origin_label_map.get(int(i_probs.argmax(axis=-1)))
+                        real_label = int(sample['label'][i])
                     else:
                         label = int(i_probs.argmax(axis=-1))
                         real_label = int(sample['polarity'][i])
                     text_raw = sample['text_raw'][i]
 
                     result['text'] = sample['text_raw'][i]
-                    result['label'] = label_map[label] if label in label_map else label
-                    result['ref_label'] = label_map[real_label] if real_label in label_map else real_label
                     result['infer result'] = correct[label == real_label]
                     results.append(result)
                     if real_label == -999:
-                        colored_pred_info = '{} --> {}'.format('Label', label_map[label])
+                        colored_pred_info = '{} --> {}'.format('Label', label)
                     else:
                         n_labeled += 1
                         if label == real_label:

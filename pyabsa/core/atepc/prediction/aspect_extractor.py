@@ -122,6 +122,7 @@ class AspectExtractor:
 
     def set_sentiment_map(self, sentiment_map):
         if sentiment_map and SENTIMENT_PADDING not in sentiment_map:
+            print('Warning: sentiment map is deprecated, please directly set labels within dataset.')
             sentiment_map[SENTIMENT_PADDING] = ''
         self.sentiment_map = sentiment_map
 
@@ -172,7 +173,7 @@ class AspectExtractor:
                 asp_res = merged_results.get(i)
                 final_res.append(
                     {
-                        'sentence': ''.join(item[0]),
+                        'sentence': ' '.join(item[0]),
                         'IOB': item[1],
                         'tokens': item[0],
                         'aspect': asp_res['aspect'] if asp_res else [],
@@ -184,9 +185,9 @@ class AspectExtractor:
             for item in sentence_res:
                 final_res[item[3]] = \
                     {'sentence': ' '.join(item[0]),
-                        'IOB': item[1],
-                        'tokens': item[0]
-                        }
+                     'IOB': item[1],
+                     'tokens': item[0]
+                     }
 
         return final_res
 
@@ -226,7 +227,7 @@ class AspectExtractor:
 
     # Temporal code, pending optimization
     def _extract(self, examples):
-        sentence_res = [] # extraction result by sentence
+        sentence_res = []  # extraction result by sentence
         extraction_res = []  # extraction result flatten by aspect
 
         self.eval_dataloader = None
@@ -300,14 +301,14 @@ class AspectExtractor:
                     if pred_iobs[iob_idx].endswith('ASP') and not pred_iobs[iob_idx + 1].endswith('I-ASP'):
                         _polarity = polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
                         polarity = POLARITY_PADDING[:iob_idx + 1] + polarity[iob_idx + 1:]
-                        extraction_res.append((all_tokens[i], pred_iobs, _polarity,i))
-        
+                        extraction_res.append((all_tokens[i], pred_iobs, _polarity, i))
+
         return extraction_res, sentence_res
 
     def _infer(self, examples):
 
         res = []  # sentiment classification result
-         # ate example id map to apc example id
+        # ate example id map to apc example id
         example_id_map = dict([(apc_id, ex[3]) for apc_id, ex in enumerate(examples)])
 
         self.eval_dataloader = None
@@ -337,14 +338,7 @@ class AspectExtractor:
 
         # extract_aspects
         self.model.eval()
-        if self.sentiment_map:
-            sentiments = self.sentiment_map
-        elif self.opt.polarities_dim == 3:
-            sentiments = {0: 'Negative', 1: "Neutral", 2: 'Positive', -999: ''}
-        else:
-            sentiments = {p: str(p) for p in range(self.opt.polarities_dim + 1)}
-            sentiments[-999] = ''
-       
+
         # Correct = {True: 'Correct', False: 'Wrong'}
         for i_batch, batch in enumerate(self.eval_dataloader):
             input_ids_spc, segment_ids, input_mask, label_ids, \
@@ -368,16 +362,16 @@ class AspectExtractor:
                                                     lcf_cdw_vec=lcf_cdw_vec)
                 for i, i_apc_logits in enumerate(apc_logits):
                     if 'origin_label_map' in self.opt.args:
-                        sent = self.opt.origin_label_map[int(i_apc_logits.argmax(axis=-1))]
+                        sent = self.opt.origin_label_map.get(int(i_apc_logits.argmax(axis=-1)))
                     else:
                         sent = int(torch.argmax(i_apc_logits, -1))
                     result = {}
-                    apc_id = i_batch*EVAL_BATCH_SIZE + i
+                    apc_id = i_batch * EVAL_BATCH_SIZE + i
                     result['sentence'] = ' '.join(all_tokens[apc_id])
                     result['tokens'] = all_tokens[apc_id]
                     result['aspect'] = all_aspects[apc_id]
                     result['positions'] = all_positions[apc_id]
-                    result['sentiment'] = sentiments[sent] if sent in sentiments else sent
+                    result['sentiment'] = sent
                     result['example_id'] = example_id_map[apc_id]
                     res.append(result)
 

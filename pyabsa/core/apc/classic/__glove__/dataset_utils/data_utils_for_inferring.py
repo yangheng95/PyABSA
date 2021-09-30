@@ -59,20 +59,6 @@ class Tokenizer(object):
 class GloVeABSADataset(Dataset):
 
     def __init__(self, tokenizer, opt):
-        self.glove_input_colses = {
-            'lstm': ['text_indices'],
-            'td_lstm': ['left_with_aspect_indices', 'right_with_aspect_indices'],
-            'tc_lstm': ['left_with_aspect_indices', 'right_with_aspect_indices', 'aspect_indices'],
-            'atae_lstm': ['text_indices', 'aspect_indices'],
-            'ian': ['text_indices', 'aspect_indices'],
-            'memnet': ['context_indices', 'aspect_indices'],
-            'ram': ['text_indices', 'aspect_indices', 'left_indices'],
-            'cabasc': ['text_indices', 'aspect_indices', 'left_with_aspect_indices', 'right_with_aspect_indices'],
-            'tnet_lf': ['text_indices', 'aspect_indices', 'aspect_boundary'],
-            'aoa': ['text_indices', 'aspect_indices'],
-            'mgan': ['text_indices', 'aspect_indices', 'left_indices'],
-            'asgcn': ['text_indices', 'aspect_indices', 'left_indices', 'dependency_graph'],
-        }
 
         self.tokenizer = tokenizer
         self.opt = opt
@@ -137,11 +123,8 @@ class GloVeABSADataset(Dataset):
                     text, polarity = text.split('!sent!')[0].strip(), text.split('!sent!')[1].strip()
                     text = text.replace('[PADDING]', '')
 
-                    polarity = int(polarity) if polarity else LABEL_PADDING
-                    if polarity < 0:
-                        raise RuntimeError(
-                            'Invalid sentiment label detected, only please label the sentiment between {0, N-1} '
-                            '(assume there are N types of sentiment polarities.)')
+                    polarity = polarity if polarity else LABEL_PADDING
+
                 else:
                     polarity = LABEL_PADDING
 

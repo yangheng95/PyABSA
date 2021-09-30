@@ -84,7 +84,7 @@ def readfile(filename):
             break
         sentence.append(splits[0])
         tag.append(splits[-2])
-        polarity.append(int(splits[-1]))
+        polarity.append(splits[-1])
 
     prepared_data = []
     for s, t, p in data:
@@ -185,9 +185,7 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
         IOB_label = example.IOB_label
         aspect_label = example.aspect_label
         polarity = example.polarity
-        if polarity != SENTIMENT_PADDING:  # bad case handle in Chinese atepc_datasets
-            if polarity == -1:
-                print(text_spc_tokens)
+        if polarity != SENTIMENT_PADDING or int(polarity) != SENTIMENT_PADDING:  # bad case handle in Chinese atepc_datasets
             polarities_set.add(polarity)  # ignore samples without polarities
         tokens = []
         labels = []

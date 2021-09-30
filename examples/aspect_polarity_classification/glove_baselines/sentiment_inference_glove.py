@@ -22,7 +22,7 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
 
 # model_path = APCCheckpointManager.get_checkpoint(checkpoint_name='TNet_LF')
-model_path = 'tnet_lf_acc_76.65_f1_72.32'  # test checkpoint
+model_path = 'tnet_lf_acc_88.7_f1_64.02'  # test checkpoint
 sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint=model_path,
                                                                 auto_device=True,  # Use CUDA if available
                                                                 sentiment_map=sentiment_map
@@ -32,7 +32,7 @@ text = 'everything is always cooked to perfection , the [ASP]service[ASP] is exc
 sent_classifier.infer(text, print_result=True)
 
 # batch inferring_tutorials returns the results, save the result if necessary using save_result=True
-inference_sets = ABSADatasetList.Restaurant15
+inference_sets = ABSADatasetList.SemEval
 results = sent_classifier.batch_infer(target_file=inference_sets,
                                       print_result=True,
                                       save_result=True,
