@@ -107,19 +107,16 @@ class ABSADataset(Dataset):
                 lcf_vec = prepared_inputs['lcf_cdm_vec'] if self.opt.lcf == 'cdm' else prepared_inputs['lcf_cdw_vec']
 
                 if self.opt.model_name == 'dlcf_dca_bert':
-                    prepared_inputs = prepare_input_for_dlcf_dca(self.opt, self.tokenizer, text_left, text_right, aspect)
+                    prepared_inputs = prepare_input_for_dlcf_dca(self.opt, self.opt.tokenizer, text_left, text_right, aspect)
                     dlcf_vec = prepared_inputs['dlcf_cdm_vec'] if self.opt.lcf == 'cdm' else prepared_inputs['dlcf_cdw_vec']
-                    depend_ids = prepared_inputs['depend_ids']
-                    depended_ids = prepared_inputs['depended_ids']
-                    no_connect = prepared_inputs['no_connect']
+                    depend_vec = prepared_inputs['depend_vec']
+                    depended_vec = prepared_inputs['depended_vec']
                 data = {
                     'ex_id': ex_id,
 
-                    'depend_ids': depend_ids if 'depend_ids' in self.opt.model.inputs else 0,
+                    'depend_vec': depend_vec if 'depend_vec' in self.opt.model.inputs else 0,
 
-                    'depended_ids': depended_ids if 'depended_ids' in self.opt.model.inputs else 0,
-
-                    'no_connect': no_connect if 'no_connect' in self.opt.model.inputs else 0,
+                    'depended_vec': depended_vec if 'depended_vec' in self.opt.model.inputs else 0,
 
                     'text_raw': text_raw,
 
