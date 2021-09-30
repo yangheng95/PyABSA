@@ -81,13 +81,9 @@ class ABSADataset(Dataset):
                 # check for given polarity
                 if '!sent!' in text:
                     text, polarity = text.split('!sent!')[0].strip(), text.split('!sent!')[1].strip()
-                    polarity = int(polarity) if polarity else LABEL_PADDING
+                    polarity = polarity if polarity else LABEL_PADDING
                     text = text.replace('[PADDING]', '')
 
-                    if polarity < 0:
-                        raise RuntimeError(
-                            'Invalid sentiment label detected, only please label the sentiment between {0, N-1} '
-                            '(assume there are N types of sentiment polarities.)')
                 else:
                     polarity = LABEL_PADDING
 

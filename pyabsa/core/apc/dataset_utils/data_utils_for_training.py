@@ -29,7 +29,7 @@ class ABSADataset(Dataset):
             text_left, _, text_right = [s.strip() for s in lines[i].partition("$T$")]
             aspect = lines[i + 1].lower().strip()
             polarity = lines[i + 2].strip()
-            polarity = int(polarity)
+            # polarity = int(polarity)
             label_set.add(polarity)
 
             prepared_inputs = prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect)

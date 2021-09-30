@@ -24,18 +24,21 @@
 instead of using absolute path. e.g.,
 
 ```bash
-dataset = 'laptop' # instead of './SemEeval/LAPTOP' case doesn't matter
-checkpoint = 'lcfs' # any checkpoint whose absoulte path contains lcfs
+dataset = 'laptop' # instead of './SemEval/LAPTOP'. keyword case doesn't matter
+checkpoint = 'lcfs' # any checkpoint whose absolute path contains lcfs
 ```
 
-- PyABSA use the [AutoCuda](https://github.com/yangheng95/autocuda) to support automatic cuda assignment, but you can still set a preferred device.
+- PyABSA use the [AutoCUDA](https://github.com/yangheng95/autocuda) to support automatic cuda assignment, but you can still set a preferred device.
 ```python3
 auto_device=True  # to auto assign a cuda device for training / inference
-auto_device='cuda:1'  # to specify a prefered device
-auto_device='cpu'  # to specify a prefered device
+auto_device=False  # to use cpu
+auto_device='cuda:1'  # to specify a preferred device
+auto_device='cpu'  # to specify a preferred device
 ```
 
-- PyABSA support auto label fixing which means you can set the labels to any number (greater than -999), e.g., sentiment labels = {-9. -1, 0, 199}
+- PyABSA support auto label fixing which means you can set the labels to any token (except -999), e.g., sentiment labels = {-9. 2, negative, positive}
+- Check and make sure the version and datasets of checkpoint are compatible to your current PyABSA. The version information of PyABSA is also available in the output while loading checkpoints training args.
+- You can train a model using multiple datasets with same sentiment labels, and you can even contribute and define a combination of datasets [here](https://github.com/yangheng95/PyABSA/blob/6defdb10b7fded79e2c989d9ddd95e6b06bebbbf/pyabsa/functional/dataset/dataset_manager.py#L32)!
 - Other features are available to be found
 
 # Instruction
@@ -56,17 +59,18 @@ If you are willing to support PyABSA project, please star this repository as you
 # Installation
 
 Please do not install the version without corresponding release note to avoid installing a test version.
+
 ## install via pip
 
 To use PyABSA, install the latest version from pip or source code:
 
-```
+```bash
 pip install -U pyabsa
 ```
 
 ## install via source
 
-```
+```bash
 git clone https://github.com/yangheng95/PyABSA --depth=1
 cd PyABSA 
 python setup.py install
@@ -108,7 +112,7 @@ python setup.py install
 
 ### 1. Import necessary entries
 
-```
+```python3
 from pyabsa.functional import Trainer
 from pyabsa.functional import APCConfigManager
 from pyabsa.functional import ABSADatasetList
@@ -125,7 +129,7 @@ from pyabsa.functional import APCModelList
 
 ### 2. Choose a base param config
 
-```
+```python3
 # Choose a Bert-based APC models param_dict
 apc_config_english = APCConfigManager.get_apc_config_english()
 
@@ -138,7 +142,7 @@ apc_config_english = APCConfigManager.get_apc_config_english()
 
 ### 3. Specify an APC model and alter some hyper-parameters (if necessary)
 
-```
+```python3
 # Specify a Bert-based APC model
 apc_config_english.model = APCModelList.SLIDE_LCFS_BERT
 
@@ -161,7 +165,7 @@ apc_config_english.cross_validate_fold = -1
 
 ### 4. Configure runtime setting and running training
 
-```
+```python3
 dataset_path = ABSADatasetList.SemEval #or set your local dataset
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=dataset_path,  # train set and test set will be automatically detected
@@ -172,7 +176,7 @@ sent_classifier = Trainer(config=apc_config_english,
 
 ### 5. Sentiment inference
 
-```
+```python3
 # batch inferring_tutorials returns the results, save the result if necessary using save_result=True
 inference_dataset = ABSADatasetList.SemEval # or set your local dataset
 results = sent_classifier.batch_infer(target_file=inference_dataset,
@@ -184,17 +188,7 @@ results = sent_classifier.batch_infer(target_file=inference_dataset,
 
 ### 6. Sentiment inference output format (情感分类结果示例如下)
 
-```
-Apple is unmatched in  product quality  , aesthetics , craftmanship , and customer service .  
-product quality --> Positive  Real: Positive (Correct)
- Apple is unmatched in product quality ,  aesthetics  , craftmanship , and customer service .  
-aesthetics --> Positive  Real: Positive (Correct)
- Apple is unmatched in product quality , aesthetics ,  craftmanship  , and customer service .  
-craftmanship --> Positive  Real: Positive (Correct)
- Apple is unmatched in product quality , aesthetics , craftmanship , and  customer service  .  
-customer service --> Positive  Real: Positive (Correct)
-It is a great size and amazing  windows 8  included !  
-windows 8 --> Positive  Real: Positive (Correct)
+```python3
  I do not like too much  Windows 8  .  
 Windows 8 --> Negative  Real: Negative (Correct)
 Took a long time trying to decide between one with  retina display  and one without .  
@@ -211,7 +205,7 @@ Check the detailed usages in [APC examples](examples/aspect_polarity_classificat
 
 ### 1. Import necessary entries
 
-```
+```python3
 from pyabsa.functional import ATEPCModelList
 from pyabsa.functional import Trainer, ATEPCTrainer
 from pyabsa.functional import ABSADatasetList
@@ -220,13 +214,13 @@ from pyabsa.functional import ATEPCConfigManager
 
 ### 2. Choose a base param config
 
-```
+```python3
 config = ATEPCConfigManager.get_atepc_config_english()
 ```
 
 ### 3. Specify an ATEPC model and alter some hyper-parameters (if necessary)
 
-```
+```python3
 atepc_config_english = ATEPCConfigManager.get_atepc_config_english()
 atepc_config_english.num_epoch = 10
 atepc_config_english.evaluate_begin = 4
@@ -236,7 +230,7 @@ atepc_config_english.model = ATEPCModelList.LCF_ATEPC
 
 ### 4. Configure runtime setting and running training
 
-```
+```python3
 laptop14 = ABSADatasetList.Laptop14
 
 aspect_extractor = ATEPCTrainer(config=atepc_config_english, 
@@ -246,7 +240,7 @@ aspect_extractor = ATEPCTrainer(config=atepc_config_english,
 
 ### 5. Aspect term extraction & sentiment inference
 
-```
+```python3
 from pyabsa import ATEPCCheckpointManager
 
 examples = ['相比较原系列锐度高了不少这一点好与不好大家有争议',
@@ -266,22 +260,18 @@ atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source
 
 ### 6. Aspect term extraction & sentiment inference output format (方面抽取及情感分类结果示例如下):
 
-```
-Sentence with predicted labels:
+```bash
 关(O) 键(O) 的(O) 时(O) 候(O) 需(O) 要(O) 表(O) 现(O) 持(O) 续(O) 影(O) 像(O) 的(O) 短(B-ASP) 片(I-ASP) 功(I-ASP) 能(I-ASP) 还(O) 是(O) 很(O) 有(O) 用(O) 的(O)
 {'aspect': '短 片 功 能', 'position': '14,15,16,17', 'sentiment': '1'}
-Sentence with predicted labels:
 相(O) 比(O) 较(O) 原(O) 系(O) 列(O) 锐(B-ASP) 度(I-ASP) 高(O) 了(O) 不(O) 少(O) 这(O) 一(O) 点(O) 好(O) 与(O) 不(O) 好(O) 大(O) 家(O) 有(O) 争(O) 议(O)
 {'aspect': '锐 度', 'position': '6,7', 'sentiment': '0'}
 
-Sentence with predicted labels:
 It(O) was(O) pleasantly(O) uncrowded(O) ,(O) the(O) service(B-ASP) was(O) delightful(O) ,(O) the(O) garden(B-ASP) adorable(O) ,(O) the(O) food(B-ASP) -LRB-(O) from(O) appetizers(B-ASP) to(O) entrees(B-ASP) -RRB-(O) was(O) delectable(O) .(O)
 {'aspect': 'service', 'position': '7', 'sentiment': 'Positive'}
 {'aspect': 'garden', 'position': '12', 'sentiment': 'Positive'}
 {'aspect': 'food', 'position': '16', 'sentiment': 'Positive'}
 {'aspect': 'appetizers', 'position': '19', 'sentiment': 'Positive'}
 {'aspect': 'entrees', 'position': '21', 'sentiment': 'Positive'}
-Sentence with predicted labels:
 ```
 
 Check the detailed usages in [ATE examples](examples/aspect_term_extraction) directory.
@@ -293,39 +283,16 @@ Check the detailed usages in [ATE examples](examples/aspect_term_extraction) dir
 PyABSA will check the latest available checkpoints before and load the latest checkpoint from Google Drive. To view
 available checkpoints, you can use the following code and load the checkpoint by name:
 
-```
+```python3
 from pyabsa import available_checkpoints
 
-checkpoint_map = available_checkpoinbertts()
+checkpoint_map = available_checkpoints()
 ```
 
 If you can not access to Google Drive, you can download our checkpoints and load the unzipped checkpoint manually.
 如果您无法访问谷歌Drive，您可以下载我们预训练的模型，并手动解压缩并加载模型。 模型下载[地址](https://pan.baidu.com/s/1oKkO7RJ6Ob9vY6flnJk3Sg) 提取码：ABSA
 
-## How to share checkpoints (e.g., checkpoints trained on your custom dataset) with community
-
-For resource limitation, we do not provide diversities of checkpoints, we hope you can share your checkpoints with those
-who have not enough resource to train their model.
-
-1. Upload your zipped checkpoint to Google Drive **in a shared folder**.
-   ![123](examples/local_context_focus/pic/pic1.png)
-
-2. Get the link of your checkpoint.
-   ![123](examples/local_context_focus/pic/pic2.png)
-
-3. Register the checkpoint in the [checkpoint_map](examples/checkpoint_map.json), then make a pull request. We will
-   update the checkpoints index as soon as we can, Thanks for your help!
-
-```
-"checkpoint name": {
-        "id": "your checkpoint link",
-        "model": "model name",
-        "dataset": "trained dataset",
-        "description": "trained equipment",
-        "version": "used pyabsa version",
-        "author": "name (email)"
-      }
-```
+## [How to share checkpoints (e.g., checkpoints trained on your custom dataset) with community]((examples/documents/share-checkpoint.md))
 
 ## How to use checkpoints
 
@@ -333,7 +300,7 @@ who have not enough resource to train their model.
 
 #### 1.1 Import necessary entries
 
-```
+```python3
 import os
 from pyabsa import APCCheckpointManager, ABSADatasetList
 os.environ['PYTHONIOENCODING'] = 'UTF8'
@@ -341,7 +308,7 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 
 #### 1.2 Assume the sent_classifier and checkpoint
 
-```
+```python3
 sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
 
 sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='dlcf-dca-bert1', #or set your local checkpoint
@@ -352,7 +319,7 @@ sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='dlcf
 
 #### 1.3 Configure inferring setting
 
-```
+```python3
 # batch inferring_tutorials returns the results, save the result if necessary using save_result=True
 inference_datasets = ABSADatasetList.Laptop14 # or set your local dataset
 results = sent_classifier.batch_infer(target_file=inference_datasets,
@@ -366,7 +333,7 @@ results = sent_classifier.batch_infer(target_file=inference_datasets,
 
 #### 2.1 Import necessary entries
 
-```
+```python3
 import os
 from pyabsa import ABSADatasetList
 from pyabsa import ATEPCCheckpointManager
@@ -375,7 +342,7 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 
 #### 2.2 Assume the sent_classifier and checkpoint
 
-```
+```python3
 sentiment_map = {0: 'Negative', 1: "Neutral", 2: 'Positive', -999: ''}
 
 aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='Laptop14', # or your local checkpoint
@@ -385,7 +352,7 @@ aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='Lapto
 
 #### 2.3 Configure extraction and inferring setting
 
-```
+```python3
 # inference_dataset = ABSADatasetList.SemEval # or set your local dataset
 atepc_result = aspect_extractor.extract_aspect(inference_source=inference_dataset,
                                                save_result=True,
@@ -398,7 +365,7 @@ atepc_result = aspect_extractor.extract_aspect(inference_source=inference_datase
 
 #### 3.1 Import necessary entries
 
-```
+```python3
 from pyabsa.functional import APCCheckpointManager
 from pyabsa.functional import Trainer
 from pyabsa.functional import APCConfigManager
@@ -408,13 +375,13 @@ from pyabsa.functional import APCModelList
 
 #### 3.2 Choose a base param_dict
 
-```
+```python3
 apc_config_english = APCConfigManager.get_apc_config_english()
 ```
 
 #### 3.3 Specify an APC model and alter some hyper-parameters (if necessary)
 
-```
+```python3
 apc_config_english.model = APCModelList.SLIDE_LCF_BERT
 apc_config_english.evaluate_begin = 2
 apc_config_english.similarity_threshold = 1
@@ -428,14 +395,14 @@ apc_config_english.srd_alignment = True
 
 #### 3.4 Configure checkpoint
 
-```
+```python3
 # Ensure the corresponding checkpoint of trained model
 checkpoint_path = APCCheckpointManager.get_checkpoint('slide-lcf-bert')
 ```
 
 #### 3.5 Configure runtime setting and running training
 
-```
+```python3
 dataset_path = ABSADatasetList.SemEval #or set your local dataset
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=dataset_path,

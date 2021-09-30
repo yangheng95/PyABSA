@@ -128,6 +128,7 @@ class SentimentClassifier:
 
     def set_sentiment_map(self, sentiment_map):
         if sentiment_map and LABEL_PADDING not in sentiment_map:
+            print('Warning: sentiment map is deprecated, please directly set labels within dataset.')
             sentiment_map[LABEL_PADDING] = ''
         self.sentiment_map = sentiment_map
 
@@ -180,13 +181,6 @@ class SentimentClassifier:
 
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
 
-        if self.sentiment_map:
-            sentiment_map = self.sentiment_map
-        elif self.opt.polarities_dim == 3:
-            sentiment_map = {0: 'Negative', 1: "Neutral", 2: 'Positive', LABEL_PADDING: ''}
-        else:
-            sentiment_map = {p: p for p in range(self.opt.polarities_dim)}
-            sentiment_map[LABEL_PADDING] = ''
         correct = {True: 'Correct', False: 'Wrong'}
         results = []
         if save_path:
@@ -198,7 +192,7 @@ class SentimentClassifier:
             n_total = 0
             for _, sample in enumerate(self.infer_dataloader):
                 result = {}
-                inputs = [sample[col].to(self.opt.device) for col in self.opt.inputs_cols]
+                inputs = [sample[col].to(self.opt.device) for col in self.opt.inputs_cols if col != 'polarity']
                 self.model.eval()
                 outputs = self.model(inputs)
                 sen_logits = outputs
@@ -206,13 +200,10 @@ class SentimentClassifier:
                 for i, i_probs in enumerate(t_probs):
                     if 'origin_label_map' in self.opt.args:
                         sent = self.opt.origin_label_map[int(i_probs.argmax(axis=-1))]
-                        real_sent = self.opt.origin_label_map[int(sample['polarity'][i])]
+                        real_sent = sample['polarity'][i]
                     else:
                         sent = int(i_probs.argmax(axis=-1))
                         real_sent = int(sample['polarity'][i])
-
-                    sent = sentiment_map[sent] if sent in sentiment_map else sent
-                    real_sent = sentiment_map[real_sent] if real_sent in sentiment_map else real_sent
 
                     aspect = sample['aspect'][i]
                     text_raw = sample['text_raw'][i]

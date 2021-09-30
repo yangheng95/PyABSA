@@ -1,4 +1,13 @@
 {
+  "1.2.0a0": {
+    "1": "Enhance to support more flexible labels, now you can define string-based label instead of integer labels",
+    "2": "Remove set_sentiment_map() support due to above modification",
+    "3": "Fix a problem may cause problem while building graph for combined datasets",
+    "4": "Fix a printing problem in ATEPC",
+    "5": "Fix a bug in inference set loading",
+    "6": "Redefine the Chinese datasets",
+    "7": "This version involves considerable modification and may contain potential bug"
+  },
   "1.1.24": {
     "1": "Add the parameters statistics function",
     "2": "Optimize the DLCF_DCA model"
