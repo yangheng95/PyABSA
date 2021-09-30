@@ -1,7 +1,7 @@
 {
   "1.1.24": {
     "1": "Add the parameters statistics function",
-    "2": "Optimize the DLCF_DCA model",
+    "2": "Optimize the DLCF_DCA model"
   },
   "1.1.23": {
     "1": "Improve atepc aspect_extractor result, ensure final output is same length and order as original input examples",
@@ -9,7 +9,7 @@
     "3": "Fix a problem may cause error in text classification",
     "4": "Fix a dataset loading problem"
   },
-  "1.1.21": {
+  "1.1.22": {
     "1": "Improve dataset search to be more flexible",
     "2": "Refactor label fix trigger, enable auto label transformation in training and testing while the labels are invalid. This feature is developed based on the mooc dataset: https://github.com/jmc-123/ABSADatasets/tree/master/datasets/apc_datasets/Chinese/mooc",
     "3": "Fix the batch inference of text classification",
