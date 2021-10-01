@@ -15,11 +15,11 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import ATEPCConfigManager
 
 # chinese_sets = ABSADatasetList.Chinese
-chinese_sets = 'MOOC'
+chinese_sets = ABSADatasetList.English
 atepc_config_chinese = ATEPCConfigManager.get_atepc_config_chinese()
 atepc_config_chinese.log_step = 50
 atepc_config_chinese.model = ATEPCModelList.LCF_ATEPC
-atepc_config_chinese.evaluate_begin = 4
+atepc_config_chinese.evaluate_begin = 3
 
 aspect_extractor = Trainer(config=atepc_config_chinese,
                            dataset=chinese_sets,

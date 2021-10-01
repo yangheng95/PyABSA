@@ -31,6 +31,7 @@ class DatasetItem(list):
 
 
 class ABSADatasetList:
+
     # SemEval
     Laptop14 = DatasetItem('Laptop14', 'Laptop14')
     Restaurant14 = DatasetItem('Restaurant14', 'Restaurant14')
@@ -39,6 +40,12 @@ class ABSADatasetList:
 
     # Twitter
     ACL_Twitter = DatasetItem('Twitter', 'Twitter')
+
+    MAMS = DatasetItem('MAMS', 'MAMS')
+
+    # @R Mukherjee et al.
+    Television = DatasetItem('Television', 'Television')
+    TShirt = DatasetItem('TShirt', 'TShirt')
 
     # Chinese (binary polarity)
     Phone = DatasetItem('Phone', 'Phone')
@@ -52,18 +59,12 @@ class ABSADatasetList:
     # jmc123@github https://github.com/jmc-123
     MOOC = DatasetItem('MOOC', 'MOOC')
 
-    MAMS = DatasetItem('MAMS', 'MAMS')
-
-    # @R Mukherjee et al.
-    Television = DatasetItem('Television', 'Television')
-    TShirt = DatasetItem('TShirt', 'TShirt')
-
     # assembled dataset_utils
-    Chinese = DatasetItem('Chinese', ['Phone', 'Camera', 'Notebook', 'Car'])
+    Chinese = DatasetItem('Chinese', ['Phone', 'Camera', 'Notebook', 'Car', 'Shampoo', 'MOOC'])
     English = DatasetItem('English', ['laptop14', 'restaurant14', 'restaurant16', 'twitter', 'MAMS', 'Television', 'TShirt'])
     SemEval = DatasetItem('SemEval', ['laptop14', 'restaurant14', 'restaurant16'])  # Abandon rest15 dataset due to data leakage, See https://github.com/yangheng95/PyABSA/issues/53
     Restaurant = DatasetItem('Restaurant', ['restaurant14', 'restaurant16'])
-    Multilingual = DatasetItem('Multilingual', 'Multilingual')
+    Multilingual = DatasetItem('Multilingual', 'datasets')
 
 
 class ClassificationDatasetList:
@@ -92,7 +93,8 @@ def detect_dataset(dataset_path, task='apc'):
     if len(dataset_file['test']) == 0:
         print('Warning, auto_evaluate=True, however cannot find test set using for evaluating!')
 
-    print(colored('Never mix datasets with different sentiment labels!', 'yellow'))
+    if len(dataset_path) > 1:
+        print(colored('Never mixing datasets with different sentiment labels for training & inferring !', 'yellow'))
 
     return dataset_file
 
@@ -113,8 +115,8 @@ def detect_infer_dataset(dataset_path, task='apc'):
     if len(dataset_file) == 0:
         raise RuntimeError('{} is not an integrated dataset or not downloaded automatically,'
                            ' or it is not a path containing datasets!'.format(dataset_path))
-
-    print(colored('Never mix datasets with different sentiment labels!', 'yellow'))
+    if len(dataset_path) > 1:
+        print(colored('Never mixing datasets with different sentiment labels for training & inferring !', 'yellow'))
 
     return dataset_file
 
@@ -128,12 +130,13 @@ def download_datasets_from_github(save_path):
 
     with tempfile.TemporaryDirectory() as tmpdir:
         try:
-            git.Repo.clone_from('https://github.com/yangheng95/ABSADatasets.git', tmpdir, branch='master', depth=1)
+            git.Repo.clone_from('https://github.com/yangheng95/ABSADatasets.git', tmpdir, branch='v1.2', depth=1)
+            # git.Repo.clone_from('https://github.com/yangheng95/ABSADatasets.git', tmpdir, branch='master', depth=1)
             try:
                 shutil.move(os.path.join(tmpdir, 'datasets'), '{}'.format(save_path))
             except IOError as e:
                 pass
         except Exception as e:
-            print('Fail to download datasets: {}, please check your connection to GitHub, we will keep retrying...'.format(e))
+            print('Fail to clone ABSADatasets: {}, please check your connection to GitHub, we will keep retrying...'.format(e))
             time.sleep(3)
             download_datasets_from_github(save_path)

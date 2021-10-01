@@ -127,8 +127,8 @@ class SentimentClassifier:
         self.set_sentiment_map(sentiment_map)
 
     def set_sentiment_map(self, sentiment_map):
-        if sentiment_map and LABEL_PADDING not in sentiment_map:
-            print('Warning: sentiment map is deprecated, please directly set labels within dataset.')
+        if sentiment_map:
+            print(colored('Warning: sentiment map is deprecated, please directly set labels within dataset.', 'red'))
             sentiment_map[LABEL_PADDING] = ''
         self.sentiment_map = sentiment_map
 
@@ -201,7 +201,7 @@ class SentimentClassifier:
                     if 'origin_label_map' in self.opt.args:
                         sent = self.opt.origin_label_map[int(i_probs.argmax(axis=-1))]
                         real_sent = sample['polarity'][i]
-                    else:
+                    else:  # for the former versions until 1.2.0
                         sent = int(i_probs.argmax(axis=-1))
                         real_sent = int(sample['polarity'][i])
 

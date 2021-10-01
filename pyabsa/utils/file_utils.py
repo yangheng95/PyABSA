@@ -78,7 +78,7 @@ def assemble_aspects(fname):
                 asp_begin = (sample[0].split().index('$T$'))
                 asp_end = sample[0].split().index('$T$') + len(sample[1].split())
                 for i in range(asp_begin, asp_end):
-                    polarities_tmp[i] = int(sample[2])
+                    polarities_tmp[i] = sample[2]
                     if i - sample[0].split().index('$T$') < 1:
                         tags[i] = 'B-ASP'
                     else:
