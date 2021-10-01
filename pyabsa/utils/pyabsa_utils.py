@@ -61,22 +61,20 @@ def check_and_fix_labels(label_set, label_name, all_data, opt):
     for lb in label_set:
         if isinstance(lb, str) and len(lb.strip().split()) > 1:
             raise KeyError('The original label must be one token, i.e., label.lb.strip().split()==1 !')
-    print('Warning! Invalid label detected, label-fixing is triggered! (You can manually refactor the labels instead.)')
     new_label_dict = {origin_label: idx for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
     origin_label_map = {idx: origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
     if 'origin_label_map' not in opt.args:
         opt.origin_label_map = origin_label_map
 
     if opt.origin_label_map != origin_label_map:
-        raise KeyError('Fail to fix the labels, the number of labels are not equal among all datasets!')
+        # raise KeyError('Fail to fix the labels, the number of labels are not equal among all datasets!')
+        opt.origin_label_map.update(origin_label_map)
 
     for item in all_data:
         try:
             item[label_name] = new_label_dict[item[label_name]]
         except:
             item.polarity = new_label_dict[item.polarity]
-    print('original labels:{}'.format(list(label_set)))
-    print('mapped new labels:{}'.format(new_label_dict))
 
 
 def get_device(auto_device):

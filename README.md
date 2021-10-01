@@ -292,7 +292,7 @@ checkpoint_map = available_checkpoints()
 If you can not access to Google Drive, you can download our checkpoints and load the unzipped checkpoint manually.
 如果您无法访问谷歌Drive，您可以下载我们预训练的模型，并手动解压缩并加载模型。 模型下载[地址](https://pan.baidu.com/s/1oKkO7RJ6Ob9vY6flnJk3Sg) 提取码：ABSA
 
-## [How to share checkpoints (e.g., checkpoints trained on your custom dataset) with community]((examples/documents/share-checkpoint.md))
+## [How to share checkpoints (e.g., checkpoints trained on your custom dataset) with community](examples/documents/share-checkpoint.md)
 
 ## How to use checkpoints
 

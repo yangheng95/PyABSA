@@ -103,7 +103,7 @@ class ABSADataset(Dataset):
                 lcf_vec = prepared_inputs['lcf_cdm_vec'] if self.opt.lcf == 'cdm' else prepared_inputs['lcf_cdw_vec']
 
                 if self.opt.model_name == 'dlcf_dca_bert':
-                    prepared_inputs = prepare_input_for_dlcf_dca(self.opt, self.opt.tokenizer, text_left, text_right, aspect)
+                    prepared_inputs = prepare_input_for_dlcf_dca(self.opt, self.tokenizer, text_left, text_right, aspect)
                     dlcf_vec = prepared_inputs['dlcf_cdm_vec'] if self.opt.lcf == 'cdm' else prepared_inputs['dlcf_cdw_vec']
                     depend_vec = prepared_inputs['depend_vec']
                     depended_vec = prepared_inputs['depended_vec']
@@ -147,9 +147,9 @@ class ABSADataset(Dataset):
 
             except Exception as e:
                 if ignore_error:
-                    print('Ignore error while processing:', text)
+                    print('Ignore error while processing: {} Error info:{}'.format(text, e))
                 else:
-                    raise e
+                    raise RuntimeError(e)
 
         self.opt.polarities_dim = len(label_set)
 
