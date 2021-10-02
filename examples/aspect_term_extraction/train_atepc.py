@@ -18,9 +18,11 @@ atepc_config_english = ATEPCConfigManager.get_atepc_config_english()
 atepc_config_english.num_epoch = 6
 atepc_config_english.evaluate_begin = 3
 atepc_config_english.log_step = 5
-atepc_config_english.model = ATEPCModelList.LCFS_ATEPC
-dataset_path = ABSADatasetList.Laptop14
+atepc_config_english.model = ATEPCModelList.LCF_ATEPC
+
+dataset_path = ABSADatasetList.Multilingual
 # or your local dataset: dataset_path = 'your local dataset path'
+
 aspect_extractor = ATEPCTrainer(config=atepc_config_english,
                                 dataset=dataset_path,
                                 from_checkpoint='',  # set checkpoint to train on the checkpoint.
