@@ -30,7 +30,7 @@ from ..dataset_utils.data_utils_for_inferring import (ATEPCProcessor,
 
 class AspectExtractor:
 
-    def __init__(self, model_arg=None, sentiment_map=None):
+    def __init__(self, model_arg=None, sentiment_map=None, eval_batch_size=128):
         print('This is the aspect extractor aims to extract aspect and predict sentiment,'
               ' note that use_bert_spc is disabled while extracting aspects and classifying sentiment!')
         optimizers = {
@@ -64,6 +64,8 @@ class AspectExtractor:
                 print('tokenizer: {}'.format(tokenizer_path))
 
                 self.opt = pickle.load(open(config_path, mode='rb'))
+                self.opt.eval_batch_size = eval_batch_size
+
                 if 'pretrained_bert_name' in self.opt.args:
                     self.opt.pretrained_bert = self.opt.pretrained_bert_name
                 if state_dict_path:
@@ -102,7 +104,6 @@ class AspectExtractor:
             raise ValueError("Invalid gradient_accumulation_steps parameter: {}, should be >= 1".format(
                 self.opt.gradient_accumulation_steps))
 
-        self.opt.batch_size = 1
         param_optimizer = list(self.model.named_parameters())
         no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
         optimizer_grouped_parameters = [
@@ -189,45 +190,6 @@ class AspectExtractor:
 
         return final_res
 
-    # def merge_result(self, sentence_res, results):
-    #     """ merge ate sentence result and apc results, and restore to original sentence order
-    #
-    #     Args:
-    #         sentence_res ([tuple]): list of ate sentence results, which has (tokens, iobs)
-    #         results ([dict]): list of apc results
-    #
-    #     Returns:
-    #         [dict]: merged extraction/polarity results for each input example
-    #     """
-    #     merged_results = {}
-    #
-    #     if results['polarity_res']:
-    #         for item1, item2 in zip(results['extraction_res'], results['polarity_res']):
-    #             sentence = ' '.join(item1[0])
-    #             if sentence == item2['sentence'] and item2['sentence'] in merged_results:
-    #                 if merged_results[sentence]['position'] and item2['pos_ids'] not in merged_results[sentence]['position']:
-    #                     merged_results[sentence]['aspect'].append(item2['aspect'])
-    #                     merged_results[sentence]['position'].append(item2['pos_ids'])
-    #                     merged_results[sentence]['sentiment'].append(item2['sentiment'])
-    #             else:
-    #                 merged_results[sentence] = {
-    #                     'sentence': item2['sentence'],
-    #                     'IOB': item1[1],
-    #                     'aspect': [item2['aspect']],
-    #                     'position': [item2['pos_ids']],
-    #                     'sentiment': [item2['sentiment']]
-    #                 }
-    #
-    #     else:
-    #         for item in sentence_res:
-    #             merged_results[' '.join(item[0])] = {
-    #                 'sentence': ' '.join(item[0]),
-    #                 'IOB': item[1],
-    #                 'tokens': item[0]
-    #             }
-    #
-    #     return list(merged_results.values())
-
     def extract_aspect(self, inference_source, save_result=True, print_result=True, pred_sentiment=True):
         results = {'extraction_res': None, 'polarity_res': None}
 
@@ -287,12 +249,14 @@ class AspectExtractor:
                                   all_polarities, all_valid_ids, all_lmask_ids)
         # Run prediction for full data
         eval_sampler = SequentialSampler(eval_data)
-        self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=128)
+        if 'eval_batch_size' not in self.opt.args:
+            self.opt.eval_batch_size = 128
+        self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=self.opt.eval_batch_size)
 
         # extract_aspects
         self.model.eval()
         label_map = {i: label for i, label in enumerate(self.label_list, 1)}
-        for input_ids_spc, input_mask, segment_ids, label_ids, polarity, valid_ids, l_mask in self.eval_dataloader:
+        for i_batch, (input_ids_spc, input_mask, segment_ids, label_ids, polarity, valid_ids, l_mask) in enumerate(self.eval_dataloader):
             input_ids_spc = input_ids_spc.to(self.opt.device)
             input_mask = input_mask.to(self.opt.device)
             segment_ids = segment_ids.to(self.opt.device)
@@ -335,10 +299,11 @@ class AspectExtractor:
 
                 POLARITY_PADDING = [SENTIMENT_PADDING] * len(polarity)
                 for iob_idx in range(len(polarity) - 1):
+                    example_id = i_batch * self.opt.eval_batch_size + i
                     if pred_iobs[iob_idx].endswith('ASP') and not pred_iobs[iob_idx + 1].endswith('I-ASP'):
                         _polarity = polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
                         polarity = POLARITY_PADDING[:iob_idx + 1] + polarity[iob_idx + 1:]
-                        extraction_res.append((all_tokens[i], pred_iobs, _polarity, i))
+                        extraction_res.append((all_tokens[i], pred_iobs, _polarity, example_id))
 
         return extraction_res, sentence_res
 
@@ -369,9 +334,9 @@ class AspectExtractor:
         eval_data = TensorDataset(all_spc_input_ids, all_input_mask, all_segment_ids, all_label_ids,
                                   all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
         # Run prediction for full data
-        EVAL_BATCH_SIZE = 128
+        self.opt.eval_batch_size = 128
         eval_sampler = SequentialSampler(eval_data)
-        self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=EVAL_BATCH_SIZE)
+        self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=self.opt.eval_batch_size)
 
         # extract_aspects
         self.model.eval()
@@ -403,7 +368,7 @@ class AspectExtractor:
                     else:
                         sent = int(torch.argmax(i_apc_logits, -1))
                     result = {}
-                    apc_id = i_batch * EVAL_BATCH_SIZE + i
+                    apc_id = i_batch * self.opt.eval_batch_size + i
                     result['sentence'] = ' '.join(all_tokens[apc_id])
                     result['tokens'] = all_tokens[apc_id]
                     result['aspect'] = all_aspects[apc_id]

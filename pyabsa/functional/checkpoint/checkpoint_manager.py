@@ -42,14 +42,17 @@ class APCCheckpointManager(CheckpointManager):
     def get_sentiment_classifier(checkpoint: str = None,
                                  from_drive_url: str = '',
                                  sentiment_map: dict = None,
-                                 auto_device=True):
+                                 auto_device=True,
+                                 eval_batch_size=128):
         """
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
-        :param sentiment_map: label to text index map
         :param from_drive_url: for loading shared checkpoint on google drive from a direct url, this param disable the 'checkpoint' param.
+        :param sentiment_map: label to text index map (deprecated and has no effect)
         This param is for someone want load a checkpoint not registered in PyABSA
         :param auto_device: True or False, otherwise 'cuda', 'cpu' works
+        :param eval_batch_size: eval batch_size in modeling
+                
         :return:
         """
         checkpoint_config = find_file(os.getcwd(), [checkpoint, '.config'])
@@ -62,7 +65,7 @@ class APCCheckpointManager(CheckpointManager):
         else:
             checkpoint = APCCheckpointManager.get_checkpoint(checkpoint, from_drive_url=from_drive_url)
 
-        sent_classifier = SentimentClassifier(checkpoint, sentiment_map=sentiment_map)
+        sent_classifier = SentimentClassifier(checkpoint, sentiment_map=sentiment_map, eval_batch_size=eval_batch_size)
         device, device_name = get_device(auto_device)
         sent_classifier.to(device)
         return sent_classifier
@@ -99,14 +102,17 @@ class ATEPCCheckpointManager(CheckpointManager):
     def get_aspect_extractor(checkpoint: str = None,
                              from_drive_url: str = '',
                              sentiment_map: dict = None,
-                             auto_device=True):
+                             auto_device=True,
+                             eval_batch_size=128):
         """
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
         :param from_drive_url: for loading shared checkpoint on google drive from a direct url, this param disable the 'checkpoint' param.
         This param is for someone want load a checkpoint not registered in PyABSA
-        :param sentiment_map: label to text index map
+        :param sentiment_map: label to text index map (deprecated and has no effect)
         :param auto_device: True or False, otherwise 'cuda', 'cpu' works
+        :param eval_batch_size: eval batch_size in modeling
+        
         :return:
         """
         checkpoint_config = find_file(os.getcwd(), [checkpoint, '.config'])
@@ -119,7 +125,7 @@ class ATEPCCheckpointManager(CheckpointManager):
         else:
             checkpoint = ATEPCCheckpointManager.get_checkpoint(checkpoint, from_drive_url=from_drive_url)
 
-        aspect_extractor = AspectExtractor(checkpoint, sentiment_map=sentiment_map)
+        aspect_extractor = AspectExtractor(checkpoint, sentiment_map=sentiment_map, eval_batch_size=eval_batch_size)
         device, device_name = get_device(auto_device)
         aspect_extractor.to(device)
         return aspect_extractor
@@ -155,14 +161,17 @@ class TextClassifierCheckpointManager(CheckpointManager):
     def get_text_classifier(checkpoint: str = None,
                             from_drive_url: str = '',
                             label_map: dict = None,
-                            auto_device=True):
+                            auto_device=True,
+                            eval_batch_size=128):
         """
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
         :param from_drive_url: for loading shared checkpoint on google drive from a direct url, this param disable the 'checkpoint' param.
         This param is for someone want load a checkpoint not registered in PyABSA
-        :param label_map: label to text index map
+        :param label_map: label to text index map (deprecated and has no effect)
         :param auto_device: True or False, otherwise 'cuda', 'cpu' works
+        :param eval_batch_size: eval batch_size in modeling
+                
         :return:
         """
         checkpoint_config = find_file(os.getcwd(), [checkpoint, '.config'])
@@ -175,7 +184,7 @@ class TextClassifierCheckpointManager(CheckpointManager):
         else:
             checkpoint = TextClassifierCheckpointManager.get_checkpoint(checkpoint, from_drive_url=from_drive_url)
 
-        text_classifier = TextClassifier(checkpoint, label_map=label_map)
+        text_classifier = TextClassifier(checkpoint, label_map=label_map, eval_batch_size=eval_batch_size)
         device, device_name = get_device(auto_device)
         text_classifier.to(device)
         return text_classifier

@@ -28,7 +28,7 @@ from pyabsa.core.apc.dataset_utils.data_utils_for_inferring import ABSADataset
 
 
 class SentimentClassifier:
-    def __init__(self, model_arg=None, sentiment_map=None):
+    def __init__(self, model_arg=None, sentiment_map=None, eval_batch_size=128):
         '''
             from_train_model: load inferring_tutorials model from trained model
         '''
@@ -59,6 +59,8 @@ class SentimentClassifier:
                 print('tokenizer: {}'.format(tokenizer_path))
 
                 self.opt = pickle.load(open(config_path, mode='rb'))
+                self.opt.eval_batch_size = eval_batch_size
+
                 if state_dict_path:
                     if 'pretrained_bert_name' in self.opt.args or 'pretrained_bert' in self.opt.args:
                         if 'pretrained_bert_name' in self.opt.args:
@@ -161,7 +163,7 @@ class SentimentClassifier:
             raise FileNotFoundError('Can not find inference dataset_utils!')
 
         self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
-        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=128, shuffle=False)
+        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.opt.eval_batch_size, shuffle=False)
         return self._infer(save_path=save_path if save_result else None, print_result=print_result)
 
     def infer(self, text: str = None,
@@ -174,7 +176,7 @@ class SentimentClassifier:
             self.dataset.prepare_infer_sample(text)
         else:
             raise RuntimeError('Please specify your dataset_utils path!')
-        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=128, shuffle=False)
+        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.opt.eval_batch_size, shuffle=False)
         return self._infer(print_result=print_result)
 
     def _infer(self, save_path=None, print_result=True):

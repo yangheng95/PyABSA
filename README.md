@@ -426,9 +426,9 @@ More datasets are available at [ABSADatasets](https://github.com/yangheng95/ABSA
 8. Camera
 9. Notebook
 10. MAMS
-11. Multilingual (The sum of the above datasets.)
-12. TShirt
-13. Television
+11. TShirt
+12. Television
+13. Multilingual (The sum of all datasets.)
 
 Basically, you don't have to download the datasets, as the datasets will be downloaded automatically.
 
