@@ -164,7 +164,11 @@ class GloVeABSADataset(Dataset):
         fin = open(graph_path, 'rb')
         idx2graph = pickle.load(fin)
 
+        ex_id = 0
+
         for i in tqdm.tqdm(range(0, len(lines), 3), postfix='building word indices...'):
+            if lines[i].count("$T$") > 1:
+                continue
             text_left, _, text_right = [s.lower().strip() for s in lines[i].partition("$T$")]
             aspect = lines[i + 1].lower().strip()
             text_raw = text_left + ' ' + aspect + ' ' + text_right
@@ -190,6 +194,8 @@ class GloVeABSADataset(Dataset):
             dependency_graph = dependency_graph[range(0, opt.max_seq_len), :]
 
             data = {
+                'ex_id': ex_id,
+
                 'text_indices': text_indices
                 if 'text_indices' in opt.model.inputs else 0,
 
@@ -219,6 +225,7 @@ class GloVeABSADataset(Dataset):
 
                 'polarity': polarity,
             }
+            ex_id += 1
 
             label_set.add(polarity)
 
