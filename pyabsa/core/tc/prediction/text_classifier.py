@@ -123,8 +123,8 @@ class TextClassifier:
         self.set_label_map(label_map)
 
     def set_label_map(self, label_map):
-        if label_map and LABEL_PADDING not in label_map:
-            print('Warning: sentiment map is deprecated, please directly set labels within dataset.')
+        if label_map:
+            print(colored('Warning: label map is deprecated, please directly set labels within dataset.', 'red'))
             label_map[LABEL_PADDING] = ''
         self.label_map = label_map
 

@@ -1,5 +1,10 @@
 {
-  "1.2.0a0": {
+  "1.2.1": {
+    "1": "Full support of flexible datasets, update ABSADatasets to version 2021.10.02",
+    "2": "Fix the inference of DLCF_DCA model",
+    "3": "This version is for replacing 1.2.0"
+  },
+  "1.2.0": {
     "1": "Enhance to support more flexible labels, now you can define string-based label instead of integer labels",
     "2": "Remove set_sentiment_map() support due to above modification",
     "3": "Fix a problem may cause problem while building graph for combined datasets",

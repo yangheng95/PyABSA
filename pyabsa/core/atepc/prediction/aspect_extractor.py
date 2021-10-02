@@ -140,11 +140,9 @@ class AspectExtractor:
 
     def merge_result(self, sentence_res, results):
         """ merge ate sentence result and apc results, and restore to original sentence order
-
         Args:
             sentence_res ([tuple]): list of ate sentence results, which has (tokens, iobs)
             results ([dict]): list of apc results
-
         Returns:
             [dict]: merged extraction/polarity results for each input example
         """
@@ -152,20 +150,20 @@ class AspectExtractor:
         if results['polarity_res'] is not None:
             merged_results = {}
             pre_example_id = None
-            # merge ate and apc results, assume they are same ordered           
+            # merge ate and apc results, assume they are same ordered
             for item1, item2 in zip(results['extraction_res'], results['polarity_res']):
                 cur_example_id = item1[3]
                 assert cur_example_id == item2['example_id'], "ate and apc results should be same ordered"
                 if pre_example_id is None or cur_example_id != pre_example_id:
-                    merged_results[cur_example_id] = \
-                        {'sentence': item2['sentence'],
-                         'aspect': [item2['aspect']],
-                         'position': [item2['positions']],
-                         'sentiment': [item2['sentiment']]
-                         }
+                    merged_results[cur_example_id] = {
+                        'sentence': item2['sentence'],
+                        'aspect': [item2['aspect']],
+                        'position': [item2['pos_ids']],
+                        'sentiment': [item2['sentiment']]
+                    }
                 else:
                     merged_results[cur_example_id]['aspect'].append(item2['aspect'])
-                    merged_results[cur_example_id]['position'].append(item2['positions'])
+                    merged_results[cur_example_id]['position'].append(item2['pos_ids'])
                     merged_results[cur_example_id]['sentiment'].append(item2['sentiment'])
                 # remember example id
                 pre_example_id = item1[3]
@@ -183,13 +181,52 @@ class AspectExtractor:
                 )
         else:
             for item in sentence_res:
-                final_res[item[3]] = \
-                    {'sentence': ' '.join(item[0]),
-                     'IOB': item[1],
-                     'tokens': item[0]
-                     }
+                final_res[item[3]] = {
+                    'sentence': ' '.join(item[0]),
+                    'IOB': item[1],
+                    'tokens': item[0]
+                }
 
         return final_res
+
+    # def merge_result(self, sentence_res, results):
+    #     """ merge ate sentence result and apc results, and restore to original sentence order
+    #
+    #     Args:
+    #         sentence_res ([tuple]): list of ate sentence results, which has (tokens, iobs)
+    #         results ([dict]): list of apc results
+    #
+    #     Returns:
+    #         [dict]: merged extraction/polarity results for each input example
+    #     """
+    #     merged_results = {}
+    #
+    #     if results['polarity_res']:
+    #         for item1, item2 in zip(results['extraction_res'], results['polarity_res']):
+    #             sentence = ' '.join(item1[0])
+    #             if sentence == item2['sentence'] and item2['sentence'] in merged_results:
+    #                 if merged_results[sentence]['position'] and item2['pos_ids'] not in merged_results[sentence]['position']:
+    #                     merged_results[sentence]['aspect'].append(item2['aspect'])
+    #                     merged_results[sentence]['position'].append(item2['pos_ids'])
+    #                     merged_results[sentence]['sentiment'].append(item2['sentiment'])
+    #             else:
+    #                 merged_results[sentence] = {
+    #                     'sentence': item2['sentence'],
+    #                     'IOB': item1[1],
+    #                     'aspect': [item2['aspect']],
+    #                     'position': [item2['pos_ids']],
+    #                     'sentiment': [item2['sentiment']]
+    #                 }
+    #
+    #     else:
+    #         for item in sentence_res:
+    #             merged_results[' '.join(item[0])] = {
+    #                 'sentence': ' '.join(item[0]),
+    #                 'IOB': item[1],
+    #                 'tokens': item[0]
+    #             }
+    #
+    #     return list(merged_results.values())
 
     def extract_aspect(self, inference_source, save_result=True, print_result=True, pred_sentiment=True):
         results = {'extraction_res': None, 'polarity_res': None}
@@ -370,7 +407,7 @@ class AspectExtractor:
                     result['sentence'] = ' '.join(all_tokens[apc_id])
                     result['tokens'] = all_tokens[apc_id]
                     result['aspect'] = all_aspects[apc_id]
-                    result['positions'] = all_positions[apc_id]
+                    result['pos_ids'] = all_positions[apc_id]
                     result['sentiment'] = sent
                     result['example_id'] = example_id_map[apc_id]
                     res.append(result)
