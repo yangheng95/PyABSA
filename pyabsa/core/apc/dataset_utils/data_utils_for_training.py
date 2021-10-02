@@ -25,12 +25,15 @@ class ABSADataset(Dataset):
         # record polarities type to update polarities_dim
         label_set = set()
 
+        ex_id = 0
+
         for i in tqdm.tqdm(range(0, len(lines), 3), postfix='building word indices...'):
+            if lines[i].count("$T$") > 1:
+                continue
             text_left, _, text_right = [s.strip() for s in lines[i].partition("$T$")]
             aspect = lines[i + 1].lower().strip()
             polarity = lines[i + 2].strip()
             # polarity = int(polarity)
-            label_set.add(polarity)
 
             prepared_inputs = prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect)
 
@@ -47,7 +50,7 @@ class ABSADataset(Dataset):
                 depend_vec = prepared_inputs['depend_vec']
                 depended_vec = prepared_inputs['depended_vec']
             data = {
-                'ex_id': i // 3,
+                'ex_id': ex_id,
 
                 'text_raw': text_raw,
 
@@ -79,9 +82,9 @@ class ABSADataset(Dataset):
 
                 'polarity': polarity,
             }
+            ex_id += 1
 
             label_set.add(polarity)
-
             all_data.append(data)
 
         check_and_fix_labels(label_set, 'polarity', all_data, opt)

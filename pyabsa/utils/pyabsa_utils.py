@@ -35,6 +35,8 @@ def print_args(config, logger=None, mode=0):
     activated_args = []
     default_args = []
     for arg in config.args:
+        if isinstance(arg, str) and os.path.exists(arg):
+            arg = os.path.basename(arg)
         if config.args_call_count[arg]:
             activated_args.append('>>> {0}: {1}  --> Active'.format(arg, config.args[arg]))
         else:

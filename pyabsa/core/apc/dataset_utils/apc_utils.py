@@ -103,11 +103,11 @@ def load_apc_datasets(fname):
     for f in fname:
         print('loading: {}'.format(f))
         fin = open(f, 'r', encoding='utf-8')
-        lines = fin.readlines()
-        if len(lines) % 3 != 0 and 'train' in f:
+        _lines_ = fin.readlines()
+        if len(_lines_) % 3 != 0 and 'train' in f:
             print('Ignore {} due to illegal dataset format!'.format(f))
         else:
-            lines.extend(lines)
+            lines.extend(_lines_)
         fin.close()
     return lines
 

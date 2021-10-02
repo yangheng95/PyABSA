@@ -1,4 +1,9 @@
 {
+  "1.2.3": {
+    "1": "Enhance ATEPC dataset converting",
+    "2": "Fix some problems in some particular situations",
+    "3": "Improve stability"
+  },
   "1.2.2": {
     "1": "Full support of flexible datasets, update ABSADatasets to version 2021.10.02",
     "2": "Support batch_size setting in ATEPC, APC, TC inference",

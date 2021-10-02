@@ -16,7 +16,7 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import APCModelList
 
 apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = APCModelList.FAST_LCF_BERT
+apc_config_english.model = APCModelList.SLIDE_LCF_BERT
 apc_config_english.lcf = 'cdw'
 apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
@@ -30,9 +30,9 @@ apc_config_english.seed = {1, 2, 3}
 apc_config_english.cross_validate_fold = -1  # disable cross_validate
 # apc_config_english.use_syntax_based_SRD = True
 
-SemEval = ABSADatasetList.Laptop14
+Multilingual = ABSADatasetList.Multilingual
 sent_classifier = Trainer(config=apc_config_english,
-                          dataset=SemEval,  # train set and test set will be automatically detected
+                          dataset=Multilingual,  # train set and test set will be automatically detected
                           checkpoint_save_mode=1,  # =None to avoid save model
                           auto_device=True  # automatic choose CUDA or CPU
                           )

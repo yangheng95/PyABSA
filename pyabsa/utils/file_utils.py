@@ -15,6 +15,7 @@ import urllib.request
 import torch
 from findfile import find_files, find_dir
 from google_drive_downloader import GoogleDriveDownloader as gdd
+from pyabsa.core.atepc.dataset_utils.atepc_utils import split_text
 from termcolor import colored
 
 from pyabsa import __version__
@@ -63,7 +64,10 @@ def assemble_aspects(fname):
     lines = fin.readlines()
     fin.close()
     for i in range(len(lines)):
-        lines[i] = lines[i].replace('$ t $', '$T$').strip()
+        if i % 3 == 0 or i % 3 == 1:
+            lines[i] = ' '.join(split_text(lines[i].strip())).replace('$ t $', '$T$')
+        else:
+            lines[i] = lines[i].strip()
 
     def unify_same_samples(same_samples):
         text = same_samples[0][0].replace('$T$', same_samples[0][1])
@@ -115,19 +119,19 @@ def split_aspects(sentence):
     aspects = sentence[1].split("|")
     polarity = sentence[2].split("|")
     pre_position = 0
-    aspect_contex = sentence[0]
+    aspect_context = sentence[0]
     for i in range(aspect_num):
-        aspect_contex = aspect_contex.replace("$A$", aspects[i], 1)
+        aspect_context = aspect_context.replace("$A$", aspects[i], 1)
         single_aspect_with_contex.append(
-            (aspect_contex[pre_position:aspect_contex.find("$A$")], aspects[i], polarity[i]))
-        pre_position = aspect_contex.find(aspects[i]) + len(aspects[i]) + 1
+            (aspect_context[pre_position:aspect_context.find("$A$")], aspects[i], polarity[i]))
+        pre_position = aspect_context.find(aspects[i]) + len(aspects[i]) + 1
 
     return single_aspect_with_contex
 
 
 def convert_atepc(fname):
     print('converting:', fname)
-    dist_fname = fname + '.atepc'
+    dist_fname = fname.replace('apc_datasets', 'atepc_datasets') + '.atepc'
     lines = []
     samples = assemble_aspects(fname)
 
