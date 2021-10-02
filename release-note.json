@@ -1,8 +1,9 @@
 {
-  "1.2.1": {
+  "1.2.2": {
     "1": "Full support of flexible datasets, update ABSADatasets to version 2021.10.02",
-    "2": "Fix the inference of DLCF_DCA model",
-    "3": "This version is for replacing 1.2.0"
+    "2": "Support batch_size setting in ATEPC, APC, TC inference",
+    "3": "Fix the inference of DLCF_DCA model",
+    "4": "This version is for replacing 1.2.0(1)"
   },
   "1.2.0": {
     "1": "Enhance to support more flexible labels, now you can define string-based label instead of integer labels",
