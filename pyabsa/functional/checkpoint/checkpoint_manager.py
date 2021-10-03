@@ -203,7 +203,7 @@ class TextClassifierCheckpointManager(CheckpointManager):
         :return:
         """
         if not from_drive_url:
-            text_classification_checkpoint = available_checkpoints('TextClassification')
+            text_classification_checkpoint = available_checkpoints('TC')
             if checkpoint.lower() in [k.lower() for k in text_classification_checkpoint.keys()]:
                 print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint), 'green'))
             else:
@@ -285,7 +285,7 @@ def available_checkpoints(task='', from_local=False):
 
         t_checkpoint_map = {}
         if task:
-            t_checkpoint_map = dict(checkpoint_map)[task.upper()] if task in checkpoint_map else {}
+            t_checkpoint_map = dict(checkpoint_map)[task.upper()] if task.upper() in checkpoint_map else {}
             parse_checkpoint_info(t_checkpoint_map, task)
         else:
             for task_map in checkpoint_map:
