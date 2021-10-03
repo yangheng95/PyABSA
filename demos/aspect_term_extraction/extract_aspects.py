@@ -1,0 +1,50 @@
+# -*- coding: utf-8 -*-
+# file: extract_aspects.py
+# time: 2021/5/27 0027
+# author: yangheng <yangheng@m.scnu.edu.cn>
+# github: https://github.com/yangheng95
+# Copyright (C) 2021. All Rights Reserved.
+from pyabsa import ABSADatasetList
+from pyabsa import ATEPCCheckpointManager
+
+# 本工具提供的所有功能均属于测试功能，供学习所用， 欢迎帮助维护及提出意见
+# 仅仅实现了单条文本抽取方面及分类情感， 后面有精力会实现批量抽取方面
+
+# All the functions provided by this tool are experimental and for learning purpose only,
+# welcome to help maintain and put forward suggestions
+# There might batch extraction function in the future
+
+examples = ['But the staff was so nice to us .',
+            'But the staff was so horrible to us .',
+            r'Not only was the food outstanding , but the little ` perks \' were great .',
+            'It took half an hour to get our check , which was perfect since we could sit , have drinks and talk !',
+            'It was pleasantly uncrowded , the service was delightful , the garden adorable , '
+            'the food -LRB- from appetizers to entrees -RRB- was delectable .',
+            'How pretentious and inappropriate for MJ Grill to claim that it provides power lunch and dinners !'
+            ]
+
+# 从Google Drive下载提供的预训练模型
+
+# # 如果有需要，使用以下方法自定义情感索引到情感标签的词典， 其中-999为必需的填充， e.g.,
+# sentiment_map = {0: 'Negative', 1: "Neutral", 2: 'Positive', -999: ''}
+
+# aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='english',
+#                                                                auto_device=True  # False means load model on CPU
+#                                                                )
+
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='lcfs_atepc_cdw_apcacc_74.98_apcf1_54.96_atef1_79.81',
+                                                               auto_device=True  # False means load model on CPU
+                                                               )
+
+# inference_source = ABSADatasetList.SemEval
+# inference_source = r'E:\PyABSA-Workspace\latest\PyABSA\examples\aspect_polarity_classification\integrated_datasets\datasets\apc_datasets\TShirt'
+# inference_source = ABSADatasetList.TShirt
+# inference_source = examples
+inference_source = ABSADatasetList.Laptop14
+atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source,  #
+                                               save_result=True,
+                                               print_result=True,  # print the result
+                                               pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
+                                               )
+
+# print(atepc_result)

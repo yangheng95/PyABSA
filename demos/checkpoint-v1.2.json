@@ -1,0 +1,139 @@
+{
+  "APC": {
+    "multilingual": {
+      "id": "https://drive.google.com/file/d/1qr90Ui9ioWgevIcyRB0fXh4vuctPYa76/view?usp=sharing",
+      "Training Model": "SLIDE-LCF-BERT",
+      "Training Dataset": "Multilingual",
+      "Description": "Trained on RTX2080",
+      "Available Version": "1.2.3",
+      "Checkpoint File": "slide_lcf_bert_acc_83.4_f1_73.42.zip",
+      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
+    },
+    "english": {
+      "id": "https://drive.google.com/file/d/1_fwXMthAzFSctLn1qq9FoSg_8uTU_rdz/view?usp=sharing",
+      "Training Model": "Slide-LCF-BERT",
+      "Training Dataset": "Rest 14, 16, Laptop 14",
+      "Description": "Trained on RTX2080",
+      "Available Version": "1.1",
+      "Checkpoint File": "slide_lcf_bert_acc_83.4_f1_73.42.zip",
+      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
+    },
+    "slide-lcfs-bert": {
+      "id": "https://drive.google.com/file/d/1bRTozW9u7GSyZpWbe75jbK6IvKh0_GM9/view?usp=sharing",
+      "Training Model": "slide-lcfs-bert",
+      "Training Dataset": "Laptop 14",
+      "Description": "Trained on T4",
+      "Available Version": "1.1",
+      "Author": "M, Xu (xumayi@m.scnu.edu.cn)"
+    },
+    "slide-lcf-bert": {
+      "id": "https://drive.google.com/file/d/1dX_nd3kfWJ_3l8ul1kjVnrExrWzVLdg1/view?usp=sharing",
+      "Training Model": "slide-lcf-bert",
+      "Training Dataset": "Laptop 14",
+      "Description": "Trained on T4",
+      "Available Version": "1.1",
+      "Author": "M, Xu (xumayi@m.scnu.edu.cn)"
+    },
+    "dlcf-dca-bert1": {
+      "id": "https://drive.google.com/file/d/1w-NtWujPglsvZu4-jC6Vmu8Iz8CvX-1u/view?usp=sharing",
+      "Training Model": "dlcf-dca-bert",
+      "Training Dataset": "Laptop 14",
+      "Description": "Trained on T4",
+      "Available Version": "1.1.17-1.1.23",
+      "Author": "M, Xu (xumayi@m.scnu.edu.cn)"
+    },
+    "dlcf-dca-bert2": {
+      "id": "https://drive.google.com/file/d/1py52V7GmkvjWxrpKICY6h7XaUh9Anw7A/view?usp=sharing",
+      "Training Model": "dlcf-dca-bert",
+      "Training Dataset": "Restaurant 14",
+      "Description": "Trained on T4",
+      "Available Version": "1.1.17-1.1.23",
+      "Author": "M, Xu (xumayi@m.scnu.edu.cn)"
+    },
+    "chinese": {
+      "id": "https://drive.google.com/file/d/1Xm2USp1VylbzwQizgLqaRYpdznb8Vxyj/view?usp=sharing",
+      "Training Model": "Fast-LCF-BERT",
+      "Training Dataset": "Chinese",
+      "Description": "Trained on RTX2080",
+      "Available Version": "1.1",
+      "Checkpoint File": "fast_lcf_bert_acc_96.77_f1_96.16.zip",
+      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
+    },
+    "HELP-WANTED": {
+      "id": "",
+      "Description": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
+      "Checkpoint File": "PLEASE NOTE THAT THIS IS NOT A REAL CHECKPOINT!",
+      "Available Version": ""
+    }
+  },
+  "ATEPC": {
+    "chinese": {
+      "id": "https://drive.google.com/file/d/1vJ6qwCptDGQ0FLvnuPttpwvPJYpIaHw1/view?usp=sharing",
+      "Training Model": "LCF-ATEPC",
+      "Training Dataset": "Chinese",
+      "Description": "",
+      "Available Version": "1.1",
+      "Checkpoint File": "lcf_atepc_cdw_apcacc_96.76_apcf1_96.2_atef1_90.08.zip",
+      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
+    },
+    "Laptop14": {
+      "id": "https://drive.google.com/file/d/1-1lkoaePxXemm8jtqTLTLI5LEr6pXMTe/view?usp=sharing",
+      "Training Model": "",
+      "Training Dataset": "",
+      "Description": "Trained on T4",
+      "dataset": "Laptop 14",
+      "Available Version": "1.0.7.1",
+      "Author": "M, Xu (xumayi@m.scnu.edu.cn)"
+    },
+    "semeval": {
+      "id": "https://drive.google.com/file/d/14LYNXGO9BJFPXvXX4u6bGXNqhalPEjiC/view?usp=sharing",
+      "Training Model": "LCF-ATEPC",
+      "Training Dataset": "Rest 14, 16, Laptop 14",
+      "Description": "",
+      "Checkpoint File": "lcf_atepc_cdw_apcacc_82.77_apcf1_72.41_atef1_80.97.zip",
+      "Available Version": "1.1",
+      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
+    },
+    "english": {
+      "id": "https://drive.google.com/file/d/14LYNXGO9BJFPXvXX4u6bGXNqhalPEjiC/view?usp=sharing",
+      "Training Model": "LCF-ATEPC",
+      "Training Dataset": "Rest 14, 16, Laptop 14, MAMS, twitter, tshirt, television",
+      "Description": "",
+      "Checkpoint File": "lcf_atepc_cdw_apcacc_80.5_apcf1_77.31_atef1_74.65.zip",
+      "Available Version": "1.1.13",
+      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
+    },
+    "multilingual": {
+      "id": "https://drive.google.com/file/d/1vDr85mflnZofpzIsnwffgQVwqE1U0QoO/view?usp=sharing",
+      "Training Model": "LCF-ATEPC",
+      "Training Dataset": "multilingual",
+      "Description": "Rest 14, 16, Laptop 14, MAMS, twitter, tshirt, television, Chinese",
+      "Checkpoint File": "lcf_atepc_cdw_apcacc_83.66_apcf1_75.18_atef1_83.27.zip",
+      "Available Version": "1.1.12",
+      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
+    },
+    "HELP-WANTED": {
+      "id": "",
+      "Description": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
+      "Checkpoint File": "PLEASE NOTE THAT THIS IS NOT A REAL CHECKPOINT!",
+      "Available Version": ""
+    }
+  },
+  "TC": {
+      "sst2": {
+      "id": "https://drive.google.com/file/d/1Lbk2ts6CrcdLRKMUGIAeSouRrECyNMEt/view?usp=sharing",
+      "Training Model": "BERT",
+      "Training Dataset": "SST2",
+      "Description": "",
+      "Checkpoint File": "bert_acc_91.32_f1_91.32.zip",
+      "Available Version": "1.2.4",
+      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
+    },
+    "HELP-WANTED": {
+      "id": "",
+      "Description": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
+      "Checkpoint File": "PLEASE NOTE THAT THIS IS NOT A REAL CHECKPOINT!",
+      "Available Version": ""
+    }
+  }
+}
