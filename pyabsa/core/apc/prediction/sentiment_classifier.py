@@ -2,7 +2,7 @@
 # file: sentiment_classifier.py
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # Copyright (C) 2020. All Rights Reserved.
-
+import json
 import os
 import pickle
 import random
@@ -100,7 +100,7 @@ class SentimentClassifier:
             if not (hasattr(APCModelList, self.model.__class__.__name__) or
                     hasattr(GloVeAPCModelList, self.model.__class__.__name__) or
                     hasattr(BERTBaselineAPCModelList, self.model.__class__.__name__)):
-                raise KeyError('The checkpoint you are loading is not from APC model.')
+                raise KeyError('The ref_checkpoint you are loading is not from APC model.')
 
         if hasattr(APCModelList, self.opt.model.__name__):
             self.dataset = ABSADataset(tokenizer=self.tokenizer, opt=self.opt)
@@ -130,7 +130,7 @@ class SentimentClassifier:
 
     def set_sentiment_map(self, sentiment_map):
         if sentiment_map:
-            print(colored('Warning: sentiment map is deprecated, please directly set labels within dataset.', 'red'))
+            print(colored('Warning: set_sentiment_map() is deprecated, please directly set labels within dataset.', 'red'))
             sentiment_map[LABEL_PADDING] = ''
         self.sentiment_map = sentiment_map
 
@@ -156,11 +156,11 @@ class SentimentClassifier:
         if clear_input_samples:
             self.clear_input_samples()
 
-        save_path = os.path.join(os.getcwd(), 'apc_inference.result.txt')
+        save_path = os.path.join(os.getcwd(), 'apc_inference.result.json')
 
         target_file = detect_infer_dataset(target_file, task='apc')
         if not target_file:
-            raise FileNotFoundError('Can not find inference dataset_utils!')
+            raise FileNotFoundError('Can not find inference datasets!')
 
         self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.opt.eval_batch_size, shuffle=False)
@@ -175,9 +175,33 @@ class SentimentClassifier:
         if text:
             self.dataset.prepare_infer_sample(text)
         else:
-            raise RuntimeError('Please specify your dataset_utils path!')
+            raise RuntimeError('Please specify your datasets path!')
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.opt.eval_batch_size, shuffle=False)
         return self._infer(print_result=print_result)
+
+    def merge_results(self, results):
+        """ merge APC results have the same input text
+        """
+        final_res = []
+        for result in results:
+
+            if final_res and "".join(final_res[-1]['text'].split()) == "".join(result['text'].split()):
+                final_res[-1]['aspect'].append(result['aspect'])
+                final_res[-1]['sentiment'].append(result['sentiment'])
+                final_res[-1]['ref_sentiment'].append(result['ref_sentiment'])
+                final_res[-1]['ref_check'].append(result['ref_check'])
+            else:
+                final_res.append(
+                    {
+                        'text': result['text'].replace('  ', ' '),
+                        'aspect': [result['aspect']],
+                        'sentiment': [result['sentiment']],
+                        'ref_sentiment': [result['ref_sentiment']],
+                        'ref_check': [result['ref_check']]
+                    }
+                )
+
+        return final_res
 
     def _infer(self, save_path=None, print_result=True):
 
@@ -185,15 +209,13 @@ class SentimentClassifier:
 
         correct = {True: 'Correct', False: 'Wrong'}
         results = []
-        if save_path:
-            fout = open(save_path, 'w', encoding='utf8')
+
         with torch.no_grad():
             self.model.eval()
             n_correct = 0
             n_labeled = 0
             n_total = 0
             for _, sample in enumerate(self.infer_dataloader):
-                result = {}
                 inputs = [sample[col].to(self.opt.device) for col in self.opt.inputs_cols if col != 'polarity']
                 self.model.eval()
                 outputs = self.model(inputs)
@@ -202,7 +224,11 @@ class SentimentClassifier:
                 for i, i_probs in enumerate(t_probs):
                     if 'origin_label_map' in self.opt.args:
                         sent = self.opt.origin_label_map[int(i_probs.argmax(axis=-1))]
-                        real_sent = sample['polarity'][i]
+                        real_sent = sample['polarity'][i] if isinstance(sample['polarity'][i], str) else self.opt.origin_label_map[int(sample['polarity'][i])]
+                        if real_sent != -999 and real_sent != '-999':
+                            n_labeled += 1
+                        if sent == real_sent:
+                            n_correct += 1
                     else:  # for the former versions until 1.2.0
                         sent = int(i_probs.argmax(axis=-1))
                         real_sent = int(sample['polarity'][i])
@@ -210,58 +236,44 @@ class SentimentClassifier:
                     aspect = sample['aspect'][i]
                     text_raw = sample['text_raw'][i]
 
-                    result['text'] = sample['text_raw'][i]
-                    result['aspect'] = sample['aspect'][i]
-                    result['sentiment'] = sent
-                    result['ref_sentiment'] = real_sent
-                    result['infer result'] = correct[sent == real_sent]
-                    results.append(result)
-                    if real_sent == -999:
-                        colored_pred_info = '{} --> {}'.format(aspect, sent)
-                    else:
-                        n_labeled += 1
-                        if sent == real_sent:
-                            n_correct += 1
-                        pred_res = correct[sent == real_sent]
-                        colored_pred_res = colored(pred_res, 'green') if pred_res == 'Correct' else colored(pred_res, 'red')
-                        colored_aspect = colored(aspect, 'magenta')
-                        colored_pred_info = '{} --> {}  Real: {} ({})'.format(colored_aspect,
-                                                                              sent,
-                                                                              real_sent,
-                                                                              colored_pred_res
-                                                                              )
+                    results.append({
+                        'text': text_raw,
+                        'aspect': aspect,
+                        'sentiment': sent,
+                        'ref_sentiment': real_sent,
+                        'ref_check': correct[sent == real_sent] if real_sent != '-999' else '',
+                    })
                     n_total += 1
-                    try:
-                        if save_path:
-                            fout.write(text_raw + '\n')
-                            pred_info = '{} --> {}  Real: {} ({})'.format(aspect,
-                                                                          sent,
-                                                                          real_sent,
-                                                                          pred_res
-                                                                          )
-                            fout.write(pred_info + '\n')
-                    except:
-                        print('Can not save result: {}'.format(text_raw))
-                    try:
-                        if print_result:
-                            print(text_raw)
-                            print(colored_pred_info)
-                    except UnicodeError as e:
-                        print(colored('Encoding Error, you should use UTF8 encoding, e.g., use: os.environ["PYTHONIOENCODING"]="UTF8"'))
+
             print('Total samples:{}'.format(n_total))
             print('Labeled samples:{}'.format(n_labeled))
             print('Prediction Accuracy:{}%'.format(100 * n_correct / n_labeled if n_labeled else 'N.A.'))
 
-            try:
-                if save_path:
-                    fout.write('Total samples:{}\n'.format(n_total))
-                    fout.write('Labeled samples:{}\n'.format(n_labeled))
-                    fout.write('Prediction Accuracy:{}%\n'.format(100 * n_correct / n_labeled))
-                    print('inference result saved in: {}'.format(save_path))
-            except Exception as e:
-                print(e)
-        if save_path:
-            fout.close()
+        results = self.merge_results(results)
+        try:
+            if print_result:
+                for result in results:
+                    text_printing = result['text']
+                    for i in range(len(result['aspect'])):
+                        if result['ref_sentiment'][i] != -999:
+                            if result['sentiment'][i] == result['ref_sentiment'][i]:
+                                aspect_info = colored('{} -> {}(ref:{})'.format(result['aspect'][i], result['sentiment'][i], result['ref_sentiment'][i]), 'green')
+                            else:
+                                aspect_info = colored('{} -> {}(ref:{})'.format(result['aspect'][i], result['sentiment'][i], result['ref_sentiment'][i]), 'red')
+                        else:
+                            aspect_info = '{} -> {}'.format(result['aspect'][i], result['sentiment'][i])
+
+                        text_printing = text_printing.replace(result['aspect'][i], aspect_info)
+                    print(text_printing)
+            if save_path:
+                fout = open(save_path, 'w', encoding='utf8')
+                json.dump(json.JSONEncoder().encode({'results': results}), open(save_path, 'w'), ensure_ascii=False)
+                fout.write('Total samples:{}\n'.format(n_total))
+                fout.write('Labeled samples:{}\n'.format(n_labeled))
+                fout.write('Prediction Accuracy:{}%\n'.format(100 * n_correct / n_labeled)) if n_labeled else 'N.A.'
+                print('inference result saved in: {}'.format(save_path))
+        except Exception as e:
+            print('Can not save result: {}, Exception: {}'.format(text_raw, e))
         return results
 
     def clear_input_samples(self):

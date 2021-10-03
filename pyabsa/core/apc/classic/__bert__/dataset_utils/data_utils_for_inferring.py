@@ -141,6 +141,7 @@ class BERTBaselineABSADataset(Dataset):
     def process_data(self, samples, ignore_error=True):
         all_data = []
 
+        ex_id = 0
         for text in tqdm.tqdm(samples, postfix='building word indices...'):
             try:
                 # handle for empty lines in inferring_tutorials dataset_utils
@@ -214,6 +215,7 @@ class BERTBaselineABSADataset(Dataset):
                 }
 
                 all_data.append(data)
+                ex_id += 1
 
             except Exception as e:
                 if ignore_error:

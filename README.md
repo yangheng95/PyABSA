@@ -188,7 +188,7 @@ results = sent_classifier.batch_infer(target_file=inference_dataset,
 
 ### 6. Sentiment inference output format (情感分类结果示例如下)
 
-```python3
+```
  I do not like too much  Windows 8  .  
 Windows 8 --> Negative  Real: Negative (Correct)
 Took a long time trying to decide between one with  retina display  and one without .  

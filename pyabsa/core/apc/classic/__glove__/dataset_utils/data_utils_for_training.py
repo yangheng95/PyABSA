@@ -89,6 +89,7 @@ def build_embedding_matrix(word2idx, embed_dim, dat_fname, opt):
     else:
         print('Extracting embedding_matrix for {}'.format(dat_fname))
         glove_path = prepare_glove840_embedding(opt.dataset_name)
+        opt.glove = glove_path
         embedding_matrix = np.zeros((len(word2idx) + 2, embed_dim))  # idx 0 and len(word2idx)+1 are all-zeros
 
         word_vec = _load_word_vec(glove_path, word2idx=word2idx, embed_dim=embed_dim)

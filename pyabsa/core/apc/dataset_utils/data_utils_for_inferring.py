@@ -5,6 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 import numpy as np
+from pyabsa.utils.pyabsa_utils import check_and_fix_labels
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
@@ -72,7 +73,8 @@ class ABSADataset(Dataset):
     def process_data(self, samples, ignore_error=True):
         all_data = []
         label_set = set()
-        for ex_id, text in enumerate(tqdm(samples, postfix='building word indices...')):
+        ex_id = 0
+        for i, text in enumerate(tqdm(samples, postfix='building word indices...')):
             try:
                 # handle for empty lines in inferring_tutorials dataset_utils
                 if text is None or '' == text.strip():
@@ -142,7 +144,7 @@ class ABSADataset(Dataset):
                 }
 
                 label_set.add(polarity)
-
+                ex_id += 1
                 all_data.append(data)
 
             except Exception as e:
@@ -151,6 +153,9 @@ class ABSADataset(Dataset):
                 else:
                     raise RuntimeError(e)
 
+
+
+        check_and_fix_labels(label_set, 'polarity', all_data, self.opt)
         self.opt.polarities_dim = len(label_set)
 
         if self.opt.model_name in ['slide_lcf_bert', 'slide_lcfs_bert', 'ssw_t', 'ssw_s']:
