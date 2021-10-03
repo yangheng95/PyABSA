@@ -24,7 +24,7 @@ apc_config_english.pretrained_bert = 'bert-base-multilingual-uncased'
 apc_config_english.dynamic_truncate = True
 apc_config_english.srd_alignment = True
 
-checkpoint_path = APCCheckpointManager.get_checkpoint('english')
+checkpoint_path = APCCheckpointManager.get_checkpoint('multilingual')
 SemEval = ABSADatasetList.SemEval
 
 sent_classifier = Trainer(config=apc_config_english,

@@ -19,7 +19,7 @@ config.pretrained_bert = 'bert-base-multilingual-uncased'
 config.num_epoch = 1
 config.log_step = 100
 
-multilingual = ABSADatasetList.Multilingual
+multilingual = 'integrated_datasets/apc_datasets/ACL_Twitter/acl-14-short-data/train.raw'
 
 sent_classifier = APCTrainer(config=config,
                              dataset=multilingual,

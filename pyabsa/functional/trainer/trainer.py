@@ -98,7 +98,7 @@ class Trainer:
         self.logger = get_logger(os.getcwd(), log_name=log_name, log_type='training')
 
         if checkpoint_save_mode:
-            config.model_path_to_save = os.path.join(os.getcwd(), 'checkpoints')
+            config.model_path_to_save = 'checkpoints'
         else:
             config.model_path_to_save = None
 

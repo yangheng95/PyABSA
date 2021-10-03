@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: 1_train_glove.py
+# file: train_text_classification_glove.py
 # time: 2021/8/5
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
@@ -16,7 +16,7 @@ classification_config_english.num_epoch = 10
 classification_config_english.evaluate_begin = 2
 classification_config_english.max_seq_len = 80
 classification_config_english.dropout = 0.5
-classification_config_english.seed = {42}
+classification_config_english.seed = {42, 56, 1}
 classification_config_english.log_step = 5
 classification_config_english.l2reg = 0.0001
 

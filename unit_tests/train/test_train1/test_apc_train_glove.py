@@ -15,7 +15,7 @@ from pyabsa import APCTrainer, APCConfigManager, GloVeAPCModelList, ABSADatasetL
 apc_config_english = APCConfigManager.get_apc_config_bert_baseline()
 apc_config_english.model = GloVeAPCModelList.ASGCN
 apc_config_english.num_epoch = 1
-apc_config_english.pretrained_bert = 'bert-base-multilingual-uncased'
+# apc_config_english.pretrained_bert = 'bert-base-multilingual-uncased'  # this line will trigger an error
 apc_config_english.evaluate_begin = 0
 apc_config_english.max_seq_len = 100
 apc_config_english.dropout = 0.5
