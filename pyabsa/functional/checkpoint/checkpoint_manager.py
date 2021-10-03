@@ -209,13 +209,13 @@ class TextClassifierCheckpointManager(CheckpointManager):
             else:
                 print(colored('Checkpoint:{} is not found.'.format(checkpoint), 'red'))
                 sys.exit(-1)
-            return download_checkpoint(task='atepc',
+            return download_checkpoint(task='TC',
                                        language=checkpoint.lower(),
                                        archive_path=text_classification_checkpoint[checkpoint.lower()]['id'])
         elif find_file(os.getcwd(), [checkpoint, '.config']):
             return os.path.dirname(find_file(os.getcwd(), [checkpoint, '.config']))
         else:
-            return download_checkpoint(task='atepc',
+            return download_checkpoint(task='TC',
                                        language=checkpoint.lower(),
                                        archive_path=from_drive_url)
 

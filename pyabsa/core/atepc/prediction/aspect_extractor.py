@@ -215,7 +215,7 @@ class AspectExtractor:
                 results['polarity_res'] = self._infer(results['extraction_res'])
             results = self.merge_result(sentence_res, results)
             if save_result:
-                save_path = os.path.join(os.getcwd(), 'atepc_inference.result.json')
+                save_path = os.path.join(os.getcwd(), 'test_inference2.result.json')
                 print('The results of aspect term extraction have been saved in {}'.format(save_path))
                 json.dump(json.JSONEncoder().encode({'results': results}), open(save_path, 'w'), ensure_ascii=False)
             if print_result:

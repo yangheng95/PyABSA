@@ -53,7 +53,7 @@ If you are willing to support PyABSA project, please star this repository as you
 - [Model Support](#model-support)
 - [Dataset Support](https://github.com/yangheng95/ABSADatasets)
 - [Make Contributions](#contribution)
-- [All Examples](examples)
+- [All Examples](usages)
 - [Notice for LCF-BERT & LCF-ATEPC](#notice)
 
 # Installation
@@ -199,7 +199,7 @@ battery --> Positive  Real: Positive (Correct)
 snow lion --> Positive  Real: Positive (Correct)
 ```
 
-Check the detailed usages in [APC examples](examples/aspect_polarity_classification) directory.
+Check the detailed usages in [APC Demos](demos/aspect_polarity_classification) directory.
 
 ## Aspect Term Extraction and Polarity Classification (ATEPC)
 
@@ -274,7 +274,7 @@ It(O) was(O) pleasantly(O) uncrowded(O) ,(O) the(O) service(B-ASP) was(O) deligh
 {'aspect': 'entrees', 'position': '21', 'sentiment': 'Positive'}
 ```
 
-Check the detailed usages in [ATE examples](examples/aspect_term_extraction) directory.
+Check the detailed usages in [ATE Demos](demos/aspect_term_extraction) directory.
 
 # Checkpoint
 
@@ -512,7 +512,7 @@ You can make a contribution in many ways, including:
 The LCF is a simple and adoptive mechanism proposed for ABSA. Many models based on LCF has been proposed and achieved
 SOTA performance. Developing your models based on LCF will significantly improve your ABSA models. If you are looking
 for the original proposal of local context focus, please redirect to the introduction of
-[LCF](https://github.com/yangheng95/PyABSA/tree/release/examples/local_context_focus). If you are looking for the
+[LCF](https://github.com/yangheng95/PyABSA/tree/release/demos/documents). If you are looking for the
 original codes of the LCF-related papers, please redirect
 to [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/LC-ABSA)
 or [LCF-ATEPC](https://github.com/XuMayi/LCF-ATEPC).

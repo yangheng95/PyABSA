@@ -46,7 +46,8 @@ class SentimentClassifier:
             self.tokenizer = model_arg[2]
         else:
             # load from a model path
-            try:
+            # try:
+            if True:
                 print('Load sentiment classifier from', model_arg)
                 state_dict_path = find_file(model_arg, '.state_dict', exclude_key=['__MACOSX'])
                 model_path = find_file(model_arg, '.model', exclude_key=['__MACOSX'])
@@ -62,7 +63,7 @@ class SentimentClassifier:
                 self.opt.eval_batch_size = eval_batch_size
 
                 if state_dict_path:
-                    if 'pretrained_bert_name' in self.opt.args or 'pretrained_bert' in self.opt.args:
+                    if not hasattr(GloVeAPCModelList, self.opt.model.__name__.upper()):
                         if 'pretrained_bert_name' in self.opt.args:
                             self.opt.pretrained_bert = self.opt.pretrained_bert_name
                         self.bert = BertModel.from_pretrained(self.opt.pretrained_bert)
@@ -94,8 +95,8 @@ class SentimentClassifier:
                 print('Config used in Training:')
                 print_args(self.opt, mode=1)
 
-            except Exception as e:
-                raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, model_arg))
+            # except Exception as e:
+            #     raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, model_arg))
 
             if not (hasattr(APCModelList, self.model.__class__.__name__) or
                     hasattr(GloVeAPCModelList, self.model.__class__.__name__) or
@@ -156,7 +157,7 @@ class SentimentClassifier:
         if clear_input_samples:
             self.clear_input_samples()
 
-        save_path = os.path.join(os.getcwd(), 'apc_inference.result.json')
+        save_path = os.path.join(os.getcwd(), 'test_inference1.result.json')
 
         target_file = detect_infer_dataset(target_file, task='apc')
         if not target_file:

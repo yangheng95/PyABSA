@@ -72,6 +72,27 @@ class ClassificationDatasetList:
     SST2 = DatasetItem('SST2', 'SST2')
 
 
+def filter_dataset(dataset_files):
+    filter_key_words = ['.py', '.ignore', '.md', 'readme']
+    if isinstance(dataset_files, list):
+        for d in dataset_files:
+            for k in filter_key_words:
+                if k in d:
+                    dataset_files.remove(d)
+    else:
+        for d in dataset_files['train']:
+            for k in filter_key_words:
+                if k in d:
+                    dataset_files['train'].remove(d)
+
+        for d in dataset_files['test']:
+            for k in filter_key_words:
+                if k in d:
+                    dataset_files['test'].remove(d)
+
+    return dataset_files
+
+
 def detect_dataset(dataset_path, task='apc'):
     if not isinstance(dataset_path, DatasetItem):
         dataset_path = DatasetItem(dataset_path)
@@ -81,11 +102,11 @@ def detect_dataset(dataset_path, task='apc'):
             print('{} dataset is loading from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
             search_path = find_dir(os.getcwd(), [d, task], exclude_key=['infer', 'test.'], disable_alert=False)
-            dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['infer', 'test.', '.py', '.ignore'])
-            dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['infer', 'train.', '.py', '.ignore'])
+            dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['infer', 'test.'])
+            dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['infer', 'train.'])
         else:
-            dataset_file['train'] = find_files(d, ['train', task], exclude_key=['infer', 'test.', '.py', '.ignore'])
-            dataset_file['test'] = find_files(d, ['test', task], exclude_key=['infer', 'train.', '.py', '.ignore'])
+            dataset_file['train'] = find_files(d, ['train', task], exclude_key=['infer', 'test.'])
+            dataset_file['test'] = find_files(d, ['test', task], exclude_key=['infer', 'train.'])
 
     if len(dataset_file['train']) == 0:
         raise RuntimeError('{} is not an integrated dataset or not downloaded automatically,'
@@ -96,7 +117,7 @@ def detect_dataset(dataset_path, task='apc'):
     if len(dataset_path) > 1:
         print(colored('Never mixing datasets with different sentiment labels for training & inferring !', 'yellow'))
 
-    return dataset_file
+    return filter_dataset(dataset_file)
 
 
 def detect_infer_dataset(dataset_path, task='apc'):
@@ -108,9 +129,9 @@ def detect_infer_dataset(dataset_path, task='apc'):
             print('{} dataset is loading from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
             search_path = find_dir(os.getcwd(), [d, task], disable_alert=False)
-            dataset_file += find_files(search_path, ['infer', d], ['train.', '.ignore'], '.py')
+            dataset_file += find_files(search_path, ['infer', d], ['train.'])
         else:
-            dataset_file += find_files(d, ['infer', task], ['train.', '.ignore'], '.py')
+            dataset_file += find_files(d, ['infer', task], ['train.'])
 
     if len(dataset_file) == 0:
         raise RuntimeError('{} is not an integrated dataset or not downloaded automatically,'
@@ -118,7 +139,7 @@ def detect_infer_dataset(dataset_path, task='apc'):
     if len(dataset_path) > 1:
         print(colored('Never mixing datasets with different sentiment labels for training & inferring !', 'yellow'))
 
-    return dataset_file
+    return filter_dataset(dataset_file)
 
 
 def download_datasets_from_github(save_path):

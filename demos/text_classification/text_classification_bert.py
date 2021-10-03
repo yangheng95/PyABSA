@@ -13,7 +13,7 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 
 # Assume the text_classifier is loaded or obtained using train function
 
-text_classifier = TextClassifierCheckpointManager.get_text_classifier(checkpoint='sst2',
+text_classifier = TextClassifierCheckpointManager.get_text_classifier(checkpoint='bert',
                                                                       auto_device=True,  # Use CUDA if available
                                                                       )
 
