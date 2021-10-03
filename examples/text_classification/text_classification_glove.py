@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: text_classification_glove.py
+# file: 2_classification_glove.py
 # time: 2021/8/5
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95

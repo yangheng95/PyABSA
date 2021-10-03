@@ -2,7 +2,7 @@
 # file: text_classifier.py
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # Copyright (C) 2020. All Rights Reserved.
-
+import json
 import os
 import pickle
 import random
@@ -165,11 +165,11 @@ class TextClassifier:
         if clear_input_samples:
             self.clear_input_samples()
 
-        save_path = os.path.join(os.getcwd(), 'inference.result.txt')
+        save_path = os.path.join(os.getcwd(), 'text_classification.result.json')
 
         target_file = detect_infer_dataset(target_file, task='text_classification')
         if not target_file:
-            raise FileNotFoundError('Can not find inference dataset_utils!')
+            raise FileNotFoundError('Can not find inference datasets!')
 
         self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.opt.eval_batch_size, shuffle=False)
@@ -184,9 +184,31 @@ class TextClassifier:
         if text:
             self.dataset.prepare_infer_sample(text)
         else:
-            raise RuntimeError('Please specify your dataset_utils path!')
+            raise RuntimeError('Please specify your datasets path!')
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.opt.eval_batch_size, shuffle=False)
         return self._infer(print_result=print_result)
+
+    def merge_results(self, results):
+        """ merge APC results have the same input text
+        """
+        final_res = []
+        for result in results:
+
+            if final_res and "".join(final_res[-1]['text'].split()) == "".join(result['text'].split()):
+                final_res[-1]['label'].append(result['label'])
+                final_res[-1]['ref_label'].append(result['ref_label'])
+                final_res[-1]['ref_check'].append(result['ref_check'])
+            else:
+                final_res.append(
+                    {
+                        'text': result['text'].replace('  ', ' '),
+                        'label': [result['label']],
+                        'ref_label': [result['ref_label']],
+                        'ref_check': [result['ref_check']]
+                    }
+                )
+
+        return final_res
 
     def _infer(self, save_path=None, print_result=True):
 
@@ -194,75 +216,68 @@ class TextClassifier:
 
         correct = {True: 'Correct', False: 'Wrong'}
         results = []
-        if save_path:
-            fout = open(save_path, 'w', encoding='utf8')
+
         with torch.no_grad():
             self.model.eval()
             n_correct = 0
             n_labeled = 0
             n_total = 0
             for _, sample in enumerate(self.infer_dataloader):
-                result = {}
-                inputs = [sample[col].to(self.opt.device) for col in self.opt.inputs_cols]
+                inputs = [sample[col].to(self.opt.device) for col in self.opt.inputs_cols if col != 'label']
                 self.model.eval()
                 outputs = self.model(inputs)
                 sen_logits = outputs
                 t_probs = torch.softmax(sen_logits, dim=-1).cpu().numpy()
                 for i, i_probs in enumerate(t_probs):
                     if 'origin_label_map' in self.opt.args:
-                        label = self.opt.origin_label_map.get(int(i_probs.argmax(axis=-1)))
-                        real_label = int(sample['label'][i])
-                    else:
-                        label = int(i_probs.argmax(axis=-1))
-                        real_label = int(sample['polarity'][i])
+                        sent = self.opt.origin_label_map[int(i_probs.argmax(axis=-1))]
+                        real_sent = sample['label'][i] if isinstance(sample['label'][i], str) else self.opt.origin_label_map[int(sample['label'][i])]
+                        if real_sent != -999 and real_sent != '-999':
+                            n_labeled += 1
+                        if sent == real_sent:
+                            n_correct += 1
+                    else:  # for the former versions until 1.2.0
+                        sent = int(i_probs.argmax(axis=-1))
+                        real_sent = int(sample['label'][i])
+
                     text_raw = sample['text_raw'][i]
 
-                    result['text'] = sample['text_raw'][i]
-                    result['infer result'] = correct[label == real_label]
-                    results.append(result)
-                    if real_label == -999:
-                        colored_pred_info = '{} --> {}'.format('Label', label)
-                    else:
-                        n_labeled += 1
-                        if label == real_label:
-                            n_correct += 1
-                        pred_res = correct[label == real_label]
-                        colored_pred_res = colored(pred_res, 'green') if pred_res == 'Correct' else colored(pred_res, 'red')
-                        colored_label = colored('Label', 'magenta')
-                        colored_pred_info = '{} --> {}  Real: {} ({})'.format(colored_label,
-                                                                              label,
-                                                                              real_label,
-                                                                              colored_pred_res
-                                                                              )
+                    results.append({
+                        'text': text_raw,
+                        'label': sent,
+                        'ref_label': real_sent,
+                        'ref_check': correct[sent == real_sent] if real_sent != '-999' else '',
+                    })
                     n_total += 1
-                    try:
-                        if save_path:
-                            fout.write(text_raw + '\n')
-                            pred_info = '{} --> {}  Real: {} ({})'.format('Label',
-                                                                          label,
-                                                                          real_label,
-                                                                          pred_res
-                                                                          )
-                            fout.write(pred_info + '\n')
-                    except:
-                        print('Can not save result: {}'.format(text_raw))
-                    try:
-                        if print_result:
-                            print(text_raw)
-                            print(colored_pred_info)
-                    except UnicodeError as e:
-                        print(colored('Encoding Error, you should use UTF8 encoding, e.g., use: os.environ["PYTHONIOENCODING"]="UTF8"'))
 
-            try:
-                if save_path:
-                    fout.write('Total samples:{}\n'.format(n_total))
-                    fout.write('Labeled samples:{}\n'.format(n_labeled))
-                    fout.write('Prediction Accuracy:{}%\n'.format(100 * n_correct / n_labeled))
-                    print('inference result saved in: {}'.format(save_path))
-            except:
-                pass
-        if save_path:
-            fout.close()
+            print('Total samples:{}'.format(n_total))
+            print('Labeled samples:{}'.format(n_labeled))
+            print('Prediction Accuracy:{}%'.format(100 * n_correct / n_labeled if n_labeled else 'N.A.'))
+
+        try:
+            if print_result:
+                for result in results:
+                    text_printing = result['text']
+
+                    if result['ref_label'] != -999:
+                        if result['label'] == result['ref_label']:
+                            text_info = colored(' -> {}(ref:{})'.format(result['label'], result['ref_label']), 'green')
+                        else:
+                            text_info = colored(' -> {}(ref:{})'.format(result['label'], result['ref_label']), 'red')
+                    else:
+                        text_info = ' -> {}'.format(result['label'])
+
+                    text_printing += text_info
+                    print(text_printing)
+            if save_path:
+                fout = open(save_path, 'w', encoding='utf8')
+                json.dump(json.JSONEncoder().encode({'results': results}), open(save_path, 'w'), ensure_ascii=False)
+                fout.write('Total samples:{}\n'.format(n_total))
+                fout.write('Labeled samples:{}\n'.format(n_labeled))
+                fout.write('Prediction Accuracy:{}%\n'.format(100 * n_correct / n_labeled)) if n_labeled else 'N.A.'
+                print('inference result saved in: {}'.format(save_path))
+        except Exception as e:
+            print('Can not save result: {}, Exception: {}'.format(text_raw, e))
         return results
 
     def clear_input_samples(self):

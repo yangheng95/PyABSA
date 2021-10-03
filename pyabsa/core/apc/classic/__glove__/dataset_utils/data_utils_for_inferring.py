@@ -112,6 +112,7 @@ class GloVeABSADataset(Dataset):
     def process_data(self, samples, ignore_error=True):
         all_data = []
 
+        ex_id = 0
         for text in tqdm.tqdm(samples, postfix='building word indices...'):
             try:
                 # handle for empty lines in inferring_tutorials dataset_utils
@@ -186,12 +187,14 @@ class GloVeABSADataset(Dataset):
                 }
 
                 all_data.append(data)
+                ex_id += 1
 
             except Exception as e:
                 if ignore_error:
                     print('Ignore error while processing:', text)
                 else:
                     raise e
+
 
         self.all_data = all_data
         return self.all_data

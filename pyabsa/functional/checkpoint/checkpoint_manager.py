@@ -91,6 +91,8 @@ class APCCheckpointManager(CheckpointManager):
             return download_checkpoint(task='apc',
                                        language=checkpoint.lower(),
                                        archive_path=aspect_sentiment_classification_checkpoint[checkpoint.lower()]['id'])
+        elif find_file(os.getcwd(), [checkpoint, '.config']):
+            return os.path.dirname(find_file(os.getcwd(), [checkpoint, '.config']))
         else:
             return download_checkpoint_from_drive_url(task='apc',
                                                       language=checkpoint.lower(),
@@ -149,6 +151,8 @@ class ATEPCCheckpointManager(CheckpointManager):
             return download_checkpoint(task='atepc',
                                        language=checkpoint.lower(),
                                        archive_path=atepc_checkpoint[checkpoint]['id'])
+        elif find_file(os.getcwd(), [checkpoint, '.config']):
+            return os.path.dirname(find_file(os.getcwd(), [checkpoint, '.config']))
         else:
 
             return download_checkpoint(task='atepc',
@@ -208,6 +212,8 @@ class TextClassifierCheckpointManager(CheckpointManager):
             return download_checkpoint(task='atepc',
                                        language=checkpoint.lower(),
                                        archive_path=text_classification_checkpoint[checkpoint.lower()]['id'])
+        elif find_file(os.getcwd(), [checkpoint, '.config']):
+            return os.path.dirname(find_file(os.getcwd(), [checkpoint, '.config']))
         else:
             return download_checkpoint(task='atepc',
                                        language=checkpoint.lower(),
@@ -244,63 +250,53 @@ def compare_version(version1, version2):
 def parse_checkpoint_info(t_checkpoint_map, task='APC'):
     print('*' * 23, colored('Available {} model checkpoints for Version:{} (this version)'.format(task, __version__), 'green'), '*' * 23)
     for i, checkpoint in enumerate(t_checkpoint_map):
-        print('-' * 100)
-        print("{}. Checkpoint Name: {}\nModel: {}\nDataset: {} \nVersion: {} \nDescription:{} \nAuthor: {}".format(
-            i + 1,
-            checkpoint,
+        checkpoint = t_checkpoint_map[checkpoint]
+        try:
+            c_version = checkpoint['Available Version']
+        except:
+            continue
 
-            t_checkpoint_map[checkpoint]['model']
-            if 'model' in t_checkpoint_map[checkpoint] else '',
+        if '-' in c_version:
+            min_ver, _, max_ver = c_version.partition('-')
+        elif '+' in c_version:
+            min_ver, _, max_ver = c_version.partition('-')
+        else:
+            min_ver = c_version
+            max_ver = ''
+        max_ver = max_ver if max_ver else 'N.A.'
+        if compare_version(min_ver, __version__) <= 0 and compare_version(__version__, max_ver) <= 0:
 
-            t_checkpoint_map[checkpoint]['dataset']
-            if 'dataset' in t_checkpoint_map[checkpoint] else '',
-
-            t_checkpoint_map[checkpoint]['version']
-            if 'version' in t_checkpoint_map[checkpoint] else '',
-
-            t_checkpoint_map[checkpoint]['description']
-            if 'description' in t_checkpoint_map[checkpoint] else '',
-
-            t_checkpoint_map[checkpoint]['author']
-            if 'author' in t_checkpoint_map[checkpoint] else ''
-        ))
-    print('-' * 100)
+            print('-' * 100)
+            for key in checkpoint:
+                print('{}: {}'.format(key, checkpoint[key]))
+            print('-' * 100)
     return t_checkpoint_map
 
 
 def available_checkpoints(task='', from_local=False):
     try:
         if not from_local:
-            checkpoint_url = '1jjaAQM6F9s_IEXNpaY-bQF9EOrhq0PBD'
+            # checkpoint_url = '1jjaAQM6F9s_IEXNpaY-bQF9EOrhq0PBD'  # V1
+            checkpoint_url = '1CBVGPA3xdQqdkFFwzO5T2Q4reFtzFIJZ'  # V2
             if os.path.isfile('./checkpoints.json'):
                 os.remove('./checkpoints.json')
             gdd.download_file_from_google_drive(file_id=checkpoint_url, dest_path='./checkpoints.json')
         checkpoint_map = json.load(open('./checkpoints.json', 'r'))
-        current_version_map = {}
-        for t_map in checkpoint_map:
-            if '-' in t_map:
-                min_ver, _, max_ver = t_map.partition('-')
-            elif '+' in t_map:
-                min_ver, _, max_ver = t_map.partition('-')
-            else:
-                min_ver = t_map
-                max_ver = ''
-            max_ver = max_ver if max_ver else 'N.A.'
-            if compare_version(min_ver, __version__) <= 0 and compare_version(__version__, max_ver) <= 0:
-                current_version_map.update(checkpoint_map[t_map])  # add checkpoint_map[t_map]
+
         t_checkpoint_map = {}
         if task:
-            t_checkpoint_map = dict(current_version_map)[task.upper()] if task in current_version_map else {}
+            t_checkpoint_map = dict(checkpoint_map)[task.upper()] if task in checkpoint_map else {}
             parse_checkpoint_info(t_checkpoint_map, task)
         else:
-            for task_map in current_version_map:
-                parse_checkpoint_info(current_version_map[task_map], task_map)
+            for task_map in checkpoint_map:
+                parse_checkpoint_info(checkpoint_map[task_map], task_map)
 
         # os.remove('./checkpoints.json')
-        return t_checkpoint_map if task else current_version_map
+        return t_checkpoint_map if task else checkpoint_map
+
     except Exception as e:
         print('\nFailed to query checkpoints (Error: {}), you can try manually download the checkpoints from: \n'.format(e) +
-              '[1]\tGoogle Drive\t: https://drive.google.com/drive/folders/1yiMTucHKy2hAx945lgzhvb9QeHvJrStC\n'
+              '[1]\tGoogle Drive\t: https://drive.google.com/file/d/1CBVGPA3xdQqdkFFwzO5T2Q4reFtzFIJZ/view?usp=sharing\n'
               '[2]\tBaidu NetDisk\t: https://pan.baidu.com/s/1K8aYQ4EIrPm1GjQv_mnxEg (Access Code: absa)\n')
         sys.exit(-1)
 

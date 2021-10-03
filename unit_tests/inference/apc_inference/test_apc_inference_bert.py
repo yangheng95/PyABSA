@@ -10,11 +10,9 @@ from pyabsa import APCCheckpointManager, ABSADatasetList
 
 # Assume the sent_classifier is loaded or obtained using train function
 
-sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
-checkpoint = 'asgcn_bert_acc_76.18_f1_70.89'  # test checkpoint
-sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint=checkpoint,
+sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='ASGCN_BERT',
                                                                 auto_device=True,  # Use CUDA if available
-                                                                sentiment_map=sentiment_map
+                                                                sentiment_map=None
                                                                 )
 
 text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated . !sent! 1 1'

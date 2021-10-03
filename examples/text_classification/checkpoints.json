@@ -1,18 +1,16 @@
 {
   "APC": {
     "multilingual": {
-      "id": "",
-      "Checkpoint Name": "",
+      "id": "https://drive.google.com/file/d/1qr90Ui9ioWgevIcyRB0fXh4vuctPYa76/view?usp=sharing",
       "Training Model": "SLIDE-LCF-BERT",
       "Training Dataset": "Multilingual",
       "Description": "Trained on RTX2080",
-      "Available Version": "1.1",
+      "Available Version": "1.2.3",
       "Checkpoint File": "slide_lcf_bert_acc_83.4_f1_73.42.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "english": {
       "id": "https://drive.google.com/file/d/1_fwXMthAzFSctLn1qq9FoSg_8uTU_rdz/view?usp=sharing",
-      "Checkpoint Name": "",
       "Training Model": "Slide-LCF-BERT",
       "Training Dataset": "Rest 14, 16, Laptop 14",
       "Description": "Trained on RTX2080",
@@ -22,7 +20,6 @@
     },
     "slide-lcfs-bert": {
       "id": "https://drive.google.com/file/d/1bRTozW9u7GSyZpWbe75jbK6IvKh0_GM9/view?usp=sharing",
-      "Checkpoint Name": "",
       "Training Model": "slide-lcfs-bert",
       "Training Dataset": "Laptop 14",
       "Description": "Trained on T4",
@@ -31,7 +28,6 @@
     },
     "slide-lcf-bert": {
       "id": "https://drive.google.com/file/d/1dX_nd3kfWJ_3l8ul1kjVnrExrWzVLdg1/view?usp=sharing",
-      "Checkpoint Name": "",
       "Training Model": "slide-lcf-bert",
       "Training Dataset": "Laptop 14",
       "Description": "Trained on T4",
@@ -40,7 +36,6 @@
     },
     "dlcf-dca-bert1": {
       "id": "https://drive.google.com/file/d/1w-NtWujPglsvZu4-jC6Vmu8Iz8CvX-1u/view?usp=sharing",
-      "Checkpoint Name": "",
       "Training Model": "dlcf-dca-bert",
       "Training Dataset": "Laptop 14",
       "Description": "Trained on T4",
@@ -49,7 +44,6 @@
     },
     "dlcf-dca-bert2": {
       "id": "https://drive.google.com/file/d/1py52V7GmkvjWxrpKICY6h7XaUh9Anw7A/view?usp=sharing",
-      "Checkpoint Name": "",
       "Training Model": "dlcf-dca-bert",
       "Training Dataset": "Restaurant 14",
       "Description": "Trained on T4",
@@ -58,7 +52,6 @@
     },
     "chinese": {
       "id": "https://drive.google.com/file/d/1Xm2USp1VylbzwQizgLqaRYpdznb8Vxyj/view?usp=sharing",
-      "Checkpoint Name": "",
       "Training Model": "Fast-LCF-BERT",
       "Training Dataset": "Chinese",
       "Description": "Trained on RTX2080",
@@ -76,7 +69,6 @@
   "ATEPC": {
     "chinese": {
       "id": "https://drive.google.com/file/d/1vJ6qwCptDGQ0FLvnuPttpwvPJYpIaHw1/view?usp=sharing",
-      "Checkpoint Name": "",
       "Training Model": "LCF-ATEPC",
       "Training Dataset": "Chinese",
       "Description": "",
@@ -86,7 +78,6 @@
     },
     "Laptop14": {
       "id": "https://drive.google.com/file/d/1-1lkoaePxXemm8jtqTLTLI5LEr6pXMTe/view?usp=sharing",
-      "Checkpoint Name": "",
       "Training Model": "",
       "Training Dataset": "",
       "Description": "Trained on T4",
@@ -96,7 +87,6 @@
     },
     "semeval": {
       "id": "https://drive.google.com/file/d/14LYNXGO9BJFPXvXX4u6bGXNqhalPEjiC/view?usp=sharing",
-      "Checkpoint Name": "",
       "Training Model": "LCF-ATEPC",
       "Training Dataset": "Rest 14, 16, Laptop 14",
       "Description": "",
@@ -106,7 +96,6 @@
     },
     "english": {
       "id": "https://drive.google.com/file/d/14LYNXGO9BJFPXvXX4u6bGXNqhalPEjiC/view?usp=sharing",
-      "Checkpoint Name": "",
       "Training Model": "LCF-ATEPC",
       "Training Dataset": "Rest 14, 16, Laptop 14, MAMS, twitter, tshirt, television",
       "Description": "",
@@ -116,7 +105,6 @@
     },
     "multilingual": {
       "id": "https://drive.google.com/file/d/1vDr85mflnZofpzIsnwffgQVwqE1U0QoO/view?usp=sharing",
-      "Checkpoint Name": "",
       "Training Model": "LCF-ATEPC",
       "Training Dataset": "multilingual",
       "Description": "Rest 14, 16, Laptop 14, MAMS, twitter, tshirt, television, Chinese",

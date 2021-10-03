@@ -17,19 +17,29 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 #                                                                 auto_device=True,  # Use CUDA if available
 #                                                                 sentiment_map=sentiment_map
 #                                                                 )
-
-sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='fast_lcf_bert_acc_77.9_f1_74.34',
+examples = [
+    'Strong build though which really adds to its [ASP]durability[ASP] .',  # !sent! Positive
+    'Strong [ASP]build[ASP] though which really adds to its durability . !sent! Positive',
+    'The [ASP]battery life[ASP] is excellent - 6-7 hours without charging . !sent! Positive',
+    'I have had my computer for 2 weeks already and it [ASP]works[ASP] perfectly . !sent! Positive',
+    'And I may be the only one but I am really liking [ASP]Windows 8[ASP] . !sent! Positive',
+]
+sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='multilingual',
                                                                 auto_device=True,  # Use CUDA if available
                                                                 )
 
 # text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated . !sent! 1 1'
 # sent_classifier.infer(text, print_result=True)
 
-# batch inferring_tutorials returns the results, save the result if necessary using save_result=True
-inference_sets = ABSADatasetList.Laptop14
-# inference_sets = r'E:\PyABSA-Workspace\latest\PyABSA\examples\aspect_polarity_classification\datasets\apc_datasets\mams'
-results = sent_classifier.batch_infer(target_file=inference_sets,
-                                      print_result=True,
-                                      save_result=True,
-                                      ignore_error=False,
-                                      )
+inference_sets = examples
+
+for ex in examples:
+    result = sent_classifier.infer(ex, print_result=True)
+
+# inference_sets = ABSADatasetList.Laptop14
+# results = sent_classifier.batch_infer(target_file=inference_sets,
+#                                       print_result=True,
+#                                       save_result=True,
+#                                       ignore_error=False,
+#                                       )
+# print(results)

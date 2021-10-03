@@ -1,7 +1,5 @@
 {
-
-  "1.0.5": {
-    "APC": {
+  "APC": {
       "english": {
         "id": "https://drive.google.com/file/d/1_fwXMthAzFSctLn1qq9FoSg_8uTU_rdz/view?usp=sharing",
         "model": "Slide-LCF-BERT",
@@ -76,13 +74,22 @@
         "version": "1.0.7.1",
         "author": "M, Xu (xumayi@m.scnu.edu.cn)"
       },
-      "english": {
+      "semeval": {
         "id": "https://drive.google.com/file/d/14LYNXGO9BJFPXvXX4u6bGXNqhalPEjiC/view?usp=sharing",
         "model": "LCF-ATEPC",
         "dataset": "Rest 14, 16, Laptop 14",
         "description": "",
         "tag": "lcf_atepc_cdw_apcacc_82.77_apcf1_72.41_atef1_80.97.zip",
         "version": "1.1",
+        "author": "H, Yang (yangheng@m.scnu.edu.cn)"
+      },
+      "english": {
+        "id": "https://drive.google.com/file/d/14LYNXGO9BJFPXvXX4u6bGXNqhalPEjiC/view?usp=sharing",
+        "model": "LCF-ATEPC",
+        "dataset": "Rest 14, 16, Laptop 14, MAMS, twitter, tshirt, television",
+        "description": "",
+        "tag": "lcf_atepc_cdw_apcacc_80.5_apcf1_77.31_atef1_74.65.zip",
+        "version": "1.1.13",
         "author": "H, Yang (yangheng@m.scnu.edu.cn)"
       },
       "multilingual": {
@@ -102,13 +109,6 @@
       }
     },
     "TC": {
-      "SST2": {
-        "id": "",
-        "model": "",
-        "dataset": "SST2",
-        "description": "Trained on RTX2080",
-        "version": "1.0.7"
-      },
       "HELP-WANTED": {
         "id": "",
         "description": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
@@ -116,5 +116,5 @@
         "version": "0.0.0"
       }
     }
-  }
+
 }

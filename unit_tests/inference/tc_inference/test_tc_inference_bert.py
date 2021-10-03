@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: text_classification_bert.py
+# file: 2_classification_bert.py
 # time: 2021/8/5
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
@@ -13,7 +13,7 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 
 # Assume the text_classifier is loaded or obtained using train function
 
-text_classifier = TextClassifierCheckpointManager.get_text_classifier(checkpoint='bert_acc_91.32_f1_91.32',
+text_classifier = TextClassifierCheckpointManager.get_text_classifier(checkpoint='checkpoint',
                                                                       auto_device=True,  # Use CUDA if available
                                                                       )
 

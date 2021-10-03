@@ -123,7 +123,7 @@ class AspectExtractor:
 
     def set_sentiment_map(self, sentiment_map):
         if sentiment_map and SENTIMENT_PADDING not in sentiment_map:
-            print('Warning: sentiment map is deprecated, please directly set labels within dataset.')
+            print('Warning: set_sentiment_map is deprecated, please directly set labels within dataset.')
             sentiment_map[SENTIMENT_PADDING] = ''
         self.sentiment_map = sentiment_map
 

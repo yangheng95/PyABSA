@@ -61,9 +61,9 @@ class ABSADatasetList:
 
     # assembled dataset_utils
     Chinese = DatasetItem('Chinese', ['Phone', 'Camera', 'Notebook', 'Car', 'Shampoo', 'MOOC'])
-    English = DatasetItem('English', ['laptop14', 'restaurant14', 'restaurant16', 'twitter', 'MAMS', 'Television', 'TShirt'])
-    SemEval = DatasetItem('SemEval', ['laptop14', 'restaurant14', 'restaurant16'])  # Abandon rest15 dataset due to data leakage, See https://github.com/yangheng95/PyABSA/issues/53
-    Restaurant = DatasetItem('Restaurant', ['restaurant14', 'restaurant16'])
+    English = DatasetItem('English', ['Laptop14', 'Restaurant14', 'Restaurant16', 'ACL_Twitter', 'MAMS', 'Television', 'TShirt'])
+    SemEval = DatasetItem('SemEval', ['Laptop14', 'Restaurant14', 'Restaurant16'])  # Abandon rest15 dataset due to data leakage, See https://github.com/yangheng95/PyABSA/issues/53
+    Restaurant = DatasetItem('Restaurant', ['Restaurant14', 'Restaurant16'])
     Multilingual = DatasetItem('Multilingual', 'datasets')
 
 

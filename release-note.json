@@ -1,4 +1,9 @@
 {
+  "1.2.4": {
+    "1": "Refactor checkpoint map processing format",
+    "2": "Refactor APC inference to merge results with same text",
+    "3": "Improve stability"
+  },
   "1.2.3": {
     "1": "Enhance ATEPC dataset converting",
     "2": "Fix some problems in some particular situations",
@@ -31,7 +36,7 @@
   },
   "1.1.22": {
     "1": "Improve dataset search to be more flexible",
-    "2": "Refactor label fix trigger, enable auto label transformation in training and testing while the labels are invalid. This feature is developed based on the mooc dataset: https://github.com/jmc-123/ABSADatasets/tree/master/datasets/apc_datasets/Chinese/mooc",
+    "2": "Refactor label-mapping trigger. This feature is developed based on the mooc dataset: https://github.com/jmc-123/ABSADatasets/tree/master/datasets/apc_datasets/Chinese/mooc",
     "3": "Fix the batch inference of text classification",
     "4": "Fix the text classification dataset downloading problem",
     "5": "Fix a problem may cause failure of ATEPC inference",
@@ -42,7 +47,7 @@
   },
   "1.1.19": {
     "1": "Fix training without testset in APC",
-    "2": "Add SpaCy model setting option"
+    "2": "Add SpaCy model setting option, e.g., config.spacy_model = 'zh_core_web_sm'"
   },
   "1.1.18": {
     "1": "Reformat and fix a bug of ATEPC output"
