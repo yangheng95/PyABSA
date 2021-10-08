@@ -1,4 +1,7 @@
 {
+  "1.2.7": {
+    "1": "Fix the convert_apc_set_to_atepc_set function",
+  },
   "1.2.4": {
     "1": "Refactor checkpoint map processing format",
     "2": "Refactor APC inference to merge results with same text",
