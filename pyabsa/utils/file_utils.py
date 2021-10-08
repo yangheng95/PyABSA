@@ -108,6 +108,7 @@ def assemble_aspects(fname):
             samples.extend(unify_same_samples(aspects_in_one_sentence))
             aspects_in_one_sentence = []
             aspects_in_one_sentence.append([lines[i], lines[i + 1], lines[i + 2]])
+    samples.extend(unify_same_samples(aspects_in_one_sentence))
 
     return samples
 
