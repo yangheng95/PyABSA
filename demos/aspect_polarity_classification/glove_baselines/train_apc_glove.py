@@ -25,4 +25,4 @@ sent_classifier = APCTrainer(config=apc_config_english,  # set config=None will 
                              dataset=Dataset,  # train set and test set will be automatically detected
                              checkpoint_save_mode=1,  # set model_path_to_save=None to avoid save model
                              auto_device=True  # automatic choose CUDA or CPU
-                             )
+                             ).train()

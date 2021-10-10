@@ -36,4 +36,4 @@ sent_classifier = Trainer(config=apc_config_english,
                           dataset=Multilingual,  # train set and test set will be automatically detected
                           checkpoint_save_mode=1,  # =None to avoid save model
                           auto_device=True  # automatic choose CUDA or CPU
-                          )
+                          ).train()

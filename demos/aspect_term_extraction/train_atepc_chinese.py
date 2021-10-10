@@ -25,4 +25,4 @@ aspect_extractor = Trainer(config=atepc_config_chinese,
                            dataset=chinese_sets,
                            checkpoint_save_mode=1,
                            auto_device=True
-                           )
+                           ).train()

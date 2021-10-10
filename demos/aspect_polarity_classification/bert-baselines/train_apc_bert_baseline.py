@@ -30,25 +30,25 @@ sent_classifier = APCTrainer(config=apc_config_english,
                              dataset=laptop14,  # train set and test set will be automatically detected
                              checkpoint_save_mode=1,  # None to avoid save model
                              auto_device=True  # automatic choose CUDA or CPU
-                             )
+                             ).train()
 
 Restaurant14 = ABSADatasetList.Restaurant14
 sent_classifier = APCTrainer(config=apc_config_english,
                              dataset=Restaurant14,  # train set and test set will be automatically detected
                              checkpoint_save_mode=1,  # None to avoid save model
                              auto_device=True  # automatic choose CUDA or CPU
-                             )
+                             ).train()
 
 Restaurant15 = ABSADatasetList.Restaurant15
 sent_classifier = APCTrainer(config=apc_config_english,
                              dataset=Restaurant15,  # train set and test set will be automatically detected
                              checkpoint_save_mode=1,  # None to avoid save model
                              auto_device=True  # automatic choose CUDA or CPU
-                             )
+                             ).train()
 
 Restaurant16 = ABSADatasetList.Restaurant16
 sent_classifier = APCTrainer(config=apc_config_english,
                              dataset=Restaurant16,  # train set and test set will be automatically detected
                              checkpoint_save_mode=1,  # None to avoid save model
                              auto_device=True  # automatic choose CUDA or CPU
-                             )
+                             ).train()

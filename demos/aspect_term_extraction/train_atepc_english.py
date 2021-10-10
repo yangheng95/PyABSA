@@ -24,4 +24,4 @@ aspect_extractor = Trainer(config=config,
                            dataset=semeval,
                            checkpoint_save_mode=1,
                            auto_device=True
-                           )
+                           ).train()

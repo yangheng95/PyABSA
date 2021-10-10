@@ -102,9 +102,8 @@ class Trainer:
         else:
             config.model_path_to_save = None
 
-        self.train()
+        self.inference_model = None
 
-    def train(self):
         if isinstance(self.config.seed, int):
             self.config.seed = [self.config.seed]
 
@@ -122,9 +121,16 @@ class Trainer:
             self.logger.removeHandler(self.logger.handlers[0])
 
         if self.checkpoint_save_mode:
-            return self.model_class(max(model_path))
+            self.inference_model = self.model_class(max(model_path))
         else:
-            return model
+            self.inference_model = model
+
+    def train(self):
+        """
+        just return the trained model for inference (e.g., polarity classification, aspect-term extraction)
+        """
+        self.inference_model.to(self.config.device)
+        return self.inference_model
 
 
 class APCTrainer(Trainer):
