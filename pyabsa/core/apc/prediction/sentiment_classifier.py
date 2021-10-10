@@ -269,9 +269,9 @@ class SentimentClassifier:
             if save_path:
                 fout = open(save_path, 'w', encoding='utf8')
                 json.dump(json.JSONEncoder().encode({'results': results}), open(save_path, 'w'), ensure_ascii=False)
-                fout.write('Total samples:{}\n'.format(n_total))
-                fout.write('Labeled samples:{}\n'.format(n_labeled))
-                fout.write('Prediction Accuracy:{}%\n'.format(100 * n_correct / n_labeled)) if n_labeled else 'N.A.'
+                # fout.write('Total samples:{}\n'.format(n_total))
+                # fout.write('Labeled samples:{}\n'.format(n_labeled))
+                # fout.write('Prediction Accuracy:{}%\n'.format(100 * n_correct / n_labeled)) if n_labeled else 'N.A.'
                 print('inference result saved in: {}'.format(save_path))
         except Exception as e:
             print('Can not save result: {}, Exception: {}'.format(text_raw, e))

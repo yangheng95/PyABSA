@@ -28,4 +28,4 @@ chinese_sets = ABSADatasetList.Chinese
 sent_classifier = Trainer(config=config,  # set config=None to use default model
                           dataset=chinese_sets,  # train set and test set will be automatically detected
                           auto_device=True  # automatic choose CUDA or CPU
-                          )
+                          ).train()

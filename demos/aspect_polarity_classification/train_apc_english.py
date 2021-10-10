@@ -16,7 +16,6 @@ from pyabsa.functional import APCConfigManager
 from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import APCModelList
 
-save_path = 'state_dict'
 apc_config_english = APCConfigManager.get_apc_config_english()
 apc_config_english.model = APCModelList.SLIDE_LCF_BERT
 apc_config_english.num_epoch = 10
@@ -35,4 +34,4 @@ sent_classifier = Trainer(config=apc_config_english,
                           dataset=Laptop14,
                           checkpoint_save_mode=1,
                           auto_device=True
-                          )
+                          ).train()
