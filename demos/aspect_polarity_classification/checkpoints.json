@@ -120,6 +120,15 @@
     }
   },
   "TC": {
+    "bert": {
+      "id": "https://drive.google.com/file/d/1Lbk2ts6CrcdLRKMUGIAeSouRrECyNMEt/view?usp=sharing",
+      "Training Model": "BERT",
+      "Training Dataset": "SST2",
+      "Description": "",
+      "Checkpoint File": "bert_acc_91.32_f1_91.32.zip",
+      "Available Version": "1.2.4",
+      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
+    },
     "HELP-WANTED": {
       "id": "",
       "Description": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",

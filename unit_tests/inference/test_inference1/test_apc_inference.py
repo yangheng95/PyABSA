@@ -19,7 +19,6 @@ sent_classifier.infer(text, print_result=True)
 chinese_text = '还有就是[ASP]笔画的键盘分布[ASP]我感觉不合理. !sent! Negative'
 sent_classifier.infer(chinese_text, print_result=True)
 
-
 multilingual = ABSADatasetList.Multilingual
 sent_classifier.batch_infer(target_file=multilingual,
                             print_result=True,

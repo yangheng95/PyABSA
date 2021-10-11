@@ -33,6 +33,7 @@ if __name__ == '__main__':
     iface = gr.Interface(
         fn=inference,
         inputs=["text"],
+        examples=['the wine list is incredible and extensive and diverse , the food is all incredible and the staff was all very nice , good at their jobs and cultured .'],
         outputs="dataframe",
         theme='huggingface',
         title='Aspect Term Extraction & Polarity Classification'

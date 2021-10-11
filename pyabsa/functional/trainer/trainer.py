@@ -104,6 +104,13 @@ class Trainer:
 
         self.inference_model = None
 
+        self.train()
+
+    def train(self):
+        """
+        just return the trained model for inference (e.g., polarity classification, aspect-term extraction)
+        """
+
         if isinstance(self.config.seed, int):
             self.config.seed = [self.config.seed]
 
@@ -125,10 +132,7 @@ class Trainer:
         else:
             self.inference_model = model
 
-    def train(self):
-        """
-        just return the trained model for inference (e.g., polarity classification, aspect-term extraction)
-        """
+    def load_trained_model(self):
         self.inference_model.to(self.config.device)
         return self.inference_model
 

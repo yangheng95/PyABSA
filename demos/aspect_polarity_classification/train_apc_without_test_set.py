@@ -20,4 +20,4 @@ sent_classifier = APCTrainer(config=config,
                              dataset=multilingual,
                              checkpoint_save_mode=1,
                              auto_device=True
-                             ).train()
+                             ).load_trained_model()

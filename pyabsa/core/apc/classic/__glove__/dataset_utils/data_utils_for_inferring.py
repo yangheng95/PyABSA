@@ -195,7 +195,6 @@ class GloVeABSADataset(Dataset):
                 else:
                     raise e
 
-
         self.all_data = all_data
         return self.all_data
 

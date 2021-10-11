@@ -74,21 +74,6 @@ class Tokenizer4Pretraining:
 class BERTBaselineABSADataset(Dataset):
 
     def __init__(self, tokenizer, opt):
-        self.bert_baseline_input_colses = {
-            'lstm_bert': ['text_indices'],
-            'td_lstm_bert': ['left_with_aspect_indices', 'right_with_aspect_indices'],
-            'tc_lstm_bert': ['left_with_aspect_indices', 'right_with_aspect_indices', 'aspect_indices'],
-            'atae_lstm_bert': ['text_indices', 'aspect_indices'],
-            'ian_bert': ['text_indices', 'aspect_indices'],
-            'memnet_bert': ['context_indices', 'aspect_indices'],
-            'ram_bert': ['text_indices', 'aspect_indices', 'left_indices'],
-            'cabasc_bert': ['text_indices', 'aspect_indices', 'left_with_aspect_indices', 'right_with_aspect_indices'],
-            'tnet_lf_bert': ['text_indices', 'aspect_indices', 'aspect_boundary'],
-            'aoa_bert': ['text_indices', 'aspect_indices'],
-            'mgan_bert': ['text_indices', 'aspect_indices', 'left_indices'],
-            'asgcn_bert': ['text_indices', 'aspect_indices', 'left_indices', 'dependency_graph'],
-        }
-
         self.tokenizer = tokenizer
         self.opt = opt
         self.all_data = []

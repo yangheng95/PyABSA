@@ -279,18 +279,18 @@ class AspectExtractor:
             input_mask = input_mask.to('cpu').numpy()
             for i, i_ate_logits in enumerate(ate_logits):
                 pred_iobs = []
-                sentence_res.append((all_tokens[i+(self.opt.eval_batch_size*i_batch)], pred_iobs))
+                sentence_res.append((all_tokens[i + (self.opt.eval_batch_size * i_batch)], pred_iobs))
                 for j, m in enumerate(label_ids[i]):
                     if j == 0:
                         continue
-                    elif len(pred_iobs) == len(all_tokens[i+(self.opt.eval_batch_size*i_batch)]):
+                    elif len(pred_iobs) == len(all_tokens[i + (self.opt.eval_batch_size * i_batch)]):
                         break
                     else:
                         pred_iobs.append(label_map.get(i_ate_logits[j], 'O'))
 
                 ate_result = []
                 polarity = []
-                for t, l in zip(all_tokens[i+(self.opt.eval_batch_size*i_batch)], pred_iobs):
+                for t, l in zip(all_tokens[i + (self.opt.eval_batch_size * i_batch)], pred_iobs):
                     ate_result.append('{}({})'.format(t, l))
                     if 'ASP' in l:
                         polarity.append(-SENTIMENT_PADDING)
@@ -303,7 +303,7 @@ class AspectExtractor:
                     if pred_iobs[iob_idx].endswith('ASP') and not pred_iobs[iob_idx + 1].endswith('I-ASP'):
                         _polarity = polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
                         polarity = POLARITY_PADDING[:iob_idx + 1] + polarity[iob_idx + 1:]
-                        extraction_res.append((all_tokens[i+(self.opt.eval_batch_size*i_batch)], pred_iobs, _polarity, example_id))
+                        extraction_res.append((all_tokens[i + (self.opt.eval_batch_size * i_batch)], pred_iobs, _polarity, example_id))
 
         return extraction_res, sentence_res
 
@@ -363,8 +363,8 @@ class AspectExtractor:
                                                     lcf_cdm_vec=lcf_cdm_vec,
                                                     lcf_cdw_vec=lcf_cdw_vec)
                 for i, i_apc_logits in enumerate(apc_logits):
-                    if 'origin_label_map' in self.opt.args:
-                        sent = self.opt.origin_label_map.get(int(i_apc_logits.argmax(axis=-1)))
+                    if 'index_to_label' in self.opt.args and int(i_apc_logits.argmax(axis=-1)) in self.opt.index_to_label:
+                        sent = self.opt.index_to_label.get(int(i_apc_logits.argmax(axis=-1)))
                     else:
                         sent = int(torch.argmax(i_apc_logits, -1))
                     result = {}
