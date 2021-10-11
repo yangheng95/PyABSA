@@ -279,18 +279,18 @@ class AspectExtractor:
             input_mask = input_mask.to('cpu').numpy()
             for i, i_ate_logits in enumerate(ate_logits):
                 pred_iobs = []
-                sentence_res.append((all_tokens[i], pred_iobs))
+                sentence_res.append((all_tokens[i+(self.opt.eval_batch_size*i_batch)], pred_iobs))
                 for j, m in enumerate(label_ids[i]):
                     if j == 0:
                         continue
-                    elif len(pred_iobs) == len(all_tokens[i]):
+                    elif len(pred_iobs) == len(all_tokens[i+(self.opt.eval_batch_size*i_batch)]):
                         break
                     else:
                         pred_iobs.append(label_map.get(i_ate_logits[j], 'O'))
 
                 ate_result = []
                 polarity = []
-                for t, l in zip(all_tokens[i], pred_iobs):
+                for t, l in zip(all_tokens[i+(self.opt.eval_batch_size*i_batch)], pred_iobs):
                     ate_result.append('{}({})'.format(t, l))
                     if 'ASP' in l:
                         polarity.append(-SENTIMENT_PADDING)
@@ -303,7 +303,7 @@ class AspectExtractor:
                     if pred_iobs[iob_idx].endswith('ASP') and not pred_iobs[iob_idx + 1].endswith('I-ASP'):
                         _polarity = polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
                         polarity = POLARITY_PADDING[:iob_idx + 1] + polarity[iob_idx + 1:]
-                        extraction_res.append((all_tokens[i], pred_iobs, _polarity, example_id))
+                        extraction_res.append((all_tokens[i+(self.opt.eval_batch_size*i_batch)], pred_iobs, _polarity, example_id))
 
         return extraction_res, sentence_res
 
