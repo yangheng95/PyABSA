@@ -31,6 +31,15 @@
       "contributions": [
         "data"
       ]
+    },
+    {
+      "login": "FrancisDacian",
+      "name": "Ryan",
+      "avatar_url": "https://avatars.githubusercontent.com/u/24215706?v=4",
+      "profile": "https://github.com/FrancisDacian",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
