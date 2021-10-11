@@ -23,4 +23,4 @@ text_classifier = TextClassificationTrainer(config=classification_config_english
                                             dataset=SST2,
                                             checkpoint_save_mode=1,
                                             auto_device=True
-                                            ).train()
+                                            ).load_trained_model()

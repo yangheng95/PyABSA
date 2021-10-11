@@ -1,4 +1,3 @@
-
 For resource limitation, we do not provide diversities of checkpoints, we hope you can share your checkpoints with those
 who have not enough resource to train their model.
 
@@ -8,8 +7,8 @@ who have not enough resource to train their model.
 2. Get the link of your checkpoint.
    ![123](../documents/pic/pic2.png)
 
-3. Register the checkpoint in the [checkpoint_map](../checkpoint_map.json), then make a pull request. We will
-   update the checkpoints index as soon as we can, Thanks for your help!
+3. Register the checkpoint in the [checkpoint_map](../checkpoint_map.json), then make a pull request. We will update the
+   checkpoints index as soon as we can, Thanks for your help!
 
 ```
 "checkpoint name": {

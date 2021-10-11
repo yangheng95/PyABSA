@@ -25,4 +25,4 @@ aspect_extractor = Trainer(config=config,
                            from_checkpoint=checkpoint_path,
                            checkpoint_save_mode=1,
                            auto_device=True
-                           ).train()
+                           ).load_trained_model()

@@ -63,20 +63,22 @@ def check_and_fix_labels(label_set, label_name, all_data, opt):
     for lb in label_set:
         if isinstance(lb, str) and len(lb.strip().split()) > 1:
             raise KeyError('The original label must be one token, i.e., label.lb.strip().split()==1 !')
-    new_label_dict = {origin_label: idx for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
-    origin_label_map = {idx: origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
-    if 'origin_label_map' not in opt.args:
-        opt.origin_label_map = origin_label_map
+    label_to_index = {origin_label: int(idx) for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+    index_to_label = {int(idx): origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+    if 'index_to_label' not in opt.args:
+        opt.index_to_label = index_to_label
+        opt.label_to_index = label_to_index
 
-    if opt.origin_label_map != origin_label_map:
+    if opt.index_to_label != index_to_label:
         # raise KeyError('Fail to fix the labels, the number of labels are not equal among all datasets!')
-        opt.origin_label_map.update(origin_label_map)
+        opt.index_to_label.update(index_to_label)
+        opt.label_to_index.update(label_to_index)
 
     for item in all_data:
         try:
-            item[label_name] = new_label_dict[item[label_name]]
+            item[label_name] = label_to_index[item[label_name]]
         except:
-            item.polarity = new_label_dict[item.polarity]
+            item.polarity = label_to_index[item.polarity]
 
 
 def get_device(auto_device):
