@@ -23,4 +23,4 @@ sent_classifier = Trainer(config=apc_config_english,
                           dataset=laptop14,
                           checkpoint_save_mode=True,
                           auto_device=True
-                          ).train()
+                          ).load_trained_model()

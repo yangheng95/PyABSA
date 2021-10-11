@@ -229,9 +229,9 @@ class TextClassifier:
                 sen_logits = outputs
                 t_probs = torch.softmax(sen_logits, dim=-1).cpu().numpy()
                 for i, i_probs in enumerate(t_probs):
-                    if 'origin_label_map' in self.opt.args:
-                        sent = self.opt.origin_label_map[int(i_probs.argmax(axis=-1))]
-                        real_sent = sample['label'][i] if isinstance(sample['label'][i], str) else self.opt.origin_label_map[int(sample['label'][i])]
+                    if 'index_to_label' in self.opt.args and int(i_probs.argmax(axis=-1)):
+                        sent = self.opt.index_to_label[int(i_probs.argmax(axis=-1))]
+                        real_sent = sample['label'][i] if isinstance(sample['label'][i], str) else self.opt.index_to_label[int(sample['label'][i])]
                         if real_sent != -999 and real_sent != '-999':
                             n_labeled += 1
                         if sent == real_sent:
@@ -249,10 +249,10 @@ class TextClassifier:
                         'ref_check': correct[sent == real_sent] if real_sent != '-999' else '',
                     })
                     n_total += 1
-
-            print('Total samples:{}'.format(n_total))
-            print('Labeled samples:{}'.format(n_labeled))
-            print('Prediction Accuracy:{}%'.format(100 * n_correct / n_labeled if n_labeled else 'N.A.'))
+            if len(self.infer_dataloader) > 1:
+                print('Total samples:{}'.format(n_total))
+                print('Labeled samples:{}'.format(n_labeled))
+                print('Prediction Accuracy:{}%'.format(100 * n_correct / n_labeled if n_labeled else 'N.A.'))
 
         try:
             if print_result:
@@ -271,7 +271,7 @@ class TextClassifier:
                     print(text_printing)
             if save_path:
                 fout = open(save_path, 'w', encoding='utf8')
-                json.dump(json.JSONEncoder().encode({'results': results}), open(save_path, 'w'), ensure_ascii=False)
+                json.dump(json.JSONEncoder().encode({'results': results}), fout, ensure_ascii=False)
                 # fout.write('Total samples:{}\n'.format(n_total))
                 # fout.write('Labeled samples:{}\n'.format(n_labeled))
                 # fout.write('Prediction Accuracy:{}%\n'.format(100 * n_correct / n_labeled)) if n_labeled else 'N.A.'

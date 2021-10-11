@@ -31,7 +31,6 @@ class DatasetItem(list):
 
 
 class ABSADatasetList:
-
     # SemEval
     Laptop14 = DatasetItem('Laptop14', 'Laptop14')
     Restaurant14 = DatasetItem('Restaurant14', 'Restaurant14')
@@ -83,12 +82,12 @@ def detect_dataset(dataset_path, task='apc'):
         if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(ClassificationDatasetList, d):
             print('{} dataset is loading from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
-            search_path = find_dir(os.getcwd(), [d, task], exclude_key=['infer', 'test.']+filter_key_words, disable_alert=False)
-            dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['infer', 'test.']+filter_key_words)
-            dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['infer', 'train.']+filter_key_words)
+            search_path = find_dir(os.getcwd(), [d, task], exclude_key=['infer', 'test.'] + filter_key_words, disable_alert=False)
+            dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['infer', 'test.'] + filter_key_words)
+            dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['infer', 'train.'] + filter_key_words)
         else:
-            dataset_file['train'] = find_files(d, ['train', task], exclude_key=['infer', 'test.']+filter_key_words)
-            dataset_file['test'] = find_files(d, ['test', task], exclude_key=['infer', 'train.']+filter_key_words)
+            dataset_file['train'] = find_files(d, ['train', task], exclude_key=['infer', 'test.'] + filter_key_words)
+            dataset_file['test'] = find_files(d, ['test', task], exclude_key=['infer', 'train.'] + filter_key_words)
 
     if len(dataset_file['train']) == 0:
         raise RuntimeError('{} is not an integrated dataset or not downloaded automatically,'
@@ -111,9 +110,9 @@ def detect_infer_dataset(dataset_path, task='apc'):
             print('{} dataset is loading from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
             search_path = find_dir(os.getcwd(), [d, task], exclude_key=filter_key_words, disable_alert=False)
-            dataset_file += find_files(search_path, ['infer', d], exclude_key=['train.']+filter_key_words)
+            dataset_file += find_files(search_path, ['infer', d], exclude_key=['train.'] + filter_key_words)
         else:
-            dataset_file += find_files(d, ['infer', task], exclude_key=['train.']+filter_key_words)
+            dataset_file += find_files(d, ['infer', task], exclude_key=['train.'] + filter_key_words)
 
     if len(dataset_file) == 0:
         raise RuntimeError('{} is not an integrated dataset or not downloaded automatically,'

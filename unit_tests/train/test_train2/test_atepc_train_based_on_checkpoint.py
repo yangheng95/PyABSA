@@ -14,7 +14,6 @@ config = ATEPCConfigManager.get_atepc_config_english()
 
 checkpoint_path = ATEPCCheckpointManager.get_checkpoint(checkpoint='checkpoint')  # or
 
-
 config.model = ATEPCModelList.LCFS_ATEPC
 config.evaluate_begin = 0
 config.num_epoch = 1

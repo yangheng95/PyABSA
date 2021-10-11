@@ -153,8 +153,6 @@ class ABSADataset(Dataset):
                 else:
                     raise RuntimeError(e)
 
-
-
         check_and_fix_labels(label_set, 'polarity', all_data, self.opt)
         self.opt.polarities_dim = len(label_set)
 
@@ -165,7 +163,8 @@ class ABSADataset(Dataset):
                 cluster_ids = []
                 for pad_idx in range(self.opt.max_seq_len):
                     if pad_idx in data['cluster_ids']:
-                        cluster_ids.append(data['polarity'])
+                        # print(data['polarity'])
+                        cluster_ids.append(self.opt.label_to_index[self.opt.index_to_label[data['polarity']]])
                     else:
                         cluster_ids.append(-100)
                         # cluster_ids.append(3)

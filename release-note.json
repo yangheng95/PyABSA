@@ -1,6 +1,12 @@
 {
-  "1.2.7": {
+  "1.2.8": {
     "1": "Fix the convert_apc_set_to_atepc_set function",
+    "2": "Fix the error to load a inference model from training, i.e., use trainer.load_trained_model() to load the inference model",
+    "3": "Fix a bug of batch size setting in atepc inference",
+    "4": "Fix a bug of auto label-mapping"
+  },
+  "1.2.7": {
+    "1": "Deprecated"
   },
   "1.2.4": {
     "1": "Refactor checkpoint map processing format",

@@ -20,15 +20,17 @@
 
 ## Tips
 
-- PyABSA use the [FindFile](https://github.com/yangheng95/findfile) to find the target file which means you can specify a dataset/checkpoint by keywords
-instead of using absolute path. e.g.,
+- PyABSA use the [FindFile](https://github.com/yangheng95/findfile) to find the target file which means you can specify
+  a dataset/checkpoint by keywords instead of using absolute path. e.g.,
 
 ```bash
 dataset = 'laptop' # instead of './SemEval/LAPTOP'. keyword case doesn't matter
 checkpoint = 'lcfs' # any checkpoint whose absolute path contains lcfs
 ```
 
-- PyABSA use the [AutoCUDA](https://github.com/yangheng95/autocuda) to support automatic cuda assignment, but you can still set a preferred device.
+- PyABSA use the [AutoCUDA](https://github.com/yangheng95/autocuda) to support automatic cuda assignment, but you can
+  still set a preferred device.
+
 ```python3
 auto_device=True  # to auto assign a cuda device for training / inference
 auto_device=False  # to use cpu
@@ -36,14 +38,18 @@ auto_device='cuda:1'  # to specify a preferred device
 auto_device='cpu'  # to specify a preferred device
 ```
 
-- PyABSA support auto label fixing which means you can set the labels to any token (except -999), e.g., sentiment labels = {-9. 2, negative, positive}
-- Check and make sure the version and datasets of checkpoint are compatible to your current PyABSA. The version information of PyABSA is also available in the output while loading checkpoints training args.
-- You can train a model using multiple datasets with same sentiment labels, and you can even contribute and define a combination of datasets [here](https://github.com/yangheng95/PyABSA/blob/6defdb10b7fded79e2c989d9ddd95e6b06bebbbf/pyabsa/functional/dataset/dataset_manager.py#L32)!
+- PyABSA support auto label fixing which means you can set the labels to any token (except -999), e.g., sentiment labels
+  = {-9. 2, negative, positive}
+- Check and make sure the version and datasets of checkpoint are compatible to your current PyABSA. The version
+  information of PyABSA is also available in the output while loading checkpoints training args.
+- You can train a model using multiple datasets with same sentiment labels, and you can even contribute and define a
+  combination of
+  datasets [here](https://github.com/yangheng95/PyABSA/blob/6defdb10b7fded79e2c989d9ddd95e6b06bebbbf/pyabsa/functional/dataset/dataset_manager.py#L32)!
 - Other features are available to be found
 
 # Instruction
 
-If you are willing to support PyABSA project, please star this repository as your contribution. 
+If you are willing to support PyABSA project, please star this repository as your contribution.
 
 - [Installation](#installation)
 - [Package Overview](#package-overview)
@@ -496,15 +502,20 @@ or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
 12. [TNet_LF](pyabsa/core/apc/classic/__glove__/models/tnet_lf.py)
 
 # Contribution
-We expect that you can help us improve this project, and your contributions are welcome. 
-You can make a contribution in many ways, including:
+
+We expect that you can help us improve this project, and your contributions are welcome. You can make a contribution in
+many ways, including:
 
 - Share your custom dataset in PyABSA and [ABSADatasets](https://github.com/yangheng95/ABSADatasets)
-- Integrates your models in PyABSA. (You can share your models whether it is or not based on PyABSA. if you are interested, we will help you)
-- Raise a bug report while you use PyABSA or review the code (PyABSA is a individual project driven by enthusiasm so your help is needed)
+- Integrates your models in PyABSA. (You can share your models whether it is or not based on PyABSA. if you are
+  interested, we will help you)
+- Raise a bug report while you use PyABSA or review the code (PyABSA is a individual project driven by enthusiasm so
+  your help is needed)
 - Give us some advice about feature design/refactor (You can advise to improve some feature)
-- Correct/Rewrite some error-messages or code comment (The comments are not written by native english speaker, you can help us improve documents)
-- Create an example script in a particular situation (Such as specify a SpaCy model, pretrainedbert type, some hyperparameters)
+- Correct/Rewrite some error-messages or code comment (The comments are not written by native english speaker, you can
+  help us improve documents)
+- Create an example script in a particular situation (Such as specify a SpaCy model, pretrainedbert type, some
+  hyperparameters)
 - Star this repository to keep it active
 
 # Notice
@@ -512,9 +523,8 @@ You can make a contribution in many ways, including:
 The LCF is a simple and adoptive mechanism proposed for ABSA. Many models based on LCF has been proposed and achieved
 SOTA performance. Developing your models based on LCF will significantly improve your ABSA models. If you are looking
 for the original proposal of local context focus, please redirect to the introduction of
-[LCF](https://github.com/yangheng95/PyABSA/tree/release/demos/documents). If you are looking for the
-original codes of the LCF-related papers, please redirect
-to [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/LC-ABSA)
+[LCF](https://github.com/yangheng95/PyABSA/tree/release/demos/documents). If you are looking for the original codes of
+the LCF-related papers, please redirect to [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/LC-ABSA)
 or [LCF-ATEPC](https://github.com/XuMayi/LCF-ATEPC).
 
 ## Acknowledgement

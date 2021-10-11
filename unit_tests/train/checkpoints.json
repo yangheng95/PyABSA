@@ -92,7 +92,7 @@
         "dataset": "Chinese",
         "description": "Trained on RTX2080",
         "version": "1.1",
-                "tag": "fast_lcf_bert_acc_96.77_f1_96.16.zip",
+        "tag": "fast_lcf_bert_acc_96.77_f1_96.16.zip",
         "author": "H, Yang (yangheng@m.scnu.edu.cn)"
       },
       "HELP-WANTED": {
@@ -115,7 +115,7 @@
       "Laptop14": {
         "id": "https://drive.google.com/file/d/1-1lkoaePxXemm8jtqTLTLI5LEr6pXMTe/view?usp=sharing",
         "description": "Trained on T4",
-                "dataset": "Laptop 14",
+        "dataset": "Laptop 14",
         "version": "1.0.7.1",
         "author": "M, Xu (xumayi@m.scnu.edu.cn)"
       },
