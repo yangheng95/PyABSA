@@ -122,15 +122,6 @@ See the demos
 from pyabsa.functional import Trainer
 from pyabsa.functional import APCConfigManager
 from pyabsa.functional import ABSADatasetList
-
-# Get model list for Bert-based APC models
-from pyabsa.functional import APCModelList
-
-# Get model list for Bert-based APC baseline models
-# from pyabsa.functional import BERTBaselineAPCModelList 
-
-# Get model list for GloVe-based APC baseline models
-# from pyabsa.functional import GloVeAPCModelList
 ```
 
 ### 2. Choose a base param config
@@ -138,12 +129,6 @@ from pyabsa.functional import APCModelList
 ```python3
 # Choose a Bert-based APC models param_dict
 apc_config_english = APCConfigManager.get_apc_config_english()
-
-# Choose a Bert-based APC baseline models param_dict
-# apc_config_english = APCConfigManager.get_apc_config_bert_baseline()
-
-# Choose a GloVe-based APC baseline models param_dict
-# apc_config_english = APCConfigManager.get_apc_config_glove()
 ```
 
 ### 3. Specify an APC model and alter some hyper-parameters (if necessary)
@@ -151,12 +136,6 @@ apc_config_english = APCConfigManager.get_apc_config_english()
 ```python3
 # Specify a Bert-based APC model
 apc_config_english.model = APCModelList.SLIDE_LCFS_BERT
-
-# Specify a Bert-based APC baseline model
-# apc_config_english.model = BERTBaselineAPCModelList.ASGCN_BERT
-
-# Specify a GloVe-based APC baseline model
-# apc_config_english.model = GloVeAPCModelList.ASGCN
 ```
 
 ### 4. Configure runtime setting and running training
@@ -349,7 +328,6 @@ apc_config_english.model = APCModelList.SLIDE_LCF_BERT
 #### 3.4 Configure checkpoint
 
 ```python3
-# Ensure the corresponding checkpoint of trained model
 checkpoint_path = APCCheckpointManager.get_checkpoint('slide-lcf-bert')
 ```
 
@@ -381,9 +359,11 @@ More datasets are available at [ABSADatasets](https://github.com/yangheng95/ABSA
 10. MAMS
 11. TShirt
 12. Television
-13. Multilingual (The sum of all datasets.)
+13. MOOC
+14. Shampoo
+15. Multilingual (The sum of all datasets.)
 
-Basically, you don't have to download the datasets, as the datasets will be downloaded automatically.
+You don't have to download the datasets, as the datasets will be downloaded automatically.
 
 # Model Support
 
