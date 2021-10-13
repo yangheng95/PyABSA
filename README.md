@@ -113,7 +113,7 @@ python setup.py install
 </table>
 
 # Quick Start
-
+See the demos 
 ## Aspect Polarity Classification (APC)
 
 ### 1. Import necessary entries
@@ -157,16 +157,6 @@ apc_config_english.model = APCModelList.SLIDE_LCFS_BERT
 
 # Specify a GloVe-based APC baseline model
 # apc_config_english.model = GloVeAPCModelList.ASGCN
-
-apc_config_english.similarity_threshold = 1
-apc_config_english.max_seq_len = 80
-apc_config_english.dropout = 0.5
-apc_config_english.log_step = 5
-apc_config_english.num_epoch = 10
-apc_config_english.evaluate_begin = 4
-apc_config_english.l2reg = 0.0005
-apc_config_english.seed = {1, 2, 3}
-apc_config_english.cross_validate_fold = -1
 ```
 
 ### 4. Configure runtime setting and running training
@@ -177,7 +167,7 @@ sent_classifier = Trainer(config=apc_config_english,
                           dataset=dataset_path,  # train set and test set will be automatically detected
                           checkpoint_save_mode=1,  # = None to avoid save model
                           auto_device=True  # automatic choose CUDA or CPU
-                          )
+                          ).load_trained_model()
 ```
 
 ### 5. Sentiment inference
@@ -190,19 +180,6 @@ results = sent_classifier.batch_infer(target_file=inference_dataset,
                                       save_result=True,
                                       ignore_error=True,
                                       )
-```
-
-### 6. Sentiment inference output format (情感分类结果示例如下)
-
-```
- I do not like too much  Windows 8  .  
-Windows 8 --> Negative  Real: Negative (Correct)
-Took a long time trying to decide between one with  retina display  and one without .  
-retina display --> Neutral  Real: Neutral (Correct)
- It 's so nice that the  battery  last so long and that this machine has the snow lion !  
-battery --> Positive  Real: Positive (Correct)
- It 's so nice that the battery last so long and that this machine has the  snow lion  !  
-snow lion --> Positive  Real: Positive (Correct)
 ```
 
 Check the detailed usages in [APC Demos](demos/aspect_polarity_classification) directory.
@@ -228,9 +205,6 @@ config = ATEPCConfigManager.get_atepc_config_english()
 
 ```python3
 atepc_config_english = ATEPCConfigManager.get_atepc_config_english()
-atepc_config_english.num_epoch = 10
-atepc_config_english.evaluate_begin = 4
-atepc_config_english.log_step = 100
 atepc_config_english.model = ATEPCModelList.LCF_ATEPC
 ```
 
@@ -241,7 +215,7 @@ laptop14 = ABSADatasetList.Laptop14
 
 aspect_extractor = ATEPCTrainer(config=atepc_config_english, 
                                 dataset=laptop14
-                                )
+                                ).load_trained_model()
 ```
 
 ### 5. Aspect term extraction & sentiment inference
@@ -264,21 +238,6 @@ atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source
                                                )
 ```
 
-### 6. Aspect term extraction & sentiment inference output format (方面抽取及情感分类结果示例如下):
-
-```bash
-关(O) 键(O) 的(O) 时(O) 候(O) 需(O) 要(O) 表(O) 现(O) 持(O) 续(O) 影(O) 像(O) 的(O) 短(B-ASP) 片(I-ASP) 功(I-ASP) 能(I-ASP) 还(O) 是(O) 很(O) 有(O) 用(O) 的(O)
-{'aspect': '短 片 功 能', 'position': '14,15,16,17', 'sentiment': '1'}
-相(O) 比(O) 较(O) 原(O) 系(O) 列(O) 锐(B-ASP) 度(I-ASP) 高(O) 了(O) 不(O) 少(O) 这(O) 一(O) 点(O) 好(O) 与(O) 不(O) 好(O) 大(O) 家(O) 有(O) 争(O) 议(O)
-{'aspect': '锐 度', 'position': '6,7', 'sentiment': '0'}
-
-It(O) was(O) pleasantly(O) uncrowded(O) ,(O) the(O) service(B-ASP) was(O) delightful(O) ,(O) the(O) garden(B-ASP) adorable(O) ,(O) the(O) food(B-ASP) -LRB-(O) from(O) appetizers(B-ASP) to(O) entrees(B-ASP) -RRB-(O) was(O) delectable(O) .(O)
-{'aspect': 'service', 'position': '7', 'sentiment': 'Positive'}
-{'aspect': 'garden', 'position': '12', 'sentiment': 'Positive'}
-{'aspect': 'food', 'position': '16', 'sentiment': 'Positive'}
-{'aspect': 'appetizers', 'position': '19', 'sentiment': 'Positive'}
-{'aspect': 'entrees', 'position': '21', 'sentiment': 'Positive'}
-```
 
 Check the detailed usages in [ATE Demos](demos/aspect_term_extraction) directory.
 
@@ -315,11 +274,8 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 #### 1.2 Assume the sent_classifier and checkpoint
 
 ```python3
-sentiment_map = {0: 'Negative', 1: 'Neutral', 2: 'Positive', -999: ''}
-
 sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='dlcf-dca-bert1', #or set your local checkpoint
                                                                 auto_device='cuda',  # Use CUDA if available
-                                                                sentiment_map=sentiment_map
                                                                 )
 ```
 
@@ -349,7 +305,6 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 #### 2.2 Assume the sent_classifier and checkpoint
 
 ```python3
-sentiment_map = {0: 'Negative', 1: "Neutral", 2: 'Positive', -999: ''}
 
 aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='Laptop14', # or your local checkpoint
                                                                auto_device=True  # False means load model on CPU
@@ -389,14 +344,6 @@ apc_config_english = APCConfigManager.get_apc_config_english()
 
 ```python3
 apc_config_english.model = APCModelList.SLIDE_LCF_BERT
-apc_config_english.evaluate_begin = 2
-apc_config_english.similarity_threshold = 1
-apc_config_english.max_seq_len = 80
-apc_config_english.dropout = 0.5
-apc_config_english.log_step = 5
-apc_config_english.l2reg = 0.0001
-apc_config_english.dynamic_truncate = True
-apc_config_english.srd_alignment = True
 ```
 
 #### 3.4 Configure checkpoint
@@ -415,7 +362,7 @@ sent_classifier = Trainer(config=apc_config_english,
                           from_checkpoint=checkpoint_path,
                           checkpoint_save_mode=1,
                           auto_device=True
-                          )
+                          ).load_trained_model()
 ```
 
 # Datasets
