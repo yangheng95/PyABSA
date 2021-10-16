@@ -1,8 +1,8 @@
 name: traffic2badge
 on:
-  push:
-    branches:
-      - release
+  #push:
+  #  branches:
+  #    - release
   schedule:
     - cron: '1 0 * * *' #UTC
 
