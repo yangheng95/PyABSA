@@ -1,18 +1,18 @@
 [
   {
     "referrer": "github.com",
-    "count": 300,
-    "uniques": 61
+    "count": 284,
+    "uniques": 59
   },
   {
     "referrer": "Google",
-    "count": 193,
-    "uniques": 139
+    "count": 180,
+    "uniques": 132
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 18,
-    "uniques": 15
+    "count": 17,
+    "uniques": 14
   },
   {
     "referrer": "link.zhihu.com",
@@ -30,22 +30,22 @@
     "uniques": 4
   },
   {
-    "referrer": "openbase.com",
-    "count": 3,
-    "uniques": 1
-  },
-  {
     "referrer": "colab.research.google.com",
     "count": 3,
     "uniques": 1
   },
   {
-    "referrer": "bytedance.feishu.cn",
+    "referrer": "openbase.com",
     "count": 3,
     "uniques": 1
   },
   {
-    "referrer": "juno.shuu.cf",
+    "referrer": "ss.scnu.edu.cn",
+    "count": 2,
+    "uniques": 1
+  },
+  {
+    "referrer": "bytedance.feishu.cn",
     "count": 2,
     "uniques": 1
   }
