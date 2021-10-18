@@ -6,18 +6,18 @@
   },
   {
     "referrer": "Google",
-    "count": 178,
-    "uniques": 134
+    "count": 167,
+    "uniques": 128
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 19,
-    "uniques": 14
+    "count": 20,
+    "uniques": 15
   },
   {
     "referrer": "link.zhihu.com",
-    "count": 14,
-    "uniques": 7
+    "count": 17,
+    "uniques": 9
   },
   {
     "referrer": "pypi.org",
@@ -26,8 +26,8 @@
   },
   {
     "referrer": "Baidu",
-    "count": 5,
-    "uniques": 5
+    "count": 4,
+    "uniques": 4
   },
   {
     "referrer": "openbase.com",
@@ -45,7 +45,7 @@
     "uniques": 2
   },
   {
-    "referrer": "bytedance.feishu.cn",
+    "referrer": "ss.scnu.edu.cn",
     "count": 2,
     "uniques": 1
   }
