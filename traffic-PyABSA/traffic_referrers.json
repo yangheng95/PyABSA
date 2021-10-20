@@ -1,23 +1,23 @@
 [
   {
     "referrer": "github.com",
-    "count": 320,
-    "uniques": 66
+    "count": 315,
+    "uniques": 70
   },
   {
     "referrer": "Google",
     "count": 162,
-    "uniques": 118
-  },
-  {
-    "referrer": "link.zhihu.com",
-    "count": 22,
-    "uniques": 9
+    "uniques": 117
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 18,
-    "uniques": 14
+    "count": 23,
+    "uniques": 17
+  },
+  {
+    "referrer": "link.zhihu.com",
+    "count": 21,
+    "uniques": 8
   },
   {
     "referrer": "pypi.org",
@@ -26,13 +26,13 @@
   },
   {
     "referrer": "Baidu",
-    "count": 4,
-    "uniques": 4
+    "count": 3,
+    "uniques": 3
   },
   {
     "referrer": "colab.research.google.com",
     "count": 3,
-    "uniques": 1
+    "uniques": 2
   },
   {
     "referrer": "openbase.com",
