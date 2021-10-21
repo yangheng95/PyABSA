@@ -25,15 +25,24 @@
 
 ## Tips
 
-- PyABSA use the [FindFile](https://github.com/yangheng95/findfile) to find the target file which means you can specify
+
+### Use your custom dataset
+PyABSA use the [FindFile](https://github.com/yangheng95/findfile) to find the target file which means you can specify
   a dataset/checkpoint by keywords instead of using absolute path. e.g.,
 
+- First, refer to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) to prepare your dataset into acceptable format.
+- You can PR to contribute your dataset and use it like `ABDADatasets.your_dataset`, or use it by dataset absolute / relative path, or dataset dir name
 ```bash
-dataset = 'laptop' # instead of './SemEval/LAPTOP'. keyword case doesn't matter
-checkpoint = 'lcfs' # any checkpoint whose absolute path contains lcfs
+dataset = './laptop' # relative path
+dataset = 'ABSOLUTE_PATH/laptop/' # absolute path
+dataset = 'laptop' # dataset directory name, keyword case doesn't matter
+dataset = 'lapto' # search any directory whose path contains the 'lapto' or 'aptop'
+
+checkpoint = 'lcfs' # checkpoint assignment is similar to above methods
 ```
 
-- PyABSA use the [AutoCUDA](https://github.com/yangheng95/autocuda) to support automatic cuda assignment, but you can
+### Auto select the free cuda for training & inference
+PyABSA use the [AutoCUDA](https://github.com/yangheng95/autocuda) to support automatic cuda assignment, but you can
   still set a preferred device.
 
 ```python3
@@ -43,7 +52,8 @@ auto_device='cuda:1'  # to specify a preferred device
 auto_device='cpu'  # to specify a preferred device
 ```
 
-- PyABSA support auto label fixing which means you can set the labels to any token (except -999), e.g., sentiment labels
+### Flexible labels than others 
+PyABSA support auto label fixing which means you can set the labels to any token (except -999), e.g., sentiment labels
   = {-9. 2, negative, positive}
 - Check and make sure the version and datasets of checkpoint are compatible to your current PyABSA. The version
   information of PyABSA is also available in the output while loading checkpoints training args.
