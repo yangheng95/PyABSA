@@ -14,90 +14,17 @@
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
-
-> Fast & Low Memory requirement & Enhanced implementation of Local Context Focus.
+> Aspect Term Extraction (ATE) & Aspect Polarity Classification (APC)
+> 
+> Fast & Low Memory requirement & Enhanced implementation of Local Context Focus
 >
 > Build from LC-ABSA / LCF-ABSA / LCF-BERT and LCF-ATEPC.
->
-> Provide tutorials of training and usages of ATE and APC models.
->
-> PyTorch Implementations (CPU & CUDA supported).
-
-## Tips
-
-
-### Use your custom dataset
-PyABSA use the [FindFile](https://github.com/yangheng95/findfile) to find the target file which means you can specify
-  a dataset/checkpoint by keywords instead of using absolute path. e.g.,
-
-- First, refer to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) to prepare your dataset into acceptable format.
-- You can PR to contribute your dataset and use it like `ABDADatasets.your_dataset`, or use it by dataset absolute / relative path, or dataset dir name
-```bash
-dataset = './laptop' # relative path
-dataset = 'ABSOLUTE_PATH/laptop/' # absolute path
-dataset = 'laptop' # dataset directory name, keyword case doesn't matter
-dataset = 'lapto' # search any directory whose path contains the 'lapto' or 'aptop'
-
-checkpoint = 'lcfs' # checkpoint assignment is similar to above methods
-```
-
-### Auto select the free cuda for training & inference
-PyABSA use the [AutoCUDA](https://github.com/yangheng95/autocuda) to support automatic cuda assignment, but you can
-  still set a preferred device.
-
-```python3
-auto_device=True  # to auto assign a cuda device for training / inference
-auto_device=False  # to use cpu
-auto_device='cuda:1'  # to specify a preferred device
-auto_device='cpu'  # to specify a preferred device
-```
-
-### Flexible labels than others 
-PyABSA support auto label fixing which means you can set the labels to any token (except -999), e.g., sentiment labels
-  = {-9. 2, negative, positive}
-- Check and make sure the version and datasets of checkpoint are compatible to your current PyABSA. The version
-  information of PyABSA is also available in the output while loading checkpoints training args.
-- You can train a model using multiple datasets with same sentiment labels, and you can even contribute and define a
-  combination of
-  datasets [here](https://github.com/yangheng95/PyABSA/blob/6defdb10b7fded79e2c989d9ddd95e6b06bebbbf/pyabsa/functional/dataset/dataset_manager.py#L32)!
-- Other features are available to be found
-
-# Instruction
+> 
+> PyTorch Implementations (CPU & CUDA supported). 
 
 If you are willing to support PyABSA project, please star this repository as your contribution.
-
-- [Installation](#installation)
-- [Package Overview](#package-overview)
-- [Quick-Start](#quick-start)
-    - [Aspect Term Extraction and Polarity Classification (ATEPC)](#install-via-pip)
-    - [Aspect Polarity Classification (APC)](#install-via-source)
-- [Model Support](#model-support)
-- [Dataset Support](https://github.com/yangheng95/ABSADatasets)
-- [Make Contributions](#contribution)
-- [All Examples](usages)
-- [Notice for LCF-BERT & LCF-ATEPC](#notice)
-
-# Installation
-
-Please do not install the version without corresponding release note to avoid installing a test version.
-
-## install via pip
-
-To use PyABSA, install the latest version from pip or source code:
-
-```bash
-pip install -U pyabsa
-```
-
-## install via source
-
-```bash
-git clone https://github.com/yangheng95/PyABSA --depth=1
-cd PyABSA 
-python setup.py install
-```
-
-# Package Overview
+ 
+## 1. Package Overview
 
 <table>
 <tr>
@@ -124,241 +51,95 @@ python setup.py install
     <td><b> pyabsa.functional.trainer </b></td>
     <td> training module, every trainer return a inference model </td>
 </tr>
-
 </table>
 
-# Quick Start
-See the demos 
-## Aspect Polarity Classification (APC)
+## 2. Read the Important Tips
 
-### 1. Import necessary entries
+### 2.1 Use your custom dataset
+PyABSA use the [FindFile](https://github.com/yangheng95/findfile) to find the target file which means you can specify
+  a dataset/checkpoint by keywords instead of using absolute path. e.g.,
 
-```python3
-from pyabsa.functional import Trainer
-from pyabsa.functional import APCConfigManager
-from pyabsa.functional import ABSADatasetList
+- First, refer to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) to prepare your dataset into acceptable format.
+- You can PR to contribute your dataset and use it like `ABDADatasets.your_dataset`, or use it by dataset absolute / relative path, or dataset dir name
+```bash
+dataset = './laptop' # relative path
+dataset = 'ABSOLUTE_PATH/laptop/' # absolute path
+dataset = 'laptop' # dataset directory name, keyword case doesn't matter
+dataset = 'lapto' # search any directory whose path contains the 'lapto' or 'aptop'
+
+checkpoint = 'lcfs' # checkpoint assignment is similar to above methods
 ```
 
-### 2. Choose a base param config
+### 2.2 Auto select the free cuda for training & inference
+PyABSA use the [AutoCUDA](https://github.com/yangheng95/autocuda) to support automatic cuda assignment, but you can
+  still set a preferred device.
 
 ```python3
-# Choose a Bert-based APC models param_dict
-apc_config_english = APCConfigManager.get_apc_config_english()
+auto_device=True  # to auto assign a cuda device for training / inference
+auto_device=False  # to use cpu
+auto_device='cuda:1'  # to specify a preferred device
+auto_device='cpu'  # to specify a preferred device
 ```
 
-### 3. Specify an APC model and alter some hyper-parameters (if necessary)
+### 2.3 Flexible labels than others 
+PyABSA support auto label fixing which means you can set the labels to any token (except -999), e.g., sentiment labels
+  = {-9. 2, negative, positive}
+- Check and make sure the version and datasets of checkpoint are compatible to your current PyABSA. The version
+  information of PyABSA is also available in the output while loading checkpoints training args.
+- You can train a model using multiple datasets with same sentiment labels, and you can even contribute and define a
+  combination of
+  datasets [here](https://github.com/yangheng95/PyABSA/blob/6defdb10b7fded79e2c989d9ddd95e6b06bebbbf/pyabsa/functional/dataset/dataset_manager.py#L32)!
+- Other features are available to be found
 
-```python3
-# Specify a Bert-based APC model
-apc_config_english.model = APCModelList.SLIDE_LCFS_BERT
+
+## 4. Quick Start
+- Create a new python environment and install pyabsa
+- ind a target demo script ([ATEPC](https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_term_extraction), [APC](https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_polarity_classification), [Text Classification](https://github.com/yangheng95/PyABSA/tree/release/demos/text_classification)) to prepare your work
+- Format your dataset referring to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) or use public dataset in ABSADatasets
+- Init your config to specify Model, Dataset, hyper-parameters
+- Training your model and get checkpoint
+- Share your checkpoint and dataset
+
+## 5. Installation
+
+Please do not install the version without corresponding release note to avoid installing a test version.
+
+### 5.1 install via pip
+
+To use PyABSA, install the latest version from pip or source code:
+
+```bash
+pip install -U pyabsa
 ```
 
-### 4. Configure runtime setting and running training
+### 5.2 install via source
 
-```python3
-dataset_path = ABSADatasetList.SemEval #or set your local dataset
-sent_classifier = Trainer(config=apc_config_english,
-                          dataset=dataset_path,  # train set and test set will be automatically detected
-                          checkpoint_save_mode=1,  # = None to avoid save model
-                          auto_device=True  # automatic choose CUDA or CPU
-                          ).load_trained_model()
+```bash
+git clone https://github.com/yangheng95/PyABSA --depth=1
+cd PyABSA 
+python setup.py install
 ```
+## 6. Learning to Use Checkpoint
 
-### 5. Sentiment inference
-
-```python3
-# batch inferring_tutorials returns the results, save the result if necessary using save_result=True
-inference_dataset = ABSADatasetList.SemEval # or set your local dataset
-results = sent_classifier.batch_infer(target_file=inference_dataset,
-                                      print_result=True,
-                                      save_result=True,
-                                      ignore_error=True,
-                                      )
-```
-
-Check the detailed usages in [APC Demos](demos/aspect_polarity_classification) directory.
-
-## Aspect Term Extraction and Polarity Classification (ATEPC)
-
-### 1. Import necessary entries
-
-```python3
-from pyabsa.functional import ATEPCModelList
-from pyabsa.functional import Trainer, ATEPCTrainer
-from pyabsa.functional import ABSADatasetList
-from pyabsa.functional import ATEPCConfigManager
-```
-
-### 2. Choose a base param config
-
-```python3
-config = ATEPCConfigManager.get_atepc_config_english()
-```
-
-### 3. Specify an ATEPC model and alter some hyper-parameters (if necessary)
-
-```python3
-atepc_config_english = ATEPCConfigManager.get_atepc_config_english()
-atepc_config_english.model = ATEPCModelList.LCF_ATEPC
-```
-
-### 4. Configure runtime setting and running training
-
-```python3
-laptop14 = ABSADatasetList.Laptop14
-
-aspect_extractor = ATEPCTrainer(config=atepc_config_english, 
-                                dataset=laptop14
-                                ).load_trained_model()
-```
-
-### 5. Aspect term extraction & sentiment inference
-
-```python3
-from pyabsa import ATEPCCheckpointManager
-
-examples = ['相比较原系列锐度高了不少这一点好与不好大家有争议',
-            '这款手机的大小真的很薄，但是颜色不太好看， 总体上我很满意啦。'
-            ]
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='chinese',
-                                                               auto_device=True  # False means load model on CPU
-                                                               )
-
-inference_source = pyabsa.ABSADatasetList.SemEval
-atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source, 
-                                               save_result=True,
-                                               print_result=True,  # print the result
-                                               pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
-                                               )
-```
-
-
-Check the detailed usages in [ATE Demos](demos/aspect_term_extraction) directory.
-
-# Checkpoint
-
-## How to get available checkpoints from Google Drive
+### 6.1 How to get available checkpoints from Google Drive
 
 PyABSA will check the latest available checkpoints before and load the latest checkpoint from Google Drive. To view
 available checkpoints, you can use the following code and load the checkpoint by name:
 
 ```python3
 from pyabsa import available_checkpoints
-
-checkpoint_map = available_checkpoints()
+checkpoint_map = available_checkpoints()  # show available checkpoints of PyABSA of current version 
 ```
-
 If you can not access to Google Drive, you can download our checkpoints and load the unzipped checkpoint manually.
-如果您无法访问谷歌Drive，您可以下载我们预训练的模型，并手动解压缩并加载模型。 模型下载[地址](https://pan.baidu.com/s/1oKkO7RJ6Ob9vY6flnJk3Sg) 提取码：ABSA
+如果您无法访问谷歌Drive，您可以从[此处 (提取码：ABSA)](https://pan.baidu.com/s/1oKkO7RJ6Ob9vY6flnJk3Sg) 下载我们预训练的模型，并手动解压缩并加载模型。
 
-## [How to share checkpoints (e.g., checkpoints trained on your custom dataset) with community](examples/documents/share-checkpoint.md)
+## 6.2 How to use our pretrained checkpoints on your dataset
+- [Aspect terms extraction & polarity classification](https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_term_extraction/extract_aspects.py)
+- [Aspect polarity classification](https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_polarity_classification/sentiment_inference.py)
 
-## How to use checkpoints
+## 6.3 [How to share checkpoints (e.g., checkpoints trained on your custom dataset) with community](demos/documents/share-checkpoint.md)
 
-### 1. Sentiment inference
-
-#### 1.1 Import necessary entries
-
-```python3
-import os
-from pyabsa import APCCheckpointManager, ABSADatasetList
-os.environ['PYTHONIOENCODING'] = 'UTF8'
-```
-
-#### 1.2 Assume the sent_classifier and checkpoint
-
-```python3
-sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='dlcf-dca-bert1', #or set your local checkpoint
-                                                                auto_device='cuda',  # Use CUDA if available
-                                                                )
-```
-
-#### 1.3 Configure inferring setting
-
-```python3
-# batch inferring_tutorials returns the results, save the result if necessary using save_result=True
-inference_datasets = ABSADatasetList.Laptop14 # or set your local dataset
-results = sent_classifier.batch_infer(target_file=inference_datasets,
-                                      print_result=True,
-                                      save_result=True,
-                                      ignore_error=True,
-                                      )
-```
-
-### 2. Aspect term extraction & sentiment inference
-
-#### 2.1 Import necessary entries
-
-```python3
-import os
-from pyabsa import ABSADatasetList
-from pyabsa import ATEPCCheckpointManager
-os.environ['PYTHONIOENCODING'] = 'UTF8'
-```
-
-#### 2.2 Assume the sent_classifier and checkpoint
-
-```python3
-
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='Laptop14', # or your local checkpoint
-                                                               auto_device=True  # False means load model on CPU
-                                                               )
-```
-
-#### 2.3 Configure extraction and inferring setting
-
-```python3
-# inference_dataset = ABSADatasetList.SemEval # or set your local dataset
-atepc_result = aspect_extractor.extract_aspect(inference_source=inference_dataset,
-                                               save_result=True,
-                                               print_result=True,  # print the result
-                                               pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
-                                               )
-```
-
-### 3. Train based on checkpoint
-
-#### 3.1 Import necessary entries
-
-```python3
-from pyabsa.functional import APCCheckpointManager
-from pyabsa.functional import Trainer
-from pyabsa.functional import APCConfigManager
-from pyabsa.functional import ABSADatasetList
-from pyabsa.functional import APCModelList
-```
-
-#### 3.2 Choose a base param_dict
-
-```python3
-apc_config_english = APCConfigManager.get_apc_config_english()
-```
-
-#### 3.3 Specify an APC model and alter some hyper-parameters (if necessary)
-
-```python3
-apc_config_english.model = APCModelList.SLIDE_LCF_BERT
-```
-
-#### 3.4 Configure checkpoint
-
-```python3
-checkpoint_path = APCCheckpointManager.get_checkpoint('slide-lcf-bert')
-```
-
-#### 3.5 Configure runtime setting and running training
-
-```python3
-dataset_path = ABSADatasetList.SemEval #or set your local dataset
-sent_classifier = Trainer(config=apc_config_english,
-                          dataset=dataset_path,
-                          from_checkpoint=checkpoint_path,
-                          checkpoint_save_mode=1,
-                          auto_device=True
-                          ).load_trained_model()
-```
-
-# Datasets
+## 7. Datasets
 
 More datasets are available at [ABSADatasets](https://github.com/yangheng95/ABSADatasets).
 
@@ -380,13 +161,13 @@ More datasets are available at [ABSADatasets](https://github.com/yangheng95/ABSA
 
 You don't have to download the datasets, as the datasets will be downloaded automatically.
 
-# Model Support
+## 8. Model Support
 
 Except for the following models, we provide a template model involving LCF vec, you can develop your model based on
 the [LCF-APC](pyabsa/core/apc/models/lcf_template_apc.py) model template
 or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
 
-## ATEPC
+### 8.1 ATEPC
 
 1. [LCF-ATEPC](pyabsa/core/atepc/models/lcf_atepc.py)
 2. [LCF-ATEPC-LARGE](pyabsa/core/atepc/models/lcf_atepc_large.py) (Dual BERT)
@@ -396,9 +177,9 @@ or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
 5. [FAST-LCFS-ATEPC](pyabsa/core/atepc/models/fast_lcfs_atepc.py)
 6. [BERT-BASE](pyabsa/core/atepc/models/bert_base_atepc.py)
 
-## APC
+### 8.2 APC
 
-### Bert-based APC models
+#### Bert-based APC models
 
 1. [SLIDE-LCF-BERT](pyabsa/core/apc/models/slide_lcf_bert.py) (Faster & Performs Better than LCF/LCFS-BERT)
 2. [SLIDE-LCFS-BERT](pyabsa/core/apc/models/slide_lcfs_bert.py) (Faster & Performs Better than LCF/LCFS-BERT)
@@ -413,7 +194,7 @@ or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
 11. [LCA-Net](pyabsa/core/apc/models/lca_bert.py)
 12. [DLCF-DCA-BERT *](pyabsa/core/apc/models/dlcf_dca_bert.py)
 
-### Bert-based APC baseline models
+#### Bert-based APC baseline models
 
 1. [AOA_BERT](pyabsa/core/apc/classic/__bert__/models/aoa.py)
 2. [ASGCN_BERT](pyabsa/core/apc/classic/__bert__/models/asgcn.py)
@@ -428,7 +209,7 @@ or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
 11. [TC_LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/tc_lstm.py)
 12. [TNet_LF_BERT](pyabsa/core/apc/classic/__bert__/models/tnet_lf.py)
 
-### GloVe-based APC baseline models
+#### GloVe-based APC baseline models
 
 1. [AOA](pyabsa/core/apc/classic/__glove__/models/aoa.py)
 2. [ASGCN](pyabsa/core/apc/classic/__glove__/models/asgcn.py)
@@ -443,7 +224,7 @@ or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
 11. [TD-LSTM](pyabsa/core/apc/classic/__glove__/models/tc_lstm.py)
 12. [TNet_LF](pyabsa/core/apc/classic/__glove__/models/tnet_lf.py)
 
-# Contribution
+## Contribution
 
 We expect that you can help us improve this project, and your contributions are welcome. You can make a contribution in
 many ways, including:
@@ -460,7 +241,7 @@ many ways, including:
   hyperparameters)
 - Star this repository to keep it active
 
-# Notice
+## Notice
 
 The LCF is a simple and adoptive mechanism proposed for ABSA. Many models based on LCF has been proposed and achieved
 SOTA performance. Developing your models based on LCF will significantly improve your ABSA models. If you are looking

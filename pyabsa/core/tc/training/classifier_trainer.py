@@ -374,8 +374,8 @@ class Instructor:
             )
             self.logger.info('-------------------------- Training Summary --------------------------')
 
-        print('Training finished, we hope you can share your checkpoint with everybody, please see:',
-              'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
+        print('Training finished, we hope you can share your checkpoint with community, please see:',
+              'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
 
         print_args(self.opt, self.logger)
 
