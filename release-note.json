@@ -1,4 +1,8 @@
 {
+  "1.2.9": {
+    "1": "Add an rule on APC dataset lines checking",
+    "2": "You can use multiple types of label in your dataset, e.g., string, number"
+  },
   "1.2.8": {
     "1": "Fix the convert_apc_set_to_atepc_set function",
     "2": "Fix the error to load a inference model from training, i.e., use trainer.load_trained_model() to load the inference model",

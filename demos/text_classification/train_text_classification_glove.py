@@ -9,7 +9,6 @@
 from pyabsa import ClassificationConfigManager, ClassificationDatasetList
 from pyabsa.functional import GloVeClassificationModelList, Trainer
 
-save_path = 'state_dict'
 classification_config_english = ClassificationConfigManager.get_classification_config_glove()
 classification_config_english.model = GloVeClassificationModelList.LSTM
 classification_config_english.num_epoch = 10

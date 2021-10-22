@@ -21,7 +21,7 @@ from transformers import AutoTokenizer, AutoModel, BertModel
 
 from pyabsa.functional.dataset import ABSADatasetList
 from pyabsa.utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args, optimizers, load_checkpoint, retry
+from pyabsa.utils.pyabsa_utils import print_args, optimizers, resume_from_checkpoint, retry
 
 from ..models import BERTBaselineAPCModelList, GloVeAPCModelList, APCModelList
 from ..classic.__bert__.dataset_utils.data_utils_for_training import (Tokenizer4Pretraining,
@@ -504,6 +504,6 @@ def train4apc(opt, from_checkpoint_path, logger):
 
     # in case of handling ConnectionError exception
     trainer = Instructor(opt, logger)
-    load_checkpoint(trainer, from_checkpoint_path)
+    resume_from_checkpoint(trainer, from_checkpoint_path)
 
     return trainer.run()

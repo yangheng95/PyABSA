@@ -59,10 +59,7 @@ def print_args(config, logger=None, mode=0):
 
 
 def check_and_fix_labels(label_set, label_name, all_data, opt):
-    # update polarities_dim, init model behind this function!
-    for lb in label_set:
-        if isinstance(lb, str) and len(lb.strip().split()) > 1:
-            raise KeyError('The original label must be one token, i.e., label.lb.strip().split()==1 !')
+    # update polarities_dim, init model behind execution of this function!
     label_to_index = {origin_label: int(idx) for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
     index_to_label = {int(idx): origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
     if 'index_to_label' not in opt.args:
@@ -97,7 +94,7 @@ def get_device(auto_device):
     return device, device_name
 
 
-def load_checkpoint(trainer, from_checkpoint_path):
+def resume_from_checkpoint(trainer, from_checkpoint_path):
     if from_checkpoint_path:
         model_path = find_files(from_checkpoint_path, '.model')
         state_dict_path = find_files(from_checkpoint_path, '.state_dict')
