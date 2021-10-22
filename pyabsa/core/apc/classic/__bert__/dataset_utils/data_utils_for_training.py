@@ -181,6 +181,9 @@ class BERTBaselineABSADataset(Dataset):
 
         ex_id = 0
 
+        if len(lines) % 3 != 0:
+            raise RuntimeError('One or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.')
+
         for i in tqdm.tqdm(range(0, len(lines), 3), postfix='building word indices...'):
             if lines[i].count("$T$") > 1:
                 continue

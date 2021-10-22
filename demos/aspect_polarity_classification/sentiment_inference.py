@@ -24,7 +24,7 @@ examples = [
     'I have had my computer for 2 weeks already and it [ASP]works[ASP] perfectly . !sent! Positive',
     'And I may be the only one but I am really liking [ASP]Windows 8[ASP] . !sent! Positive',
 ]
-sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='slide_lcf_bert_acc_79.94_f1_75.74',
+sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='slide_lcf_bert_acc_79.31_f1_74.12',
                                                                 auto_device=True,  # Use CUDA if available
                                                                 )
 
@@ -36,10 +36,10 @@ inference_sets = examples
 for ex in examples:
     result = sent_classifier.infer(ex, print_result=True)
 
-# inference_sets = ABSADatasetList.Laptop14
-# results = sent_classifier.batch_infer(target_file=inference_sets,
-#                                       print_result=True,
-#                                       save_result=True,
-#                                       ignore_error=False,
-#                                       )
-# print(results)
+inference_sets = ABSADatasetList.Laptop14
+results = sent_classifier.batch_infer(target_file=inference_sets,
+                                      print_result=True,
+                                      save_result=True,
+                                      ignore_error=False,
+                                      )
+print(results)

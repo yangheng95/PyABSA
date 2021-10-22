@@ -7,8 +7,6 @@
 
 from pyabsa import ATEPCCheckpointManager, ABSADatasetList
 
-# There might batch extraction function in the future
-
 examples = ['尤 其 是 照 的 大 尺 寸 照 片 时 效 果 也 是 非 常 不 错 的',
             '照 大 尺 寸 的 照 片 的 时 候 手 机 反 映 速 度 太 慢',
             '关 键 的 时 候 需 要 表 现 持 续 影 像 的 短 片 功 能 还 是 很 有 用 的',

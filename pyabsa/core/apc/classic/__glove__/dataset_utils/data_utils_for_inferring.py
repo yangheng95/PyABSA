@@ -75,7 +75,7 @@ class GloVeABSADataset(Dataset):
                     samples.append(sample)
             else:
                 text, ref_sent = text.split('!sent!')
-                ref_sent = ref_sent.split()
+                ref_sent = ref_sent.split(',')
                 text = '[PADDING] ' + text + ' [PADDING]'
                 splits = text.split('[ASP]')
 
@@ -127,7 +127,7 @@ class GloVeABSADataset(Dataset):
                     polarity = polarity if polarity else LABEL_PADDING
 
                 else:
-                    polarity = LABEL_PADDING
+                    polarity = str(LABEL_PADDING)
 
                 # simply add padding in case of some aspect is at the beginning or ending of a sentence
                 text_left, aspect, text_right = text.split('[ASP]')
