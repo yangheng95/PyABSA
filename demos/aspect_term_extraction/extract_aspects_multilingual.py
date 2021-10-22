@@ -7,12 +7,6 @@
 
 from pyabsa import ATEPCCheckpointManager
 
-# 本工具提供的所有功能均属于测试功能，供学习所用， 欢迎帮助维护及提出意见
-# 仅仅实现了单条文本抽取方面及分类情感， 后面有精力会实现批量抽取方面
-
-# All the functions provided by this tool are experimental and for learning purpose only,
-# welcome to help maintain and put forward suggestions
-
 examples = ['But the staff was so nice to us .',
             'But the staff was so horrible to us .',
             r'Not only was the food outstanding , but the little ` perks \' were great .',
