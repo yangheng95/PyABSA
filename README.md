@@ -92,7 +92,7 @@ PyABSA support auto label fixing which means you can set the labels to any token
 - Other features are available to be found
 
 
-## 4. Quick Start
+## 3. Quick Start
 - Create a new python environment and install pyabsa
 - ind a target demo script ([ATEPC](https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_term_extraction), [APC](https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_polarity_classification), [Text Classification](https://github.com/yangheng95/PyABSA/tree/release/demos/text_classification)) to prepare your work
 - Format your dataset referring to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) or use public dataset in ABSADatasets
@@ -100,11 +100,11 @@ PyABSA support auto label fixing which means you can set the labels to any token
 - Training your model and get checkpoint
 - Share your checkpoint and dataset
 
-## 5. Installation
+## 4. Installation
 
 Please do not install the version without corresponding release note to avoid installing a test version.
 
-### 5.1 install via pip
+### 4.1 install via pip
 
 To use PyABSA, install the latest version from pip or source code:
 
@@ -112,16 +112,16 @@ To use PyABSA, install the latest version from pip or source code:
 pip install -U pyabsa
 ```
 
-### 5.2 install via source
+### 4.2 install via source
 
 ```bash
 git clone https://github.com/yangheng95/PyABSA --depth=1
 cd PyABSA 
 python setup.py install
 ```
-## 6. Learning to Use Checkpoint
+## 5. Learning to Use Checkpoint
 
-### 6.1 How to get available checkpoints from Google Drive
+### 5.1 How to get available checkpoints from Google Drive
 
 PyABSA will check the latest available checkpoints before and load the latest checkpoint from Google Drive. To view
 available checkpoints, you can use the following code and load the checkpoint by name:
@@ -133,13 +133,13 @@ checkpoint_map = available_checkpoints()  # show available checkpoints of PyABSA
 If you can not access to Google Drive, you can download our checkpoints and load the unzipped checkpoint manually.
 如果您无法访问谷歌Drive，您可以从[此处 (提取码：ABSA)](https://pan.baidu.com/s/1oKkO7RJ6Ob9vY6flnJk3Sg) 下载我们预训练的模型，并手动解压缩并加载模型。
 
-## 6.2 How to use our pretrained checkpoints on your dataset
+## 5.2 How to use our pretrained checkpoints on your dataset
 - [Aspect terms extraction & polarity classification](https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_term_extraction/extract_aspects.py)
 - [Aspect polarity classification](https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_polarity_classification/sentiment_inference.py)
 
-## 6.3 [How to share checkpoints (e.g., checkpoints trained on your custom dataset) with community](demos/documents/share-checkpoint.md)
+## 5.3 [How to share checkpoints (e.g., checkpoints trained on your custom dataset) with community](demos/documents/share-checkpoint.md)
 
-## 7. Datasets
+## 6. Datasets
 
 More datasets are available at [ABSADatasets](https://github.com/yangheng95/ABSADatasets).
 
@@ -161,13 +161,13 @@ More datasets are available at [ABSADatasets](https://github.com/yangheng95/ABSA
 
 You don't have to download the datasets, as the datasets will be downloaded automatically.
 
-## 8. Model Support
+## 7. Model Support
 
 Except for the following models, we provide a template model involving LCF vec, you can develop your model based on
 the [LCF-APC](pyabsa/core/apc/models/lcf_template_apc.py) model template
 or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
 
-### 8.1 ATEPC
+### 7.1 ATEPC
 
 1. [LCF-ATEPC](pyabsa/core/atepc/models/lcf_atepc.py)
 2. [LCF-ATEPC-LARGE](pyabsa/core/atepc/models/lcf_atepc_large.py) (Dual BERT)
@@ -177,7 +177,7 @@ or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
 5. [FAST-LCFS-ATEPC](pyabsa/core/atepc/models/fast_lcfs_atepc.py)
 6. [BERT-BASE](pyabsa/core/atepc/models/bert_base_atepc.py)
 
-### 8.2 APC
+### 7.2 APC
 
 #### Bert-based APC models
 
