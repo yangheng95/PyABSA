@@ -6,11 +6,13 @@
 # Copyright (C) 2021. All Rights Reserved.
 import numpy as np
 import tqdm
+from termcolor import colored
 from torch.utils.data import Dataset
 
 from pyabsa.utils.pyabsa_utils import check_and_fix_labels
 from .apc_utils import build_sentiment_window, build_spc_mask_vec, load_apc_datasets, prepare_input_for_apc, configure_spacy_model
 from .apc_utils_for_dlcf_dca import prepare_input_for_dlcf_dca
+from pyabsa.utils.pyabsa_utils import validate_example
 
 
 class ABSADataset(Dataset):
@@ -21,14 +23,14 @@ class ABSADataset(Dataset):
 
         lines = load_apc_datasets(fname)
 
+        if len(lines) % 3 != 0:
+            print(colored('ERROR: one or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.', 'red'))
+
         all_data = []
         # record polarities type to update polarities_dim
         label_set = set()
 
         ex_id = 0
-
-        if len(lines) % 3 != 0:
-            raise RuntimeError('One or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.')
 
         for i in tqdm.tqdm(range(0, len(lines), 3), postfix='building word indices...'):
             if lines[i].count("$T$") > 1:
@@ -47,6 +49,9 @@ class ABSADataset(Dataset):
             text_raw_bert_indices = prepared_inputs['text_raw_bert_indices']
             aspect_bert_indices = prepared_inputs['aspect_bert_indices']
             lcf_vec = prepared_inputs['lcf_cdm_vec'] if opt.lcf == 'cdm' else prepared_inputs['lcf_cdw_vec']
+
+            validate_example(text_raw, aspect, polarity)
+
             if opt.model_name == 'dlcf_dca_bert':
                 prepared_inputs = prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect)
                 dlcf_vec = prepared_inputs['dlcf_cdm_vec'] if opt.lcf == 'cdm' else prepared_inputs['dlcf_cdw_vec']

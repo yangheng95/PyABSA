@@ -302,7 +302,8 @@ def get_cdw_vec(opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical
             try:
                 assert 0 <= w <= 1  # exception
             except:
-                print('Warning! invalid CDW weight:', w)
+                pass
+                # print('Warning! invalid CDW weight:', w)
             cdw_vec[i] = w
     return cdw_vec
 

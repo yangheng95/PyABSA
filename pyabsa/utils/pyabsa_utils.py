@@ -58,6 +58,18 @@ def print_args(config, logger=None, mode=0):
             print(colored(line, 'yellow'))
 
 
+def validate_example(text: str, aspect: str, polarity: str):
+    print(len(text), len(aspect))
+    if len(text) < len(aspect):
+        print(colored('Data Error to check -> aspect: {} is longer than text: {}'.format(aspect, text), 'red'))
+
+    if len(aspect) > 10:
+        print(colored('Aspect Warning to check -> aspect: {} is too long, text: {}, polarity: {}'.format(aspect, text, polarity), 'yellow'))
+
+    if len(polarity.split(' ')) > 3:
+        print(colored('Label Warning to check -> polarity: {} is too long, text: {}, aspect: {}'.format(polarity, text, aspect), 'yellow'))
+
+
 def check_and_fix_labels(label_set, label_name, all_data, opt):
     # update polarities_dim, init model behind execution of this function!
     label_to_index = {origin_label: int(idx) for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}

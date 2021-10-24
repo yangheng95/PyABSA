@@ -10,12 +10,13 @@ import numpy as np
 import tqdm
 from findfile import find_file
 from google_drive_downloader.google_drive_downloader import GoogleDriveDownloader as gdd
+from termcolor import colored
 from torch.utils.data import Dataset
 from transformers import AutoTokenizer
 
 from pyabsa.core.apc.classic.__glove__.dataset_utils.dependency_graph import prepare_dependency_graph
-from pyabsa.core.apc.dataset_utils.apc_utils import load_apc_datasets
-from pyabsa.utils.pyabsa_utils import check_and_fix_labels
+from pyabsa.core.apc.dataset_utils.apc_utils import load_apc_datasets, configure_spacy_model
+from pyabsa.utils.pyabsa_utils import check_and_fix_labels, validate_example
 
 
 def prepare_glove840_embedding(glove_path):
@@ -165,6 +166,7 @@ class Tokenizer4Pretraining:
 class BERTBaselineABSADataset(Dataset):
 
     def __init__(self, dataset_list, tokenizer, opt):
+        configure_spacy_model(opt)
 
         lines = load_apc_datasets(dataset_list)
 
@@ -182,7 +184,7 @@ class BERTBaselineABSADataset(Dataset):
         ex_id = 0
 
         if len(lines) % 3 != 0:
-            raise RuntimeError('One or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.')
+            print(colored('ERROR: one or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.', 'red'))
 
         for i in tqdm.tqdm(range(0, len(lines), 3), postfix='building word indices...'):
             if lines[i].count("$T$") > 1:
@@ -211,6 +213,8 @@ class BERTBaselineABSADataset(Dataset):
                                       'constant')
             dependency_graph = dependency_graph[:, range(0, opt.max_seq_len)]
             dependency_graph = dependency_graph[range(0, opt.max_seq_len), :]
+
+            validate_example(text_raw, aspect, polarity)
 
             data = {
                 'ex_id': ex_id,
