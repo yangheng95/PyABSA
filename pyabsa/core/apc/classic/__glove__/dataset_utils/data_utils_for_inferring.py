@@ -7,8 +7,9 @@ import numpy as np
 import tqdm
 from torch.utils.data import Dataset
 
+from pyabsa.utils.pyabsa_utils import validate_example
 from .dependency_graph import dependency_adj_matrix
-from pyabsa.core.apc.dataset_utils.apc_utils import load_apc_datasets, LABEL_PADDING
+from pyabsa.core.apc.dataset_utils.apc_utils import load_apc_datasets, LABEL_PADDING, configure_spacy_model
 
 
 def pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating='post', value=0):
@@ -59,6 +60,7 @@ class Tokenizer(object):
 class GloVeABSADataset(Dataset):
 
     def __init__(self, tokenizer, opt):
+        configure_spacy_model(opt)
 
         self.tokenizer = tokenizer
         self.opt = opt
@@ -152,6 +154,8 @@ class GloVeABSADataset(Dataset):
                                           'constant')
                 dependency_graph = dependency_graph[:, range(0, self.opt.max_seq_len)]
                 dependency_graph = dependency_graph[range(0, self.opt.max_seq_len), :]
+
+                validate_example(text, aspect, polarity)
 
                 data = {
                     'text_indices': text_indices
