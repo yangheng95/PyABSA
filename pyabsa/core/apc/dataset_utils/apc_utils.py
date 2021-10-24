@@ -395,6 +395,7 @@ def configure_spacy_model(opt):
             nlp = spacy.load(opt.spacy_model)
         except:
             raise RuntimeError('Download failed, you can download {} manually.'.format(opt.spacy_model))
+    return nlp
 
 
 def calculate_dep_dist(sentence, aspect):
