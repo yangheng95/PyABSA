@@ -5,7 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 import numpy as np
-from pyabsa.utils.pyabsa_utils import check_and_fix_labels
+from pyabsa.utils.pyabsa_utils import check_and_fix_labels, validate_example
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
@@ -103,6 +103,8 @@ class ABSADataset(Dataset):
                 text_raw_bert_indices = prepared_inputs['text_raw_bert_indices']
                 aspect_bert_indices = prepared_inputs['aspect_bert_indices']
                 lcf_vec = prepared_inputs['lcf_cdm_vec'] if self.opt.lcf == 'cdm' else prepared_inputs['lcf_cdw_vec']
+
+                validate_example(text_raw, aspect, polarity)
 
                 if self.opt.model_name == 'dlcf_dca_bert':
                     prepared_inputs = prepare_input_for_dlcf_dca(self.opt, self.tokenizer, text_left, text_right, aspect)

@@ -3,6 +3,7 @@ import pickle
 
 import numpy as np
 import spacy
+import termcolor
 import tqdm
 from spacy.tokens import Doc
 
@@ -18,8 +19,22 @@ class WhitespaceTokenizer(object):
         return Doc(self.vocab, words=words, spaces=spaces)
 
 
-nlp = spacy.load('en_core_web_sm')
-nlp.tokenizer = WhitespaceTokenizer(nlp.vocab)
+def configure_spacy_model(opt):
+    if not hasattr(opt, 'spacy_model'):
+        opt.spacy_model = 'en_core_web_sm'
+    global nlp
+    try:
+        nlp = spacy.load(opt.spacy_model)
+    except:
+        print('Can not load {} from spacy, try to download it in order to parse syntax tree:'.format(opt.spacy_model),
+              termcolor.colored('\npython -m spacy download {}'.format(opt.spacy_model), 'green'))
+        try:
+            os.system('python -m spacy download {}'.format(opt.spacy_model))
+            nlp = spacy.load(opt.spacy_model)
+        except:
+            raise RuntimeError('Download failed, you can download {} manually.'.format(opt.spacy_model))
+
+    nlp.tokenizer = WhitespaceTokenizer(nlp.vocab)
 
 
 def dependency_adj_matrix(text):
