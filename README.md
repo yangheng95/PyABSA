@@ -12,7 +12,7 @@
 [![total clones per week](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_clones_per_week.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 > Aspect Term Extraction (ATE) & Aspect Polarity Classification (APC)
 > 
@@ -271,6 +271,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=zh-CN"><img src="https://avatars.githubusercontent.com/u/51735130?v=4?s=100" width="100px;" alt=""/><br /><sub><b>YangHeng</b></sub></a><br /><a href="#projectManagement-yangheng95" title="Project Management">📆</a></td>
     <td align="center"><a href="https://github.com/brightgems"><img src="https://avatars.githubusercontent.com/u/8269060?v=4?s=100" width="100px;" alt=""/><br /><sub><b>brtgpy</b></sub></a><br /><a href="#data-brightgems" title="Data">🔣</a></td>
     <td align="center"><a href="https://github.com/FrancisDacian"><img src="https://avatars.githubusercontent.com/u/24215706?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ryan</b></sub></a><br /><a href="https://github.com/yangheng95/PyABSA/commits?author=FrancisDacian" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/lpfy"><img src="https://avatars.githubusercontent.com/u/4684417?v=4?s=100" width="100px;" alt=""/><br /><sub><b>lpfy</b></sub></a><br /><a href="https://github.com/yangheng95/PyABSA/commits?author=lpfy" title="Code">💻</a></td>
   </tr>
 </table>
 
