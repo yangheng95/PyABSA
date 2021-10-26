@@ -158,7 +158,51 @@ class ClassificationConfigManager(ConfigManager):
         :param kwargs:
         """
         super().__init__(args, **kwargs)
+    
+    @staticmethod
+    def set_classification_config(configType:str, newitem:dict):
+        if isinstance(newitem, dict):
+            if configType=='template':
+                _classification_config_template.update(newitem)
+            elif configType=='base':
+                _classification_config_base.update(newitem)
+            elif configType=='english':
+                _classification_config_english.update(newitem)
+            elif configType=='chinese':
+                _classification_config_chinese.update(newitem)
+            elif configType=='multilingual':
+                _classification_config_multilingual.update(newitem)
+            elif configType=='glove':
+                _classification_config_glove.update(newitem)
+            else:
+                raise ValueError("Wrong value of config type supplied, please use one from following type: template, base, english, chinese, multilingual, glove")
+        else:
+            raise TypeError("Wrong type of new config item supplied, please use dict e.g.{'NewConfig': NewValue}")        
+      
+    @staticmethod
+    def set_classification_config_template(newitem):
+        ClassificationConfigManager.set_classification_config('template', newitem)
+    
+    @staticmethod
+    def set_classification_config_base(newitem):
+        ClassificationConfigManager.set_classification_config('base', newitem)
+        
+    @staticmethod
+    def set_classification_config_english(newitem):
+        ClassificationConfigManager.set_classification_config('english', newitem)
+    
+    @staticmethod
+    def set_classification_config_chinese(newitem):
+        ClassificationConfigManager.set_classification_config('chinese', newitem)
+    
+    @staticmethod
+    def set_classification_config_multilingual(newitem):
+        ClassificationConfigManager.set_classification_config('multilingual', newitem)
 
+    @staticmethod
+    def set_classification_config_glove(newitem):
+        ClassificationConfigManager.set_classification_config('glove', newitem)
+        
     @staticmethod
     def get_classification_config_template():
         return ClassificationConfigManager(copy.deepcopy(_classification_config_template))
