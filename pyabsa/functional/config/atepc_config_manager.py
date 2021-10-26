@@ -175,7 +175,45 @@ class ATEPCConfigManager(ConfigManager):
         :param kwargs:
         """
         super().__init__(args, **kwargs)
-
+    
+    @staticmethod
+    def set_atepc_config(configType:str, newitem:dict):
+        if isinstance(newitem, dict):
+            if configType=='template':
+                _atepc_config_template.update(newitem)
+            elif configType=='base':
+                _atepc_config_base.update(newitem)
+            elif configType=='english':
+                _atepc_config_english.update(newitem)
+            elif configType=='chinese':
+                _atepc_config_chinese.update(newitem)
+            elif configType=='multilingual':
+                _atepc_config_multilingual.update(newitem)
+            else:
+                raise ValueError("Wrong value of config type supplied, please use one from following type: template, base, english, chinese, multilingual")
+        else:
+            raise TypeError("Wrong type of new config item supplied, please use dict e.g.{'NewConfig': NewValue}")        
+      
+    @staticmethod
+    def set_atepc_config_template(newitem):
+        ATEPCConfigManager.set_atepc_config('template', newitem)
+    
+    @staticmethod
+    def set_atepc_config_base(newitem):
+        ATEPCConfigManager.set_atepc_config('base', newitem)
+        
+    @staticmethod
+    def set_atepc_config_english(newitem):
+        ATEPCConfigManager.set_atepc_config('english', newitem)
+    
+    @staticmethod
+    def set_atepc_config_chinese(newitem):
+        ATEPCConfigManager.set_atepc_config('chinese', newitem)
+    
+    @staticmethod
+    def set_atepc_config_multilingual(newitem):
+        ATEPCConfigManager.set_atepc_config('multilingual', newitem)
+        
     @staticmethod
     def get_atepc_config_template():
         return ATEPCConfigManager(copy.deepcopy(_atepc_config_template))
