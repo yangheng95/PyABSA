@@ -258,7 +258,57 @@ class APCConfigManager(ConfigManager):
         :param kwargs:
         """
         super().__init__(args, **kwargs)
-
+    
+    @staticmethod
+    def set_apc_config(configType:str, newitem:dict):
+        if isinstance(newitem, dict):
+            if configType=='template':
+                _apc_config_template.update(newitem)
+            elif configType=='base':
+                _apc_config_base.update(newitem)
+            elif configType=='english':
+                _apc_config_english.update(newitem)
+            elif configType=='chinese':
+                _apc_config_chinese.update(newitem)
+            elif configType=='multilingual':
+                _apc_config_multilingual.update(newitem)
+            elif configType=='glove':
+                _apc_config_glove.update(newitem)    
+            elif configType=='bert_baseline':
+                _apc_config_bert_baseline.update(newitem)
+            else:
+                raise ValueError("Wrong value of config type supplied, please use one from following type: template, base, english, chinese, multilingual, glove, bert_baseline")
+        else:
+            raise TypeError("Wrong type of new config item supplied, please use dict e.g.{'NewConfig': NewValue}")        
+      
+    @staticmethod
+    def set_apc_config_template(newitem):
+        APCConfigManager.set_apc_config('template', newitem)
+    
+    @staticmethod
+    def set_apc_config_base(newitem):
+        APCConfigManager.set_apc_config('base', newitem)
+        
+    @staticmethod
+    def set_apc_config_english(newitem):
+        APCConfigManager.set_apc_config('english', newitem)
+    
+    @staticmethod
+    def set_apc_config_chinese(newitem):
+        APCConfigManager.set_apc_config('chinese', newitem)
+    
+    @staticmethod
+    def set_apc_config_multilingual(newitem):
+        APCConfigManager.set_apc_config('multilingual', newitem)
+        
+    @staticmethod
+    def set_apc_config_glove(newitem):
+        APCConfigManager.set_apc_config('glove', newitem)
+        
+    @staticmethod
+    def set_apc_config_bert_baseline(newitem):
+        APCConfigManager.set_apc_config('bert_baseline', newitem)
+    
     @staticmethod
     def get_apc_config_template():
         return APCConfigManager(copy.deepcopy(_apc_config_template))
