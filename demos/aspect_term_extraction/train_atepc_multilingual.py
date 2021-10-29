@@ -18,6 +18,8 @@ from pyabsa.functional import ATEPCConfigManager
 config = ATEPCConfigManager.get_atepc_config_multilingual()
 config.evaluate_begin = 5
 multilingual = ABSADatasetList.Multilingual
+config.pretrained_bert = 'bert-base-multilingual-uncased'
+
 aspect_extractor = Trainer(config=config,
                            dataset=multilingual,
                            checkpoint_save_mode=1,

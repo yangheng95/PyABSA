@@ -26,7 +26,7 @@ atepc_config.srd_alignment = False
 atepc_config.pretrained_bert = 'bert-base-uncased'
 atepc_config.model = ATEPCModelList.LCF_ATEPC
 
-dataset_path = ABSADatasetList.SemEval
+dataset_path = ABSADatasetList.English
 # or your local dataset: dataset_path = 'your local dataset path'
 
 aspect_extractor = ATEPCTrainer(config=atepc_config,
