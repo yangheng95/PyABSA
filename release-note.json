@@ -1,9 +1,11 @@
 {
+  "1.2.11": {
+    "1": "Add set/get functions for configs"
+  },
   "1.2.10": {
     "1": "Add an rule on APC dataset lines checking",
     "2": "Add SpaCy model config in classic APC models",
     "3": "Not fully tested for all situations"
-
   },
   "1.2.9": {
     "1": "Add an rule on APC dataset lines checking",
