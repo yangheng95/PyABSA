@@ -88,16 +88,40 @@ PyABSA support auto label fixing which means you can set the labels to any token
   information of PyABSA is also available in the output while loading checkpoints training args.
 - You can train a model using multiple datasets with same sentiment labels, and you can even contribute and define a
   combination of
-  datasets [here](https://github.com/yangheng95/PyABSA/blob/6defdb10b7fded79e2c989d9ddd95e6b06bebbbf/pyabsa/functional/dataset/dataset_manager.py#L32)!
-- Other features are available to be found
+  datasets [here](./pyabsa/functional/dataset/dataset_manager.py#L32)!
 
+
+### 2.3 Get/Set config options
+The default spaCy english model is en_core_web_sm, if you didn't install it, PyABSA will download/install it automatically.
+
+If you would like to change english model (or other pre-defined options), you can get/set as following:
+
+```python3
+from pyabsa.functional.config.apc_config_manager import APCConfigManager
+from pyabsa.functional.config.atepc_config_manager import ATEPCConfigManager
+from pyabsa.functional.config.classification_config_manager import ClassificationConfigManager
+
+#Set
+APCConfigManager.set_apc_config_english({'spacy_model': 'en_core_web_lg'})
+ATEPCConfigManager.set_atepc_config_english({'spacy_model': 'en_core_web_lg'})
+ClassificationConfigManager.set_classification_config_english({'spacy_model': 'en_core_web_lg'})
+
+#Get
+APCConfigManager.get_apc_config_english()
+ATEPCConfigManager.get_atepc_config_english()
+ClassificationConfigManager.get_classification_config_english()
+
+#Manually Set spaCy nlp Language object
+from pyabsa.core.apc.dataset_utils.apc_utils import configure_spacy_model
+nlp = configure_spacy_model(APCConfigManager.get_apc_config_english())
+```
 
 ## 3. Quick Start
 - Create a new python environment and install pyabsa
 - ind a target demo script ([ATEPC](https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_term_extraction), [APC](https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_polarity_classification), [Text Classification](https://github.com/yangheng95/PyABSA/tree/release/demos/text_classification)) to prepare your work
 - Format your dataset referring to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) or use public dataset in ABSADatasets
 - Init your config to specify Model, Dataset, hyper-parameters
-- Training your model and get checkpoint
+- Training your model and get checkpoints
 - Share your checkpoint and dataset
 
 ## 4. Installation
