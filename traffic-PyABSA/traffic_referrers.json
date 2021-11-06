@@ -1,23 +1,23 @@
 [
   {
     "referrer": "github.com",
-    "count": 976,
-    "uniques": 65
+    "count": 1011,
+    "uniques": 69
   },
   {
     "referrer": "Google",
-    "count": 268,
-    "uniques": 78
+    "count": 272,
+    "uniques": 80
   },
   {
     "referrer": "link.zhihu.com",
-    "count": 86,
-    "uniques": 9
+    "count": 87,
+    "uniques": 10
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 44,
-    "uniques": 19
+    "count": 48,
+    "uniques": 20
   },
   {
     "referrer": "ss.scnu.edu.cn",
@@ -27,6 +27,11 @@
   {
     "referrer": "DuckDuckGo",
     "count": 5,
+    "uniques": 2
+  },
+  {
+    "referrer": "arxiv.org",
+    "count": 3,
     "uniques": 2
   },
   {
@@ -43,10 +48,5 @@
     "referrer": "l.facebook.com",
     "count": 2,
     "uniques": 2
-  },
-  {
-    "referrer": "index.quantumstat.com",
-    "count": 2,
-    "uniques": 1
   }
 ]
