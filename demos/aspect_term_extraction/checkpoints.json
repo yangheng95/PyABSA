@@ -1,21 +1,21 @@
 {
   "APC": {
     "multilingual": {
-      "id": "https://drive.google.com/file/d/1qr90Ui9ioWgevIcyRB0fXh4vuctPYa76/view?usp=sharing",
-      "Training Model": "SLIDE-LCF-BERT",
+      "id": "https://drive.google.com/file/d/1_Xe25iODKDuPDZsTY0LxTo12XlODHD9u/view?usp=sharing",
+      "Training Model": "Fast-LCF-BERT",
       "Training Dataset": "Multilingual",
-      "Description": "Trained on RTX2080",
+      "Description": "Trained on RTX2080 Ti",
       "Available Version": "1.2.3",
-      "Checkpoint File": "slide_lcf_bert_acc_83.4_f1_73.42.zip",
+      "Checkpoint File": "fast_lcf_bert_acc_85.88_f1_81.35.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "english": {
-      "id": "https://drive.google.com/file/d/1_fwXMthAzFSctLn1qq9FoSg_8uTU_rdz/view?usp=sharing",
+      "id": "https://drive.google.com/file/d/1S9Dx191Xc3IBMfCsYXWHRNMS73zUlDH4/view?usp=sharing",
       "Training Model": "Slide-LCF-BERT",
-      "Training Dataset": "Rest 14, 16, Laptop 14",
-      "Description": "Trained on RTX2080",
-      "Available Version": "1.1",
-      "Checkpoint File": "slide_lcf_bert_acc_83.4_f1_73.42.zip",
+      "Training Dataset": "English",
+      "Description": "Trained on RTX2080 Ti",
+      "Available Version": "1.2.3",
+      "Checkpoint File": "slide_lcf_bert_acc_83.06_f1_80.43.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "slide-lcfs-bert": {
@@ -51,12 +51,12 @@
       "Author": "M, Xu (xumayi@m.scnu.edu.cn)"
     },
     "chinese": {
-      "id": "https://drive.google.com/file/d/1Xm2USp1VylbzwQizgLqaRYpdznb8Vxyj/view?usp=sharing",
+      "id": "https://drive.google.com/file/d/1wdq3T4MKRb5x-VesfAKGsehWmsF_mn80/view?usp=sharing",
       "Training Model": "Fast-LCF-BERT",
       "Training Dataset": "Chinese",
-      "Description": "Trained on RTX2080",
-      "Available Version": "1.1",
-      "Checkpoint File": "fast_lcf_bert_acc_96.77_f1_96.16.zip",
+      "Description": "Trained on RTX2080 Ti",
+      "Available Version": "1.2.3",
+      "Checkpoint File": "fast_lcf_bert_acc_94.92_f1_89.06.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "HELP-WANTED": {
@@ -68,12 +68,12 @@
   },
   "ATEPC": {
     "chinese": {
-      "id": "https://drive.google.com/file/d/1vJ6qwCptDGQ0FLvnuPttpwvPJYpIaHw1/view?usp=sharing",
+      "id": "https://drive.google.com/file/d/1jbdifnbcJrx2euypL2gEMDUthfmpDspV/view?usp=sharing",
       "Training Model": "LCF-ATEPC",
       "Training Dataset": "Chinese",
       "Description": "",
-      "Available Version": "1.1",
-      "Checkpoint File": "lcf_atepc_cdw_apcacc_96.76_apcf1_96.2_atef1_90.08.zip",
+      "Available Version": "1.2.3",
+      "Checkpoint File": "lcf_atepc_cdw_apcacc_80.71_apcf1_59.44_atef1_51.64.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "Laptop14": {
@@ -86,30 +86,30 @@
       "Author": "M, Xu (xumayi@m.scnu.edu.cn)"
     },
     "semeval": {
-      "id": "https://drive.google.com/file/d/14LYNXGO9BJFPXvXX4u6bGXNqhalPEjiC/view?usp=sharing",
+      "id": "https://drive.google.com/file/d/1tLLolZ9g4tQ5EXN3-e6w2c7qqtQ3_9wj/view?usp=sharing",
       "Training Model": "LCF-ATEPC",
-      "Training Dataset": "Rest 14, 16, Laptop 14",
+      "Training Dataset": "SemEval",
       "Description": "",
-      "Checkpoint File": "lcf_atepc_cdw_apcacc_82.77_apcf1_72.41_atef1_80.97.zip",
-      "Available Version": "1.1",
+      "Checkpoint File": "lcf_atepc_cdw_apcacc_83.08_apcf1_74.4_atef1_81.98.zip",
+      "Available Version": "1.2.3",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "english": {
-      "id": "https://drive.google.com/file/d/14LYNXGO9BJFPXvXX4u6bGXNqhalPEjiC/view?usp=sharing",
+      "id": "https://drive.google.com/file/d/14vU32lzfh9XX9--wnM8iVBrIcKP4rP0L/view?usp=sharing",
       "Training Model": "LCF-ATEPC",
-      "Training Dataset": "Rest 14, 16, Laptop 14, MAMS, twitter, tshirt, television",
+      "Training Dataset": "English",
       "Description": "",
-      "Checkpoint File": "lcf_atepc_cdw_apcacc_80.5_apcf1_77.31_atef1_74.65.zip",
-      "Available Version": "1.1.13",
+      "Checkpoint File": "lcf_atepc_cdw_apcacc_75.15_apcf1_69.59_atef1_76.37.zip",
+      "Available Version": "1.2.3",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "multilingual": {
-      "id": "https://drive.google.com/file/d/1vDr85mflnZofpzIsnwffgQVwqE1U0QoO/view?usp=sharing",
+      "id": "https://drive.google.com/file/d/17FtI9ZDvTS0MRbH4bqTT86kcWmGREUvQ/view?usp=sharing",
       "Training Model": "LCF-ATEPC",
-      "Training Dataset": "multilingual",
-      "Description": "Rest 14, 16, Laptop 14, MAMS, twitter, tshirt, television, Chinese",
-      "Checkpoint File": "lcf_atepc_cdw_apcacc_83.66_apcf1_75.18_atef1_83.27.zip",
-      "Available Version": "1.1.12",
+      "Training Dataset": "Multilingual",
+      "Description": "",
+      "Checkpoint File": "lcf_atepc_cdw_apcacc_80.94_apcf1_75.95_atef1_67.11.zip",
+      "Available Version": "1.2.3",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "HELP-WANTED": {
@@ -120,7 +120,7 @@
     }
   },
   "TC": {
-    "bert": {
+      "bert": {
       "id": "https://drive.google.com/file/d/1Lbk2ts6CrcdLRKMUGIAeSouRrECyNMEt/view?usp=sharing",
       "Training Model": "BERT",
       "Training Dataset": "SST2",
