@@ -28,8 +28,10 @@ from pyabsa.utils.pyabsa_utils import save_args
 def generate_inference_set_for_apc(dataset_path):
     if isinstance(dataset_path, DatasetItem):
         dataset_path = dataset_path.dataset_name
-    train_datasets = find_files(os.getcwd(), ['dataset', 'train', 'apc', dataset_path], exclude_key='infer')
-    test_datasets = find_files(os.getcwd(), ['dataset', 'test', 'apc', dataset_path], exclude_key='infer')
+    elif not os.path.exists(dataset_path):
+        dataset_path = os.getcwd()
+    train_datasets = find_files(dataset_path, ['dataset', 'train', 'apc'], exclude_key='infer')
+    test_datasets = find_files(dataset_path, ['dataset', 'test', 'apc'], exclude_key='infer')
     for file in train_datasets + test_datasets:
         try:
             fin = open(file, 'r', newline='\n', encoding='utf-8')
