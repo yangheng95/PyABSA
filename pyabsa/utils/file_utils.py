@@ -30,8 +30,8 @@ def generate_inference_set_for_apc(dataset_path):
         dataset_path = dataset_path.dataset_name
     elif not os.path.exists(dataset_path):
         dataset_path = os.getcwd()
-    train_datasets = find_files(dataset_path, ['dataset', 'train', 'apc'], exclude_key='infer')
-    test_datasets = find_files(dataset_path, ['dataset', 'test', 'apc'], exclude_key='infer')
+    train_datasets = find_files(dataset_path, ['dataset', 'train', 'apc'], exclude_key='.inference')
+    test_datasets = find_files(dataset_path, ['dataset', 'test', 'apc'], exclude_key='.inference')
     for file in train_datasets + test_datasets:
         try:
             fin = open(file, 'r', newline='\n', encoding='utf-8')
@@ -158,7 +158,7 @@ def convert_apc_set_to_atepc_set(path):
     if isinstance(path, DatasetItem):
         path = path.dataset_name
     if not os.path.exists(path):
-        files = find_files(os.getcwd(), [path, 'dataset', 'apc'], exclude_key='infer')
+        files = find_files(os.getcwd(), [path, 'dataset', 'apc'], exclude_key='.inference')
     else:
         files = find_files(path, '', exclude_key='infer')
 
