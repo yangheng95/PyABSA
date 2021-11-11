@@ -91,12 +91,12 @@ def detect_dataset(dataset_path, task='apc'):
 
     if len(dataset_file['train']) == 0:
         raise RuntimeError('{} is not an integrated dataset or not downloaded automatically,'
-                           ' or it is not a path containing datasets!'.format(dataset_path))
+                           ' and it is not a path containing train/test datasets!'.format(dataset_path))
     if len(dataset_file['test']) == 0:
         print('Warning, auto_evaluate=True, however cannot find test set using for evaluating!')
 
     if len(dataset_path) > 1:
-        print(colored('Never mixing datasets with different sentiment labels for training & inferring !', 'yellow'))
+        print(colored('Never mixing datasets with different sentiment labels for training & inference !', 'yellow'))
 
     return dataset_file
 
@@ -116,9 +116,9 @@ def detect_infer_dataset(dataset_path, task='apc'):
 
     if len(dataset_file) == 0:
         raise RuntimeError('{} is not an integrated dataset or not downloaded automatically,'
-                           ' or it is not a path containing datasets!'.format(dataset_path))
+                           ' and it is not a path containing inference datasets!'.format(dataset_path))
     if len(dataset_path) > 1:
-        print(colored('Never mixing datasets with different sentiment labels for training & inferring !', 'yellow'))
+        print(colored('Never mixing datasets with different sentiment labels for training & inference !', 'yellow'))
 
     return dataset_file
 
