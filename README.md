@@ -217,18 +217,18 @@ or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
 
 #### Bert-based APC baseline models
 
-1. [AOA_BERT](pyabsa/core/apc/classic/__bert__/models/aoa.py)
-2. [ASGCN_BERT](pyabsa/core/apc/classic/__bert__/models/asgcn.py)
-3. [ATAE_LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/atae_lstm.py)
-4. [Cabasc_BERT](pyabsa/core/apc/classic/__bert__/models/cabasc.py)
-5. [IAN_BERT](pyabsa/core/apc/classic/__bert__/models/ian.py)
-6. [LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/lstm.py)
-7. [MemNet_BERT](pyabsa/core/apc/classic/__bert__/models/memnet.py)
-8. [MGAN_BERT](pyabsa/core/apc/classic/__bert__/models/mgan.py)
-9. [RAM_BERT](pyabsa/core/apc/classic/__bert__/models/ram.py)
-10. [TD_LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/td_lstm.py)
-11. [TC_LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/tc_lstm.py)
-12. [TNet_LF_BERT](pyabsa/core/apc/classic/__bert__/models/tnet_lf.py)
+1. [AOA_BERT](pyabsa/core/apc/classic/__bert__/models/aoa_bert.py)
+2. [ASGCN_BERT](pyabsa/core/apc/classic/__bert__/models/asgcn_bert.py)
+3. [ATAE_LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/atae_lstm_bert.py)
+4. [Cabasc_BERT](pyabsa/core/apc/classic/__bert__/models/cabasc_bert.py)
+5. [IAN_BERT](pyabsa/core/apc/classic/__bert__/models/ian_bert.py)
+6. [LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/lstm_bert.py)
+7. [MemNet_BERT](pyabsa/core/apc/classic/__bert__/models/memnet_bert.py)
+8. [MGAN_BERT](pyabsa/core/apc/classic/__bert__/models/mgan_bert.py)
+9. [RAM_BERT](pyabsa/core/apc/classic/__bert__/models/ram_bert.py)
+10. [TD_LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/td_lstm_bert.py)
+11. [TC_LSTM_BERT](pyabsa/core/apc/classic/__bert__/models/tc_lstm_bert.py)
+12. [TNet_LF_BERT](pyabsa/core/apc/classic/__bert__/models/tnet_lf_bert.py)
 
 #### GloVe-based APC baseline models
 
