@@ -88,7 +88,7 @@ PyABSA encourages you to use string labels instead of numbers. e.g., sentiment l
   combination of datasets [here](./pyabsa/functional/dataset/dataset_manager.py#L32)!
 
 
-### 2.3 Get/Set config options
+### 2.4 Get/Set config options
 The default spaCy english model is en_core_web_sm, if you didn't install it, PyABSA will download/install it automatically.
 
 If you would like to change english model (or other pre-defined options), you can get/set as following:
@@ -152,7 +152,7 @@ from pyabsa import available_checkpoints
 checkpoint_map = available_checkpoints()  # show available checkpoints of PyABSA of current version 
 ```
 If you can not access to Google Drive, you can download our checkpoints and load the unzipped checkpoint manually.
-如果您无法访问谷歌Drive，您可以从[此处 (提取码：ABSA)](https://pan.baidu.com/s/1oKkO7RJ6Ob9vY6flnJk3Sg) 下载我们预训练的模型，并手动解压缩并加载模型。
+如果您无法访问谷歌Drive，您可以从[此处 (提取码：ABSA)](https://pan.baidu.com/s/1oKkO7RJ6Ob9vY6flnJk3Sg) 下载我们预训练的模型，并加载模型（百度云上的checkpoints更新较慢，版本较为滞后，请注意使用对应版本的PyABSA）。
 
 ## 5.2 How to use our pretrained checkpoints on your dataset
 - [Aspect terms extraction & polarity classification](https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_term_extraction/extract_aspects.py)
