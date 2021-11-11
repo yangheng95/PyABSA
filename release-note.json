@@ -1,5 +1,8 @@
 {
-  "1.2.11": {
+  "1.2.13": {
+    "1": "Minor update in dataset searching"
+  },
+  "1.2.12": {
     "1": "Add set/get functions for configs"
   },
   "1.2.10": {

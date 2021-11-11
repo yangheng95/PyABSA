@@ -1,10 +1,9 @@
-# PyABSA - Open & Efficient for Framework for Aspect-based Sentiment Analysis
+# PyABSA - Open Framework for Aspect-based Sentiment Analysis
 
 ![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg)
 [![PyPI](https://img.shields.io/pypi/v/pyabsa)](https://pypi.org/project/pyabsa/)
 [![PyPI_downloads](https://img.shields.io/pypi/dm/pyabsa)](https://pypi.org/project/pyabsa/)
 ![License](https://img.shields.io/pypi/l/pyabsa?logo=PyABSA)
-[![Gitter](https://badges.gitter.im/PyABSA/community.svg)](https://gitter.im/PyABSA/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 [![total views](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_views.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
 [![total views per week](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_views_per_week.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
@@ -82,13 +81,11 @@ auto_device='cpu'  # to specify a preferred device
 ```
 
 ### 2.3 Flexible labels than others 
-PyABSA support auto label fixing which means you can set the labels to any token (except -999), e.g., sentiment labels
-  = {-9. 2, negative, positive}
-- Check and make sure the version and datasets of checkpoint are compatible to your current PyABSA. The version
-  information of PyABSA is also available in the output while loading checkpoints training args.
+PyABSA encourages you to use string labels instead of numbers. e.g., sentiment labels = {negative, positive, unknown}
+- What labels you labeled in the dataset, what labels will be output in inference
+- The version information of PyABSA is also available in the output while loading checkpoints training args.
 - You can train a model using multiple datasets with same sentiment labels, and you can even contribute and define a
-  combination of
-  datasets [here](./pyabsa/functional/dataset/dataset_manager.py#L32)!
+  combination of datasets [here](./pyabsa/functional/dataset/dataset_manager.py#L32)!
 
 
 ### 2.3 Get/Set config options
