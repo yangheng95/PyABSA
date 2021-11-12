@@ -1,18 +1,18 @@
 [
   {
     "referrer": "github.com",
-    "count": 683,
-    "uniques": 72
+    "count": 763,
+    "uniques": 83
   },
   {
     "referrer": "Google",
-    "count": 196,
-    "uniques": 78
+    "count": 230,
+    "uniques": 92
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 85,
-    "uniques": 19
+    "count": 86,
+    "uniques": 20
   },
   {
     "referrer": "link.zhihu.com",
@@ -21,7 +21,7 @@
   },
   {
     "referrer": "linkedin.com",
-    "count": 16,
+    "count": 19,
     "uniques": 13
   },
   {
@@ -30,23 +30,23 @@
     "uniques": 1
   },
   {
-    "referrer": "l.facebook.com",
-    "count": 4,
-    "uniques": 2
-  },
-  {
     "referrer": "index.quantumstat.com",
     "count": 4,
     "uniques": 2
   },
   {
-    "referrer": "pypi.org",
-    "count": 3,
+    "referrer": "l.facebook.com",
+    "count": 4,
     "uniques": 2
   },
   {
     "referrer": "DuckDuckGo",
-    "count": 2,
+    "count": 3,
+    "uniques": 3
+  },
+  {
+    "referrer": "pypi.org",
+    "count": 3,
     "uniques": 2
   }
 ]
