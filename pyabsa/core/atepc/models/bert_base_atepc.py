@@ -39,6 +39,7 @@ class BERT_BASE_ATEPC(BertForTokenClassification):
         self.dense = torch.nn.Linear(opt.hidden_dim, opt.polarities_dim)
 
     def get_batch_token_labels_bert_base_indices(self, labels):
+        curr_device = labels.device
         if labels is None:
             return
         # convert tags of BERT-SPC input to BERT-BASE format
@@ -46,15 +47,16 @@ class BERT_BASE_ATEPC(BertForTokenClassification):
         for text_i in range(len(labels)):
             sep_index = np.argmax((labels[text_i] == 5))
             labels[text_i][sep_index + 1:] = 0
-        return torch.tensor(labels).to(self.opt.device)
+        return torch.tensor(labels).to(curr_device)
 
     def get_ids_for_local_context_extractor(self, text_indices):
         # convert BERT-SPC input to BERT-BASE format
+        curr_device = text_indices.device
         text_ids = text_indices.detach().cpu().numpy()
         for text_i in range(len(text_ids)):
             sep_index = np.argmax((text_ids[text_i] == 102))
             text_ids[text_i][sep_index + 1:] = 0
-        return torch.tensor(text_ids).to(self.opt.device)
+        return torch.tensor(text_ids).to(curr_device)
 
     def forward(self, input_ids_spc,
                 token_type_ids=None,
@@ -67,6 +69,7 @@ class BERT_BASE_ATEPC(BertForTokenClassification):
                 lcf_cdw_vec=None
                 ):
 
+        curr_device = attention_mask.device
         if not self.opt.use_bert_spc:
             input_ids = self.get_ids_for_local_context_extractor(input_ids_spc)
             labels = self.get_batch_token_labels_bert_base_indices(labels)
@@ -75,7 +78,7 @@ class BERT_BASE_ATEPC(BertForTokenClassification):
             global_context_out = self.bert4global(input_ids_spc, token_type_ids, attention_mask)['last_hidden_state']
 
         batch_size, max_len, feat_dim = global_context_out.shape
-        global_valid_output = torch.zeros(batch_size, max_len, feat_dim, dtype=torch.float32).to(self.opt.device)
+        global_valid_output = torch.zeros(batch_size, max_len, feat_dim, dtype=torch.float32).to(curr_device)
         for i in range(batch_size):
             jj = -1
             for j in range(max_len):
