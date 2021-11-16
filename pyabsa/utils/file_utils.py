@@ -242,13 +242,18 @@ def save_model(opt, model, tokenizer, save_path):
     if not opt.save_mode:
         return
     # Save a trained model, configuration and tokenizer
-    model_to_save = model.module if hasattr(model, 'core') else model  # Only save the model it-self
+    if hasattr(model, 'module') or hasattr(model, 'core'):
+        print ("save model from dataparallel!")
+        model_to_save =  model.module
+    else:
+        print ("<<< save a single machine model!")
+        model_to_save = model
 
     if opt.save_mode == 1 or 'bert' not in opt.model_name:
         if not os.path.exists(save_path):
             os.makedirs(save_path)
             # torch.save(self.model.cpu().state_dict(), save_path + self.opt.model_name + '.state_dict')  # save the state dict
-        torch.save(model.state_dict(), save_path + opt.model_name + '.state_dict')  # save the state dict
+        torch.save(model_to_save.state_dict(), save_path + opt.model_name + '.state_dict')  # save the state dict
         pickle.dump(opt, open(save_path + opt.model_name + '.config', mode='wb'))
         pickle.dump(tokenizer, open(save_path + opt.model_name + '.tokenizer', mode='wb'))
         save_args(opt, save_path + opt.model_name + '.args.txt')
