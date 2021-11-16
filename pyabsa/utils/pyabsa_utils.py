@@ -120,7 +120,10 @@ def resume_from_checkpoint(trainer, from_checkpoint_path):
                     print(colored('Warning, the checkpoint was not trained using {} from param_dict'.format(trainer.opt.model.__name__)), 'red')
                 trainer.model = torch.load(model_path[0])
             if state_dict_path:
-                trainer.model.load_state_dict(torch.load(state_dict_path[0]))
+                if torch.cuda.device_count() > 1:
+                    trainer.model.module.load_state_dict(torch.load(state_dict_path[0]))
+                else:
+                    trainer.model.load_state_dict(torch.load(state_dict_path[0]))
                 trainer.model.opt = trainer.opt
                 trainer.model.to(trainer.opt.device)
             else:
