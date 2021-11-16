@@ -300,16 +300,28 @@ class Instructor:
             lcf_cdw_vec = lcf_cdw_vec.to(self.opt.device)
 
             with torch.no_grad():
-                ate_logits, apc_logits = self.model.module(input_ids_spc,
-                                                    token_type_ids=segment_ids,
-                                                    attention_mask=input_mask,
-                                                    labels=None,
-                                                    polarity=polarity,
-                                                    valid_ids=valid_ids,
-                                                    attention_mask_label=l_mask,
-                                                    lcf_cdm_vec=lcf_cdm_vec,
-                                                    lcf_cdw_vec=lcf_cdw_vec
-                                                    )
+                if torch.cuda.device_count() > 1:
+                    ate_logits, apc_logits = self.model.module(input_ids_spc,
+                                                        token_type_ids=segment_ids,
+                                                        attention_mask=input_mask,
+                                                        labels=None,
+                                                        polarity=polarity,
+                                                        valid_ids=valid_ids,
+                                                        attention_mask_label=l_mask,
+                                                        lcf_cdm_vec=lcf_cdm_vec,
+                                                        lcf_cdw_vec=lcf_cdw_vec
+                                                        )
+                else:
+                    ate_logits, apc_logits = self.model(input_ids_spc,
+                                                               token_type_ids=segment_ids,
+                                                               attention_mask=input_mask,
+                                                               labels=None,
+                                                               polarity=polarity,
+                                                               valid_ids=valid_ids,
+                                                               attention_mask_label=l_mask,
+                                                               lcf_cdm_vec=lcf_cdm_vec,
+                                                               lcf_cdw_vec=lcf_cdw_vec
+                                                               )
             if eval_APC:
                 n_test_correct += (torch.argmax(apc_logits, -1) == polarity).sum().item()
                 n_test_total += len(polarity)
@@ -323,7 +335,10 @@ class Instructor:
 
             if eval_ATE:
                 if not self.opt.use_bert_spc:
-                    label_ids = self.model.module.get_batch_token_labels_bert_base_indices(label_ids)
+                    if torch.cuda.device_count() > 1:
+                        label_ids = self.model.module.get_batch_token_labels_bert_base_indices(label_ids)
+                    else:
+                        label_ids = self.model.get_batch_token_labels_bert_base_indices(label_ids)
                 ate_logits = torch.argmax(F.log_softmax(ate_logits, dim=2), dim=2)
                 ate_logits = ate_logits.detach().cpu().numpy()
                 label_ids = label_ids.to('cpu').numpy()
