@@ -106,7 +106,16 @@ class Instructor:
         # init the model behind the convert_examples_to_features function in case of updating polarities_dim
 
         self.model = self.opt.model(bert_base_model, opt=self.opt)
-        self.model.to(self.opt.device)
+
+        # use DataParallel for training if device count larger than 1
+        if torch.cuda.device_count()>1:
+            print ("use multi-gpu training!")
+            self.opt.device = "cuda:0"
+            self.model.to(self.opt.device)
+            self.model = torch.nn.DataParallel(self.model)
+        else:
+            self.model.to(self.opt.device)
+
         param_optimizer = list(self.model.named_parameters())
         no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
         self.optimizer_grouped_parameters = [
@@ -155,7 +164,14 @@ class Instructor:
                                                 )
                 # loss_ate = loss_ate.item() / (loss_ate.item() + loss_apc.item()) * loss_ate
                 # loss_apc = loss_apc.item() / (loss_ate.item() + loss_apc.item()) * loss_apc
-                loss = 3 * loss_ate + loss_apc
+                #for multi-gpu, average loss by gpu instance number
+                if torch.cuda.device_count()>1:
+                    loss = 3 * loss_ate.mean() + loss_apc.mean()
+                else:
+                    loss = 3 * loss_ate + loss_apc
+
+                print ("loss result: ", loss)
+
                 sum_loss += loss.item()
                 loss.backward()
                 nb_tr_examples += input_ids_spc.size(0)
