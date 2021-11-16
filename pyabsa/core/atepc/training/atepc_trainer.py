@@ -162,14 +162,13 @@ class Instructor:
                                                 lcf_cdm_vec=lcf_cdm_vec,
                                                 lcf_cdw_vec=lcf_cdw_vec
                                                 )
+                # for multi-gpu, average loss by gpu instance number
+                if torch.cuda.device_count() > 1:
+                    loss_ate, loss_apc = loss_ate.mean(), loss_apc.mean()
                 # loss_ate = loss_ate.item() / (loss_ate.item() + loss_apc.item()) * loss_ate
                 # loss_apc = loss_apc.item() / (loss_ate.item() + loss_apc.item()) * loss_apc
                 #for multi-gpu, average loss by gpu instance number
-                if torch.cuda.device_count()>1:
-                    loss = 3 * loss_ate.mean() + loss_apc.mean()
-                else:
-                    loss = 3 * loss_ate + loss_apc
-
+                loss = 3 * loss_ate + loss_apc
                 print ("loss result: ", loss)
 
                 sum_loss += loss.item()
@@ -301,7 +300,7 @@ class Instructor:
             lcf_cdw_vec = lcf_cdw_vec.to(self.opt.device)
 
             with torch.no_grad():
-                ate_logits, apc_logits = self.model(input_ids_spc,
+                ate_logits, apc_logits = self.model.module(input_ids_spc,
                                                     token_type_ids=segment_ids,
                                                     attention_mask=input_mask,
                                                     labels=None,
@@ -324,7 +323,7 @@ class Instructor:
 
             if eval_ATE:
                 if not self.opt.use_bert_spc:
-                    label_ids = self.model.get_batch_token_labels_bert_base_indices(label_ids)
+                    label_ids = self.model.module.get_batch_token_labels_bert_base_indices(label_ids)
                 ate_logits = torch.argmax(F.log_softmax(ate_logits, dim=2), dim=2)
                 ate_logits = ate_logits.detach().cpu().numpy()
                 label_ids = label_ids.to('cpu').numpy()
