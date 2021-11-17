@@ -97,6 +97,16 @@ class Instructor:
 
             self.model = opt.model(self.embedding_matrix, opt).to(opt.device)
 
+        print ("<<< opt.device", self.opt.device)
+        print ("<<<< gpu setting!")
+        if torch.cuda.device_count()>1:
+            print ("use multi-gpu training!")
+            self.opt.device = torch.device('cuda:0')
+            self.model.to(self.opt.device)
+            self.model = torch.nn.DataParallel(self.model)
+        else:
+            self.model.to(self.opt.device)
+
         if self.opt.device.type == 'cuda':
             self.logger.info(
                 "cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device.index)))
@@ -217,6 +227,9 @@ class Instructor:
                 else:
                     sen_logits = outputs
                     loss = criterion(sen_logits, targets)
+
+                if torch.cuda.device_count() > 1:
+                    loss = loss.mean()
 
                 sum_loss += loss.item()
                 loss.backward()
