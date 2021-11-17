@@ -110,7 +110,7 @@ class Instructor:
         # use DataParallel for training if device count larger than 1
         if torch.cuda.device_count()>1:
             print ("use multi-gpu training!")
-            self.opt.device = "cuda:0"
+            self.opt.device = torch.device('cuda:0')
             self.model.to(self.opt.device)
             self.model = torch.nn.DataParallel(self.model)
         else:
