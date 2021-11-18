@@ -34,13 +34,13 @@ class LCA_BERT(nn.Module):
 
     def forward(self, inputs):
         if self.opt.use_bert_spc:
-            text_global_indices = inputs[0]
+            text_global_indices = inputs['text_bert_indices']
         else:
-            text_global_indices = inputs[1]
-        text_local_indices = inputs[1]
-        lca_ids = inputs[2]
+            text_global_indices = inputs['text_raw_bert_indices']
+        text_local_indices = inputs['text_raw_bert_indices']
+        lca_ids = inputs['lcf_vec']
         lcf_matrix = lca_ids.unsqueeze(2)  # lca_ids is the same as lcf_matrix
-        polarity = inputs[3]
+        polarity = inputs['polarity']
 
         bert_global_out = self.bert4global(text_global_indices)['last_hidden_state']
         bert_local_out = self.bert4local(text_local_indices)['last_hidden_state']
@@ -66,5 +66,4 @@ class LCA_BERT(nn.Module):
 
         lcp_loss = self.lca_criterion(lca_logits, lca_ids)
         sent_loss = self.classification_criterion(sent_logits, polarity)
-
-        return {'logits': sent_logits, 'loss': (1 - self.opt.sigma) * sent_loss + self.opt.sigma * lcp_loss}
+        return {'logits': sent_logits, 'hidden_state': pooled_out, 'loss': (1 - self.opt.sigma) * sent_loss + self.opt.sigma * lcp_loss}

@@ -28,11 +28,11 @@ class FAST_LCFS_BERT(nn.Module):
 
     def forward(self, inputs):
         if self.opt.use_bert_spc:
-            text_bert_indices = inputs[0]
+            text_bert_indices = inputs['text_bert_indices']
         else:
-            text_bert_indices = inputs[1]
-        text_local_indices = inputs[1]
-        lcf_matrix = inputs[2].unsqueeze(2)
+            text_bert_indices = inputs['text_raw_bert_indices']
+        text_local_indices = inputs['text_raw_bert_indices']
+        lcf_matrix = inputs['lcf_vec'].unsqueeze(2)
         global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
 
         # LCF layer
@@ -45,4 +45,4 @@ class FAST_LCFS_BERT(nn.Module):
         cat_features = self.bert_SA_(cat_features)
         pooled_out = self.bert_pooler(cat_features)
         dense_out = self.dense(pooled_out)
-        return dense_out
+        return {'logits': dense_out, 'hidden_state': pooled_out}

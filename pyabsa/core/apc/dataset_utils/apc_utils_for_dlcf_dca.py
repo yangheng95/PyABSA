@@ -126,18 +126,6 @@ def get_dynamic_cdm_vec(opt, max_dist, bert_spc_indices, aspect_indices, aspect_
     return cdm_vec
 
 
-try:
-    nlp = spacy.load("en_core_web_sm")
-except:
-    print('Can not load en_core_web_sm from spacy, try to download it in order to parse syntax tree:',
-          termcolor.colored('\npython -m spacy download en_core_web_sm', 'green'))
-    try:
-        os.system('python -m spacy download en_core_web_sm')
-        nlp = spacy.load("en_core_web_sm")
-    except:
-        raise RuntimeError('Download failed, you can download en_core_web_sm manually.')
-
-
 def calculate_cluster(sentence, aspect, opt):
     terms = [a.lower() for a in aspect.split()]
 

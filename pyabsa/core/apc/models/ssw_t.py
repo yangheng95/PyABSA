@@ -51,14 +51,14 @@ class SSW_T(nn.Module):
         self.sent_dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
 
     def forward(self, inputs):
-        text_bert_indices = inputs[0]
-        spc_mask_vec = inputs[1]
-        lcf_matrix = inputs[2].unsqueeze(2)
-        left_lcf_matrix = inputs[3].unsqueeze(2)
-        right_lcf_matrix = inputs[4].unsqueeze(2)
-        polarity = inputs[5]
-        left_dist = self.dist_embed(inputs[6].unsqueeze(1))
-        right_dist = self.dist_embed(inputs[7].unsqueeze(1))
+        text_bert_indices = inputs['text_bert_indices']
+        spc_mask_vec = inputs['spc_mask_vec']
+        lcf_matrix = inputs['lcf_vec'].unsqueeze(2)
+        left_lcf_matrix = inputs['left_lcf_vec'].unsqueeze(2)
+        right_lcf_matrix = inputs['right_lcf_vec'].unsqueeze(2)
+        polarity = inputs['polarity']
+        left_dist = self.dist_embed(inputs['left_dist'].unsqueeze(1))
+        right_dist = self.dist_embed(inputs['right_dist'].unsqueeze(1))
 
         global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
         masked_global_context_features = torch.mul(spc_mask_vec, global_context_features)
@@ -96,4 +96,4 @@ class SSW_T(nn.Module):
         sent_logits = self.sent_dense(sent_out)
         sent_loss = self.classification_criterion(sent_logits, polarity)
 
-        return {'logits': sent_logits, 'loss': sent_loss}
+        return {'logits': sent_logits, 'hidden_state': sent_out, 'loss': sent_loss}

@@ -109,13 +109,13 @@ class DLCF_DCA_BERT(nn.Module):
 
     def forward(self, inputs):
         if self.opt.use_bert_spc:
-            text_bert_indices = inputs[0]
+            text_bert_indices = inputs['text_bert_indices']
         else:
-            text_bert_indices = inputs[1]
-        text_local_indices = inputs[1]
-        lcf_matrix = inputs[2].unsqueeze(2)
-        depend_vec = inputs[3].unsqueeze(2)
-        depended_vec = inputs[4].unsqueeze(2)
+            text_bert_indices = inputs['text_raw_bert_indices']
+        text_local_indices = inputs['text_raw_bert_indices']
+        lcf_matrix = inputs['dlcf_vec'].unsqueeze(2)
+        depend_vec = inputs['depend_vec'].unsqueeze(2)
+        depended_vec = inputs['depended_vec'].unsqueeze(2)
 
         global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
         local_context_features = self.bert4local(text_local_indices)['last_hidden_state']
@@ -139,4 +139,4 @@ class DLCF_DCA_BERT(nn.Module):
         out_cat = self.bert_SA_(out_cat)
         out_cat = self.bert_pooler(out_cat)
         dense_out = self.dense(out_cat)
-        return dense_out
+        return {'logits': dense_out, 'hidden_state': out_cat}
