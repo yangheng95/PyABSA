@@ -243,10 +243,10 @@ def save_model(opt, model, tokenizer, save_path):
         return
     # Save a trained model, configuration and tokenizer
     if hasattr(model, 'module') or hasattr(model, 'core'):
-        print ("save model from dataparallel!")
-        model_to_save =  model.module
+        # print("save model from data-parallel!")
+        model_to_save = model.module
     else:
-        print ("<<< save a single machine model!")
+        # print("save a single cuda model!")
         model_to_save = model
 
     if opt.save_mode == 1 or 'bert' not in opt.model_name:

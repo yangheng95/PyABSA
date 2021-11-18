@@ -33,6 +33,10 @@ def config_check(args):
             assert args['dca_layer'] >= 1
         if args['model'] == pyabsa.APCModelList.LCA_BERT:
             assert args['lcf'] == 'cdm'  # LCA-Net only support CDM mode
+        if 'ensemble_mode' in args:
+            assert args['ensemble_mode'] in {'cat', 'mean'}
+        if 'ensemble_mode' in args:
+            assert args['ensemble_mode'] in {'cat', 'mean'}
 
     except AssertionError:
         raise RuntimeError('Some parameters are not valid, please see the main example.')

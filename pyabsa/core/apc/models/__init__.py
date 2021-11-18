@@ -11,6 +11,7 @@ class APCModelList:
     from .bert_base import BERT_BASE
     from .bert_spc import BERT_SPC
     from .dlcf_dca_bert import DLCF_DCA_BERT
+    from .dlcfs_dca_bert import DLCFS_DCA_BERT
     from .fast_lcf_bert import FAST_LCF_BERT
     from .fast_lcf_bert_att import FAST_LCF_BERT_ATT
     from .fast_lcfs_bert import FAST_LCFS_BERT
@@ -29,6 +30,7 @@ class APCModelList:
     SLIDE_LCFS_BERT = SLIDE_LCFS_BERT
 
     DLCF_DCA_BERT = DLCF_DCA_BERT
+    DLCFS_DCA_BERT = DLCFS_DCA_BERT
 
     LCF_BERT = LCF_BERT
     FAST_LCF_BERT = FAST_LCF_BERT

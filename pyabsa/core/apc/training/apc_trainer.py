@@ -163,7 +163,7 @@ class Instructor:
                 # switch model to training_tutorials mode, clear gradient accumulators
                 self.model.train()
                 self.optimizer.zero_grad()
-                inputs = {col: sample_batched[col].to(self.opt.device) for col in self.opt.inputs}
+                inputs = {col: sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols}
                 outputs = self.model(inputs)
                 targets = sample_batched['polarity'].to(self.opt.device)
 
@@ -408,7 +408,7 @@ class Instructor:
         with torch.no_grad():
             for t_batch, t_sample_batched in enumerate(test_dataloader):
 
-                t_inputs = {col: t_sample_batched[col].to(self.opt.device) for col in self.opt.inputs}
+                t_inputs = {col: t_sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols}
 
                 t_targets = t_sample_batched['polarity'].to(self.opt.device)
 

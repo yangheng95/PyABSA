@@ -48,6 +48,7 @@ class ABSADataset(Dataset):
             text_bert_indices = prepared_inputs['text_bert_indices']
             text_raw_bert_indices = prepared_inputs['text_raw_bert_indices']
             aspect_bert_indices = prepared_inputs['aspect_bert_indices']
+            lcfs_vec = prepared_inputs['lcfs_cdm_vec'] if opt.lcf == 'cdm' else prepared_inputs['lcfs_cdw_vec']
             lcf_vec = prepared_inputs['lcf_cdm_vec'] if opt.lcf == 'cdm' else prepared_inputs['lcf_cdw_vec']
 
             validate_example(text_raw, aspect, polarity)
@@ -55,6 +56,7 @@ class ABSADataset(Dataset):
             if opt.model_name == 'dlcf_dca_bert':
                 prepared_inputs = prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect)
                 dlcf_vec = prepared_inputs['dlcf_cdm_vec'] if opt.lcf == 'cdm' else prepared_inputs['dlcf_cdw_vec']
+                dlcfs_vec = prepared_inputs['dlcfs_cdm_vec'] if opt.lcf == 'cdm' else prepared_inputs['dlcfs_cdw_vec']
                 depend_vec = prepared_inputs['depend_vec']
                 depended_vec = prepared_inputs['depended_vec']
             data = {
@@ -68,25 +70,29 @@ class ABSADataset(Dataset):
 
                 'lca_ids': lcf_vec,  # the lca indices are the same as the refactored CDM (lcf != CDW or Fusion) lcf vec
 
-                'lcf_vec': lcf_vec if 'lcf_vec' in opt.inputs else 0,
+                'lcf_vec': lcf_vec if 'lcf_vec' in opt.inputs_cols else 0,
 
-                'dlcf_vec': dlcf_vec if 'dlcf_vec' in opt.inputs else 0,
+                'lcfs_vec': lcfs_vec if 'lcfs_vec' in opt.inputs_cols else 0,
+
+                'dlcf_vec': dlcf_vec if 'dlcf_vec' in opt.inputs_cols else 0,
+
+                'dlcfs_vec': dlcfs_vec if 'dlcfs_vec' in opt.inputs_cols else 0,
 
                 'spc_mask_vec': build_spc_mask_vec(opt, text_raw_bert_indices)
-                if 'spc_mask_vec' in opt.inputs else 0,
+                if 'spc_mask_vec' in opt.inputs_cols else 0,
 
                 'text_bert_indices': text_bert_indices
-                if 'text_bert_indices' in opt.inputs else 0,
+                if 'text_bert_indices' in opt.inputs_cols else 0,
 
                 'aspect_bert_indices': aspect_bert_indices
-                if 'aspect_bert_indices' in opt.inputs else 0,
+                if 'aspect_bert_indices' in opt.inputs_cols else 0,
 
                 'text_raw_bert_indices': text_raw_bert_indices
-                if 'text_raw_bert_indices' in opt.inputs else 0,
+                if 'text_raw_bert_indices' in opt.inputs_cols else 0,
 
-                'depend_vec': depend_vec if 'depend_vec' in opt.inputs else 0,
+                'depend_vec': depend_vec if 'depend_vec' in opt.inputs_cols else 0,
 
-                'depended_vec': depended_vec if 'depended_vec' in opt.inputs else 0,
+                'depended_vec': depended_vec if 'depended_vec' in opt.inputs_cols else 0,
 
                 'polarity': polarity,
             }
@@ -98,7 +104,7 @@ class ABSADataset(Dataset):
         check_and_fix_labels(label_set, 'polarity', all_data, opt)
         opt.polarities_dim = len(label_set)
 
-        if 'left_lcf_vec' in opt.inputs or 'right_lcf_vec' in opt.inputs:
+        if 'left_lcf_vec' in opt.inputs_cols or 'right_lcf_vec' in opt.inputs_cols or 'left_lcfs_vec' in opt.inputs_cols or 'right_lcfs_vec' in opt.inputs_cols:
             all_data = build_sentiment_window(all_data, tokenizer, opt.similarity_threshold)
             for data in all_data:
 

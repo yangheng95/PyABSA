@@ -43,20 +43,30 @@ def prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect):
 
         aspect_begin = len(tokenizer.tokenize(bos_token + ' ' + text_left))
 
-        if 'dlcf' in opt.model_name or opt.use_syntax_based_SRD:
-            syntactical_dist, max_dist = get_syntax_distance(text_raw, aspect, tokenizer, opt)
-        else:
-            syntactical_dist = None
+        # if 'dlcf' in opt.model_name or opt.use_syntax_based_SRD:
+        #     syntactical_dist, max_dist = get_syntax_distance(text_raw, aspect, tokenizer, opt)
+        # else:
+        #     syntactical_dist = None
+
+        syntactical_dist, max_dist = get_syntax_distance(text_raw, aspect, tokenizer, opt)
 
         dlcf_cdm_vec = get_dynamic_cdm_vec(opt, max_dist, text_bert_indices, aspect_bert_indices,
-                                           aspect_begin, syntactical_dist)
+                                           aspect_begin, syntactical_dist=None)
         dlcf_cdw_vec = get_dynamic_cdw_vec(opt, max_dist, text_bert_indices, aspect_bert_indices,
-                                           aspect_begin, syntactical_dist)
+                                           aspect_begin, syntactical_dist=None)
+
+        dlcfs_cdm_vec = get_dynamic_cdm_vec(opt, max_dist, text_bert_indices, aspect_bert_indices,
+                                            aspect_begin, syntactical_dist)
+        dlcfs_cdw_vec = get_dynamic_cdw_vec(opt, max_dist, text_bert_indices, aspect_bert_indices,
+                                            aspect_begin, syntactical_dist)
+
         depend_vec, depended_vec = calculate_cluster(text_raw, aspect, opt)
 
         inputs = {
             'dlcf_cdm_vec': dlcf_cdm_vec,
             'dlcf_cdw_vec': dlcf_cdw_vec,
+            'dlcfs_cdm_vec': dlcfs_cdm_vec,
+            'dlcfs_cdw_vec': dlcfs_cdw_vec,
             'depend_vec': depend_vec,
             'depended_vec': depended_vec,
         }

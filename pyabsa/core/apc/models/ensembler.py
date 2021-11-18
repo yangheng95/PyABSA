@@ -41,10 +41,10 @@ class APCEnsembler(nn.Module):
         models = [opt.model] if not isinstance(opt.model, list) else opt.model
         model_pool_check(models)
 
-        self.opt.inputs = set()
+        self.opt.inputs_cols = set()
         for model in models:
-            self.opt.inputs |= set(model.inputs)
-        self.inputs = self.opt.inputs
+            self.opt.inputs_cols |= set(model.inputs)
+        self.inputs_cols = self.opt.inputs_cols
 
         self.models = ModuleList()
 
@@ -61,7 +61,8 @@ class APCEnsembler(nn.Module):
             if hasattr(APCModelList, models[i].__name__):
                 self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case=True) if not self.tokenizer else self.tokenizer
                 # self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert) if not self.bert else self.bert
-                self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert) if not self.bert else copy.deepcopy(self.bert)
+                # self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert) if not self.bert else copy.deepcopy(self.bert)
+                self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert) if not self.bert else self.bert  # share the underlying bert between models
 
                 if load_dataset:
                     self.train_set = ABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt) if not self.train_set else self.train_set
@@ -74,7 +75,7 @@ class APCEnsembler(nn.Module):
 
             elif hasattr(BERTBaselineAPCModelList, models[i].__name__):
                 self.tokenizer = Tokenizer4Pretraining(self.opt.max_seq_len, self.opt.pretrained_bert) if not self.tokenizer else self.tokenizer
-                self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert) if not self.bert else copy.deepcopy(self.bert)
+                self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert) if not self.bert else self.bert
 
                 if load_dataset:
                     self.train_set = BERTBaselineABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt) if not self.train_set else self.train_set
@@ -103,7 +104,8 @@ class APCEnsembler(nn.Module):
                     embed_dim=opt.embed_dim,
                     dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(opt.embed_dim), os.path.basename(opt.dataset_name)),
                     opt=self.opt
-                ) if not self.embedding_matrix else copy.deepcopy(self.embedding_matrix)
+                # ) if not self.embedding_matrix else copy.deepcopy(self.embedding_matrix)
+                ) if not self.embedding_matrix else self.embedding_matrix
 
                 if load_dataset:
                     self.train_set = GloVeABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt) if not self.train_set else self.train_set
