@@ -7,7 +7,6 @@
 from pyabsa import ABSADatasetList
 from pyabsa import ATEPCCheckpointManager
 
-
 examples = ['But the staff was so nice to us .',
             'But the staff was so horrible to us .',
             r'Not only was the food outstanding , but the little ` perks \' were great .',

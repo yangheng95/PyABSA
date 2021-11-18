@@ -11,7 +11,7 @@ from pyabsa.network.sa_encoder import Encoder
 
 
 class SLIDE_LCFS_BERT(nn.Module):
-    inputs = ['text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec']
+    inputs = ['text_bert_indices', 'spc_mask_vec', 'lcfs_vec', 'left_lcfs_vec', 'right_lcfs_vec']
 
     def __init__(self, bert, opt):
         super(SLIDE_LCFS_BERT, self).__init__()

@@ -14,15 +14,15 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 > Aspect Term Extraction (ATE) & Aspect Polarity Classification (APC)
-> 
+>
 > Fast & Low Memory requirement & Enhanced implementation of Local Context Focus
 >
 > Build from LC-ABSA / LCF-ABSA / LCF-BERT and LCF-ATEPC.
-> 
-> PyTorch Implementations (CPU & CUDA supported). 
+>
+> PyTorch Implementations (CPU & CUDA supported).
 
 If you are willing to support PyABSA project, please star this repository as your contribution.
- 
+
 ## 1. Package Overview
 
 <table>
@@ -55,11 +55,15 @@ If you are willing to support PyABSA project, please star this repository as you
 ## 2. Read the Important Tips
 
 ### 2.1 Use your custom dataset
-PyABSA use the [FindFile](https://github.com/yangheng95/findfile) to find the target file which means you can specify
-  a dataset/checkpoint by keywords instead of using absolute path. e.g.,
 
-- First, refer to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) to prepare your dataset into acceptable format.
-- You can PR to contribute your dataset and use it like `ABDADatasets.your_dataset`, or use it by dataset absolute / relative path, or dataset dir name
+PyABSA use the [FindFile](https://github.com/yangheng95/findfile) to find the target file which means you can specify a
+dataset/checkpoint by keywords instead of using absolute path. e.g.,
+
+- First, refer to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) to prepare your dataset into acceptable
+  format.
+- You can PR to contribute your dataset and use it like `ABDADatasets.your_dataset`, or use it by dataset absolute /
+  relative path, or dataset dir name
+
 ```bash
 dataset = './laptop' # relative path
 dataset = 'ABSOLUTE_PATH/laptop/' # absolute path
@@ -70,8 +74,9 @@ checkpoint = 'lcfs' # checkpoint assignment is similar to above methods
 ```
 
 ### 2.2 Auto select the free cuda for training & inference
+
 PyABSA use the [AutoCUDA](https://github.com/yangheng95/autocuda) to support automatic cuda assignment, but you can
-  still set a preferred device.
+still set a preferred device.
 
 ```python3
 auto_device=True  # to auto assign a cuda device for training / inference
@@ -80,16 +85,19 @@ auto_device='cuda:1'  # to specify a preferred device
 auto_device='cpu'  # to specify a preferred device
 ```
 
-### 2.3 Flexible labels than others 
+### 2.3 Flexible labels than others
+
 PyABSA encourages you to use string labels instead of numbers. e.g., sentiment labels = {negative, positive, unknown}
+
 - What labels you labeled in the dataset, what labels will be output in inference
 - The version information of PyABSA is also available in the output while loading checkpoints training args.
 - You can train a model using multiple datasets with same sentiment labels, and you can even contribute and define a
   combination of datasets [here](./pyabsa/functional/dataset/dataset_manager.py#L32)!
 
-
 ### 2.4 Get/Set config options
-The default spaCy english model is en_core_web_sm, if you didn't install it, PyABSA will download/install it automatically.
+
+The default spaCy english model is en_core_web_sm, if you didn't install it, PyABSA will download/install it
+automatically.
 
 If you would like to change english model (or other pre-defined options), you can get/set as following:
 
@@ -114,9 +122,14 @@ nlp = configure_spacy_model(APCConfigManager.get_apc_config_english())
 ```
 
 ## 3. Quick Start
+
 - Create a new python environment and install pyabsa
-- ind a target demo script ([ATEPC](https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_term_extraction), [APC](https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_polarity_classification), [Text Classification](https://github.com/yangheng95/PyABSA/tree/release/demos/text_classification)) to prepare your work
-- Format your dataset referring to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) or use public dataset in ABSADatasets
+- ind a target demo script ([ATEPC](https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_term_extraction)
+  , [APC](https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_polarity_classification)
+  , [Text Classification](https://github.com/yangheng95/PyABSA/tree/release/demos/text_classification)) to prepare your
+  work
+- Format your dataset referring to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) or use public dataset in
+  ABSADatasets
 - Init your config to specify Model, Dataset, hyper-parameters
 - Training your model and get checkpoints
 - Share your checkpoint and dataset
@@ -140,6 +153,7 @@ git clone https://github.com/yangheng95/PyABSA --depth=1
 cd PyABSA 
 python setup.py install
 ```
+
 ## 5. Learning to Use Checkpoint
 
 ### 5.1 How to get available checkpoints from Google Drive
@@ -151,10 +165,13 @@ available checkpoints, you can use the following code and load the checkpoint by
 from pyabsa import available_checkpoints
 checkpoint_map = available_checkpoints()  # show available checkpoints of PyABSA of current version 
 ```
+
 If you can not access to Google Drive, you can download our checkpoints and load the unzipped checkpoint manually.
-如果您无法访问谷歌Drive，您可以从[此处 (提取码：ABSA)](https://pan.baidu.com/s/1oKkO7RJ6Ob9vY6flnJk3Sg) 下载我们预训练的模型，并加载模型（百度云上的checkpoints更新较慢，版本较为滞后，请注意使用对应版本的PyABSA）。
+如果您无法访问谷歌Drive，您可以从[此处 (提取码：ABSA)](https://pan.baidu.com/s/1oKkO7RJ6Ob9vY6flnJk3Sg)
+下载我们预训练的模型，并加载模型（百度云上的checkpoints更新较慢，版本较为滞后，请注意使用对应版本的PyABSA）。
 
 ## 5.2 How to use our pretrained checkpoints on your dataset
+
 - [Aspect terms extraction & polarity classification](https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_term_extraction/extract_aspects.py)
 - [Aspect polarity classification](https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_polarity_classification/sentiment_inference.py)
 

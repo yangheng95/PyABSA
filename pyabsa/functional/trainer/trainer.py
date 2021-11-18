@@ -8,7 +8,6 @@ import copy
 import os
 
 import findfile
-from findfile import find_dir
 
 from pyabsa import __version__
 
@@ -25,15 +24,17 @@ from pyabsa.core.tc.training.classifier_trainer import train4classification
 from pyabsa.functional.config.apc_config_manager import APCConfigManager
 from pyabsa.functional.config.atepc_config_manager import ATEPCConfigManager
 from pyabsa.functional.config.classification_config_manager import ClassificationConfigManager
-from pyabsa.functional.dataset import ABSADatasetList
 
 from pyabsa.utils.logger import get_logger
 
 from pyabsa.utils.pyabsa_utils import get_device
 
+import warnings
+
+warnings.filterwarnings('once')
+
 
 def init_config(config, auto_device):
-
     config.device, config.device_name = get_device(auto_device)
     config.auto_device = auto_device
     config.model_name = config.model.__name__.lower() if not isinstance(config.model, list) else 'ensemble'
@@ -64,7 +65,7 @@ class Trainer:
                                      "checkpoint_save_mode=2" to save the whole model,
                                      "checkpoint_save_mode=3" to save the fine-tuned BERT,
                                      otherwise avoid to save checkpoint but return the trained model after training
-        :param auto_device: True or False, otherwise 'allcuda', 'cpu' works
+        :param auto_device: True or False, otherwise 'allcuda', 'cuda:1', 'cpu' works
 
         """
         if isinstance(config, APCConfigManager):
