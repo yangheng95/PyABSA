@@ -4,7 +4,6 @@ These experimental results are not rigorous reproduction of corresponding papers
 random seeds. Due to the limitation of computational resources, we will be glad if you help us finish the leaderboard,
 for the sake of providing reference of reproduction. The performance reports of other models are welcome.
 
-
 |                        |     LAP14    |             |             |     RES14    |             |             |     RES15    |             |             |     RES16    |             |             |
 |------------------------|:------------:|:-----------:|:-----------:|:------------:|-------------|-------------|:------------:|-------------|-------------|:------------:|-------------|-------------|
 |                        | Max APC Acc: | Max APC F1: | Max ATE F1: | Max APC Acc: | Max APC F1: | Max ATE F1: | Max APC Acc: | Max APC F1: | Max ATE F1: | Max APC Acc: | Max APC F1: | Max ATE F1: |
@@ -22,5 +21,5 @@ for the sake of providing reference of reproduction. The performance reports of 
 | LCFS_ATEPC_LARGE (cdw) |     78.48    |  74.04 |  80.31  |   83.70   |   75.09  |   86.80  |   81.54   |   61.06  |   78.18  |   89.74   |    70.04    |    78.39    |
 | LCFS_ATEPC_LARGE (cdm) |     77.64    |  73.06 |    80.34    |     82.9     |   73.97  |   87.03  |     81.16    |   61.57  |   77.85  |     89.8     |   72.21 |   78.02  |
 
-**The above results were obtained in the 1.2.12 version of PyABSA, and all experiments were performed on the Nvidia Tesla
-T4 GPU.**
+**The above results were obtained in the 1.2.12 version of PyABSA, and all experiments were performed on the Nvidia
+Tesla T4 GPU.**

@@ -47,8 +47,7 @@ class SentimentClassifier:
             self.tokenizer = model_arg[2]
         else:
             # load from a model path
-            # try:
-            if True:
+            try:
                 print('Load sentiment classifier from', model_arg)
                 state_dict_path = find_file(model_arg, '.state_dict', exclude_key=['__MACOSX'])
                 model_path = find_file(model_arg, '.model', exclude_key=['__MACOSX'])
@@ -63,12 +62,38 @@ class SentimentClassifier:
                 self.opt = pickle.load(open(config_path, mode='rb'))
                 self.opt.eval_batch_size = eval_batch_size
 
-                if state_dict_path:
-                    self.model = APCEnsembler(self.opt, load_dataset=False)
-                    self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
+                if isinstance(self.opt.model, list):
+                    if state_dict_path:
+                        self.model = APCEnsembler(self.opt, load_dataset=False)
+                        self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
 
-                if model_path:
-                    self.model = torch.load(model_path)
+                    if model_path:
+                        self.model = torch.load(model_path, map_location='cpu')
+                else:
+                    if state_dict_path:
+                        if not hasattr(GloVeAPCModelList, self.opt.model.__name__.upper()):
+                            if 'pretrained_bert_name' in self.opt.args:
+                                self.opt.pretrained_bert = self.opt.pretrained_bert_name
+                            self.bert = BertModel.from_pretrained(self.opt.pretrained_bert)
+                            self.model = self.opt.model(self.bert, self.opt)
+                        else:
+                            tokenizer = build_tokenizer(
+                                dataset_list=self.opt.dataset_file,
+                                max_seq_len=self.opt.max_seq_len,
+                                dat_fname='{0}_tokenizer.dat'.format(os.path.basename(self.opt.dataset_name)),
+                                opt=self.opt
+                            )
+                            embedding_matrix = build_embedding_matrix(
+                                word2idx=tokenizer.word2idx,
+                                embed_dim=self.opt.embed_dim,
+                                dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(self.opt.embed_dim), os.path.basename(self.opt.dataset_name)),
+                                opt=self.opt
+                            )
+                            self.model = self.opt.model(embedding_matrix, self.opt).to(self.opt.device)
+                        self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
+
+                    if model_path:
+                        self.model = torch.load(model_path, map_location='cpu')
 
                 if tokenizer_path:
                     self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
@@ -78,18 +103,31 @@ class SentimentClassifier:
                 print('Config used in Training:')
                 print_args(self.opt, mode=1)
 
-        if hasattr(APCModelList, self.opt.model[0].__name__):
-            self.dataset = ABSADataset(tokenizer=self.tokenizer, opt=self.opt)
+            except Exception as e:
+                raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, model_arg))
 
-        elif hasattr(BERTBaselineAPCModelList, self.opt.model[0].__name__):
-            self.dataset = BERTBaselineABSADataset(tokenizer=self.tokenizer, opt=self.opt)
+        if isinstance(self.opt.model, list):
+            if hasattr(APCModelList, self.opt.model[0].__name__):
+                self.dataset = ABSADataset(tokenizer=self.tokenizer, opt=self.opt)
 
-        elif hasattr(GloVeAPCModelList, self.opt.model[0].__name__):
-            self.dataset = GloVeABSADataset(tokenizer=self.tokenizer, opt=self.opt)
+            elif hasattr(BERTBaselineAPCModelList, self.opt.model[0].__name__):
+                self.dataset = BERTBaselineABSADataset(tokenizer=self.tokenizer, opt=self.opt)
+
+            elif hasattr(GloVeAPCModelList, self.opt.model[0].__name__):
+                self.dataset = GloVeABSADataset(tokenizer=self.tokenizer, opt=self.opt)
+            else:
+                raise KeyError('The ref_checkpoint you are loading is not from APC model.')
         else:
-            raise KeyError('The ref_checkpoint you are loading is not from APC model.')
+            if hasattr(APCModelList, self.opt.model.__name__):
+                self.dataset = ABSADataset(tokenizer=self.tokenizer, opt=self.opt)
 
-        self.opt.inputs_cols = self.opt.inputs
+            elif hasattr(BERTBaselineAPCModelList, self.opt.model.__name__):
+                self.dataset = BERTBaselineABSADataset(tokenizer=self.tokenizer, opt=self.opt)
+
+            elif hasattr(GloVeAPCModelList, self.opt.model.__name__):
+                self.dataset = GloVeABSADataset(tokenizer=self.tokenizer, opt=self.opt)
+            else:
+                raise KeyError('The ref_checkpoint you are loading is not from APC model.')
 
         self.infer_dataloader = None
 
@@ -194,7 +232,7 @@ class SentimentClassifier:
             n_labeled = 0
             n_total = 0
             for _, sample in enumerate(self.infer_dataloader):
-                inputs = {col: sample[col].to(self.opt.device) for col in self.opt.inputs if col != 'polarity'}
+                inputs = {col: sample[col].to(self.opt.device) for col in self.opt.inputs_cols if col != 'polarity'}
                 self.model.eval()
                 outputs = self.model(inputs)
                 sen_logits = outputs['logits']

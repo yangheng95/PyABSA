@@ -35,9 +35,11 @@ if __name__ == '__main__':
         inputs=["text"],
         examples=[['the wine list is incredible and extensive and diverse , the food is all incredible and the staff was all very nice , good at their jobs and cultured .'],
                   ['中 药 学 这 门 课 程 总 体 设 计 非 常 好 简 洁 实 用 重 在 功 效 主 治 病 症 用 法 但 涉 及 的 药 物 数 量 少 只 介 绍 了 不 同 类 中 有 代 表 性 典 型 的 数 味 药 有 些 常 用 药 还 得 课 外 去 进 一 步 了 解'],
-                  ['Though the menu includes some unorthodox offerings (a peanut butter roll, for instance), the classics are pure and great--we have never had better sushi anywhere, including Japan.'],
+                  [
+                      'Though the menu includes some unorthodox offerings (a peanut butter roll, for instance), the classics are pure and great--we have never had better sushi anywhere, including Japan.'],
                   ['Everything , from the soft bread , soggy salad , and 50 minute wait time , with an incredibly rude service to deliver below average food .'],
-                  ['Even though it is running Snow Leopard , 2.4 GHz C2D is a bit of an antiquated CPU and thus the occasional spinning wheel would appear when running Office Mac applications such as Word or Excel .'],
+                  [
+                      'Even though it is running Snow Leopard , 2.4 GHz C2D is a bit of an antiquated CPU and thus the occasional spinning wheel would appear when running Office Mac applications such as Word or Excel .'],
                   ],
         outputs="dataframe",
         theme='huggingface',

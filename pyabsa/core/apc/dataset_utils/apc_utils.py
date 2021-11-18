@@ -198,17 +198,24 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
     aspect_begin = len(tokenizer.tokenize(bos_token + ' ' + text_left))
     aspect_position = set(range(aspect_begin, aspect_begin + np.count_nonzero(aspect_bert_indices)))
 
-    if 'lcfs' in opt.model_name or 'ssw_s' in opt.model_name or opt.use_syntax_based_SRD:
-        syntactical_dist, _ = get_syntax_distance(text_raw, aspect, tokenizer, opt)
-    else:
-        syntactical_dist = None
+    # if 'lcfs' in opt.model_name or 'ssw_s' in opt.model_name or opt.use_syntax_based_SRD:
+    #     syntactical_dist, _ = get_syntax_distance(text_raw, aspect, tokenizer, opt)
+    # else:
+    #     syntactical_dist = None
+
+    syntactical_dist, _ = get_syntax_distance(text_raw, aspect, tokenizer, opt)
 
     lcf_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices,
-                                          aspect_begin, syntactical_dist)
+                                          aspect_begin, syntactical_dist=None)
 
     lcf_cdw_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices,
-                              aspect_begin, syntactical_dist)
+                              aspect_begin, syntactical_dist=None)
 
+    lcfs_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices,
+                                           aspect_begin, syntactical_dist)
+
+    lcfs_cdw_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices,
+                               aspect_begin, syntactical_dist)
     inputs = {
         'text_raw': text_raw,
         'text_spc': text_spc,
@@ -219,6 +226,8 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
         'aspect_bert_indices': aspect_bert_indices,
         'lcf_cdm_vec': lcf_cdm_vec,
         'lcf_cdw_vec': lcf_cdw_vec,
+        'lcfs_cdm_vec': lcfs_cdm_vec,
+        'lcfs_cdw_vec': lcfs_cdw_vec,
     }
 
     return inputs
@@ -350,7 +359,7 @@ def copy_side_aspect(direct, target, source, examples):
             examples[ex_id]['cluster_ids'] |= source['cluster_ids']
             examples[ex_id]['side_ex_ids'] |= target['side_ex_ids']
 
-    for data_item in ['lcf_vec']:
+    for data_item in ['lcf_vec', 'lcfs_vec']:
         target[direct + '_' + data_item] = source[data_item]
     target[direct + '_dist'] = int(abs(np.average(list(source['aspect_position'])) - np.average(list(target['aspect_position']))))
     # target[direct + '_dist'] = 0 if id(source['lcf_vec']) == id(target['lcf_vec']) else 1

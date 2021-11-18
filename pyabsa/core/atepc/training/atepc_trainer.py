@@ -108,8 +108,8 @@ class Instructor:
         self.model = self.opt.model(bert_base_model, opt=self.opt)
 
         # use DataParallel for training if device count larger than 1
-        if torch.cuda.device_count()>1:
-            print ("use multi-gpu training!")
+        if torch.cuda.device_count() > 1:
+            print("use multi-gpu training!")
             self.opt.device = torch.device('cuda:0')
             self.model.to(self.opt.device)
             self.model = torch.nn.DataParallel(self.model)
@@ -167,7 +167,7 @@ class Instructor:
                     loss_ate, loss_apc = loss_ate.mean(), loss_apc.mean()
                 # loss_ate = loss_ate.item() / (loss_ate.item() + loss_apc.item()) * loss_ate
                 # loss_apc = loss_apc.item() / (loss_ate.item() + loss_apc.item()) * loss_apc
-                #for multi-gpu, average loss by gpu instance number
+                # for multi-gpu, average loss by gpu instance number
                 loss = 3 * loss_ate + loss_apc
                 iterator.postfix = "loss: {}".format(loss.item())
                 iterator.update()
@@ -302,17 +302,6 @@ class Instructor:
             with torch.no_grad():
                 if torch.cuda.device_count() > 1:
                     ate_logits, apc_logits = self.model.module(input_ids_spc,
-                                                        token_type_ids=segment_ids,
-                                                        attention_mask=input_mask,
-                                                        labels=None,
-                                                        polarity=polarity,
-                                                        valid_ids=valid_ids,
-                                                        attention_mask_label=l_mask,
-                                                        lcf_cdm_vec=lcf_cdm_vec,
-                                                        lcf_cdw_vec=lcf_cdw_vec
-                                                        )
-                else:
-                    ate_logits, apc_logits = self.model(input_ids_spc,
                                                                token_type_ids=segment_ids,
                                                                attention_mask=input_mask,
                                                                labels=None,
@@ -322,6 +311,17 @@ class Instructor:
                                                                lcf_cdm_vec=lcf_cdm_vec,
                                                                lcf_cdw_vec=lcf_cdw_vec
                                                                )
+                else:
+                    ate_logits, apc_logits = self.model(input_ids_spc,
+                                                        token_type_ids=segment_ids,
+                                                        attention_mask=input_mask,
+                                                        labels=None,
+                                                        polarity=polarity,
+                                                        valid_ids=valid_ids,
+                                                        attention_mask_label=l_mask,
+                                                        lcf_cdm_vec=lcf_cdm_vec,
+                                                        lcf_cdw_vec=lcf_cdw_vec
+                                                        )
             if eval_APC:
                 n_test_correct += (torch.argmax(apc_logits, -1) == polarity).sum().item()
                 n_test_total += len(polarity)

@@ -9,7 +9,8 @@
 from pyabsa import APCCheckpointManager, ABSADatasetList
 
 # Assume the sent_classifier is loaded or obtained using train function
-sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='fast_lcf_bert_acc_90.93_f1_57.98')
+sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='chinese')
+# sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='checkpoint')
 
 # # 由于BERT采用单字分词，中文是否用空格分割不影响BERT的表现。欢迎贡献中文或其它语言数据集
 # chinese_text = '还有就是[ASP]笔画的键盘分布[ASP]我感觉不合理 !sent! 0'
