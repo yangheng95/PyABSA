@@ -44,6 +44,7 @@ class APCEnsembler(nn.Module):
         self.opt.inputs = set()
         for model in models:
             self.opt.inputs |= set(model.inputs)
+        self.inputs = self.opt.inputs
 
         self.models = ModuleList()
 
@@ -116,15 +117,20 @@ class APCEnsembler(nn.Module):
 
     def forward(self, inputs):
         outputs = [self.models[i](inputs) for i in range(len(self.models))]
-        # loss = torch.tensor(0., requires_grad=True)
         loss = torch.tensor(0., requires_grad=True)
         for i, out in enumerate(outputs):
-            # self.logits = torch.cat((self.logits, out['logits']), dim=-1) if i != 0 else out['logits']
-            logits = logits + out['logits'] if i != 0 else out['logits']
+            if 'ensemble_mode' not in self.opt or self.opt.ensemble_mode == 'cat':
+                logits = torch.cat((logits, out['logits']), dim=-1) if i != 0 else out['logits']
+            elif self.opt.ensemble_mode == 'mean':
+                logits = logits + out['logits'] if i != 0 else out['logits']
+            else:
+                raise KeyError('Invalid ensemble_mode!')
             if 'loss' in out:
                 loss = loss + out['loss'] if i != 0 else out['loss']
 
-        logits = self.dense(self.logits)
-        # logits = logits / len(self.models)
+        if 'ensemble_mode' not in self.opt or self.opt.ensemble_mode == 'cat':
+            logits = self.dense(logits)
+        elif self.opt.ensemble_mode == 'mean':
+            logits = logits / len(self.models)
 
         return {'logits': logits, 'loss': loss.to(logits.device)}
