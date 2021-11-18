@@ -114,9 +114,9 @@ class ABSADataset(Dataset):
                 data = {
                     'ex_id': ex_id,
 
-                    'depend_vec': depend_vec if 'depend_vec' in self.opt.model.inputs else 0,
+                    'depend_vec': depend_vec if 'depend_vec' in self.opt.inputs else 0,
 
-                    'depended_vec': depended_vec if 'depended_vec' in self.opt.model.inputs else 0,
+                    'depended_vec': depended_vec if 'depended_vec' in self.opt.inputs else 0,
 
                     'text_raw': text_raw,
 
@@ -126,21 +126,21 @@ class ABSADataset(Dataset):
 
                     'lca_ids': lcf_vec,  # the lca indices are the same as the refactored CDM (lcf != CDW or Fusion) lcf vec
 
-                    'lcf_vec': lcf_vec if 'lcf_vec' in self.opt.model.inputs else 0,
+                    'lcf_vec': lcf_vec if 'lcf_vec' in self.opt.inputs else 0,
 
-                    'dlcf_vec': dlcf_vec if 'dlcf_vec' in self.opt.model.inputs else 0,
+                    'dlcf_vec': dlcf_vec if 'dlcf_vec' in self.opt.inputs else 0,
 
                     'spc_mask_vec': build_spc_mask_vec(self.opt, text_raw_bert_indices)
-                    if 'spc_mask_vec' in self.opt.model.inputs else 0,
+                    if 'spc_mask_vec' in self.opt.inputs else 0,
 
                     'text_bert_indices': text_bert_indices
-                    if 'text_bert_indices' in self.opt.model.inputs else 0,
+                    if 'text_bert_indices' in self.opt.inputs else 0,
 
                     'aspect_bert_indices': aspect_bert_indices
-                    if 'aspect_bert_indices' in self.opt.model.inputs else 0,
+                    if 'aspect_bert_indices' in self.opt.inputs else 0,
 
                     'text_raw_bert_indices': text_raw_bert_indices
-                    if 'text_raw_bert_indices' in self.opt.model.inputs else 0,
+                    if 'text_raw_bert_indices' in self.opt.inputs else 0,
 
                     'polarity': polarity,
                 }
@@ -158,7 +158,7 @@ class ABSADataset(Dataset):
         check_and_fix_labels(label_set, 'polarity', all_data, self.opt)
         self.opt.polarities_dim = len(label_set)
 
-        if 'cluster_ids' in self.opt.model.inputs and 'side_ex_ids' in self.opt.model.inputs:
+        if 'left_lcf_vec' in self.opt.inputs or 'right_lcf_vec' in self.opt.inputs:
             all_data = build_sentiment_window(all_data, self.tokenizer, self.opt.similarity_threshold)
             for data in all_data:
 

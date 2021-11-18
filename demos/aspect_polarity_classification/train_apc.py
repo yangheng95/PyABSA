@@ -27,9 +27,9 @@ apc_config_english.dropout = 0.5
 apc_config_english.log_step = 5
 # apc_config_english.pretrained_bert = 'bert-base-multilingual-uncased'
 apc_config_english.pretrained_bert = 'bert-base-uncased'
-apc_config_english.num_epoch = 10
-apc_config_english.batch_size = 16
-apc_config_english.evaluate_begin = 0
+apc_config_english.num_epoch = 5
+apc_config_english.batch_size = 64
+apc_config_english.evaluate_begin = 4
 apc_config_english.l2reg = 0.0005
 apc_config_english.seed = {1, 2, 3}
 apc_config_english.cross_validate_fold = -1  # disable cross_validate
@@ -38,7 +38,7 @@ apc_config_english.cross_validate_fold = -1  # disable cross_validate
 Multilingual = ABSADatasetList.Laptop14
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=Multilingual,  # train set and test set will be automatically detected
-                          checkpoint_save_mode=0,  # =None to avoid save model
+                          checkpoint_save_mode=1,  # =None to avoid save model
                           # auto_device=True  # automatic choose CUDA or CPU
                           auto_device='allcuda'  # automatic choose CUDA or CPU
                           # auto_device='cuda:2'  # automatic choose CUDA or CPU

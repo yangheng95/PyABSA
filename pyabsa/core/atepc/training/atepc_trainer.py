@@ -169,8 +169,8 @@ class Instructor:
                 # loss_apc = loss_apc.item() / (loss_ate.item() + loss_apc.item()) * loss_apc
                 #for multi-gpu, average loss by gpu instance number
                 loss = 3 * loss_ate + loss_apc
-                print ("loss result: ", loss)
-
+                iterator.postfix = "loss: {}".format(loss.item())
+                iterator.update()
                 sum_loss += loss.item()
                 loss.backward()
                 nb_tr_examples += input_ids_spc.size(0)

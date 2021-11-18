@@ -24,7 +24,7 @@ examples = [
     'I have had my computer for 2 weeks already and it [ASP]works[ASP] perfectly . !sent! Positive',
     'And I may be the only one but I am really liking [ASP]Windows 8[ASP] . !sent! Positive',
 ]
-sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='slide_lcf_bert_acc_79.31_f1_74.12',
+sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='checkpoints',
                                                                 auto_device=True,  # Use CUDA if available
                                                                 )
 
