@@ -158,7 +158,7 @@ class ABSADataset(Dataset):
         check_and_fix_labels(label_set, 'polarity', all_data, self.opt)
         self.opt.polarities_dim = len(label_set)
 
-        if self.opt.model_name in ['slide_lcf_bert', 'slide_lcfs_bert', 'ssw_t', 'ssw_s']:
+        if 'cluster_ids' in self.opt.model.inputs and 'side_ex_ids' in self.opt.model.inputs:
             all_data = build_sentiment_window(all_data, self.tokenizer, self.opt.similarity_threshold)
             for data in all_data:
 

@@ -90,7 +90,9 @@ def check_and_fix_labels(label_set, label_name, all_data, opt):
 
 
 def get_device(auto_device):
-    if isinstance(auto_device, str):
+    if isinstance(auto_device, str) and auto_device == 'allcuda':
+        device = 'cuda'
+    elif isinstance(auto_device, str):
         device = auto_device
     elif isinstance(auto_device, bool):
         device = auto_cuda() if auto_device else 'cpu'

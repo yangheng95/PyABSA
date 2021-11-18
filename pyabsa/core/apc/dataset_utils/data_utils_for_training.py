@@ -68,25 +68,25 @@ class ABSADataset(Dataset):
 
                 'lca_ids': lcf_vec,  # the lca indices are the same as the refactored CDM (lcf != CDW or Fusion) lcf vec
 
-                'lcf_vec': lcf_vec if 'lcf_vec' in opt.model.inputs else 0,
+                'lcf_vec': lcf_vec if 'lcf_vec' in opt.inputs else 0,
 
-                'dlcf_vec': dlcf_vec if 'dlcf_vec' in opt.model.inputs else 0,
+                'dlcf_vec': dlcf_vec if 'dlcf_vec' in opt.inputs else 0,
 
                 'spc_mask_vec': build_spc_mask_vec(opt, text_raw_bert_indices)
-                if 'spc_mask_vec' in opt.model.inputs else 0,
+                if 'spc_mask_vec' in opt.inputs else 0,
 
                 'text_bert_indices': text_bert_indices
-                if 'text_bert_indices' in opt.model.inputs else 0,
+                if 'text_bert_indices' in opt.inputs else 0,
 
                 'aspect_bert_indices': aspect_bert_indices
-                if 'aspect_bert_indices' in opt.model.inputs else 0,
+                if 'aspect_bert_indices' in opt.inputs else 0,
 
                 'text_raw_bert_indices': text_raw_bert_indices
-                if 'text_raw_bert_indices' in opt.model.inputs else 0,
+                if 'text_raw_bert_indices' in opt.inputs else 0,
 
-                'depend_vec': depend_vec if 'depend_vec' in opt.model.inputs else 0,
+                'depend_vec': depend_vec if 'depend_vec' in opt.inputs else 0,
 
-                'depended_vec': depended_vec if 'depended_vec' in opt.model.inputs else 0,
+                'depended_vec': depended_vec if 'depended_vec' in opt.inputs else 0,
 
                 'polarity': polarity,
             }
@@ -98,7 +98,7 @@ class ABSADataset(Dataset):
         check_and_fix_labels(label_set, 'polarity', all_data, opt)
         opt.polarities_dim = len(label_set)
 
-        if opt.model_name in ['slide_lcf_bert', 'slide_lcfs_bert', 'ssw_t', 'ssw_s']:
+        if 'left_lcf_vec' in opt.inputs or 'right_lcf_vec' in opt.inputs:
             all_data = build_sentiment_window(all_data, tokenizer, opt.similarity_threshold)
             for data in all_data:
 

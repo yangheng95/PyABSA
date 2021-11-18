@@ -33,9 +33,10 @@ from pyabsa.utils.pyabsa_utils import get_device
 
 
 def init_config(config, auto_device):
-    config.device, config.device_name = get_device(auto_device)
 
-    config.model_name = config.model.__name__.lower()
+    config.device, config.device_name = get_device(auto_device)
+    config.auto_device = auto_device
+    config.model_name = config.model.__name__.lower() if not isinstance(config.model, list) else 'ensemble'
     config.Version = __version__
 
     if 'use_syntax_based_SRD' in config:
@@ -63,7 +64,7 @@ class Trainer:
                                      "checkpoint_save_mode=2" to save the whole model,
                                      "checkpoint_save_mode=3" to save the fine-tuned BERT,
                                      otherwise avoid to save checkpoint but return the trained model after training
-        :param auto_device: True or False, otherwise 'cuda', 'cpu' works
+        :param auto_device: True or False, otherwise 'allcuda', 'cpu' works
 
         """
         if isinstance(config, APCConfigManager):
@@ -89,6 +90,7 @@ class Trainer:
             self.config.dataset_name = custom_dataset.dataset_name
         self.dataset_file = detect_dataset(dataset, task=self.task)
         self.config.dataset_file = self.dataset_file
+
         self.config = init_config(self.config, auto_device)
 
         self.from_checkpoint = findfile.find_dir(os.getcwd(), from_checkpoint) if from_checkpoint else ''

@@ -205,31 +205,31 @@ class GloVeABSADataset(Dataset):
                 'ex_id': ex_id,
 
                 'text_indices': text_indices
-                if 'text_indices' in opt.model.inputs else 0,
+                if 'text_indices' in opt.inputs else 0,
 
                 'context_indices': context_indices
-                if 'context_indices' in opt.model.inputs else 0,
+                if 'context_indices' in opt.inputs else 0,
 
                 'left_indices': left_indices
-                if 'left_indices' in opt.model.inputs else 0,
+                if 'left_indices' in opt.inputs else 0,
 
                 'left_with_aspect_indices': left_with_aspect_indices
-                if 'left_with_aspect_indices' in opt.model.inputs else 0,
+                if 'left_with_aspect_indices' in opt.inputs else 0,
 
                 'right_indices': right_indices
-                if 'right_indices' in opt.model.inputs else 0,
+                if 'right_indices' in opt.inputs else 0,
 
                 'right_with_aspect_indices': right_with_aspect_indices
-                if 'right_with_aspect_indices' in opt.model.inputs else 0,
+                if 'right_with_aspect_indices' in opt.inputs else 0,
 
                 'aspect_indices': aspect_indices
-                if 'aspect_indices' in opt.model.inputs else 0,
+                if 'aspect_indices' in opt.inputs else 0,
 
                 'aspect_boundary': aspect_boundary
-                if 'aspect_boundary' in opt.model.inputs else 0,
+                if 'aspect_boundary' in opt.inputs else 0,
 
                 'dependency_graph': dependency_graph
-                if 'dependency_graph' in opt.model.inputs else 0,
+                if 'dependency_graph' in opt.inputs else 0,
 
                 'polarity': polarity,
             }

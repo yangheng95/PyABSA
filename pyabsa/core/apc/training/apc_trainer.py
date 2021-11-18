@@ -30,6 +30,7 @@ from ..classic.__glove__.dataset_utils.data_utils_for_training import (build_tok
                                                                        build_embedding_matrix,
                                                                        GloVeABSADataset)
 from ..dataset_utils.data_utils_for_training import ABSADataset
+from ..models.ensembler import APCEnsembler
 
 
 class Instructor:
@@ -37,76 +38,20 @@ class Instructor:
         self.logger = logger
         self.opt = opt
 
-        # init BERT-based model and dataset_manager
-        if hasattr(APCModelList, opt.model.__name__):
-            self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case=True)
+        self.logger = logger
+        self.opt = opt
+        self.model = APCEnsembler(self.opt).to(opt.device)
 
-            self.train_set = ABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
-            if self.opt.dataset_file['test']:
-                self.test_set = ABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
-                self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
-            else:
-                self.test_set = None
-
-            self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
-            # init the model behind the construction of apc_datasets in case of updating polarities_dim
-            self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
-
-        elif hasattr(BERTBaselineAPCModelList, opt.model.__name__):
-            self.tokenizer = Tokenizer4Pretraining(self.opt.max_seq_len, self.opt.pretrained_bert)
-
-            self.train_set = BERTBaselineABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
-            if self.opt.dataset_file['test']:
-                self.test_set = BERTBaselineABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
-                self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
-            else:
-                self.test_set = None
-
-            self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
-            # init the model behind the construction of apc_datasets in case of updating polarities_dim
-            self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
-
-        elif hasattr(GloVeAPCModelList, opt.model.__name__):
-            # init GloVe-based model and dataset_manager
-
-            if hasattr(ABSADatasetList, opt.dataset_name):
-                opt.dataset_name = os.path.join(os.getcwd(), opt.dataset_name)
-                if not os.path.exists(os.path.join(os.getcwd(), opt.dataset_name)):
-                    os.mkdir(os.path.join(os.getcwd(), opt.dataset_name))
-
-            self.tokenizer = build_tokenizer(
-                dataset_list=opt.dataset_file,
-                max_seq_len=opt.max_seq_len,
-                dat_fname='{0}_tokenizer.dat'.format(os.path.basename(opt.dataset_name)),
-                opt=self.opt
-            )
-            self.embedding_matrix = build_embedding_matrix(
-                word2idx=self.tokenizer.word2idx,
-                embed_dim=opt.embed_dim,
-                dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(opt.embed_dim), os.path.basename(opt.dataset_name)),
-                opt=self.opt
-            )
-
-            self.train_set = GloVeABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
-            if self.opt.dataset_file['test']:
-                self.test_set = GloVeABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
-                self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
-
-            else:
-                self.test_set = None
-
-            self.model = opt.model(self.embedding_matrix, opt).to(opt.device)
-
-        print ("<<< opt.device", self.opt.device)
-        print ("<<<< gpu setting!")
-        if torch.cuda.device_count()>1:
-            print ("use multi-gpu training!")
-            self.opt.device = torch.device('cuda:0')
-            self.model.to(self.opt.device)
+        self.train_set = self.model.train_set
+        self.test_set = self.model.test_set
+        self.test_dataloader = self.model.test_dataloader
+        self.tokenizer = self.model.tokenizer
+        print("# of available cuda ", torch.cuda.device_count())
+        if torch.cuda.device_count() > 1 and self.opt.auto_device == 'allcuda':
+            print("use multi-cuda training!")
             self.model = torch.nn.DataParallel(self.model)
         else:
             self.model.to(self.opt.device)
-
         if self.opt.device.type == 'cuda':
             self.logger.info(
                 "cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device.index)))
@@ -218,17 +163,16 @@ class Instructor:
                 # switch model to training_tutorials mode, clear gradient accumulators
                 self.model.train()
                 self.optimizer.zero_grad()
-                inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
+                inputs = {col: sample_batched[col].to(self.opt.device) for col in self.opt.inputs}
                 outputs = self.model(inputs)
                 targets = sample_batched['polarity'].to(self.opt.device)
 
-                if isinstance(outputs, dict):
-                    loss = outputs['loss']
-                else:
-                    sen_logits = outputs
-                    loss = criterion(sen_logits, targets)
+                sen_logits = outputs['logits']
+                loss = criterion(sen_logits, targets)
+                if 'loss' in outputs:
+                    loss += torch.sum(outputs['loss'])
 
-                if torch.cuda.device_count() > 1:
+                if torch.cuda.device_count() > 1 and self.opt.auto_device == 'allcuda':
                     loss = loss.mean()
 
                 sum_loss += loss.item()
@@ -344,15 +288,17 @@ class Instructor:
                     # switch model to training_tutorials mode, clear gradient accumulators
                     self.model.train()
                     self.optimizer.zero_grad()
-                    inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
+                    inputs = {col: sample_batched[col].to(self.opt.device) for col in self.opt.inputs}
                     outputs = self.model(inputs)
                     targets = sample_batched['polarity'].to(self.opt.device)
 
-                    if isinstance(outputs, dict):
-                        loss = outputs['loss']
-                    else:
-                        sen_logits = outputs
-                        loss = criterion(sen_logits, targets)
+                    sen_logits = outputs['logits']
+                    loss = criterion(sen_logits, targets)
+                    if 'loss' in outputs:
+                        loss += torch.sum(outputs['loss'])
+
+                    if torch.cuda.device_count() > 1 and self.opt.auto_device == 'allcuda':
+                        loss = loss.mean()
 
                     sum_loss += loss.item()
                     loss.backward()
@@ -408,7 +354,7 @@ class Instructor:
 
                         iterator.postfix = postfix
                         iterator.refresh()
-            self.model.load_state_dict(torch.load(find_file(None, 'state_dict')))
+            self.model.load_state_dict(torch.load(find_file(os.getcwd(), 'state_dict')))
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
             if max_fold_acc > max_fold_acc_k_fold:
                 save_path_k_fold = save_path
@@ -462,7 +408,8 @@ class Instructor:
         with torch.no_grad():
             for t_batch, t_sample_batched in enumerate(test_dataloader):
 
-                t_inputs = [t_sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
+                t_inputs = {col: t_sample_batched[col].to(self.opt.device) for col in self.opt.inputs}
+
                 t_targets = t_sample_batched['polarity'].to(self.opt.device)
 
                 t_outputs = self.model(t_inputs)
@@ -490,7 +437,7 @@ class Instructor:
     def run(self):
         # Loss and Optimizer
         criterion = nn.CrossEntropyLoss()
-        self._reset_params()
+        # self._reset_params()
         return self._train(criterion)
 
 
@@ -503,15 +450,6 @@ def train4apc(opt, from_checkpoint_path, logger):
     numpy.random.seed(opt.seed)
     torch.manual_seed(opt.seed)
     torch.cuda.manual_seed(opt.seed)
-
-    if hasattr(APCModelList, opt.model.__name__):
-        opt.inputs_cols = opt.model.inputs
-
-    elif hasattr(BERTBaselineAPCModelList, opt.model.__name__):
-        opt.inputs_cols = opt.model.inputs
-
-    elif hasattr(GloVeAPCModelList, opt.model.__name__):
-        opt.inputs_cols = opt.model.inputs
 
     opt.device = torch.device(opt.device)
 

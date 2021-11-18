@@ -33,11 +33,11 @@ class SLIDE_LCFS_BERT(nn.Module):
         self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
 
     def forward(self, inputs):
-        text_bert_indices = inputs[0]
-        spc_mask_vec = inputs[1]
-        lcf_matrix = inputs[2].unsqueeze(2)
-        left_lcf_matrix = inputs[3].unsqueeze(2)
-        right_lcf_matrix = inputs[4].unsqueeze(2)
+        text_bert_indices = inputs['text_bert_indices']
+        spc_mask_vec = inputs['spc_mask_vec']
+        lcf_matrix = inputs['lcf_vec'].unsqueeze(2)
+        left_lcf_matrix = inputs['left_lcf_vec'].unsqueeze(2)
+        right_lcf_matrix = inputs['right_lcf_vec'].unsqueeze(2)
 
         global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
         masked_global_context_features = torch.mul(spc_mask_vec, global_context_features)
@@ -74,4 +74,4 @@ class SLIDE_LCFS_BERT(nn.Module):
         sent_out = self.bert_pooler(sent_out)
         dense_out = self.dense(sent_out)
 
-        return dense_out
+        return {'logits': dense_out, 'hidden_state': sent_out}
