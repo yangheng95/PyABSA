@@ -1,4 +1,9 @@
 {
+  "1.3a0": {
+    "1": "Add multi-cuda support for APC model and part of ATEPC models",
+    "2": "Add ensemble support for APC models",
+    "3": "This is an public test version, could be removed later. Please roll back if you find any problem"
+  },
   "1.2.13": {
     "1": "Minor update in dataset searching"
   },
