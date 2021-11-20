@@ -248,23 +248,20 @@ def save_model(opt, model, tokenizer, save_path):
     else:
         # print("save a single cuda model!")
         model_to_save = model
-
-    if opt.save_mode == 1 or 'bert' not in opt.model_name:
+    if opt.save_mode == 1 or opt.save_mode == 2:
         if not os.path.exists(save_path):
             os.makedirs(save_path)
-            # torch.save(self.model.cpu().state_dict(), save_path + self.opt.model_name + '.state_dict')  # save the state dict
-        torch.save(model_to_save.state_dict(), save_path + opt.model_name + '.state_dict')  # save the state dict
-        pickle.dump(opt, open(save_path + opt.model_name + '.config', mode='wb'))
-        pickle.dump(tokenizer, open(save_path + opt.model_name + '.tokenizer', mode='wb'))
+        f_config = open(save_path + opt.model_name + '.config', mode='wb')
+        f_tokenizer = open(save_path + opt.model_name + '.tokenizer', mode='wb')
+        pickle.dump(opt, f_config)
+        pickle.dump(tokenizer, f_tokenizer)
+        f_config.close()
+        f_tokenizer.close()
         save_args(opt, save_path + opt.model_name + '.args.txt')
-    elif opt.save_mode == 2 or 'bert' not in opt.model_name:
-        if not os.path.exists(save_path):
-            os.makedirs(save_path)
-        # torch.save(self.model.cpu().state_dict(), save_path + self.opt.model_name + '.state_dict')  # save the state dict
-        torch.save(model.cpu(), save_path + opt.model_name + '.model')  # save the state dict
-        pickle.dump(opt, open(save_path + opt.model_name + '.config', mode='wb'))
-        pickle.dump(tokenizer, open(save_path + opt.model_name + '.tokenizer', mode='wb'))
-        save_args(opt, save_path + opt.model_name + '.args.txt')
+        if opt.save_mode == 1:
+            torch.save(model_to_save.state_dict(), save_path + opt.model_name + '.state_dict')  # save the state dict
+        elif opt.save_mode == 2:
+            torch.save(model.cpu(), save_path + opt.model_name + '.model')  # save the state dict
 
     elif opt.save_mode == 3:
         # save the fine-tuned bert model
@@ -277,7 +274,8 @@ def save_model(opt, model, tokenizer, save_path):
         torch.save(model_to_save.state_dict(), output_model_file)
         model_to_save.config.to_json_file(output_config_file)
         tokenizer.save_vocabulary(model_output_dir)
-
+    else:
+        raise ValueError('Invalid save_mode: {}'.format(opt.save_mode))
     model.to(opt.device)
 
 
