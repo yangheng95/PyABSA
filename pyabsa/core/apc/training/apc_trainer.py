@@ -8,7 +8,6 @@ import math
 import os
 import random
 import shutil
-import time
 
 import numpy
 import torch
@@ -17,19 +16,11 @@ from findfile import find_file
 from sklearn import metrics
 from torch.utils.data import DataLoader, random_split, ConcatDataset
 from tqdm import tqdm
-from transformers import AutoTokenizer, AutoModel, BertModel
+from transformers import BertModel
 
-from pyabsa.functional.dataset import ABSADatasetList
 from pyabsa.utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args, optimizers, resume_from_checkpoint, retry
 
-from ..models import BERTBaselineAPCModelList, GloVeAPCModelList, APCModelList
-from ..classic.__bert__.dataset_utils.data_utils_for_training import (Tokenizer4Pretraining,
-                                                                      BERTBaselineABSADataset)
-from ..classic.__glove__.dataset_utils.data_utils_for_training import (build_tokenizer,
-                                                                       build_embedding_matrix,
-                                                                       GloVeABSADataset)
-from ..dataset_utils.data_utils_for_training import ABSADataset
 from ..models.ensembler import APCEnsembler
 
 

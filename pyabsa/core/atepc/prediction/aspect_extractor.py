@@ -15,7 +15,7 @@ import torch
 import torch.nn.functional as F
 from findfile import find_file
 from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
-from transformers import BertTokenizer
+from transformers import BertTokenizer, AutoTokenizer, AutoModel
 from transformers.models.bert.modeling_bert import BertModel
 
 from pyabsa.functional.dataset import detect_infer_dataset, DatasetItem
@@ -69,7 +69,7 @@ class AspectExtractor:
                 if 'pretrained_bert_name' in self.opt.args:
                     self.opt.pretrained_bert = self.opt.pretrained_bert_name
                 if state_dict_path:
-                    bert_base_model = BertModel.from_pretrained(self.opt.pretrained_bert)
+                    bert_base_model = AutoModel.from_pretrained(self.opt.pretrained_bert)
                     bert_base_model.config.num_labels = self.opt.num_labels
                     self.model = self.opt.model(bert_base_model, self.opt)
                     self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
@@ -79,7 +79,7 @@ class AspectExtractor:
                 if tokenizer_path:
                     self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
                 else:
-                    self.tokenizer = BertTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case=True)
+                    self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
 
                 self.tokenizer.bos_token = self.tokenizer.bos_token if self.tokenizer.bos_token else '[CLS]'
                 self.tokenizer.eos_token = self.tokenizer.eos_token if self.tokenizer.eos_token else '[SEP]'

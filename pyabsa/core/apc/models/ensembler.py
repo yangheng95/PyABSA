@@ -59,7 +59,7 @@ class APCEnsembler(nn.Module):
 
             # init BERT-based model and dataset
             if hasattr(APCModelList, models[i].__name__):
-                self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case=True) if not self.tokenizer else self.tokenizer
+                self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert) if not self.tokenizer else self.tokenizer
                 # self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert) if not self.bert else self.bert
                 # self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert) if not self.bert else copy.deepcopy(self.bert)
                 self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert) if not self.bert else self.bert  # share the underlying bert between models

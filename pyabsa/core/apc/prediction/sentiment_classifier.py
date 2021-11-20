@@ -12,7 +12,7 @@ import torch
 from findfile import find_file
 from termcolor import colored
 from torch.utils.data import DataLoader
-from transformers import BertModel, AutoTokenizer
+from transformers import AutoTokenizer, AutoModel
 
 from pyabsa.core.apc.classic.__glove__.dataset_utils.data_utils_for_training import build_embedding_matrix, build_tokenizer
 from pyabsa.core.apc.models.ensembler import APCEnsembler
@@ -74,7 +74,7 @@ class SentimentClassifier:
                         if not hasattr(GloVeAPCModelList, self.opt.model.__name__.upper()):
                             if 'pretrained_bert_name' in self.opt.args:
                                 self.opt.pretrained_bert = self.opt.pretrained_bert_name
-                            self.bert = BertModel.from_pretrained(self.opt.pretrained_bert)
+                            self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
                             self.model = self.opt.model(self.bert, self.opt)
                         else:
                             tokenizer = build_tokenizer(
@@ -98,7 +98,7 @@ class SentimentClassifier:
                 if tokenizer_path:
                     self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
                 else:
-                    self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case=True)
+                    self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
 
                 print('Config used in Training:')
                 print_args(self.opt, mode=1)
