@@ -153,9 +153,7 @@ class GloVeABSADataset(Dataset):
 
     def __init__(self, dataset_list, tokenizer, opt):
         configure_spacy_model(opt)
-
         lines = load_apc_datasets(dataset_list)
-
         all_data = []
         label_set = set()
 
