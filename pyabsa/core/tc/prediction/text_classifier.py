@@ -12,7 +12,7 @@ import torch
 from findfile import find_file
 from termcolor import colored
 from torch.utils.data import DataLoader
-from transformers import BertModel, AutoTokenizer
+from transformers import AutoTokenizer, AutoModel
 
 from pyabsa.functional.dataset import detect_infer_dataset
 
@@ -62,7 +62,7 @@ class TextClassifier:
                     if 'pretrained_bert_name' in self.opt.args or 'pretrained_bert' in self.opt.args:
                         if 'pretrained_bert_name' in self.opt.args:
                             self.opt.pretrained_bert = self.opt.pretrained_bert_name
-                        self.bert = BertModel.from_pretrained(self.opt.pretrained_bert)
+                        self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
                         self.model = self.opt.model(self.bert, self.opt)
                     else:
                         self.tokenizer = build_tokenizer(
@@ -87,7 +87,7 @@ class TextClassifier:
                 if tokenizer_path:
                     self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
                 else:
-                    self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case=True)
+                    self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
 
                 print('Config used in Training:')
                 print_args(self.opt, mode=1)
