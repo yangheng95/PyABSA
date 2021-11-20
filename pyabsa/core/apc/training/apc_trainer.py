@@ -432,7 +432,7 @@ class Instructor:
         return self._train(criterion)
 
 
-# @retry
+@retry
 def train4apc(opt, from_checkpoint_path, logger):
     if not isinstance(opt.seed, int):
         opt.logger.info('Please do not use multiple random seeds without evaluating.')

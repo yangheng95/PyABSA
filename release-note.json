@@ -1,4 +1,8 @@
 {
+  "1.3.5": {
+    "1": "Update default pretrained_bert (bert-base-uncased -> roberta-base)",
+    "2": "Add cache dataset option for APC task"
+  },
   "1.3.4": {
     "1": "Replace remaining BertModel.from_pretrained() and BertTokenizer.from_pretrained() with AutoModel.from_pretrained() and AutoTokenizer.from_pretrained()",
     "2": "Replace remaining BertModel.from_pretrained() and BertTokenizer.from_pretrained() with AutoModel.from_pretrained() and AutoTokenizer.from_pretrained()",
