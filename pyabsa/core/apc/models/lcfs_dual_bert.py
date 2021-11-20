@@ -35,7 +35,7 @@ class LCFS_DUAL_BERT(nn.Module):
         else:
             text_bert_indices = inputs['text_raw_bert_indices']
         text_local_indices = inputs['text_raw_bert_indices']
-        lcf_matrix = inputs['lcf_vec'].unsqueeze(2)
+        lcf_matrix = inputs['lcfs_vec'].unsqueeze(2)
         global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
         local_context_features = self.bert4local(text_local_indices)['last_hidden_state']
 

@@ -113,7 +113,7 @@ class DLCFS_DCA_BERT(nn.Module):
         else:
             text_bert_indices = inputs['text_raw_bert_indices']
         text_local_indices = inputs['text_raw_bert_indices']
-        lcf_matrix = inputs['dlcf_vec'].unsqueeze(2)
+        lcf_matrix = inputs['dlcfs_vec'].unsqueeze(2)
         depend_vec = inputs['depend_vec'].unsqueeze(2)
         depended_vec = inputs['depended_vec'].unsqueeze(2)
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: train_apc.py
+# file: train_apc_ensemble.py
 # time: 2021/5/26 0026
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
@@ -18,18 +18,19 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import APCModelList
 
 apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = [APCModelList.SLIDE_LCF_BERT, APCModelList.FAST_LCF_BERT]
+apc_config_english.model = [APCModelList.SLIDE_LCFS_BERT, APCModelList.FAST_LCF_BERT]
+# apc_config_english.model = [APCModelList.FAST_LCF_BERT]
 apc_config_english.lcf = 'cdw'
 apc_config_english.similarity_threshold = 1
-apc_config_english.max_seq_len = 80
+apc_config_english.max_seq_len = 100
 
 apc_config_english.dropout = 0.5
 apc_config_english.log_step = 5
 # apc_config_english.pretrained_bert = 'bert-base-multilingual-uncased'
-apc_config_english.pretrained_bert = 'bert-base-uncased'
-apc_config_english.num_epoch = 10
-apc_config_english.batch_size = 16
-apc_config_english.evaluate_begin = 2
+apc_config_english.pretrained_bert = 'roberta-base'
+apc_config_english.num_epoch = 15
+apc_config_english.batch_size = 64
+apc_config_english.evaluate_begin = 5
 apc_config_english.l2reg = 0.0005
 apc_config_english.seed = {1, 2, 3}
 apc_config_english.cross_validate_fold = -1  # disable cross_validate

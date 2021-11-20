@@ -1,8 +1,14 @@
 {
-  "1.3a0": {
+  "1.3.3": {
+    "1": "Replace remaining BertModel.from_pretrained() and BertTokenizer.from_pretrained() with AutoModel.from_pretrained() and AutoTokenizer.from_pretrained()",
+    "2": "Change default do_lower_case option in AutoTokenizer.from_pretrained()",
+    "3": "This is an public test version, could be removed later. Please roll back if you find any problem"
+  },
+  "1.3.1": {
     "1": "Add multi-cuda support for APC model and part of ATEPC models",
     "2": "Add ensemble support for APC models",
-    "3": "This is an public test version, could be removed later. Please roll back if you find any problem"
+    "3": "Fix support of legacy APC models in loading & inference using shared checkpoint ",
+    "4": "This is an public test version, could be removed later. Please roll back if you find any problem"
   },
   "1.2.13": {
     "1": "Minor update in dataset searching"
