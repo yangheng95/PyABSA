@@ -1,18 +1,23 @@
 [
   {
     "referrer": "github.com",
-    "count": 986,
-    "uniques": 91
+    "count": 965,
+    "uniques": 92
   },
   {
     "referrer": "Google",
-    "count": 333,
+    "count": 336,
     "uniques": 120
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 56,
-    "uniques": 30
+    "count": 63,
+    "uniques": 32
+  },
+  {
+    "referrer": "link.zhihu.com",
+    "count": 39,
+    "uniques": 8
   },
   {
     "referrer": "linkedin.com",
@@ -20,14 +25,14 @@
     "uniques": 15
   },
   {
-    "referrer": "link.zhihu.com",
-    "count": 25,
-    "uniques": 7
-  },
-  {
     "referrer": "Baidu",
     "count": 10,
     "uniques": 5
+  },
+  {
+    "referrer": "githubmemory.com",
+    "count": 7,
+    "uniques": 2
   },
   {
     "referrer": "DuckDuckGo",
@@ -35,17 +40,12 @@
     "uniques": 4
   },
   {
-    "referrer": "githubmemory.com",
-    "count": 4,
-    "uniques": 1
-  },
-  {
-    "referrer": "Yahoo",
-    "count": 2,
+    "referrer": "pypi.org",
+    "count": 3,
     "uniques": 2
   },
   {
-    "referrer": "ecosia.org",
+    "referrer": "textflint.io",
     "count": 2,
     "uniques": 2
   }
