@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: slide_lcfs_bert.py
+# file: lsa_t.py
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # Copyright (C) 2021. All Rights Reserved.
 
@@ -10,11 +10,11 @@ from transformers.models.bert.modeling_bert import BertPooler
 from pyabsa.network.sa_encoder import Encoder
 
 
-class SLIDE_LCFS_BERT(nn.Module):
-    inputs = ['text_bert_indices', 'spc_mask_vec', 'lcfs_vec', 'left_lcfs_vec', 'right_lcfs_vec']
+class FAST_LSA_T(nn.Module):
+    inputs = ['text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec']
 
     def __init__(self, bert, opt):
-        super(SLIDE_LCFS_BERT, self).__init__()
+        super(FAST_LSA_T, self).__init__()
         self.bert4global = bert
         self.opt = opt
         self.dropout = nn.Dropout(opt.dropout)
@@ -35,15 +35,15 @@ class SLIDE_LCFS_BERT(nn.Module):
     def forward(self, inputs):
         text_bert_indices = inputs['text_bert_indices']
         spc_mask_vec = inputs['spc_mask_vec']
-        lcf_matrix = inputs['lcfs_vec'].unsqueeze(2)
-        left_lcf_matrix = inputs['left_lcfs_vec'].unsqueeze(2)
-        right_lcf_matrix = inputs['right_lcfs_vec'].unsqueeze(2)
+        lcf_matrix = inputs['lcf_vec'].unsqueeze(2)
+        left_lcf_matrix = inputs['left_lcf_vec'].unsqueeze(2)
+        right_lcf_matrix = inputs['right_lcf_vec'].unsqueeze(2)
 
         global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
         masked_global_context_features = torch.mul(spc_mask_vec, global_context_features)
 
         # # --------------------------------------------------- #
-        lcf_features = torch.mul(masked_global_context_features, lcf_matrix)
+        lcf_features = torch.mul(global_context_features, lcf_matrix)
         lcf_features = self.encoder(lcf_features)
         # # --------------------------------------------------- #
         left_lcf_features = torch.mul(masked_global_context_features, left_lcf_matrix)

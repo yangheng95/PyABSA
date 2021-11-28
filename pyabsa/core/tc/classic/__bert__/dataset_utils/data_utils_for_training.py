@@ -14,7 +14,7 @@ from torch.utils.data import Dataset
 from transformers import AutoTokenizer
 
 from pyabsa.core.apc.dataset_utils.apc_utils import load_apc_datasets
-from pyabsa.utils.pyabsa_utils import check_and_fix_labels
+from pyabsa.utils.pyabsa_utils import check_and_fix_labels, TransformerConnectionError
 
 
 def prepare_glove840_embedding(glove_path):
@@ -148,7 +148,11 @@ class Tokenizer(object):
 
 class Tokenizer4Pretraining:
     def __init__(self, max_seq_len, pretrained_bert_name):
-        self.tokenizer = AutoTokenizer.from_pretrained(pretrained_bert_name)
+        try:
+            self.tokenizer = AutoTokenizer.from_pretrained(pretrained_bert_name)
+        except ValueError:
+            raise TransformerConnectionError('Unable to connect transformer model hub, we will retry if you dont terminate this process...')
+
         self.max_seq_len = max_seq_len
 
     def text_to_sequence(self, text, reverse=False, padding='post', truncating='post'):

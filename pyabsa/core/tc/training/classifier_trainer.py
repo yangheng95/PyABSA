@@ -28,7 +28,7 @@ from ..classic.__glove__.dataset_utils.data_utils_for_training import (build_tok
                                                                        build_embedding_matrix,
                                                                        GloVeClassificationDataset)
 from pyabsa.utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry
+from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError
 
 
 class Instructor:
@@ -46,8 +46,11 @@ class Instructor:
                 self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
             else:
                 self.test_set = None
+            try:
+                self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
+            except ValueError:
+                raise TransformerConnectionError()
 
-            self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
             # init the model behind the construction of apc_datasets in case of updating polarities_dim
             self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
 
@@ -72,6 +75,7 @@ class Instructor:
             )
 
             self.train_set = GloVeClassificationDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
+
             if self.opt.dataset_file['test']:
                 self.test_set = GloVeClassificationDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
                 self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
@@ -81,9 +85,27 @@ class Instructor:
 
             self.model = opt.model(self.embedding_matrix, opt).to(opt.device)
 
+            # use DataParallel for training if device count larger than 1
+            if torch.cuda.device_count() > 1 and self.opt.auto_device == 'cuda':
+
+                self.opt.device = torch.device(self.opt.device)
+                self.model.to(self.opt.device)
+                if self.opt.parallel_mode == 'DataParallel':
+                    self.model = torch.nn.parallel.DataParallel(self.model)
+                else:
+                    self.model = torch.nn.parallel.DistributedDataParallel(module=self.model, find_unused_parameters=True)
+
+                self.opt.device = 'cuda:{}'.format(self.model.output_device)
+            else:
+                self.model.to(self.opt.device)
+
+            self.opt.device = torch.device(self.opt.device)
         if self.opt.device.type == 'cuda':
             self.logger.info(
-                "cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device.index)))
+                "cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device)))
+
+        if 'patience' not in self.opt.args or not self.opt.patience:
+            self.opt.patience = len(self.train_set) / self.opt.batch_size / self.opt.log_step * self.opt.patience
 
         print_args(self.opt, self.logger)
         self.optimizer = self.opt.optimizer(
@@ -126,15 +148,15 @@ class Instructor:
                 self.val_dataloaders.append(
                     DataLoader(dataset=val_set, batch_size=self.opt.batch_size, shuffle=True))
 
-    def _train(self, criterion, lca_criterion):
+    def _train(self, criterion):
         self.prepare_dataloader(self.train_set)
         if self.val_dataloaders:
-            return self._k_fold_train_and_evaluate(criterion, lca_criterion)
+            return self._k_fold_train_and_evaluate(criterion)
         else:
-            return self._train_and_evaluate(criterion, lca_criterion)
+            return self._train_and_evaluate(criterion)
 
-    def _train_and_evaluate(self, criterion, lca_criterion):
-
+    def _train_and_evaluate(self, criterion):
+        patience = self.opt.patience
         sum_loss = 0
         sum_acc = 0
         sum_f1 = 0
@@ -208,6 +230,9 @@ class Instructor:
                                 save_model(self.opt, self.model, self.tokenizer, save_path)
                         if f1 > max_fold_f1:
                             max_fold_f1 = f1
+                            patience = self.opt.patience
+                        else:
+                            patience -= 1
                         postfix = ('Epoch:{} | Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) |'
                                    ' Test F1:{:.2f}(max:{:.2f})'.format(epoch,
                                                                         loss.item(),
@@ -216,11 +241,12 @@ class Instructor:
                                                                         f1 * 100,
                                                                         max_fold_f1 * 100))
                     else:
-                        postfix = 'Epoch:{} | No evaluation until epoch:{}'.format(epoch, self.opt.evaluate_begin)
+                        postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch, loss.item(), self.opt.evaluate_begin)
 
                     iterator.postfix = postfix
                     iterator.refresh()
-
+            if patience < 0:
+                break
         self.logger.info('-------------------------- Training Summary --------------------------')
         self.logger.info('Acc: {:.8f} F1: {:.8f} Accumulated Loss: {:.8f}'.format(
             max_fold_acc * 100,
@@ -245,7 +271,8 @@ class Instructor:
                 save_model(self.opt, self.model, self.tokenizer, save_path)
             return self.model, self.opt, self.tokenizer, sum_acc, sum_f1
 
-    def _k_fold_train_and_evaluate(self, criterion, lca_criterion):
+    def _k_fold_train_and_evaluate(self, criterion):
+        patience = self.opt.patience
         sum_loss = 0
         sum_acc = 0
         sum_f1 = 0
@@ -283,14 +310,8 @@ class Instructor:
                     outputs = self.model(inputs)
                     targets = sample_batched['label'].to(self.opt.device)
 
-                    if 'lca' in self.opt.model_name:
-                        sen_logits, lca_logits, lca_ids = outputs
-                        sen_loss = criterion(sen_logits, targets)
-                        lcp_loss = lca_criterion(lca_logits, lca_ids)
-                        loss = (1 - self.opt.sigma) * sen_loss + self.opt.sigma * lcp_loss
-                    else:
-                        sen_logits = outputs
-                        loss = criterion(sen_logits, targets)
+                    sen_logits = outputs
+                    loss = criterion(sen_logits, targets)
                     sum_loss += loss.item()
                     loss.backward()
                     self.optimizer.step()
@@ -333,6 +354,9 @@ class Instructor:
                                     save_model(self.opt, self.model, self.tokenizer, save_path)
                             if f1 > max_fold_f1:
                                 max_fold_f1 = f1
+                                patience = self.opt.patience
+                            else:
+                                patience -= 1
                             postfix = ('Epoch:{} | Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) |'
                                        ' Test F1:{:.2f}(max:{:.2f})'.format(epoch,
                                                                             loss.item(),
@@ -345,6 +369,9 @@ class Instructor:
 
                         iterator.postfix = postfix
                         iterator.refresh()
+                self.logger.info(iterator.postfix)
+                if not patience:
+                    break
             self.model = torch.load(find_file(save_path, 'model')).to(self.opt.device)
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
             if max_fold_acc > max_fold_acc_k_fold:
@@ -424,9 +451,8 @@ class Instructor:
     def run(self):
         # Loss and Optimizer
         criterion = nn.CrossEntropyLoss()
-        lca_criterion = nn.CrossEntropyLoss()
 
-        return self._train(criterion, lca_criterion)
+        return self._train(criterion)
 
 
 @retry

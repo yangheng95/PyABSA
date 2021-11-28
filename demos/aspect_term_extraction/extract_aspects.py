@@ -16,8 +16,8 @@ examples = ['But the staff was so nice to us .',
             'How pretentious and inappropriate for MJ Grill to claim that it provides power lunch and dinners !'
             ]
 
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='english',
-                                                               auto_device=True  # False means load model on CPU
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='fast_lcf_atepc_cdw_apcacc_65.06_apcf1_26.28_atef1_21.62',
+                                                               auto_device=False  # False means load model on CPU
                                                                )
 
 inference_source = ABSADatasetList.SemEval

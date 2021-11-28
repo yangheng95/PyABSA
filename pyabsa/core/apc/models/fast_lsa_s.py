@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: slide_lcf_bert.py
+# file: lsa_s.py
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # Copyright (C) 2021. All Rights Reserved.
 
@@ -10,11 +10,11 @@ from transformers.models.bert.modeling_bert import BertPooler
 from pyabsa.network.sa_encoder import Encoder
 
 
-class SLIDE_LCF_BERT(nn.Module):
+class FAST_LSA_S(nn.Module):
     inputs = ['text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec']
 
     def __init__(self, bert, opt):
-        super(SLIDE_LCF_BERT, self).__init__()
+        super(FAST_LSA_S, self).__init__()
         self.bert4global = bert
         self.opt = opt
         self.dropout = nn.Dropout(opt.dropout)
@@ -43,7 +43,7 @@ class SLIDE_LCF_BERT(nn.Module):
         masked_global_context_features = torch.mul(spc_mask_vec, global_context_features)
 
         # # --------------------------------------------------- #
-        lcf_features = torch.mul(masked_global_context_features, lcf_matrix)
+        lcf_features = torch.mul(global_context_features, lcf_matrix)
         lcf_features = self.encoder(lcf_features)
         # # --------------------------------------------------- #
         left_lcf_features = torch.mul(masked_global_context_features, left_lcf_matrix)

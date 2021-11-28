@@ -8,6 +8,7 @@ import copy
 import os
 
 import findfile
+import torch
 
 from pyabsa import __version__
 
@@ -37,6 +38,7 @@ warnings.filterwarnings('once')
 def init_config(config, auto_device):
     config.device, config.device_name = get_device(auto_device)
     config.auto_device = auto_device
+    config.device = 'cuda' if auto_device == 'all_cuda' else config.device
     config.model_name = config.model.__name__.lower() if not isinstance(config.model, list) else 'ensemble'
     config.Version = __version__
 
@@ -68,10 +70,25 @@ class Trainer:
         :param auto_device: True or False, otherwise 'allcuda', 'cuda:1', 'cpu' works
 
         """
+        if auto_device == 'all_cuda':
+            if config.parallel_mode == 'DataParallel':
+                print("use DataParallel for multi-cuda training!")
+            else:
+                print("use DistributedDataParallel for multi-cuda training!")
+                os.environ['RANK'] = '0' if not os.environ.get('RANK', None) else os.environ.get('RANK', None)
+                os.environ['WORLD_SIZE'] = '1' if not os.environ.get('WORLD_SIZE', None) else os.environ.get('WORLD_SIZE', None)
+                os.environ['MASTER_ADDR'] = '127.0.0.1' if not os.environ.get('MASTER_ADDR', None) else os.environ.get('MASTER_ADDR', None)
+                os.environ['MASTER_PORT'] = '9235' if not os.environ.get('MASTER_PORT', None) else os.environ.get('MASTER_PORT', None)
+                try:
+                    torch.distributed.init_process_group(backend='nccl')
+                except Exception as e:
+                    print('Ignore exception: {}'.format(e))
+
         if isinstance(config, APCConfigManager):
             self.train_func = train4apc
             self.model_class = SentimentClassifier
             self.task = 'apc'
+
         elif isinstance(config, ATEPCConfigManager):
             self.train_func = train4atepc
             self.model_class = AspectExtractor

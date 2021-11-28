@@ -11,7 +11,7 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import APCModelList
 
 apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = APCModelList.SLIDE_LCF_BERT
+apc_config_english.model = APCModelList.LSA_T
 apc_config_english.evaluate_begin = 0
 apc_config_english.num_epoch = 1
 apc_config_english.log_step = 100

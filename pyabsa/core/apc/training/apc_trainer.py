@@ -38,14 +38,26 @@ class Instructor:
         self.test_dataloader = self.model.test_dataloader
         self.tokenizer = self.model.tokenizer
         print("# of available cuda ", torch.cuda.device_count())
+
+        if 'patience' not in self.opt.args or not self.opt.patience:
+            self.opt.patience = len(self.train_set) / self.opt.batch_size / self.opt.log_step * self.opt.patience
+
+        # use DataParallel for training if device count larger than 1
         if torch.cuda.device_count() > 1 and self.opt.auto_device == 'allcuda':
-            print("use multi-cuda training!")
-            self.model = torch.nn.DataParallel(self.model)
+            self.opt.device = torch.device(self.opt.device)
+            self.model.to(self.opt.device)
+            if self.opt.parallel_mode == 'DataParallel':
+                self.model = torch.nn.parallel.DataParallel(self.model)
+            else:
+                self.model = torch.nn.parallel.DistributedDataParallel(module=self.model, find_unused_parameters=True)
+
+            self.opt.device = 'cuda:{}'.format(self.model.output_device)
         else:
             self.model.to(self.opt.device)
+
+        self.opt.device = torch.device(self.opt.device)
         if self.opt.device.type == 'cuda':
-            self.logger.info(
-                "cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device.index)))
+            self.logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device)))
 
         print_args(self.opt, self.logger)
 
@@ -114,7 +126,7 @@ class Instructor:
             return self._train_and_evaluate(criterion)
 
     def _train_and_evaluate(self, criterion):
-
+        patience = self.opt.patience
         sum_loss = 0
         sum_acc = 0
         sum_f1 = 0
@@ -146,7 +158,6 @@ class Instructor:
                          Trainable_params, NonTrainable_params)
         self.logger.info("Batch size = %d", self.opt.batch_size)
         self.logger.info("Num steps = %d", len(self.train_dataloaders[0]) // self.opt.batch_size * self.opt.num_epoch)
-
         for epoch in range(self.opt.num_epoch):
             iterator = tqdm(self.train_dataloaders[0])
             for i_batch, sample_batched in enumerate(iterator):
@@ -160,7 +171,7 @@ class Instructor:
 
                 sen_logits = outputs['logits']
                 loss = criterion(sen_logits, targets)
-                if 'loss' in outputs:
+                if isinstance(outputs, dict) and 'loss' in outputs:
                     loss += torch.sum(outputs['loss'])
 
                 if torch.cuda.device_count() > 1 and self.opt.auto_device == 'allcuda':
@@ -208,6 +219,10 @@ class Instructor:
                                 save_model(self.opt, self.model, self.tokenizer, save_path)
                         if f1 > max_fold_f1:
                             max_fold_f1 = f1
+                            patience = self.opt.patience
+                        else:
+                            patience -= 1
+
                         postfix = ('Epoch:{} | Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) |'
                                    ' Test F1:{:.2f}(max:{:.2f})'.format(epoch,
                                                                         loss.item(),
@@ -216,11 +231,12 @@ class Instructor:
                                                                         f1 * 100,
                                                                         max_fold_f1 * 100))
                     else:
-                        postfix = 'Epoch:{} | No evaluation until epoch:{}'.format(epoch, self.opt.evaluate_begin)
+                        postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch, loss.item(), self.opt.evaluate_begin)
 
                     iterator.postfix = postfix
                     iterator.refresh()
-
+            if patience < 0:
+                break
         self.logger.info('-------------------------- Training Summary --------------------------')
         self.logger.info('Acc: {:.8f} F1: {:.8f} Accumulated Loss: {:.8f}'.format(
             max_fold_acc * 100,
@@ -246,6 +262,7 @@ class Instructor:
             return self.model, self.opt, self.tokenizer, sum_acc, sum_f1
 
     def _k_fold_train_and_evaluate(self, criterion):
+        patience = self.opt.patience
         sum_loss = 0
         sum_acc = 0
         sum_f1 = 0
@@ -333,6 +350,9 @@ class Instructor:
                                     save_model(self.opt, self.model, self.tokenizer, save_path)
                             if f1 > max_fold_f1:
                                 max_fold_f1 = f1
+                                patience = self.opt.patience
+                            else:
+                                patience -= 1
                             postfix = ('Epoch:{} | Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) |'
                                        ' Test F1:{:.2f}(max:{:.2f})'.format(epoch,
                                                                             loss.item(),
@@ -341,10 +361,12 @@ class Instructor:
                                                                             f1 * 100,
                                                                             max_fold_f1 * 100))
                         else:
-                            postfix = 'Epoch:{} | No evaluation until epoch:{}'.format(epoch, self.opt.evaluate_begin)
+                            postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch, loss.item(), self.opt.evaluate_begin)
 
                         iterator.postfix = postfix
                         iterator.refresh()
+                if patience < 0:
+                    break
             self.model.load_state_dict(torch.load(find_file(os.getcwd(), 'state_dict')))
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
             if max_fold_acc > max_fold_acc_k_fold:
@@ -428,15 +450,11 @@ class Instructor:
     def run(self):
         # Loss and Optimizer
         criterion = nn.CrossEntropyLoss()
-        # self._reset_params()
         return self._train(criterion)
 
 
 @retry
 def train4apc(opt, from_checkpoint_path, logger):
-    if not isinstance(opt.seed, int):
-        opt.logger.info('Please do not use multiple random seeds without evaluating.')
-        opt.seed = list(opt.seed)[0]
     random.seed(opt.seed)
     numpy.random.seed(opt.seed)
     torch.manual_seed(opt.seed)

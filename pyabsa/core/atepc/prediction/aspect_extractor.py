@@ -21,7 +21,7 @@ from transformers.models.bert.modeling_bert import BertModel
 from pyabsa.functional.dataset import detect_infer_dataset, DatasetItem
 from pyabsa.core.atepc.models import ATEPCModelList
 from pyabsa.core.atepc.dataset_utils.atepc_utils import load_atepc_inference_datasets
-from pyabsa.utils.pyabsa_utils import print_args, save_json
+from pyabsa.utils.pyabsa_utils import print_args, save_json, TransformerConnectionError
 from ..dataset_utils.data_utils_for_inferring import (ATEPCProcessor,
                                                       convert_ate_examples_to_features,
                                                       convert_apc_examples_to_features,
@@ -69,7 +69,11 @@ class AspectExtractor:
                 if 'pretrained_bert_name' in self.opt.args:
                     self.opt.pretrained_bert = self.opt.pretrained_bert_name
                 if state_dict_path:
-                    bert_base_model = AutoModel.from_pretrained(self.opt.pretrained_bert)
+                    try:
+                        bert_base_model = AutoModel.from_pretrained(self.opt.pretrained_bert)
+                    except ValueError:
+                        raise TransformerConnectionError()
+
                     bert_base_model.config.num_labels = self.opt.num_labels
                     self.model = self.opt.model(bert_base_model, self.opt)
                     self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
@@ -79,7 +83,10 @@ class AspectExtractor:
                 if tokenizer_path:
                     self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
                 else:
-                    self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
+                    try:
+                        self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
+                    except ValueError:
+                        raise TransformerConnectionError()
 
                 self.tokenizer.bos_token = self.tokenizer.bos_token if self.tokenizer.bos_token else '[CLS]'
                 self.tokenizer.eos_token = self.tokenizer.eos_token if self.tokenizer.eos_token else '[SEP]'

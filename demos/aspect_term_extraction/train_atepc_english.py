@@ -16,13 +16,14 @@ from pyabsa.functional import ATEPCConfigManager
 
 config = ATEPCConfigManager.get_atepc_config_english()
 config.model = ATEPCModelList.LCF_ATEPC
-config.evaluate_begin = 5
-config.num_epoch = 6
+config.evaluate_begin = 2
+config.num_epoch = 20
 config.log_step = 100
-semeval = ABSADatasetList.SemEval
+config.pretrained_bert = 'bert-base-uncased'
+semeval = ABSADatasetList.Restaurant14
 aspect_extractor = Trainer(config=config,
                            dataset=semeval,
-                           checkpoint_save_mode=1,
+                           checkpoint_save_mode=0,
                            auto_device=True
                            ).load_trained_model()
 
