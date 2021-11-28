@@ -15,12 +15,11 @@ from pyabsa.functional import APCConfigManager
 from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import APCModelList
 
-save_path = 'state_dict'
 apc_config_multilingual = APCConfigManager.get_apc_config_multilingual()
 apc_config_multilingual.model = APCModelList.FAST_LCF_BERT
 apc_config_multilingual.evaluate_begin = 3
 
-datasets_path = 'datasets/apc_datasets/multilingual'  # file or dir are acceptable for 'datasets_path'
+datasets_path = 'multilingual'  # to search a file or dir that is acceptable for 'dataset'
 sent_classifier = Trainer(config=apc_config_multilingual,
                           dataset=datasets_path,
                           checkpoint_save_mode=1,

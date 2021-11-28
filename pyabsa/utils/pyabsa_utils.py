@@ -34,7 +34,8 @@ def save_args(config, save_path):
 def print_args(config, logger=None, mode=0):
     activated_args = []
     default_args = []
-    for arg in config.args:
+    args = [key for key in sorted(config.args.keys())]
+    for arg in args:
         if isinstance(arg, str) and os.path.exists(arg):
             arg = os.path.basename(arg)
         if config.args_call_count[arg]:
@@ -135,15 +136,21 @@ def resume_from_checkpoint(trainer, from_checkpoint_path):
         print('Checkpoint loaded!')
 
 
+class TransformerConnectionError(ValueError):
+    def __init__(self):
+        pass
+
+
 def retry(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        while True:
+        count = 5
+        while count:
             try:
                 return f(*args, **kwargs)
-            except Exception as e:
-                print('Catch exception: {} in {}, retry soon if you dont terminate process...'.format(e, f))
+            except (TransformerConnectionError, requests.exceptions.ConnectionError):
                 time.sleep(5)
+                count -= 1
 
     return decorated
 

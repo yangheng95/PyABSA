@@ -22,7 +22,7 @@ from ..classic.__bert__.dataset_utils.data_utils_for_inferring import BERTClassi
 
 from ..classic.__glove__.dataset_utils.data_utils_for_training import LABEL_PADDING, build_embedding_matrix, build_tokenizer
 
-from pyabsa.utils.pyabsa_utils import print_args
+from pyabsa.utils.pyabsa_utils import print_args, TransformerConnectionError
 
 
 class TextClassifier:
@@ -62,7 +62,11 @@ class TextClassifier:
                     if 'pretrained_bert_name' in self.opt.args or 'pretrained_bert' in self.opt.args:
                         if 'pretrained_bert_name' in self.opt.args:
                             self.opt.pretrained_bert = self.opt.pretrained_bert_name
-                        self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
+                        try:
+                            self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
+                        except ValueError:
+                            raise TransformerConnectionError()
+
                         self.model = self.opt.model(self.bert, self.opt)
                     else:
                         self.tokenizer = build_tokenizer(

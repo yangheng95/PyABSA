@@ -105,7 +105,7 @@ class ATEPCProcessor:
                         aspect.append(s)
             else:
                 for j, (t, s, p) in enumerate(zip(tag, sentence, polarity)):
-                    if 999 == p:
+                    if int(999) == int(p):
                         aspect.append(s)
             examples.append(InputExample(guid=str(i), text_a=sentence, text_b=aspect, IOB_label=tag,
                                          aspect_label=[], polarity=polarity))
@@ -148,22 +148,22 @@ def convert_ate_examples_to_features(examples, label_list, max_seq_len, tokenize
         ntokens = []
         segment_ids = []
         label_ids = []
-        ntokens.append("[CLS]")
+        ntokens.append(tokenizer.bos_token)
         segment_ids.append(0)
         valid.insert(0, 1)
         label_mask.insert(0, 1)
-        label_ids.append(label_map["[CLS]"])
+        label_ids.append(label_map[tokenizer.bos_token])
         # label_ids.append(label_map["O"])
         for i, token in enumerate(tokens):
             ntokens.append(token)
             segment_ids.append(0)
             if len(labels) > i:
                 label_ids.append(0)
-        ntokens.append("[SEP]")
+        ntokens.append(tokenizer.eos_token)
         segment_ids.append(0)
         valid.append(1)
         label_mask.append(1)
-        label_ids.append(label_map["[SEP]"])
+        label_ids.append(label_map[tokenizer.eos_token])
         input_ids_spc = tokenizer.convert_tokens_to_ids(ntokens)
         input_mask = [1] * len(input_ids_spc)
         label_mask = [1] * len(label_ids)
@@ -241,22 +241,22 @@ def convert_apc_examples_to_features(examples, label_list, max_seq_len, tokenize
         ntokens = []
         segment_ids = []
         label_ids = []
-        ntokens.append("[CLS]")
+        ntokens.append(tokenizer.bos_token)
         segment_ids.append(0)
         valid.insert(0, 1)
         label_mask.insert(0, 1)
-        label_ids.append(label_map["[CLS]"])
+        label_ids.append(label_map[tokenizer.bos_token])
         # label_ids.append(label_map["O"])
         for i, token in enumerate(tokens):
             ntokens.append(token)
             segment_ids.append(0)
             if len(labels) > i:
                 label_ids.append(0)
-        ntokens.append("[SEP]")
+        ntokens.append(tokenizer.eos_token)
         segment_ids.append(0)
         valid.append(1)
         label_mask.append(1)
-        label_ids.append(label_map["[SEP]"])
+        label_ids.append(label_map[tokenizer.eos_token])
         input_ids_spc = tokenizer.convert_tokens_to_ids(ntokens)
         input_mask = [1] * len(input_ids_spc)
         label_mask = [1] * len(label_ids)

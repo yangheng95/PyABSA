@@ -62,18 +62,17 @@ class LCF_ATEPC(BertForTokenClassification):
                 lcf_cdm_vec=None,
                 lcf_cdw_vec=None
                 ):
-        curr_device = attention_mask.device
         lcf_cdm_vec = lcf_cdm_vec.unsqueeze(2) if lcf_cdm_vec is not None else None
         lcf_cdw_vec = lcf_cdw_vec.unsqueeze(2) if lcf_cdw_vec is not None else None
         if not self.opt.use_bert_spc:
             input_ids = self.get_ids_for_local_context_extractor(input_ids_spc)
             labels = self.get_batch_token_labels_bert_base_indices(labels)
-            global_context_out = self.bert4global(input_ids, token_type_ids, attention_mask)['last_hidden_state']
+            global_context_out = self.bert4global(input_ids=input_ids, attention_mask=attention_mask)['last_hidden_state']
         else:
-            global_context_out = self.bert4global(input_ids_spc, token_type_ids, attention_mask)['last_hidden_state']
+            global_context_out = self.bert4global(input_ids=input_ids_spc, attention_mask=attention_mask)['last_hidden_state']
 
         batch_size, max_len, feat_dim = global_context_out.shape
-        global_valid_output = torch.zeros(batch_size, max_len, feat_dim, dtype=torch.float32).to(curr_device)
+        global_valid_output = torch.zeros(batch_size, max_len, feat_dim, dtype=torch.float32).to(self.device)
         for i in range(batch_size):
             jj = -1
             for j in range(max_len):
@@ -85,9 +84,9 @@ class LCF_ATEPC(BertForTokenClassification):
 
         if lcf_cdm_vec is not None or lcf_cdw_vec is not None:
             local_context_ids = self.get_ids_for_local_context_extractor(input_ids_spc)
-            local_context_out = self.bert4local(local_context_ids)['last_hidden_state']
+            local_context_out = self.bert4local(input_ids=local_context_ids)['last_hidden_state']
             batch_size, max_len, feat_dim = local_context_out.shape
-            local_valid_output = torch.zeros(batch_size, max_len, feat_dim, dtype=torch.float32).to(curr_device)
+            local_valid_output = torch.zeros(batch_size, max_len, feat_dim, dtype=torch.float32).to(self.device)
             for i in range(batch_size):
                 jj = -1
                 for j in range(max_len):

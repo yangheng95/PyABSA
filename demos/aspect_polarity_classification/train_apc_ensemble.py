@@ -18,7 +18,7 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import APCModelList
 
 apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = [APCModelList.SLIDE_LCFS_BERT]
+apc_config_english.model = [APCModelList.LCA_S]
 # apc_config_english.model = [APCModelList.FAST_LCF_BERT]
 apc_config_english.lcf = 'cdw'
 apc_config_english.similarity_threshold = 1

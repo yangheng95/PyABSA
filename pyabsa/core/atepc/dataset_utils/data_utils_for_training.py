@@ -91,7 +91,7 @@ def readfile(filename):
 
         if len(s) > 0:
             # prepare the atepc dataset, refer to https://github.com/yangheng95/PyABSA/issues/78
-            polarity_padding = [SENTIMENT_PADDING] * len(t)
+            polarity_padding = [str(SENTIMENT_PADDING)] * len(t)
             for p_idx in range(len(p) - 1):
                 if (p[p_idx] != p[p_idx + 1] and p[p_idx] != str(SENTIMENT_PADDING) and p[p_idx + 1] != str(SENTIMENT_PADDING)) \
                         or (p[p_idx] != str(SENTIMENT_PADDING) and p[p_idx + 1] == str(SENTIMENT_PADDING)):
@@ -149,12 +149,13 @@ class ATEPCProcessor(DataProcessor):
 
     def _create_examples(self, lines, set_type):
         examples = []
+
         for i, (sentence, tag, polarity) in enumerate(lines):
             aspect = []
             aspect_tag = []
             aspect_polarity = SENTIMENT_PADDING
             for w, t, p in zip(sentence, tag, polarity):
-                if p != SENTIMENT_PADDING:
+                if str(p) != str(SENTIMENT_PADDING):
                     aspect.append(w)
                     aspect_tag.append(t)
                     aspect_polarity = p
@@ -203,7 +204,6 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
             text_left = ' '.join(example.text_a)
             text_right = ''
             aspect = ''
-
         text_raw = text_left + ' ' + aspect + ' ' + text_right
         validate_example(text_raw, aspect, polarity)
 

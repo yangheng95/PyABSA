@@ -16,7 +16,7 @@ from transformers import AutoTokenizer, AutoModel
 
 from pyabsa.core.apc.classic.__glove__.dataset_utils.data_utils_for_training import build_embedding_matrix, build_tokenizer
 from pyabsa.core.apc.models.ensembler import APCEnsembler
-from pyabsa.utils.pyabsa_utils import print_args
+from pyabsa.utils.pyabsa_utils import print_args, TransformerConnectionError
 from pyabsa.functional.dataset import detect_infer_dataset
 from pyabsa.core.apc.models import (APCModelList,
                                     GloVeAPCModelList,
@@ -74,7 +74,11 @@ class SentimentClassifier:
                         if not hasattr(GloVeAPCModelList, self.opt.model.__name__.upper()):
                             if 'pretrained_bert_name' in self.opt.args:
                                 self.opt.pretrained_bert = self.opt.pretrained_bert_name
-                            self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
+                            try:
+                                self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert) if not self.tokenizer else self.tokenizer
+                                self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)  # share the underlying bert between models
+                            except ValueError:
+                                raise TransformerConnectionError()
                             self.model = self.opt.model(self.bert, self.opt)
                         else:
                             tokenizer = build_tokenizer(
@@ -98,7 +102,10 @@ class SentimentClassifier:
                 if tokenizer_path:
                     self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
                 else:
-                    self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
+                    try:
+                        self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
+                    except ValueError:
+                        raise TransformerConnectionError()
 
                 print('Config used in Training:')
                 print_args(self.opt, mode=1)

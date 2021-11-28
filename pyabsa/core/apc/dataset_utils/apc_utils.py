@@ -359,7 +359,7 @@ def copy_side_aspect(direct, target, source, examples):
             examples[ex_id]['cluster_ids'] |= source['cluster_ids']
             examples[ex_id]['side_ex_ids'] |= target['side_ex_ids']
 
-    for data_item in ['lcf_vec', 'lcfs_vec']:
+    for data_item in ['text_bert_indices', 'lcf_vec', 'lcfs_vec']:
         target[direct + '_' + data_item] = source[data_item]
     target[direct + '_dist'] = int(abs(np.average(list(source['aspect_position'])) - np.average(list(target['aspect_position']))))
     # target[direct + '_dist'] = 0 if id(source['lcf_vec']) == id(target['lcf_vec']) else 1

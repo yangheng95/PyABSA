@@ -1,19 +1,36 @@
 {
+  "1.3.11": {
+  "1": "Divide LSA into FAST-LSA and LSA models"
+  },
+  "1.3.9": {
+  "1": "Fix low performance of APC using roberta-base"
+  },
+  "1.3.8": {
+    "1": "Fix a fatal problem in ATEPC example preprocessing (influenced versions: V1.X - V1.3.5), which triggers tremendous ASPECT TOO LONG WARNING. This error severely damaged the ATEPC performance. The ATEPC checkpoints on GoogleDrive were also influenced and may be updated in teh future. ",
+    "2": "Add deep_ensemble option, use config.deep_ensemble=True to activate",
+    "3": "Add early stop option, default patience=5",
+    "4": "Refactor utils to print sorted args",
+    "5": "Fix a problem while using checkpoint_save_mode=3 to save finetuned BERT",
+    "6": "Refactor to retry training only while catching ConnectionError",
+    "7": "Fix an ensemble problem in APC",
+    "8": "Add full support distributed training",
+    "9": "Add distributed training option， i.e., DataParallel or DistributedDataParallel",
+    "10": "Fix some potential problem in using other pretrained models in ATEPC to infer (caused by hard code [CLS], [SEP]), support roberta now",
+    "11": "This is an public test version, could be removed later. Please roll back if you find any problem. I am sorry for my mistake, but I dont have enough time to maintain this project."
+  },
   "1.3.5": {
     "1": "Update default pretrained_bert (bert-base-uncased -> roberta-base)",
-    "2": "Add cache dataset option for APC task"
+    "2": "Add cache dataset option for APC task, use config.cache_dataset=True to activate"
   },
   "1.3.4": {
     "1": "Replace remaining BertModel.from_pretrained() and BertTokenizer.from_pretrained() with AutoModel.from_pretrained() and AutoTokenizer.from_pretrained()",
     "2": "Replace remaining BertModel.from_pretrained() and BertTokenizer.from_pretrained() with AutoModel.from_pretrained() and AutoTokenizer.from_pretrained()",
-    "3": "Fix some ensemble problems",
-    "4": "This is an public test version, could be removed later. Please roll back if you find any problem"
+    "3": "Fix some ensemble problems"
   },
   "1.3.1": {
     "1": "Add multi-cuda support for APC model and part of ATEPC models",
     "2": "Add ensemble support for APC models",
-    "3": "Fix support of legacy APC models in loading & inference using shared checkpoint ",
-    "4": "This is an public test version, could be removed later. Please roll back if you find any problem"
+    "3": "Fix support of legacy APC models in loading & inference using shared checkpoint "
   },
   "1.2.13": {
     "1": "Minor update in dataset searching"
@@ -219,4 +236,4 @@
     "2": "Add polarity label-fix features for some datasets containing negative labels",
     "3": "Some typo-fix"
   }
-}
+},

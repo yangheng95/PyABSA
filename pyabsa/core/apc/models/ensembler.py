@@ -13,9 +13,10 @@ from torch.nn import ModuleList
 
 import torch
 from torch.utils.data import DataLoader
-from transformers import AutoTokenizer, AutoModel, BertModel
+from transformers import AutoTokenizer, AutoModel
 
 from pyabsa.functional.dataset import ABSADatasetList
+from pyabsa.utils.pyabsa_utils import TransformerConnectionError
 
 from ..models import BERTBaselineAPCModelList, GloVeAPCModelList, APCModelList
 from ..classic.__bert__.dataset_utils.data_utils_for_training import (Tokenizer4Pretraining,
@@ -63,14 +64,15 @@ class APCEnsembler(nn.Module):
             test_set_cache_path = '{}.{}.test_set.cache'.format(self.opt.model_name, self.opt.dataset_name)
 
             if hasattr(APCModelList, models[i].__name__):
-                self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert) if not self.tokenizer else self.tokenizer
-                self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert) if not self.bert else self.bert  # share the underlying bert between models
-
+                try:
+                    self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert) if not self.tokenizer else self.tokenizer
+                    self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert) if not self.bert else self.bert  # share the underlying bert between models
+                except ValueError:
+                    raise TransformerConnectionError()
                 if load_dataset:
                     if os.path.exists(train_set_cache_path) and os.path.exists(test_set_cache_path):
                         print('Loading APC dataset cache:', train_set_cache_path, test_set_cache_path)
                         self.train_set = pickle.load(open(train_set_cache_path, mode='rb'))
-                        self.train_set = pickle.load(open(test_set_cache_path, mode='rb'))
                         self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False) if not self.test_dataloader else self.test_dataloader
                     else:
                         self.train_set = ABSADataset(self.opt.dataset_file['train'], self.tokenizer, self.opt) if not self.train_set else self.train_set
@@ -97,8 +99,7 @@ class APCEnsembler(nn.Module):
                             self.test_set = BERTBaselineABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt) if not self.test_set else self.test_set
                             self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False) if not self.test_dataloader else self.test_dataloader
 
-                # init the model behind the construction of apc_datasets in case of updating output dim
-                self.models.append(models[i](self.bert, self.opt))
+                self.models.append(models[i](copy.deepcopy(self.bert) if self.opt.deep_ensemble else self.bert, self.opt))
 
             elif hasattr(GloVeAPCModelList, models[i].__name__):
                 # init GloVe-based model and dataset
@@ -132,7 +133,7 @@ class APCEnsembler(nn.Module):
                             self.test_set = GloVeABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt) if not self.test_set else self.test_set
                             self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False) if not self.test_dataloader else self.test_dataloader
 
-                self.models.append(models[i](self.embedding_matrix, opt))
+                self.models.append(models[i](copy.deepcopy(self.embedding_matrix) if self.opt.deep_ensemble else self.embedding_matrix, self.opt))
 
                 if self.opt.cache_dataset:
                     print('Caching dataset... please remove cached dataset if change model or dataset')
@@ -144,19 +145,24 @@ class APCEnsembler(nn.Module):
     def forward(self, inputs):
         outputs = [self.models[i](inputs) for i in range(len(self.models))]
         loss = torch.tensor(0., requires_grad=True)
-        for i, out in enumerate(outputs):
+        if 'ensemble_mode' not in self.opt:
+            self.opt.ensemble_mode = 'cat'
+        if len(outputs) > 1:
+            for i, out in enumerate(outputs):
+                if self.opt.ensemble_mode == 'cat':
+                    logits = torch.cat((logits, out['logits']), dim=-1) if i != 0 else out['logits']
+                elif self.opt.ensemble_mode == 'mean':
+                    logits = logits + out['logits'] if i != 0 else out['logits']
+                else:
+                    raise KeyError('Invalid ensemble_mode!')
+                if 'loss' in out:
+                    loss = loss + out['loss'] if i != 0 else out['loss']
+
             if 'ensemble_mode' not in self.opt or self.opt.ensemble_mode == 'cat':
-                logits = torch.cat((logits, out['logits']), dim=-1) if i != 0 else out['logits']
+                logits = self.dense(logits)
             elif self.opt.ensemble_mode == 'mean':
-                logits = logits + out['logits'] if i != 0 else out['logits']
-            else:
-                raise KeyError('Invalid ensemble_mode!')
-            if 'loss' in out:
-                loss = loss + out['loss'] if i != 0 else out['loss']
-
-        if 'ensemble_mode' not in self.opt or self.opt.ensemble_mode == 'cat':
-            logits = self.dense(logits)
-        elif self.opt.ensemble_mode == 'mean':
-            logits = logits / len(self.models)
-
+                logits = logits / len(self.models)
+        else:
+            logits = outputs[0]['logits']
+            loss = outputs[0]['loss'] if 'loss' in outputs[0] else loss
         return {'logits': logits, 'loss': loss.to(logits.device)}

@@ -269,7 +269,7 @@ def save_model(opt, model, tokenizer, save_path):
         if not os.path.exists(model_output_dir):
             os.makedirs(model_output_dir)
         output_model_file = os.path.join(model_output_dir, 'pytorch_model.bin')
-        output_config_file = os.path.join(model_output_dir, 'bert_config.json')
+        output_config_file = os.path.join(model_output_dir, 'config.json')
 
         torch.save(model_to_save.state_dict(), output_model_file)
         model_to_save.config.to_json_file(output_config_file)
