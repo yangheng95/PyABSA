@@ -26,14 +26,14 @@ apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
 apc_config_english.dropout = 0.5
 apc_config_english.cache_dataset = False
-apc_config_english.log_step = 5
+apc_config_english.log_step = 10
 apc_config_english.pretrained_bert = 'microsoft/deberta-v3-large'
 apc_config_english.hidden_dim = 1024
 apc_config_english.embed_dim = 1024
 apc_config_english.num_epoch = 25
 apc_config_english.learning_rate = 1e-5
 apc_config_english.batch_size = 32
-apc_config_english.evaluate_begin = 5
+apc_config_english.evaluate_begin = 2
 apc_config_english.l2reg = 0.0005
 apc_config_english.seed = seeds
 apc_config_english.parallel_model = 'DistributedDataParallel'
@@ -44,42 +44,42 @@ sent_classifier = Trainer(config=apc_config_english,
                           dataset=Laptop14,  # train set and test set will be automatically detected
                           checkpoint_save_mode=0,  # =None to avoid save model
                           auto_device='allcuda'  # automatic choose CUDA or CPU
-                          ).load_trained_model()
+                          )
 
 Restaurant14 = ABSADatasetList.Restaurant14
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=Restaurant14,  # train set and test set will be automatically detected
                           checkpoint_save_mode=0,  # =None to avoid save model
                           auto_device='allcuda'  # automatic choose CUDA or CPU
-                          ).load_trained_model()
+                          )
 
 Restaurant15 = ABSADatasetList.Restaurant15
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=Restaurant15,  # train set and test set will be automatically detected
                           checkpoint_save_mode=0,  # =None to avoid save model
                           auto_device='allcuda'  # automatic choose CUDA or CPU
-                          ).load_trained_model()
+                          )
 
 Restaurant16 = ABSADatasetList.Restaurant16
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=Restaurant16,  # train set and test set will be automatically detected
                           checkpoint_save_mode=0,  # =None to avoid save model
                           auto_device='allcuda'  # automatic choose CUDA or CPU
-                          ).load_trained_model()
+                          )
 
 MAMS = ABSADatasetList.MAMS
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=MAMS,  # train set and test set will be automatically detected
                           checkpoint_save_mode=0,  # =None to avoid save model
                           auto_device='allcuda'  # automatic choose CUDA or CPU
-                          ).load_trained_model()
+                          )
 
 Twitter = ABSADatasetList.ACL_Twitter
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=Twitter,  # train set and test set will be automatically detected
                           checkpoint_save_mode=0,  # =None to avoid save model
                           auto_device='allcuda'  # automatic choose CUDA or CPU
-                          ).load_trained_model()
+                          )
 
 apc_config_english = APCConfigManager.get_apc_config_english()
 apc_config_english.model = APCModelList.FAST_LSA_T
@@ -88,14 +88,14 @@ apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
 apc_config_english.dropout = 0
 apc_config_english.cache_dataset = False
-apc_config_english.log_step = 5
+apc_config_english.log_step = 10
 apc_config_english.pretrained_bert = 'microsoft/deberta-v3-large'
 apc_config_english.hidden_dim = 1024
 apc_config_english.embed_dim = 1024
 apc_config_english.num_epoch = 25
 apc_config_english.learning_rate = 1e-5
 apc_config_english.batch_size = 32
-apc_config_english.evaluate_begin = 5
+apc_config_english.evaluate_begin = 2
 apc_config_english.l2reg = 0.0005
 apc_config_english.seed = seeds
 apc_config_english.parallel_model = 'DistributedDataParallel'
@@ -106,39 +106,39 @@ sent_classifier = Trainer(config=apc_config_english,
                           dataset=Laptop14,  # train set and test set will be automatically detected
                           checkpoint_save_mode=0,  # =None to avoid save model
                           auto_device='allcuda'  # automatic choose CUDA or CPU
-                          ).load_trained_model()
+                          )
 
 Restaurant14 = ABSADatasetList.Restaurant14
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=Restaurant14,  # train set and test set will be automatically detected
                           checkpoint_save_mode=0,  # =None to avoid save model
                           auto_device='allcuda'  # automatic choose CUDA or CPU
-                          ).load_trained_model()
+                          )
 
 Restaurant15 = ABSADatasetList.Restaurant15
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=Restaurant15,  # train set and test set will be automatically detected
                           checkpoint_save_mode=0,  # =None to avoid save model
                           auto_device='allcuda'  # automatic choose CUDA or CPU
-                          ).load_trained_model()
+                          )
 
 Restaurant16 = ABSADatasetList.Restaurant16
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=Restaurant16,  # train set and test set will be automatically detected
                           checkpoint_save_mode=0,  # =None to avoid save model
                           auto_device='allcuda'  # automatic choose CUDA or CPU
-                          ).load_trained_model()
+                          )
 
 MAMS = ABSADatasetList.MAMS
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=MAMS,  # train set and test set will be automatically detected
                           checkpoint_save_mode=0,  # =None to avoid save model
                           auto_device='allcuda'  # automatic choose CUDA or CPU
-                          ).load_trained_model()
+                          )
 
 Twitter = ABSADatasetList.ACL_Twitter
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=Twitter,  # train set and test set will be automatically detected
                           checkpoint_save_mode=0,  # =None to avoid save model
                           auto_device='allcuda'  # automatic choose CUDA or CPU
-                          ).load_trained_model()
+                          )

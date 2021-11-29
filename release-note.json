@@ -1,9 +1,14 @@
 {
+  "1.3.12": {
+    "1": "Refactor to support customize IOB label for ATEPC(The integrated function to covert APC dataset to ATEPC dataset remains only support ASP IOB now, please customize your dataset's IOB label using your own script)",
+    "2": "Update default pretrained model for ATEPC",
+    "3": "Minor changes"
+  },
   "1.3.11": {
-  "1": "Divide LSA into FAST-LSA and LSA models"
+    "1": "Divide LSA into FAST-LSA and LSA models"
   },
   "1.3.9": {
-  "1": "Fix low performance of APC using roberta-base"
+    "1": "Fix low performance of APC using roberta-base"
   },
   "1.3.8": {
     "1": "Fix a fatal problem in ATEPC example preprocessing (influenced versions: V1.X - V1.3.5), which triggers tremendous ASPECT TOO LONG WARNING. This error severely damaged the ATEPC performance. The ATEPC checkpoints on GoogleDrive were also influenced and may be updated in teh future. ",

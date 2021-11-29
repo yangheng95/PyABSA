@@ -262,7 +262,10 @@ class AspectExtractor:
 
         # extract_aspects
         self.model.eval()
-        label_map = {i: label for i, label in enumerate(self.label_list, 1)}
+        if 'index_to_IOB_label' not in self.opt.args:
+            label_map = {i: label for i, label in enumerate(self.label_list, 1)}
+        else:
+            label_map = self.opt.index_to_IOB_label
         for i_batch, (input_ids_spc, input_mask, segment_ids, label_ids, polarity, valid_ids, l_mask) in enumerate(self.eval_dataloader):
             input_ids_spc = input_ids_spc.to(self.opt.device)
             input_mask = input_mask.to(self.opt.device)

@@ -61,13 +61,16 @@ def print_args(config, logger=None, mode=0):
 
 def validate_example(text: str, aspect: str, polarity: str):
     if len(text) < len(aspect):
-        print(colored('Data Error to check -> aspect: {} is longer than text: {}'.format(aspect, text), 'red'))
+        raise ValueError(colored('AspectLengthExceedTextError -> <aspect: {}> is longer than <text: {}>, <polarity: {}>'.format(aspect, text, polarity), 'red'))
+
+    if aspect.strip().lower() not in text.strip().lower():
+        raise ValueError(colored('AspectNotInTextError -> <aspect: {}> is not in <text: {}>>'.format(aspect, text), 'yellow'))
 
     if len(aspect.split(' ')) > 10:
-        print(colored('Aspect Too Long Warning to check -> aspect: {} is too long, text: {}, polarity: {}'.format(aspect, text, polarity), 'yellow'))
+        print(colored('AspectTooLongWarning -> <aspect: {}> is too long, <text: {}>, <polarity: {}>'.format(aspect, text, polarity), 'yellow'))
 
     if len(polarity.split(' ')) > 3:
-        print(colored('Label Too Long Warning to check -> polarity: {} is too long, text: {}, aspect: {}'.format(polarity, text, aspect), 'yellow'))
+        print(colored('LabelTooLongWarning -> <label: {}> is too long, <text: {}>, <aspect: {}>'.format(polarity, text, aspect), 'yellow'))
 
 
 def check_and_fix_labels(label_set, label_name, all_data, opt):
@@ -89,6 +92,11 @@ def check_and_fix_labels(label_set, label_name, all_data, opt):
         except:
             item.polarity = label_to_index[item.polarity]
 
+
+def check_and_fix_IOB_labels(label_map, opt):
+    # update polarities_dim, init model behind execution of this function!
+    index_to_IOB_label = {int(label_map[origin_label]): origin_label for origin_label in label_map}
+    opt.index_to_IOB_label = index_to_IOB_label
 
 def get_device(auto_device):
     if isinstance(auto_device, str) and auto_device == 'allcuda':

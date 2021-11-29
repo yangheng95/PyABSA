@@ -60,16 +60,17 @@ class Instructor:
             raise TransformerConnectionError()
 
         processor = ATEPCProcessor(self.tokenizer)
-        self.label_list = processor.get_labels()
-        self.opt.num_labels = len(self.label_list) + 1
-
-        bert_base_model.config.num_labels = self.opt.num_labels
 
         self.train_examples = processor.get_train_examples(self.opt.dataset_file['train'], 'train')
         self.num_train_optimization_steps = int(
             len(self.train_examples) / self.opt.batch_size / self.opt.gradient_accumulation_steps) * self.opt.num_epoch
-        train_features = convert_examples_to_features(self.train_examples, self.label_list, self.opt.max_seq_len,
+        train_features = convert_examples_to_features(self.train_examples, self.opt.max_seq_len,
                                                       self.tokenizer, self.opt)
+        # only identify the labels in training set, make sure the labels are the same type in the test set
+        self.label_list = processor.get_labels()
+        self.opt.num_labels = len(self.label_list) + 1
+        bert_base_model.config.num_labels = self.opt.num_labels
+
         all_spc_input_ids = torch.tensor([f.input_ids_spc for f in train_features], dtype=torch.long)
         all_input_mask = torch.tensor([f.input_mask for f in train_features], dtype=torch.long)
         all_segment_ids = torch.tensor([f.segment_ids for f in train_features], dtype=torch.long)
@@ -88,7 +89,7 @@ class Instructor:
 
         if 'test' in self.opt.dataset_file:
             eval_examples = processor.get_test_examples(self.opt.dataset_file['test'], 'test')
-            eval_features = convert_examples_to_features(eval_examples, self.label_list, self.opt.max_seq_len,
+            eval_features = convert_examples_to_features(eval_examples, self.opt.max_seq_len,
                                                          self.tokenizer, self.opt)
             all_spc_input_ids = torch.tensor([f.input_ids_spc for f in eval_features], dtype=torch.long)
             all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
