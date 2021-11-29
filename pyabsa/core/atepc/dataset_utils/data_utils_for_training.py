@@ -9,8 +9,9 @@ import tqdm
 
 from pyabsa.core.apc.dataset_utils.apc_utils import configure_spacy_model
 from pyabsa.core.atepc.dataset_utils.atepc_utils import prepare_input_for_atepc
-from pyabsa.utils.pyabsa_utils import check_and_fix_labels, SENTIMENT_PADDING, validate_example
+from pyabsa.utils.pyabsa_utils import check_and_fix_labels, SENTIMENT_PADDING, validate_example, check_and_fix_IOB_labels
 
+Labels = set()
 
 class InputExample(object):
     """A single training_tutorials/test example for simple sequence classification."""
@@ -85,6 +86,7 @@ def readfile(filename):
         sentence.append(splits[0])
         tag.append(splits[-2])
         polarity.append(splits[-1])
+        Labels.add(splits[-2])
 
     prepared_data = []
     for s, t, p in data:
@@ -145,7 +147,7 @@ class ATEPCProcessor(DataProcessor):
             self._read_tsv(data_dir), set_tag)
 
     def get_labels(self):
-        return ["O", "B-ASP", "I-ASP", self.tokenizer.bos_token, self.tokenizer.eos_token]
+        return list(Labels) + [self.tokenizer.bos_token, self.tokenizer.eos_token]
 
     def _create_examples(self, lines, set_type):
         examples = []
@@ -170,14 +172,15 @@ class ATEPCProcessor(DataProcessor):
         return examples
 
 
-def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, opt=None):
+def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
     """Loads a data file into a list of `InputBatch`s."""
 
     configure_spacy_model(opt)
 
     bos_token = tokenizer.bos_token
     eos_token = tokenizer.eos_token
-    label_map = {label: i for i, label in enumerate(label_list, 1)}
+    label_map = {label: i for i, label in enumerate(list(Labels) + [tokenizer.bos_token, tokenizer.eos_token], 1)}
+    opt.IOB_label_to_index = label_map
     features = []
     polarities_set = set()
     for (ex_index, example) in enumerate(tqdm.tqdm(examples, postfix='convert examples to features')):
@@ -281,6 +284,7 @@ def convert_examples_to_features(examples, label_list, max_seq_len, tokenizer, o
                           lcf_cdw_vec=lcf_cdw_vec)
         )
     check_and_fix_labels(polarities_set, 'polarity', features, opt)
+    check_and_fix_IOB_labels(label_map, opt)
     opt.polarities_dim = len(polarities_set)
 
     return features

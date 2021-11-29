@@ -16,7 +16,7 @@ examples = ['But the staff was so nice to us .',
             'How pretentious and inappropriate for MJ Grill to claim that it provides power lunch and dinners !'
             ]
 
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='fast_lcf_atepc_cdw_apcacc_65.06_apcf1_26.28_atef1_21.62',
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='lcf_atepc_cdw_apcacc_82.31_apcf1_71.62_atef1_82.56',
                                                                auto_device=False  # False means load model on CPU
                                                                )
 

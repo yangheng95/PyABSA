@@ -19,11 +19,10 @@ config.model = ATEPCModelList.LCF_ATEPC
 config.evaluate_begin = 2
 config.num_epoch = 20
 config.log_step = 100
-config.pretrained_bert = 'bert-base-uncased'
 semeval = ABSADatasetList.Restaurant14
 aspect_extractor = Trainer(config=config,
                            dataset=semeval,
-                           checkpoint_save_mode=0,
+                           checkpoint_save_mode=1,
                            auto_device=True
                            ).load_trained_model()
 
