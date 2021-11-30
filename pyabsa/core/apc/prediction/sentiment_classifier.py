@@ -75,7 +75,7 @@ class SentimentClassifier:
                             if 'pretrained_bert_name' in self.opt.args:
                                 self.opt.pretrained_bert = self.opt.pretrained_bert_name
                             try:
-                                self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert) if not self.tokenizer else self.tokenizer
+                                self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
                                 self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)  # share the underlying bert between models
                             except ValueError:
                                 raise TransformerConnectionError()
@@ -267,10 +267,6 @@ class SentimentClassifier:
                         'ref_check': correct[sent == real_sent] if real_sent != '-999' else '',
                     })
                     n_total += 1
-            if len(self.infer_dataloader) > 1:
-                print('Total samples:{}'.format(n_total))
-                print('Labeled samples:{}'.format(n_labeled))
-                print('Prediction Accuracy:{}%'.format(100 * n_correct / n_labeled if n_labeled else 'N.A.'))
 
         results = self.merge_results(results)
         try:
@@ -297,6 +293,11 @@ class SentimentClassifier:
                 print('inference result saved in: {}'.format(save_path))
         except Exception as e:
             print('Can not save result: {}, Exception: {}'.format(text_raw, e))
+
+        if len(self.infer_dataloader) > 1:
+            print('Total samples:{}'.format(n_total))
+            print('Labeled samples:{}'.format(n_labeled))
+            print('Prediction Accuracy:{}%'.format(100 * n_correct / n_labeled if n_labeled else 'N.A.'))
         return results
 
     def clear_input_samples(self):

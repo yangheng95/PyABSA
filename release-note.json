@@ -1,4 +1,7 @@
 {
+  "1.3.13": {
+    "1": "Fix a checkpoint loading problem of APC(Some checkpoint at Google Drive may be unavailable now, we will update soon)"
+  },
   "1.3.12": {
     "1": "Refactor to support customize IOB label for ATEPC(The integrated function to covert APC dataset to ATEPC dataset remains only support ASP IOB now, please customize your dataset's IOB label using your own script)",
     "2": "Update default pretrained model for ATEPC",
