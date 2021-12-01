@@ -28,7 +28,7 @@ from ..classic.__glove__.dataset_utils.data_utils_for_training import (build_tok
                                                                        build_embedding_matrix,
                                                                        GloVeClassificationDataset)
 from pyabsa.utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError
+from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError, optimizers
 
 
 class Instructor:
@@ -87,19 +87,13 @@ class Instructor:
             self.model = opt.model(self.embedding_matrix, opt).to(opt.device)
 
             # use DataParallel for training if device count larger than 1
-            if torch.cuda.device_count() > 1 and self.opt.auto_device == 'cuda':
-
-                self.opt.device = torch.device(self.opt.device)
+            if torch.cuda.device_count() > 1 and self.opt.auto_device == 'allcuda':
                 self.model.to(self.opt.device)
-                if self.opt.parallel_mode == 'DataParallel':
-                    self.model = torch.nn.parallel.DataParallel(self.model)
-                else:
-                    self.model = torch.nn.parallel.DistributedDataParallel(module=self.model, find_unused_parameters=True)
-
-                self.opt.device = self.model.device
+                self.model = torch.nn.parallel.DataParallel(self.model)
             else:
                 self.model.to(self.opt.device)
 
+        self.opt.device = torch.device(self.opt.device)
         if self.opt.device.type == 'cuda':
             self.logger.info(
                 "cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device)))
@@ -108,7 +102,7 @@ class Instructor:
             self.opt.patience = len(self.train_set) / self.opt.batch_size / self.opt.log_step * self.opt.patience
 
         print_args(self.opt, self.logger)
-        self.optimizer = self.opt.optimizer(
+        self.optimizer = optimizers[self.opt.optimizer](
             self.model.parameters(),
             lr=self.opt.learning_rate,
             weight_decay=self.opt.l2reg
@@ -457,24 +451,10 @@ class Instructor:
 
 @retry
 def train4classification(opt, from_checkpoint_path, logger):
-    if not isinstance(opt.seed, int):
-        opt.logger.info('Please do not use multiple random seeds without evaluating.')
-        opt.seed = list(opt.seed)[0]
     random.seed(opt.seed)
     numpy.random.seed(opt.seed)
     torch.manual_seed(opt.seed)
     torch.cuda.manual_seed(opt.seed)
-
-    optimizers = {
-        'adadelta': torch.optim.Adadelta,  # default lr=1.0
-        'adagrad': torch.optim.Adagrad,  # default lr=0.01
-        'adam': torch.optim.Adam,  # default lr=0.001
-        'adamax': torch.optim.Adamax,  # default lr=0.002
-        'asgd': torch.optim.ASGD,  # default lr=0.01
-        'rmsprop': torch.optim.RMSprop,  # default lr=0.01
-        'sgd': torch.optim.SGD,
-        'adamw': torch.optim.AdamW
-    }
 
     if hasattr(BERTClassificationModelList, opt.model.__name__):
         opt.inputs_cols = BERTClassificationDataset.bert_baseline_input_colses[opt.model.__name__.lower()]
@@ -482,10 +462,8 @@ def train4classification(opt, from_checkpoint_path, logger):
     elif hasattr(GloVeClassificationModelList, opt.model.__name__):
         opt.inputs_cols = GloVeClassificationDataset.glove_input_colses[opt.model.__name__.lower()]
 
-    opt.optimizer = optimizers[opt.optimizer]
     opt.device = torch.device(opt.device)
 
-    # in case of handling ConnectionError exception
     trainer = Instructor(opt, logger)
     resume_from_checkpoint(trainer, from_checkpoint_path)
 

@@ -11,12 +11,6 @@ from pyabsa import APCCheckpointManager, ABSADatasetList
 
 os.environ['PYTHONIOENCODING'] = 'UTF8'
 
-# Assume the sent_classifier is loaded or obtained using train function
-
-# sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='slide_lcfs_bert_acc_89.76_f1_69.44',
-#                                                                 auto_device=True,  # Use CUDA if available
-#                                                                 sentiment_map=sentiment_map
-#                                                                 )
 examples = [
     'Strong build though which really adds to its [ASP]durability[ASP] .',  # !sent! Positive
     'Strong [ASP]build[ASP] though which really adds to its durability . !sent! Positive',

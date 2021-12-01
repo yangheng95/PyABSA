@@ -8,7 +8,6 @@
 
 from pyabsa import APCCheckpointManager, ABSADatasetList
 
-# Assume the sent_classifier is loaded or obtained using train function
 sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='chinese')
 # sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='checkpoint')
 

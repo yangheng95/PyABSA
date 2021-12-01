@@ -23,10 +23,8 @@ atepc_config.l2reg = 0.00005
 atepc_config.batch_size = 32
 atepc_config.srd_alignment = False
 
-atepc_config.pretrained_bert = 'roberta-base'
-# atepc_config.pretrained_bert = 'bert-base-uncased'
+atepc_config.pretrained_bert = 'bert-base-uncased'
 atepc_config.model = ATEPCModelList.FAST_LCF_ATEPC
-atepc_config.parallel_mode = 'DistributedDataParallel'
 dataset_path = ABSADatasetList.Restaurant14
 # or your local dataset: dataset_path = 'your local dataset path'
 
@@ -34,7 +32,7 @@ aspect_extractor = ATEPCTrainer(config=atepc_config,
                                 dataset=dataset_path,
                                 from_checkpoint='',  # set checkpoint to train on the checkpoint.
                                 checkpoint_save_mode=1,
-                                auto_device=True
+                                auto_device='allcuda'
                                 ).load_trained_model()
 
 examples = ['But the staff was so nice to us .',

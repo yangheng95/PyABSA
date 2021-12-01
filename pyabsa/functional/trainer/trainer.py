@@ -8,7 +8,6 @@ import copy
 import os
 
 import findfile
-import torch
 
 from pyabsa import __version__
 
@@ -25,6 +24,7 @@ from pyabsa.core.tc.training.classifier_trainer import train4classification
 from pyabsa.functional.config.apc_config_manager import APCConfigManager
 from pyabsa.functional.config.atepc_config_manager import ATEPCConfigManager
 from pyabsa.functional.config.classification_config_manager import ClassificationConfigManager
+from pyabsa.utils.file_utils import query_local_version
 
 from pyabsa.utils.logger import get_logger
 
@@ -70,20 +70,7 @@ class Trainer:
         :param auto_device: True or False, otherwise 'allcuda', 'cuda:1', 'cpu' works
 
         """
-        if auto_device == 'allcuda':
-            if config.parallel_mode == 'DataParallel':
-                print("use DataParallel for multi-cuda training!")
-            else:
-                print("use DistributedDataParallel for multi-cuda training!")
-                os.environ['RANK'] = '0' if not os.environ.get('RANK', None) else os.environ.get('RANK', None)
-                os.environ['WORLD_SIZE'] = '1' if not os.environ.get('WORLD_SIZE', None) else os.environ.get('WORLD_SIZE', None)
-                os.environ['MASTER_ADDR'] = '127.0.0.1' if not os.environ.get('MASTER_ADDR', None) else os.environ.get('MASTER_ADDR', None)
-                os.environ['MASTER_PORT'] = '92352' if not os.environ.get('MASTER_PORT', None) else os.environ.get('MASTER_PORT', None)
-                try:
-                    torch.distributed.init_process_group(backend='nccl')
-                except Exception as e:
-                    print('Ignore exception: {}'.format(e))
-
+        config.ABSADatasetsVersion = query_local_version()
         if isinstance(config, APCConfigManager):
             self.train_func = train4apc
             self.model_class = SentimentClassifier

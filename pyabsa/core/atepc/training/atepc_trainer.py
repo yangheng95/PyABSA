@@ -7,6 +7,7 @@
 
 
 import os
+import pickle
 import random
 import time
 
@@ -62,69 +63,77 @@ class Instructor:
 
         processor = ATEPCProcessor(self.tokenizer)
 
-        self.train_examples = processor.get_train_examples(self.opt.dataset_file['train'], 'train')
-        self.num_train_optimization_steps = int(
-            len(self.train_examples) / self.opt.batch_size / self.opt.gradient_accumulation_steps) * self.opt.num_epoch
-        train_features = convert_examples_to_features(self.train_examples, self.opt.max_seq_len,
-                                                      self.tokenizer, self.opt)
-        # only identify the labels in training set, make sure the labels are the same type in the test set
-        self.label_list = processor.get_labels()
-        self.opt.num_labels = len(self.label_list) + 1
-        bert_base_model.config.num_labels = self.opt.num_labels
+        train_set_cache_path = '{}.{}.train_set.cache'.format(self.opt.model_name, self.opt.dataset_name)
+        if self.opt.cache_dataset and os.path.exists(train_set_cache_path):
+            print('Loading dataset cache:', train_set_cache_path)
+            self.train_data, self.opt.num_labels = pickle.load(open(train_set_cache_path, mode='rb'))
+        else:
+            self.train_examples = processor.get_train_examples(self.opt.dataset_file['train'], 'train')
+            self.num_train_optimization_steps = int(
+                len(self.train_examples) / self.opt.batch_size / self.opt.gradient_accumulation_steps) * self.opt.num_epoch
+            train_features = convert_examples_to_features(self.train_examples, self.opt.max_seq_len,
+                                                          self.tokenizer, self.opt)
+            # only identify the labels in training set, make sure the labels are the same type in the test set
+            self.label_list = processor.get_labels()
+            self.opt.num_labels = len(self.label_list) + 1
+            bert_base_model.config.num_labels = self.opt.num_labels
 
-        all_spc_input_ids = torch.tensor([f.input_ids_spc for f in train_features], dtype=torch.long)
-        all_input_mask = torch.tensor([f.input_mask for f in train_features], dtype=torch.long)
-        all_segment_ids = torch.tensor([f.segment_ids for f in train_features], dtype=torch.long)
-        all_label_ids = torch.tensor([f.label_id for f in train_features], dtype=torch.long)
-        all_valid_ids = torch.tensor([f.valid_ids for f in train_features], dtype=torch.long)
-        all_lmask_ids = torch.tensor([f.label_mask for f in train_features], dtype=torch.long)
-        all_polarities = torch.tensor([f.polarity for f in train_features], dtype=torch.long)
-        lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in train_features], dtype=torch.float32)
-        lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in train_features], dtype=torch.float32)
+            all_spc_input_ids = torch.tensor([f.input_ids_spc for f in train_features], dtype=torch.long)
+            all_input_mask = torch.tensor([f.input_mask for f in train_features], dtype=torch.long)
+            all_segment_ids = torch.tensor([f.segment_ids for f in train_features], dtype=torch.long)
+            all_label_ids = torch.tensor([f.label_id for f in train_features], dtype=torch.long)
+            all_valid_ids = torch.tensor([f.valid_ids for f in train_features], dtype=torch.long)
+            all_lmask_ids = torch.tensor([f.label_mask for f in train_features], dtype=torch.long)
+            all_polarities = torch.tensor([f.polarity for f in train_features], dtype=torch.long)
+            lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in train_features], dtype=torch.float32)
+            lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in train_features], dtype=torch.float32)
 
-        train_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
-                                   all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
+            self.train_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
+                                       all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
 
-        train_sampler = SequentialSampler(train_data)
-        self.train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=self.opt.batch_size)
+            if self.opt.cache_dataset:
+                print('Caching dataset... please remove cached dataset if change model or dataset')
+                pickle.dump((self.train_data, self.opt.num_labels), open(train_set_cache_path, mode='wb'))
+
+        train_sampler = SequentialSampler(self.train_data)
+        self.train_dataloader = DataLoader(self.train_data, sampler=train_sampler, batch_size=self.opt.batch_size)
 
         if 'test' in self.opt.dataset_file:
-            eval_examples = processor.get_test_examples(self.opt.dataset_file['test'], 'test')
-            eval_features = convert_examples_to_features(eval_examples, self.opt.max_seq_len,
-                                                         self.tokenizer, self.opt)
-            all_spc_input_ids = torch.tensor([f.input_ids_spc for f in eval_features], dtype=torch.long)
-            all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
-            all_segment_ids = torch.tensor([f.segment_ids for f in eval_features], dtype=torch.long)
-            all_label_ids = torch.tensor([f.label_id for f in eval_features], dtype=torch.long)
-            all_polarities = torch.tensor([f.polarity for f in eval_features], dtype=torch.long)
-            all_valid_ids = torch.tensor([f.valid_ids for f in eval_features], dtype=torch.long)
-            all_lmask_ids = torch.tensor([f.label_mask for f in eval_features], dtype=torch.long)
-            lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in eval_features], dtype=torch.float32)
-            lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in eval_features], dtype=torch.float32)
-            eval_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids, all_polarities,
-                                      all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
-            # all_tokens = [f.tokens for f in eval_features]
+            test_set_cache_path = '{}.{}.test_set.cache'.format(self.opt.model_name, self.opt.dataset_name)
+            if self.opt.cache_dataset and os.path.exists(test_set_cache_path):
+                print('Loading dataset cache:', test_set_cache_path)
+                eval_data = pickle.load(open(train_set_cache_path, mode='rb'))
+            else:
+                eval_examples = processor.get_test_examples(self.opt.dataset_file['test'], 'test')
+                eval_features = convert_examples_to_features(eval_examples, self.opt.max_seq_len,
+                                                             self.tokenizer, self.opt)
+                all_spc_input_ids = torch.tensor([f.input_ids_spc for f in eval_features], dtype=torch.long)
+                all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
+                all_segment_ids = torch.tensor([f.segment_ids for f in eval_features], dtype=torch.long)
+                all_label_ids = torch.tensor([f.label_id for f in eval_features], dtype=torch.long)
+                all_polarities = torch.tensor([f.polarity for f in eval_features], dtype=torch.long)
+                all_valid_ids = torch.tensor([f.valid_ids for f in eval_features], dtype=torch.long)
+                all_lmask_ids = torch.tensor([f.label_mask for f in eval_features], dtype=torch.long)
+                lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in eval_features], dtype=torch.float32)
+                lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in eval_features], dtype=torch.float32)
+                self.eval_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids, all_polarities,
+                                          all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
+                if self.opt.cache_dataset:
+                    print('Caching dataset... please remove cached dataset if change model or dataset')
+                    pickle.dump(self.eval_data, open(test_set_cache_path, mode='wb'))
 
-            eval_sampler = RandomSampler(eval_data)
-            self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=self.opt.batch_size)
-
-        # init the model behind the convert_examples_to_features function in case of updating polarities_dim
+            eval_sampler = RandomSampler(self.eval_data)
+            self.eval_dataloader = DataLoader(self.eval_data, sampler=eval_sampler, batch_size=self.opt.batch_size)
 
         self.model = self.opt.model(bert_base_model, opt=self.opt)
 
-        # use DataParallel for training if device count larger than 1
         if torch.cuda.device_count() > 1 and self.opt.auto_device == 'allcuda':
-            self.opt.device = torch.device(self.opt.device)
             self.model.to(self.opt.device)
-            if self.opt.parallel_mode == 'DataParallel':
-                self.model = torch.nn.parallel.DataParallel(self.model)
-            else:
-                self.model = torch.nn.parallel.DistributedDataParallel(module=self.model, find_unused_parameters=True)
-
-            self.opt.device = self.model.device
+            self.model = torch.nn.parallel.DataParallel(self.model)
         else:
             self.model.to(self.opt.device)
 
+        self.opt.device = torch.device(self.opt.device)
         if self.opt.device.type == 'cuda':
             self.logger.info(
                 "cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device)))
@@ -192,7 +201,7 @@ class Instructor:
                 # loss_apc = loss_apc.item() / (loss_ate.item() + loss_apc.item()) * loss_apc
                 # loss = loss_ate + loss_apc
                 loss = loss_ate + loss_apc  # the optimal weight of loss may be different according to dataset
-                iterator.update()
+
                 sum_loss += loss.item()
                 loss.backward()
                 nb_tr_examples += input_ids_spc.size(0)
@@ -263,11 +272,11 @@ class Instructor:
                         else:
                             postfix += 'ATE_F1: {}(max:{})'.format(current_ate_test_f1, self.opt.max_test_metrics[
                                 'max_ate_test_f1'])
-                    else:
-                        postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, loss.item(), self.opt.evaluate_begin)
 
-                    iterator.postfix = postfix
-                    iterator.refresh()
+                postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, loss.item(), self.opt.evaluate_begin)
+
+                iterator.postfix = postfix
+                iterator.refresh()
 
             if patience < 0:
                 break
