@@ -14,11 +14,14 @@ from pyabsa.functional import Trainer, ATEPCTrainer
 from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import ATEPCConfigManager
 
-chinese_sets = ABSADatasetList.Chinese
 atepc_config_chinese = ATEPCConfigManager.get_atepc_config_chinese()
 atepc_config_chinese.log_step = 500
 atepc_config_chinese.model = ATEPCModelList.LCF_ATEPC
-atepc_config_chinese.evaluate_begin = 3
+atepc_config_chinese.evaluate_begin = 10
+atepc_config_chinese.l2reg = 1e-8
+atepc_config_chinese.num_epoch = 15
+
+chinese_sets = ABSADatasetList.Chinese
 
 aspect_extractor = Trainer(config=atepc_config_chinese,
                            dataset=chinese_sets,

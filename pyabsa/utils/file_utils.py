@@ -13,7 +13,7 @@ import pickle
 import urllib.request
 
 import torch
-from findfile import find_files, find_dir
+from findfile import find_files, find_dir, find_cwd_file
 from google_drive_downloader import GoogleDriveDownloader as gdd
 from pyabsa.core.atepc.dataset_utils.atepc_utils import split_text
 from termcolor import colored
@@ -280,38 +280,26 @@ def save_model(opt, model, tokenizer, save_path):
 
 
 def check_update_log():
+    print(colored('check update log at https://github.com/yangheng95/PyABSA/blob/release/release-note.json', 'red'))
+
+
+def query_remote_version():
+    dataset_url = 'https://raw.githubusercontent.com/yangheng95/ABSADatasets/master/datasets/__init__.py'
+    content = urllib.request.urlopen(dataset_url, timeout=3)
+    version = content.read().decode("utf-8").split('\'')[-2]
+    return version
+
+
+def query_local_version():
+    fin = open(find_cwd_file(['__init__.py', 'integrated_datasets']))
+    local_version = fin.read().split('\'')[-2]
+    fin.close()
+    return local_version
+
+
+def check_dataset():  # retry_count is for unstable conn to GitHub
     try:
-        if os.path.exists('./release_note.json'):
-            os.remove('./release_note.json')
-        gdd.download_file_from_google_drive('1nOppewL8L1mGy9i6HQnJrEWrfaqQhC_2', './release-note.json')
-        update_logs = json.load(open('release-note.json'))
-        for v in update_logs:
-            if v > __version__:
-                print(colored('*' * 20 + ' Release Note of Version {} '.format(v) + '*' * 20, 'green'))
-                for i, line in enumerate(update_logs[v]):
-                    print('{}.\t{}'.format(i + 1, update_logs[v][line]))
+        if query_remote_version() > query_local_version():
+            print(colored('There is a new version of ABSADatasets, please remove the downloaded datasets to automatically download the new version.', 'green'))
     except Exception as e:
-        print(colored('Fail to load release note: {}, you can check it on https://github.com/yangheng95/PyABSA/blob/release/release-note.json'.format(e), 'red'))
-
-
-def check_dataset(dataset_path='./integrated_datasets', retry_count=3):  # retry_count is for unstable conn to GitHub
-    try:
-        local_version = open(os.path.join(dataset_path, '__init__.py')).read().split('\'')[-2]
-
-        if retry_count:
-            def query_datasets():
-                dataset_url = 'https://raw.githubusercontent.com/yangheng95/ABSADatasets/master/datasets/__init__.py'
-                content = urllib.request.urlopen(dataset_url, timeout=int(5 / retry_count))
-                version = content.read().decode("utf-8").split('\'')[-2]
-                return version
-
-            try:
-                result = query_datasets() > local_version
-                if result:
-                    print(colored('There is a new version of ABSADatasets, please remove the downloaded datasets to automatically download the new version.', 'green'))
-            except Exception:
-                retry_count -= 1
-                check_dataset(retry_count=retry_count)
-    except Exception as e:
-        if find_dir('integrated_datasets'):
-            print(colored('ABSADatasets version check failed, please check the latest datasets on GitHub manually.', 'red'))
+        print(colored('ABSADatasets version check failed: {}, please check the latest datasets on GitHub manually.'.format(e), 'red'))

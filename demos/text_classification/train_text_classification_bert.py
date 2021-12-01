@@ -16,7 +16,7 @@ classification_config_english.max_seq_len = 80
 classification_config_english.dropout = 0.5
 classification_config_english.seed = {42, 56, 1}
 classification_config_english.log_step = 5
-classification_config_english.l2reg = 0.0001
+classification_config_english.l2reg = 1e-8
 
 SST2 = ClassificationDatasetList.SST2
 text_classifier = TextClassificationTrainer(config=classification_config_english,

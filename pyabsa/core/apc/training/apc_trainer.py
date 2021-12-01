@@ -14,7 +14,7 @@ import torch
 import torch.nn as nn
 from findfile import find_file
 from sklearn import metrics
-from torch.utils.data import DataLoader, random_split, ConcatDataset, DistributedSampler
+from torch.utils.data import DataLoader, random_split, ConcatDataset, RandomSampler
 from tqdm import tqdm
 from transformers import BertModel
 
@@ -44,17 +44,12 @@ class Instructor:
 
         # use DataParallel for training if device count larger than 1
         if torch.cuda.device_count() > 1 and self.opt.auto_device == 'allcuda':
-            self.opt.device = torch.device(self.opt.device)
             self.model.to(self.opt.device)
-            if self.opt.parallel_mode == 'DataParallel':
-                self.model = torch.nn.parallel.DataParallel(self.model)
-            else:
-                self.model = torch.nn.parallel.DistributedDataParallel(module=self.model, find_unused_parameters=True)
-
-            self.opt.device = self.model.device
+            self.model = torch.nn.parallel.DataParallel(self.model)
         else:
             self.model.to(self.opt.device)
 
+        self.opt.device = torch.device(self.opt.device)
         if self.opt.device.type == 'cuda':
             self.logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device)))
 
@@ -97,7 +92,7 @@ class Instructor:
         self.optimizer = optimizers[self.opt.optimizer](_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
     def prepare_dataloader(self, train_set):
-        train_sampler = DistributedSampler(self.train_set if not self.train_set else self.train_set)
+        train_sampler = RandomSampler(self.train_set if not self.train_set else self.train_set)
         if self.opt.cross_validate_fold < 1:
             self.train_dataloaders.append(DataLoader(dataset=train_set,
                                                      batch_size=self.opt.batch_size,
@@ -230,11 +225,11 @@ class Instructor:
                                                                         max_fold_acc * 100,
                                                                         f1 * 100,
                                                                         max_fold_f1 * 100))
-                    else:
-                        postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch, loss.item(), self.opt.evaluate_begin)
+                else:
+                    postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch, loss.item(), self.opt.evaluate_begin)
 
-                    iterator.postfix = postfix
-                    iterator.refresh()
+                iterator.postfix = postfix
+                iterator.refresh()
             if patience < 0:
                 break
         self.logger.info('-------------------------- Training Summary --------------------------')

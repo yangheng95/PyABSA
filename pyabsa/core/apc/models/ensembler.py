@@ -12,7 +12,7 @@ from torch import nn
 from torch.nn import ModuleList
 
 import torch
-from torch.utils.data import DataLoader, DistributedSampler
+from torch.utils.data import DataLoader, DistributedSampler, RandomSampler, SequentialSampler
 from transformers import AutoTokenizer, AutoModel
 
 from pyabsa.functional.dataset import ABSADatasetList
@@ -59,7 +59,6 @@ class APCEnsembler(nn.Module):
 
         for i in range(len(models)):
 
-            # init BERT-based model and dataset
             train_set_cache_path = '{}.{}.train_set.cache'.format(self.opt.model_name, self.opt.dataset_name)
             test_set_cache_path = '{}.{}.test_set.cache'.format(self.opt.model_name, self.opt.dataset_name)
 
@@ -72,7 +71,7 @@ class APCEnsembler(nn.Module):
                     raise TransformerConnectionError()
                 if load_dataset:
                     if os.path.exists(train_set_cache_path) and os.path.exists(test_set_cache_path):
-                        print('Loading APC dataset cache:', train_set_cache_path, test_set_cache_path)
+                        print('Loading dataset cache:', train_set_cache_path, test_set_cache_path)
                         self.train_set = pickle.load(open(train_set_cache_path, mode='rb'))
                         self.test_set = pickle.load(open(test_set_cache_path, mode='rb'))
                     else:
@@ -89,7 +88,7 @@ class APCEnsembler(nn.Module):
 
                 if load_dataset:
                     if os.path.exists(train_set_cache_path) and os.path.exists(test_set_cache_path):
-                        print('Loading APC dataset cache:', train_set_cache_path, test_set_cache_path)
+                        print('Loading dataset cache:', train_set_cache_path, test_set_cache_path)
                         self.train_set = pickle.load(open(train_set_cache_path, mode='rb'))
                         self.test_set = pickle.load(open(test_set_cache_path, mode='rb'))
                     else:
@@ -131,13 +130,14 @@ class APCEnsembler(nn.Module):
 
                 self.models.append(models[i](copy.deepcopy(self.embedding_matrix) if self.opt.deep_ensemble else self.embedding_matrix, self.opt))
 
-            if self.opt.cache_dataset:
+            if self.opt.cache_dataset and not (os.path.exists(train_set_cache_path) and os.path.exists(test_set_cache_path)):
                 print('Caching dataset... please remove cached dataset if change model or dataset')
                 pickle.dump(self.train_set, open(train_set_cache_path, mode='wb'))
                 pickle.dump(self.test_set, open(test_set_cache_path, mode='wb'))
 
-            train_sampler = DistributedSampler(self.train_set if not self.train_set else self.train_set)
-            test_sampler = DistributedSampler(self.test_set if not self.test_set else self.test_set)
+            train_sampler = RandomSampler(self.train_set if not self.train_set else self.train_set)
+            test_sampler = SequentialSampler(self.test_set if not self.test_set else self.test_set)
+
             self.train_dataloader = DataLoader(self.train_set, batch_size=self.opt.batch_size, sampler=train_sampler)
             self.test_dataloader = DataLoader(self.test_set, batch_size=self.opt.batch_size, sampler=test_sampler)
 

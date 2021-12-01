@@ -12,7 +12,7 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import APCModelList
 
 apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = APCModelList.LSA_T
+apc_config_english.model = APCModelList.FAST_LSA_T
 apc_config_english.evaluate_begin = 2
 apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
