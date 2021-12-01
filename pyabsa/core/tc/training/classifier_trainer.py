@@ -48,7 +48,8 @@ class Instructor:
                 self.test_set = None
             try:
                 self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
-            except ValueError:
+            except ValueError as e:
+                print('Init pretrained model failed, exception: {}'.format(e))
                 raise TransformerConnectionError()
 
             # init the model behind the construction of apc_datasets in case of updating polarities_dim
@@ -95,11 +96,10 @@ class Instructor:
                 else:
                     self.model = torch.nn.parallel.DistributedDataParallel(module=self.model, find_unused_parameters=True)
 
-                self.opt.device = 'cuda:{}'.format(self.model.output_device)
+                self.opt.device = self.model.device
             else:
                 self.model.to(self.opt.device)
 
-            self.opt.device = torch.device(self.opt.device)
         if self.opt.device.type == 'cuda':
             self.logger.info(
                 "cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device)))

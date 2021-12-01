@@ -14,10 +14,10 @@ from pyabsa.network.sa_encoder import Encoder
 from pyabsa.core.atepc.dataset_utils.data_utils_for_training import SENTIMENT_PADDING
 
 
-class LCFS_ATEPC(BertForTokenClassification):
+class LCFS_ATEPC(nn.Module):
 
     def __init__(self, bert_base_model, opt):
-        super(LCFS_ATEPC, self).__init__(config=bert_base_model.config)
+        super(LCFS_ATEPC, self).__init__()
         config = bert_base_model.config
         self.bert4global = bert_base_model
         self.opt = opt
@@ -32,6 +32,9 @@ class LCFS_ATEPC(BertForTokenClassification):
         self.pooler = BertPooler(config)
         self.dense = torch.nn.Linear(opt.hidden_dim, opt.polarities_dim)
 
+        self.num_labels = opt.num_labels
+        self.classifier = nn.Linear(opt.hidden_dim, opt.num_labels)
+        
     def get_batch_token_labels_bert_base_indices(self, labels):
         if labels is None:
             return
@@ -40,7 +43,7 @@ class LCFS_ATEPC(BertForTokenClassification):
         for text_i in range(len(labels)):
             sep_index = np.argmax((labels[text_i] == 5))
             labels[text_i][sep_index + 1:] = 0
-        return torch.tensor(labels).to(self.device)
+        return torch.tensor(labels).to(self.bert4global.device)
 
     def get_ids_for_local_context_extractor(self, text_indices):
         # convert BERT-SPC input to BERT-BASE format
@@ -48,7 +51,7 @@ class LCFS_ATEPC(BertForTokenClassification):
         for text_i in range(len(text_ids)):
             sep_index = np.argmax((text_ids[text_i] == 102))
             text_ids[text_i][sep_index + 1:] = 0
-        return torch.tensor(text_ids).to(self.device)
+        return torch.tensor(text_ids).to(self.bert4global.device)
 
     def forward(self, input_ids_spc,
                 token_type_ids=None,
@@ -71,7 +74,7 @@ class LCFS_ATEPC(BertForTokenClassification):
             global_context_out = self.bert4global(input_ids=input_ids_spc, attention_mask=attention_mask)['last_hidden_state']
 
         batch_size, max_len, feat_dim = global_context_out.shape
-        global_valid_output = torch.zeros(batch_size, max_len, feat_dim, dtype=torch.float32).to(self.device)
+        global_valid_output = torch.zeros(batch_size, max_len, feat_dim, dtype=torch.float32).to(self.bert4global.device)
         for i in range(batch_size):
             jj = -1
             for j in range(max_len):
@@ -85,7 +88,7 @@ class LCFS_ATEPC(BertForTokenClassification):
             local_context_ids = self.get_ids_for_local_context_extractor(input_ids_spc)
             local_context_out = self.bert4local(input_ids=local_context_ids)['last_hidden_state']
             batch_size, max_len, feat_dim = local_context_out.shape
-            local_valid_output = torch.zeros(batch_size, max_len, feat_dim, dtype=torch.float32).to(self.device)
+            local_valid_output = torch.zeros(batch_size, max_len, feat_dim, dtype=torch.float32).to(self.bert4global.device)
             for i in range(batch_size):
                 jj = -1
                 for j in range(max_len):

@@ -1047,7 +1047,7 @@ sent_classifier = Trainer(config=apc_config_english,
 
 
 apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = APCModelList.FAST_FAST_LSA_T
+apc_config_english.model = APCModelList.FAST_LSA_T
 apc_config_english.lcf = 'cdw'
 apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80

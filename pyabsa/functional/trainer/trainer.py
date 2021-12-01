@@ -70,7 +70,7 @@ class Trainer:
         :param auto_device: True or False, otherwise 'allcuda', 'cuda:1', 'cpu' works
 
         """
-        if auto_device == 'all_cuda':
+        if auto_device == 'allcuda':
             if config.parallel_mode == 'DataParallel':
                 print("use DataParallel for multi-cuda training!")
             else:
@@ -78,7 +78,7 @@ class Trainer:
                 os.environ['RANK'] = '0' if not os.environ.get('RANK', None) else os.environ.get('RANK', None)
                 os.environ['WORLD_SIZE'] = '1' if not os.environ.get('WORLD_SIZE', None) else os.environ.get('WORLD_SIZE', None)
                 os.environ['MASTER_ADDR'] = '127.0.0.1' if not os.environ.get('MASTER_ADDR', None) else os.environ.get('MASTER_ADDR', None)
-                os.environ['MASTER_PORT'] = '9235' if not os.environ.get('MASTER_PORT', None) else os.environ.get('MASTER_PORT', None)
+                os.environ['MASTER_PORT'] = '92352' if not os.environ.get('MASTER_PORT', None) else os.environ.get('MASTER_PORT', None)
                 try:
                     torch.distributed.init_process_group(backend='nccl')
                 except Exception as e:
