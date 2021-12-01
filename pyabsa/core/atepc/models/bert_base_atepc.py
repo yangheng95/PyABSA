@@ -19,10 +19,10 @@ from pyabsa.network.sa_encoder import Encoder
 SENTIMENT_PADDING = -999
 
 
-class BERT_BASE_ATEPC(BertForTokenClassification):
+class BERT_BASE_ATEPC(nn.Module):
 
     def __init__(self, bert_base_model, opt):
-        super(BERT_BASE_ATEPC, self).__init__(config=bert_base_model.config)
+        super(BERT_BASE_ATEPC, self).__init__()
         config = bert_base_model.config
         self.bert4global = bert_base_model
         self.opt = opt
@@ -37,6 +37,9 @@ class BERT_BASE_ATEPC(BertForTokenClassification):
 
         self.pooler = BertPooler(config)
         self.dense = torch.nn.Linear(opt.hidden_dim, opt.polarities_dim)
+
+        self.num_labels = opt.num_labels
+        self.classifier = nn.Linear(opt.hidden_dim, opt.num_labels)
 
     def get_batch_token_labels_bert_base_indices(self, labels):
         curr_device = labels.device
@@ -68,7 +71,7 @@ class BERT_BASE_ATEPC(BertForTokenClassification):
                 lcf_cdm_vec=None,
                 lcf_cdw_vec=None
                 ):
-        curr_device = self.device
+        curr_device = self.bert4global.device
         if not self.opt.use_bert_spc:
             input_ids = self.get_ids_for_local_context_extractor(input_ids_spc)
             labels = self.get_batch_token_labels_bert_base_indices(labels)

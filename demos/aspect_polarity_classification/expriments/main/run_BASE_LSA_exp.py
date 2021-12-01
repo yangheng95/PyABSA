@@ -74,12 +74,6 @@ sent_classifier = Trainer(config=apc_config_english,
                           auto_device=True  # automatic choose CUDA or CPU
                           )
 
-Twitter = ABSADatasetList.ACL_Twitter
-sent_classifier = Trainer(config=apc_config_english,
-                          dataset=Twitter,  # train set and test set will be automatically detected
-                          checkpoint_save_mode=0,  # =None to avoid save model
-                          auto_device=True  # automatic choose CUDA or CPU
-                          )
 
 apc_config_english = APCConfigManager.get_apc_config_english()
 apc_config_english.model = APCModelList.LSA_T
@@ -133,13 +127,6 @@ seeds = seeds[1]
 MAMS = ABSADatasetList.MAMS
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=MAMS,  # train set and test set will be automatically detected
-                          checkpoint_save_mode=0,  # =None to avoid save model
-                          auto_device=True  # automatic choose CUDA or CPU
-                          )
-
-Twitter = ABSADatasetList.ACL_Twitter
-sent_classifier = Trainer(config=apc_config_english,
-                          dataset=Twitter,  # train set and test set will be automatically detected
                           checkpoint_save_mode=0,  # =None to avoid save model
                           auto_device=True  # automatic choose CUDA or CPU
                           )

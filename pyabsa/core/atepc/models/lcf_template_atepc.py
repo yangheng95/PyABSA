@@ -12,15 +12,18 @@ import torch.nn as nn
 from transformers.models.bert.modeling_bert import BertForTokenClassification
 
 
-class LCF_TEMPLATE_ATEPC(BertForTokenClassification):
+class LCF_TEMPLATE_ATEPC(nn.Module):
 
     def __init__(self, bert_base_model, opt):
-        super(LCF_TEMPLATE_ATEPC, self).__init__(config=bert_base_model.config)
+        super(LCF_TEMPLATE_ATEPC, self).__init__()
         config = bert_base_model.config
         self.bert4global = bert_base_model
         self.opt = opt
         self.bert4local = self.bert4global
         self.dropout = nn.Dropout(self.opt.dropout)
+
+        self.num_labels = opt.num_labels
+        self.classifier = nn.Linear(opt.hidden_dim, opt.num_labels)
 
     def get_batch_token_labels_bert_base_indices(self, labels):
         if labels is None:

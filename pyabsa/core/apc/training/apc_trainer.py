@@ -14,7 +14,7 @@ import torch
 import torch.nn as nn
 from findfile import find_file
 from sklearn import metrics
-from torch.utils.data import DataLoader, random_split, ConcatDataset
+from torch.utils.data import DataLoader, random_split, ConcatDataset, DistributedSampler
 from tqdm import tqdm
 from transformers import BertModel
 
@@ -51,11 +51,10 @@ class Instructor:
             else:
                 self.model = torch.nn.parallel.DistributedDataParallel(module=self.model, find_unused_parameters=True)
 
-            self.opt.device = 'cuda:{}'.format(self.model.output_device)
+            self.opt.device = self.model.device
         else:
             self.model.to(self.opt.device)
 
-        self.opt.device = torch.device(self.opt.device)
         if self.opt.device.type == 'cuda':
             self.logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device)))
 
@@ -98,10 +97,11 @@ class Instructor:
         self.optimizer = optimizers[self.opt.optimizer](_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
     def prepare_dataloader(self, train_set):
+        train_sampler = DistributedSampler(self.train_set if not self.train_set else self.train_set)
         if self.opt.cross_validate_fold < 1:
             self.train_dataloaders.append(DataLoader(dataset=train_set,
                                                      batch_size=self.opt.batch_size,
-                                                     shuffle=True,
+                                                     sampler=train_sampler,
                                                      pin_memory=True))
 
         else:
@@ -114,9 +114,9 @@ class Instructor:
                 train_set = ConcatDataset([x for i, x in enumerate(folds) if i != f_idx])
                 val_set = folds[f_idx]
                 self.train_dataloaders.append(
-                    DataLoader(dataset=train_set, batch_size=self.opt.batch_size, shuffle=True))
+                    DataLoader(dataset=train_set, batch_size=self.opt.batch_size, sampler=train_sampler))
                 self.val_dataloaders.append(
-                    DataLoader(dataset=val_set, batch_size=self.opt.batch_size, shuffle=True))
+                    DataLoader(dataset=val_set, batch_size=self.opt.batch_size,  sampler=train_sampler))
 
     def _train(self, criterion):
         self.prepare_dataloader(self.train_set)
