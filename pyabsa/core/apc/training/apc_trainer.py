@@ -225,8 +225,8 @@ class Instructor:
                                                                         max_fold_acc * 100,
                                                                         f1 * 100,
                                                                         max_fold_f1 * 100))
-                else:
-                    postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch, loss.item(), self.opt.evaluate_begin)
+                    else:
+                        postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, loss.item(), self.opt.evaluate_begin)
 
                 iterator.postfix = postfix
                 iterator.refresh()

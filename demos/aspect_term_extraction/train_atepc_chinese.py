@@ -20,6 +20,7 @@ atepc_config_chinese.model = ATEPCModelList.LCF_ATEPC
 atepc_config_chinese.evaluate_begin = 10
 atepc_config_chinese.l2reg = 1e-8
 atepc_config_chinese.num_epoch = 15
+atepc_config_chinese.cache_dataset = False
 
 chinese_sets = ABSADatasetList.Chinese
 

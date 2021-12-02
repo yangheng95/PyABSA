@@ -273,7 +273,7 @@ class Instructor:
                             postfix += 'ATE_F1: {}(max:{})'.format(current_ate_test_f1, self.opt.max_test_metrics[
                                 'max_ate_test_f1'])
 
-                postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, loss.item(), self.opt.evaluate_begin)
+                    postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, loss.item(), self.opt.evaluate_begin)
 
                 iterator.postfix = postfix
                 iterator.refresh()
