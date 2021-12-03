@@ -6,7 +6,9 @@
 # Copyright (C) 2021. All Rights Reserved.
 # Usage: Evaluate on given text or inference dataset_utils
 
-from pyabsa import ABSADatasetList, APCCheckpointManager
+from pyabsa import ABSADatasetList, APCCheckpointManager, available_checkpoints
+
+checkpoint_map = available_checkpoints(from_local=False)
 
 sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='Multilingual')
 

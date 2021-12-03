@@ -15,8 +15,8 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import ATEPCConfigManager
 
 config = ATEPCConfigManager.get_atepc_config_english()
-config.model = ATEPCModelList.LCF_ATEPC
-config.evaluate_begin = 10
+config.model = ATEPCModelList.FAST_LCFS_ATEPC
+config.evaluate_begin = 5
 config.num_epoch = 20
 config.log_step = 100
 Dataset = ABSADatasetList.English

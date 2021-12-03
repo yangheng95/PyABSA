@@ -9,8 +9,6 @@
 import os
 import pickle
 import random
-import time
-
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -63,21 +61,21 @@ class Instructor:
 
         processor = ATEPCProcessor(self.tokenizer)
 
-        train_set_cache_path = '{}.{}.train_set.cache'.format(self.opt.model_name, self.opt.dataset_name)
-        if self.opt.cache_dataset and os.path.exists(train_set_cache_path):
-            print('Loading dataset cache:', train_set_cache_path)
-            self.train_data, self.opt.num_labels = pickle.load(open(train_set_cache_path, mode='rb'))
+        cache_path = '{}.{}.dataset.cache'.format(self.opt.model_name, self.opt.dataset_name)
+        if os.path.exists(cache_path):
+            print('Loading dataset cache:', cache_path)
+            if 'test' in self.opt.dataset_file:
+                self.train_data, self.test_data, opt = pickle.load(open(cache_path, mode='rb'))
+            else:
+                self.train_data, opt = pickle.load(open(cache_path, mode='rb'))
+            # reset output dim according to dataset labels
+            self.opt.polarities_dim = opt.polarities_dim
+
         else:
             self.train_examples = processor.get_train_examples(self.opt.dataset_file['train'], 'train')
-            self.num_train_optimization_steps = int(
-                len(self.train_examples) / self.opt.batch_size / self.opt.gradient_accumulation_steps) * self.opt.num_epoch
-            train_features = convert_examples_to_features(self.train_examples, self.opt.max_seq_len,
-                                                          self.tokenizer, self.opt)
-            # only identify the labels in training set, make sure the labels are the same type in the test set
+            train_features = convert_examples_to_features(self.train_examples, self.opt.max_seq_len, self.tokenizer, self.opt)
             self.label_list = processor.get_labels()
             self.opt.num_labels = len(self.label_list) + 1
-            bert_base_model.config.num_labels = self.opt.num_labels
-
             all_spc_input_ids = torch.tensor([f.input_ids_spc for f in train_features], dtype=torch.long)
             all_input_mask = torch.tensor([f.input_mask for f in train_features], dtype=torch.long)
             all_segment_ids = torch.tensor([f.segment_ids for f in train_features], dtype=torch.long)
@@ -89,45 +87,54 @@ class Instructor:
             lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in train_features], dtype=torch.float32)
 
             self.train_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
-                                       all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
+                                            all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
 
-            if self.opt.cache_dataset:
+            if 'test' in self.opt.dataset_file:
+                self.test_examples = processor.get_test_examples(self.opt.dataset_file['test'], 'test')
+                test_features = convert_examples_to_features(self.test_examples, self.opt.max_seq_len,
+                                                             self.tokenizer, self.opt)
+                all_spc_input_ids = torch.tensor([f.input_ids_spc for f in test_features], dtype=torch.long)
+                all_input_mask = torch.tensor([f.input_mask for f in test_features], dtype=torch.long)
+                all_segment_ids = torch.tensor([f.segment_ids for f in test_features], dtype=torch.long)
+                all_label_ids = torch.tensor([f.label_id for f in test_features], dtype=torch.long)
+                all_polarities = torch.tensor([f.polarity for f in test_features], dtype=torch.long)
+                all_valid_ids = torch.tensor([f.valid_ids for f in test_features], dtype=torch.long)
+                all_lmask_ids = torch.tensor([f.label_mask for f in test_features], dtype=torch.long)
+                lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in test_features], dtype=torch.float32)
+                lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in test_features], dtype=torch.float32)
+                self.test_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids, all_polarities,
+                                               all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
+
+                test_sampler = RandomSampler(self.test_data)
+                self.test_dataloader = DataLoader(self.test_data, sampler=test_sampler, pin_memory=True, batch_size=self.opt.batch_size)
+
+            if self.opt.cache_dataset and not os.path.exists(cache_path):
                 print('Caching dataset... please remove cached dataset if change model or dataset')
-                pickle.dump((self.train_data, self.opt.num_labels), open(train_set_cache_path, mode='wb'))
+                if self.opt.dataset_file['test']:
+                    pickle.dump((self.train_data, self.test_data, opt), open(cache_path, mode='wb'))
+                else:
+                    pickle.dump((self.train_data, opt), open(cache_path, mode='wb'))
+
+        # only identify the labels in training set, make sure the labels are the same type in the test set
+        if 'num_labels' not in self.opt.args:
+            self.opt.args.update(opt.args)
+            self.opt.args_call_count.update(opt.args_call_count)
+        bert_base_model.config.num_labels = self.opt.num_labels
+
+        self.num_train_optimization_steps = int(
+            len(self.train_data) / self.opt.batch_size / self.opt.gradient_accumulation_steps) * self.opt.num_epoch
+
+        if 'patience' in self.opt.args and self.opt.patience:
+            self.opt.patience = len(self.train_data) / self.opt.batch_size / self.opt.log_step * self.opt.patience
+        else:
+            self.opt.patience = 999999999
 
         train_sampler = SequentialSampler(self.train_data)
-        self.train_dataloader = DataLoader(self.train_data, sampler=train_sampler, batch_size=self.opt.batch_size)
-
-        if 'test' in self.opt.dataset_file:
-            test_set_cache_path = '{}.{}.test_set.cache'.format(self.opt.model_name, self.opt.dataset_name)
-            if self.opt.cache_dataset and os.path.exists(test_set_cache_path):
-                print('Loading dataset cache:', test_set_cache_path)
-                eval_data = pickle.load(open(train_set_cache_path, mode='rb'))
-            else:
-                eval_examples = processor.get_test_examples(self.opt.dataset_file['test'], 'test')
-                eval_features = convert_examples_to_features(eval_examples, self.opt.max_seq_len,
-                                                             self.tokenizer, self.opt)
-                all_spc_input_ids = torch.tensor([f.input_ids_spc for f in eval_features], dtype=torch.long)
-                all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
-                all_segment_ids = torch.tensor([f.segment_ids for f in eval_features], dtype=torch.long)
-                all_label_ids = torch.tensor([f.label_id for f in eval_features], dtype=torch.long)
-                all_polarities = torch.tensor([f.polarity for f in eval_features], dtype=torch.long)
-                all_valid_ids = torch.tensor([f.valid_ids for f in eval_features], dtype=torch.long)
-                all_lmask_ids = torch.tensor([f.label_mask for f in eval_features], dtype=torch.long)
-                lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in eval_features], dtype=torch.float32)
-                lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in eval_features], dtype=torch.float32)
-                self.eval_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids, all_polarities,
-                                          all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
-                if self.opt.cache_dataset:
-                    print('Caching dataset... please remove cached dataset if change model or dataset')
-                    pickle.dump(self.eval_data, open(test_set_cache_path, mode='wb'))
-
-            eval_sampler = RandomSampler(self.eval_data)
-            self.eval_dataloader = DataLoader(self.eval_data, sampler=eval_sampler, batch_size=self.opt.batch_size)
+        self.train_dataloader = DataLoader(self.train_data, sampler=train_sampler, pin_memory=True, batch_size=self.opt.batch_size)
 
         self.model = self.opt.model(bert_base_model, opt=self.opt)
 
-        if torch.cuda.device_count() > 1 and self.opt.auto_device == 'allcuda':
+        if self.opt.auto_device == 'allcuda':
             self.model.to(self.opt.device)
             self.model = torch.nn.parallel.DataParallel(self.model)
         else:
@@ -153,11 +160,9 @@ class Instructor:
         print_args(self.opt, self.logger)
 
     def run(self):
-        if 'patience' not in self.opt.args or not self.opt.patience:
-            self.opt.patience = len(self.train_examples) / self.opt.batch_size / self.opt.log_step * self.opt.patience
         patience = self.opt.patience
         self.logger.info("***** Running training for Aspect Term Extraction *****")
-        self.logger.info("  Num examples = %d", len(self.train_examples))
+        self.logger.info("  Num examples = %d", len(self.train_data))
         self.logger.info("  Batch size = %d", self.opt.batch_size)
         self.logger.info("  Num steps = %d", self.num_train_optimization_steps)
         sum_loss = 0
@@ -171,6 +176,7 @@ class Instructor:
         for epoch in range(int(self.opt.num_epoch)):
             nb_tr_examples, nb_tr_steps = 0, 0
             iterator = tqdm.tqdm(self.train_dataloader)
+            postfix = ''
             for step, batch in enumerate(iterator):
                 self.model.train()
                 input_ids_spc, segment_ids, input_mask, label_ids, polarity, \
@@ -195,7 +201,7 @@ class Instructor:
                                                 lcf_cdw_vec=lcf_cdw_vec
                                                 )
                 # for multi-gpu, average loss by gpu instance number
-                if torch.cuda.device_count() > 1 and self.opt.auto_device == 'allcuda':
+                if self.opt.auto_device == 'allcuda':
                     loss_ate, loss_apc = loss_ate.mean(), loss_apc.mean()
                 # loss_ate = loss_ate.item() / (loss_ate.item() + loss_apc.item()) * loss_ate
                 # loss_apc = loss_apc.item() / (loss_ate.item() + loss_apc.item()) * loss_apc
@@ -210,7 +216,7 @@ class Instructor:
                 self.optimizer.zero_grad()
                 global_step += 1
                 global_step += 1
-                if 'test' in self.opt.dataset_file and global_step % self.opt.log_step == 0:
+                if self.opt.dataset_file['test'] and global_step % self.opt.log_step == 0:
                     if epoch >= self.opt.evaluate_begin:
                         apc_result, ate_result = self.evaluate(
                             eval_ATE=not (self.opt.model_name == 'lcf_atepc' and self.opt.use_bert_spc))
@@ -272,8 +278,8 @@ class Instructor:
                         else:
                             postfix += 'ATE_F1: {}(max:{})'.format(current_ate_test_f1, self.opt.max_test_metrics[
                                 'max_ate_test_f1'])
-
-                    postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, loss.item(), self.opt.evaluate_begin)
+                    else:
+                        postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, loss.item(), self.opt.evaluate_begin)
 
                 iterator.postfix = postfix
                 iterator.refresh()
@@ -319,7 +325,7 @@ class Instructor:
         self.model.eval()
         label_map = {i: label for i, label in enumerate(self.label_list, 1)}
 
-        for i, batch in enumerate(self.eval_dataloader):
+        for i, batch in enumerate(self.test_dataloader):
             input_ids_spc, segment_ids, input_mask, label_ids, polarity, \
             valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
             input_ids_spc = input_ids_spc.to(self.opt.device)
@@ -332,7 +338,7 @@ class Instructor:
             lcf_cdm_vec = lcf_cdm_vec.to(self.opt.device)
             lcf_cdw_vec = lcf_cdw_vec.to(self.opt.device)
             with torch.no_grad():
-                if torch.cuda.device_count() > 1 and self.opt.auto_device == 'allcuda':
+                if self.opt.auto_device == 'allcuda':
                     ate_logits, apc_logits = self.model.module(input_ids_spc,
                                                                token_type_ids=segment_ids,
                                                                attention_mask=input_mask,
@@ -367,7 +373,7 @@ class Instructor:
 
             if eval_ATE:
                 if not self.opt.use_bert_spc:
-                    if torch.cuda.device_count() > 1 and self.opt.auto_device == 'allcuda':
+                    if self.opt.auto_device == 'allcuda':
                         label_ids = self.model.module.get_batch_token_labels_bert_base_indices(label_ids)
                     else:
                         label_ids = self.model.get_batch_token_labels_bert_base_indices(label_ids)

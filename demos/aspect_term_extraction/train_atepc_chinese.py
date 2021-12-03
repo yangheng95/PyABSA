@@ -16,9 +16,9 @@ from pyabsa.functional import ATEPCConfigManager
 
 atepc_config_chinese = ATEPCConfigManager.get_atepc_config_chinese()
 atepc_config_chinese.log_step = 500
-atepc_config_chinese.model = ATEPCModelList.LCF_ATEPC
-atepc_config_chinese.evaluate_begin = 10
-atepc_config_chinese.l2reg = 1e-8
+atepc_config_chinese.model = ATEPCModelList.FAST_LCF_ATEPC
+atepc_config_chinese.evaluate_begin = 5
+atepc_config_chinese.l2reg = 1e-6
 atepc_config_chinese.num_epoch = 15
 atepc_config_chinese.cache_dataset = False
 

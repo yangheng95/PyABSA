@@ -5,7 +5,9 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa import ATEPCCheckpointManager
+from pyabsa import ATEPCCheckpointManager, available_checkpoints
+
+checkpoint_map = available_checkpoints(from_local=False)
 
 examples = ['But the staff was so nice to us .',
             'But the staff was so horrible to us .',

@@ -8,6 +8,7 @@ import copy
 import os
 
 import findfile
+import torch
 
 from pyabsa import __version__
 
@@ -70,6 +71,9 @@ class Trainer:
         :param auto_device: True or False, otherwise 'allcuda', 'cuda:1', 'cpu' works
 
         """
+        if not torch.cuda.device_count() > 1:
+            print('Cuda count <= 1, reset auto_device=True')
+            auto_device = True
         config.ABSADatasetsVersion = query_local_version()
         if isinstance(config, APCConfigManager):
             self.train_func = train4apc

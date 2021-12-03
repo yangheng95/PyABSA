@@ -5,7 +5,9 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa import ATEPCCheckpointManager, ABSADatasetList
+from pyabsa import ATEPCCheckpointManager, ABSADatasetList, available_checkpoints
+
+checkpoint_map = available_checkpoints(from_local=False)
 
 examples = ['尤 其 是 照 的 大 尺 寸 照 片 时 效 果 也 是 非 常 不 错 的',
             '照 大 尺 寸 的 照 片 的 时 候 手 机 反 映 速 度 太 慢',

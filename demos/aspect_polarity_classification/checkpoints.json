@@ -1,0 +1,44 @@
+{
+  "APC": {
+    "english": {
+      "id": "https://drive.google.com/file/d/1vAp1zQW3YNKzyjj8FfJdderBZYfOYhvw/view?usp=sharing",
+      "Training Model": "FAST-LSA-S",
+      "Training Dataset": "English",
+      "Description": "Trained on RTX2080 Ti",
+      "Available Version": "1.5.0",
+      "Checkpoint File": "fast_lsa_s_acc_85.18_f1_82.72.zip",
+      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
+    },
+    "chinese": {
+      "id": "https://drive.google.com/file/d/1LS_xTRVsBrucylZ3OEVIRPu1dA7RXv13/view?usp=sharing",
+      "Training Model": "FAST-LSA-S",
+      "Training Dataset": "Chinese",
+      "Description": "Trained on RTX2080 Ti",
+      "Available Version": "1.5.0",
+      "Checkpoint File": "fast_lsa_s_acc_94.38_f1_88.7.zip",
+      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
+    },
+    "HELP-WANTED": {
+      "id": "",
+      "Description": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
+      "Checkpoint File": "PLEASE NOTE THAT THIS IS NOT A REAL CHECKPOINT!",
+      "Available Version": ""
+    }
+  },
+  "ATEPC": {
+    "HELP-WANTED": {
+      "id": "",
+      "Description": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
+      "Checkpoint File": "PLEASE NOTE THAT THIS IS NOT A REAL CHECKPOINT!",
+      "Available Version": ""
+    }
+  },
+  "TC": {
+    "HELP-WANTED": {
+      "id": "",
+      "Description": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
+      "Checkpoint File": "PLEASE NOTE THAT THIS IS NOT A REAL CHECKPOINT!",
+      "Available Version": ""
+    }
+  }
+}

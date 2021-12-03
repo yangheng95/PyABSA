@@ -7,6 +7,7 @@
 
 
 import os
+import pickle
 import random
 import shutil
 import time
@@ -36,16 +37,26 @@ class Instructor:
         self.logger = logger
         self.opt = opt
 
+        cache_path = '{}.{}.dataset.cache'.format(self.opt.model_name, self.opt.dataset_name)
+        if os.path.exists(cache_path):
+            print('Loading dataset cache:', cache_path)
+            if self.opt.dataset_file['test']:
+                self.train_set, self.test_set, opt = pickle.load(open(cache_path, mode='rb'))
+            else:
+                self.train_set, opt = pickle.load(open(cache_path, mode='rb'))
+            # reset output dim according to dataset labels
+            self.opt.polarities_dim = opt.polarities_dim
+
         # init BERT-based model and dataset_utils
         if hasattr(BERTClassificationModelList, opt.model.__name__):
             self.tokenizer = Tokenizer4Pretraining(self.opt.max_seq_len, self.opt.pretrained_bert)
-
-            self.train_set = BERTClassificationDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
-            if self.opt.dataset_file['test']:
-                self.test_set = BERTClassificationDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
-                self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
-            else:
-                self.test_set = None
+            if not os.path.exists(cache_path):
+                self.train_set = BERTClassificationDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
+                if self.opt.dataset_file['test']:
+                    self.test_set = BERTClassificationDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
+                    self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
+                else:
+                    self.test_set = None
             try:
                 self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
             except ValueError as e:
@@ -74,33 +85,41 @@ class Instructor:
                 dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(opt.embed_dim), os.path.basename(opt.dataset_name)),
                 opt=self.opt
             )
+            if not os.path.exists(cache_path):
+                self.train_set = GloVeClassificationDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
 
-            self.train_set = GloVeClassificationDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
+                if self.opt.dataset_file['test']:
+                    self.test_set = GloVeClassificationDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
+                    self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
 
-            if self.opt.dataset_file['test']:
-                self.test_set = GloVeClassificationDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
-                self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
-
-            else:
-                self.test_set = None
+                else:
+                    self.test_set = None
 
             self.model = opt.model(self.embedding_matrix, opt).to(opt.device)
 
             # use DataParallel for training if device count larger than 1
-            if torch.cuda.device_count() > 1 and self.opt.auto_device == 'allcuda':
+            if self.opt.auto_device == 'allcuda':
                 self.model.to(self.opt.device)
                 self.model = torch.nn.parallel.DataParallel(self.model)
             else:
                 self.model.to(self.opt.device)
+
+        if self.opt.cache_dataset and not os.path.exists(cache_path):
+            print('Caching dataset... please remove cached dataset if change model or dataset')
+            if self.opt.dataset_file['test']:
+                pickle.dump((self.train_set, self.test_set, opt), open(cache_path, mode='wb'))
+            else:
+                pickle.dump((self.train_set, opt), open(cache_path, mode='wb'))
 
         self.opt.device = torch.device(self.opt.device)
         if self.opt.device.type == 'cuda':
             self.logger.info(
                 "cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device)))
 
-        if 'patience' not in self.opt.args or not self.opt.patience:
+        if 'patience' in self.opt.args and self.opt.patience:
             self.opt.patience = len(self.train_set) / self.opt.batch_size / self.opt.log_step * self.opt.patience
-
+        else:
+            self.opt.patience = 999999999
         print_args(self.opt, self.logger)
         self.optimizer = optimizers[self.opt.optimizer](
             self.model.parameters(),
@@ -295,6 +314,7 @@ class Instructor:
             save_path = ''
             for epoch in range(self.opt.num_epoch):
                 iterator = tqdm(train_dataloader)
+                postfix = ''
                 for i_batch, sample_batched in enumerate(iterator):
                     global_step += 1
                     # switch model to training_tutorials mode, clear gradient accumulators
@@ -361,8 +381,8 @@ class Instructor:
                         else:
                             postfix = 'Epoch:{} | No evaluation until epoch:{}'.format(epoch, self.opt.evaluate_begin)
 
-                        iterator.postfix = postfix
-                        iterator.refresh()
+                    iterator.postfix = postfix
+                    iterator.refresh()
                 self.logger.info(iterator.postfix)
                 if not patience:
                     break

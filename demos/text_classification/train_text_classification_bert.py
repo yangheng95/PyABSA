@@ -14,6 +14,7 @@ classification_config_english.num_epoch = 10
 classification_config_english.evaluate_begin = 3
 classification_config_english.max_seq_len = 80
 classification_config_english.dropout = 0.5
+classification_config_english.cache_dataset = True
 classification_config_english.seed = {42, 56, 1}
 classification_config_english.log_step = 5
 classification_config_english.l2reg = 1e-8

@@ -268,6 +268,10 @@ def parse_checkpoint_info(t_checkpoint_map, task='APC'):
 
 
 def available_checkpoints(task='', from_local=False):
+    """
+    param from_local: to load checkpoint from a customized checkpoint map,
+           which means you can load checkpoint from your Google drive (if you share your model on your Google drive)
+    """
     try:
         if not from_local:
             # checkpoint_url = '1jjaAQM6F9s_IEXNpaY-bQF9EOrhq0PBD'  # V1
@@ -297,7 +301,7 @@ def available_checkpoints(task='', from_local=False):
 
 def download_checkpoint(task='apc', language='chinese', archive_path='', model_name='any_model'):
     print(colored('Notice: The pretrained model are used for testing, '
-                  'neither trained using fine-tuned the hyper-parameters nor trained with enough steps, '
+                  'neither trained using fine-tuned hyper-parameters nor trained with enough steps, '
                   'it is recommended to train the model on your own custom datasets', 'red')
           )
     # if not os.path.exists('./checkpoints'):
