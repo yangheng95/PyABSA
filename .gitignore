@@ -21,6 +21,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.pyc
+experiments/
+*.result.json
 .idea/
 
 # Embedding

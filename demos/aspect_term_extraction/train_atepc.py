@@ -16,6 +16,7 @@ from pyabsa.functional import ATEPCConfigManager
 
 atepc_config = ATEPCConfigManager.get_atepc_config_english()
 atepc_config.num_epoch = 10
+atepc_config.model = ATEPCModelList.BERT_BASE_ATEPC
 atepc_config.evaluate_begin = 4
 atepc_config.log_step = 100
 atepc_config.dropout = 0.1

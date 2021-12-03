@@ -37,9 +37,9 @@ class LSA_S(nn.Module):
         left_text_bert_indices = inputs['left_text_bert_indices']
         right_text_bert_indices = inputs['right_text_bert_indices']
         spc_mask_vec = inputs['spc_mask_vec']
-        lcf_matrix = inputs['lcf_vec'].unsqueeze(2)
-        left_lcf_matrix = inputs['left_lcf_vec'].unsqueeze(2)
-        right_lcf_matrix = inputs['right_lcf_vec'].unsqueeze(2)
+        lcf_matrix = inputs['lcfs_vec'].unsqueeze(2)
+        left_lcf_matrix = inputs['left_lcfs_vec'].unsqueeze(2)
+        right_lcf_matrix = inputs['right_lcfs_vec'].unsqueeze(2)
 
         global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
         left_global_context_features = self.bert4global(left_text_bert_indices)['last_hidden_state']

@@ -4,8 +4,10 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-from pyabsa import ABSADatasetList
+from pyabsa import ABSADatasetList, available_checkpoints
 from pyabsa import ATEPCCheckpointManager
+
+checkpoint_map = available_checkpoints(from_local=False)
 
 examples = ['But the staff was so nice to us .',
             'But the staff was so horrible to us .',

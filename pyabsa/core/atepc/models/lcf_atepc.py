@@ -38,21 +38,19 @@ class LCF_ATEPC(nn.Module):
         if labels is None:
             return
         # convert tags of BERT-SPC input to BERT-BASE format
-        device_curr = labels.device
         labels = labels.detach().cpu().numpy()
         for text_i in range(len(labels)):
             sep_index = np.argmax((labels[text_i] == 5))
             labels[text_i][sep_index + 1:] = 0
-        return torch.tensor(labels).to(device_curr)
+        return torch.tensor(labels).to(self.bert4global.device)
 
     def get_ids_for_local_context_extractor(self, text_indices):
         # convert BERT-SPC input to BERT-BASE format
-        device_curr = text_indices.device
         text_ids = text_indices.detach().cpu().numpy()
         for text_i in range(len(text_ids)):
             sep_index = np.argmax((text_ids[text_i] == 102))
             text_ids[text_i][sep_index + 1:] = 0
-        return torch.tensor(text_ids).to(device_curr)
+        return torch.tensor(text_ids).to(self.bert4global.device)
 
     def forward(self, input_ids_spc,
                 token_type_ids=None,

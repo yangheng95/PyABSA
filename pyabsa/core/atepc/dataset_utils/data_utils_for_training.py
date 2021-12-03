@@ -13,6 +13,7 @@ from pyabsa.utils.pyabsa_utils import check_and_fix_labels, SENTIMENT_PADDING, v
 
 Labels = set()
 
+
 class InputExample(object):
     """A single training_tutorials/test example for simple sequence classification."""
 

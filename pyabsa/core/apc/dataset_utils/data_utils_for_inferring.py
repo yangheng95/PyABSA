@@ -159,7 +159,7 @@ class ABSADataset(Dataset):
                 if ignore_error:
                     print('Ignore error while processing: {} Error info:{}'.format(text, e))
                 else:
-                    raise RuntimeError(e)
+                    raise RuntimeError('Catch Exception: {}, use ignore_error=True to remove error samples.'.format(e))
 
         check_and_fix_labels(label_set, 'polarity', all_data, self.opt)
         self.opt.polarities_dim = len(label_set)

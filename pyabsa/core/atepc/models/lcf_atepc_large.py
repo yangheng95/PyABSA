@@ -34,7 +34,7 @@ class LCF_ATEPC_LARGE(nn.Module):
 
         self.pooler = BertPooler(config)
         self.dense = torch.nn.Linear(opt.hidden_dim, opt.polarities_dim)
-        
+
         self.num_labels = opt.num_labels
         self.classifier = nn.Linear(opt.hidden_dim, opt.num_labels)
 

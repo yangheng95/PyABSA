@@ -24,19 +24,21 @@
 If you are willing to support PyABSA project, please star this repository as your contribution.
 
 ## Quick Review the Performance of our Package
+
 ### APC model leaderboard
 
 |         Models       | Laptop14 (acc) |  Rest14 (acc) | Rest15 (acc) | Rest16 (acc) |
 | :------------------: | :------------: | :-----------: |:------------:|:------------:|
-| LSA-S(CDW)|    84.80      |      87.95    |    88.15     |    93.98     | 
-| LSA-S(CDM)|    83.70      |      89.01    |   88.89      |    94.47     | 
-| LSA-T(CDW)|    84.01      |      88.66    |    86.67     |    93.98     | 
-| LSA-T(CDM)|    84.01       |      88.48    |   87.78     |    93.82     | 
+|     LSA-T-DeBerta    |     84.16      |      90.45    |    88.15     |    93.98     | 
+|     LSA-S-DeBerta    |     84.33      |      89.64    |    89.04     |    94.47     | 
 
-**Results are based on roberta-base (V1.3.5), which is different from our original [paper](https://arxiv.org/pdf/2110.08604.pdf) using bert-base-uncased. We are working on update our experimental results of our paper**
-please see more in [APC leaderboard](https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_polarity_classification/leaderboard.md)
+**Results are based on roberta-base (V1.3.5), which is different from our
+original [paper](https://arxiv.org/pdf/2110.08604.pdf) using bert-base-uncased. We are working on update our
+experimental results of our paper**
+please see more
+in [APC leaderboard](https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_polarity_classification/leaderboard.md)
 
-ATEPC leaderboard update is pending due to resoruce limitaion, if you can do it please contact me. 
+ATEPC leaderboard update is pending due to resoruce limitaion, if you can do it please contact me.
 
 ## 1. Package Overview
 

@@ -31,7 +31,7 @@ class Instructor:
 
         self.logger = logger
         self.opt = opt
-        self.model = APCEnsembler(self.opt).to(opt.device)
+        self.model = APCEnsembler(self.opt)
 
         self.train_set = self.model.train_set
         self.test_set = self.model.test_set
@@ -39,11 +39,13 @@ class Instructor:
         self.tokenizer = self.model.tokenizer
         print("# of available cuda ", torch.cuda.device_count())
 
-        if 'patience' not in self.opt.args or not self.opt.patience:
+        if 'patience' in self.opt.args and self.opt.patience:
             self.opt.patience = len(self.train_set) / self.opt.batch_size / self.opt.log_step * self.opt.patience
+        else:
+            self.opt.patience = 999999999
 
         # use DataParallel for training if device count larger than 1
-        if torch.cuda.device_count() > 1 and self.opt.auto_device == 'allcuda':
+        if self.opt.auto_device == 'allcuda':
             self.model.to(self.opt.device)
             self.model = torch.nn.parallel.DataParallel(self.model)
         else:
@@ -111,7 +113,7 @@ class Instructor:
                 self.train_dataloaders.append(
                     DataLoader(dataset=train_set, batch_size=self.opt.batch_size, sampler=train_sampler))
                 self.val_dataloaders.append(
-                    DataLoader(dataset=val_set, batch_size=self.opt.batch_size,  sampler=train_sampler))
+                    DataLoader(dataset=val_set, batch_size=self.opt.batch_size, sampler=train_sampler))
 
     def _train(self, criterion):
         self.prepare_dataloader(self.train_set)
@@ -153,6 +155,7 @@ class Instructor:
                          Trainable_params, NonTrainable_params)
         self.logger.info("Batch size = %d", self.opt.batch_size)
         self.logger.info("Num steps = %d", len(self.train_dataloaders[0]) // self.opt.batch_size * self.opt.num_epoch)
+        postfix = ''
         for epoch in range(self.opt.num_epoch):
             iterator = tqdm(self.train_dataloaders[0])
             for i_batch, sample_batched in enumerate(iterator):
@@ -169,7 +172,7 @@ class Instructor:
                 if isinstance(outputs, dict) and 'loss' in outputs:
                     loss += torch.sum(outputs['loss'])
 
-                if torch.cuda.device_count() > 1 and self.opt.auto_device == 'allcuda':
+                if self.opt.auto_device == 'allcuda':
                     loss = loss.mean()
 
                 sum_loss += loss.item()
@@ -300,7 +303,7 @@ class Instructor:
                     if 'loss' in outputs:
                         loss += torch.sum(outputs['loss'])
 
-                    if torch.cuda.device_count() > 1 and self.opt.auto_device == 'allcuda':
+                    if self.opt.auto_device == 'allcuda':
                         loss = loss.mean()
 
                     sum_loss += loss.item()

@@ -62,42 +62,32 @@ class SentimentClassifier:
                 self.opt = pickle.load(open(config_path, mode='rb'))
                 self.opt.eval_batch_size = eval_batch_size
 
-                if isinstance(self.opt.model, list):
-                    if state_dict_path:
-                        self.model = APCEnsembler(self.opt, load_dataset=False)
-                        self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
+                if state_dict_path:
+                    if not hasattr(GloVeAPCModelList, self.opt.model.__name__.upper()):
+                        if state_dict_path:
+                            self.model = APCEnsembler(self.opt, load_dataset=False)
+                            self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
 
-                    if model_path:
-                        self.model = torch.load(model_path, map_location='cpu')
-                else:
-                    if state_dict_path:
-                        if not hasattr(GloVeAPCModelList, self.opt.model.__name__.upper()):
-                            if 'pretrained_bert_name' in self.opt.args:
-                                self.opt.pretrained_bert = self.opt.pretrained_bert_name
-                            try:
-                                self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
-                                self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)  # share the underlying bert between models
-                            except ValueError:
-                                raise TransformerConnectionError()
-                            self.model = self.opt.model(self.bert, self.opt)
-                        else:
-                            tokenizer = build_tokenizer(
-                                dataset_list=self.opt.dataset_file,
-                                max_seq_len=self.opt.max_seq_len,
-                                dat_fname='{0}_tokenizer.dat'.format(os.path.basename(self.opt.dataset_name)),
-                                opt=self.opt
-                            )
-                            embedding_matrix = build_embedding_matrix(
-                                word2idx=tokenizer.word2idx,
-                                embed_dim=self.opt.embed_dim,
-                                dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(self.opt.embed_dim), os.path.basename(self.opt.dataset_name)),
-                                opt=self.opt
-                            )
-                            self.model = self.opt.model(embedding_matrix, self.opt).to(self.opt.device)
-                        self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
+                        if model_path:
+                            self.model = torch.load(model_path, map_location='cpu')
+                    else:
+                        tokenizer = build_tokenizer(
+                            dataset_list=self.opt.dataset_file,
+                            max_seq_len=self.opt.max_seq_len,
+                            dat_fname='{0}_tokenizer.dat'.format(os.path.basename(self.opt.dataset_name)),
+                            opt=self.opt
+                        )
+                        embedding_matrix = build_embedding_matrix(
+                            word2idx=tokenizer.word2idx,
+                            embed_dim=self.opt.embed_dim,
+                            dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(self.opt.embed_dim), os.path.basename(self.opt.dataset_name)),
+                            opt=self.opt
+                        )
+                        self.model = self.opt.model(embedding_matrix, self.opt).to(self.opt.device)
+                    self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
 
-                    if model_path:
-                        self.model = torch.load(model_path, map_location='cpu')
+                if model_path:
+                    self.model = torch.load(model_path, map_location='cpu')
 
                 if tokenizer_path:
                     self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
@@ -186,7 +176,7 @@ class SentimentClassifier:
             raise FileNotFoundError('Can not find inference datasets!')
 
         self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
-        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.opt.eval_batch_size, shuffle=False)
+        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.opt.eval_batch_size, pin_memory=True, shuffle=False)
         return self._infer(save_path=save_path if save_result else None, print_result=print_result)
 
     def infer(self, text: str = None,

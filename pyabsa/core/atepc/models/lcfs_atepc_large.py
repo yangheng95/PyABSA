@@ -37,7 +37,7 @@ class LCFS_ATEPC_LARGE(nn.Module):
 
         self.num_labels = opt.num_labels
         self.classifier = nn.Linear(opt.hidden_dim, opt.num_labels)
-        
+
     def get_batch_token_labels_bert_base_indices(self, labels):
         if labels is None:
             return

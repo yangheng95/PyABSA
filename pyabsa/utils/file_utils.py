@@ -291,9 +291,12 @@ def query_remote_version():
 
 
 def query_local_version():
-    fin = open(find_cwd_file(['__init__.py', 'integrated_datasets']))
-    local_version = fin.read().split('\'')[-2]
-    fin.close()
+    try:
+        fin = open(find_cwd_file(['__init__.py', 'integrated_datasets']))
+        local_version = fin.read().split('\'')[-2]
+        fin.close()
+    except:
+        return ''
     return local_version
 
 

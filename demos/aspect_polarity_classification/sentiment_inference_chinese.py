@@ -6,7 +6,9 @@
 # Copyright (C) 2021. All Rights Reserved.
 # Usage: Evaluate on given text or inference dataset_utils
 
-from pyabsa import APCCheckpointManager, ABSADatasetList
+from pyabsa import APCCheckpointManager, ABSADatasetList, available_checkpoints
+
+checkpoint_map = available_checkpoints(from_local=False)
 
 sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='chinese')
 # sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='checkpoint')
@@ -15,7 +17,7 @@ sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='chin
 # chinese_text = '还有就是[ASP]笔画的键盘分布[ASP]我感觉不合理 !sent! 0'
 # sent_classifier.infer(chinese_text, print_result=True)
 
-infer_set = ABSADatasetList.Shampoo
+infer_set = ABSADatasetList.Chinese
 
 results = sent_classifier.batch_infer(target_file=infer_set,
                                       print_result=True,

@@ -258,7 +258,7 @@ class AspectExtractor:
         eval_sampler = SequentialSampler(eval_data)
         if 'eval_batch_size' not in self.opt.args:
             self.opt.eval_batch_size = 128
-        self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=self.opt.eval_batch_size)
+        self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, pin_memory=True, batch_size=self.opt.eval_batch_size)
 
         # extract_aspects
         self.model.eval()
@@ -346,7 +346,7 @@ class AspectExtractor:
         # Run prediction for full data
         self.opt.eval_batch_size = 128
         eval_sampler = SequentialSampler(eval_data)
-        self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, batch_size=self.opt.eval_batch_size)
+        self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, pin_memory=True, batch_size=self.opt.eval_batch_size)
 
         # extract_aspects
         self.model.eval()

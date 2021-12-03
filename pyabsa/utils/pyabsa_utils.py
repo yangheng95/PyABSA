@@ -98,6 +98,7 @@ def check_and_fix_IOB_labels(label_map, opt):
     index_to_IOB_label = {int(label_map[origin_label]): origin_label for origin_label in label_map}
     opt.index_to_IOB_label = index_to_IOB_label
 
+
 def get_device(auto_device):
     if isinstance(auto_device, str) and auto_device == 'allcuda':
         device = 'cuda'
