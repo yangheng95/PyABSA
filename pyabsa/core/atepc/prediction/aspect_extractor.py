@@ -64,7 +64,7 @@ class AspectExtractor:
                 print('tokenizer: {}'.format(tokenizer_path))
 
                 self.opt = pickle.load(open(config_path, mode='rb'))
-                self.opt.eval_batch_size = eval_batch_size
+                self.opt.infer_batch_size = eval_batch_size
 
                 if 'pretrained_bert_name' in self.opt.args:
                     self.opt.pretrained_bert = self.opt.pretrained_bert_name
@@ -222,7 +222,7 @@ class AspectExtractor:
                 results['polarity_res'] = self._infer(results['extraction_res'])
             results = self.merge_result(sentence_res, results)
             if save_result:
-                save_path = os.path.join(os.getcwd(), 'test_inference2.result.json')
+                save_path = os.path.join(os.getcwd(), 'atepc_inference.result.json')
                 print('The results of aspect term extraction have been saved in {}'.format(save_path))
                 json.dump(json.JSONEncoder().encode({'results': results}), open(save_path, 'w'), ensure_ascii=False)
             if print_result:
@@ -236,29 +236,29 @@ class AspectExtractor:
         sentence_res = []  # extraction result by sentence
         extraction_res = []  # extraction result flatten by aspect
 
-        self.eval_dataloader = None
+        self.infer_dataloader = None
         examples = self.processor.get_examples_for_aspect_extraction(examples)
-        eval_features = convert_ate_examples_to_features(examples,
+        infer_features = convert_ate_examples_to_features(examples,
                                                          self.label_list,
                                                          self.opt.max_seq_len,
                                                          self.tokenizer,
                                                          self.opt)
-        all_spc_input_ids = torch.tensor([f.input_ids_spc for f in eval_features], dtype=torch.long)
-        all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
-        all_segment_ids = torch.tensor([f.segment_ids for f in eval_features], dtype=torch.long)
-        all_label_ids = torch.tensor([f.label_id for f in eval_features], dtype=torch.long)
-        all_polarities = torch.tensor([f.polarity for f in eval_features], dtype=torch.long)
-        all_valid_ids = torch.tensor([f.valid_ids for f in eval_features], dtype=torch.long)
-        all_lmask_ids = torch.tensor([f.label_mask for f in eval_features], dtype=torch.long)
+        all_spc_input_ids = torch.tensor([f.input_ids_spc for f in infer_features], dtype=torch.long)
+        all_input_mask = torch.tensor([f.input_mask for f in infer_features], dtype=torch.long)
+        all_segment_ids = torch.tensor([f.segment_ids for f in infer_features], dtype=torch.long)
+        all_label_ids = torch.tensor([f.label_id for f in infer_features], dtype=torch.long)
+        all_polarities = torch.tensor([f.polarity for f in infer_features], dtype=torch.long)
+        all_valid_ids = torch.tensor([f.valid_ids for f in infer_features], dtype=torch.long)
+        all_lmask_ids = torch.tensor([f.label_mask for f in infer_features], dtype=torch.long)
 
-        all_tokens = [f.tokens for f in eval_features]
-        eval_data = TensorDataset(all_spc_input_ids, all_input_mask, all_segment_ids, all_label_ids,
+        all_tokens = [f.tokens for f in infer_features]
+        infer_data = TensorDataset(all_spc_input_ids, all_input_mask, all_segment_ids, all_label_ids,
                                   all_polarities, all_valid_ids, all_lmask_ids)
         # Run prediction for full data
-        eval_sampler = SequentialSampler(eval_data)
-        if 'eval_batch_size' not in self.opt.args:
-            self.opt.eval_batch_size = 128
-        self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, pin_memory=True, batch_size=self.opt.eval_batch_size)
+        infer_sampler = SequentialSampler(infer_data)
+        if 'infer_batch_size' not in self.opt.args:
+            self.opt.infer_batch_size = 128
+        self.infer_dataloader = DataLoader(infer_data, sampler=infer_sampler, pin_memory=True, batch_size=self.opt.infer_batch_size)
 
         # extract_aspects
         self.model.eval()
@@ -266,7 +266,7 @@ class AspectExtractor:
             label_map = {i: label for i, label in enumerate(self.label_list, 1)}
         else:
             label_map = self.opt.index_to_IOB_label
-        for i_batch, (input_ids_spc, input_mask, segment_ids, label_ids, polarity, valid_ids, l_mask) in enumerate(self.eval_dataloader):
+        for i_batch, (input_ids_spc, input_mask, segment_ids, label_ids, polarity, valid_ids, l_mask) in enumerate(self.infer_dataloader):
             input_ids_spc = input_ids_spc.to(self.opt.device)
             input_mask = input_mask.to(self.opt.device)
             segment_ids = segment_ids.to(self.opt.device)
@@ -289,18 +289,18 @@ class AspectExtractor:
             input_mask = input_mask.to('cpu').numpy()
             for i, i_ate_logits in enumerate(ate_logits):
                 pred_iobs = []
-                sentence_res.append((all_tokens[i + (self.opt.eval_batch_size * i_batch)], pred_iobs))
+                sentence_res.append((all_tokens[i + (self.opt.infer_batch_size * i_batch)], pred_iobs))
                 for j, m in enumerate(label_ids[i]):
                     if j == 0:
                         continue
-                    elif len(pred_iobs) == len(all_tokens[i + (self.opt.eval_batch_size * i_batch)]):
+                    elif len(pred_iobs) == len(all_tokens[i + (self.opt.infer_batch_size * i_batch)]):
                         break
                     else:
                         pred_iobs.append(label_map.get(i_ate_logits[j], 'O'))
 
                 ate_result = []
                 polarity = []
-                for t, l in zip(all_tokens[i + (self.opt.eval_batch_size * i_batch)], pred_iobs):
+                for t, l in zip(all_tokens[i + (self.opt.infer_batch_size * i_batch)], pred_iobs):
                     ate_result.append('{}({})'.format(t, l))
                     if 'ASP' in l:
                         polarity.append(-SENTIMENT_PADDING)
@@ -309,11 +309,11 @@ class AspectExtractor:
 
                 POLARITY_PADDING = [SENTIMENT_PADDING] * len(polarity)
                 for iob_idx in range(len(polarity) - 1):
-                    example_id = i_batch * self.opt.eval_batch_size + i
+                    example_id = i_batch * self.opt.infer_batch_size + i
                     if pred_iobs[iob_idx].endswith('ASP') and not pred_iobs[iob_idx + 1].endswith('I-ASP'):
                         _polarity = polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
                         polarity = POLARITY_PADDING[:iob_idx + 1] + polarity[iob_idx + 1:]
-                        extraction_res.append((all_tokens[i + (self.opt.eval_batch_size * i_batch)], pred_iobs, _polarity, example_id))
+                        extraction_res.append((all_tokens[i + (self.opt.infer_batch_size * i_batch)], pred_iobs, _polarity, example_id))
 
         return extraction_res, sentence_res
 
@@ -323,36 +323,36 @@ class AspectExtractor:
         # ate example id map to apc example id
         example_id_map = dict([(apc_id, ex[3]) for apc_id, ex in enumerate(examples)])
 
-        self.eval_dataloader = None
+        self.infer_dataloader = None
         examples = self.processor.get_examples_for_sentiment_classification(examples)
-        eval_features = convert_apc_examples_to_features(examples,
+        infer_features = convert_apc_examples_to_features(examples,
                                                          self.label_list,
                                                          self.opt.max_seq_len,
                                                          self.tokenizer,
                                                          self.opt)
-        all_spc_input_ids = torch.tensor([f.input_ids_spc for f in eval_features], dtype=torch.long)
-        all_input_mask = torch.tensor([f.input_mask for f in eval_features], dtype=torch.long)
-        all_segment_ids = torch.tensor([f.segment_ids for f in eval_features], dtype=torch.long)
-        all_label_ids = torch.tensor([f.label_id for f in eval_features], dtype=torch.long)
-        all_valid_ids = torch.tensor([f.valid_ids for f in eval_features], dtype=torch.long)
-        all_lmask_ids = torch.tensor([f.label_mask for f in eval_features], dtype=torch.long)
-        lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in eval_features], dtype=torch.float32)
-        lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in eval_features], dtype=torch.float32)
-        all_tokens = [f.tokens for f in eval_features]
-        all_aspects = [f.aspect for f in eval_features]
-        all_positions = [f.positions for f in eval_features]
-        eval_data = TensorDataset(all_spc_input_ids, all_input_mask, all_segment_ids, all_label_ids,
+        all_spc_input_ids = torch.tensor([f.input_ids_spc for f in infer_features], dtype=torch.long)
+        all_input_mask = torch.tensor([f.input_mask for f in infer_features], dtype=torch.long)
+        all_segment_ids = torch.tensor([f.segment_ids for f in infer_features], dtype=torch.long)
+        all_label_ids = torch.tensor([f.label_id for f in infer_features], dtype=torch.long)
+        all_valid_ids = torch.tensor([f.valid_ids for f in infer_features], dtype=torch.long)
+        all_lmask_ids = torch.tensor([f.label_mask for f in infer_features], dtype=torch.long)
+        lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in infer_features], dtype=torch.float32)
+        lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in infer_features], dtype=torch.float32)
+        all_tokens = [f.tokens for f in infer_features]
+        all_aspects = [f.aspect for f in infer_features]
+        all_positions = [f.positions for f in infer_features]
+        infer_data = TensorDataset(all_spc_input_ids, all_input_mask, all_segment_ids, all_label_ids,
                                   all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
         # Run prediction for full data
-        self.opt.eval_batch_size = 128
-        eval_sampler = SequentialSampler(eval_data)
-        self.eval_dataloader = DataLoader(eval_data, sampler=eval_sampler, pin_memory=True, batch_size=self.opt.eval_batch_size)
+        self.opt.infer_batch_size = 128
+        infer_sampler = SequentialSampler(infer_data)
+        self.infer_dataloader = DataLoader(infer_data, sampler=infer_sampler, pin_memory=True, batch_size=self.opt.infer_batch_size)
 
         # extract_aspects
         self.model.eval()
 
         # Correct = {True: 'Correct', False: 'Wrong'}
-        for i_batch, batch in enumerate(self.eval_dataloader):
+        for i_batch, batch in enumerate(self.infer_dataloader):
             input_ids_spc, segment_ids, input_mask, label_ids, \
             valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
             input_ids_spc = input_ids_spc.to(self.opt.device)
@@ -378,7 +378,7 @@ class AspectExtractor:
                     else:
                         sent = int(torch.argmax(i_apc_logits, -1))
                     result = {}
-                    apc_id = i_batch * self.opt.eval_batch_size + i
+                    apc_id = i_batch * self.opt.infer_batch_size + i
                     result['sentence'] = ' '.join(all_tokens[apc_id])
                     result['tokens'] = all_tokens[apc_id]
                     result['aspect'] = all_aspects[apc_id]

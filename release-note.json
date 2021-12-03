@@ -1,7 +1,10 @@
 {
+  "1.5.3": {
+    "1": "Minor fixes and modifications"
+  },
   "1.5": {
     "1": "Release after full test, no known error yet",
-    "2": "Fix BERT-SPC",
+    "2": "Fix BERT-SPC Modeling",
     "3": "Remove release-note check for efficient",
     "4": "Fix dataset cache function",
     "5": "Remove DistributedDataParallel for stability",
@@ -13,14 +16,14 @@
     "99": "Other modifications"
   },
   "1.3.15": {
-    "1": "Improve stablity while using other pretrained models for ATEPC",
+    "1": "Improve stability while using other pretrained models for ATEPC",
     "2": "This is a general update of default config for ATEPC"
   },
   "1.3.13": {
-    "1": "Fix a checkpoint loading problem of APC(Some checkpoint at Google Drive may be unavailable now, we will update soon)"
+    "1": "Fix a checkpoint loading problem of APC (Some checkpoint at Google Drive may be unavailable now, we will update soon)"
   },
   "1.3.12": {
-    "1": "Refactor to support customize IOB label for ATEPC(The integrated function to covert APC dataset to ATEPC dataset remains only support ASP IOB now, please customize your dataset's IOB label using your own script)",
+    "1": "Refactor to support customize IOB label for ATEPC (The integrated function to covert APC dataset to ATEPC dataset remains only support ASP IOB now, please customize your dataset's IOB label using your own script)",
     "2": "Update default pretrained model for ATEPC",
     "3": "Minor changes"
   },

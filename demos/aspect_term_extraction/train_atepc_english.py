@@ -17,8 +17,8 @@ from pyabsa.functional import ATEPCConfigManager
 config = ATEPCConfigManager.get_atepc_config_english()
 config.model = ATEPCModelList.FAST_LCFS_ATEPC
 config.evaluate_begin = 5
-config.num_epoch = 20
-config.log_step = 100
+config.num_epoch = 6
+config.log_step = 1000
 Dataset = ABSADatasetList.English
 aspect_extractor = Trainer(config=config,
                            dataset=Dataset,

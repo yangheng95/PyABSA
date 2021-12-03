@@ -229,7 +229,7 @@ class Instructor:
                                                                         f1 * 100,
                                                                         max_fold_f1 * 100))
                     else:
-                        postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, loss.item(), self.opt.evaluate_begin)
+                        postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
 
                 iterator.postfix = postfix
                 iterator.refresh()
@@ -289,6 +289,7 @@ class Instructor:
             save_path = ''
             for epoch in range(self.opt.num_epoch):
                 iterator = tqdm(train_dataloader)
+                postfix=''
                 for i_batch, sample_batched in enumerate(iterator):
                     global_step += 1
                     # switch model to training_tutorials mode, clear gradient accumulators
@@ -359,10 +360,10 @@ class Instructor:
                                                                             f1 * 100,
                                                                             max_fold_f1 * 100))
                         else:
-                            postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch, loss.item(), self.opt.evaluate_begin)
+                            postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
 
-                        iterator.postfix = postfix
-                        iterator.refresh()
+                    iterator.postfix = postfix
+                    iterator.refresh()
                 if patience < 0:
                     break
             self.model.load_state_dict(torch.load(find_file(os.getcwd(), 'state_dict')))

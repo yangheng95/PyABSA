@@ -169,7 +169,7 @@ class SentimentClassifier:
         if clear_input_samples:
             self.clear_input_samples()
 
-        save_path = os.path.join(os.getcwd(), 'test_inference1.result.json')
+        save_path = os.path.join(os.getcwd(), 'apc_inference.result.json')
 
         target_file = detect_infer_dataset(target_file, task='apc')
         if not target_file:

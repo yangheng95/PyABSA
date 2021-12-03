@@ -5,7 +5,7 @@
       "Training Model": "FAST-LSA-S",
       "Training Dataset": "English",
       "Description": "Trained on RTX2080 Ti",
-      "Available Version": "1.5.0",
+      "Available Version": "1.5.2",
       "Checkpoint File": "fast_lsa_s_acc_85.18_f1_82.72.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
@@ -14,7 +14,7 @@
       "Training Model": "FAST-LSA-S",
       "Training Dataset": "Chinese",
       "Description": "Trained on RTX2080 Ti",
-      "Available Version": "1.5.0",
+      "Available Version": "1.5.2",
       "Checkpoint File": "fast_lsa_s_acc_94.38_f1_88.7.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
@@ -26,6 +26,24 @@
     }
   },
   "ATEPC": {
+    "english": {
+      "id": "https://drive.google.com/file/d/1mycHVuK3bO01fzeKqq3NubvB5ipRjudr/view?usp=sharing",
+      "Training Model": "FAST-LCFS-ATEPC",
+      "Training Dataset": "English",
+      "Description": "Trained on RTX2080 Ti",
+      "Available Version": "1.5.2",
+      "Checkpoint File": "fast_lcfs_atepc_cdw_apcacc_78.57_apcf1_74.7_atef1_78.57.zip",
+      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
+    },
+    "chinese": {
+      "id": "",
+      "Training Model": "FAST-LSA-S",
+      "Training Dataset": "Chinese",
+      "Description": "Trained on RTX2080 Ti",
+      "Available Version": "1.5.2",
+      "Checkpoint File": "fast_lsa_s_acc_94.38_f1_88.7.zip",
+      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
+    },
     "HELP-WANTED": {
       "id": "",
       "Description": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
