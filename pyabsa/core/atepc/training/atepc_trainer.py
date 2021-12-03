@@ -64,8 +64,9 @@ class Instructor:
         cache_path = '{}.{}.dataset.cache'.format(self.opt.model_name, self.opt.dataset_name)
         if os.path.exists(cache_path):
             print('Loading dataset cache:', cache_path)
-            if 'test' in self.opt.dataset_file:
+            if self.opt.dataset_file['test']:
                 self.train_data, self.test_data, opt = pickle.load(open(cache_path, mode='rb'))
+
             else:
                 self.train_data, opt = pickle.load(open(cache_path, mode='rb'))
             # reset output dim according to dataset labels
@@ -74,8 +75,8 @@ class Instructor:
         else:
             self.train_examples = processor.get_train_examples(self.opt.dataset_file['train'], 'train')
             train_features = convert_examples_to_features(self.train_examples, self.opt.max_seq_len, self.tokenizer, self.opt)
-            self.label_list = processor.get_labels()
-            self.opt.num_labels = len(self.label_list) + 1
+            self.opt.label_list = processor.get_labels()
+            self.opt.num_labels = len(self.opt.label_list) + 1
             all_spc_input_ids = torch.tensor([f.input_ids_spc for f in train_features], dtype=torch.long)
             all_input_mask = torch.tensor([f.input_mask for f in train_features], dtype=torch.long)
             all_segment_ids = torch.tensor([f.segment_ids for f in train_features], dtype=torch.long)
@@ -105,9 +106,6 @@ class Instructor:
                 self.test_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids, all_polarities,
                                                all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
 
-                test_sampler = RandomSampler(self.test_data)
-                self.test_dataloader = DataLoader(self.test_data, sampler=test_sampler, pin_memory=True, batch_size=self.opt.batch_size)
-
             if self.opt.cache_dataset and not os.path.exists(cache_path):
                 print('Caching dataset... please remove cached dataset if change model or dataset')
                 if self.opt.dataset_file['test']:
@@ -117,9 +115,12 @@ class Instructor:
 
         # only identify the labels in training set, make sure the labels are the same type in the test set
         if 'num_labels' not in self.opt.args:
-            self.opt.args.update(opt.args)
-            self.opt.args_call_count.update(opt.args_call_count)
+            self.opt.args['num_labels'] = opt.args['num_labels']
+            self.opt.args_call_count['num_labels'] = opt.args_call_count['num_labels']
+            self.opt.args['label_list'] = opt.args['label_list']
+            self.opt.args_call_count['label_list'] = opt.args_call_count['label_list']
         bert_base_model.config.num_labels = self.opt.num_labels
+        self.opt.label_list = self.opt.label_list
 
         self.num_train_optimization_steps = int(
             len(self.train_data) / self.opt.batch_size / self.opt.gradient_accumulation_steps) * self.opt.num_epoch
@@ -131,6 +132,9 @@ class Instructor:
 
         train_sampler = SequentialSampler(self.train_data)
         self.train_dataloader = DataLoader(self.train_data, sampler=train_sampler, pin_memory=True, batch_size=self.opt.batch_size)
+        if self.opt.dataset_file['test']:
+            test_sampler = RandomSampler(self.test_data)
+            self.test_dataloader = DataLoader(self.test_data, sampler=test_sampler, pin_memory=True, batch_size=self.opt.batch_size)
 
         self.model = self.opt.model(bert_base_model, opt=self.opt)
 
@@ -279,7 +283,7 @@ class Instructor:
                             postfix += 'ATE_F1: {}(max:{})'.format(current_ate_test_f1, self.opt.max_test_metrics[
                                 'max_ate_test_f1'])
                     else:
-                        postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, loss.item(), self.opt.evaluate_begin)
+                        postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
 
                 iterator.postfix = postfix
                 iterator.refresh()
@@ -323,7 +327,7 @@ class Instructor:
         n_test_correct, n_test_total = 0, 0
         test_apc_logits_all, test_polarities_all = None, None
         self.model.eval()
-        label_map = {i: label for i, label in enumerate(self.label_list, 1)}
+        label_map = {i: label for i, label in enumerate(self.opt.label_list, 1)}
 
         for i, batch in enumerate(self.test_dataloader):
             input_ids_spc, segment_ids, input_mask, label_ids, polarity, \
@@ -387,7 +391,7 @@ class Instructor:
                     for j, m in enumerate(label):
                         if j == 0:
                             continue
-                        elif label_ids[i][j] == len(self.label_list):
+                        elif label_ids[i][j] == len(self.opt.label_list):
                             y_true.append(temp_1)
                             y_pred.append(temp_2)
                             break

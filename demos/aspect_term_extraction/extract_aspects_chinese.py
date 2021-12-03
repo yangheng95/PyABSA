@@ -18,7 +18,7 @@ examples = ['尤 其 是 照 的 大 尺 寸 照 片 时 效 果 也 是 非 常
             ]
 
 # 从Google Drive下载提供的预训练模型
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='lcf_atepc_cdw_apcacc_96.08_apcf1_95.6_atef1_81.01', eval_batch_size=256)
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='fast_lcf_atepc_cdw_apcacc_85.63_apcf1_55.51_atef1_33.13', eval_batch_size=256)
 # model_path = 'state_dict/lcf_atepc_cdw_apcacc_96.88_apcf1_96.35_atef1_91.2'
 
 examples = ABSADatasetList.Phone

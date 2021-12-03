@@ -6,7 +6,7 @@
 
 # Copyright (C) 2021. All Rights Reserved.
 
-__version__ = '1.5.2'
+__version__ = '1.5.3'
 __name__ = 'pyabsa'
 
 from termcolor import colored

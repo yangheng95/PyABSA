@@ -254,7 +254,7 @@ class Instructor:
                                                                         f1 * 100,
                                                                         max_fold_f1 * 100))
                     else:
-                        postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch, loss.item(), self.opt.evaluate_begin)
+                        postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
 
                     iterator.postfix = postfix
                     iterator.refresh()
@@ -379,13 +379,13 @@ class Instructor:
                                                                             f1 * 100,
                                                                             max_fold_f1 * 100))
                         else:
-                            postfix = 'Epoch:{} | No evaluation until epoch:{}'.format(epoch, self.opt.evaluate_begin)
+                            postfix = 'Epoch:{} | Loss:{} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
 
                     iterator.postfix = postfix
                     iterator.refresh()
-                self.logger.info(iterator.postfix)
-                if not patience:
+                if patience < 0:
                     break
+
             self.model = torch.load(find_file(save_path, 'model')).to(self.opt.device)
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
             if max_fold_acc > max_fold_acc_k_fold:
