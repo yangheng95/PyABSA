@@ -5,7 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-class ATEPCModelList:
+class ATEPCModelList(list):
     from pyabsa.core.atepc.models.bert_base_atepc import BERT_BASE_ATEPC
     from pyabsa.core.atepc.models.fast_lcf_atepc import FAST_LCF_ATEPC
     from pyabsa.core.atepc.models.fast_lcfs_atepc import FAST_LCFS_ATEPC
@@ -20,6 +20,17 @@ class ATEPCModelList:
     FAST_LCFS_ATEPC = FAST_LCFS_ATEPC
     LCF_ATEPC = LCF_ATEPC
     LCF_ATEPC_LARGE = LCF_ATEPC_LARGE
-    LCF_TEMPLATE_ATEPC = LCF_TEMPLATE_ATEPC
     LCFS_ATEPC = LCFS_ATEPC
     LCFS_ATEPC_LARGE = LCFS_ATEPC_LARGE
+
+    LCF_TEMPLATE_ATEPC = LCF_TEMPLATE_ATEPC
+
+    def __init__(self):
+        model_list = [self.BERT_BASE_ATEPC,
+                      self.FAST_LCF_ATEPC,
+                      self.FAST_LCFS_ATEPC,
+                      self.LCF_ATEPC,
+                      self.LCF_ATEPC_LARGE,
+                      self.LCFS_ATEPC,
+                      self.LCFS_ATEPC_LARGE]
+        list.__init__(model_list)

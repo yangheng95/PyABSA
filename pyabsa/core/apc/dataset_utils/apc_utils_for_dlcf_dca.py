@@ -136,6 +136,23 @@ def get_dynamic_cdm_vec(opt, max_dist, bert_spc_indices, aspect_indices, aspect_
     return cdm_vec
 
 
+def configure_dlcf_spacy_model(opt):
+    if not hasattr(opt, 'spacy_model'):
+        opt.spacy_model = 'en_core_web_sm'
+    global nlp
+    try:
+        nlp = spacy.load(opt.spacy_model)
+    except:
+        print('Can not load {} from spacy, try to download it in order to parse syntax tree:'.format(opt.spacy_model),
+              termcolor.colored('\npython -m spacy download {}'.format(opt.spacy_model), 'green'))
+        try:
+            os.system('python -m spacy download {}'.format(opt.spacy_model))
+            nlp = spacy.load(opt.spacy_model)
+        except:
+            raise RuntimeError('Download failed, you can download {} manually.'.format(opt.spacy_model))
+    return nlp
+
+
 def calculate_cluster(sentence, aspect, opt):
     terms = [a.lower() for a in aspect.split()]
 

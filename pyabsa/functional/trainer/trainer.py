@@ -41,7 +41,7 @@ def init_config(config, auto_device):
     config.auto_device = auto_device
     config.device = 'cuda' if auto_device == 'all_cuda' else config.device
     config.model_name = config.model.__name__.lower() if not isinstance(config.model, list) else 'ensemble'
-    config.Version = __version__
+    config.PyABSAVersion = __version__
 
     if 'use_syntax_based_SRD' in config:
         print('-' * 130)
@@ -71,7 +71,7 @@ class Trainer:
         :param auto_device: True or False, otherwise 'allcuda', 'cuda:1', 'cpu' works
 
         """
-        if not torch.cuda.device_count() > 1:
+        if not torch.cuda.device_count() > 1 and auto_device == 'allcuda':
             print('Cuda count <= 1, reset auto_device=True')
             auto_device = True
         config.ABSADatasetsVersion = query_local_version()

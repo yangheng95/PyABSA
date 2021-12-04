@@ -11,7 +11,7 @@ from torch.utils.data import Dataset
 
 from pyabsa.utils.pyabsa_utils import check_and_fix_labels
 from .apc_utils import build_sentiment_window, build_spc_mask_vec, load_apc_datasets, prepare_input_for_apc, configure_spacy_model
-from .apc_utils_for_dlcf_dca import prepare_input_for_dlcf_dca
+from .apc_utils_for_dlcf_dca import prepare_input_for_dlcf_dca, configure_dlcf_spacy_model
 from pyabsa.utils.pyabsa_utils import validate_example
 
 
@@ -40,7 +40,7 @@ class ABSADataset(Dataset):
             polarity = lines[i + 2].strip()
             # polarity = int(polarity)
 
-            prepared_inputs = prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect)
+            prepared_inputs = prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect, input_demands=opt.inputs_cols)
 
             text_raw = prepared_inputs['text_raw']
             aspect = prepared_inputs['aspect']
@@ -48,12 +48,13 @@ class ABSADataset(Dataset):
             text_bert_indices = prepared_inputs['text_bert_indices']
             text_raw_bert_indices = prepared_inputs['text_raw_bert_indices']
             aspect_bert_indices = prepared_inputs['aspect_bert_indices']
-            lcfs_vec = prepared_inputs['lcfs_cdm_vec'] if opt.lcf == 'cdm' else prepared_inputs['lcfs_cdw_vec']
-            lcf_vec = prepared_inputs['lcf_cdm_vec'] if opt.lcf == 'cdm' else prepared_inputs['lcf_cdw_vec']
+            lcfs_vec = prepared_inputs['lcfs_vec']
+            lcf_vec = prepared_inputs['lcf_vec']
 
             validate_example(text_raw, aspect, polarity)
 
-            if opt.model_name == 'dlcf_dca_bert':
+            if opt.model_name == 'dlcf_dca_bert' or opt.model_name == 'dlcfs_dca_bert':
+                configure_dlcf_spacy_model(opt)
                 prepared_inputs = prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect)
                 dlcf_vec = prepared_inputs['dlcf_cdm_vec'] if opt.lcf == 'cdm' else prepared_inputs['dlcf_cdw_vec']
                 dlcfs_vec = prepared_inputs['dlcfs_cdm_vec'] if opt.lcf == 'cdm' else prepared_inputs['dlcfs_cdw_vec']
@@ -78,6 +79,10 @@ class ABSADataset(Dataset):
 
                 'dlcfs_vec': dlcfs_vec if 'dlcfs_vec' in opt.inputs_cols else 0,
 
+                'depend_vec': depend_vec if 'depend_vec' in opt.inputs_cols else 0,
+
+                'depended_vec': depended_vec if 'depended_vec' in opt.inputs_cols else 0,
+
                 'spc_mask_vec': build_spc_mask_vec(opt, text_raw_bert_indices)
                 if 'spc_mask_vec' in opt.inputs_cols else 0,
 
@@ -89,10 +94,6 @@ class ABSADataset(Dataset):
 
                 'text_raw_bert_indices': text_raw_bert_indices
                 if 'text_raw_bert_indices' in opt.inputs_cols else 0,
-
-                'depend_vec': depend_vec if 'depend_vec' in opt.inputs_cols else 0,
-
-                'depended_vec': depended_vec if 'depended_vec' in opt.inputs_cols else 0,
 
                 'polarity': polarity,
             }

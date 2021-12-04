@@ -289,7 +289,7 @@ class Instructor:
             save_path = ''
             for epoch in range(self.opt.num_epoch):
                 iterator = tqdm(train_dataloader)
-                postfix=''
+                postfix = ''
                 for i_batch, sample_batched in enumerate(iterator):
                     global_step += 1
                     # switch model to training_tutorials mode, clear gradient accumulators

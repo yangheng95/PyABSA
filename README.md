@@ -96,10 +96,10 @@ PyABSA use the [AutoCUDA](https://github.com/yangheng95/autocuda) to support aut
 still set a preferred device.
 
 ```python3
-auto_device=True  # to auto assign a cuda device for training / inference
-auto_device=False  # to use cpu
-auto_device='cuda:1'  # to specify a preferred device
-auto_device='cpu'  # to specify a preferred device
+auto_device = True  # to auto assign a cuda device for training / inference
+auto_device = False  # to use cpu
+auto_device = 'cuda:1'  # to specify a preferred device
+auto_device = 'cpu'  # to specify a preferred device
 ```
 
 ### 2.3 Flexible labels than others
@@ -123,18 +123,19 @@ from pyabsa.functional.config.apc_config_manager import APCConfigManager
 from pyabsa.functional.config.atepc_config_manager import ATEPCConfigManager
 from pyabsa.functional.config.classification_config_manager import ClassificationConfigManager
 
-#Set
+# Set
 APCConfigManager.set_apc_config_english({'spacy_model': 'en_core_web_lg'})
 ATEPCConfigManager.set_atepc_config_english({'spacy_model': 'en_core_web_lg'})
 ClassificationConfigManager.set_classification_config_english({'spacy_model': 'en_core_web_lg'})
 
-#Get
+# Get
 APCConfigManager.get_apc_config_english()
 ATEPCConfigManager.get_atepc_config_english()
 ClassificationConfigManager.get_classification_config_english()
 
-#Manually Set spaCy nlp Language object
+# Manually Set spaCy nlp Language object
 from pyabsa.core.apc.dataset_utils.apc_utils import configure_spacy_model
+
 nlp = configure_spacy_model(APCConfigManager.get_apc_config_english())
 ```
 
@@ -180,6 +181,7 @@ available checkpoints, you can use the following code and load the checkpoint by
 
 ```python3
 from pyabsa import available_checkpoints
+
 checkpoint_map = available_checkpoints()  # show available checkpoints of PyABSA of current version 
 ```
 
