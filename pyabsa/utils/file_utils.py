@@ -284,9 +284,14 @@ def check_update_log():
 
 
 def query_remote_version():
-    dataset_url = 'https://raw.githubusercontent.com/yangheng95/ABSADatasets/master/datasets/__init__.py'
-    content = urllib.request.urlopen(dataset_url, timeout=3)
-    version = content.read().decode("utf-8").split('\'')[-2]
+    try:
+        dataset_url = 'https://raw.githubusercontent.com/yangheng95/ABSADatasets/v1.2/datasets/__init__.py'
+        content = urllib.request.urlopen(dataset_url, timeout=5)
+        content = content.read().decode("utf-8").split('\'')
+        version = content[-2]
+    except Exception as e:
+        print(e)
+        return 'N.A.'
     return version
 
 
@@ -296,13 +301,20 @@ def query_local_version():
         local_version = fin.read().split('\'')[-2]
         fin.close()
     except:
-        return ''
+        return 'N.A.'
     return local_version
 
 
 def check_dataset():  # retry_count is for unstable conn to GitHub
     try:
-        if query_remote_version() > query_local_version():
-            print(colored('There is a new version of ABSADatasets, please remove the downloaded datasets to automatically download the new version.', 'green'))
+        local_version = query_local_version()
+        remote_version = query_remote_version()
+        print('Remote ABSADataset version: {} Local ABSADatasets version: {}'.format(remote_version, local_version))
+        if remote_version == 'N.A.':
+            print('Unknown remote version for ABSADatasets, please check the latest version of ABSADatasets')
+        elif local_version == 'N.A.':
+            print('Unknown local version for ABSADatasets, please check the latest version of ABSADatasets')
+        elif remote_version > local_version:
+            print(colored('There is a new version of ABSADatasets({}), please remove the downloaded datasets to automatically download the new version.'.format(remote_version), 'green'))
     except Exception as e:
         print(colored('ABSADatasets version check failed: {}, please check the latest datasets on GitHub manually.'.format(e), 'red'))

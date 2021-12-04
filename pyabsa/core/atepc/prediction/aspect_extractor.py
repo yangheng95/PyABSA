@@ -239,10 +239,10 @@ class AspectExtractor:
         self.infer_dataloader = None
         examples = self.processor.get_examples_for_aspect_extraction(examples)
         infer_features = convert_ate_examples_to_features(examples,
-                                                         self.label_list,
-                                                         self.opt.max_seq_len,
-                                                         self.tokenizer,
-                                                         self.opt)
+                                                          self.label_list,
+                                                          self.opt.max_seq_len,
+                                                          self.tokenizer,
+                                                          self.opt)
         all_spc_input_ids = torch.tensor([f.input_ids_spc for f in infer_features], dtype=torch.long)
         all_input_mask = torch.tensor([f.input_mask for f in infer_features], dtype=torch.long)
         all_segment_ids = torch.tensor([f.segment_ids for f in infer_features], dtype=torch.long)
@@ -253,7 +253,7 @@ class AspectExtractor:
 
         all_tokens = [f.tokens for f in infer_features]
         infer_data = TensorDataset(all_spc_input_ids, all_input_mask, all_segment_ids, all_label_ids,
-                                  all_polarities, all_valid_ids, all_lmask_ids)
+                                   all_polarities, all_valid_ids, all_lmask_ids)
         # Run prediction for full data
         infer_sampler = SequentialSampler(infer_data)
         if 'infer_batch_size' not in self.opt.args:
@@ -326,10 +326,10 @@ class AspectExtractor:
         self.infer_dataloader = None
         examples = self.processor.get_examples_for_sentiment_classification(examples)
         infer_features = convert_apc_examples_to_features(examples,
-                                                         self.label_list,
-                                                         self.opt.max_seq_len,
-                                                         self.tokenizer,
-                                                         self.opt)
+                                                          self.label_list,
+                                                          self.opt.max_seq_len,
+                                                          self.tokenizer,
+                                                          self.opt)
         all_spc_input_ids = torch.tensor([f.input_ids_spc for f in infer_features], dtype=torch.long)
         all_input_mask = torch.tensor([f.input_mask for f in infer_features], dtype=torch.long)
         all_segment_ids = torch.tensor([f.segment_ids for f in infer_features], dtype=torch.long)
@@ -342,7 +342,7 @@ class AspectExtractor:
         all_aspects = [f.aspect for f in infer_features]
         all_positions = [f.positions for f in infer_features]
         infer_data = TensorDataset(all_spc_input_ids, all_input_mask, all_segment_ids, all_label_ids,
-                                  all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
+                                   all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
         # Run prediction for full data
         self.opt.infer_batch_size = 128
         infer_sampler = SequentialSampler(infer_data)

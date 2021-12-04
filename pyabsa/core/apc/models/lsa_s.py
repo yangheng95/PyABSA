@@ -2,6 +2,7 @@
 # file: lsa_s.py
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # Copyright (C) 2021. All Rights Reserved.
+import copy
 
 import torch
 import torch.nn as nn
@@ -15,7 +16,8 @@ class LSA_S(nn.Module):
 
     def __init__(self, bert, opt):
         super(LSA_S, self).__init__()
-        self.bert4global = bert
+        self.bert4central = bert
+        # self.bert4side = copy.deepcopy(bert)
         self.opt = opt
         self.dropout = nn.Dropout(opt.dropout)
 
@@ -41,9 +43,11 @@ class LSA_S(nn.Module):
         left_lcf_matrix = inputs['left_lcfs_vec'].unsqueeze(2)
         right_lcf_matrix = inputs['right_lcfs_vec'].unsqueeze(2)
 
-        global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
-        left_global_context_features = self.bert4global(left_text_bert_indices)['last_hidden_state']
-        right_global_context_features = self.bert4global(right_text_bert_indices)['last_hidden_state']
+        global_context_features = self.bert4central(text_bert_indices)['last_hidden_state']
+        left_global_context_features = self.bert4central(left_text_bert_indices)['last_hidden_state']
+        right_global_context_features = self.bert4central(right_text_bert_indices)['last_hidden_state']
+        # left_global_context_features = self.bert4side(left_text_bert_indices)['last_hidden_state']
+        # right_global_context_features = self.bert4side(right_text_bert_indices)['last_hidden_state']
 
         # # --------------------------------------------------- #
         lcf_features = torch.mul(global_context_features, lcf_matrix)

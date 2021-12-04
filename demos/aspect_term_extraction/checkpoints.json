@@ -36,12 +36,12 @@
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "chinese": {
-      "id": "",
+      "id": "https://drive.google.com/file/d/1wrDID4eCxdeNedh5izcmSNHHr6Yo1_dF/view?usp=sharing",
       "Training Model": "FAST-LSA-S",
       "Training Dataset": "Chinese",
       "Description": "Trained on RTX2080 Ti",
       "Available Version": "1.5.2",
-      "Checkpoint File": "fast_lsa_s_acc_94.38_f1_88.7.zip",
+      "Checkpoint File": "fast_lcf_atepc_cdw_apcacc_95.87_apcf1_95.3_atef1_84.23.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "HELP-WANTED": {

@@ -14,7 +14,7 @@ from .apc_utils import (build_sentiment_window,
                         load_apc_datasets,
                         prepare_input_for_apc,
                         LABEL_PADDING, configure_spacy_model)
-from .apc_utils_for_dlcf_dca import prepare_input_for_dlcf_dca
+from .apc_utils_for_dlcf_dca import prepare_input_for_dlcf_dca, configure_dlcf_spacy_model
 
 
 class ABSADataset(Dataset):
@@ -94,7 +94,7 @@ class ABSADataset(Dataset):
                 text_left = text_left.replace('[PADDING] ', '')
                 text_right = text_right.replace(' [PADDING]', '')
 
-                prepared_inputs = prepare_input_for_apc(self.opt, self.tokenizer, text_left, text_right, aspect)
+                prepared_inputs = prepare_input_for_apc(self.opt, self.tokenizer, text_left, text_right, aspect, input_demands=self.opt.inputs_cols)
 
                 text_raw = prepared_inputs['text_raw']
                 aspect = prepared_inputs['aspect']
@@ -102,12 +102,13 @@ class ABSADataset(Dataset):
                 text_bert_indices = prepared_inputs['text_bert_indices']
                 text_raw_bert_indices = prepared_inputs['text_raw_bert_indices']
                 aspect_bert_indices = prepared_inputs['aspect_bert_indices']
-                lcf_vec = prepared_inputs['lcf_cdm_vec'] if self.opt.lcf == 'cdm' else prepared_inputs['lcf_cdw_vec']
-                lcfs_vec = prepared_inputs['lcfs_cdm_vec'] if self.opt.lcf == 'cdm' else prepared_inputs['lcfs_cdw_vec']
+                lcfs_vec = prepared_inputs['lcfs_vec']
+                lcf_vec = prepared_inputs['lcf_vec']
 
                 validate_example(text_raw, aspect, polarity)
 
                 if self.opt.model_name == 'dlcf_dca_bert':
+                    configure_dlcf_spacy_model(opt)
                     prepared_inputs = prepare_input_for_dlcf_dca(self.opt, self.tokenizer, text_left, text_right, aspect)
                     dlcf_vec = prepared_inputs['dlcf_cdm_vec'] if self.opt.lcf == 'cdm' else prepared_inputs['dlcf_cdw_vec']
                     dlcfs_vec = prepared_inputs['dlcfs_cdm_vec'] if self.opt.lcf == 'cdm' else prepared_inputs['dlcfs_cdw_vec']
@@ -115,10 +116,6 @@ class ABSADataset(Dataset):
                     depended_vec = prepared_inputs['depended_vec']
                 data = {
                     'ex_id': ex_id,
-
-                    'depend_vec': depend_vec if 'depend_vec' in self.opt.inputs_cols else 0,
-
-                    'depended_vec': depended_vec if 'depended_vec' in self.opt.inputs_cols else 0,
 
                     'text_raw': text_raw,
 
@@ -135,6 +132,10 @@ class ABSADataset(Dataset):
                     'dlcf_vec': dlcf_vec if 'dlcf_vec' in self.opt.inputs_cols else 0,
 
                     'dlcfs_vec': dlcfs_vec if 'dlcfs_vec' in self.opt.inputs_cols else 0,
+
+                    'depend_vec': depend_vec if 'depend_vec' in self.opt.inputs_cols else 0,
+
+                    'depended_vec': depended_vec if 'depended_vec' in self.opt.inputs_cols else 0,
 
                     'spc_mask_vec': build_spc_mask_vec(self.opt, text_raw_bert_indices)
                     if 'spc_mask_vec' in self.opt.inputs_cols else 0,

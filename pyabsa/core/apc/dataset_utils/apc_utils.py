@@ -161,7 +161,7 @@ def load_apc_datasets(fname):
 #
 #     return inputs
 
-def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
+def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect, input_demands):
     if hasattr(opt, 'dynamic_truncate') and opt.dynamic_truncate:
         _max_seq_len = opt.max_seq_len - len(aspect.split(' '))
         text_left = text_left.split(' ')
@@ -203,19 +203,18 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
     # else:
     #     syntactical_dist = None
 
-    syntactical_dist, _ = get_syntax_distance(text_raw, aspect, tokenizer, opt)
+    if 'lcfs_vec' in input_demands:
+        syntactical_dist, _ = get_syntax_distance(text_raw, aspect, tokenizer, opt)
+        if opt.lcf == 'cdm':
+            lcfs_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices, aspect_begin, syntactical_dist)
+        elif opt.lcf == 'cdw':
+            lcfs_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices, aspect_begin, syntactical_dist)
+    if 'lcf_vec' in input_demands:
+        if opt.lcf == 'cdm':
+            lcf_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices, aspect_begin, None)
+        elif opt.lcf == 'cdw':
+            lcf_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices, aspect_begin, None)
 
-    lcf_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices,
-                                          aspect_begin, syntactical_dist=None)
-
-    lcf_cdw_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices,
-                              aspect_begin, syntactical_dist=None)
-
-    lcfs_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices,
-                                           aspect_begin, syntactical_dist)
-
-    lcfs_cdw_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices,
-                               aspect_begin, syntactical_dist)
     inputs = {
         'text_raw': text_raw,
         'text_spc': text_spc,
@@ -224,10 +223,8 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
         'text_bert_indices': text_bert_indices,
         'text_raw_bert_indices': text_raw_bert_indices,
         'aspect_bert_indices': aspect_bert_indices,
-        'lcf_cdm_vec': lcf_cdm_vec,
-        'lcf_cdw_vec': lcf_cdw_vec,
-        'lcfs_cdm_vec': lcfs_cdm_vec,
-        'lcfs_cdw_vec': lcfs_cdw_vec,
+        'lcf_vec': lcf_vec if 'lcf_vec' in input_demands else 0,
+        'lcfs_vec': lcfs_vec if 'lcfs_vec' in input_demands else 0,
     }
 
     return inputs

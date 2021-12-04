@@ -30,7 +30,7 @@ class DatasetItem(list):
                 self.append(d)
 
 
-class ABSADatasetList:
+class ABSADatasetList(list):
     # SemEval
     Laptop14 = DatasetItem('Laptop14', 'Laptop14')
     Restaurant14 = DatasetItem('Restaurant14', 'Restaurant14')
@@ -59,16 +59,37 @@ class ABSADatasetList:
     MOOC = DatasetItem('MOOC', 'MOOC')
 
     # assembled dataset_utils
-    Chinese = DatasetItem('Chinese', ['Phone', 'Camera', 'Notebook', 'Car', 'Shampoo', 'MOOC'])
+    Chinese = DatasetItem('Chinese', ['Phone', 'Camera', 'Notebook', 'Car'])
+    Binary_Polarity_Chinese = DatasetItem('Chinese', ['Phone', 'Camera', 'Notebook', 'Car'])
+    Triple_Polarity_Chinese = DatasetItem('Chinese', ['MOOC' 'Shampoo'])
+
     English = DatasetItem('English', ['Laptop14', 'Restaurant14', 'Restaurant16', 'ACL_Twitter', 'MAMS', 'Television', 'TShirt'])
     SemEval = DatasetItem('SemEval', ['Laptop14', 'Restaurant14', 'Restaurant16'])  # Abandon rest15 dataset due to data leakage, See https://github.com/yangheng95/PyABSA/issues/53
     Restaurant = DatasetItem('Restaurant', ['Restaurant14', 'Restaurant16'])
     Multilingual = DatasetItem('Multilingual', 'datasets')
 
+    def __init__(self):
+        dataset_list = [
+            self.Laptop14, self.Restaurant14, self.Restaurant15, self.Restaurant16,
+            self.ACL_Twitter, self.MAMS, self.Television, self.TShirt,
+            self.Phone, self.Car, self.Notebook, self.Camera,
+            self.Binary_Polarity_Chinese, self.Triple_Polarity_Chinese,
+            self.Shampoo, self.MOOC,
+            self.English, self.SemEval,
+            self.Restaurant, self.Multilingual
+        ]
+        super().__init__(dataset_list)
 
-class ClassificationDatasetList:
+
+class ClassificationDatasetList(list):
     SST1 = DatasetItem('SST1', 'SST1')
     SST2 = DatasetItem('SST2', 'SST2')
+
+    def __init__(self):
+        dataset_list = [
+            self.SST1, self.SST2
+        ]
+        super().__init__(dataset_list)
 
 
 filter_key_words = ['.py', '.ignore', '.md', 'readme', 'log', 'result', 'zip', '.state_dict', '.model', '.png']

@@ -1,4 +1,7 @@
 {
+  "1.5.4": {
+    "1": "Fix a a bug while using custom dataset"
+  },
   "1.5.3": {
     "1": "Minor fixes and modifications"
   },
