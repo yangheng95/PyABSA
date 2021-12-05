@@ -238,10 +238,7 @@ class SentimentClassifier:
                 for i, i_probs in enumerate(t_probs):
                     if 'index_to_label' in self.opt.args and int(i_probs.argmax(axis=-1)) in self.opt.index_to_label:
                         sent = self.opt.index_to_label[int(i_probs.argmax(axis=-1))]
-                        if sample['polarity'] != -999:
-                            real_sent = sample['polarity'][i] if isinstance(sample['polarity'][i], str) else self.opt.index_to_label[int(sample['polarity'][i])]
-                        else:
-                            real_sent = 'N.A.'
+                        real_sent = sample['polarity'][i] if isinstance(sample['polarity'][i], str) else self.opt.index_to_label[int(sample['polarity'][i])]
                         if real_sent != -999 and real_sent != '-999':
                             n_labeled += 1
                         if sent == real_sent:
