@@ -33,4 +33,4 @@ class ATEPCModelList(list):
                       self.LCF_ATEPC_LARGE,
                       self.LCFS_ATEPC,
                       self.LCFS_ATEPC_LARGE]
-        list.__init__(model_list)
+        super().__init__(model_list)

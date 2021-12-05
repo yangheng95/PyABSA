@@ -24,7 +24,7 @@ class ATAE_LSTM_BERT(nn.Module):
         self.dense = nn.Linear(opt.hidden_dim, opt.polarities_dim)
 
     def forward(self, inputs):
-        text_indices, aspect_indices = inputs[0], inputs[1]
+        text_indices, aspect_indices = inputs['text_indices'], inputs['text_indices']
         x_len = torch.sum(text_indices != 0, dim=-1)
         x_len_max = torch.max(x_len)
         aspect_len = torch.sum(aspect_indices != 0, dim=-1).float()
@@ -42,4 +42,4 @@ class ATAE_LSTM_BERT(nn.Module):
         output = torch.squeeze(torch.bmm(score, h), dim=1)
 
         out = self.dense(output)
-        return out
+        return {'logits': out}

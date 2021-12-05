@@ -8,8 +8,8 @@ import tqdm
 from torch.utils.data import Dataset
 
 from pyabsa.utils.pyabsa_utils import validate_example
-from .dependency_graph import dependency_adj_matrix
-from pyabsa.core.apc.dataset_utils.apc_utils import load_apc_datasets, LABEL_PADDING, configure_spacy_model
+from .dependency_graph import dependency_adj_matrix, configure_spacy_model
+from pyabsa.core.apc.dataset_utils.apc_utils import load_apc_datasets, LABEL_PADDING
 
 
 def pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating='post', value=0):
@@ -133,6 +133,7 @@ class GloVeABSADataset(Dataset):
 
                 # simply add padding in case of some aspect is at the beginning or ending of a sentence
                 text_left, aspect, text_right = text.split('[ASP]')
+                text = text.replace('[ASP]', '')
                 text_left = text_left.replace('[PADDING] ', '')
                 text_right = text_right.replace(' [PADDING]', '')
 
@@ -159,31 +160,31 @@ class GloVeABSADataset(Dataset):
 
                 data = {
                     'text_indices': text_indices
-                    if 'text_indices' in self.opt.inputs else 0,
+                    if 'text_indices' in self.opt.inputs_cols else 0,
 
                     'context_indices': context_indices
-                    if 'context_indices' in self.opt.inputs else 0,
+                    if 'context_indices' in self.opt.inputs_cols else 0,
 
                     'left_indices': left_indices
-                    if 'left_indices' in self.opt.inputs else 0,
+                    if 'left_indices' in self.opt.inputs_cols else 0,
 
                     'left_with_aspect_indices': left_with_aspect_indices
-                    if 'left_with_aspect_indices' in self.opt.inputs else 0,
+                    if 'left_with_aspect_indices' in self.opt.inputs_cols else 0,
 
                     'right_indices': right_indices
-                    if 'right_indices' in self.opt.inputs else 0,
+                    if 'right_indices' in self.opt.inputs_cols else 0,
 
                     'right_with_aspect_indices': right_with_aspect_indices
-                    if 'right_with_aspect_indices' in self.opt.inputs else 0,
+                    if 'right_with_aspect_indices' in self.opt.inputs_cols else 0,
 
                     'aspect_indices': aspect_indices
-                    if 'aspect_indices' in self.opt.inputs else 0,
+                    if 'aspect_indices' in self.opt.inputs_cols else 0,
 
                     'aspect_boundary': aspect_boundary
-                    if 'aspect_boundary' in self.opt.inputs else 0,
+                    if 'aspect_boundary' in self.opt.inputs_cols else 0,
 
                     'dependency_graph': dependency_graph
-                    if 'dependency_graph' in self.opt.inputs else 0,
+                    if 'dependency_graph' in self.opt.inputs_cols else 0,
 
                     'text_raw': text,
                     'aspect': aspect,

@@ -43,8 +43,9 @@ class TextClassifier:
             self.opt = model_arg[1]
             self.tokenizer = model_arg[2]
         else:
-            # load from a model path
             try:
+                if 'fine-tuned' in model_arg:
+                    raise ValueError('Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!')
                 print('Load text classifier from', model_arg)
                 state_dict_path = find_file(model_arg, '.state_dict', exclude_key=['__MACOSX'])
                 model_path = find_file(model_arg, '.model', exclude_key=['__MACOSX'])
@@ -59,9 +60,10 @@ class TextClassifier:
                 self.opt = pickle.load(open(config_path, mode='rb'))
 
                 if state_dict_path:
-                    if 'pretrained_bert_name' in self.opt.args or 'pretrained_bert' in self.opt.args:
-                        if 'pretrained_bert_name' in self.opt.args:
-                            self.opt.pretrained_bert = self.opt.pretrained_bert_name
+                    if not hasattr(GloVeClassificationModelList, self.opt.model.__name__.upper()):
+                        if 'pretrained_bert_name' in self.opt.args or 'pretrained_bert' in self.opt.args:
+                            if 'pretrained_bert_name' in self.opt.args:
+                                self.opt.pretrained_bert = self.opt.pretrained_bert_name
                         try:
                             self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
                         except ValueError:
@@ -235,7 +237,10 @@ class TextClassifier:
                 for i, i_probs in enumerate(t_probs):
                     if 'index_to_label' in self.opt.args and int(i_probs.argmax(axis=-1)):
                         sent = self.opt.index_to_label[int(i_probs.argmax(axis=-1))]
-                        real_sent = sample['label'][i] if isinstance(sample['label'][i], str) else self.opt.index_to_label[int(sample['label'][i])]
+                        if sample['label'] != -999:
+                            real_sent = sample['label'][i] if isinstance(sample['label'][i], str) else self.opt.index_to_label[int(sample['label'][i])]
+                        else:
+                            real_sent = 'N.A.'
                         if real_sent != -999 and real_sent != '-999':
                             n_labeled += 1
                         if sent == real_sent:

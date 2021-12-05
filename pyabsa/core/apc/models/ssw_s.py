@@ -45,7 +45,7 @@ class SSW_S(nn.Module):
         lcf_matrix = inputs['lcfs_vec'].unsqueeze(2)
         left_lcf_matrix = inputs['left_lcfs_vec'].unsqueeze(2)
         right_lcf_matrix = inputs['right_lcfs_vec'].unsqueeze(2)
-        polarity = inputs['polarity']
+        polarity = inputs['polarity'] if 'polarity' in inputs else None
         left_dist = self.dist_embed(inputs['left_dist'].unsqueeze(1))
         right_dist = self.dist_embed(inputs['right_dist'].unsqueeze(1))
 
@@ -83,6 +83,8 @@ class SSW_S(nn.Module):
         sent_out = self.post_encoder_(sent_out)
         sent_out = self.bert_pooler(sent_out)
         sent_logits = self.sent_dense(sent_out)
-        sent_loss = self.classification_criterion(sent_logits, polarity)
-
-        return {'logits': sent_logits, 'hidden_state': sent_out, 'loss': sent_loss}
+        if polarity is not None:
+            sent_loss = self.classification_criterion(sent_logits, polarity)
+            return {'logits': sent_logits, 'hidden_state': sent_out, 'loss': sent_loss}
+        else:
+            return {'logits': sent_logits, 'hidden_state': sent_out}

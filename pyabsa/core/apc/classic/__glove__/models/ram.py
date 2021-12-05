@@ -51,7 +51,8 @@ class RAM(nn.Module):
         self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
 
     def forward(self, inputs):
-        text_raw_indices, aspect_indices, text_left_indices = inputs[0], inputs[1], inputs[2]
+        text_raw_indices, aspect_indices, text_left_indices = \
+            inputs['text_indices'], inputs['aspect_indices'], inputs['left_indices']
         left_len = torch.sum(text_left_indices != 0, dim=-1)
         memory_len = torch.sum(text_raw_indices != 0, dim=-1)
         aspect_len = torch.sum(aspect_indices != 0, dim=-1)
@@ -68,6 +69,8 @@ class RAM(nn.Module):
 
         batch_size = memory.size(0)
         seq_len = memory.size(1)
+        if 'hops' not in self.opt.args:
+            self.opt.hops = 3
         for _ in range(self.opt.hops):
             g = self.att_linear(torch.cat([memory,
                                            torch.zeros(batch_size, seq_len, self.opt.embed_dim).to(
@@ -79,4 +82,4 @@ class RAM(nn.Module):
             i = torch.bmm(alpha.transpose(1, 2), memory).squeeze(1)
             et = self.gru_cell(i, et)
         out = self.dense(et)
-        return out
+        return {'logits': out}

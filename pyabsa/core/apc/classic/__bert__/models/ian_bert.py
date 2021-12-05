@@ -13,10 +13,10 @@ from ..layers.dynamic_rnn import DynamicLSTM
 class IAN_BERT(nn.Module):
     inputs = ['text_indices', 'aspect_indices']
 
-    def __init__(self, embedding_matrix, opt):
+    def __init__(self, bert, opt):
         super(IAN_BERT, self).__init__()
         self.opt = opt
-        self.embed = nn.Embedding.from_pretrained(torch.tensor(embedding_matrix, dtype=torch.float))
+        self.embed = self.embed = bert
         self.lstm_context = DynamicLSTM(opt.embed_dim, opt.hidden_dim, num_layers=1, batch_first=True)
         self.lstm_aspect = DynamicLSTM(opt.embed_dim, opt.hidden_dim, num_layers=1, batch_first=True)
         self.attention_aspect = Attention(opt.hidden_dim, score_function='bi_linear')
@@ -24,7 +24,7 @@ class IAN_BERT(nn.Module):
         self.dense = nn.Linear(opt.hidden_dim * 2, opt.polarities_dim)
 
     def forward(self, inputs):
-        text_raw_indices, aspect_indices = inputs[0], inputs[1]
+        text_raw_indices, aspect_indices = inputs['text_indices'], inputs['aspect_indices']
         text_raw_len = torch.sum(text_raw_indices != 0, dim=-1)
         aspect_len = torch.sum(aspect_indices != 0, dim=-1)
 
@@ -48,4 +48,4 @@ class IAN_BERT(nn.Module):
 
         x = torch.cat((aspect_final, context_final), dim=-1)
         out = self.dense(x)
-        return out
+        return {'logits': out}

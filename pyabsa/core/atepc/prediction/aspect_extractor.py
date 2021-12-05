@@ -50,7 +50,8 @@ class AspectExtractor:
             self.opt = model_arg[1]
             self.tokenizer = model_arg[2]
         else:
-            # load from a model path
+            if 'fine-tuned' in model_arg:
+                raise ValueError('Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!')
             print('Load aspect extractor from', model_arg)
             try:
                 state_dict_path = find_file(model_arg, '.state_dict', exclude_key=['__MACOSX'])

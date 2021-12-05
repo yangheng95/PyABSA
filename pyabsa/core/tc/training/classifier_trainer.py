@@ -47,14 +47,13 @@ class Instructor:
             # reset output dim according to dataset labels
             self.opt.polarities_dim = opt.polarities_dim
 
-        # init BERT-based model and dataset_utils
+        # init BERT-based model and dataset
         if hasattr(BERTClassificationModelList, opt.model.__name__):
             self.tokenizer = Tokenizer4Pretraining(self.opt.max_seq_len, self.opt.pretrained_bert)
             if not os.path.exists(cache_path):
                 self.train_set = BERTClassificationDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
                 if self.opt.dataset_file['test']:
                     self.test_set = BERTClassificationDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
-                    self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
                 else:
                     self.test_set = None
             try:
@@ -67,7 +66,7 @@ class Instructor:
             self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
 
         elif hasattr(GloVeClassificationModelList, opt.model.__name__):
-            # init GloVe-based model and dataset_utils
+            # init GloVe-based model and dataset
             if hasattr(ClassificationDatasetList, opt.dataset_name):
                 opt.dataset_name = os.path.join(os.getcwd(), opt.dataset_name)
                 if not os.path.exists(os.path.join(os.getcwd(), opt.dataset_name)):
@@ -85,16 +84,10 @@ class Instructor:
                 dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(opt.embed_dim), os.path.basename(opt.dataset_name)),
                 opt=self.opt
             )
-            if not os.path.exists(cache_path):
-                self.train_set = GloVeClassificationDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
-
-                if self.opt.dataset_file['test']:
-                    self.test_set = GloVeClassificationDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
-                    self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
-
-                else:
-                    self.test_set = None
-
+            if self.opt.dataset_file['test']:
+                self.test_set = GloVeClassificationDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
+            else:
+                self.test_set = None
             self.model = opt.model(self.embedding_matrix, opt).to(opt.device)
 
             # use DataParallel for training if device count larger than 1
@@ -103,6 +96,11 @@ class Instructor:
                 self.model = torch.nn.parallel.DataParallel(self.model)
             else:
                 self.model.to(self.opt.device)
+
+        if self.test_set:
+            self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
+        else:
+            self.test_dataloader = None
 
         if self.opt.cache_dataset and not os.path.exists(cache_path):
             print('Caching dataset... please remove cached dataset if change model or dataset')

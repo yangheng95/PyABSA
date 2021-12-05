@@ -38,9 +38,9 @@ class LCA_BERT(nn.Module):
         else:
             text_global_indices = inputs['text_raw_bert_indices']
         text_local_indices = inputs['text_raw_bert_indices']
-        lca_ids = inputs['lcf_vec']
+        lca_ids = inputs['lcf_vec'].long()
         lcf_matrix = lca_ids.unsqueeze(2)  # lca_ids is the same as lcf_matrix
-        polarity = inputs['polarity']
+        polarity = inputs['polarity'] if 'polarity' in inputs else None
 
         bert_global_out = self.bert4global(text_global_indices)['last_hidden_state']
         bert_local_out = self.bert4local(text_local_indices)['last_hidden_state']
@@ -64,6 +64,9 @@ class LCA_BERT(nn.Module):
         pooled_out = self.pool(cat_features)
         sent_logits = self.dense(pooled_out)
 
-        lcp_loss = self.lca_criterion(lca_logits, lca_ids)
-        sent_loss = self.classification_criterion(sent_logits, polarity)
-        return {'logits': sent_logits, 'hidden_state': pooled_out, 'loss': (1 - self.opt.sigma) * sent_loss + self.opt.sigma * lcp_loss}
+        if polarity is not None:
+            lcp_loss = self.lca_criterion(lca_logits, lca_ids)
+            sent_loss = self.classification_criterion(sent_logits, polarity)
+            return {'logits': sent_logits, 'hidden_state': pooled_out, 'loss': (1 - self.opt.sigma) * sent_loss + self.opt.sigma * lcp_loss}
+        else:
+            return {'logits': sent_logits, 'hidden_state': pooled_out}

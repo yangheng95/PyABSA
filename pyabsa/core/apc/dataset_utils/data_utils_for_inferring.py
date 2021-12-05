@@ -107,8 +107,8 @@ class ABSADataset(Dataset):
 
                 validate_example(text_raw, aspect, polarity)
 
-                if self.opt.model_name == 'dlcf_dca_bert':
-                    configure_dlcf_spacy_model(opt)
+                if self.opt.model_name == 'dlcf_dca_bert' or self.opt.model_name == 'dlcfs_dca_bert':
+                    configure_dlcf_spacy_model(self.opt)
                     prepared_inputs = prepare_input_for_dlcf_dca(self.opt, self.tokenizer, text_left, text_right, aspect)
                     dlcf_vec = prepared_inputs['dlcf_cdm_vec'] if self.opt.lcf == 'cdm' else prepared_inputs['dlcf_cdw_vec']
                     dlcfs_vec = prepared_inputs['dlcfs_cdm_vec'] if self.opt.lcf == 'cdm' else prepared_inputs['dlcfs_cdw_vec']
