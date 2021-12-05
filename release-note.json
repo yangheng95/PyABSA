@@ -1,4 +1,21 @@
 {
+  "1.6": {
+    "0": "This is a stable version which eliminates almost all unknown problems before",
+    "1": "Fix a problem in saving fine-tuned pretrained model",
+    "2": "Fix an inference problem in LCA-BERT, SSW-T, SSW-S models",
+    "3": "Fix a problem in updating ABSADatasets version",
+    "4": "Modify the output format for BERTBaseline models and GloVe based models to adapt apc_trainer architecture",
+    "5": "Fix the data preprocessing code for BERTBaseline models and GloVe based models",
+    "6": "Rename the dependency matrix cache folder, that is for remove conflict between dependency matrix folder and integrated datasets",
+    "7": "Add alert while loading fine-tuned models",
+    "8": "Fix the inference for DLCF-DCA and DLCFS-DCA models",
+    "9": "Fix the embedding function in IAN-Bert model",
+    "10": "Fix the hop arg missing problem in Memnet-Bert, Ram-Bert, Memnet-GloVe, Ram-GloVe models",
+    "11": "Fix a printing problem in baseline APC model inference result",
+    "12": "Fix a parallel problem in BERT-BASE-ATEPC model",
+    "13": "Stabilize the text_classifier",
+    "14": "Fix test_loader init problem and dataset cache problem in ClassificationTrainer"
+  },
   "1.5.4": {
     "1": "Fix a a bug while using custom dataset"
   },

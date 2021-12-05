@@ -54,7 +54,8 @@ class TNet_LF_BERT(nn.Module):
         self.fc = nn.Linear(50, C)
 
     def forward(self, inputs):
-        text_raw_indices, aspect_indices, aspect_in_text = inputs[0], inputs[1], inputs[2]
+        text_raw_indices, aspect_indices, aspect_in_text = \
+            inputs['text_indices'], inputs['aspect_indices'], inputs['aspect_boundary']
         feature_len = torch.sum(text_raw_indices != 0, dim=-1)
         aspect_len = torch.sum(aspect_indices != 0, dim=-1)
         feature = self.embed(text_raw_indices)['last_hidden_state']
@@ -77,4 +78,4 @@ class TNet_LF_BERT(nn.Module):
         z = F.relu(self.convs3(v))  # [(N,Co,L), ...]*len(Ks)
         z = F.max_pool1d(z, z.size(2)).squeeze(2)
         out = self.fc(z)
-        return out
+        return {'logits': out}

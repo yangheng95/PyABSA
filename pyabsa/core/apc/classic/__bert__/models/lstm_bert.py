@@ -19,9 +19,9 @@ class LSTM_BERT(nn.Module):
         self.dense = nn.Linear(opt.hidden_dim, opt.polarities_dim)
 
     def forward(self, inputs):
-        text_raw_indices = inputs[0]
+        text_raw_indices = inputs['text_indices']
         x = self.embed(text_raw_indices)['last_hidden_state']
         x_len = torch.sum(text_raw_indices != 0, dim=-1)
         _, (h_n, _) = self.lstm(x, x_len)
         out = self.dense(h_n[0])
-        return out
+        return {'logits': out}

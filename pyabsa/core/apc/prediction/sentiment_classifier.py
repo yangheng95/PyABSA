@@ -48,6 +48,8 @@ class SentimentClassifier:
         else:
             # load from a model path
             try:
+                if 'fine-tuned' in model_arg:
+                    raise ValueError('Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!')
                 print('Load sentiment classifier from', model_arg)
                 state_dict_path = find_file(model_arg, '.state_dict', exclude_key=['__MACOSX'])
                 model_path = find_file(model_arg, '.model', exclude_key=['__MACOSX'])
@@ -67,7 +69,6 @@ class SentimentClassifier:
                         if state_dict_path:
                             self.model = APCEnsembler(self.opt, load_dataset=False)
                             self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
-
                         if model_path:
                             self.model = torch.load(model_path, map_location='cpu')
                     else:
@@ -237,7 +238,10 @@ class SentimentClassifier:
                 for i, i_probs in enumerate(t_probs):
                     if 'index_to_label' in self.opt.args and int(i_probs.argmax(axis=-1)) in self.opt.index_to_label:
                         sent = self.opt.index_to_label[int(i_probs.argmax(axis=-1))]
-                        real_sent = sample['polarity'][i] if isinstance(sample['polarity'][i], str) else self.opt.index_to_label[int(sample['polarity'][i])]
+                        if sample['polarity'] != -999:
+                            real_sent = sample['polarity'][i] if isinstance(sample['polarity'][i], str) else self.opt.index_to_label[int(sample['polarity'][i])]
+                        else:
+                            real_sent = 'N.A.'
                         if real_sent != -999 and real_sent != '-999':
                             n_labeled += 1
                         if sent == real_sent:

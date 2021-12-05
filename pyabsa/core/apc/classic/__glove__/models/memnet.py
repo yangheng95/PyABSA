@@ -38,7 +38,7 @@ class MemNet(nn.Module):
         self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
 
     def forward(self, inputs):
-        text_raw_without_aspect_indices, aspect_indices = inputs[0], inputs[1]
+        text_raw_without_aspect_indices, aspect_indices = inputs['context_indices'], inputs['aspect_indices']
         memory_len = torch.sum(text_raw_without_aspect_indices != 0, dim=-1)
         aspect_len = torch.sum(aspect_indices != 0, dim=-1)
         nonzeros_aspect = torch.tensor(aspect_len, dtype=torch.float).to(self.opt.device)
@@ -50,10 +50,12 @@ class MemNet(nn.Module):
         aspect = torch.sum(aspect, dim=1)
         aspect = torch.div(aspect, nonzeros_aspect.view(nonzeros_aspect.size(0), 1))
         x = aspect.unsqueeze(dim=1)
+        if 'hops' not in self.opt.args:
+            self.opt.hops = 3
         for _ in range(self.opt.hops):
             x = self.x_linear(x)
             out_at, _ = self.attention(memory, x)
             x = out_at + x
         x = x.view(x.size(0), -1)
         out = self.dense(x)
-        return out
+        return {'logits': out}

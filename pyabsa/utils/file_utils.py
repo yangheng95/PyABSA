@@ -265,15 +265,15 @@ def save_model(opt, model, tokenizer, save_path):
 
     elif opt.save_mode == 3:
         # save the fine-tuned bert model
-        model_output_dir = save_path + '-fine-tuned-bert'
+        model_output_dir = save_path + 'fine-tuned-pretrained-model'
         if not os.path.exists(model_output_dir):
             os.makedirs(model_output_dir)
         output_model_file = os.path.join(model_output_dir, 'pytorch_model.bin')
         output_config_file = os.path.join(model_output_dir, 'config.json')
 
         torch.save(model_to_save.state_dict(), output_model_file)
-        model_to_save.config.to_json_file(output_config_file)
-        tokenizer.save_vocabulary(model_output_dir)
+        model_to_save.bert.config.to_json_file(output_config_file)
+        tokenizer.tokenizer.save_vocabulary(model_output_dir)
     else:
         raise ValueError('Invalid save_mode: {}'.format(opt.save_mode))
     model.to(opt.device)
@@ -290,7 +290,6 @@ def query_remote_version():
         content = content.read().decode("utf-8").split('\'')
         version = content[-2]
     except Exception as e:
-        print(e)
         return 'N.A.'
     return version
 

@@ -14,8 +14,8 @@ from termcolor import colored
 from torch.utils.data import Dataset
 from transformers import AutoTokenizer
 
-from pyabsa.core.apc.classic.__glove__.dataset_utils.dependency_graph import prepare_dependency_graph
-from pyabsa.core.apc.dataset_utils.apc_utils import load_apc_datasets, configure_spacy_model
+from pyabsa.core.apc.classic.__glove__.dataset_utils.dependency_graph import prepare_dependency_graph, configure_spacy_model
+from pyabsa.core.apc.dataset_utils.apc_utils import load_apc_datasets
 from pyabsa.utils.pyabsa_utils import check_and_fix_labels, validate_example
 
 
@@ -173,11 +173,10 @@ class BERTBaselineABSADataset(Dataset):
         all_data = []
         label_set = set()
 
-        dataset_name = opt.dataset_name
-        if not os.path.exists(dataset_name):
-            os.mkdir(dataset_name)
-            opt.dataset_name = os.path.join(os.getcwd(), dataset_name)
-        graph_path = prepare_dependency_graph(dataset_list, dataset_name, opt.max_seq_len)
+        dep_cache_path = os.path.join(os.getcwd(), '{}_dependency_cache'.format(opt.dataset_name))
+        if not os.path.exists(dep_cache_path):
+            os.mkdir(dep_cache_path)
+        graph_path = prepare_dependency_graph(dataset_list, dep_cache_path, opt.max_seq_len)
         fin = open(graph_path, 'rb')
         idx2graph = pickle.load(fin)
 
@@ -220,31 +219,31 @@ class BERTBaselineABSADataset(Dataset):
                 'ex_id': ex_id,
 
                 'text_indices': text_indices
-                if 'text_indices' in opt.inputs else 0,
+                if 'text_indices' in opt.inputs_cols else 0,
 
                 'context_indices': context_indices
-                if 'context_indices' in opt.inputs else 0,
+                if 'context_indices' in opt.inputs_cols else 0,
 
                 'left_indices': left_indices
-                if 'left_indices' in opt.inputs else 0,
+                if 'left_indices' in opt.inputs_cols else 0,
 
                 'left_with_aspect_indices': left_with_aspect_indices
-                if 'left_with_aspect_indices' in opt.inputs else 0,
+                if 'left_with_aspect_indices' in opt.inputs_cols else 0,
 
                 'right_indices': right_indices
-                if 'right_indices' in opt.inputs else 0,
+                if 'right_indices' in opt.inputs_cols else 0,
 
                 'right_with_aspect_indices': right_with_aspect_indices
-                if 'right_with_aspect_indices' in opt.inputs else 0,
+                if 'right_with_aspect_indices' in opt.inputs_cols else 0,
 
                 'aspect_indices': aspect_indices
-                if 'aspect_indices' in opt.inputs else 0,
+                if 'aspect_indices' in opt.inputs_cols else 0,
 
                 'aspect_boundary': aspect_boundary
-                if 'aspect_boundary' in opt.inputs else 0,
+                if 'aspect_boundary' in opt.inputs_cols else 0,
 
                 'dependency_graph': dependency_graph
-                if 'dependency_graph' in opt.inputs else 0,
+                if 'dependency_graph' in opt.inputs_cols else 0,
 
                 'polarity': polarity,
             }

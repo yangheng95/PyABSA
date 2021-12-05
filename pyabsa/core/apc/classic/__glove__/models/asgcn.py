@@ -83,7 +83,8 @@ class ASGCN(nn.Module):
         return mask * x
 
     def forward(self, inputs):
-        text_indices, aspect_indices, left_indices, adj = inputs
+        text_indices, aspect_indices, left_indices, adj = \
+            inputs['text_indices'], inputs['aspect_indices'], inputs['left_indices'], inputs['dependency_graph']
         text_len = torch.sum(text_indices != 0, dim=-1)
         aspect_len = torch.sum(aspect_indices != 0, dim=-1)
         left_len = torch.sum(left_indices != 0, dim=-1)
@@ -99,5 +100,5 @@ class ASGCN(nn.Module):
         alpha_mat = torch.matmul(x, text_out.transpose(1, 2))
         alpha = F.softmax(alpha_mat.sum(1, keepdim=True), dim=2)
         x = torch.matmul(alpha, text_out).squeeze(1)  # batch_size x 2*hidden_dim
-        output = self.fc(x)
-        return output
+        out = self.fc(x)
+        return {'logits': out}

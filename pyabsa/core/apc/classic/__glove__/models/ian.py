@@ -24,7 +24,7 @@ class IAN(nn.Module):
         self.dense = nn.Linear(opt.hidden_dim * 2, opt.polarities_dim)
 
     def forward(self, inputs):
-        text_raw_indices, aspect_indices = inputs[0], inputs[1]
+        text_raw_indices, aspect_indices = inputs['text_indices'], inputs['aspect_indices']
         text_raw_len = torch.sum(text_raw_indices != 0, dim=-1)
         aspect_len = torch.sum(aspect_indices != 0, dim=-1)
 
@@ -48,4 +48,4 @@ class IAN(nn.Module):
 
         x = torch.cat((aspect_final, context_final), dim=-1)
         out = self.dense(x)
-        return out
+        return {'logits': out}
