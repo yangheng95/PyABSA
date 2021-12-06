@@ -1,6 +1,11 @@
 {
+  "1.6.4": {
+    "1": "Fix a potential problem in generate APC inference set",
+    "2": "Register a Yelp dataset provided by WeLi9811: https://github.com/WeiLi9811"
+  },
   "1.6.3": {
-    "0": "Fix a potential problem in the sentiment classifier while loading tokenizer"
+    "1": "Fix a potential problem in the sentiment classifier while loading tokenizer",
+    "2": "Fix a problem in preprocessing in APC inference"
   },
   "1.6": {
     "0": "This is a stable version which eliminates almost all unknown problems before",
