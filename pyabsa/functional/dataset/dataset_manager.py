@@ -46,6 +46,9 @@ class ABSADatasetList(list):
     Television = DatasetItem('Television', 'Television')
     TShirt = DatasetItem('TShirt', 'TShirt')
 
+    # @WeiLi9811 https://github.com/WeiLi9811
+    Yelp = DatasetItem('Yelp', 'Yelp')
+
     # Chinese (binary polarity)
     Phone = DatasetItem('Phone', 'Phone')
     Car = DatasetItem('Car', 'Car')

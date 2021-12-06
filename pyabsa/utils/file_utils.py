@@ -27,11 +27,12 @@ from pyabsa.utils.pyabsa_utils import save_args
 
 def generate_inference_set_for_apc(dataset_path):
     if isinstance(dataset_path, DatasetItem):
-        dataset_path = dataset_path.dataset_name
-    elif not os.path.exists(dataset_path):
-        dataset_path = os.getcwd()
-    train_datasets = find_files(dataset_path, ['dataset', 'train', 'apc'], exclude_key='.inference')
-    test_datasets = find_files(dataset_path, ['dataset', 'test', 'apc'], exclude_key='.inference')
+        dataset_name = dataset_path.dataset_name
+    else:
+        dataset_name = ''
+
+    train_datasets = find_files(os.getcwd(), ['dataset', 'train', 'apc', dataset_name], exclude_key='.inference')
+    test_datasets = find_files(os.getcwd(), ['dataset', 'test', 'apc', dataset_name], exclude_key='.inference')
     for file in train_datasets + test_datasets:
         try:
             fin = open(file, 'r', newline='\n', encoding='utf-8')
@@ -134,7 +135,10 @@ def split_aspects(sentence):
 
 def convert_atepc(fname):
     print('converting:', fname)
-    dist_fname = fname.replace('apc_datasets', 'atepc_datasets') + '.atepc'
+    dist_fname = fname.replace('apc_datasets', 'atepc_datasets')
+    if not os.path.exists(os.path.dirname(dist_fname)):
+        os.makedirs(os.path.dirname(dist_fname))
+    dist_fname += '.atepc'
     lines = []
     samples = assemble_aspects(fname)
 
@@ -144,9 +148,6 @@ def convert_atepc(fname):
             lines.append(token + " " + label + " " + str(polarity))
         lines.append('\n')
 
-    # 写之前，先检验文件是否存在，存在就删掉
-    if os.path.exists(dist_fname):
-        os.remove(dist_fname)
     fout = open(dist_fname, 'w', encoding='utf8')
     for line in lines:
         fout.writelines((line + '\n').replace('\n\n', '\n'))
