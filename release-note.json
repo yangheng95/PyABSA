@@ -1,4 +1,7 @@
 {
+  "1.6.3": {
+    "0": "Fix a potential problem in the sentiment classifier while loading tokenizer"
+  },
   "1.6": {
     "0": "This is a stable version which eliminates almost all unknown problems before",
     "1": "Fix a problem in saving fine-tuned pretrained model",
