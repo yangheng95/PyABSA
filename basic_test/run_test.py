@@ -6,6 +6,8 @@
 # Copyright (C) 2021. All Rights Reserved.
 import shutil
 
+from torch import cuda
+
 from pyabsa import APCModelList, BERTBaselineAPCModelList, GloVeAPCModelList, \
     ATEPCModelList, BERTClassificationModelList, GloVeClassificationModelList
 from pyabsa import ABSADatasetList, ClassificationDatasetList
@@ -45,10 +47,12 @@ apc_examples = [
 # # # for dataset in ABSADatasetList():
 for dataset in ABSADatasetList()[:1]:
     for model in APCModelList():
+        cuda.empty_cache()
         config = APCConfigManager.get_apc_config_english()
         config.model = model
         config.cache_dataset = True
         config.num_epoch = 1
+        config.max_seq_len = 10
         config.evaluate_begin = 0
         config.log_step = 100
         sent_classifier = Trainer(config=config,
@@ -67,6 +71,7 @@ for dataset in ABSADatasetList()[:1]:
 
     for model in BERTBaselineAPCModelList():
         config = APCConfigManager.get_apc_config_english()
+        cuda.empty_cache()
         config.model = model
         config.cache_dataset = True
         config.num_epoch = 1
@@ -86,6 +91,7 @@ for dataset in ABSADatasetList()[:1]:
 
     for model in GloVeAPCModelList():
         config = APCConfigManager.get_apc_config_english()
+        cuda.empty_cache()
         config.model = model
         config.cache_dataset = True
         config.num_epoch = 1
@@ -105,6 +111,7 @@ for dataset in ABSADatasetList()[:1]:
 
     for model in ATEPCModelList():
         config = ATEPCConfigManager.get_atepc_config_english()
+        cuda.empty_cache()
         config.model = model
         config.cache_dataset = True
         config.num_epoch = 1
@@ -127,6 +134,7 @@ for dataset in ABSADatasetList()[:1]:
 
 for dataset in ClassificationDatasetList():
     for model in BERTClassificationModelList():
+        cuda.empty_cache()
         config = ClassificationConfigManager.get_classification_config_english()
         config.model = model
         config.num_epoch = 1

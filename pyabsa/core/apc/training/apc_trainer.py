@@ -30,9 +30,9 @@ class Instructor:
         self.opt = opt
 
         self.logger = logger
-        self.opt = opt
-        self.model = APCEnsembler(self.opt)
 
+        self.model = APCEnsembler(self.opt)
+        self.opt = self.model.opt
         self.train_set = self.model.train_set
         self.test_set = self.model.test_set
         self.test_dataloader = self.model.test_dataloader
