@@ -68,6 +68,8 @@ class APCEnsembler(nn.Module):
                     self.train_set, opt = pickle.load(open(cache_path, mode='rb'))
                 # reset output dim according to dataset labels
                 self.opt.polarities_dim = opt.polarities_dim
+                self.opt.label_to_index = opt.label_to_index
+                self.opt.index_to_label = opt.index_to_label
 
             if hasattr(APCModelList, models[i].__name__):
                 try:

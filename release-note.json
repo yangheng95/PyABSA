@@ -1,7 +1,10 @@
 {
+  "1.6.7": {
+    "1": "Fix a potential problem while do batch inference after training based on cached dataset"
+  },
   "1.6.4": {
     "1": "Fix a potential problem in generate APC inference set",
-    "2": "Register a Yelp dataset provided by WeLi9811: https://github.com/WeiLi9811"
+    "2": "Register a Yelp dataset in PyABSA provided by WeLi9811: https://github.com/WeiLi9811"
   },
   "1.6.3": {
     "1": "Fix a potential problem in the sentiment classifier while loading tokenizer",
