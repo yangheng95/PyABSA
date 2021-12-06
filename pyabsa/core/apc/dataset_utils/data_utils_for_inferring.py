@@ -43,10 +43,10 @@ class ABSADataset(Dataset):
                 sample += ' !sent! ' + str(ref_sent[int(i / 2)])
                 samples.append(sample.replace('[TEMP]', '[ASP]'))
         elif not ref_sent or int((len(splits) - 1) / 2) != len(ref_sent):
-            if int((len(splits) - 1) / 2) != len(ref_sent):
-                print(_text, ' -> Unequal length of reference sentiment and aspects, ignore the reference sentiment.')
-            else:
+            if not ref_sent:
                 print(_text, ' -> No the reference sentiment found')
+            else:
+                print(_text, ' -> Unequal length of reference sentiment and aspects, ignore the reference sentiment.')
 
             for i in range(0, len(splits) - 1, 2):
                 sample = text.replace('[ASP]' + splits[i + 1] + '[ASP]',
