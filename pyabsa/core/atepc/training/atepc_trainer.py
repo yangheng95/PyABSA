@@ -109,9 +109,9 @@ class Instructor:
             if self.opt.cache_dataset and not os.path.exists(cache_path):
                 print('Caching dataset... please remove cached dataset if change model or dataset')
                 if self.opt.dataset_file['test']:
-                    pickle.dump((self.train_data, self.test_data, opt), open(cache_path, mode='wb'))
+                    pickle.dump((self.train_data, self.test_data, self, self.opt), open(cache_path, mode='wb'))
                 else:
-                    pickle.dump((self.train_data, opt), open(cache_path, mode='wb'))
+                    pickle.dump((self.train_data, self.opt), open(cache_path, mode='wb'))
 
         # only identify the labels in training set, make sure the labels are the same type in the test set
         if 'num_labels' not in self.opt.args:
@@ -120,7 +120,7 @@ class Instructor:
             self.opt.args['label_list'] = opt.args['label_list']
             self.opt.args_call_count['label_list'] = opt.args_call_count['label_list']
         bert_base_model.config.num_labels = self.opt.num_labels
-        self.opt.label_list = self.opt.label_list
+        self.opt.label_list = opt.label_list
 
         self.num_train_optimization_steps = int(
             len(self.train_data) / self.opt.batch_size / self.opt.gradient_accumulation_steps) * self.opt.num_epoch

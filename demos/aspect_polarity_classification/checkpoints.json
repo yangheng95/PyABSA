@@ -1,21 +1,21 @@
 {
   "APC": {
     "english": {
-      "id": "https://drive.google.com/file/d/1vAp1zQW3YNKzyjj8FfJdderBZYfOYhvw/view?usp=sharing",
+      "id": "https://drive.google.com/file/d/1AsjRzMa2D6DykMuOvokMra9mGBdRgIJC/view?usp=sharing",
       "Training Model": "FAST-LSA-S",
       "Training Dataset": "English",
       "Description": "Trained on RTX2080 Ti",
-      "Available Version": "1.5.2",
-      "Checkpoint File": "fast_lsa_s_acc_85.18_f1_82.72.zip",
+      "Available Version": "1.6.3",
+      "Checkpoint File": "fast_lsa_s_acc_84.9_f1_82.11.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "chinese": {
-      "id": "https://drive.google.com/file/d/1LS_xTRVsBrucylZ3OEVIRPu1dA7RXv13/view?usp=sharing",
+      "id": "https://drive.google.com/file/d/1mXLZorWyIQM2wGTqnPrFo0X0_b5cr4mu/view?usp=sharing",
       "Training Model": "FAST-LSA-S",
       "Training Dataset": "Chinese",
       "Description": "Trained on RTX2080 Ti",
       "Available Version": "1.5.2",
-      "Checkpoint File": "fast_lsa_s_acc_94.38_f1_88.7.zip",
+      "Checkpoint File": "fast_lsa_s_acc_94.34_f1_93.37.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "HELP-WANTED": {

@@ -14,6 +14,10 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 checkpoint_map = available_checkpoints(from_local=False)
 
 examples = [
+    'The [ASP]battery-life[ASP], and this [ASP]battery[ASP] is ok',
+    'The [ASP] battery-life [ASP] is bad',
+    'The [ASP] battery-life [ASP] is good',
+    'The [ASP] battery-life [ASP] ',
     'Strong build though which really adds to its [ASP]durability[ASP] .',  # !sent! Positive
     'Strong [ASP]build[ASP] though which really adds to its durability . !sent! Positive',
     'The [ASP]battery life[ASP] is excellent - 6-7 hours without charging . !sent! Positive',
@@ -36,6 +40,6 @@ inference_sets = ABSADatasetList.English
 results = sent_classifier.batch_infer(target_file=inference_sets,
                                       print_result=True,
                                       save_result=True,
-                                      ignore_error=True,
+                                      ignore_error=False,
                                       )
 print(results)

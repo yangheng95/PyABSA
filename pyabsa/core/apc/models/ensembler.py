@@ -124,9 +124,9 @@ class APCEnsembler(nn.Module):
             if self.opt.cache_dataset and not os.path.exists(cache_path):
                 print('Caching dataset... please remove cached dataset if change model or dataset')
                 if self.opt.dataset_file['test']:
-                    pickle.dump((self.train_set, self.test_set, opt), open(cache_path, mode='wb'))
+                    pickle.dump((self.train_set, self.test_set, self.opt), open(cache_path, mode='wb'))
                 else:
-                    pickle.dump((self.train_set, opt), open(cache_path, mode='wb'))
+                    pickle.dump((self.train_set, self.opt), open(cache_path, mode='wb'))
 
             if load_dataset:
                 train_sampler = RandomSampler(self.train_set if not self.train_set else self.train_set)

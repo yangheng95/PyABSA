@@ -28,41 +28,39 @@ class ABSADataset(Dataset):
     def parse_sample(self, text):
         _text = text
         samples = []
-        try:
-            if '!sent!' not in text:
-                splits = text.split('[ASP]')
-                for i in range(0, len(splits) - 1, 2):
-                    sample = text.replace('[ASP]', '').replace(splits[i + 1], '[ASP]' + splits[i + 1] + '[ASP]')
-                    samples.append(sample)
+
+        if '!sent!' not in text:
+            text += '!sent!'
+        text, _, ref_sent = text.partition('!sent!')
+        ref_sent = ref_sent.split(',') if ref_sent else None
+        text = '[PADDING] ' + text + ' [PADDING]'
+        splits = text.split('[ASP]')
+
+        if ref_sent and int((len(splits) - 1) / 2) == len(ref_sent):
+            for i in range(0, len(splits) - 1, 2):
+                sample = text.replace('[ASP]' + splits[i + 1] + '[ASP]',
+                                      '[TEMP]' + splits[i + 1] + '[TEMP]').replace('[ASP]', '')
+                sample += ' !sent! ' + str(ref_sent[int(i / 2)])
+                samples.append(sample.replace('[TEMP]', '[ASP]'))
+        elif not ref_sent or int((len(splits) - 1) / 2) != len(ref_sent):
+            if int((len(splits) - 1) / 2) != len(ref_sent):
+                print(_text, ' -> Unequal length of reference sentiment and aspects, ignore the reference sentiment.')
             else:
-                text, ref_sent = text.split('!sent!')
-                ref_sent = ref_sent.split(',')
-                text = '[PADDING] ' + text + ' [PADDING]'
-                splits = text.split('[ASP]')
+                print(_text, ' -> No the reference sentiment found')
 
-                if int((len(splits) - 1) / 2) == len(ref_sent):
-                    for i in range(0, len(splits) - 1, 2):
-                        sample = text.replace('[ASP]' + splits[i + 1] + '[ASP]',
-                                              '[TEMP]' + splits[i + 1] + '[TEMP]').replace('[ASP]', '')
-                        sample += ' !sent! ' + str(ref_sent[int(i / 2)])
-                        samples.append(sample.replace('[TEMP]', '[ASP]'))
-                else:
-                    print(_text,
-                          ' -> Unequal length of reference sentiment and aspects, ignore the reference sentiment.')
-                    for i in range(0, len(splits) - 1, 2):
-                        sample = text.replace('[ASP]' + splits[i + 1] + '[ASP]',
-                                              '[TEMP]' + splits[i + 1] + '[TEMP]').replace('[ASP]', '')
-                        samples.append(sample.replace('[TEMP]', '[ASP]'))
+            for i in range(0, len(splits) - 1, 2):
+                sample = text.replace('[ASP]' + splits[i + 1] + '[ASP]',
+                                      '[TEMP]' + splits[i + 1] + '[TEMP]').replace('[ASP]', '')
+                samples.append(sample.replace('[TEMP]', '[ASP]'))
+        else:
+            raise ValueError('Invalid Input:{}'.format(text))
 
-        except:
-            print('Invalid Input:', _text)
         return samples
 
     def prepare_infer_sample(self, text: str):
         self.process_data(self.parse_sample(text))
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
-
         lines = load_apc_datasets(infer_file)
         samples = []
         for sample in lines:
@@ -162,7 +160,6 @@ class ABSADataset(Dataset):
                 else:
                     raise RuntimeError('Catch Exception: {}, use ignore_error=True to remove error samples.'.format(e))
 
-        check_and_fix_labels(label_set, 'polarity', all_data, self.opt)
         self.opt.polarities_dim = len(label_set)
 
         if 'left_lcf_vec' in self.opt.inputs_cols or 'right_lcf_vec' in self.opt.inputs_cols \
@@ -174,7 +171,7 @@ class ABSADataset(Dataset):
                 for pad_idx in range(self.opt.max_seq_len):
                     if pad_idx in data['cluster_ids']:
                         # print(data['polarity'])
-                        cluster_ids.append(self.opt.label_to_index[self.opt.index_to_label[data['polarity']]])
+                        cluster_ids.append(self.opt.label_to_index.get(self.opt.index_to_label.get(data['polarity'], 'N.A.'), -999))
                     else:
                         cluster_ids.append(-100)
                         # cluster_ids.append(3)

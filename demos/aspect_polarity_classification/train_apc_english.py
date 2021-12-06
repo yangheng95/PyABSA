@@ -16,9 +16,9 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import APCModelList
 
 apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = APCModelList.BERT_SPC
+apc_config_english.model = APCModelList.FAST_LSA_S
 apc_config_english.num_epoch = 30
-apc_config_english.evaluate_begin = 0
+apc_config_english.evaluate_begin = 5
 apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
 apc_config_english.dropout = 0.5
@@ -28,7 +28,7 @@ apc_config_english.l2reg = 1e-8
 apc_config_english.dynamic_truncate = True
 apc_config_english.srd_alignment = True
 
-Dataset = ABSADatasetList.Laptop14
+Dataset = ABSADatasetList.English
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=Dataset,
                           checkpoint_save_mode=1,
