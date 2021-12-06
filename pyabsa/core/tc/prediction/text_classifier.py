@@ -233,7 +233,7 @@ class TextClassifier:
                     if 'index_to_label' in self.opt.args and int(i_probs.argmax(axis=-1)):
                         sent = self.opt.index_to_label[int(i_probs.argmax(axis=-1))]
                         if sample['label'] != -999:
-                            real_sent = sample['label'][i] if isinstance(sample['label'][i], str) else self.opt.index_to_label[int(sample['label'][i])]
+                            real_sent = sample['label'][i] if isinstance(sample['label'][i], str) else self.opt.index_to_label.get(int(sample['label'][i]), 'N.A.')
                         else:
                             real_sent = 'N.A.'
                         if real_sent != -999 and real_sent != '-999':

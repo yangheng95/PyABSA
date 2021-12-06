@@ -18,7 +18,7 @@ from pyabsa.functional import APCModelList
 config = APCConfigManager.get_apc_config_chinese()
 config.evaluate_begin = 4
 config.dropout = 0.5
-config.l2reg = 0.0000001
+config.l2reg = 1e-8
 config.model = APCModelList.FAST_LSA_S
 config.spacy_model = 'zh_core_web_sm'
 # chinese_sets = ABSADatasetList.Chinese
