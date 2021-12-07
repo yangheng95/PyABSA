@@ -39,7 +39,7 @@ class ABSADataset(Dataset):
         if ref_sent and int((len(splits) - 1) / 2) == len(ref_sent):
             for i in range(0, len(splits) - 1, 2):
                 sample = text.replace('[ASP]' + splits[i + 1] + '[ASP]',
-                                      '[TEMP]' + splits[i + 1] + '[TEMP]').replace('[ASP]', '')
+                                      '[TEMP]' + splits[i + 1] + '[TEMP]', 1).replace('[ASP]', '')
                 sample += ' !sent! ' + str(ref_sent[int(i / 2)])
                 samples.append(sample.replace('[TEMP]', '[ASP]'))
         elif not ref_sent or int((len(splits) - 1) / 2) != len(ref_sent):
@@ -50,7 +50,7 @@ class ABSADataset(Dataset):
 
             for i in range(0, len(splits) - 1, 2):
                 sample = text.replace('[ASP]' + splits[i + 1] + '[ASP]',
-                                      '[TEMP]' + splits[i + 1] + '[TEMP]').replace('[ASP]', '')
+                                      '[TEMP]' + splits[i + 1] + '[TEMP]', 1).replace('[ASP]', '')
                 samples.append(sample.replace('[TEMP]', '[ASP]'))
         else:
             raise ValueError('Invalid Input:{}'.format(text))
