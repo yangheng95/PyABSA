@@ -14,7 +14,7 @@
       "Training Model": "FAST-LSA-S",
       "Training Dataset": "Chinese",
       "Description": "Trained on RTX2080 Ti",
-      "Available Version": "1.5.2",
+      "Available Version": "1.6.3",
       "Checkpoint File": "fast_lsa_s_acc_94.34_f1_93.37.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
