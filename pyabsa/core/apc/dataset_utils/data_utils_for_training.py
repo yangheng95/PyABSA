@@ -105,9 +105,28 @@ class ABSADataset(Dataset):
         check_and_fix_labels(label_set, 'polarity', all_data, opt)
         opt.polarities_dim = len(label_set)
 
+        len1 = []
+        len2 = []
+        len3 = []
+        len4 = []
+        len5 = []
+
         if 'left_lcf_vec' in opt.inputs_cols or 'right_lcf_vec' in opt.inputs_cols or 'left_lcfs_vec' in opt.inputs_cols or 'right_lcfs_vec' in opt.inputs_cols:
             all_data = build_sentiment_window(all_data, tokenizer, opt.similarity_threshold)
             for data in all_data:
+
+                if len(data['cluster_ids']) == 1:
+                    len1.append(data['cluster_ids'])
+                elif len(data['cluster_ids']) == 2:
+                    len2.append(data['cluster_ids'])
+                elif len(data['cluster_ids']) == 3:
+                    len3.append(data['cluster_ids'])
+                elif len(data['cluster_ids']) == 4:
+                    len4.append(data['cluster_ids'])
+                elif len(data['cluster_ids']) > 4:
+                    len5.append(data['cluster_ids'])
+                else:
+                    raise ValueError()
 
                 cluster_ids = []
                 for pad_idx in range(opt.max_seq_len):
@@ -120,10 +139,14 @@ class ABSADataset(Dataset):
                 data['cluster_ids'] = np.asarray(cluster_ids, dtype=np.int64)
                 data['side_ex_ids'] = np.array(0)
                 data['aspect_position'] = np.array(0)
-
         else:
             for data in all_data:
                 data['aspect_position'] = np.array(0)
+        print('# of Cluster size(1): {}'.format(len(len1)))
+        print('# of Cluster size(2): {}'.format(len(len2)))
+        print('# of Cluster size(3): {}'.format(len(len3)))
+        print('# of Cluster size(4): {}'.format(len(len4)))
+        print('# of Cluster size(>=5): {}'.format(len(len5)))
 
         self.data = all_data
 

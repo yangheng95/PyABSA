@@ -16,7 +16,7 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import APCModelList
 
 apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = APCModelList.FAST_LSA_S
+apc_config_english.model = APCModelList.DLCFS_DCA_BERT
 apc_config_english.num_epoch = 30
 apc_config_english.evaluate_begin = 5
 apc_config_english.similarity_threshold = 1
