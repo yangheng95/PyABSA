@@ -1,18 +1,18 @@
 [
   {
     "referrer": "github.com",
-    "count": 1461,
-    "uniques": 109
+    "count": 1464,
+    "uniques": 100
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 180,
+    "count": 188,
     "uniques": 35
   },
   {
     "referrer": "Google",
-    "count": 167,
-    "uniques": 102
+    "count": 170,
+    "uniques": 94
   },
   {
     "referrer": "catalyzex.com",
@@ -25,28 +25,28 @@
     "uniques": 6
   },
   {
-    "referrer": "pypi.org",
-    "count": 6,
-    "uniques": 3
-  },
-  {
     "referrer": "search.becovi.com",
     "count": 6,
     "uniques": 1
   },
   {
-    "referrer": "Baidu",
+    "referrer": "arxiv.org",
     "count": 5,
-    "uniques": 4
+    "uniques": 3
   },
   {
-    "referrer": "arxiv.org",
-    "count": 3,
+    "referrer": "pypi.org",
+    "count": 5,
     "uniques": 2
   },
   {
     "referrer": "Bing",
-    "count": 3,
-    "uniques": 2
+    "count": 4,
+    "uniques": 3
+  },
+  {
+    "referrer": "Baidu",
+    "count": 4,
+    "uniques": 3
   }
 ]
