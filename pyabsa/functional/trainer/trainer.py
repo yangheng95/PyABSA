@@ -23,6 +23,7 @@ from pyabsa.core.tc.prediction.text_classifier import TextClassifier
 from pyabsa.core.tc.training.classifier_trainer import train4classification
 
 from pyabsa.functional.config.apc_config_manager import APCConfigManager
+from pyabsa.functional.checkpoint.checkpoint_manager import APCCheckpointManager
 from pyabsa.functional.config.atepc_config_manager import ATEPCConfigManager
 from pyabsa.functional.config.classification_config_manager import ClassificationConfigManager
 from pyabsa.utils.file_utils import query_local_version

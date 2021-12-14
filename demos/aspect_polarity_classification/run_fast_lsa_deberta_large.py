@@ -21,6 +21,7 @@ from pyabsa.functional import APCModelList
 import warnings
 
 warnings.filterwarnings('ignore')
+
 seeds = [random.randint(0, 10000) for _ in range(2)]
 
 apc_config_english = APCConfigManager.get_apc_config_english()
@@ -30,7 +31,7 @@ apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
 apc_config_english.dropout = 0
 apc_config_english.cache_dataset = False
-apc_config_english.log_step = 10
+apc_config_english.patience = 5
 apc_config_english.pretrained_bert = 'microsoft/deberta-v3-large'
 apc_config_english.hidden_dim = 1024
 apc_config_english.embed_dim = 1024
@@ -85,7 +86,7 @@ apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
 apc_config_english.dropout = 0
 apc_config_english.cache_dataset = False
-apc_config_english.log_step = 10
+apc_config_english.patience = 5
 apc_config_english.pretrained_bert = 'microsoft/deberta-v3-large'
 apc_config_english.hidden_dim = 1024
 apc_config_english.embed_dim = 1024
