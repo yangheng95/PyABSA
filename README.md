@@ -9,6 +9,7 @@
 [![total views per week](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_views_per_week.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
 [![total clones](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_clones.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
 [![total clones per week](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_clones_per_week.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
+
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/back-to-reality-leveraging-pattern-driven/aspect-based-sentiment-analysis-on-semeval)](https://paperswithcode.com/sota/aspect-based-sentiment-analysis-on-semeval?p=back-to-reality-leveraging-pattern-driven)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
@@ -33,9 +34,9 @@ If you are willing to support PyABSA project, please star this repository as you
 |     LSA-T-DeBerta    |     84.16      |      90.45    |    88.15     |    93.98     | 
 |     LSA-S-DeBerta    |     84.33      |      89.64    |    89.04     |    94.47     | 
 
-**Results are based on roberta-base (V1.3.5), which is different from our
+**Results are based on DeBerta (V1.3.5), which is different from our
 original [paper](https://arxiv.org/pdf/2110.08604.pdf) using bert-base-uncased. We are working on update our
-experimental results of our paper**
+experimental results in our paper**
 please see more
 in [APC leaderboard](https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_polarity_classification/leaderboard.md)
 
