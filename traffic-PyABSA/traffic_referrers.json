@@ -1,18 +1,18 @@
 [
   {
     "referrer": "github.com",
-    "count": 1464,
-    "uniques": 100
+    "count": 1499,
+    "uniques": 98
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 188,
-    "uniques": 35
+    "count": 274,
+    "uniques": 42
   },
   {
     "referrer": "Google",
-    "count": 170,
-    "uniques": 94
+    "count": 181,
+    "uniques": 90
   },
   {
     "referrer": "catalyzex.com",
@@ -21,8 +21,8 @@
   },
   {
     "referrer": "link.zhihu.com",
-    "count": 11,
-    "uniques": 6
+    "count": 12,
+    "uniques": 7
   },
   {
     "referrer": "search.becovi.com",
@@ -30,23 +30,23 @@
     "uniques": 1
   },
   {
-    "referrer": "arxiv.org",
-    "count": 5,
-    "uniques": 3
-  },
-  {
     "referrer": "pypi.org",
     "count": 5,
     "uniques": 2
   },
   {
-    "referrer": "Bing",
+    "referrer": "arxiv.org",
     "count": 4,
-    "uniques": 3
+    "uniques": 2
   },
   {
     "referrer": "Baidu",
-    "count": 4,
-    "uniques": 3
+    "count": 3,
+    "uniques": 2
+  },
+  {
+    "referrer": "hub.fastgit.org",
+    "count": 3,
+    "uniques": 1
   }
 ]
