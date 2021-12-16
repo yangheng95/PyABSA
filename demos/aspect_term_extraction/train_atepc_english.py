@@ -16,10 +16,10 @@ from pyabsa.functional import ATEPCConfigManager
 
 config = ATEPCConfigManager.get_atepc_config_english()
 config.model = ATEPCModelList.FAST_LCFS_ATEPC
-config.evaluate_begin = 0
+config.evaluate_begin = 5
 config.num_epoch = 20
 config.log_step = 100
-Dataset = ABSADatasetList.English
+Dataset = ABSADatasetList.Laptop14
 aspect_extractor = Trainer(config=config,
                            dataset=Dataset,
                            checkpoint_save_mode=1,

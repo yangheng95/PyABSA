@@ -213,8 +213,11 @@ class AspectExtractor:
             inference_set = detect_infer_dataset(inference_source, task='apc')
             inference_source = load_atepc_inference_datasets(inference_set)
 
+        elif isinstance(inference_source, list):
+            pass
+
         else:
-            print('Please run inference using examples list or inference dataset path (list)!')
+            raise ValueError('Please run inference using examples list or inference dataset path (list)!')
 
         if inference_source:
             extraction_res, sentence_res = self._extract(inference_source)
@@ -346,6 +349,8 @@ class AspectExtractor:
                                    all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
         # Run prediction for full data
         self.opt.infer_batch_size = 128
+        self.opt.use_bert_spc = True
+
         infer_sampler = SequentialSampler(infer_data)
         self.infer_dataloader = DataLoader(infer_data, sampler=infer_sampler, pin_memory=True, batch_size=self.opt.infer_batch_size)
 
