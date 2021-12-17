@@ -109,7 +109,7 @@ class Instructor:
             if self.opt.cache_dataset and not os.path.exists(cache_path):
                 print('Caching dataset... please remove cached dataset if change model or dataset')
                 if self.opt.dataset_file['test']:
-                    pickle.dump((self.train_data, self.test_data, self, self.opt), open(cache_path, mode='wb'))
+                    pickle.dump((self.train_data, self.test_data, self.opt), open(cache_path, mode='wb'))
                 else:
                     pickle.dump((self.train_data, self.opt), open(cache_path, mode='wb'))
 

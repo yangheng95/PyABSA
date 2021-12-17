@@ -1,4 +1,8 @@
 {
+  "1.6.12": {
+    "1": "Fix cross_validate for APC",
+    "2": "Fix cache function in ATEPC"
+  },
   "1.6.10": {
     "1": "Fix a potential problem while training based on checkpoint in multi-cuda environ"
   },

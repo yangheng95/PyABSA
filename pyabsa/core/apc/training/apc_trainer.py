@@ -14,7 +14,7 @@ import torch
 import torch.nn as nn
 from findfile import find_file
 from sklearn import metrics
-from torch.utils.data import DataLoader, random_split, ConcatDataset, RandomSampler
+from torch.utils.data import DataLoader, random_split, ConcatDataset, RandomSampler, SequentialSampler
 from tqdm import tqdm
 from transformers import BertModel
 
@@ -94,8 +94,8 @@ class Instructor:
         self.optimizer = optimizers[self.opt.optimizer](_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
     def prepare_dataloader(self, train_set):
-        train_sampler = RandomSampler(self.train_set if not self.train_set else self.train_set)
         if self.opt.cross_validate_fold < 1:
+            train_sampler = RandomSampler(self.train_set if not self.train_set else self.train_set)
             self.train_dataloaders.append(DataLoader(dataset=train_set,
                                                      batch_size=self.opt.batch_size,
                                                      sampler=train_sampler,
@@ -103,17 +103,19 @@ class Instructor:
 
         else:
             split_dataset = train_set
-            len_per_fold = len(split_dataset) // self.opt.cross_validate_fold
+            len_per_fold = len(split_dataset) // self.opt.cross_validate_fold + 1
             folds = random_split(split_dataset, tuple([len_per_fold] * (self.opt.cross_validate_fold - 1) + [
                 len(split_dataset) - len_per_fold * (self.opt.cross_validate_fold - 1)]))
 
             for f_idx in range(self.opt.cross_validate_fold):
                 train_set = ConcatDataset([x for i, x in enumerate(folds) if i != f_idx])
                 val_set = folds[f_idx]
+                train_sampler = RandomSampler(train_set if not train_set else train_set)
+                val_sampler = SequentialSampler(val_set if not val_set else val_set)
                 self.train_dataloaders.append(
                     DataLoader(dataset=train_set, batch_size=self.opt.batch_size, sampler=train_sampler))
                 self.val_dataloaders.append(
-                    DataLoader(dataset=val_set, batch_size=self.opt.batch_size, sampler=train_sampler))
+                    DataLoader(dataset=val_set, batch_size=self.opt.batch_size, sampler=val_sampler))
 
     def _train(self, criterion):
         self.prepare_dataloader(self.train_set)
@@ -292,10 +294,10 @@ class Instructor:
                 postfix = ''
                 for i_batch, sample_batched in enumerate(iterator):
                     global_step += 1
-                    # switch model to training_tutorials mode, clear gradient accumulators
+                    # switch model to train mode, clear gradient accumulators
                     self.model.train()
                     self.optimizer.zero_grad()
-                    inputs = {col: sample_batched[col].to(self.opt.device) for col in self.opt.inputs}
+                    inputs = {col: sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols}
                     outputs = self.model(inputs)
                     targets = sample_batched['polarity'].to(self.opt.device)
 
