@@ -1,28 +1,23 @@
 [
   {
     "referrer": "github.com",
-    "count": 1482,
+    "count": 1412,
     "uniques": 98
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 324,
-    "uniques": 55
+    "count": 366,
+    "uniques": 56
   },
   {
     "referrer": "Google",
-    "count": 260,
-    "uniques": 102
+    "count": 262,
+    "uniques": 100
   },
   {
     "referrer": "link.zhihu.com",
-    "count": 19,
-    "uniques": 9
-  },
-  {
-    "referrer": "catalyzex.com",
-    "count": 19,
-    "uniques": 1
+    "count": 18,
+    "uniques": 8
   },
   {
     "referrer": "search.becovi.com",
@@ -48,5 +43,10 @@
     "referrer": "Bing",
     "count": 2,
     "uniques": 2
+  },
+  {
+    "referrer": "arxiv.org",
+    "count": 2,
+    "uniques": 1
   }
 ]
