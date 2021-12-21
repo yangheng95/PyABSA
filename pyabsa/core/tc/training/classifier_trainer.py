@@ -4,8 +4,7 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-
-
+import math
 import os
 import pickle
 import random
@@ -185,6 +184,10 @@ class Instructor:
             self.logger.info("Test set examples = %d", len(self.test_set))
         self.logger.info("Batch size = %d", self.opt.batch_size)
         self.logger.info("Num steps = %d", len(self.train_dataloaders[0]) // self.opt.batch_size * self.opt.num_epoch)
+        if self.opt.log_step < 0:
+            self.opt.log_step = len(self.train_dataloaders[0])
+            self.opt.patience = math.inf
+            patience = self.opt.patience
 
         for epoch in range(self.opt.num_epoch):
             iterator = tqdm(self.train_dataloaders[0])
@@ -298,6 +301,11 @@ class Instructor:
         self.opt.max_test_metrics = {'max_apc_test_acc': 0, 'max_apc_test_f1': 0, 'max_ate_test_f1': 0}
 
         for f, (train_dataloader, val_dataloader) in enumerate(zip(self.train_dataloaders, self.val_dataloaders)):
+            if self.opt.log_step < 0:
+                self.opt.log_step = len(train_dataloader) if self.opt.log_step < 0 else self.opt.log_step
+                self.opt.patience = math.inf
+                patience = self.opt.patience
+
             self.logger.info("***** Running training for Aspect Polarity Classification *****")
             self.logger.info("Training set examples = %d", len(self.train_set))
             if self.test_set:

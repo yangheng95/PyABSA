@@ -109,58 +109,6 @@ def load_apc_datasets(fname):
     return lines
 
 
-# test code, this implementation applies dynamic truncation on tokenized input,
-# instead of truncating the original input itself
-# def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
-#     bos_token = tokenizer.bos_token if tokenizer.bos_token else '[CLS]'
-#     eos_token = tokenizer.eos_token if tokenizer.eos_token else '[SEP]'
-#
-#     text_left_tokens = tokenizer.tokenize(text_left)
-#     text_right_tokens = tokenizer.tokenize(text_right)
-#     text_aspect_tokens = tokenizer.tokenize(aspect)
-#
-#     if hasattr(opt, 'dynamic_truncate') and opt.dynamic_truncate:
-#         # reserve 3 tokens for [CLS] and double [SEP]s
-#         _max_seq_len = opt.max_seq_len - 2 * len(text_aspect_tokens) - 3
-#         if _max_seq_len < (len(text_left_tokens) + len(text_right_tokens)):
-#             cut_len = len(text_left_tokens) + len(text_right_tokens) - _max_seq_len
-#             if len(text_left_tokens) > len(text_right_tokens):
-#                 text_left_tokens = text_left_tokens[cut_len:]
-#             else:
-#                 text_right_tokens = text_right_tokens[:len(text_right_tokens) - cut_len]
-#
-#     text_raw = text_left + ' ' + aspect + ' ' + text_right
-#     text_raw_tokens = [bos_token] + text_left_tokens + text_aspect_tokens + text_right_tokens + [eos_token]
-#     text_raw_bert_indices = tokenizer.convert_tokens_to_ids(text_raw_tokens)
-#     text_spc_tokens = text_raw_tokens + text_aspect_tokens + [eos_token]
-#     text_bert_indices = tokenizer.convert_tokens_to_ids(text_spc_tokens)
-#     aspect_bert_indices = tokenizer.convert_tokens_to_ids(text_aspect_tokens)
-#     text_bert_indices = pad_and_truncate(text_bert_indices, opt.max_seq_len)
-#     aspect_begin = len(text_left_tokens) + 1
-#     if 'lcfs' in opt.model_name or opt.use_syntax_based_SRD:
-#         syntactical_dist = get_syntax_distance(text_raw, aspect, tokenizer, opt)
-#     else:
-#         syntactical_dist = None
-#
-#     lca_ids, lcf_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices,
-#                                                    aspect_begin, syntactical_dist)
-#
-#     lcf_cdw_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices,
-#                               aspect_begin, syntactical_dist)
-#
-#     inputs = {
-#         'text_raw': text_raw,
-#         'aspect': aspect,
-#         'text_bert_indices': text_bert_indices,
-#         'text_raw_bert_indices': text_raw_bert_indices,
-#         'aspect_bert_indices': aspect_bert_indices,
-#         'lca_ids': lca_ids,
-#         'lcf_cdm_vec': lcf_cdm_vec,
-#         'lcf_cdw_vec': lcf_cdw_vec,
-#     }
-#
-#     return inputs
-
 def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect, input_demands):
     if hasattr(opt, 'dynamic_truncate') and opt.dynamic_truncate:
         _max_seq_len = opt.max_seq_len - len(aspect.split(' '))
@@ -174,15 +122,6 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect, input_d
                 text_right = text_right[:len(text_right) - cut_len]
         text_left = ' '.join(text_left)
         text_right = ' '.join(text_right)
-
-        # test code
-        text_left = ' '.join(text_left.split(' ')[int(-(opt.max_seq_len - len(aspect.split())) / 2) - 1:])
-        text_right = ' '.join(text_right.split(' ')[:int((opt.max_seq_len - len(aspect.split())) / 2) + 1])
-
-    # if hasattr(opt, 'dynamic_truncate') and opt.dynamic_truncate:
-    #     # dynamic truncation on input text
-    #     text_left = ' '.join(text_left.split(' ')[int(-(opt.max_seq_len - len(aspect.split())) / 2) - 1:])
-    #     text_right = ' '.join(text_right.split(' ')[:int((opt.max_seq_len - len(aspect.split())) / 2) + 1])
 
     tokenizer.bos_token = tokenizer.bos_token if tokenizer.bos_token else '[CLS]'
     tokenizer.eos_token = tokenizer.eos_token if tokenizer.eos_token else '[SEP]'

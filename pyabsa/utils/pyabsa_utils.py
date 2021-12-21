@@ -32,31 +32,35 @@ def save_args(config, save_path):
 
 
 def print_args(config, logger=None, mode=0):
-    activated_args = []
-    default_args = []
     args = [key for key in sorted(config.args.keys())]
     for arg in args:
-        if isinstance(arg, str) and os.path.exists(arg):
-            arg = os.path.basename(arg)
-        if config.args_call_count[arg]:
-            activated_args.append('>>> {0}: {1}  --> Active'.format(arg, config.args[arg]))
-        else:
-            if mode == 0:
-                default_args.append('>>> {0}: {1}  --> Default'.format(arg, config.args[arg]))
-            else:
-                default_args.append('>>> {0}: {1}  --> Not Used'.format(arg, config.args[arg]))
+        logger.info('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
 
-    for line in activated_args:
-        if logger:
-            logger.info(line)
-        else:
-            print(colored(line, 'green'))
-
-    for line in default_args:
-        if logger:
-            logger.info(line)
-        else:
-            print(colored(line, 'yellow'))
+    # activated_args = []
+    # default_args = []
+    # args = [key for key in sorted(config.args.keys())]
+    # for arg in args:
+    #     if isinstance(arg, str) and os.path.exists(arg):
+    #         arg = os.path.basename(arg)
+    #     if config.args_call_count[arg]:
+    #         activated_args.append('>>> {0}: {1}  --> Active'.format(arg, config.args[arg]))
+    #     else:
+    #         if mode == 0:
+    #             default_args.append('>>> {0}: {1}  --> Default'.format(arg, config.args[arg]))
+    #         else:
+    #             default_args.append('>>> {0}: {1}  --> Not Used'.format(arg, config.args[arg]))
+    #
+    # for line in activated_args:
+    #     if logger:
+    #         logger.info(line)
+    #     else:
+    #         print(colored(line, 'green'))
+    #
+    # for line in default_args:
+    #     if logger:
+    #         logger.info(line)
+    #     else:
+    #         print(colored(line, 'yellow'))
 
 
 def validate_example(text: str, aspect: str, polarity: str):
@@ -142,7 +146,7 @@ def resume_from_checkpoint(trainer, from_checkpoint_path):
                 print('.model or .state_dict file is missing!')
         else:
             print('No checkpoint found in {}'.format(from_checkpoint_path))
-        print('Checkpoint loaded!')
+        print('Resume training from Checkpoint: {}!'.format(from_checkpoint_path))
 
 
 class TransformerConnectionError(ValueError):
@@ -203,5 +207,8 @@ optimizers = {
     'asgd': torch.optim.ASGD,  # default lr=0.01
     'rmsprop': torch.optim.RMSprop,  # default lr=0.01
     'sgd': torch.optim.SGD,
-    'adamw': torch.optim.AdamW
+    'adamw': torch.optim.AdamW,
+    'radam': torch.optim.RAdam,
+    'nadam': torch.optim.NAdam,
+    'sparseadam': torch.optim.SparseAdam,
 }
