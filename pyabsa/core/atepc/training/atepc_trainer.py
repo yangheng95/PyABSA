@@ -4,8 +4,7 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-
-
+import math
 import os
 import pickle
 import random
@@ -165,6 +164,11 @@ class Instructor:
 
     def run(self):
         patience = self.opt.patience
+        if self.opt.log_step < 0:
+            self.opt.log_step = len(self.train_dataloader) if self.opt.log_step < 0 else self.opt.log_step
+            self.opt.patience = math.inf
+            patience = self.opt.patience
+
         self.logger.info("***** Running training for Aspect Term Extraction *****")
         self.logger.info("  Num examples = %d", len(self.train_data))
         self.logger.info("  Batch size = %d", self.opt.batch_size)

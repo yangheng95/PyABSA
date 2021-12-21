@@ -148,6 +148,10 @@ class Instructor:
                 Trainable_params += mulValue  # 可训练参数量
             else:
                 NonTrainable_params += mulValue  # 非可训练参数量
+        if self.opt.log_step < 0:
+            self.opt.log_step = len(self.train_dataloaders[0]) if self.opt.log_step < 0 else self.opt.log_step
+            self.opt.patience = math.inf
+            patience = self.opt.patience
 
         self.logger.info("***** Running training for Aspect Polarity Classification *****")
         self.logger.info("Training set examples = %d", len(self.train_set))
@@ -277,6 +281,11 @@ class Instructor:
         self.opt.max_test_metrics = {'max_apc_test_acc': 0, 'max_apc_test_f1': 0, 'max_ate_test_f1': 0}
 
         for f, (train_dataloader, val_dataloader) in enumerate(zip(self.train_dataloaders, self.val_dataloaders)):
+            if self.opt.log_step < 0:
+                self.opt.log_step = len(train_dataloader)
+                self.opt.patience = math.inf
+                patience = self.opt.patience
+
             self.logger.info("***** Running training for Aspect Polarity Classification *****")
             self.logger.info("Training set examples = %d", len(self.train_set))
             if self.test_set:

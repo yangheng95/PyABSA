@@ -11,6 +11,9 @@
 #                      but there are some changes in this paper, and it is under submission                            #
 ########################################################################################################################
 import random
+import shutil
+
+import findfile
 
 from pyabsa.functional import Trainer
 from pyabsa.functional import APCConfigManager
@@ -20,7 +23,7 @@ from pyabsa.functional import APCModelList
 import warnings
 
 warnings.filterwarnings('ignore')
-# seeds = [random.randint(0, 10000) for _ in range(5)]
+
 seeds = [random.randint(0, 10000) for _ in range(2)]
 
 apc_config_english = APCConfigManager.get_apc_config_english()
@@ -29,77 +32,56 @@ apc_config_english.lcf = 'cdw'
 apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
 apc_config_english.dropout = 0
-apc_config_english.cache_dataset = True
-apc_config_english.log_step = 5
+apc_config_english.optimizer = 'adam'
+apc_config_english.cache_dataset = False
+apc_config_english.patience = 10
 apc_config_english.pretrained_bert = 'microsoft/deberta-v3-base'
 apc_config_english.hidden_dim = 768
 apc_config_english.embed_dim = 768
 apc_config_english.num_epoch = 25
+apc_config_english.log_step = 5
 apc_config_english.learning_rate = 1e-5
-apc_config_english.patience = 5
 apc_config_english.batch_size = 16
 apc_config_english.evaluate_begin = 2
-apc_config_english.l2reg = 1e-7
+apc_config_english.l2reg = 1e-8
 apc_config_english.seed = seeds
+
 apc_config_english.cross_validate_fold = -1  # disable cross_validate
 
 Laptop14 = ABSADatasetList.Laptop14
 Trainer(config=apc_config_english,
         dataset=Laptop14,  # train set and test set will be automatically detected
-        checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device='cuda:0'  # automatic choose CUDA or CPU
+        checkpoint_save_mode=1,  # =None to avoid save model
+        auto_device=True  # automatic choose CUDA or CPU
         )
 
 Restaurant14 = ABSADatasetList.Restaurant14
 Trainer(config=apc_config_english,
         dataset=Restaurant14,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device='cuda:0'  # automatic choose CUDA or CPU
+        auto_device=True  # automatic choose CUDA or CPU
         )
 
 Restaurant15 = ABSADatasetList.Restaurant15
 Trainer(config=apc_config_english,
         dataset=Restaurant15,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device='cuda:0'  # automatic choose CUDA or CPU
+        auto_device=True  # automatic choose CUDA or CPU
         )
 
 Restaurant16 = ABSADatasetList.Restaurant16
 Trainer(config=apc_config_english,
         dataset=Restaurant16,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device='cuda:0'  # automatic choose CUDA or CPU
+        auto_device=True  # automatic choose CUDA or CPU
         )
 
 MAMS = ABSADatasetList.MAMS
 Trainer(config=apc_config_english,
         dataset=MAMS,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device='cuda:0'  # automatic choose CUDA or CPU
+        auto_device=True  # automatic choose CUDA or CPU
         )
-
-
-# Boosting via Cross-domain Training
-apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = APCModelList.FAST_LSA_T
-apc_config_english.num_epoch = 10
-apc_config_english.evaluate_begin = 9
-apc_config_english.similarity_threshold = 1
-apc_config_english.max_seq_len = 80
-apc_config_english.dropout = 0.5
-apc_config_english.seed = 2672
-apc_config_english.log_step = 1000
-apc_config_english.l2reg = 1e-8
-apc_config_english.dynamic_truncate = True
-apc_config_english.srd_alignment = True
-
-Dataset = ABSADatasetList.English
-sent_classifier = Trainer(config=apc_config_english,
-                          dataset=Dataset,
-                          checkpoint_save_mode=1,
-                          auto_device=True
-                          ).load_trained_model()
-
 
 apc_config_english = APCConfigManager.get_apc_config_english()
 apc_config_english.model = APCModelList.FAST_LSA_T
@@ -107,51 +89,53 @@ apc_config_english.lcf = 'cdw'
 apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
 apc_config_english.dropout = 0
-apc_config_english.cache_dataset = True
-apc_config_english.log_step = 5
+apc_config_english.cache_dataset = False
+apc_config_english.patience = 10
+apc_config_english.optimizer = 'adam'
 apc_config_english.pretrained_bert = 'microsoft/deberta-v3-base'
 apc_config_english.hidden_dim = 768
 apc_config_english.embed_dim = 768
 apc_config_english.num_epoch = 25
+apc_config_english.log_step = 5
 apc_config_english.learning_rate = 1e-5
-apc_config_english.patience = 5
 apc_config_english.batch_size = 16
 apc_config_english.evaluate_begin = 2
-apc_config_english.l2reg = 1e-7
+apc_config_english.l2reg = 1e-8
 apc_config_english.seed = seeds
-apc_config_english.cross_validate_fold = -1  # disable cross_validate
 
+apc_config_english.cross_validate_fold = -1  # disable cross_validate
+#
 Laptop14 = ABSADatasetList.Laptop14
 Trainer(config=apc_config_english,
         dataset=Laptop14,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device='cuda:0'  # automatic choose CUDA or CPU
+        auto_device=True,  # automatic choose CUDA or CPU
         )
 
 Restaurant14 = ABSADatasetList.Restaurant14
 Trainer(config=apc_config_english,
         dataset=Restaurant14,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device='cuda:0'  # automatic choose CUDA or CPU
+        auto_device=True  # automatic choose CUDA or CPU
         )
 
 Restaurant15 = ABSADatasetList.Restaurant15
 Trainer(config=apc_config_english,
         dataset=Restaurant15,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device='cuda:0'  # automatic choose CUDA or CPU
+        auto_device=True  # automatic choose CUDA or CPU
         )
 
 Restaurant16 = ABSADatasetList.Restaurant16
 Trainer(config=apc_config_english,
         dataset=Restaurant16,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device='cuda:0'  # automatic choose CUDA or CPU
+        auto_device=True  # automatic choose CUDA or CPU
         )
 
 MAMS = ABSADatasetList.MAMS
 Trainer(config=apc_config_english,
         dataset=MAMS,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device='cuda:0'  # automatic choose CUDA or CPU
+        auto_device=True  # automatic choose CUDA or CPU
         )

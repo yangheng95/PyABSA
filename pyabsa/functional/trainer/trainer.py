@@ -58,7 +58,9 @@ class Trainer:
                  dataset: str = None,
                  from_checkpoint: str = '',
                  checkpoint_save_mode: int = 1,
-                 auto_device=True):
+                 auto_device=True,
+                 path_to_save=None
+                 ):
         """
 
         :param config: PyABSA.config.ConfigManager
@@ -68,7 +70,7 @@ class Trainer:
                                      "checkpoint_save_mode=1" to save the state_dict,
                                      "checkpoint_save_mode=2" to save the whole model,
                                      "checkpoint_save_mode=3" to save the fine-tuned BERT,
-                                     otherwise avoid to save checkpoint but return the trained model after training
+                                     otherwise avoid saving checkpoint but return the trained model after training
         :param auto_device: True or False, otherwise 'allcuda', 'cuda:1', 'cpu' works
 
         """
@@ -110,7 +112,10 @@ class Trainer:
         self.logger = get_logger(os.getcwd(), log_name=log_name, log_type='training')
 
         if checkpoint_save_mode:
-            config.model_path_to_save = 'checkpoints'
+            if path_to_save:
+                config.model_path_to_save = path_to_save
+            else:
+                config.model_path_to_save = 'checkpoints'
         else:
             config.model_path_to_save = None
 
