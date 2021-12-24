@@ -1,18 +1,18 @@
 [
   {
     "referrer": "github.com",
-    "count": 943,
-    "uniques": 81
+    "count": 946,
+    "uniques": 86
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 442,
-    "uniques": 72
+    "count": 486,
+    "uniques": 76
   },
   {
     "referrer": "Google",
-    "count": 276,
-    "uniques": 110
+    "count": 288,
+    "uniques": 111
   },
   {
     "referrer": "link.zhihu.com",
@@ -25,17 +25,17 @@
     "uniques": 3
   },
   {
+    "referrer": "Baidu",
+    "count": 3,
+    "uniques": 2
+  },
+  {
     "referrer": "html.duckduckgo.com",
     "count": 2,
     "uniques": 1
   },
   {
     "referrer": "arxiv.org",
-    "count": 2,
-    "uniques": 1
-  },
-  {
-    "referrer": "Baidu",
     "count": 2,
     "uniques": 1
   },
