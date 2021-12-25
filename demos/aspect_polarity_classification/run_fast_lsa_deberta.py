@@ -39,7 +39,7 @@ apc_config_english.pretrained_bert = 'microsoft/deberta-v3-base'
 apc_config_english.hidden_dim = 768
 apc_config_english.embed_dim = 768
 apc_config_english.num_epoch = 25
-apc_config_english.log_step = 5
+apc_config_english.log_step = 10
 apc_config_english.learning_rate = 1e-5
 apc_config_english.batch_size = 16
 apc_config_english.evaluate_begin = 2
@@ -51,7 +51,7 @@ apc_config_english.cross_validate_fold = -1  # disable cross_validate
 Laptop14 = ABSADatasetList.Laptop14
 Trainer(config=apc_config_english,
         dataset=Laptop14,  # train set and test set will be automatically detected
-        checkpoint_save_mode=1,  # =None to avoid save model
+        checkpoint_save_mode=0,  # =None to avoid save model
         auto_device=True  # automatic choose CUDA or CPU
         )
 
@@ -104,7 +104,7 @@ apc_config_english.l2reg = 1e-8
 apc_config_english.seed = seeds
 
 apc_config_english.cross_validate_fold = -1  # disable cross_validate
-#
+
 Laptop14 = ABSADatasetList.Laptop14
 Trainer(config=apc_config_english,
         dataset=Laptop14,  # train set and test set will be automatically detected

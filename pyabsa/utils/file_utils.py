@@ -274,14 +274,18 @@ def save_model(opt, model, tokenizer, save_path):
 
         torch.save(model_to_save.state_dict(), output_model_file)
         model_to_save.bert.config.to_json_file(output_config_file)
-        tokenizer.tokenizer.save_vocabulary(model_output_dir)
+        if hasattr(tokenizer, 'tokenizer'):
+            tokenizer.tokenizer.save_vocabulary(model_output_dir)
+        else:
+            tokenizer.save_vocabulary(model_output_dir)
+
     else:
         raise ValueError('Invalid save_mode: {}'.format(opt.save_mode))
     model.to(opt.device)
 
 
 def check_update_log():
-    print(colored('check update log at https://github.com/yangheng95/PyABSA/blob/release/release-note.json', 'red'))
+    print(colored('check release notes at https://github.com/yangheng95/PyABSA/blob/release/release-note.json', 'red'))
 
 
 def query_remote_version():

@@ -34,7 +34,10 @@ def save_args(config, save_path):
 def print_args(config, logger=None, mode=0):
     args = [key for key in sorted(config.args.keys())]
     for arg in args:
-        logger.info('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
+        if logger:
+            logger.info('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
+        else:
+            print('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
 
     # activated_args = []
     # default_args = []

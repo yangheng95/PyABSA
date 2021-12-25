@@ -204,6 +204,7 @@ class SentimentClassifier:
             if final_res and "".join(final_res[-1]['text'].split()) == "".join(result['text'].split()):
                 final_res[-1]['aspect'].append(result['aspect'])
                 final_res[-1]['sentiment'].append(result['sentiment'])
+                final_res[-1]['confidence'].append(result['confidence'])
                 final_res[-1]['ref_sentiment'].append(result['ref_sentiment'])
                 final_res[-1]['ref_check'].append(result['ref_check'])
             else:
@@ -212,6 +213,7 @@ class SentimentClassifier:
                         'text': result['text'].replace('  ', ' '),
                         'aspect': [result['aspect']],
                         'sentiment': [result['sentiment']],
+                        'confidence': [result['confidence']],
                         'ref_sentiment': [result['ref_sentiment']],
                         'ref_check': [result['ref_check']]
                     }
@@ -249,6 +251,8 @@ class SentimentClassifier:
                         sent = int(i_probs.argmax(axis=-1))
                         real_sent = int(sample['polarity'][i])
 
+                    confidence = max(i_probs)
+
                     aspect = sample['aspect'][i]
                     text_raw = sample['text_raw'][i]
 
@@ -256,6 +260,7 @@ class SentimentClassifier:
                         'text': text_raw,
                         'aspect': aspect,
                         'sentiment': sent,
+                        'confidence': confidence,
                         'ref_sentiment': real_sent,
                         'ref_check': correct[sent == real_sent] if real_sent != '-999' else '',
                     })
@@ -269,11 +274,24 @@ class SentimentClassifier:
                     for i in range(len(result['aspect'])):
                         if result['ref_sentiment'][i] != -999:
                             if result['sentiment'][i] == result['ref_sentiment'][i]:
-                                aspect_info = colored('{} -> {}(ref:{})'.format(result['aspect'][i], result['sentiment'][i], result['ref_sentiment'][i]), 'green')
+                                aspect_info = colored('{} -> {}(confidence:{}, ref:{})'.format(
+                                    result['aspect'][i],
+                                    result['sentiment'][i],
+                                    round(result['confidence'][i], 3),
+                                    result['ref_sentiment'][i]),
+                                    'green')
                             else:
-                                aspect_info = colored('{} -> {}(ref:{})'.format(result['aspect'][i], result['sentiment'][i], result['ref_sentiment'][i]), 'red')
+                                aspect_info = colored('{} -> {}(confidence:{}, ref:{})'.format(
+                                    result['aspect'][i],
+                                    result['sentiment'][i],
+                                    round(result['confidence'][i], 3),
+                                    result['ref_sentiment'][i]),
+                                    'red')
+
                         else:
-                            aspect_info = '{} -> {}'.format(result['aspect'][i], result['sentiment'][i])
+                            aspect_info = '{} -> {}(confidence:{})'.format(result['aspect'][i],
+                                                                           round(result['confidence'][i], 3),
+                                                                           result['sentiment'][i])
 
                         text_printing = text_printing.replace(result['aspect'][i], aspect_info)
                     print(text_printing)
