@@ -1,22 +1,22 @@
 [
   {
     "referrer": "github.com",
-    "count": 946,
+    "count": 898,
     "uniques": 86
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 486,
-    "uniques": 76
+    "count": 495,
+    "uniques": 82
   },
   {
     "referrer": "Google",
-    "count": 288,
+    "count": 282,
     "uniques": 111
   },
   {
     "referrer": "link.zhihu.com",
-    "count": 12,
+    "count": 13,
     "uniques": 6
   },
   {
@@ -40,12 +40,12 @@
     "uniques": 1
   },
   {
-    "referrer": "textflint.io",
+    "referrer": "nlpprogress.com",
     "count": 1,
     "uniques": 1
   },
   {
-    "referrer": "nlpprogress.com",
+    "referrer": "Bing",
     "count": 1,
     "uniques": 1
   }
