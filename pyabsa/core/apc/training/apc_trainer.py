@@ -36,6 +36,8 @@ class Instructor:
         self.train_set = self.model.train_set
         self.test_set = self.model.test_set
         self.test_dataloader = self.model.test_dataloader
+        self.val_dataloader = self.model.val_dataloader
+        self.train_dataloader = self.model.train_dataloader
         self.tokenizer = self.model.tokenizer
         print("# of available cuda ", torch.cuda.device_count())
 
@@ -94,7 +96,11 @@ class Instructor:
         self.optimizer = optimizers[self.opt.optimizer](_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
     def prepare_dataloader(self, train_set):
-        if self.opt.cross_validate_fold < 1:
+        if self.train_dataloader and self.val_dataloader:
+            self.val_dataloaders = [self.val_dataloader]
+            self.train_dataloaders = [self.train_dataloader]
+
+        elif self.opt.cross_validate_fold < 1:
             train_sampler = RandomSampler(self.train_set if not self.train_set else self.train_set)
             self.train_dataloaders.append(DataLoader(dataset=train_set,
                                                      batch_size=self.opt.batch_size,
@@ -102,6 +108,12 @@ class Instructor:
                                                      pin_memory=True))
 
         else:
+            train_sampler = RandomSampler(self.train_set if not self.train_set else self.train_set)
+            self.train_dataloaders.append(DataLoader(dataset=train_set,
+                                                     batch_size=self.opt.batch_size,
+                                                     sampler=train_sampler,
+                                                     pin_memory=True))
+
             split_dataset = train_set
             len_per_fold = len(split_dataset) // self.opt.cross_validate_fold + 1
             folds = random_split(split_dataset, tuple([len_per_fold] * (self.opt.cross_validate_fold - 1) + [
@@ -119,7 +131,7 @@ class Instructor:
 
     def _train(self, criterion):
         self.prepare_dataloader(self.train_set)
-        if self.val_dataloaders:
+        if len(self.val_dataloaders) > 1:
             return self._k_fold_train_and_evaluate(criterion)
         else:
             return self._train_and_evaluate(criterion)
@@ -188,9 +200,11 @@ class Instructor:
                 # evaluate if test set is available
                 if self.opt.dataset_file['test'] and global_step % self.opt.log_step == 0:
                     if epoch >= self.opt.evaluate_begin:
-
-                        test_acc, f1 = self._evaluate_acc_f1(self.test_dataloader)
-
+                        if self.val_dataloaders:
+                            test_acc, f1 = self._evaluate_acc_f1(self.val_dataloaders[0])
+                            # test_acc, f1 = self._evaluate_acc_f1(self.test_dataloader)
+                        else:
+                            test_acc, f1 = self._evaluate_acc_f1(self.test_dataloader)
                         self.opt.metrics_of_this_checkpoint['acc'] = test_acc
                         self.opt.metrics_of_this_checkpoint['f1'] = f1
 
@@ -199,7 +213,7 @@ class Instructor:
                         if test_acc > max_fold_acc:
 
                             max_fold_acc = test_acc
-                            if self.opt.model_path_to_save:
+                            if self.opt.model_path_to_save or self.val_dataloader:
                                 if not os.path.exists(self.opt.model_path_to_save):
                                     os.mkdir(self.opt.model_path_to_save)
                                 if save_path:
@@ -242,6 +256,10 @@ class Instructor:
                 iterator.refresh()
             if patience < 0:
                 break
+        if self.val_dataloaders:
+            print('Evaluating on testset...')
+            max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
+
         self.logger.info('-------------------------- Training Summary --------------------------')
         self.logger.info('Acc: {:.8f} F1: {:.8f} Accumulated Loss: {:.8f}'.format(
             max_fold_acc * 100,
@@ -379,7 +397,7 @@ class Instructor:
                     iterator.refresh()
                 if patience < 0:
                     break
-            self.model.load_state_dict(torch.load(find_file(os.getcwd(), 'state_dict')))
+            self.model.load_state_dict(torch.load(find_file(save_path, 'state_dict')))
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
             if max_fold_acc > max_fold_acc_k_fold:
                 save_path_k_fold = save_path

@@ -24,7 +24,7 @@ def config_check(args):
         if 'evaluate_begin' in args:
             assert 0 <= args['evaluate_begin'] < args['num_epoch']
         if 'cross_validate_fold' in args:
-            assert args['cross_validate_fold'] == -1 or 5 <= args['cross_validate_fold'] <= 10
+            assert args['cross_validate_fold'] == -1 or args['cross_validate_fold'] <= 10
         if 'dlcf_a' in args:
             assert args['dlcf_a'] > 1
         if 'dca_p' in args:
