@@ -18,6 +18,10 @@ from termcolor import colored
 class DatasetItem(list):
     def __init__(self, dataset_name, dataset_items=None):
         super().__init__()
+        if os.path.exists(dataset_name):
+            print('Maybe dataset_name is a path, rename to path basename...')
+            dataset_name = os.path.basename(dataset_name)
+
         self.dataset_name = dataset_name
 
         if not dataset_items:
