@@ -209,11 +209,12 @@ class Instructor:
                                     except:
                                         # logger.info('Can not remove sub-optimal trained model:', save_path)
                                         pass
-                                save_path = '{0}/{1}_acc_{2}_f1_{3}/'.format(self.opt.model_path_to_save,
-                                                                             self.opt.model_name,
-                                                                             round(test_acc * 100, 2),
-                                                                             round(f1 * 100, 2)
-                                                                             )
+                                save_path = '{0}/{1}_{2}_acc_{3}_f1_{4}/'.format(self.opt.model_path_to_save,
+                                                                                 self.opt.model_name,
+                                                                                 self.opt.dataset_name,
+                                                                                 round(test_acc * 100, 2),
+                                                                                 round(f1 * 100, 2)
+                                                                                 )
 
                                 if test_acc > self.opt.max_test_metrics['max_apc_test_acc']:
                                     self.opt.max_test_metrics['max_apc_test_acc'] = test_acc
@@ -346,11 +347,12 @@ class Instructor:
                                         except:
                                             # logger.info('Can not remove sub-optimal trained model:', save_path)
                                             pass
-                                    save_path = '{0}/{1}_acc_{2}_f1_{3}/'.format(self.opt.model_path_to_save,
-                                                                                 self.opt.model_name,
-                                                                                 round(test_acc * 100, 2),
-                                                                                 round(f1 * 100, 2)
-                                                                                 )
+                                    save_path = '{0}/{1}_{2}_acc_{3}_f1_{4}/'.format(self.opt.model_path_to_save,
+                                                                                     self.opt.model_name,
+                                                                                     self.opt.dataset_name,
+                                                                                     round(test_acc * 100, 2),
+                                                                                     round(f1 * 100, 2)
+                                                                                     )
 
                                     if test_acc > self.opt.max_test_metrics['max_apc_test_acc']:
                                         self.opt.max_test_metrics['max_apc_test_acc'] = test_acc

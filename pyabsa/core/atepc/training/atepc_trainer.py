@@ -254,9 +254,10 @@ class Instructor:
                                 #     except:
                                 #         self.logger.info('Can not remove sub-self.optimal trained model:', save_path)
 
-                                save_path = '{0}/{1}_{2}_apcacc_{3}_apcf1_{4}_atef1_{5}/'.format(
+                                save_path = '{0}/{1}_{2}_{3}_apcacc_{4}_apcf1_{5}_atef1_{6}/'.format(
                                     self.opt.model_path_to_save,
                                     self.opt.model_name,
+                                    self.opt.dataset_name,
                                     self.opt.lcf,
                                     round(apc_result['apc_test_acc'], 2),
                                     round(apc_result['apc_test_f1'], 2),
