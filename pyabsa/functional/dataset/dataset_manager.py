@@ -106,7 +106,7 @@ filter_key_words = ['.py', '.ignore', '.md', 'readme', 'log', 'result', 'zip', '
 def detect_dataset(dataset_path, task='apc'):
     if not isinstance(dataset_path, DatasetItem):
         dataset_path = DatasetItem(dataset_path)
-    dataset_file = {'train': [], 'test': []}
+    dataset_file = {'train': [], 'test': [], 'valid': []}
     for d in dataset_path:
         if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(ClassificationDatasetList, d):
             print('{} dataset is loading from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
@@ -114,9 +114,11 @@ def detect_dataset(dataset_path, task='apc'):
             search_path = find_dir(os.getcwd(), [d, task], exclude_key=['infer', 'test.'] + filter_key_words, disable_alert=False)
             dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['.inference', 'test.'] + filter_key_words)
             dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['inference', 'train.'] + filter_key_words)
+            dataset_file['valid'] += find_files(search_path, [d, 'valid', task], exclude_key=['inference', 'train.'] + filter_key_words)
         else:
             dataset_file['train'] = find_files(d, ['train', task], exclude_key=['.inference', 'test.'] + filter_key_words)
             dataset_file['test'] = find_files(d, ['test', task], exclude_key=['.inference', 'train.'] + filter_key_words)
+            dataset_file['valid'] = find_files(d, ['valid', task], exclude_key=['.inference', 'train.'] + filter_key_words)
 
     if len(dataset_file['train']) == 0:
         raise RuntimeError('{} is not an integrated dataset or not downloaded automatically,'
