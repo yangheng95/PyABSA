@@ -45,7 +45,7 @@ apc_examples = [
 ]
 
 # # # for dataset in ABSADatasetList():
-for dataset in ABSADatasetList()[:1]:
+# for dataset in ABSADatasetList()[:1]:
     # for model in APCModelList():
     #     cuda.empty_cache()
     #     config = APCConfigManager.get_apc_config_english()
@@ -70,74 +70,74 @@ for dataset in ABSADatasetList()[:1]:
     #         cuda.empty_cache()
     #     except Exception as e:
     #         print(e)
-
-
-    for model in BERTBaselineAPCModelList():
-        config = APCConfigManager.get_apc_config_english()
-        cuda.empty_cache()
-        config.model = model
-        config.cache_dataset = True
-        config.num_epoch = 1
-        config.evaluate_begin = 0
-        config.log_step = 100
-        sent_classifier = Trainer(config=config,
-                                  dataset=dataset,
-                                  checkpoint_save_mode=2,
-                                  auto_device='allcuda'
-                                  ).load_trained_model()
-        for ex in apc_examples:
-            result = sent_classifier.infer(ex, print_result=True)
-        try:
-            shutil.rmtree(find_cwd_dir('checkpoints'))
-            del sent_classifier
-            cuda.empty_cache()
-        except Exception as e:
-            print(e)
-
-    for model in GloVeAPCModelList():
-        config = APCConfigManager.get_apc_config_english()
-        cuda.empty_cache()
-        config.model = model
-        config.cache_dataset = True
-        config.num_epoch = 1
-        config.evaluate_begin = 0
-        config.log_step = 100
-        sent_classifier = Trainer(config=config,
-                                  dataset=dataset,
-                                  checkpoint_save_mode=2,
-                                  auto_device='allcuda'
-                                  ).load_trained_model()
-        for ex in apc_examples:
-            result = sent_classifier.infer(ex, print_result=True)
-        try:
-            shutil.rmtree(find_cwd_dir('checkpoints'))
-            del sent_classifier
-            cuda.empty_cache()
-        except Exception as e:
-            print(e)
-
-    for model in ATEPCModelList():
-        config = ATEPCConfigManager.get_atepc_config_english()
-        cuda.empty_cache()
-        config.model = model
-        config.cache_dataset = True
-        config.num_epoch = 1
-        config.evaluate_begin = 0
-        config.log_step = 100
-        aspect_extractor = Trainer(config=config,
-                                   dataset=dataset,
-                                   checkpoint_save_mode=1,
-                                   auto_device='allcuda'
-                                   ).load_trained_model()
-        aspect_extractor.extract_aspect(inference_source=atepc_examples,  #
-                                        save_result=True,
-                                        print_result=True,  # print the result
-                                        pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
-                                        )
-        try:
-            shutil.rmtree(find_cwd_dir('checkpoints'))
-        except Exception as e:
-            print(e)
+    #
+    #
+    # for model in BERTBaselineAPCModelList():
+    #     config = APCConfigManager.get_apc_config_english()
+    #     cuda.empty_cache()
+    #     config.model = model
+    #     config.cache_dataset = True
+    #     config.num_epoch = 1
+    #     config.evaluate_begin = 0
+    #     config.log_step = 100
+    #     sent_classifier = Trainer(config=config,
+    #                               dataset=dataset,
+    #                               checkpoint_save_mode=2,
+    #                               auto_device='allcuda'
+    #                               ).load_trained_model()
+    #     for ex in apc_examples:
+    #         result = sent_classifier.infer(ex, print_result=True)
+    #     try:
+    #         shutil.rmtree(find_cwd_dir('checkpoints'))
+    #         del sent_classifier
+    #         cuda.empty_cache()
+    #     except Exception as e:
+    #         print(e)
+    #
+    # for model in GloVeAPCModelList():
+    #     config = APCConfigManager.get_apc_config_english()
+    #     cuda.empty_cache()
+    #     config.model = model
+    #     config.cache_dataset = True
+    #     config.num_epoch = 1
+    #     config.evaluate_begin = 0
+    #     config.log_step = 100
+    #     sent_classifier = Trainer(config=config,
+    #                               dataset=dataset,
+    #                               checkpoint_save_mode=2,
+    #                               auto_device='allcuda'
+    #                               ).load_trained_model()
+    #     for ex in apc_examples:
+    #         result = sent_classifier.infer(ex, print_result=True)
+    #     try:
+    #         shutil.rmtree(find_cwd_dir('checkpoints'))
+    #         del sent_classifier
+    #         cuda.empty_cache()
+    #     except Exception as e:
+    #         print(e)
+    #
+    # for model in ATEPCModelList():
+    #     config = ATEPCConfigManager.get_atepc_config_english()
+    #     cuda.empty_cache()
+    #     config.model = model
+    #     config.cache_dataset = True
+    #     config.num_epoch = 1
+    #     config.evaluate_begin = 0
+    #     config.log_step = 100
+    #     aspect_extractor = Trainer(config=config,
+    #                                dataset=dataset,
+    #                                checkpoint_save_mode=1,
+    #                                auto_device='allcuda'
+    #                                ).load_trained_model()
+    #     aspect_extractor.extract_aspect(inference_source=atepc_examples,  #
+    #                                     save_result=True,
+    #                                     print_result=True,  # print the result
+    #                                     pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
+    #                                     )
+    #     try:
+    #         shutil.rmtree(find_cwd_dir('checkpoints'))
+    #     except Exception as e:
+    #         print(e)
 
 for dataset in ClassificationDatasetList():
     for model in BERTClassificationModelList():

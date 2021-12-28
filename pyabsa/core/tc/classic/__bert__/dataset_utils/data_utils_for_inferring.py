@@ -131,9 +131,9 @@ class BERTClassificationDataset(Dataset):
                 all_data.append(data)
 
             except Exception as e:
-                if ignore_error:
-                    print('Ignore error while processing:', text)
-                else:
+                # if ignore_error:
+                #     print('Ignore error while processing:', text)
+                # else:
                     raise e
 
         self.all_data = all_data
