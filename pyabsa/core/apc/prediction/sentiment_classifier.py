@@ -69,7 +69,7 @@ class SentimentClassifier:
                         if state_dict_path:
                             self.model = APCEnsembler(self.opt, load_dataset=False)
                             self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
-                        if model_path:
+                        elif model_path:
                             self.model = torch.load(model_path, map_location='cpu')
 
                         try:
@@ -83,13 +83,13 @@ class SentimentClassifier:
                         if state_dict_path:
                             self.model = APCEnsembler(self.opt, load_dataset=False)
                             self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
-                        if model_path:
+                        elif model_path:
                             self.model = torch.load(model_path, map_location='cpu')
 
                         if tokenizer_path:
                             self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
                         else:
-                            raise ValueError('No .tokenizer found!')
+                            raise ValueError('No .tokenizer file found in checkpoint path!')
                     else:
                         tokenizer = build_tokenizer(
                             dataset_list=self.opt.dataset_file,

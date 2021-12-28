@@ -59,18 +59,24 @@ class TextClassifier:
 
                 self.opt = pickle.load(open(config_path, mode='rb'))
 
-                if state_dict_path:
+                if state_dict_path or model_path:
                     if not hasattr(GloVeClassificationModelList, self.opt.model.__name__.upper()):
                         if 'pretrained_bert_name' in self.opt.args or 'pretrained_bert' in self.opt.args:
                             if 'pretrained_bert_name' in self.opt.args:
                                 self.opt.pretrained_bert = self.opt.pretrained_bert_name
-                        try:
-                            self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
-                            self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
-                        except ValueError:
-                            raise TransformerConnectionError()
-
-                        self.model = self.opt.model(self.bert, self.opt)
+                        if state_dict_path:
+                            try:
+                                self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
+                                self.model = self.opt.model(self.bert, self.opt)
+                            except ValueError:
+                                raise TransformerConnectionError()
+                        elif model_path:
+                            if model_path:
+                                self.model = torch.load(model_path, map_location='cpu')
+                        if tokenizer_path:
+                            self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
+                        else:
+                            raise ValueError('No .tokenizer found!')
                     else:
                         self.tokenizer = build_tokenizer(
                             dataset_list=self.opt.dataset_file,
