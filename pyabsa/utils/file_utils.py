@@ -26,6 +26,7 @@ from pyabsa.utils.pyabsa_utils import save_args
 
 
 def generate_inference_set_for_apc(dataset_path):
+    print('To ensure your conversion is successful, make sure the dataset name contain "apc" string ')
     if isinstance(dataset_path, DatasetItem):
         dataset_name = dataset_path.dataset_name
     else:
@@ -240,8 +241,6 @@ def detect_error_in_dataset(dataset):
 
 
 def save_model(opt, model, tokenizer, save_path):
-    if not opt.save_mode:
-        return
     # Save a trained model, configuration and tokenizer
     if hasattr(model, 'module') or hasattr(model, 'core'):
         # print("save model from data-parallel!")

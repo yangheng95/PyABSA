@@ -1,4 +1,9 @@
 {
+  "1.6.15": {
+    "1": "Add validation set support for aspect-based sentiment polarity classification",
+    "2": "Add confidence output for aspect-based sentiment polarity classification",
+    "3": "Make some minor fixes"
+  },
   "1.6.13": {
     "1": "Some minor modifications"
   },

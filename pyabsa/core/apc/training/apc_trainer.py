@@ -39,7 +39,6 @@ class Instructor:
         self.val_dataloader = self.model.val_dataloader
         self.train_dataloader = self.model.train_dataloader
         self.tokenizer = self.model.tokenizer
-        print("# of available cuda ", torch.cuda.device_count())
 
         if 'patience' in self.opt.args and self.opt.patience:
             self.opt.patience = len(self.train_set) / self.opt.batch_size / self.opt.log_step * self.opt.patience
@@ -202,7 +201,6 @@ class Instructor:
                     if epoch >= self.opt.evaluate_begin:
                         if self.val_dataloaders:
                             test_acc, f1 = self._evaluate_acc_f1(self.val_dataloaders[0])
-                            # test_acc, f1 = self._evaluate_acc_f1(self.test_dataloader)
                         else:
                             test_acc, f1 = self._evaluate_acc_f1(self.test_dataloader)
                         self.opt.metrics_of_this_checkpoint['acc'] = test_acc
@@ -213,7 +211,7 @@ class Instructor:
                         if test_acc > max_fold_acc:
 
                             max_fold_acc = test_acc
-                            if self.opt.model_path_to_save or self.val_dataloader:
+                            if self.opt.model_path_to_save:
                                 if not os.path.exists(self.opt.model_path_to_save):
                                     os.mkdir(self.opt.model_path_to_save)
                                 if save_path:
@@ -257,8 +255,10 @@ class Instructor:
             if patience < 0:
                 break
         if self.val_dataloaders:
-            print('Evaluating on testset...')
+            print('Loading best model: {} and evaluating on test set ...'.format(save_path))
+            self.model.load_state_dict(torch.load(find_file(save_path, '.state_dict')))
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
+            shutil.rmtree(save_path)
 
         self.logger.info('-------------------------- Training Summary --------------------------')
         self.logger.info('Acc: {:.8f} F1: {:.8f} Accumulated Loss: {:.8f}'.format(
@@ -397,7 +397,7 @@ class Instructor:
                     iterator.refresh()
                 if patience < 0:
                     break
-            self.model.load_state_dict(torch.load(find_file(save_path, 'state_dict')))
+            self.model.load_state_dict(torch.load(find_file(save_path, '.state_dict')))
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
             if max_fold_acc > max_fold_acc_k_fold:
                 save_path_k_fold = save_path

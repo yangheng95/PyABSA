@@ -111,9 +111,13 @@ class Trainer:
         log_name = self.config.model_name
         self.logger = get_logger(os.getcwd(), log_name=log_name, log_type='training')
 
-        if checkpoint_save_mode:
+        if checkpoint_save_mode or self.dataset_file['valid']:
             if path_to_save:
                 config.model_path_to_save = path_to_save
+            elif self.dataset_file['valid']:
+                print('Training using validation set needs to save checkpoint, turn on checkpoint saving function ...')
+                config.model_path_to_save = 'checkpoints'
+                self.config.save_mode = 1
             else:
                 config.model_path_to_save = 'checkpoints'
         else:
@@ -130,22 +134,26 @@ class Trainer:
 
         if isinstance(self.config.seed, int):
             self.config.seed = [self.config.seed]
-
         model_path = []
         seeds = self.config.seed
-        for _, s in enumerate(seeds):
-            config = copy.deepcopy(self.config)
-            config.seed = s
-            if self.checkpoint_save_mode:
-                model_path.append(self.train_func(config, self.from_checkpoint, self.logger))
-            else:
-                # always return the last trained model if dont save trained model
-                model = self.model_class(model_arg=self.train_func(config, self.from_checkpoint, self.logger))
+        model = None
+        for i, s in enumerate(seeds):
+            try:
+                config = copy.deepcopy(self.config)
+                config.seed = s
+                if self.checkpoint_save_mode:
+                    model_path.append(self.train_func(config, self.from_checkpoint, self.logger))
+                else:
+                    # always return the last trained model if dont save trained model
+                    model = self.model_class(model_arg=self.train_func(config, self.from_checkpoint, self.logger))
+            except Exception as e:
+                print('Error! No. {} training ending with exception: {}'.format(i+1, e))
         while self.logger.handlers:
             self.logger.removeHandler(self.logger.handlers[0])
 
         if self.checkpoint_save_mode:
-            self.inference_model = self.model_class(max(model_path))
+            if os.path.exists(max(model_path)):
+                self.inference_model = self.model_class(max(model_path))
         else:
             self.inference_model = model
 

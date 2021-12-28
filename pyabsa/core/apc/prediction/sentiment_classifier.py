@@ -64,8 +64,8 @@ class SentimentClassifier:
                 self.opt = pickle.load(open(config_path, mode='rb'))
                 self.opt.eval_batch_size = eval_batch_size
 
-                if state_dict_path:
-                    if not hasattr(GloVeAPCModelList, self.opt.model.__name__.upper()):
+                if state_dict_path or model_path:
+                    if hasattr(APCModelList, self.opt.model.__name__.upper()):
                         if state_dict_path:
                             self.model = APCEnsembler(self.opt, load_dataset=False)
                             self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
@@ -79,6 +79,17 @@ class SentimentClassifier:
                                 self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
                             else:
                                 raise TransformerConnectionError()
+                    elif hasattr(BERTBaselineAPCModelList, self.opt.model.__name__.upper()):
+                        if state_dict_path:
+                            self.model = APCEnsembler(self.opt, load_dataset=False)
+                            self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
+                        if model_path:
+                            self.model = torch.load(model_path, map_location='cpu')
+
+                        if tokenizer_path:
+                            self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
+                        else:
+                            raise ValueError('No .tokenizer found!')
                     else:
                         tokenizer = build_tokenizer(
                             dataset_list=self.opt.dataset_file,
@@ -104,7 +115,7 @@ class SentimentClassifier:
                 print_args(self.opt, mode=1)
 
             except Exception as e:
-                raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, model_arg))
+                raise RuntimeError('Fail to load the model from {}! \nException: {} '.format(e, model_arg))
 
         if isinstance(self.opt.model, list):
             if hasattr(APCModelList, self.opt.model[0].__name__):
@@ -270,6 +281,12 @@ class SentimentClassifier:
         try:
             if print_result:
                 for result in results:
+                    # flag = False  # only print error cases
+                    # for ref_check in result['ref_check']:
+                    #     if ref_check == 'Wrong':
+                    #         flag = True
+                    # if not flag:
+                    #     continue
                     text_printing = result['text']
                     for i in range(len(result['aspect'])):
                         if result['ref_sentiment'][i] != -999:

@@ -6,7 +6,7 @@
 
 # Copyright (C) 2021. All Rights Reserved.
 
-__version__ = '1.6.15a0'
+__version__ = '1.6.16'
 __name__ = 'pyabsa'
 
 from termcolor import colored
@@ -31,6 +31,7 @@ from pyabsa.functional.config import ATEPCConfigManager
 from pyabsa.functional.config import ClassificationConfigManager
 from pyabsa.utils.file_utils import check_update_log, check_dataset
 from pyabsa.utils.pyabsa_utils import validate_version
+
 
 validate_version()
 

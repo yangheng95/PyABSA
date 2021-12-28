@@ -72,7 +72,11 @@ class ABSADataset(Dataset):
         all_data = []
         label_set = set()
         ex_id = 0
-        for i, text in enumerate(tqdm(samples, postfix='building word indices...')):
+        if len(samples) > 1:
+            it = tqdm(samples, postfix='building word indices...')
+        else:
+            it = samples
+        for i, text in enumerate(it):
             try:
                 # handle for empty lines in inferring_tutorials dataset_utils
                 if text is None or '' == text.strip():
@@ -91,6 +95,7 @@ class ABSADataset(Dataset):
                 text_left, aspect, text_right = text.split('[ASP]')
                 text_left = text_left.replace('[PADDING] ', '')
                 text_right = text_right.replace(' [PADDING]', '')
+                text = text_left + ' ' + aspect + ' ' + text_right
 
                 prepared_inputs = prepare_input_for_apc(self.opt, self.tokenizer, text_left, text_right, aspect, input_demands=self.opt.inputs_cols)
 

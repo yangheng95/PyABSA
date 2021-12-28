@@ -133,9 +133,9 @@ class GloVeABSADataset(Dataset):
 
                 # simply add padding in case of some aspect is at the beginning or ending of a sentence
                 text_left, aspect, text_right = text.split('[ASP]')
-                text = text.replace('[ASP]', '')
                 text_left = text_left.replace('[PADDING] ', '')
                 text_right = text_right.replace(' [PADDING]', '')
+                text = text_left + ' ' + aspect + ' ' + text_right
 
                 text_indices = self.tokenizer.text_to_sequence(text_left + " " + aspect + " " + text_right)
                 context_indices = self.tokenizer.text_to_sequence(text_left + " " + text_right)
