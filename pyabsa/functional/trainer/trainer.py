@@ -138,7 +138,7 @@ class Trainer:
         seeds = self.config.seed
         model = None
         for i, s in enumerate(seeds):
-            # try:
+            try:
                 config = copy.deepcopy(self.config)
                 config.seed = s
                 if self.checkpoint_save_mode:
@@ -146,8 +146,8 @@ class Trainer:
                 else:
                     # always return the last trained model if dont save trained model
                     model = self.model_class(model_arg=self.train_func(config, self.from_checkpoint, self.logger))
-            # except Exception as e:
-            #     print('Error! No. {} training ending with exception: {}'.format(i+1, e))
+            except Exception as e:
+                print('Error! No. {} training ending with exception: {}'.format(i+1, e))
         while self.logger.handlers:
             self.logger.removeHandler(self.logger.handlers[0])
 

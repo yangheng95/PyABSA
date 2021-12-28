@@ -46,33 +46,33 @@ apc_config_english.seed = seeds
 
 apc_config_english.cross_validate_fold = -1  # disable cross_validate
 
-# Laptop14 = ABSADatasetList.Laptop14
-# Trainer(config=apc_config_english,
-#         dataset=Laptop14,  # train set and test set will be automatically detected
-#         checkpoint_save_mode=0,  # =None to avoid save model
-#         auto_device=True  # automatic choose CUDA or CPU
-#         )
-#
-# Restaurant14 = ABSADatasetList.Restaurant14
-# Trainer(config=apc_config_english,
-#         dataset=Restaurant14,  # train set and test set will be automatically detected
-#         checkpoint_save_mode=0,  # =None to avoid save model
-#         auto_device=True  # automatic choose CUDA or CPU
-#         )
-#
-# Restaurant15 = ABSADatasetList.Restaurant15
-# Trainer(config=apc_config_english,
-#         dataset=Restaurant15,  # train set and test set will be automatically detected
-#         checkpoint_save_mode=0,  # =None to avoid save model
-#         auto_device=True  # automatic choose CUDA or CPU
-#         )
-#
-# Restaurant16 = ABSADatasetList.Restaurant16
-# Trainer(config=apc_config_english,
-#         dataset=Restaurant16,  # train set and test set will be automatically detected
-#         checkpoint_save_mode=0,  # =None to avoid save model
-#         auto_device=True  # automatic choose CUDA or CPU
-#         )
+Laptop14 = ABSADatasetList.Laptop14
+Trainer(config=apc_config_english,
+        dataset=Laptop14,  # train set and test set will be automatically detected
+        checkpoint_save_mode=0,  # =None to avoid save model
+        auto_device=True  # automatic choose CUDA or CPU
+        )
+
+Restaurant14 = ABSADatasetList.Restaurant14
+Trainer(config=apc_config_english,
+        dataset=Restaurant14,  # train set and test set will be automatically detected
+        checkpoint_save_mode=0,  # =None to avoid save model
+        auto_device=True  # automatic choose CUDA or CPU
+        )
+
+Restaurant15 = ABSADatasetList.Restaurant15
+Trainer(config=apc_config_english,
+        dataset=Restaurant15,  # train set and test set will be automatically detected
+        checkpoint_save_mode=0,  # =None to avoid save model
+        auto_device=True  # automatic choose CUDA or CPU
+        )
+
+Restaurant16 = ABSADatasetList.Restaurant16
+Trainer(config=apc_config_english,
+        dataset=Restaurant16,  # train set and test set will be automatically detected
+        checkpoint_save_mode=0,  # =None to avoid save model
+        auto_device=True  # automatic choose CUDA or CPU
+        )
 
 MAMS = ABSADatasetList.MAMS
 Trainer(config=apc_config_english,
@@ -102,7 +102,7 @@ apc_config_english.evaluate_begin = 2
 apc_config_english.l2reg = 1e-8
 apc_config_english.seed = seeds
 
-apc_config_english.cross_validate_fold = 5  # disable cross_validate
+apc_config_english.cross_validate_fold = -1  # disable cross_validate
 
 Laptop14 = ABSADatasetList.Laptop14
 Trainer(config=apc_config_english,
