@@ -68,6 +68,8 @@ def build_tokenizer(dataset_list, max_seq_len, dat_fname, opt):
 
         tokenizer = Tokenizer(max_seq_len)
         tokenizer.fit_on_text(text)
+        if not os.path.exists(os.path.join(opt.dataset_name)):
+            os.makedirs(os.path.join(opt.dataset_name))
         pickle.dump(tokenizer, open(os.path.join(opt.dataset_name, dat_fname), 'wb'))
     return tokenizer
 
@@ -100,6 +102,8 @@ def build_embedding_matrix(word2idx, embed_dim, dat_fname, opt):
             if vec is not None:
                 # words not found in embedding index will be all-zeros.
                 embedding_matrix[i] = vec
+        if not os.path.exists(os.path.join(opt.dataset_name)):
+            os.makedirs(os.path.join(opt.dataset_name))
         pickle.dump(embedding_matrix, open(os.path.join(opt.dataset_name, dat_fname), 'wb'))
     return embedding_matrix
 

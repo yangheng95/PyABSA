@@ -24,7 +24,7 @@ checkpoint_map = available_checkpoints(from_local=False)
 #     'I have had my computer for 2 weeks already and it [ASP]works[ASP] perfectly . !sent! Positive',
 #     'And I may be the only one but I am really liking [ASP]Windows 8[ASP] . !sent! Positive',
 # ]
-sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='fast_lsa_s_acc_85',
+sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='fast_lcf_bert_MAMS_acc_84.43_f1_84.17',
                                                                 auto_device=True,  # Use CUDA if available
                                                                 )
 

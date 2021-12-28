@@ -64,10 +64,7 @@ class APCEnsembler(nn.Module):
             cache_path = '{}.{}.dataset.cache'.format(self.opt.model_name, self.opt.dataset_name)
             if load_dataset and os.path.exists(cache_path):
                 print('Loading dataset cache:', cache_path)
-                if self.opt.dataset_file['test'] and self.opt.dataset_file['valid']:
-                    self.train_set, self.test_set, opt = pickle.load(open(cache_path, mode='rb'))
-                else:
-                    self.train_set, opt = pickle.load(open(cache_path, mode='rb'))
+                self.train_set, self.valid_set, self.test_set, opt = pickle.load(open(cache_path, mode='rb'))
                 # reset output dim according to dataset labels
                 self.opt.polarities_dim = opt.polarities_dim
                 self.opt.label_to_index = opt.label_to_index
@@ -130,19 +127,16 @@ class APCEnsembler(nn.Module):
 
             if self.opt.cache_dataset and not os.path.exists(cache_path):
                 print('Caching dataset... please remove cached dataset if change model or dataset')
-                if self.opt.dataset_file['test'] and self.opt.dataset_file['valid']:
-                    pickle.dump((self.train_set, self.test_set, self.opt), open(cache_path, mode='wb'))
-                else:
-                    pickle.dump((self.train_set, self.opt), open(cache_path, mode='wb'))
+                pickle.dump((self.train_set, self.valid_set, self.test_set, self.opt), open(cache_path, mode='wb'))
 
             if load_dataset:
                 train_sampler = RandomSampler(self.train_set if not self.train_set else self.train_set)
-                test_sampler = SequentialSampler(self.test_set if not self.test_set else self.test_set)
-                valid_sampler = SequentialSampler(self.valid_set if not self.valid_set else self.valid_set)
-
                 self.train_dataloader = DataLoader(self.train_set, batch_size=self.opt.batch_size, pin_memory=True, sampler=train_sampler)
-                self.test_dataloader = DataLoader(self.test_set, batch_size=self.opt.batch_size, pin_memory=True, sampler=test_sampler)
+                if self.test_set:
+                    test_sampler = SequentialSampler(self.test_set if not self.test_set else self.test_set)
+                    self.test_dataloader = DataLoader(self.test_set, batch_size=self.opt.batch_size, pin_memory=True, sampler=test_sampler)
                 if self.valid_set:
+                    valid_sampler = SequentialSampler(self.valid_set if not self.valid_set else self.valid_set)
                     self.val_dataloader = DataLoader(self.valid_set, batch_size=self.opt.batch_size, pin_memory=True, sampler=valid_sampler)
 
         self.dense = nn.Linear(opt.polarities_dim * len(models), opt.polarities_dim)
