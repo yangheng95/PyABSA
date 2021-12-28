@@ -258,7 +258,7 @@ class Instructor:
             print('Loading best model: {} and evaluating on test set ...'.format(save_path))
             self.model.load_state_dict(torch.load(find_file(save_path, '.state_dict')))
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
-            shutil.rmtree(save_path)
+            # shutil.rmtree(save_path)
 
         self.logger.info('-------------------------- Training Summary --------------------------')
         self.logger.info('Acc: {:.8f} F1: {:.8f} Accumulated Loss: {:.8f}'.format(
