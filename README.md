@@ -25,22 +25,9 @@
 
 If you are willing to support PyABSA project, please star this repository as your contribution.
 
-## Quick Review the Performance of our Package
 
-### APC model leaderboard
-
-|         Models       | Laptop14 (acc) |  Rest14 (acc) | Rest15 (acc) | Rest16 (acc) |
-| :------------------: | :------------: | :-----------: |:------------:|:------------:|
-|     LSA-T-DeBerta    |     84.16      |      90.45    |    88.15     |    93.98     | 
-|     LSA-S-DeBerta    |     84.33      |      89.64    |    89.04     |    94.47     | 
-
-**Results are based on DeBerta (V1.3.5), which is different from our
-original [paper](https://arxiv.org/pdf/2110.08604.pdf) using bert-base-uncased. We are working on update our
-experimental results in our paper**
-please see more
-in [APC leaderboard](https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_polarity_classification/leaderboard.md)
-
-ATEPC leaderboard update is pending due to resoruce limitaion, if you can do it please contact me.
+## Annotate Your Own Dataset
+The repo [ABSADatasets](https://github.com/yangheng95/ABSADatasets/tree/v1.2/DPT) provides an open-soruce dataset annotating tool, you can easily annotate your dataset before using PyABSA.
 
 ## 1. Package Overview
 
@@ -71,7 +58,7 @@ ATEPC leaderboard update is pending due to resoruce limitaion, if you can do it 
 </tr>
 </table>
 
-## 2. Read the Important Tips
+## 2. Important: Read the Tips
 
 ### 2.1 Use your custom dataset
 
@@ -141,14 +128,14 @@ from pyabsa.core.apc.dataset_utils.apc_utils import configure_spacy_model
 nlp = configure_spacy_model(APCConfigManager.get_apc_config_english())
 ```
 
-## 3. Quick Start
+## 3. Quick Tutorial
 
 - Create a new python environment and install pyabsa
-- ind a target demo script ([ATEPC](https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_term_extraction)
+- Find a suitable demo script ([ATEPC](https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_term_extraction)
   , [APC](https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_polarity_classification)
   , [Text Classification](https://github.com/yangheng95/PyABSA/tree/release/demos/text_classification)) to prepare your
-  work
-- Format your dataset referring to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) or use public dataset in
+  work. (Welcome to share your demo script)
+- Format/Annotate your dataset referring to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) or use public dataset in
   ABSADatasets
 - Init your config to specify Model, Dataset, hyper-parameters
 - Training your model and get checkpoints
