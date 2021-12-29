@@ -114,7 +114,7 @@ class Trainer:
         if checkpoint_save_mode or self.dataset_file['valid']:
             if path_to_save:
                 config.model_path_to_save = path_to_save
-            elif self.dataset_file['valid']:
+            elif self.dataset_file['valid'] and not checkpoint_save_mode:
                 print('Training using validation set needs to save checkpoint, turn on checkpoint saving function ...')
                 config.model_path_to_save = 'checkpoints'
                 self.config.save_mode = 1
