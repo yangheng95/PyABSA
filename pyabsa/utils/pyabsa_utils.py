@@ -211,7 +211,7 @@ optimizers = {
     'rmsprop': torch.optim.RMSprop,  # default lr=0.01
     'sgd': torch.optim.SGD,
     'adamw': torch.optim.AdamW,
-    'radam': torch.optim.RAdam,
-    'nadam': torch.optim.NAdam,
-    'sparseadam': torch.optim.SparseAdam,
+    'radam': torch.optim.RAdam if torch.version.__version__ > '1.9.1' else torch.optim.Adam,
+    'nadam': torch.optim.NAdam if torch.version.__version__ > '1.9.1' else torch.optim.Adam,
+    'sparseadam': torch.optim.SparseAdam if torch.version.__version__ > '1.9.1' else torch.optim.Adam,
 }

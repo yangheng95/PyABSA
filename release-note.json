@@ -1,4 +1,10 @@
 {
+  "1.6.17": {
+    "1": "Remove some optimizers to support pytorch < 1.10.1"
+  },
+  "1.6.16": {
+    "1": "Make some minor fixes"
+  },
   "1.6.15": {
     "1": "Add validation set support for aspect-based sentiment polarity classification",
     "2": "Add confidence output for aspect-based sentiment polarity classification",
