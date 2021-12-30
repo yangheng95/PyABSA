@@ -54,7 +54,7 @@ class BERT_BASE_ATEPC(nn.Module):
 
         text_ids = text_indices.detach().cpu().numpy()
         for text_i in range(len(text_ids)):
-            sep_index = np.argmax((text_ids[text_i] == 102))
+            sep_index = np.argmax((text_ids[text_i] == self.opt.sep_indices))
             text_ids[text_i][sep_index + 1:] = 0
         return torch.tensor(text_ids).to(self.bert4global.device)
 

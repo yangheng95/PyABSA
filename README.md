@@ -43,6 +43,18 @@ dataset = 'lapto' # search any path containing the 'lapto' or 'aptop' string
 checkpoint = 'lcfs' # checkpoint path assignment is similar to above methods
 ```
 
+### Learn to Use AutoCuda
+Auto select the free cuda for training & inference
+PyABSA use the AutoCUDA to support automatic cuda assignment, but you can still set a preferred device.
+```python3
+auto_device = True  # to auto assign a cuda device for training / inference
+auto_device = False  # to use cpu
+auto_device = 'cuda:1'  # to specify a preferred device
+auto_device = 'cpu'  # to specify a preferred device
+auto_device = 'allcuda'  # use all cuda to train
+```
+
+
 ### Use Human-readable Labels in Your Dataset 
 PyABSA encourages you to use string labels instead of numbers. e.g., sentiment labels = {negative, positive, Neutral, unknown}
 
