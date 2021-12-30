@@ -1,4 +1,8 @@
 {
+  "1.8.0": {
+    "1": "Add more pretrained model (i.e., encoder model) for ATEPC task. e.g., microsoft/deberta-v3-base(large), roberta-base(large)",
+    "2": "Refactor Docs"
+  },
   "1.6.17": {
     "1": "Remove some optimizers to support pytorch < 1.10.1"
   },

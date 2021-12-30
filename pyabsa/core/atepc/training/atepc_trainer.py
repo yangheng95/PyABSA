@@ -54,6 +54,8 @@ class Instructor:
         try:
             self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
             bert_base_model = AutoModel.from_pretrained(self.opt.pretrained_bert)
+            self.opt.sep_indices = self.tokenizer.sep_token_id
+
         except ValueError as e:
             print('Init pretrained model failed, exception: {}'.format(e))
             raise TransformerConnectionError()

@@ -28,6 +28,6 @@ setup(
     exclude_package_date={'': ['.gitignore']},
     # Choose your license
     license='MIT',
-    install_requires=['findfile>=1.5', 'autocuda>=0.8', 'spacy', 'networkx', 'seqeval', 'update_checker', 'typing_extensions',
+    install_requires=['findfile>=1.7.3', 'autocuda>=0.9', 'spacy', 'networkx', 'seqeval', 'update_checker', 'typing_extensions',
                       'tqdm', 'termcolor', 'gitpython', 'googledrivedownloader', 'transformers>4.5', 'torch>=1.0', 'sentencepiece'],
 )

@@ -198,8 +198,8 @@ def validate_version():
         versions = list(data["releases"].keys())
         versions.sort(key=parse_version, reverse=True)
         if __version__ not in versions:
-            print(colored('You are using a DEPRECATED / TEST version of PyABSA which may contain potential bug!'
-                          ' Please update using pip install -U pyabsa!', 'red'))
+            print(colored('You are using a DEPRECATED or TEST version of PyABSA which may contain potential bug!'
+                          ' Consider update using pip install -U pyabsa!', 'red'))
 
 
 optimizers = {
