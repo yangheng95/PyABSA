@@ -12,24 +12,73 @@
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/back-to-reality-leveraging-pattern-driven/aspect-based-sentiment-analysis-on-semeval)](https://paperswithcode.com/sota/aspect-based-sentiment-analysis-on-semeval?p=back-to-reality-leveraging-pattern-driven)
 
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
-> Aspect Term Extraction (ATE) & Aspect Polarity Classification (APC)
->
-> Fast & Low Memory requirement & Enhanced implementation of Local Context Focus
->
-> Build from LC-ABSA / LCF-ABSA / LCF-BERT and LCF-ATEPC.
->
-> PyTorch Implementations (CPU & CUDA supported).
-
-If you are willing to support PyABSA project, please star this repository as your contribution.
+PyABSA is a personal project which received many contributions from all the contributors. Please feel free to help make it developing,
+Each star helps PyABSA go further, too. With regards for all the people who contribute to PyABSA.
 
 
 ## Annotate Your Own Dataset
-The repo [ABSADatasets](https://github.com/yangheng95/ABSADatasets/tree/v1.2/DPT) provides an open-soruce dataset annotating tool, you can easily annotate your dataset before using PyABSA.
+The repo [ABSADatasets](https://github.com/yangheng95/ABSADatasets/tree/v1.2/DPT) provides an open-source dataset annotating tool, you can easily annotate your dataset before using PyABSA.
 
-## 1. Package Overview
+## Fit on Your Existing Dataset
+- First, refer to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) to prepare your dataset into acceptable
+  format.
+- You can PR to contribute your dataset and use it like `ABDADatasets.your_dataset` (All the datasets are for research only, shall not danger your data copyright)
+
+## Training based on Existing Checkpoints
+Have no enough data to train your model, here are what you can do:
+- Combine multiple datasets with your dataset to train your model
+- Resume training from shared checkpoints, see [train_based_on_checkpoint.py](demos/aspect_polarity_classification/train_based_on_checkpoint.py), 
+[train_atepc_based_on_checkpoint.py](demos/aspect_term_extraction/train_atepc_based_on_checkpoint.py)
+
+### Learn to Use FindFile 
+PyABSA uses [FindFile](https://github.com/yangheng95/findfile) to locate the target file(s) so you can specify a
+dataset/checkpoint path by keywords instead of using absolute path. e.g.,
+
+```bash
+dataset = './laptop' # relative path
+dataset = 'ABSOLUTE_PATH/laptop/' # absolute path
+dataset = 'laptop' # dataset name, char-case un-sensitive
+dataset = 'lapto' # search any path containing the 'lapto' or 'aptop' string
+
+checkpoint = 'lcfs' # checkpoint path assignment is similar to above methods
+```
+
+### Use Human-readable Labels in Your Dataset 
+PyABSA encourages you to use string labels instead of numbers. e.g., sentiment labels = {negative, positive, Neutral, unknown}
+
+- What labels you use in the dataset, what labels will be output in inference
+- You can train a model using multiple datasets with same sentiment labels, and you can even contribute and define a
+  combination of datasets [here](./pyabsa/functional/dataset/dataset_manager.py#L32)!
+- The version information of PyABSA is also available in the output while loading checkpoints training args.
+
+## For Syntax-Parsing Models
+The default SpaCy english model is en_core_web_sm, if you didn't install it, PyABSA will download/install it
+automatically.
+
+If you would like to change english model (or other pre-defined options), you can get/set as following:
+
+```python3
+from pyabsa.functional.config.apc_config_manager import APCConfigManager
+from pyabsa.functional.config.atepc_config_manager import ATEPCConfigManager
+from pyabsa.functional.config.classification_config_manager import ClassificationConfigManager
+
+# Set
+APCConfigManager.set_apc_config_english({'spacy_model': 'en_core_web_lg'})
+ATEPCConfigManager.set_atepc_config_english({'spacy_model': 'en_core_web_lg'})
+ClassificationConfigManager.set_classification_config_english({'spacy_model': 'en_core_web_lg'})
+
+# Get
+APCConfigManager.get_apc_config_english()
+ATEPCConfigManager.get_atepc_config_english()
+ClassificationConfigManager.get_classification_config_english()
+
+# Manually Set spaCy nlp Language object
+from pyabsa.core.apc.dataset_utils.apc_utils import configure_spacy_model
+
+nlp = configure_spacy_model(APCConfigManager.get_apc_config_english())
+```
+
+## Package Overview
 
 <table>
 <tr>
@@ -58,94 +107,11 @@ The repo [ABSADatasets](https://github.com/yangheng95/ABSADatasets/tree/v1.2/DPT
 </tr>
 </table>
 
-## 2. Important: Read the Tips
-
-### 2.1 Use your custom dataset
-
-PyABSA use the [FindFile](https://github.com/yangheng95/findfile) to find the target file which means you can specify a
-dataset/checkpoint by keywords instead of using absolute path. e.g.,
-
-- First, refer to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) to prepare your dataset into acceptable
-  format.
-- You can PR to contribute your dataset and use it like `ABDADatasets.your_dataset`, or use it by dataset absolute /
-  relative path, or dataset dir name
-
-```bash
-dataset = './laptop' # relative path
-dataset = 'ABSOLUTE_PATH/laptop/' # absolute path
-dataset = 'laptop' # dataset directory name, keyword case doesn't matter
-dataset = 'lapto' # search any directory whose path contains the 'lapto' or 'aptop'
-
-checkpoint = 'lcfs' # checkpoint assignment is similar to above methods
-```
-
-### 2.2 Auto select the free cuda for training & inference
-
-PyABSA use the [AutoCUDA](https://github.com/yangheng95/autocuda) to support automatic cuda assignment, but you can
-still set a preferred device.
-
-```python3
-auto_device = True  # to auto assign a cuda device for training / inference
-auto_device = False  # to use cpu
-auto_device = 'cuda:1'  # to specify a preferred device
-auto_device = 'cpu'  # to specify a preferred device
-```
-
-### 2.3 Flexible labels than others
-
-PyABSA encourages you to use string labels instead of numbers. e.g., sentiment labels = {negative, positive, unknown}
-
-- What labels you labeled in the dataset, what labels will be output in inference
-- The version information of PyABSA is also available in the output while loading checkpoints training args.
-- You can train a model using multiple datasets with same sentiment labels, and you can even contribute and define a
-  combination of datasets [here](./pyabsa/functional/dataset/dataset_manager.py#L32)!
-
-### 2.4 Get/Set config options
-
-The default spaCy english model is en_core_web_sm, if you didn't install it, PyABSA will download/install it
-automatically.
-
-If you would like to change english model (or other pre-defined options), you can get/set as following:
-
-```python3
-from pyabsa.functional.config.apc_config_manager import APCConfigManager
-from pyabsa.functional.config.atepc_config_manager import ATEPCConfigManager
-from pyabsa.functional.config.classification_config_manager import ClassificationConfigManager
-
-# Set
-APCConfigManager.set_apc_config_english({'spacy_model': 'en_core_web_lg'})
-ATEPCConfigManager.set_atepc_config_english({'spacy_model': 'en_core_web_lg'})
-ClassificationConfigManager.set_classification_config_english({'spacy_model': 'en_core_web_lg'})
-
-# Get
-APCConfigManager.get_apc_config_english()
-ATEPCConfigManager.get_atepc_config_english()
-ClassificationConfigManager.get_classification_config_english()
-
-# Manually Set spaCy nlp Language object
-from pyabsa.core.apc.dataset_utils.apc_utils import configure_spacy_model
-
-nlp = configure_spacy_model(APCConfigManager.get_apc_config_english())
-```
-
-## 3. Quick Tutorial
-
-- Create a new python environment and install pyabsa
-- Find a suitable demo script ([ATEPC](https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_term_extraction)
-  , [APC](https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_polarity_classification)
-  , [Text Classification](https://github.com/yangheng95/PyABSA/tree/release/demos/text_classification)) to prepare your
-  work. (Welcome to share your demo script)
-- Format/Annotate your dataset referring to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) or use public dataset in
-  ABSADatasets
-- Init your config to specify Model, Dataset, hyper-parameters
-- Training your model and get checkpoints
-- Share your checkpoint and dataset
-
-## 4. Installation
+## Installation
 
 Please do not install the version without corresponding release note to avoid installing a test version.
 
-### 4.1 install via pip
+### install via pip
 
 To use PyABSA, install the latest version from pip or source code:
 
@@ -153,7 +119,7 @@ To use PyABSA, install the latest version from pip or source code:
 pip install -U pyabsa
 ```
 
-### 4.2 install via source
+### install via source
 
 ```bash
 git clone https://github.com/yangheng95/PyABSA --depth=1
@@ -161,9 +127,23 @@ cd PyABSA
 python setup.py install
 ```
 
-## 5. Learning to Use Checkpoint
+## Quick Start
 
-### 5.1 How to get available checkpoints from Google Drive
+- Create a new python environment (Recommended) and install latest pyabsa
+- Find a suitable demo script ([ATEPC](https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_term_extraction)
+  , [APC](https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_polarity_classification)
+  , [Text Classification](https://github.com/yangheng95/PyABSA/tree/release/demos/text_classification)) to prepare your
+  training script. (Welcome to share your demo script)
+- Format or Annotate your dataset referring to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) or use public dataset in
+  ABSADatasets
+- Init your config to specify Model, Dataset, hyper-parameters
+- Training your model and get checkpoints
+- Share your checkpoint and dataset
+
+
+## Learning to Use Checkpoint
+
+### Get available checkpoints from Google Drive
 
 PyABSA will check the latest available checkpoints before and load the latest checkpoint from Google Drive. To view
 available checkpoints, you can use the following code and load the checkpoint by name:
@@ -176,16 +156,16 @@ checkpoint_map = available_checkpoints()  # show available checkpoints of PyABSA
 
 If you can not access to Google Drive, you can download our checkpoints and load the unzipped checkpoint manually.
 如果您无法访问谷歌Drive，您可以从[此处 (提取码：ABSA)](https://pan.baidu.com/s/1oKkO7RJ6Ob9vY6flnJk3Sg)
-下载我们预训练的模型，并加载模型（百度云上的checkpoints更新较慢，版本较为滞后，请注意使用对应版本的PyABSA）。
+下载我们预训练的模型，并加载模型（本仓库为个人业余项目，没有精力再维护百度云，如果您可以帮助管理国内checkpoint的保存和下载请联系我）。
 
-## 5.2 How to use our pretrained checkpoints on your dataset
+## How to use our pretrained checkpoints on your dataset
 
 - [Aspect terms extraction & polarity classification](https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_term_extraction/extract_aspects.py)
 - [Aspect polarity classification](https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_polarity_classification/sentiment_inference.py)
 
-## 5.3 [How to share checkpoints (e.g., checkpoints trained on your custom dataset) with community](demos/documents/share-checkpoint.md)
+## [How to share checkpoints (e.g., checkpoints trained on your custom dataset) with community](demos/documents/share-checkpoint.md)
 
-## 6. Datasets
+## Datasets
 
 More datasets are available at [ABSADatasets](https://github.com/yangheng95/ABSADatasets).
 
@@ -207,13 +187,13 @@ More datasets are available at [ABSADatasets](https://github.com/yangheng95/ABSA
 
 You don't have to download the datasets, as the datasets will be downloaded automatically.
 
-## 7. Model Support
+## Model Support
 
 Except for the following models, we provide a template model involving LCF vec, you can develop your model based on
 the [LCF-APC](pyabsa/core/apc/models/lcf_template_apc.py) model template
 or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
 
-### 7.1 ATEPC
+### ATEPC
 
 1. [LCF-ATEPC](pyabsa/core/atepc/models/lcf_atepc.py)
 2. [LCF-ATEPC-LARGE](pyabsa/core/atepc/models/lcf_atepc_large.py) (Dual BERT)
@@ -223,7 +203,7 @@ or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
 5. [FAST-LCFS-ATEPC](pyabsa/core/atepc/models/fast_lcfs_atepc.py)
 6. [BERT-BASE](pyabsa/core/atepc/models/bert_base_atepc.py)
 
-### 7.2 APC
+### APC
 
 #### Bert-based APC models
 
@@ -283,7 +263,7 @@ many ways, including:
 - Give us some advice about feature design/refactor (You can advise to improve some feature)
 - Correct/Rewrite some error-messages or code comment (The comments are not written by native english speaker, you can
   help us improve documents)
-- Create an example script in a particular situation (Such as specify a SpaCy model, pretrainedbert type, some
+- Create an example script in a particular situation (Such as specify a SpaCy model, pretrained-bert type, some
   hyperparameters)
 - Star this repository to keep it active
 
@@ -299,33 +279,3 @@ or [LCF-ATEPC](https://github.com/XuMayi/LCF-ATEPC).
 ## Acknowledgement
 
 This work build from LC-ABSA/LCF-ABSA and LCF-ATEPC, and other impressive works such as PyTorch-ABSA and LCFS-BERT.
-
-## License
-
-MIT
-
-## Contributors ✨
-
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/XuMayi"><img src="https://avatars.githubusercontent.com/u/50400855?v=4?s=100" width="100px;" alt=""/><br /><sub><b>XuMayi</b></sub></a><br /><a href="https://github.com/yangheng95/PyABSA/commits?author=XuMayi" title="Code">💻</a></td>
-    <td align="center"><a href="https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=zh-CN"><img src="https://avatars.githubusercontent.com/u/51735130?v=4?s=100" width="100px;" alt=""/><br /><sub><b>YangHeng</b></sub></a><br /><a href="#projectManagement-yangheng95" title="Project Management">📆</a></td>
-    <td align="center"><a href="https://github.com/brightgems"><img src="https://avatars.githubusercontent.com/u/8269060?v=4?s=100" width="100px;" alt=""/><br /><sub><b>brtgpy</b></sub></a><br /><a href="#data-brightgems" title="Data">🔣</a></td>
-    <td align="center"><a href="https://github.com/FrancisDacian"><img src="https://avatars.githubusercontent.com/u/24215706?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ryan</b></sub></a><br /><a href="https://github.com/yangheng95/PyABSA/commits?author=FrancisDacian" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/lpfy"><img src="https://avatars.githubusercontent.com/u/4684417?v=4?s=100" width="100px;" alt=""/><br /><sub><b>lpfy</b></sub></a><br /><a href="https://github.com/yangheng95/PyABSA/commits?author=lpfy" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/jackie930"><img src="https://avatars.githubusercontent.com/u/41107450?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jackie Liu</b></sub></a><br /><a href="https://github.com/yangheng95/PyABSA/commits?author=jackie930" title="Code">💻</a></td>
-  </tr>
-</table>
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification.
-Contributions of any kind welcome!
