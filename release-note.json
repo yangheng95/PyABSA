@@ -1,4 +1,7 @@
 {
+  "1.8.2": {
+    "1": "Minor fixes and optimization"
+  },
   "1.8.1": {
     "1": "Fix an inference bug for ATEPC"
   },

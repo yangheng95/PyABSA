@@ -12,8 +12,8 @@
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/back-to-reality-leveraging-pattern-driven/aspect-based-sentiment-analysis-on-semeval)](https://paperswithcode.com/sota/aspect-based-sentiment-analysis-on-semeval?p=back-to-reality-leveraging-pattern-driven)
 
-PyABSA is a personal project which received many contributions from all the contributors. Please feel free to help make it developing,
-Each star helps PyABSA go further, too. With regards for all the people who contribute to PyABSA.
+PyABSA is a personal project which received many contributions from all the contributors. Please feel free to help make it developing, with regards for all the people who contribute to PyABSA.
+I am glad if PyABSA helps you, please star this repo as Each Star helps PyABSA go further, many thanks.
 
 
 ## Annotate Your Own Dataset
