@@ -16,9 +16,10 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import APCModelList
 
 apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = APCModelList.FAST_LSA_S
+apc_config_english.model = APCModelList.FAST_LSA_T
 apc_config_english.num_epoch = 30
 apc_config_english.evaluate_begin = 10
+apc_config_english.pretrained_bert = 'microsoft/deberta-v3-base'
 apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
 apc_config_english.dropout = 0.5

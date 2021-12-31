@@ -9,6 +9,7 @@ import os
 
 import findfile
 import torch
+import transformers
 
 from pyabsa import __version__
 
@@ -43,6 +44,8 @@ def init_config(config, auto_device):
     config.device = 'cuda' if auto_device == 'all_cuda' else config.device
     config.model_name = config.model.__name__.lower() if not isinstance(config.model, list) else 'ensemble'
     config.PyABSAVersion = __version__
+    config.TransformersVersion = transformers.__version__
+    config.TorchVersion = '{}+{}'.format(torch.version.__version__, torch.version.cuda)
 
     if 'use_syntax_based_SRD' in config:
         print('-' * 130)
@@ -55,9 +58,9 @@ def init_config(config, auto_device):
 class Trainer:
     def __init__(self,
                  config: ConfigManager = None,
-                 dataset: str = None,
-                 from_checkpoint: str = '',
-                 checkpoint_save_mode: int = 1,
+                 dataset=None,
+                 from_checkpoint: str = None,
+                 checkpoint_save_mode: int = 0,
                  auto_device=True,
                  path_to_save=None
                  ):
@@ -147,7 +150,7 @@ class Trainer:
                     # always return the last trained model if dont save trained model
                     model = self.model_class(model_arg=self.train_func(config, self.from_checkpoint, self.logger))
             except Exception as e:
-                print('Error! No. {} training ending with exception: {}'.format(i+1, e))
+                print('Error! No. {} training ending with exception: {}'.format(i + 1, e))
         while self.logger.handlers:
             self.logger.removeHandler(self.logger.handlers[0])
 

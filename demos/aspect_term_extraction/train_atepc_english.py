@@ -15,14 +15,14 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import ATEPCConfigManager
 
 config = ATEPCConfigManager.get_atepc_config_english()
-config.model = ATEPCModelList.LCFS_ATEPC
+config.model = ATEPCModelList.FAST_LCF_ATEPC
 config.pretrained_bert = 'microsoft/deberta-v3-base'
 config.evaluate_begin = 5
 config.num_epoch = 20
 config.l2reg = 1e-8
 config.learning_rate = 1e-5
 config.log_step = 10
-Dataset = ABSADatasetList.Laptop14
+Dataset = ABSADatasetList.Multilingual
 aspect_extractor = Trainer(config=config,
                            dataset=Dataset,
                            checkpoint_save_mode=1,
