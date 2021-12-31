@@ -1,4 +1,7 @@
 {
+  "1.8.1": {
+    "1": "Fix an inference bug for ATEPC"
+  },
   "1.8.0": {
     "1": "Add more pretrained model (i.e., encoder model) for ATEPC task. e.g., microsoft/deberta-v3-base(large), roberta-base(large)",
     "2": "Refactor Docs"
