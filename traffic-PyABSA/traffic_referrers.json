@@ -1,23 +1,23 @@
 [
   {
     "referrer": "github.com",
-    "count": 834,
-    "uniques": 73
+    "count": 861,
+    "uniques": 74
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 422,
-    "uniques": 82
+    "count": 371,
+    "uniques": 77
   },
   {
     "referrer": "Google",
-    "count": 298,
-    "uniques": 93
+    "count": 313,
+    "uniques": 91
   },
   {
     "referrer": "link.zhihu.com",
-    "count": 13,
-    "uniques": 3
+    "count": 15,
+    "uniques": 5
   },
   {
     "referrer": "Baidu",
@@ -35,12 +35,12 @@
     "uniques": 2
   },
   {
-    "referrer": "ss.scnu.edu.cn",
+    "referrer": "package.wiki",
     "count": 1,
     "uniques": 1
   },
   {
-    "referrer": "StartPage",
+    "referrer": "arxiv.org",
     "count": 1,
     "uniques": 1
   },
