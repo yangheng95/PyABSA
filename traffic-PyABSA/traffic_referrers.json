@@ -1,18 +1,18 @@
 [
   {
     "referrer": "github.com",
-    "count": 794,
-    "uniques": 66
+    "count": 786,
+    "uniques": 64
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 353,
-    "uniques": 74
+    "count": 357,
+    "uniques": 71
   },
   {
     "referrer": "Google",
-    "count": 320,
-    "uniques": 87
+    "count": 332,
+    "uniques": 89
   },
   {
     "referrer": "githubmate.com",
@@ -21,8 +21,13 @@
   },
   {
     "referrer": "link.zhihu.com",
-    "count": 15,
+    "count": 14,
     "uniques": 5
+  },
+  {
+    "referrer": "awesomeopensource.com",
+    "count": 11,
+    "uniques": 1
   },
   {
     "referrer": "Baidu",
@@ -35,18 +40,13 @@
     "uniques": 2
   },
   {
-    "referrer": "nlpprogress.com",
+    "referrer": "l.facebook.com",
     "count": 2,
     "uniques": 2
   },
   {
-    "referrer": "ss.scnu.edu.cn",
-    "count": 1,
-    "uniques": 1
-  },
-  {
-    "referrer": "l.facebook.com",
-    "count": 1,
-    "uniques": 1
+    "referrer": "pythonrepo.com",
+    "count": 2,
+    "uniques": 2
   }
 ]
