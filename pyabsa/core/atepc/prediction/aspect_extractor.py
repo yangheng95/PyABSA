@@ -81,12 +81,12 @@ class AspectExtractor:
                 if model_path:
                     self.model = torch.load(model_path, map_location='cpu')
                     self.model.opt = self.opt
-                if tokenizer_path:
-                    self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
-                else:
-                    try:
-                        self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
-                    except ValueError:
+                try:
+                    self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
+                except ValueError:
+                    if tokenizer_path:
+                        self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
+                    else:
                         raise TransformerConnectionError()
 
                 self.tokenizer.bos_token = self.tokenizer.bos_token if self.tokenizer.bos_token else '[CLS]'

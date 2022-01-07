@@ -24,7 +24,7 @@ warnings.filterwarnings('ignore')
 seeds = [random.randint(0, 10000) for _ in range(2)]
 
 apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = APCModelList.FAST_LSA_S
+apc_config_english.model = APCModelList.FAST_LCF_BERT
 apc_config_english.lcf = 'cdw'
 apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
@@ -82,7 +82,7 @@ Trainer(config=apc_config_english,
         )
 
 apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = APCModelList.FAST_LSA_T
+apc_config_english.model = APCModelList.FAST_LCFS_BERT
 apc_config_english.lcf = 'cdw'
 apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80

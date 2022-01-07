@@ -16,12 +16,15 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import ATEPCConfigManager
 
 config = ATEPCConfigManager.get_atepc_config_multilingual()
-config.evaluate_begin = 5
+config.evaluate_begin = 10
 config.log_step = 500
 config.batch_size = 64
+config.max_seq_len = 128
+config.l2reg = 1e-8
+config.learning_rate = 1e-5
 config.model = ATEPCModelList.FAST_LCF_ATEPC
 multilingual = ABSADatasetList.Multilingual
-config.pretrained_bert = 'xlm-roberta-base'
+config.pretrained_bert = 'microsoft/mdeberta-v3-base'
 
 aspect_extractor = Trainer(config=config,
                            dataset=multilingual,

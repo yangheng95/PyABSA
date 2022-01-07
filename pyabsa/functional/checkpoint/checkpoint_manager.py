@@ -193,7 +193,7 @@ class TextClassifierCheckpointManager(CheckpointManager):
         download the checkpoint and return the path of the downloaded checkpoint
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
         :param from_drive_url: for loading shared checkpoint on google drive from a direct url, this param disable the 'checkpoint' param.
-        This param is for someone want load a checkpoint not registered in PyABSA
+        This param is for someone wants to load a checkpoint not registered in PyABSA
         :return:
         """
         if not from_drive_url:
