@@ -209,7 +209,7 @@ class Instructor:
                         sum_acc += test_acc
                         sum_f1 += f1
                         if test_acc > max_fold_acc:
-
+                            patience = self.opt.patience
                             max_fold_acc = test_acc
                             if self.opt.model_path_to_save:
                                 if not os.path.exists(self.opt.model_path_to_save):
@@ -353,7 +353,7 @@ class Instructor:
                             sum_acc += test_acc
                             sum_f1 += f1
                             if test_acc > max_fold_acc:
-
+                                patience = self.opt.patience
                                 max_fold_acc = test_acc
                                 if self.opt.model_path_to_save:
                                     if not os.path.exists(self.opt.model_path_to_save):

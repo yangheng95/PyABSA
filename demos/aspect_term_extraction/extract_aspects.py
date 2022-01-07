@@ -12,7 +12,7 @@ from pyabsa import ATEPCCheckpointManager
 examples = ['But the staff was so perfect to us, but the service was bad .',
             ]
 
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='fast_lcfs_atepc_Restaurant14_cdw_apcacc_82.48_apcf1_69.18_atef1_84.17',
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='english',
                                                                auto_device=True  # False means load model on CPU
                                                                )
 

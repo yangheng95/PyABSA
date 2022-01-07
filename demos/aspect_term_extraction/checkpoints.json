@@ -4,8 +4,8 @@
       "id": "https://drive.google.com/file/d/1AsjRzMa2D6DykMuOvokMra9mGBdRgIJC/view?usp=sharing",
       "Training Model": "FAST-LSA-S",
       "Training Dataset": "English",
-      "Description": "Trained on RTX2080 Ti",
-      "Available Version": "1.6.3",
+      "Description": "Trained on RTX3090",
+      "Available Version": "1.6.3-1.6.99",
       "Checkpoint File": "fast_lsa_s_acc_84.9_f1_82.11.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
@@ -14,7 +14,7 @@
       "Training Model": "FAST-LSA-S",
       "Training Dataset": "English",
       "Description": "Trained on RTX2080 Ti",
-      "Available Version": "1.6.3",
+      "Available Version": "1.6.3-1.6.99",
       "Checkpoint File": "fast_lsa_s_acc_84.9_f1_82.11.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
@@ -28,12 +28,21 @@
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "chinese": {
-      "id": "https://drive.google.com/file/d/1mXLZorWyIQM2wGTqnPrFo0X0_b5cr4mu/view?usp=sharing",
-      "Training Model": "FAST-LSA-S",
+      "id": "https://drive.google.com/file/d/1TKM08i-u1oiyGOmGXIQ9jqbCLDvEt1oA/view?usp=sharing",
+      "Training Model": "FAST-LCF-MDeBERTa",
       "Training Dataset": "Chinese",
-      "Description": "Trained on RTX2080 Ti",
-      "Available Version": "1.6.3",
-      "Checkpoint File": "fast_lsa_s_acc_94.34_f1_93.37.zip",
+      "Description": "Trained on RTX3090",
+      "Available Version": "1.8.2",
+      "Checkpoint File": "fast_lcf_bert_Chinese_acc_97.11_f1_96.54.zip",
+      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
+    },
+    "multilingual": {
+      "id": "https://drive.google.com/file/d/1E3b3OSP4Kw8JNZySm-bynH9k4-nhlmx3/view?usp=sharing",
+      "Training Model": "FAST-LCF-Deberta",
+      "Training Dataset": "Multilingual",
+      "Description": "Trained on RTX3090",
+      "Available Version": "1.8.2",
+      "Checkpoint File": "fast_lcf_bert_Multilingual_acc_94.72_f1_90.07.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "HELP-WANTED": {
@@ -45,21 +54,30 @@
   },
   "ATEPC": {
     "english": {
-      "id": "https://drive.google.com/file/d/1mycHVuK3bO01fzeKqq3NubvB5ipRjudr/view?usp=sharing",
-      "Training Model": "FAST-LCFS-ATEPC",
+      "id": "https://drive.google.com/file/d/1pByDF5RezyRXK9qUzmTsV_PpOlWShQvE/view?usp=sharing",
+      "Training Model": "FAST-LCF-ATEPC",
       "Training Dataset": "English",
-      "Description": "Trained on RTX2080 Ti",
-      "Available Version": "1.5.2",
-      "Checkpoint File": "fast_lcfs_atepc_cdw_apcacc_78.57_apcf1_74.7_atef1_78.57.zip",
+      "Description": "Trained on RTX3090",
+      "Available Version": "1.8.2",
+      "Checkpoint File": "fast_lcf_atepc_English_cdw_apcacc_81.03_apcf1_78.11_atef1_74.94.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "chinese": {
-      "id": "https://drive.google.com/file/d/1wrDID4eCxdeNedh5izcmSNHHr6Yo1_dF/view?usp=sharing",
-      "Training Model": "FAST-LSA-S",
+      "id": "https://drive.google.com/file/d/1thb3gBzT8PTRhlPtm5JD10nha74scBR5/view?usp=sharing",
+      "Training Model": "FAST-LCF-DeBERTa",
       "Training Dataset": "Chinese",
-      "Description": "Trained on RTX2080 Ti",
-      "Available Version": "1.5.2",
-      "Checkpoint File": "fast_lcf_atepc_cdw_apcacc_95.87_apcf1_95.3_atef1_84.23.zip",
+      "Description": "Trained on RTX3090",
+      "Available Version": "1.8.2",
+      "Checkpoint File": "fast_lcf_atepc_Chinese_cdw_apcacc_96.14_apcf1_95.64_atef1_91.07.zip",
+      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
+    },
+    "multilingual": {
+      "id": "https://drive.google.com/file/d/1APypwgfbuT0HwZUT3gCh9YydQ0IP9GFG/view?usp=sharing",
+      "Training Model": "FAST-LCF-ATEPC",
+      "Training Dataset": "ABSADatasets.Multilingual",
+      "Description": "Trained on RTX3090",
+      "Available Version": "1.8.2",
+      "Checkpoint File": "fast_lcf_atepc_Multilingual_cdw_apcacc_83.69_apcf1_79.36_atef1_76.96.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "HELP-WANTED": {
