@@ -1,18 +1,18 @@
 [
   {
     "referrer": "github.com",
-    "count": 733,
-    "uniques": 70
+    "count": 748,
+    "uniques": 66
   },
   {
     "referrer": "Google",
-    "count": 373,
-    "uniques": 99
+    "count": 354,
+    "uniques": 89
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 342,
-    "uniques": 65
+    "count": 303,
+    "uniques": 59
   },
   {
     "referrer": "githubmate.com",
@@ -31,8 +31,8 @@
   },
   {
     "referrer": "pythonrepo.com",
-    "count": 4,
-    "uniques": 3
+    "count": 5,
+    "uniques": 4
   },
   {
     "referrer": "gitee.com",
@@ -45,8 +45,8 @@
     "uniques": 2
   },
   {
-    "referrer": "nlpprogress.com",
-    "count": 2,
-    "uniques": 2
+    "referrer": "teams.microsoft.com",
+    "count": 3,
+    "uniques": 1
   }
 ]
