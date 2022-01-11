@@ -1,18 +1,18 @@
 [
   {
     "referrer": "github.com",
-    "count": 748,
-    "uniques": 66
+    "count": 727,
+    "uniques": 64
   },
   {
     "referrer": "Google",
-    "count": 354,
-    "uniques": 89
+    "count": 339,
+    "uniques": 79
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 303,
-    "uniques": 59
+    "count": 284,
+    "uniques": 54
   },
   {
     "referrer": "githubmate.com",
@@ -20,24 +20,24 @@
     "uniques": 2
   },
   {
-    "referrer": "link.zhihu.com",
-    "count": 15,
-    "uniques": 5
-  },
-  {
     "referrer": "awesomeopensource.com",
     "count": 11,
     "uniques": 1
   },
   {
-    "referrer": "pythonrepo.com",
-    "count": 5,
+    "referrer": "link.zhihu.com",
+    "count": 7,
     "uniques": 4
   },
   {
     "referrer": "gitee.com",
+    "count": 5,
+    "uniques": 2
+  },
+  {
+    "referrer": "pythonrepo.com",
     "count": 4,
-    "uniques": 1
+    "uniques": 3
   },
   {
     "referrer": "pypi.org",
