@@ -1,18 +1,18 @@
 [
   {
     "referrer": "github.com",
-    "count": 716,
-    "uniques": 69
+    "count": 722,
+    "uniques": 68
   },
   {
     "referrer": "Google",
-    "count": 257,
-    "uniques": 65
+    "count": 268,
+    "uniques": 67
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 254,
-    "uniques": 52
+    "count": 250,
+    "uniques": 53
   },
   {
     "referrer": "githubmate.com",
@@ -21,7 +21,7 @@
   },
   {
     "referrer": "teams.microsoft.com",
-    "count": 12,
+    "count": 13,
     "uniques": 1
   },
   {
@@ -31,8 +31,8 @@
   },
   {
     "referrer": "link.zhihu.com",
-    "count": 7,
-    "uniques": 4
+    "count": 9,
+    "uniques": 5
   },
   {
     "referrer": "gitee.com",
@@ -40,13 +40,13 @@
     "uniques": 2
   },
   {
+    "referrer": "zhihu.com",
+    "count": 5,
+    "uniques": 1
+  },
+  {
     "referrer": "pythonrepo.com",
     "count": 4,
     "uniques": 3
-  },
-  {
-    "referrer": "l.facebook.com",
-    "count": 2,
-    "uniques": 2
   }
 ]
