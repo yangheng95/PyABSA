@@ -16,7 +16,7 @@ import torch
 import torch.nn as nn
 from findfile import find_file
 from sklearn import metrics
-from torch.utils.data import DataLoader, random_split, ConcatDataset
+from torch.utils.data import DataLoader, random_split, ConcatDataset, RandomSampler, SequentialSampler
 from tqdm import tqdm
 from transformers import AutoModel
 
@@ -40,7 +40,7 @@ class Instructor:
         if os.path.exists(cache_path):
             print('Loading dataset cache:', cache_path)
             if self.opt.dataset_file['test']:
-                self.train_set, self.test_set, opt = pickle.load(open(cache_path, mode='rb'))
+                self.train_set,  self.valid_set, self.test_set, opt = pickle.load(open(cache_path, mode='rb'))
             else:
                 self.train_set, opt = pickle.load(open(cache_path, mode='rb'))
             # reset output dim according to dataset labels
@@ -55,6 +55,10 @@ class Instructor:
                     self.test_set = BERTClassificationDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
                 else:
                     self.test_set = None
+                if self.opt.dataset_file['valid']:
+                    self.valid_set = BERTClassificationDataset(self.opt.dataset_file['valid'], self.tokenizer, self.opt)
+                else:
+                    self.valid_set = None
             try:
                 self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
             except ValueError as e:
@@ -87,6 +91,10 @@ class Instructor:
                 self.test_set = GloVeClassificationDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
             else:
                 self.test_set = None
+            if self.opt.dataset_file['valid']:
+                self.valid_set = GloVeClassificationDataset(self.opt.dataset_file['valid'], self.tokenizer, self.opt)
+            else:
+                self.valid_set = None
             self.model = opt.model(self.embedding_matrix, opt).to(opt.device)
 
             # use DataParallel for training if device count larger than 1
@@ -101,10 +109,15 @@ class Instructor:
         else:
             self.test_dataloader = None
 
+        if self.valid_set:
+            self.valid_dataloader = DataLoader(dataset=self.valid_set, batch_size=self.opt.batch_size, shuffle=False)
+        else:
+            self.valid_dataloader = None
+
         if self.opt.cache_dataset and not os.path.exists(cache_path):
             print('Caching dataset... please remove cached dataset if change model or dataset')
-            if self.opt.dataset_file['test']:
-                pickle.dump((self.train_set, self.test_set, opt), open(cache_path, mode='wb'))
+            if self.opt.dataset_file['test'] and self.opt.dataset_file['valid']:
+                pickle.dump((self.train_set, self.valid_set, self.test_set, opt), open(cache_path, mode='wb'))
             else:
                 pickle.dump((self.train_set, opt), open(cache_path, mode='wb'))
 
@@ -135,28 +148,30 @@ class Instructor:
     def reload_model(self):
         self.model.load_state_dict(torch.load('./init_state_dict.bin'))
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
-        self.optimizer = self.opt.optimizer(_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
+        self.optimizer = optimizers[self.opt.optimizer](_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
     def prepare_dataloader(self, train_set):
         if self.opt.cross_validate_fold < 1:
+            train_sampler = RandomSampler(self.train_set if not self.train_set else self.train_set)
             self.train_dataloaders.append(DataLoader(dataset=train_set,
                                                      batch_size=self.opt.batch_size,
-                                                     shuffle=True,
+                                                     sampler=train_sampler,
                                                      pin_memory=True))
-
         else:
             split_dataset = train_set
-            len_per_fold = len(split_dataset) // self.opt.cross_validate_fold
+            len_per_fold = len(split_dataset) // self.opt.cross_validate_fold + 1
             folds = random_split(split_dataset, tuple([len_per_fold] * (self.opt.cross_validate_fold - 1) + [
                 len(split_dataset) - len_per_fold * (self.opt.cross_validate_fold - 1)]))
 
             for f_idx in range(self.opt.cross_validate_fold):
                 train_set = ConcatDataset([x for i, x in enumerate(folds) if i != f_idx])
                 val_set = folds[f_idx]
+                train_sampler = RandomSampler(train_set if not train_set else train_set)
+                val_sampler = SequentialSampler(val_set if not val_set else val_set)
                 self.train_dataloaders.append(
-                    DataLoader(dataset=train_set, batch_size=self.opt.batch_size, shuffle=True))
+                    DataLoader(dataset=train_set, batch_size=self.opt.batch_size, sampler=train_sampler))
                 self.val_dataloaders.append(
-                    DataLoader(dataset=val_set, batch_size=self.opt.batch_size, shuffle=True))
+                    DataLoader(dataset=val_set, batch_size=self.opt.batch_size, sampler=val_sampler))
 
     def _train(self, criterion):
         self.prepare_dataloader(self.train_set)
@@ -210,7 +225,10 @@ class Instructor:
                 if self.opt.dataset_file['test'] and global_step % self.opt.log_step == 0:
                     if epoch >= self.opt.evaluate_begin:
 
-                        test_acc, f1 = self._evaluate_acc_f1(self.test_dataloader)
+                        if self.valid_dataloader:
+                            test_acc, f1 = self._evaluate_acc_f1(self.valid_dataloader)
+                        else:
+                            test_acc, f1 = self._evaluate_acc_f1(self.test_dataloader)
 
                         self.opt.metrics_of_this_checkpoint['acc'] = test_acc
                         self.opt.metrics_of_this_checkpoint['f1'] = f1
@@ -268,6 +286,13 @@ class Instructor:
                     iterator.refresh()
             if patience < 0:
                 break
+
+        if self.valid_dataloader:
+            print('Loading best model: {} and evaluating on test set ...'.format(save_path))
+            self.model.load_state_dict(torch.load(find_file(save_path, '.state_dict')))
+            max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
+            # shutil.rmtree(save_path)
+
         self.logger.info('-------------------------- Training Summary --------------------------')
         self.logger.info('Acc: {:.8f} F1: {:.8f} Accumulated Loss: {:.8f}'.format(
             max_fold_acc * 100,
@@ -406,12 +431,14 @@ class Instructor:
                 if patience < 0:
                     break
 
-            self.model = torch.load(find_file(save_path, 'model')).to(self.opt.device)
+            self.model.load_state_dict(torch.load(find_file(save_path, '.state_dict')))
+
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
             if max_fold_acc > max_fold_acc_k_fold:
                 save_path_k_fold = save_path
             fold_test_acc.append(max_fold_acc)
             fold_test_f1.append(max_fold_f1)
+
             self.logger.info('-------------------------- Training Summary --------------------------')
             self.logger.info('Acc: {:.8f} F1: {:.8f} Accumulated Loss: {:.8f}'.format(
                 max_fold_acc * 100,
@@ -427,7 +454,7 @@ class Instructor:
 
         if self.opt.cross_validate_fold > 0:
             self.logger.info('-------------------------- Training Summary --------------------------')
-            self.logger.info('{}-fold Avg Acc: {:.8f} Avg F1: {:.8f} Accumulated Loss: {:.8f}'.format(
+            self.logger.info('{}-fold Best Test Acc: {:.8f} Avg F1: {:.8f} Accumulated Loss: {:.8f}'.format(
                 self.opt.cross_validate_fold,
                 mean_test_acc * 100,
                 mean_test_f1 * 100,

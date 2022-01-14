@@ -73,10 +73,10 @@ class Instructor:
         self.train_dataloaders = []
         self.val_dataloaders = []
 
-        if os.path.exists('init_state_dict.tmp'):
-            os.remove('init_state_dict.tmp')
+        if os.path.exists('init_state_dict.bin'):
+            os.remove('init_state_dict.bin')
         if self.opt.cross_validate_fold > 0:
-            torch.save(self.model.state_dict(), 'init_state_dict.tmp')
+            torch.save(self.model.state_dict(), 'init_state_dict.bin')
 
     def _reset_params(self):
         for child in self.model.children():
@@ -107,12 +107,6 @@ class Instructor:
                                                      pin_memory=True))
 
         else:
-            train_sampler = RandomSampler(self.train_set if not self.train_set else self.train_set)
-            self.train_dataloaders.append(DataLoader(dataset=train_set,
-                                                     batch_size=self.opt.batch_size,
-                                                     sampler=train_sampler,
-                                                     pin_memory=True))
-
             split_dataset = train_set
             len_per_fold = len(split_dataset) // self.opt.cross_validate_fold + 1
             folds = random_split(split_dataset, tuple([len_per_fold] * (self.opt.cross_validate_fold - 1) + [
@@ -427,7 +421,7 @@ class Instructor:
 
         if self.opt.cross_validate_fold > 0:
             self.logger.info('-------------------------- Training Summary --------------------------')
-            self.logger.info('{}-fold Avg Acc: {:.8f} Avg F1: {:.8f} Accumulated Loss: {:.8f}'.format(
+            self.logger.info('{}-fold Best Test Acc: {:.8f} Avg F1: {:.8f} Accumulated Loss: {:.8f}'.format(
                 self.opt.cross_validate_fold,
                 mean_test_acc * 100,
                 mean_test_f1 * 100,

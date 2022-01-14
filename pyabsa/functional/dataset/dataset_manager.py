@@ -100,7 +100,7 @@ class ClassificationDatasetList(list):
         super().__init__(dataset_list)
 
 
-filter_key_words = ['.py', '.ignore', '.md', 'readme', 'log', 'result', 'zip', '.state_dict', '.model', '.png']
+filter_key_words = ['.py', '.ignore', '.md', 'readme', 'log', 'result', 'zip', '.state_dict', '.model', '.png', 'acc', 'f1']
 
 
 def detect_dataset(dataset_path, task='apc'):

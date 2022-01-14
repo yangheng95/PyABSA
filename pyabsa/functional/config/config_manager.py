@@ -28,7 +28,13 @@ def config_check(args):
         if 'evaluate_begin' in args:
             assert 0 <= args['evaluate_begin'] < args['num_epoch']
         if 'cross_validate_fold' in args:
-            assert args['cross_validate_fold'] == -1 or args['cross_validate_fold'] <= 10
+            assert args['cross_validate_fold'] == -1 or args['cross_validate_fold'] > 1
+            if not 5 < args['cross_validate_fold'] < 10:
+                message = 'Warning! cross_validate_fold will be better in [5, 10], instead of {}'.format(args['cross_validate_fold'])
+                if message not in one_shot_messages:
+                    print(message)
+                    one_shot_messages.add(message)
+
         if 'dlcf_a' in args:
             assert args['dlcf_a'] > 1
         if 'dca_p' in args:
@@ -44,7 +50,7 @@ def config_check(args):
                 message = 'Optimizer {} is not available in PyTorch < 1.10, it will be redirected to Adam instead.'.format(args['optimizer'])
                 if message not in one_shot_messages:
                     print(message)
-                one_shot_messages.add('Optimizer {} is not available in PyTorch < 1.10, it will be redirected to Adam instead.'.format(args['optimizer']))
+                    one_shot_messages.add('Optimizer {} is not available in PyTorch < 1.10, it will be redirected to Adam instead.'.format(args['optimizer']))
 
     except AssertionError:
         raise RuntimeError('Some parameters are not valid, please see the main example.')

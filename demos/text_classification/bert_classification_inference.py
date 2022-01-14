@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: text_classification_bert.py
+# file: bert_classification_inference.py
 # time: 2021/8/5
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
