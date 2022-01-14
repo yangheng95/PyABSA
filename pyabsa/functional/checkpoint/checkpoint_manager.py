@@ -264,6 +264,7 @@ def parse_checkpoint_info(t_checkpoint_map, task='APC'):
             for key in checkpoint:
                 print('{}: {}'.format(key, checkpoint[key]))
             print('-' * 100)
+    print('*' * 23, colored('There may be some checkpoints available for early versions, see ./checkpoints.json'.format(task, __version__), 'yellow'), '*' * 23)
     return t_checkpoint_map
 
 
