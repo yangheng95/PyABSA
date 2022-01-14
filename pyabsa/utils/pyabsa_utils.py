@@ -164,7 +164,7 @@ def retry(f):
         while count:
             try:
                 return f(*args, **kwargs)
-            except (TransformerConnectionError, requests.exceptions.ConnectionError):
+            except Exception as e:
                 time.sleep(5)
                 count -= 1
 

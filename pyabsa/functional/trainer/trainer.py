@@ -45,7 +45,7 @@ def init_config(config, auto_device):
     config.model_name = config.model.__name__.lower() if not isinstance(config.model, list) else 'ensemble'
     config.PyABSAVersion = __version__
     config.TransformersVersion = transformers.__version__
-    config.TorchVersion = '{}+{}'.format(torch.version.__version__, torch.version.cuda)
+    config.TorchVersion = '{}+cuda{}'.format(torch.version.__version__, torch.version.cuda)
 
     if 'use_syntax_based_SRD' in config:
         print('-' * 130)
@@ -118,7 +118,7 @@ class Trainer:
             if path_to_save:
                 config.model_path_to_save = path_to_save
             elif self.dataset_file['valid'] and not checkpoint_save_mode:
-                print('Training using validation set needs to save checkpoint, turn on checkpoint saving function ...')
+                print('Using Validation set needs to save checkpoint, turn on checkpoint-saving ...')
                 config.model_path_to_save = 'checkpoints'
                 self.config.save_mode = 1
             else:
@@ -141,7 +141,7 @@ class Trainer:
         seeds = self.config.seed
         model = None
         for i, s in enumerate(seeds):
-            # try:
+            try:
                 config = copy.deepcopy(self.config)
                 config.seed = s
                 if self.checkpoint_save_mode:
@@ -149,8 +149,8 @@ class Trainer:
                 else:
                     # always return the last trained model if dont save trained model
                     model = self.model_class(model_arg=self.train_func(config, self.from_checkpoint, self.logger))
-            # except Exception as e:
-            #     print('Error! No. {} training ending with exception: {}'.format(i + 1, e))
+            except Exception as e:
+                print('Error! No. {} training ending with exception: {}'.format(i + 1, e))
         while self.logger.handlers:
             self.logger.removeHandler(self.logger.handlers[0])
 

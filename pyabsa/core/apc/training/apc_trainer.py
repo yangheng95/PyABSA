@@ -208,9 +208,17 @@ class Instructor:
 
                         sum_acc += test_acc
                         sum_f1 += f1
-                        if test_acc > max_fold_acc:
-                            patience = self.opt.patience
-                            max_fold_acc = test_acc
+
+                        if test_acc > max_fold_acc or f1 > max_fold_f1:
+
+                            if test_acc > max_fold_acc:
+                                patience = self.opt.patience
+                                max_fold_acc = test_acc
+
+                            if f1 > max_fold_f1:
+                                max_fold_f1 = f1
+                                patience = self.opt.patience
+
                             if self.opt.model_path_to_save:
                                 if not os.path.exists(self.opt.model_path_to_save):
                                     os.mkdir(self.opt.model_path_to_save)
@@ -234,12 +242,8 @@ class Instructor:
                                     self.opt.max_test_metrics['max_apc_test_f1'] = f1
 
                                 save_model(self.opt, self.model, self.tokenizer, save_path)
-                        if f1 > max_fold_f1:
-                            max_fold_f1 = f1
-                            patience = self.opt.patience
                         else:
                             patience -= 1
-
                         postfix = ('Epoch:{} | Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) |'
                                    ' Test F1:{:.2f}(max:{:.2f})'.format(epoch,
                                                                         loss.item(),
@@ -352,9 +356,17 @@ class Instructor:
 
                             sum_acc += test_acc
                             sum_f1 += f1
-                            if test_acc > max_fold_acc:
-                                patience = self.opt.patience
-                                max_fold_acc = test_acc
+
+                            if test_acc > max_fold_acc or f1 > max_fold_f1:
+
+                                if test_acc > max_fold_acc:
+                                    patience = self.opt.patience
+                                    max_fold_acc = test_acc
+
+                                if f1 > max_fold_f1:
+                                    max_fold_f1 = f1
+                                    patience = self.opt.patience
+
                                 if self.opt.model_path_to_save:
                                     if not os.path.exists(self.opt.model_path_to_save):
                                         os.mkdir(self.opt.model_path_to_save)
@@ -378,9 +390,6 @@ class Instructor:
                                         self.opt.max_test_metrics['max_apc_test_f1'] = f1
 
                                     save_model(self.opt, self.model, self.tokenizer, save_path)
-                            if f1 > max_fold_f1:
-                                max_fold_f1 = f1
-                                patience = self.opt.patience
                             else:
                                 patience -= 1
                             postfix = ('Epoch:{} | Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) |'
