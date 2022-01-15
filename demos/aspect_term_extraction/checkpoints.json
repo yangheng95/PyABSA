@@ -45,6 +45,22 @@
       "Checkpoint File": "fast_lcf_bert_Multilingual_acc_94.72_f1_90.07.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
+    "dlcf-dca-bert1": {
+      "id": "https://drive.google.com/file/d/1w-NtWujPglsvZu4-jC6Vmu8Iz8CvX-1u/view?usp=sharing",
+      "Training Model": "dlcf-dca-bert",
+      "Training Dataset": "Laptop 14",
+      "Description": "Trained on T4",
+      "Available Version": "1.1.17-1.1.23",
+      "Author": "M, Xu (xumayi@m.scnu.edu.cn)"
+    },
+    "dlcf-dca-bert2": {
+      "id": "https://drive.google.com/file/d/1w-NtWujPglsvZu4-jC6Vmu8Iz8CvX-1u/view?usp=sharing",
+      "Training Model": "dlcf-dca-bert",
+      "Training Dataset": "Restaurant 14",
+      "Description": "Trained on T4",
+      "Available Version": "1.1.17-1.1.23",
+      "Author": "M, Xu (xumayi@m.scnu.edu.cn)"
+    },
     "HELP-WANTED": {
       "id": "",
       "Description": "You can help us by sharing checkpoints (e.g. models trained on you own datasets) with community.",
@@ -58,7 +74,7 @@
       "Training Model": "FAST-LCF-ATEPC",
       "Training Dataset": "English",
       "Description": "Trained on RTX3090",
-      "Available Version": "1.8.2",
+      "Available Version": "1.8.4",
       "Checkpoint File": "fast_lcf_atepc_English_cdw_apcacc_81.03_apcf1_78.11_atef1_74.94.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
@@ -67,7 +83,7 @@
       "Training Model": "FAST-LCF-DeBERTa",
       "Training Dataset": "Chinese",
       "Description": "Trained on RTX3090",
-      "Available Version": "1.8.2",
+      "Available Version": "1.8.4",
       "Checkpoint File": "fast_lcf_atepc_Chinese_cdw_apcacc_96.14_apcf1_95.64_atef1_91.07.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
@@ -76,7 +92,7 @@
       "Training Model": "FAST-LCF-ATEPC",
       "Training Dataset": "ABSADatasets.Multilingual",
       "Description": "Trained on RTX3090",
-      "Available Version": "1.8.2",
+      "Available Version": "1.8.4",
       "Checkpoint File": "fast_lcf_atepc_Multilingual_cdw_apcacc_83.69_apcf1_79.36_atef1_76.96.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },

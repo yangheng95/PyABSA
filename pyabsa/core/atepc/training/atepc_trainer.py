@@ -115,11 +115,11 @@ class Instructor:
                     pickle.dump((self.train_data, self.opt), open(cache_path, mode='wb'))
 
         # only identify the labels in training set, make sure the labels are the same type in the test set
-        if 'num_labels' not in self.opt.args:
-            self.opt.args['num_labels'] = opt.args['num_labels']
-            self.opt.args_call_count['num_labels'] = opt.args_call_count['num_labels']
-            self.opt.args['label_list'] = opt.args['label_list']
-            self.opt.args_call_count['label_list'] = opt.args_call_count['label_list']
+        for key in opt.args:
+            if key not in self.opt.args:
+                self.opt.args[key] = opt.args[key]
+                self.opt.args_call_count[key] = opt.args_call_count[key]
+
         bert_base_model.config.num_labels = self.opt.num_labels
         self.opt.label_list = opt.label_list
 
