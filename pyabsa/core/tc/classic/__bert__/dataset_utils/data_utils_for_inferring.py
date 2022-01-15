@@ -98,8 +98,11 @@ class BERTClassificationDataset(Dataset):
 
     def process_data(self, samples, ignore_error=True):
         all_data = []
-
-        for text in tqdm.tqdm(samples, postfix='building word indices...'):
+        if len(samples) > 1:
+            it = tqdm.tqdm(samples, postfix='building word indices...')
+        else:
+            it = samples
+        for text in it:
             try:
                 # handle for empty lines in inferring_tutorials dataset_utils
                 if text is None or '' == text.strip():
@@ -131,9 +134,9 @@ class BERTClassificationDataset(Dataset):
                 all_data.append(data)
 
             except Exception as e:
-                # if ignore_error:
-                #     print('Ignore error while processing:', text)
-                # else:
+                if ignore_error:
+                    print('Ignore error while processing:', text)
+                else:
                     raise e
 
         self.all_data = all_data

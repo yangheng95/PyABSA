@@ -314,10 +314,10 @@ def check_dataset():  # retry_count is for unstable conn to GitHub
         remote_version = query_remote_version()
         print('Remote ABSADataset version: {} Local ABSADatasets version: {}'.format(remote_version, local_version))
         if remote_version == 'N.A.':
-            print('Unknown remote version for ABSADatasets, please check the latest version of ABSADatasets')
+            print('Unknown remote version for ABSADatasets, please check the latest version of ABSADatasets at https://github.com/yangheng95/ABSADatasets')
         elif local_version == 'N.A.':
-            print('Unknown local version for ABSADatasets, please check the latest version of ABSADatasets')
+            print('Unknown local version for ABSADatasets, please check the latest version of ABSADatasets at https://github.com/yangheng95/ABSADatasets')
         elif remote_version > local_version:
             print(colored('There is a new version of ABSADatasets({}), please remove the downloaded datasets to automatically download the new version.'.format(remote_version), 'green'))
     except Exception as e:
-        print(colored('ABSADatasets version check failed: {}, please check the latest datasets on GitHub manually.'.format(e), 'red'))
+        print(colored('ABSADatasets version check failed: {}, please check the latest datasets at https://github.com/yangheng95/ABSADatasets manually.'.format(e), 'red'))
