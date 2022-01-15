@@ -12,7 +12,7 @@ from pyabsa import ATEPCCheckpointManager
 examples = ['But the staff was so perfect to us, but the service was bad .',
             ]
 
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='english',
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='fast_lcf_atepc_Chinese_cdw_apcacc_93.73_apcf1_92.81_atef1_78.39',
                                                                auto_device=True  # False means load model on CPU
                                                                )
 
@@ -21,7 +21,7 @@ aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='engli
 # inference_source = 'integrated_datasets/datasets/apc_datasets/TShirt'
 # inference_source = ABSADatasetList.TShirt
 # inference_source = examples
-inference_source = ABSADatasetList.Restaurant14
+inference_source = ABSADatasetList.Chinese
 atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source,  #
                                                save_result=True,
                                                print_result=True,  # print the result
