@@ -18,21 +18,21 @@ from pyabsa.functional import APCModelList
 apc_config_english = APCConfigManager.get_apc_config_english()
 apc_config_english.model = APCModelList.FAST_LSA_T
 apc_config_english.num_epoch = 30
-apc_config_english.evaluate_begin = 10
+apc_config_english.evaluate_begin = 2
 apc_config_english.pretrained_bert = 'microsoft/deberta-v3-base'
 apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
 apc_config_english.dropout = 0.5
 apc_config_english.seed = 2672
-apc_config_english.log_step = 1000
+apc_config_english.log_step = 50
 apc_config_english.l2reg = 1e-8
 apc_config_english.dynamic_truncate = True
 apc_config_english.srd_alignment = True
 
-Dataset = ABSADatasetList.English
+Dataset = ABSADatasetList.Laptop14
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=Dataset,
-                          checkpoint_save_mode=1,
+                          checkpoint_save_mode=0,
                           auto_device=True
                           ).load_trained_model()
 
