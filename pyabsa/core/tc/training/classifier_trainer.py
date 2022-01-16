@@ -191,7 +191,7 @@ class Instructor:
         max_fold_f1 = 0
         save_path = ''
         self.opt.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
-        self.opt.max_test_metrics = {'max_test_acc': 0, 'max_test_f1': 0, 'max_ate_test_f1': 0}
+        self.opt.max_test_metrics = {'max_test_acc': 0, 'max_test_f1': 0}
 
         self.logger.info("***** Running training for Aspect Polarity Classification *****")
         self.logger.info("Training set examples = %d", len(self.train_set))
@@ -330,7 +330,7 @@ class Instructor:
         max_fold_acc_k_fold = 0
 
         self.opt.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
-        self.opt.max_test_metrics = {'max_test_acc': 0, 'max_test_f1': 0, 'max_ate_test_f1': 0}
+        self.opt.max_test_metrics = {'max_test_acc': 0, 'max_test_f1': 0}
 
         for f, (train_dataloader, val_dataloader) in enumerate(zip(self.train_dataloaders, self.val_dataloaders)):
             if self.opt.log_step < 0:
