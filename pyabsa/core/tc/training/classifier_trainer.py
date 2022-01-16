@@ -65,7 +65,7 @@ class Instructor:
                 print('Init pretrained model failed, exception: {}'.format(e))
                 raise TransformerConnectionError()
 
-            # init the model behind the construction of apc_datasets in case of updating polarities_dim
+            # init the model behind the construction of datasets in case of updating polarities_dim
             self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
 
         elif hasattr(GloVeClassificationModelList, opt.model.__name__):
@@ -191,7 +191,7 @@ class Instructor:
         max_fold_f1 = 0
         save_path = ''
         self.opt.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
-        self.opt.max_test_metrics = {'max_apc_test_acc': 0, 'max_apc_test_f1': 0, 'max_ate_test_f1': 0}
+        self.opt.max_test_metrics = {'max_test_acc': 0, 'max_test_f1': 0, 'max_ate_test_f1': 0}
 
         self.logger.info("***** Running training for Aspect Polarity Classification *****")
         self.logger.info("Training set examples = %d", len(self.train_set))
@@ -263,10 +263,10 @@ class Instructor:
                                                                                  round(f1 * 100, 2)
                                                                                  )
 
-                                if test_acc > self.opt.max_test_metrics['max_apc_test_acc']:
-                                    self.opt.max_test_metrics['max_apc_test_acc'] = test_acc
-                                if f1 > self.opt.max_test_metrics['max_apc_test_f1']:
-                                    self.opt.max_test_metrics['max_apc_test_f1'] = f1
+                                if test_acc > self.opt.max_test_metrics['max_test_acc']:
+                                    self.opt.max_test_metrics['max_test_acc'] = test_acc
+                                if f1 > self.opt.max_test_metrics['max_test_f1']:
+                                    self.opt.max_test_metrics['max_test_f1'] = f1
 
                                 save_model(self.opt, self.model, self.tokenizer, save_path)
                         else:
@@ -330,7 +330,7 @@ class Instructor:
         max_fold_acc_k_fold = 0
 
         self.opt.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
-        self.opt.max_test_metrics = {'max_apc_test_acc': 0, 'max_apc_test_f1': 0, 'max_ate_test_f1': 0}
+        self.opt.max_test_metrics = {'max_test_acc': 0, 'max_test_f1': 0, 'max_ate_test_f1': 0}
 
         for f, (train_dataloader, val_dataloader) in enumerate(zip(self.train_dataloaders, self.val_dataloaders)):
             if self.opt.log_step < 0:
@@ -407,10 +407,10 @@ class Instructor:
                                                                                      round(f1 * 100, 2)
                                                                                      )
 
-                                    if test_acc > self.opt.max_test_metrics['max_apc_test_acc']:
-                                        self.opt.max_test_metrics['max_apc_test_acc'] = test_acc
-                                    if f1 > self.opt.max_test_metrics['max_apc_test_f1']:
-                                        self.opt.max_test_metrics['max_apc_test_f1'] = f1
+                                    if test_acc > self.opt.max_test_metrics['max_test_acc']:
+                                        self.opt.max_test_metrics['max_test_acc'] = test_acc
+                                    if f1 > self.opt.max_test_metrics['max_test_f1']:
+                                        self.opt.max_test_metrics['max_test_f1'] = f1
 
                                     save_model(self.opt, self.model, self.tokenizer, save_path)
                             else:
@@ -454,7 +454,7 @@ class Instructor:
 
         if self.opt.cross_validate_fold > 0:
             self.logger.info('-------------------------- Training Summary --------------------------')
-            self.logger.info('{}-fold Best Test Acc: {:.8f} Avg F1: {:.8f} Accumulated Loss: {:.8f}'.format(
+            self.logger.info('{}-fold Besta Test Acc: {:.8f} Avg F1: {:.8f} Accumulated Loss: {:.8f}'.format(
                 self.opt.cross_validate_fold,
                 mean_test_acc * 100,
                 mean_test_f1 * 100,

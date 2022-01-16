@@ -121,8 +121,8 @@ def detect_dataset(dataset_path, task='apc'):
             dataset_file['valid'] = find_files(d, ['valid', task], exclude_key=['.inference', 'train.'] + filter_key_words)
 
     if len(dataset_file['train']) == 0:
-        raise RuntimeError('{} is not an integrated dataset or not downloaded automatically,'
-                           ' and it is not a path containing train/test datasets!'.format(dataset_path))
+        raise RuntimeError('Fail to locate dataset: {}. If you are using your own dataset, you may need rename your dataset according to {}'.format(dataset_path,
+                           'https://github.com/yangheng95/ABSADatasets#important-rename-your-dataset-filename-before-use-it-in-pyabsa'))
     if len(dataset_file['test']) == 0:
         print('Warning, auto_evaluate=True, however cannot find test set using for evaluating!')
 
@@ -146,8 +146,9 @@ def detect_infer_dataset(dataset_path, task='apc'):
             dataset_file += find_files(d, ['.inference', task], exclude_key=['train.'] + filter_key_words)
 
     if len(dataset_file) == 0:
-        raise RuntimeError('{} is not an integrated dataset or not downloaded automatically,'
-                           ' and it is not a path containing inference datasets!'.format(dataset_path))
+        raise RuntimeError('Fail to locate dataset: {}. If you are using your own dataset, you may need rename your dataset according to {}'.format(dataset_path,
+                           'https://github.com/yangheng95/ABSADatasets#important-rename-your-dataset-filename-before-use-it-in-pyabsa'))
+
     if len(dataset_path) > 1:
         print(colored('Never mixing datasets with different sentiment labels for training & inference !', 'yellow'))
 
@@ -170,6 +171,6 @@ def download_datasets_from_github(save_path):
             except IOError as e:
                 pass
         except Exception as e:
-            print('Fail to clone ABSADatasets: {}, please check your connection to GitHub, we will keep retrying...'.format(e))
+            print(colored('Fail to clone ABSADatasets: {}. Please check your connection to GitHub, keep retry downloading...'.format(e), 'red'))
             time.sleep(3)
             download_datasets_from_github(save_path)
