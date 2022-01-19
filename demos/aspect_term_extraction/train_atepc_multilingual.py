@@ -16,7 +16,7 @@ from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import ATEPCConfigManager
 
 config = ATEPCConfigManager.get_atepc_config_multilingual()
-config.evaluate_begin = 10
+config.evaluate_begin = 5
 config.log_step = 500
 config.batch_size = 64
 config.max_seq_len = 128
