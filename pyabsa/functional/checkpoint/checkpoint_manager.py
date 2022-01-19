@@ -8,6 +8,7 @@ import json
 import os
 import sys
 import zipfile
+from distutils.version import StrictVersion
 
 from autocuda import auto_cuda
 from findfile import find_files, find_dir, find_file
@@ -49,7 +50,7 @@ class APCCheckpointManager(CheckpointManager):
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
         :param from_drive_url: for loading shared checkpoint on google drive from a direct url, this param disable the 'checkpoint' param.
         :param sentiment_map: label to text index map (deprecated and has no effect)
-        This param is for someone want load a checkpoint not registered in PyABSA
+        This param is for someone wants to load a checkpoint not registered in PyABSA
         :param auto_device: True or False, otherwise 'cuda', 'cpu' works
         :param eval_batch_size: eval batch_size in modeling
                 
@@ -74,7 +75,7 @@ class APCCheckpointManager(CheckpointManager):
         download the checkpoint and return the path of the downloaded checkpoint
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
         :param from_drive_url: for loading shared checkpoint on google drive from a direct url, this param disable the 'checkpoint' param.
-        This param is for someone want load a checkpoint not registered in PyABSA
+        This param is for someone wants to load a checkpoint not registered in PyABSA
         :return:
         """
         if not from_drive_url:
@@ -108,7 +109,7 @@ class ATEPCCheckpointManager(CheckpointManager):
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
         :param from_drive_url: for loading shared checkpoint on google drive from a direct url, this param disable the 'checkpoint' param.
-        This param is for someone want load a checkpoint not registered in PyABSA
+        This param is for someone wants to load a checkpoint not registered in PyABSA
         :param sentiment_map: label to text index map (deprecated and has no effect)
         :param auto_device: True or False, otherwise 'cuda', 'cpu' works
         :param eval_batch_size: eval batch_size in modeling
@@ -134,7 +135,7 @@ class ATEPCCheckpointManager(CheckpointManager):
         download the checkpoint and return the path of the downloaded checkpoint
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
         :param from_drive_url: for loading shared checkpoint on google drive from a direct url, this param disable the 'checkpoint' param.
-        This param is for someone want load a checkpoint not registered in PyABSA
+        This param is for someone wants to load a checkpoint not registered in PyABSA
         :return:
         """
         if not from_drive_url:
@@ -167,7 +168,7 @@ class TextClassifierCheckpointManager(CheckpointManager):
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
         :param from_drive_url: for loading shared checkpoint on google drive from a direct url, this param disable the 'checkpoint' param.
-        This param is for someone want load a checkpoint not registered in PyABSA
+        This param is for someone wants to load a checkpoint not registered in PyABSA
         :param label_map: label to text index map (deprecated and has no effect)
         :param auto_device: True or False, otherwise 'cuda', 'cpu' works
         :param eval_batch_size: eval batch_size in modeling
@@ -214,35 +215,8 @@ class TextClassifierCheckpointManager(CheckpointManager):
                                        archive_path=from_drive_url)
 
 
-def compare_version(version1, version2):
-    #  1 means greater, 0 means equal, -1 means lower
-    if version1 and not version2:
-        return 1
-    elif version2 and not version1:
-        return -1
-    else:
-        version1 = version1.split('.')
-        version2 = version2.split('.')
-        for v1, v2 in zip(version1, version2):
-            if len(v1) == len(v2):
-                if v1 > v2:
-                    return 1
-                if v2 > v1:
-                    return -1
-            else:
-                if v1.startswith(v2):
-                    return -1
-                elif v2.startswith(v1):
-                    return 1
-                elif v1 == v2:
-                    return 0
-                else:
-                    return int(v1 > v2)
-        return 0
-
-
 def parse_checkpoint_info(t_checkpoint_map, task='APC'):
-    print('*' * 23, colored('Available {} model checkpoints for Version:{} (this version)'.format(task, __version__), 'green'), '*' * 23)
+    print('*' * 10, colored('Available {} model checkpoints for Version:{} (this version)'.format(task, __version__), 'green'), '*' * 10)
     for i, checkpoint in enumerate(t_checkpoint_map):
         checkpoint = t_checkpoint_map[checkpoint]
         try:
@@ -258,13 +232,13 @@ def parse_checkpoint_info(t_checkpoint_map, task='APC'):
             min_ver = c_version
             max_ver = ''
         max_ver = max_ver if max_ver else 'N.A.'
-        if compare_version(min_ver, __version__) <= 0 and compare_version(__version__, max_ver) <= 0:
+        StrictVersion()
+        if max_ver == 'N.A.' or StrictVersion(min_ver) <= StrictVersion(__version__) <= StrictVersion(max_ver):
 
             print('-' * 100)
             for key in checkpoint:
                 print('{}: {}'.format(key, checkpoint[key]))
             print('-' * 100)
-    print('*' * 23, colored('There may be some checkpoints available for early versions, see ./checkpoints.json'.format(task, __version__), 'yellow'), '*' * 23)
     return t_checkpoint_map
 
 
@@ -290,14 +264,20 @@ def available_checkpoints(task='', from_local=False):
             for task_map in checkpoint_map:
                 parse_checkpoint_info(checkpoint_map[task_map], task_map)
 
+        print(colored('There may be some checkpoints available for early versions of PyABSA, see ./checkpoints.json'.format(task, __version__), 'yellow'))
+
         # os.remove('./checkpoints.json')
         return t_checkpoint_map if task else checkpoint_map
 
     except Exception as e:
-        print('\nFailed to query checkpoints (Error: {}), you can try manually download the checkpoints from: \n'.format(e) +
-              '[1]\tGoogle Drive\t: https://drive.google.com/file/d/1CBVGPA3xdQqdkFFwzO5T2Q4reFtzFIJZ/view?usp=sharing\n'
-              '[2]\tBaidu NetDisk\t: https://pan.baidu.com/s/1K8aYQ4EIrPm1GjQv_mnxEg (Access Code: absa)\n')
-        sys.exit(-1)
+        if not from_local:
+            print('Fail to query checkpoints from Google Drive, try to download checkpoint parsed from ./checkpoints.json')
+            return available_checkpoints(task, True)
+        else:
+            print('\nFailed to query checkpoints (Error: {}), you can try manually download the checkpoints from: \n'.format(e) +
+                  '[1]\tGoogle Drive\t: https://drive.google.com/file/d/1CBVGPA3xdQqdkFFwzO5T2Q4reFtzFIJZ/view?usp=sharing\n'
+                  '[2]\tBaidu NetDisk\t: https://pan.baidu.com/s/1K8aYQ4EIrPm1GjQv_mnxEg (Access Code: absa)\n')
+            sys.exit(-1)
 
 
 def download_checkpoint(task='apc', language='chinese', archive_path='', model_name='any_model'):

@@ -22,6 +22,7 @@ __pycache__/
 *$py.class
 *.pyc
 experiments/
+tests/
 *.result.json
 .idea/
 
@@ -152,6 +153,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-.DS_Store
 .DS_Store
 examples/.DS_Store

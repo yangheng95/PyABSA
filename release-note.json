@@ -1,4 +1,7 @@
 {
+  "1.8.11":{
+    "1": "Fix version comparison in parsing checkpoints"
+  },
   "1.8.9(10)":{
     "1": "Minor doc fix"
   },
