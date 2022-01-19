@@ -19,7 +19,7 @@ class DatasetItem(list):
     def __init__(self, dataset_name, dataset_items=None):
         super().__init__()
         if os.path.exists(dataset_name):
-            print('Maybe dataset_name is a path, rename to path basename...')
+            print('Construct DatasetItem from {}, assign dataset_name={}...'.format(dataset_name, os.path.basename(dataset_name)))
             dataset_name = os.path.basename(dataset_name)
 
         self.dataset_name = dataset_name
@@ -171,6 +171,15 @@ def download_datasets_from_github(save_path):
             except IOError as e:
                 pass
         except Exception as e:
-            print(colored('Fail to clone ABSADatasets: {}. Please check your connection to GitHub, keep retry downloading...'.format(e), 'red'))
-            time.sleep(3)
-            download_datasets_from_github(save_path)
+            print(colored('Fail to clone ABSADatasets at GitHub: {}. Retry clone at GitEE...'.format(e), 'red'))
+            try:
+                git.Repo.clone_from('https://gitee.com/yangheng95/ABSADatasets.git', tmpdir, branch='v1.2', depth=1)
+                # git.Repo.clone_from('https://github.com/yangheng95/ABSADatasets.git', tmpdir, branch='master', depth=1)
+                try:
+                    shutil.move(os.path.join(tmpdir, 'datasets'), '{}'.format(save_path))
+                except IOError as e:
+                    pass
+            except Exception as e:
+                print(colored('Fail to clone ABSADatasets: {}. Please check your connection...'.format(e), 'red'))
+                time.sleep(3)
+                download_datasets_from_github(save_path)
