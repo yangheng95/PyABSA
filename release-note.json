@@ -1,4 +1,7 @@
 {
+  "1.8.13":{
+    "1": "Add confidence in text classification output"
+  },
   "1.8.12":{
     "1": "Add GitEE support in integrated dataset downloading"
   },

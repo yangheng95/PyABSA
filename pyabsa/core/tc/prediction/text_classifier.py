@@ -195,28 +195,6 @@ class TextClassifier:
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.opt.eval_batch_size, shuffle=False)
         return self._infer(print_result=print_result)
 
-    def merge_results(self, results):
-        """ merge APC results have the same input text
-        """
-        final_res = []
-        for result in results:
-
-            if final_res and "".join(final_res[-1]['text'].split()) == "".join(result['text'].split()):
-                final_res[-1]['label'].append(result['label'])
-                final_res[-1]['ref_label'].append(result['ref_label'])
-                final_res[-1]['ref_check'].append(result['ref_check'])
-            else:
-                final_res.append(
-                    {
-                        'text': result['text'].replace('  ', ' '),
-                        'label': [result['label']],
-                        'ref_label': [result['ref_label']],
-                        'ref_check': [result['ref_check']]
-                    }
-                )
-
-        return final_res
-
     def _infer(self, save_path=None, print_result=True):
 
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
@@ -255,6 +233,7 @@ class TextClassifier:
                     results.append({
                         'text': text_raw,
                         'label': sent,
+                        'confidence': max(i_probs),
                         'ref_label': real_sent,
                         'ref_check': correct[sent == real_sent] if real_sent != '-999' else '',
                     })
