@@ -8,7 +8,7 @@ import pickle
 
 import numpy as np
 import tqdm
-from findfile import find_file
+from findfile import find_file, find_cwd_file
 from google_drive_downloader.google_drive_downloader import GoogleDriveDownloader as gdd
 from torch.utils.data import Dataset
 
@@ -20,11 +20,9 @@ LABEL_PADDING = -999
 
 def prepare_glove840_embedding(glove_path):
     glove840_id = '1G-vd6W1oF9ByyJ-pzp9dcqKnr_plh4Em'
-    if not os.path.exists(glove_path):
-        os.mkdir(glove_path)
-    elif os.path.isfile(glove_path):
+    if os.path.exists(glove_path) and os.path.isfile(glove_path):
         return glove_path
-    elif os.path.isdir(glove_path):
+    else:
         embedding_file = None
         dir_path = os.path.dirname(glove_path)
         if find_file(dir_path, 'glove.42B.300d.txt', exclude_key='.zip'):
@@ -37,22 +35,27 @@ def prepare_glove840_embedding(glove_path):
         if embedding_file:
             print('Find potential embedding files: {}'.format(embedding_file))
             return embedding_file
-        zip_glove_path = os.path.join(glove_path, 'glove.840B.300d.txt.zip')
+        zip_glove_path = os.path.join(os.path.dirname(glove_path), 'glove.840B.300d.txt.zip')
         print('No GloVe embedding found at {},'
-              ' downloading glove.840B.300d.txt (2GB transferred / 5.5GB unzipped)...'.format(glove_path))
+              ' downloading glove.840B.300d.txt (2GB will be downloaded / 5.5GB after unzip)...'.format(glove_path))
         gdd.download_file_from_google_drive(file_id=glove840_id,
                                             dest_path=zip_glove_path,
                                             unzip=True,
                                             showsize=True
                                             )
-        glove_path = find_file(glove_path, 'txt', exclude_key='.zip')
+        os.remove(zip_glove_path)
+        glove_path = find_cwd_file(glove_path, exclude_key='.zip')
     return glove_path
 
 
 def build_tokenizer(dataset_list, max_seq_len, dat_fname, opt):
-    if os.path.exists(os.path.join(opt.dataset_name, dat_fname)):
-        print('Loading tokenizer on {}'.format(os.path.join(opt.dataset_name, dat_fname)))
-        tokenizer = pickle.load(open(os.path.join(opt.dataset_name, dat_fname), 'rb'))
+    dataset_name = os.path.basename(opt.dataset_name)
+    if not os.path.exists('run/{}'.format(dataset_name)):
+        os.makedirs('run/{}'.format(dataset_name))
+    tokenizer_path = 'run/{}/{}'.format(dataset_name, dat_fname)
+    if os.path.exists(tokenizer_path):
+        print('Loading tokenizer on {}'.format(tokenizer_path))
+        tokenizer = pickle.load(open(tokenizer_path, 'rb'))
     else:
         text = ''
         for dataset_type in dataset_list:
@@ -60,15 +63,12 @@ def build_tokenizer(dataset_list, max_seq_len, dat_fname, opt):
                 fin = open(file, 'r', encoding='utf-8', newline='\n', errors='ignore')
                 lines = fin.readlines()
                 fin.close()
-                for i in range(0, len(lines), 3):
-                    text_left, _, text_right = [s.lower().strip() for s in lines[i].partition("$T$")]
-                    aspect = lines[i + 1].lower().strip()
-                    text_raw = text_left + " " + aspect + " " + text_right
-                    text += text_raw + " "
+                for i in range(0, len(lines)):
+                    text += lines[i + 1].lower().strip()
 
         tokenizer = Tokenizer(max_seq_len)
         tokenizer.fit_on_text(text)
-        pickle.dump(tokenizer, open(os.path.join(opt.dataset_name, dat_fname), 'wb'))
+        pickle.dump(tokenizer, open(tokenizer_path, 'wb'))
     return tokenizer
 
 
@@ -84,12 +84,14 @@ def _load_word_vec(path, word2idx=None, embed_dim=300):
 
 
 def build_embedding_matrix(word2idx, embed_dim, dat_fname, opt):
-    if os.path.exists(os.path.join(opt.dataset_name, dat_fname)):
-        print('Loading cached embedding_matrix for {}'.format(os.path.join(opt.dataset_name, dat_fname)))
-        embedding_matrix = pickle.load(open(os.path.join(opt.dataset_name, dat_fname), 'rb'))
+    if not os.path.exists('run'):
+        os.makedirs('run')
+    embed_matrix_path = 'run/{}'.format(os.path.join(opt.dataset_name, dat_fname))
+    if os.path.exists(embed_matrix_path):
+        print('Loading cached embedding_matrix for {}'.format(embed_matrix_path))
+        embedding_matrix = pickle.load(open(embed_matrix_path, 'rb'))
     else:
-        print('Extracting embedding_matrix for {}'.format(dat_fname))
-        glove_path = prepare_glove840_embedding(opt.dataset_name)
+        glove_path = prepare_glove840_embedding(embed_matrix_path)
         embedding_matrix = np.zeros((len(word2idx) + 2, embed_dim))  # idx 0 and len(word2idx)+1 are all-zeros
 
         word_vec = _load_word_vec(glove_path, word2idx=word2idx, embed_dim=embed_dim)
@@ -99,7 +101,7 @@ def build_embedding_matrix(word2idx, embed_dim, dat_fname, opt):
             if vec is not None:
                 # words not found in embedding index will be all-zeros.
                 embedding_matrix[i] = vec
-        pickle.dump(embedding_matrix, open(os.path.join(opt.dataset_name, dat_fname), 'wb'))
+        pickle.dump(embedding_matrix, open(embed_matrix_path, 'wb'))
     return embedding_matrix
 
 

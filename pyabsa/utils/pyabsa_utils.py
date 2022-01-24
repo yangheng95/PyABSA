@@ -163,11 +163,11 @@ def retry(f):
         count = 5
         while count:
             # try:
-                return f(*args, **kwargs)
-            # except Exception as e:
-            #     print('Training Exception: {}, will retry later'.format(e))
-            #     time.sleep(60)
-            #     count -= 1
+            return f(*args, **kwargs)
+        # except Exception as e:
+        #     print('Training Exception: {}, will retry later'.format(e))
+        #     time.sleep(60)
+        #     count -= 1
 
     return decorated
 

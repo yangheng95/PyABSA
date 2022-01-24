@@ -161,7 +161,6 @@ class TextClassifierCheckpointManager(CheckpointManager):
     @staticmethod
     def get_text_classifier(checkpoint: str = None,
                             from_drive_url: str = '',
-                            label_map: dict = None,
                             auto_device=True,
                             eval_batch_size=128):
         """
@@ -169,7 +168,6 @@ class TextClassifierCheckpointManager(CheckpointManager):
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
         :param from_drive_url: for loading shared checkpoint on google drive from a direct url, this param disable the 'checkpoint' param.
         This param is for someone wants to load a checkpoint not registered in PyABSA
-        :param label_map: label to text index map (deprecated and has no effect)
         :param auto_device: True or False, otherwise 'cuda', 'cpu' works
         :param eval_batch_size: eval batch_size in modeling
                 
@@ -183,7 +181,7 @@ class TextClassifierCheckpointManager(CheckpointManager):
         else:
             checkpoint = TextClassifierCheckpointManager.get_checkpoint(checkpoint, from_drive_url=from_drive_url)
 
-        text_classifier = TextClassifier(checkpoint, label_map=label_map, eval_batch_size=eval_batch_size)
+        text_classifier = TextClassifier(checkpoint, eval_batch_size=eval_batch_size)
         device, device_name = get_device(auto_device)
         text_classifier.to(device)
         return text_classifier

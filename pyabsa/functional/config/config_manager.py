@@ -29,7 +29,7 @@ def config_check(args):
             assert 0 <= args['evaluate_begin'] < args['num_epoch']
         if 'cross_validate_fold' in args:
             assert args['cross_validate_fold'] == -1 or args['cross_validate_fold'] > 1
-            if not 5 < args['cross_validate_fold'] < 10 and not args['cross_validate_fold'] == -1:
+            if not 5 <= args['cross_validate_fold'] <= 10 and not args['cross_validate_fold'] == -1:
                 message = 'Warning! cross_validate_fold will be better in [5, 10], instead of {}'.format(args['cross_validate_fold'])
                 if message not in one_shot_messages:
                     print(message)

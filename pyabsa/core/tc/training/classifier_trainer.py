@@ -40,15 +40,17 @@ class Instructor:
         if os.path.exists(cache_path):
             print('Loading dataset cache:', cache_path)
             if self.opt.dataset_file['test']:
-                self.train_set,  self.valid_set, self.test_set, opt = pickle.load(open(cache_path, mode='rb'))
+                self.train_set, self.valid_set, self.test_set, opt = pickle.load(open(cache_path, mode='rb'))
             else:
                 self.train_set, opt = pickle.load(open(cache_path, mode='rb'))
             # reset output dim according to dataset labels
             self.opt.polarities_dim = opt.polarities_dim
+            self.opt.label_to_index = opt.label_to_index
+            self.opt.index_to_label = opt.index_to_label
 
         # init BERT-based model and dataset
         if hasattr(BERTClassificationModelList, opt.model.__name__):
-            self.tokenizer = Tokenizer4Pretraining(self.opt.max_seq_len, self.opt.pretrained_bert)
+            self.tokenizer = Tokenizer4Pretraining(self.opt.max_seq_len, self.opt)
             if not os.path.exists(cache_path):
                 self.train_set = BERTClassificationDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
                 if self.opt.dataset_file['test']:
@@ -87,6 +89,8 @@ class Instructor:
                 dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(opt.embed_dim), os.path.basename(opt.dataset_name)),
                 opt=self.opt
             )
+            self.train_set = GloVeClassificationDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
+
             if self.opt.dataset_file['test']:
                 self.test_set = GloVeClassificationDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
             else:
@@ -116,10 +120,10 @@ class Instructor:
 
         if self.opt.cache_dataset and not os.path.exists(cache_path):
             print('Caching dataset... please remove cached dataset if change model or dataset')
-            if self.opt.dataset_file['test'] and self.opt.dataset_file['valid']:
-                pickle.dump((self.train_set, self.valid_set, self.test_set, opt), open(cache_path, mode='wb'))
+            if self.opt.dataset_file['test']:
+                pickle.dump((self.train_set, self.valid_set, self.test_set, self.opt), open(cache_path, mode='wb'))
             else:
-                pickle.dump((self.train_set, opt), open(cache_path, mode='wb'))
+                pickle.dump((self.train_set, self.opt), open(cache_path, mode='wb'))
 
         self.opt.device = torch.device(self.opt.device)
         if self.opt.device.type == 'cuda':
@@ -493,7 +497,6 @@ class Instructor:
                 t_targets = t_sample_batched['label'].to(self.opt.device)
 
                 sen_outputs = self.model(t_inputs)
-
                 n_test_correct += (torch.argmax(sen_outputs, -1) == t_targets).sum().item()
                 n_test_total += len(sen_outputs)
 
