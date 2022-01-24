@@ -147,9 +147,9 @@ class Tokenizer(object):
 
 
 class Tokenizer4Pretraining:
-    def __init__(self, max_seq_len, pretrained_bert_name):
+    def __init__(self, max_seq_len, opt):
         try:
-            self.tokenizer = AutoTokenizer.from_pretrained(pretrained_bert_name)
+            self.tokenizer = AutoTokenizer.from_pretrained(opt.pretrained_bert, do_lower_case='uncased' in opt.pretrained_bert)
         except ValueError as e:
             raise TransformerConnectionError()
 
@@ -167,7 +167,6 @@ class Tokenizer4Pretraining:
 class BERTClassificationDataset(Dataset):
     bert_baseline_input_colses = {
         'bert': ['text_bert_indices']
-
     }
 
     def __init__(self, dataset_list, tokenizer, opt):
@@ -181,10 +180,8 @@ class BERTClassificationDataset(Dataset):
             line = lines[i].strip().split('$LABEL$')
             text, label = line[0], line[1]
             text = text.strip().lower()
-            label = label.strip().lower()
-            text_indices = tokenizer.text_to_sequence('[CLS] {} [SEP]'.format(text))
-
-            label = int(label)
+            label = label.strip()
+            text_indices = tokenizer.text_to_sequence('{} {} {}'.format(tokenizer.tokenizer.cls_token, text, tokenizer.tokenizer.sep_token))
 
             data = {
                 'text_bert_indices': text_indices,

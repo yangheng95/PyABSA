@@ -100,7 +100,7 @@ class ClassificationDatasetList(list):
         super().__init__(dataset_list)
 
 
-filter_key_words = ['.py', '.ignore', '.md', 'readme', 'log', 'result', 'zip', '.state_dict', '.model', '.png', 'acc', 'f1']
+filter_key_words = ['.py', '.ignore', '.md', 'readme', 'log', 'result', 'zip', '.state_dict', '.model', '.png', 'acc_', 'f1_']
 
 
 def detect_dataset(dataset_path, task='apc'):
@@ -111,18 +111,22 @@ def detect_dataset(dataset_path, task='apc'):
         if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(ClassificationDatasetList, d):
             print('{} dataset is loading from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
-            search_path = find_dir(os.getcwd(), [d, task], exclude_key=['infer', 'test.'] + filter_key_words, disable_alert=False)
+            search_path = find_dir(os.getcwd(), [d, task, 'dataset'], exclude_key=['infer', 'test.'] + filter_key_words, disable_alert=False)
             dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['.inference', 'test.'] + filter_key_words)
             dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['inference', 'train.'] + filter_key_words)
             dataset_file['valid'] += find_files(search_path, [d, 'valid', task], exclude_key=['inference', 'train.'] + filter_key_words)
+            dataset_file['valid'] += find_files(search_path, [d, 'dev', task], exclude_key=['inference', 'train.'] + filter_key_words)
         else:
             dataset_file['train'] = find_files(d, ['train', task], exclude_key=['.inference', 'test.'] + filter_key_words)
             dataset_file['test'] = find_files(d, ['test', task], exclude_key=['.inference', 'train.'] + filter_key_words)
             dataset_file['valid'] = find_files(d, ['valid', task], exclude_key=['.inference', 'train.'] + filter_key_words)
+            dataset_file['valid'] += find_files(d, ['dev', task], exclude_key=['inference', 'train.'] + filter_key_words)
 
     if len(dataset_file['train']) == 0:
+        if os.path.isdir(dataset_path.dataset_name):
+            print('No train set found from: {}, unrecognized files: {}'.format(dataset_path, ', '.join(os.listdir(dataset_path.dataset_name))))
         raise RuntimeError('Fail to locate dataset: {}. If you are using your own dataset, you may need rename your dataset according to {}'.format(dataset_path,
-                           'https://github.com/yangheng95/ABSADatasets#important-rename-your-dataset-filename-before-use-it-in-pyabsa'))
+                                                                                                                                                    'https://github.com/yangheng95/ABSADatasets#important-rename-your-dataset-filename-before-use-it-in-pyabsa'))
     if len(dataset_file['test']) == 0:
         print('Warning, auto_evaluate=True, however cannot find test set using for evaluating!')
 
@@ -140,14 +144,16 @@ def detect_infer_dataset(dataset_path, task='apc'):
         if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(ClassificationDatasetList, d):
             print('{} dataset is loading from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
-            search_path = find_dir(os.getcwd(), [d, task], exclude_key=filter_key_words, disable_alert=False)
+            search_path = find_dir(os.getcwd(), [d, task, 'dataset'], exclude_key=filter_key_words, disable_alert=False)
             dataset_file += find_files(search_path, ['.inference', d], exclude_key=['train.'] + filter_key_words)
         else:
             dataset_file += find_files(d, ['.inference', task], exclude_key=['train.'] + filter_key_words)
 
     if len(dataset_file) == 0:
+        if os.path.isdir(dataset_path.dataset_name):
+            print('No inference set found from: {}, unrecognized files: {}'.format(dataset_path, ', '.join(os.listdir(dataset_path.dataset_name))))
         raise RuntimeError('Fail to locate dataset: {}. If you are using your own dataset, you may need rename your dataset according to {}'.format(dataset_path,
-                           'https://github.com/yangheng95/ABSADatasets#important-rename-your-dataset-filename-before-use-it-in-pyabsa'))
+                                                                                                                                                    'https://github.com/yangheng95/ABSADatasets#important-rename-your-dataset-filename-before-use-it-in-pyabsa'))
 
     if len(dataset_path) > 1:
         print(colored('Never mixing datasets with different sentiment labels for training & inference !', 'yellow'))

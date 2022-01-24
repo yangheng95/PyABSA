@@ -262,7 +262,7 @@ class SentimentClassifier:
                         sent = int(i_probs.argmax(axis=-1))
                         real_sent = int(sample['polarity'][i])
 
-                    confidence = max(i_probs)
+                    confidence = float(max(i_probs))
 
                     aspect = sample['aspect'][i]
                     text_raw = sample['text_raw'][i]

@@ -1,4 +1,8 @@
 {
+  "1.8.14":{
+    "1": "Fix text classification inference using pretrained model (GloVe based inference is not affected)",
+    "2": "Improve stability in using GloVe based model (include APC, TC)"
+  },
   "1.8.13":{
     "1": "Add confidence in text classification output"
   },

@@ -102,7 +102,7 @@ class Trainer:
         else:
             custom_dataset = DatasetItem('custom_dataset', dataset)
             self.config.dataset_item = list(custom_dataset)
-            self.config.dataset_name = custom_dataset.dataset_name
+            self.config.dataset_name = os.path.basename(custom_dataset.dataset_name)
         self.dataset_file = detect_dataset(dataset, task=self.task)
         self.config.dataset_file = self.dataset_file
 

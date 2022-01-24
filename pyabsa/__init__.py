@@ -2,11 +2,11 @@
 # file: __init__.py
 # time: 2021/4/22 0022
 # author: yangheng <yangheng@m.scnu.edu.cn>
-# github: https://github.com/yangheng95
+# github: https://github.com/yangheng95z
 
 # Copyright (C) 2021. All Rights Reserved.
 
-__version__ = '1.8.13'
+__version__ = '1.8.14'
 __name__ = 'pyabsa'
 
 from termcolor import colored
@@ -31,7 +31,6 @@ from pyabsa.functional.config import ATEPCConfigManager
 from pyabsa.functional.config import ClassificationConfigManager
 from pyabsa.utils.file_utils import check_update_log, check_dataset
 from pyabsa.utils.pyabsa_utils import validate_version
-
 
 validate_version()
 
