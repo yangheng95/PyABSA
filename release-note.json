@@ -1,4 +1,7 @@
 {
+  "1.8.15":{
+    "1": "Minor revisions"
+  },
   "1.8.14":{
     "1": "Fix text classification inference using pretrained model (GloVe based inference is not affected)",
     "2": "Improve stability in using GloVe based model (include APC, TC)"

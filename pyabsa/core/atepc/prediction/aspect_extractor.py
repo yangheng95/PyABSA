@@ -65,7 +65,6 @@ class AspectExtractor:
                 print('tokenizer: {}'.format(tokenizer_path))
 
                 self.opt = pickle.load(open(config_path, mode='rb'))
-                self.opt.infer_batch_size = eval_batch_size
 
                 if 'pretrained_bert_name' in self.opt.args:
                     self.opt.pretrained_bert = self.opt.pretrained_bert_name
@@ -126,6 +125,7 @@ class AspectExtractor:
                                                         weight_decay=self.opt.l2reg)
 
         self.eval_dataloader = None
+        self.opt.infer_batch_size = eval_batch_size
         self.sentiment_map = None
         self.set_sentiment_map(sentiment_map)
 
