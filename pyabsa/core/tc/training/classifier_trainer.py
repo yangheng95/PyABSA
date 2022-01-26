@@ -197,7 +197,7 @@ class Instructor:
         self.opt.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
         self.opt.max_test_metrics = {'max_test_acc': 0, 'max_test_f1': 0}
 
-        self.logger.info("***** Running training for Aspect Polarity Classification *****")
+        self.logger.info("***** Running training for Text Classification *****")
         self.logger.info("Training set examples = %d", len(self.train_set))
         if self.test_set:
             self.logger.info("Test set examples = %d", len(self.test_set))
@@ -342,7 +342,7 @@ class Instructor:
                 self.opt.patience = math.inf
                 patience = self.opt.patience
 
-            self.logger.info("***** Running training for Aspect Polarity Classification *****")
+            self.logger.info("***** Running training for Text Classification *****")
             self.logger.info("Training set examples = %d", len(self.train_set))
             if self.test_set:
                 self.logger.info("Test set examples = %d", len(self.test_set))

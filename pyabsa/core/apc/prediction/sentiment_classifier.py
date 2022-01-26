@@ -62,7 +62,6 @@ class SentimentClassifier:
                 print('tokenizer: {}'.format(tokenizer_path))
 
                 self.opt = pickle.load(open(config_path, mode='rb'))
-                self.opt.eval_batch_size = eval_batch_size
 
                 if state_dict_path or model_path:
                     if hasattr(APCModelList, self.opt.model.__name__.upper()):
@@ -151,6 +150,7 @@ class SentimentClassifier:
             torch.backends.cudnn.benchmark = False
 
         self.opt.initializer = self.opt.initializer
+        self.opt.eval_batch_size = eval_batch_size
 
         self.sentiment_map = None
         self.set_sentiment_map(sentiment_map)
@@ -289,7 +289,7 @@ class SentimentClassifier:
                     #     continue
                     text_printing = result['text']
                     for i in range(len(result['aspect'])):
-                        if result['ref_sentiment'][i] != -999:
+                        if result['ref_sentiment'][i] != -999 and result['ref_sentiment'][i] != '-999':
                             if result['sentiment'][i] == result['ref_sentiment'][i]:
                                 aspect_info = colored('{} -> {}(confidence:{}, ref:{})'.format(
                                     result['aspect'][i],

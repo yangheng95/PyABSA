@@ -58,7 +58,6 @@ class TextClassifier:
                 print('tokenizer: {}'.format(tokenizer_path))
 
                 self.opt = pickle.load(open(config_path, mode='rb'))
-                self.opt.eval_batch_size = eval_batch_size
 
                 if state_dict_path or model_path:
                     if hasattr(BERTClassificationModelList, self.opt.model.__name__.upper()):
