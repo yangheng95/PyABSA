@@ -1,18 +1,18 @@
 [
   {
     "referrer": "github.com",
-    "count": 517,
-    "uniques": 73
+    "count": 523,
+    "uniques": 75
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 342,
-    "uniques": 68
+    "count": 314,
+    "uniques": 75
   },
   {
     "referrer": "Google",
-    "count": 195,
-    "uniques": 58
+    "count": 204,
+    "uniques": 64
   },
   {
     "referrer": "pythonrepo.com",
@@ -30,12 +30,12 @@
     "uniques": 3
   },
   {
-    "referrer": "gitmetadata.com",
-    "count": 3,
+    "referrer": "teams.microsoft.com",
+    "count": 4,
     "uniques": 1
   },
   {
-    "referrer": "teams.microsoft.com",
+    "referrer": "gitmetadata.com",
     "count": 3,
     "uniques": 1
   },
