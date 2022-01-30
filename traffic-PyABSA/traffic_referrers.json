@@ -1,28 +1,28 @@
 [
   {
     "referrer": "github.com",
-    "count": 523,
-    "uniques": 75
+    "count": 489,
+    "uniques": 77
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 314,
-    "uniques": 75
+    "count": 317,
+    "uniques": 82
   },
   {
     "referrer": "Google",
-    "count": 204,
-    "uniques": 64
+    "count": 287,
+    "uniques": 66
+  },
+  {
+    "referrer": "r0w1bpqpz0k-496ff2e9c6d22116-0-colab.googleusercontent.com",
+    "count": 46,
+    "uniques": 3
   },
   {
     "referrer": "pythonrepo.com",
     "count": 24,
     "uniques": 2
-  },
-  {
-    "referrer": "hub.fastgit.org",
-    "count": 9,
-    "uniques": 1
   },
   {
     "referrer": "link.zhihu.com",
