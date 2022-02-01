@@ -1,18 +1,18 @@
 [
   {
     "referrer": "github.com",
-    "count": 509,
-    "uniques": 75
+    "count": 453,
+    "uniques": 71
   },
   {
     "referrer": "Google",
-    "count": 319,
-    "uniques": 66
+    "count": 321,
+    "uniques": 60
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 290,
-    "uniques": 76
+    "count": 280,
+    "uniques": 74
   },
   {
     "referrer": "r0w1bpqpz0k-496ff2e9c6d22116-0-colab.googleusercontent.com",
@@ -25,17 +25,17 @@
     "uniques": 2
   },
   {
-    "referrer": "link.zhihu.com",
-    "count": 3,
-    "uniques": 2
-  },
-  {
     "referrer": "teams.microsoft.com",
     "count": 3,
     "uniques": 1
   },
   {
     "referrer": "textflint.io",
+    "count": 2,
+    "uniques": 1
+  },
+  {
+    "referrer": "link.zhihu.com",
     "count": 2,
     "uniques": 1
   },
