@@ -24,12 +24,12 @@ from pyabsa.core.tc.prediction.text_classifier import TextClassifier
 from pyabsa.core.tc.training.classifier_trainer import train4classification
 
 from pyabsa.functional.config.apc_config_manager import APCConfigManager
-from pyabsa.functional.checkpoint.checkpoint_manager import APCCheckpointManager
 from pyabsa.functional.config.atepc_config_manager import ATEPCConfigManager
 from pyabsa.functional.config.classification_config_manager import ClassificationConfigManager
 from pyabsa.utils.file_utils import query_local_version
 
 from pyabsa.utils.logger import get_logger
+from metric_visualizer import MetricVisualizer
 
 from pyabsa.utils.pyabsa_utils import get_device
 
@@ -108,6 +108,8 @@ class Trainer:
 
         self.config = init_config(self.config, auto_device)
 
+        self.MV = MetricVisualizer()
+
         self.from_checkpoint = findfile.find_dir(os.getcwd(), from_checkpoint) if from_checkpoint else ''
         self.checkpoint_save_mode = checkpoint_save_mode
         self.config.save_mode = checkpoint_save_mode
@@ -143,6 +145,7 @@ class Trainer:
         for i, s in enumerate(seeds):
             config = copy.deepcopy(self.config)
             config.seed = s
+            config.MV = self.MV
             if self.checkpoint_save_mode:
                 model_path.append(self.train_func(config, self.from_checkpoint, self.logger))
             else:
@@ -150,6 +153,13 @@ class Trainer:
                 model = self.model_class(model_arg=self.train_func(config, self.from_checkpoint, self.logger))
         while self.logger.handlers:
             self.logger.removeHandler(self.logger.handlers[0])
+
+        if 'show_metric' in self.config.args and self.config.show_metric:
+            save_path = '{}_{}'.format(self.config.model_name, self.config.dataset_name)
+            self.MV.summary(save_path=save_path)
+            self.MV.traj_plot(save_path=save_path)
+            self.MV.violin_plot(save_path=save_path)
+            self.MV.box_plot(save_path=save_path)
 
         if self.checkpoint_save_mode:
             if os.path.exists(max(model_path)):

@@ -26,15 +26,16 @@ from pyabsa.utils.pyabsa_utils import save_args
 
 
 def generate_inference_set_for_apc(dataset_path):
-    print('To ensure your conversion is successful, make sure the dataset name contain "apc" string ')
+    print('To ensure your generation is successful, make sure the dataset name contain "apc" and "dataset" string ')
     if isinstance(dataset_path, DatasetItem):
         dataset_name = dataset_path.dataset_name
     else:
-        dataset_name = ''
+        dataset_name = dataset_path
 
     train_datasets = find_files(os.getcwd(), ['dataset', 'train', 'apc', dataset_name], exclude_key='.inference')
+    valid_datasets = find_files(os.getcwd(), ['dataset', 'valid', 'apc', dataset_name], exclude_key='.inference')
     test_datasets = find_files(os.getcwd(), ['dataset', 'test', 'apc', dataset_name], exclude_key='.inference')
-    for file in train_datasets + test_datasets:
+    for file in train_datasets + valid_datasets + test_datasets:
         try:
             fin = open(file, 'r', newline='\n', encoding='utf-8')
             lines = fin.readlines()
@@ -49,7 +50,7 @@ def generate_inference_set_for_apc(dataset_path):
         except:
             print('Unprocessed file:', file)
         print('save in: {}'.format(path_to_save))
-    print('process finished')
+    print('Inference set generation finished')
 
 
 def is_similar(s1, s2):
@@ -155,14 +156,15 @@ def convert_atepc(fname):
     fout.close()
 
 
-# 将数据集中的aspect切割出来
 def convert_apc_set_to_atepc_set(path):
+    print('To ensure your conversion is successful, make sure the dataset name contain "apc" and "dataset" string ')
+
     if isinstance(path, DatasetItem):
         path = path.dataset_name
     if not os.path.exists(path):
         files = find_files(os.getcwd(), [path, 'dataset', 'apc'], exclude_key='.inference')
     else:
-        files = find_files(path, '', exclude_key='infer')
+        files = find_files(path, ['dataset', 'apc'], exclude_key='infer')
 
     print('Find datasets files at {}:'.format(path))
     for f in files:
