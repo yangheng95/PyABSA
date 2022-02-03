@@ -291,10 +291,15 @@ class Instructor:
             if patience < 0:
                 break
 
+        self.opt.MV.add_metric('Max-Valid-Acc', max_fold_acc * 100)
+        self.opt.MV.add_metric('Max-Valid-F1', max_fold_f1 * 100)
+
         if self.valid_dataloader:
             print('Loading best model: {} and evaluating on test set ...'.format(save_path))
             self.model.load_state_dict(torch.load(find_file(save_path, '.state_dict')))
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
+            self.opt.MV.add_metric('Max-Test-Acc', max_fold_acc * 100)
+            self.opt.MV.add_metric('Max-Test-F1', max_fold_f1 * 100)
             # shutil.rmtree(save_path)
 
         self.logger.info('-------------------------- Training Summary --------------------------')
@@ -304,8 +309,6 @@ class Instructor:
             sum_loss)
         )
         self.logger.info('-------------------------- Training Summary --------------------------')
-        if os.path.exists('./init_state_dict.bin'):
-            self.reload_model()
 
         print('Training finished, we hope you can share your checkpoint with everybody, please see:',
               'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
@@ -443,6 +446,9 @@ class Instructor:
             fold_test_acc.append(max_fold_acc)
             fold_test_f1.append(max_fold_f1)
 
+            self.opt.MV.add_metric('Fold{}-Max-Valid-Acc'.format(f), max_fold_acc * 100)
+            self.opt.MV.add_metric('Fold{}-Max-Valid-F1'.format(f), max_fold_f1 * 100)
+
             self.logger.info('-------------------------- Training Summary --------------------------')
             self.logger.info('Acc: {:.8f} F1: {:.8f} Accumulated Loss: {:.8f}'.format(
                 max_fold_acc * 100,
@@ -455,6 +461,9 @@ class Instructor:
 
         mean_test_acc = numpy.mean(fold_test_acc)
         mean_test_f1 = numpy.mean(fold_test_f1)
+
+        self.opt.MV.add_metric('Mean-Test-Acc', mean_test_acc * 100)
+        self.opt.MV.add_metric('Mean-Test-F1', mean_test_f1 * 100)
 
         if self.opt.cross_validate_fold > 0:
             self.logger.info('-------------------------- Training Summary --------------------------')

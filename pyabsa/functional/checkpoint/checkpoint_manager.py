@@ -56,7 +56,10 @@ class APCCheckpointManager(CheckpointManager):
                 
         :return:
         """
-        checkpoint_config = find_file(os.getcwd(), [checkpoint, '.config'])
+        if os.path.exists(checkpoint):
+            checkpoint_config = find_file(checkpoint, ['.config'])
+        else:
+            checkpoint_config = find_file(os.getcwd(), [checkpoint, '.config'])
         if checkpoint_config:
             checkpoint = os.path.dirname(checkpoint_config)
         elif checkpoint.endswith('.zip'):
@@ -116,7 +119,10 @@ class ATEPCCheckpointManager(CheckpointManager):
         
         :return:
         """
-        checkpoint_config = find_file(os.getcwd(), [checkpoint, '.config'])
+        if os.path.exists(checkpoint):
+            checkpoint_config = find_file(checkpoint, ['.config'])
+        else:
+            checkpoint_config = find_file(os.getcwd(), [checkpoint, '.config'])
         if checkpoint_config:
             checkpoint = os.path.dirname(checkpoint_config)
         elif checkpoint.endswith('.zip'):
@@ -173,7 +179,10 @@ class TextClassifierCheckpointManager(CheckpointManager):
                 
         :return:
         """
-        checkpoint_config = find_file(os.getcwd(), [checkpoint, '.config'])
+        if os.path.exists(checkpoint):
+            checkpoint_config = find_file(checkpoint, ['.config'])
+        else:
+            checkpoint_config = find_file(os.getcwd(), [checkpoint, '.config'])
         if checkpoint_config:
             checkpoint = os.path.dirname(checkpoint_config)
         elif checkpoint.endswith('.zip'):
