@@ -307,9 +307,9 @@ class Instructor:
         )
         self.logger.info('-------------------------------------Training Summary-------------------------------------')
 
-        self.opt.MV.add_metric('Max-APC-Test-Acc', self.opt.max_test_metrics['max_apc_test_acc'] * 100)
-        self.opt.MV.add_metric('Max-APC-Test-F1', self.opt.max_test_metrics['max_apc_test_f1'] * 100)
-        self.opt.MV.add_metric('Max-ATE-Test-F1', self.opt.max_test_metrics['max_ate_test_f1'] * 100)
+        self.opt.MV.add_metric('Max-APC-Test-Acc', self.opt.max_test_metrics['max_apc_test_acc'])
+        self.opt.MV.add_metric('Max-APC-Test-F1', self.opt.max_test_metrics['max_apc_test_f1'])
+        self.opt.MV.add_metric('Max-ATE-Test-F1', self.opt.max_test_metrics['max_ate_test_f1'])
 
         print('Training finished, we hope you can share your checkpoint with community, please see:',
               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
