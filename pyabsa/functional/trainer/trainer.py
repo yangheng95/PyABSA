@@ -156,10 +156,18 @@ class Trainer:
 
         if 'show_metric' in self.config.args and self.config.show_metric:
             save_path = '{}_{}'.format(self.config.model_name, self.config.dataset_name)
-            self.MV.summary(save_path=save_path)
-            self.MV.traj_plot(save_path=save_path)
-            self.MV.violin_plot(save_path=save_path)
-            self.MV.box_plot(save_path=save_path)
+            self.MV.summary(save_path=None)
+            self.MV.traj_plot(save_path=None)
+            self.MV.violin_plot(save_path=None)
+            self.MV.box_plot(save_path=None)
+
+            try:
+                self.MV.summary(save_path=save_path)
+                self.MV.traj_plot(save_path=save_path)
+                self.MV.violin_plot(save_path=save_path)
+                self.MV.box_plot(save_path=save_path)
+            except Exception as e:
+                pass
 
         if self.checkpoint_save_mode:
             if os.path.exists(max(model_path)):
