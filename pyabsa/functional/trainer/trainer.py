@@ -108,8 +108,6 @@ class Trainer:
 
         self.config = init_config(self.config, auto_device)
 
-        self.MV = MetricVisualizer()
-
         self.from_checkpoint = findfile.find_dir(os.getcwd(), from_checkpoint) if from_checkpoint else ''
         self.checkpoint_save_mode = checkpoint_save_mode
         self.config.save_mode = checkpoint_save_mode
@@ -145,29 +143,18 @@ class Trainer:
         for i, s in enumerate(seeds):
             config = copy.deepcopy(self.config)
             config.seed = s
-            config.MV = self.MV
             if self.checkpoint_save_mode:
                 model_path.append(self.train_func(config, self.from_checkpoint, self.logger))
             else:
                 # always return the last trained model if dont save trained model
                 model = self.model_class(model_arg=self.train_func(config, self.from_checkpoint, self.logger))
-        while self.logger.handlers:
-            self.logger.removeHandler(self.logger.handlers[0])
-
+            self.config.MV = config.MV
         if 'show_metric' in self.config.args and self.config.show_metric:
             save_path = '{}_{}'.format(self.config.model_name, self.config.dataset_name)
-            self.MV.summary(save_path=None)
-            self.MV.traj_plot(save_path=None)
-            self.MV.violin_plot(save_path=None)
-            self.MV.box_plot(save_path=None)
+            self.config.MV.summary(save_path)
 
-            try:
-                self.MV.summary(save_path=save_path)
-                self.MV.traj_plot(save_path=save_path)
-                self.MV.violin_plot(save_path=save_path)
-                self.MV.box_plot(save_path=save_path)
-            except Exception as e:
-                pass
+        while self.logger.handlers:
+            self.logger.removeHandler(self.logger.handlers[0])
 
         if self.checkpoint_save_mode:
             if os.path.exists(max(model_path)):
