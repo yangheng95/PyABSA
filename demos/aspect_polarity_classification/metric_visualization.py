@@ -5,14 +5,12 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-########################################################################################################################
-#                                          This code is for paper:                                                     #
-#      "Back to Reality: Leveraging Pattern-driven Modeling to Enable Affordable Sentiment Dependency Learning"        #
-#                      but there are some changes in this paper, and it is under submission                            #
-########################################################################################################################
 import random
+from distutils.version import StrictVersion
 
+import autocuda
 import numpy as np
+import pyabsa
 from metric_visualizer import MetricVisualizer
 
 from pyabsa.functional import Trainer
@@ -22,14 +20,19 @@ from pyabsa.functional import APCModelList
 
 import warnings
 
+if not StrictVersion(pyabsa.__version__) > StrictVersion('1.8.15'):
+    raise KeyError('This demo can only run on PyABSA > 1.8.15')
+
 warnings.filterwarnings('ignore')
 
-seeds = [random.randint(0, 10000) for _ in range(2)]
+seeds = [random.randint(0, 10000) for _ in range(5)]
 
-eta_candidates = np.arange(0, 1.1, 0.1)
+eta_candidates = list(np.arange(0, 1.1, 0.1))
+
+device = autocuda.auto_cuda()
 
 apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = APCModelList.FAST_LCF_BERT
+apc_config_english.model = APCModelList.FAST_LSA_T
 apc_config_english.lcf = 'cdw'
 apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
@@ -56,24 +59,22 @@ apc_config_english.MV = MV
 
 for eta in eta_candidates:
     apc_config_english.eta = eta
-    Laptop14 = ABSADatasetList.Laptop14
+    dataset = ABSADatasetList.Laptop14
     Trainer(config=apc_config_english,
-            dataset=Laptop14,  # train set and test set will be automatically detected
+            dataset=dataset,  # train set and test set will be automatically detected
             checkpoint_save_mode=0,  # =None to avoid save model
-            auto_device=True  # automatic choose CUDA or CPU
+            auto_device=device  # automatic choose CUDA or CPU
             )
     apc_config_english.MV.next_trail()
 
-save_path = '{}_{}'.format(apc_config_english.model_name, apc_config_english.dataset_name)
-MV.summary(save_path=None)
-MV.traj_plot(save_path=None)
-MV.violin_plot(save_path=None)
-MV.box_plot(save_path=None)
+apc_config_english.MV.summary(save_path=None, xticks=eta_candidates)
+apc_config_english.MV.traj_plot(save_path=None, xticks=eta_candidates)
+apc_config_english.MV.violin_plot(save_path=None, xticks=eta_candidates)
+apc_config_english.MV.box_plot(save_path=None, xticks=eta_candidates)
 
-try:
-    MV.summary(save_path=save_path)
-    MV.traj_plot(save_path=save_path)
-    MV.violin_plot(save_path=save_path)
-    MV.box_plot(save_path=save_path)
-except Exception as e:
-    pass
+save_path = '{}_{}'.format(apc_config_english.model_name, apc_config_english.dataset_name)
+apc_config_english.MV.summary(save_path=save_path)
+apc_config_english.MV.traj_plot(save_path=save_path, xticks=eta_candidates, xlabel=r'$\eta$')
+apc_config_english.MV.violin_plot(save_path=save_path, xticks=eta_candidates, xlabel=r'$\eta$')
+apc_config_english.MV.box_plot(save_path=save_path, xticks=eta_candidates, xlabel=r'$\eta$')
+
