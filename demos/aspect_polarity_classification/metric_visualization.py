@@ -6,9 +6,10 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 import random
-from distutils.version import StrictVersion
+from distutils.version import StrictVersion, LooseVersion
 
 import autocuda
+import metric_visualizer
 import numpy as np
 import pyabsa
 from metric_visualizer import MetricVisualizer
@@ -20,7 +21,7 @@ from pyabsa.functional import APCModelList
 
 import warnings
 
-if not StrictVersion(pyabsa.__version__) > StrictVersion('1.8.15'):
+if not LooseVersion(pyabsa.__version__) > LooseVersion('1.8.15'):
     raise KeyError('This demo can only run on PyABSA > 1.8.15')
 
 warnings.filterwarnings('ignore')
@@ -39,6 +40,7 @@ apc_config_english.max_seq_len = 80
 apc_config_english.dropout = 0
 apc_config_english.optimizer = 'adam'
 apc_config_english.cache_dataset = False
+apc_config_english.show_metric = True
 apc_config_english.patience = 10
 apc_config_english.pretrained_bert = 'microsoft/deberta-v3-base'
 apc_config_english.hidden_dim = 768
@@ -65,7 +67,7 @@ for eta in eta_candidates:
             checkpoint_save_mode=0,  # =None to avoid save model
             auto_device=device  # automatic choose CUDA or CPU
             )
-    apc_config_english.MV.next_trail()
+    apc_config_english.MV.next_trial()
 
 apc_config_english.MV.summary(save_path=None, xticks=eta_candidates)
 apc_config_english.MV.traj_plot(save_path=None, xticks=eta_candidates)

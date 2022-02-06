@@ -26,7 +26,7 @@ warnings.filterwarnings('ignore')
 seeds = [random.randint(0, 10000) for _ in range(3)]
 device = autocuda.auto_cuda()
 
-if not StrictVersion(pyabsa.__version__) > StrictVersion('1.8.15'):
+if not LooseVersion(pyabsa.__version__) > LooseVersion('1.8.15'):
     raise KeyError('This demo can only run on PyABSA > 1.8.15')
 
 classification_config_english = ClassificationConfigManager.get_classification_config_english()
