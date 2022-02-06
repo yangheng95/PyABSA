@@ -26,9 +26,9 @@ if not LooseVersion(pyabsa.__version__) > LooseVersion('1.8.15'):
 
 warnings.filterwarnings('ignore')
 
-seeds = [random.randint(0, 10000) for _ in range(5)]
+seeds = [random.randint(0, 10000) for _ in range(2)]
 
-eta_candidates = list(np.arange(0, 1.1, 0.1))
+eta_candidates = list(np.arange(0, 1.1, 0.5))
 
 device = autocuda.auto_cuda()
 
@@ -45,12 +45,12 @@ apc_config_english.patience = 10
 apc_config_english.pretrained_bert = 'microsoft/deberta-v3-base'
 apc_config_english.hidden_dim = 768
 apc_config_english.embed_dim = 768
-apc_config_english.log_step = 10
+apc_config_english.log_step = 100
 apc_config_english.SRD = 3
 apc_config_english.learning_rate = 1e-5
 apc_config_english.batch_size = 16
-apc_config_english.num_epoch = 25
-apc_config_english.evaluate_begin = 2
+apc_config_english.num_epoch = 1
+apc_config_english.evaluate_begin = 0
 apc_config_english.l2reg = 1e-8
 apc_config_english.seed = seeds
 
@@ -73,10 +73,14 @@ apc_config_english.MV.summary(save_path=None, xticks=eta_candidates)
 apc_config_english.MV.traj_plot(save_path=None, xticks=eta_candidates)
 apc_config_english.MV.violin_plot(save_path=None, xticks=eta_candidates)
 apc_config_english.MV.box_plot(save_path=None, xticks=eta_candidates)
+apc_config_english.MV.avg_bar_plot(save_path=None, xticks=eta_candidates)
+apc_config_english.MV.sum_bar_plot(save_path=None, xticks=eta_candidates)
 
 save_path = '{}_{}'.format(apc_config_english.model_name, apc_config_english.dataset_name)
 apc_config_english.MV.summary(save_path=save_path)
 apc_config_english.MV.traj_plot(save_path=save_path, xticks=eta_candidates, xlabel=r'$\eta$')
 apc_config_english.MV.violin_plot(save_path=save_path, xticks=eta_candidates, xlabel=r'$\eta$')
 apc_config_english.MV.box_plot(save_path=save_path, xticks=eta_candidates, xlabel=r'$\eta$')
+apc_config_english.MV.avg_bar_plot(save_path=save_path, xticks=eta_candidates, xlabel=r'$\eta$')
+apc_config_english.MV.sum_bar_plot(save_path=save_path, xticks=eta_candidates, xlabel=r'$\eta$')
 

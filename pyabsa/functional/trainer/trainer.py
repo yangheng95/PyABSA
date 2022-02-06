@@ -149,6 +149,7 @@ class Trainer:
             else:
                 # always return the last trained model if dont save trained model
                 model = self.model_class(model_arg=self.train_func(self.config, self.from_checkpoint, self.logger))
+        self.config.seed = seeds
         if self.config.show_metric:
             save_path = '{}_{}'.format(self.config.model_name, self.config.dataset_name)
             self.config.MV.summary(save_path)

@@ -7,7 +7,7 @@
 
 
 import random
-from distutils.version import StrictVersion
+from distutils.version import StrictVersion, LooseVersion
 
 import autocuda
 import numpy as np
@@ -66,7 +66,7 @@ for msl in max_seq_lens:
             checkpoint_save_mode=0,  # =None to avoid save model
             auto_device=device  # automatic choose CUDA or CPU
             )
-    atepc_config_english.MV.next_trail()
+    atepc_config_english.MV.next_trial()
 
 atepc_config_english.MV.summary(save_path=None, xticks=max_seq_lens)
 atepc_config_english.MV.traj_plot(save_path=None, xticks=max_seq_lens)
