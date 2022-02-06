@@ -1,18 +1,18 @@
 [
   {
+    "referrer": "Google",
+    "count": 442,
+    "uniques": 68
+  },
+  {
     "referrer": "github.com",
-    "count": 413,
+    "count": 441,
     "uniques": 65
   },
   {
-    "referrer": "Google",
-    "count": 397,
-    "uniques": 64
-  },
-  {
     "referrer": "paperswithcode.com",
-    "count": 228,
-    "uniques": 71
+    "count": 221,
+    "uniques": 72
   },
   {
     "referrer": "r0w1bpqpz0k-496ff2e9c6d22116-0-colab.googleusercontent.com",
@@ -31,8 +31,8 @@
   },
   {
     "referrer": "DuckDuckGo",
-    "count": 2,
-    "uniques": 2
+    "count": 3,
+    "uniques": 3
   },
   {
     "referrer": "textflint.io",
