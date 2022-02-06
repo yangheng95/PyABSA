@@ -1,4 +1,7 @@
 {
+  "1.8.19":{
+    "1": "Fix a problem about show_metric option"
+  },
   "1.8.16(17,18)":{
     "1": "Add simple MetricVisualizer (https://github.com/yangheng95/MetricVisualizer) integration. if you dont want to use MetricVisualizer, please set config.show_metric=False"
   },

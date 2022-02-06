@@ -21,7 +21,7 @@ from pyabsa.functional import APCModelList
 
 import warnings
 
-if not StrictVersion(pyabsa.__version__) > StrictVersion('1.8.15'):
+if not LooseVersion(pyabsa.__version__) > LooseVersion('1.8.15'):
     raise KeyError('This demo can only run on PyABSA > 1.8.15')
 
 warnings.filterwarnings('ignore')
