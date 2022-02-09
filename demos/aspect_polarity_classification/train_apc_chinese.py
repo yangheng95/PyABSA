@@ -9,7 +9,6 @@
 #                    train and evaluate on your own apc_datasets (need train and test apc_datasets)                    #
 ########################################################################################################################
 
-
 from pyabsa.functional import Trainer
 from pyabsa.functional import APCConfigManager
 from pyabsa.functional import ABSADatasetList
