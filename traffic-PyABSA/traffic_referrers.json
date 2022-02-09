@@ -1,18 +1,18 @@
 [
   {
     "referrer": "Google",
-    "count": 421,
-    "uniques": 58
+    "count": 402,
+    "uniques": 57
   },
   {
     "referrer": "github.com",
-    "count": 406,
-    "uniques": 59
+    "count": 377,
+    "uniques": 56
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 175,
-    "uniques": 64
+    "count": 172,
+    "uniques": 62
   },
   {
     "referrer": "r0w1bpqpz0k-496ff2e9c6d22116-0-colab.googleusercontent.com",
@@ -21,8 +21,8 @@
   },
   {
     "referrer": "pythonrepo.com",
-    "count": 25,
-    "uniques": 2
+    "count": 4,
+    "uniques": 1
   },
   {
     "referrer": "DuckDuckGo",
@@ -33,11 +33,6 @@
     "referrer": "teams.microsoft.com",
     "count": 3,
     "uniques": 2
-  },
-  {
-    "referrer": "trello.com",
-    "count": 2,
-    "uniques": 1
   },
   {
     "referrer": "libs.garden",
