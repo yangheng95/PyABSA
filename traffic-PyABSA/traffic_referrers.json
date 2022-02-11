@@ -1,23 +1,33 @@
 [
   {
-    "referrer": "Google",
-    "count": 390,
-    "uniques": 47
+    "referrer": "github.com",
+    "count": 509,
+    "uniques": 68
   },
   {
-    "referrer": "github.com",
-    "count": 340,
-    "uniques": 51
+    "referrer": "Google",
+    "count": 345,
+    "uniques": 65
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 157,
-    "uniques": 54
+    "count": 250,
+    "uniques": 62
   },
   {
-    "referrer": "r0w1bpqpz0k-496ff2e9c6d22116-0-colab.googleusercontent.com",
-    "count": 46,
+    "referrer": "link.zhihu.com",
+    "count": 8,
     "uniques": 3
+  },
+  {
+    "referrer": "catalyzex.com",
+    "count": 6,
+    "uniques": 1
+  },
+  {
+    "referrer": "pypi.org",
+    "count": 5,
+    "uniques": 1
   },
   {
     "referrer": "pythonrepo.com",
@@ -26,12 +36,17 @@
   },
   {
     "referrer": "DuckDuckGo",
-    "count": 3,
-    "uniques": 3
+    "count": 2,
+    "uniques": 2
   },
   {
     "referrer": "teams.microsoft.com",
     "count": 2,
     "uniques": 2
+  },
+  {
+    "referrer": "githubhelp.com",
+    "count": 1,
+    "uniques": 1
   }
 ]
