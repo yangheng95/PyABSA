@@ -253,17 +253,16 @@ class Instructor:
             if patience < 0:
                 break
 
-        if self.opt.show_metric:
-            self.opt.MV.add_metric('Max-Test-Acc', max_fold_acc * 100)
-            self.opt.MV.add_metric('Max-Test-F1', max_fold_f1 * 100)
+        self.opt.MV.add_metric('Max-Test-Acc', max_fold_acc * 100)
+        self.opt.MV.add_metric('Max-Test-F1', max_fold_f1 * 100)
 
         if self.val_dataloaders:
             print('Loading best model: {} and evaluating on test set ...'.format(save_path))
             self.model.load_state_dict(torch.load(find_file(save_path, '.state_dict')))
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
-            if self.opt.show_metric:
-                self.opt.MV.add_metric('Max-Test-Acc', max_fold_acc * 100)
-                self.opt.MV.add_metric('Max-Test-F1', max_fold_f1 * 100)
+
+            self.opt.MV.add_metric('Max-Test-Acc', max_fold_acc * 100)
+            self.opt.MV.add_metric('Max-Test-F1', max_fold_f1 * 100)
             # shutil.rmtree(save_path)
 
         # self.logger.info('-------------------------- Training Summary --------------------------')
