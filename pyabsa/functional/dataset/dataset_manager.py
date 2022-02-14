@@ -15,23 +15,26 @@ from findfile import find_files, find_dir
 from termcolor import colored
 
 
+# To replace the class defined in https://github.com/yangheng95/PyABSA/blob/release/pyabsa/functional/dataset/dataset_manager.py#L18, so that the inference script works on a custom dataset.
 class DatasetItem(list):
     def __init__(self, dataset_name, dataset_items=None):
         super().__init__()
         if os.path.exists(dataset_name):
             print('Construct DatasetItem from {}, assign dataset_name={}...'.format(dataset_name, os.path.basename(dataset_name)))
-            dataset_name = os.path.basename(dataset_name)
 
-        self.dataset_name = dataset_name
-
+        # Normalizing the dataset's name (or path) to not end with a '/' or '\'
+        while dataset_name[-1] in ['/', '\\']:
+            dataset_name = dataset_name[:-1]
+        # Creating the list of items if it does not exist
         if not dataset_items:
             dataset_items = dataset_name
-
         if not isinstance(dataset_items, list):
             self.append(dataset_items)
         else:
             for d in dataset_items:
                 self.append(d)
+        # Naming the dataset with the normalized folder name only
+        self.dataset_name = os.path.basename(dataset_name)
 
 
 class ABSADatasetList(list):
@@ -107,8 +110,6 @@ def detect_dataset(dataset_path, task='apc'):
     if not isinstance(dataset_path, DatasetItem):
         dataset_path = DatasetItem(dataset_path)
     dataset_file = {'train': [], 'test': [], 'valid': []}
-    d = ''
-    search_path = ''
     for d in dataset_path:
         if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(ClassificationDatasetList, d):
             print('{} dataset is loading from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
@@ -125,10 +126,10 @@ def detect_dataset(dataset_path, task='apc'):
             dataset_file['valid'] += find_files(d, ['dev', task], exclude_key=['inference', 'train.'] + filter_key_words)
 
     if len(dataset_file['train']) == 0:
-        if os.path.isdir(max(d, search_path)):
-            print('No train set found from: {}, unrecognized files: {}'.format(dataset_path, ', '.join(os.listdir(max(d, search_path)))))
-        raise RuntimeError('Fail to locate dataset: {}. If you are using your own dataset,' ' you may need rename your dataset according to {}'.format(
-            dataset_path, 'https://github.com/yangheng95/ABSADatasets#important-rename-your-dataset-filename-before-use-it-in-pyabsa'))
+        if os.path.isdir(dataset_path.dataset_name):
+            print('No train set found from: {}, unrecognized files: {}'.format(dataset_path, ', '.join(os.listdir(dataset_path.dataset_name))))
+        raise RuntimeError('Fail to locate dataset: {}. If you are using your own dataset, you may need rename your dataset according to {}'.format(dataset_path,
+                                                                                                                                                    'https://github.com/yangheng95/ABSADatasets#important-rename-your-dataset-filename-before-use-it-in-pyabsa'))
     if len(dataset_file['test']) == 0:
         print('Warning, auto_evaluate=True, however cannot find test set using for evaluating!')
 
@@ -142,8 +143,6 @@ def detect_infer_dataset(dataset_path, task='apc'):
     if not isinstance(dataset_path, DatasetItem):
         dataset_path = DatasetItem(dataset_path)
     dataset_file = []
-    d = ''
-    search_path = ''
     for d in dataset_path:
         if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(ClassificationDatasetList, d):
             print('{} dataset is loading from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
@@ -154,10 +153,10 @@ def detect_infer_dataset(dataset_path, task='apc'):
             dataset_file += find_files(d, ['.inference', task], exclude_key=['train.'] + filter_key_words)
 
     if len(dataset_file) == 0:
-        if os.path.isdir(max(d, search_path)):
-            print('No train set found from: {}, unrecognized files: {}'.format(dataset_path, ', '.join(os.listdir(max(d, search_path)))))
-        raise RuntimeError('Fail to locate dataset: {}. If you are using your own dataset,' ' you may need rename your dataset according to {}'.format(
-            dataset_path, 'https://github.com/yangheng95/ABSADatasets#important-rename-your-dataset-filename-before-use-it-in-pyabsa'))
+        if os.path.isdir(dataset_path.dataset_name):
+            print('No inference set found from: {}, unrecognized files: {}'.format(dataset_path, ', '.join(os.listdir(dataset_path.dataset_name))))
+        raise RuntimeError('Fail to locate dataset: {}. If you are using your own dataset, you may need rename your dataset according to {}'.format(dataset_path,
+                                                                                                                                                    'https://github.com/yangheng95/ABSADatasets#important-rename-your-dataset-filename-before-use-it-in-pyabsa'))
 
     if len(dataset_path) > 1:
         print(colored('Never mixing datasets with different sentiment labels for training & inference !', 'yellow'))
@@ -174,7 +173,6 @@ def download_datasets_from_github(save_path):
 
     with tempfile.TemporaryDirectory() as tmpdir:
         try:
-            print('Clone ABSADatasets from https://github.com/yangheng95/ABSADatasets.git')
             git.Repo.clone_from('https://github.com/yangheng95/ABSADatasets.git', tmpdir, branch='v1.2', depth=1)
             # git.Repo.clone_from('https://github.com/yangheng95/ABSADatasets.git', tmpdir, branch='master', depth=1)
             try:
@@ -182,8 +180,8 @@ def download_datasets_from_github(save_path):
             except IOError as e:
                 pass
         except Exception as e:
+            print(colored('Fail to clone ABSADatasets at GitHub: {}. Retry clone at GitEE...'.format(e), 'red'))
             try:
-                print('Clone ABSADatasets from https://gitee.com/yangheng95/ABSADatasets.git')
                 git.Repo.clone_from('https://gitee.com/yangheng95/ABSADatasets.git', tmpdir, branch='v1.2', depth=1)
                 # git.Repo.clone_from('https://github.com/yangheng95/ABSADatasets.git', tmpdir, branch='master', depth=1)
                 try:
