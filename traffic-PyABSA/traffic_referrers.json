@@ -1,23 +1,28 @@
 [
   {
     "referrer": "github.com",
-    "count": 527,
-    "uniques": 70
-  },
-  {
-    "referrer": "Google",
-    "count": 302,
+    "count": 557,
     "uniques": 75
   },
   {
+    "referrer": "Google",
+    "count": 280,
+    "uniques": 71
+  },
+  {
     "referrer": "paperswithcode.com",
-    "count": 228,
-    "uniques": 58
+    "count": 216,
+    "uniques": 52
   },
   {
     "referrer": "link.zhihu.com",
-    "count": 10,
-    "uniques": 4
+    "count": 11,
+    "uniques": 5
+  },
+  {
+    "referrer": "pythonrepo.com",
+    "count": 6,
+    "uniques": 3
   },
   {
     "referrer": "pypi.org",
@@ -30,23 +35,18 @@
     "uniques": 1
   },
   {
-    "referrer": "pythonrepo.com",
+    "referrer": "nlpprogress.com",
     "count": 4,
-    "uniques": 1
+    "uniques": 3
+  },
+  {
+    "referrer": "cn.bing.com",
+    "count": 4,
+    "uniques": 2
   },
   {
     "referrer": "DuckDuckGo",
     "count": 3,
     "uniques": 3
-  },
-  {
-    "referrer": "nlpprogress.com",
-    "count": 3,
-    "uniques": 2
-  },
-  {
-    "referrer": "githubhelp.com",
-    "count": 1,
-    "uniques": 1
   }
 ]
