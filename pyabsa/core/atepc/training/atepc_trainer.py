@@ -297,20 +297,21 @@ class Instructor:
 
             if patience < 0:
                 break
-        self.logger.info('-------------------------------------Training Summary-------------------------------------')
-        self.logger.info(
-            '  Max APC Acc: {:.5f} Max APC F1: {:.5f} Max ATE F1: {:.5f} Accumulated Loss: {}'.format(
-                self.opt.max_test_metrics['max_apc_test_acc'],
-                self.opt.max_test_metrics['max_apc_test_f1'],
-                self.opt.max_test_metrics['max_ate_test_f1'],
-                sum_loss)
-        )
-        self.logger.info('-------------------------------------Training Summary-------------------------------------')
+        # self.logger.info('-------------------------------------Training Summary-------------------------------------')
+        # self.logger.info(
+        #     '  Max APC Acc: {:.5f} Max APC F1: {:.5f} Max ATE F1: {:.5f} Accumulated Loss: {}'.format(
+        #         self.opt.max_test_metrics['max_apc_test_acc'],
+        #         self.opt.max_test_metrics['max_apc_test_f1'],
+        #         self.opt.max_test_metrics['max_ate_test_f1'],
+        #         sum_loss)
+        # )
+        # self.logger.info('-------------------------------------Training Summary-------------------------------------')
 
-        if self.opt.show_metric:
-            self.opt.MV.add_metric('Max-APC-Test-Acc', self.opt.max_test_metrics['max_apc_test_acc'])
-            self.opt.MV.add_metric('Max-APC-Test-F1', self.opt.max_test_metrics['max_apc_test_f1'])
-            self.opt.MV.add_metric('Max-ATE-Test-F1', self.opt.max_test_metrics['max_ate_test_f1'])
+        self.opt.MV.add_metric('Max-APC-Test-Acc', self.opt.max_test_metrics['max_apc_test_acc'])
+        self.opt.MV.add_metric('Max-APC-Test-F1', self.opt.max_test_metrics['max_apc_test_f1'])
+        self.opt.MV.add_metric('Max-ATE-Test-F1', self.opt.max_test_metrics['max_ate_test_f1'])
+
+        self.opt.MV.summary()
 
         print('Training finished, we hope you can share your checkpoint with community, please see:',
               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
