@@ -108,7 +108,7 @@ class Trainer:
 
         self.config = init_config(self.config, auto_device)
         if 'MV' not in self.config.args:
-            self.config.MV = MetricVisualizer(name=dataset.dataset_name + '-' + config.model.__name__,
+            self.config.MV = MetricVisualizer(name=self.config.dataset_name + '-' + config.model.__name__,
                                               trial_tag='Config',
                                               trial_tag_list=['Config-0'])
 
