@@ -107,8 +107,10 @@ class Trainer:
         self.config.dataset_file = self.dataset_file
 
         self.config = init_config(self.config, auto_device)
-        if self.config.show_metric and 'MV' not in self.config.args:
-            self.config.MV = MetricVisualizer()
+        if 'MV' not in self.config.args:
+            self.config.MV = MetricVisualizer(name=dataset.dataset_name + '-' + config.model.__name__,
+                                              trial_tag='Config',
+                                              trial_tag_list=['Config-0'])
 
         self.from_checkpoint = findfile.find_dir(os.getcwd(), from_checkpoint) if from_checkpoint else ''
         self.checkpoint_save_mode = checkpoint_save_mode
@@ -150,9 +152,9 @@ class Trainer:
                 # always return the last trained model if dont save trained model
                 model = self.model_class(model_arg=self.train_func(self.config, self.from_checkpoint, self.logger))
         self.config.seed = seeds
-        if self.config.show_metric:
-            save_path = '{}_{}'.format(self.config.model_name, self.config.dataset_name)
-            self.config.MV.summary(save_path)
+
+        # save_path = '{}_{}'.format(self.config.model_name, self.config.dataset_name)
+        # self.config.MV.summary(save_path)
 
         while self.logger.handlers:
             self.logger.removeHandler(self.logger.handlers[0])

@@ -19,7 +19,7 @@ from pyabsa import __version__
 from pyabsa.core.apc.prediction.sentiment_classifier import SentimentClassifier
 from pyabsa.core.atepc.prediction.aspect_extractor import AspectExtractor
 from pyabsa.core.tc.prediction.text_classifier import TextClassifier
-from pyabsa.utils.pyabsa_utils import get_device
+from pyabsa.utils.pyabsa_utils import get_device, retry
 
 
 def unzip_checkpoint(zip_path):
@@ -40,6 +40,7 @@ class CheckpointManager:
 
 class APCCheckpointManager(CheckpointManager):
     @staticmethod
+    @retry
     def get_sentiment_classifier(checkpoint: str = None,
                                  from_drive_url: str = '',
                                  sentiment_map: dict = None,
@@ -103,6 +104,7 @@ class APCCheckpointManager(CheckpointManager):
 
 class ATEPCCheckpointManager(CheckpointManager):
     @staticmethod
+    @retry
     def get_aspect_extractor(checkpoint: str = None,
                              from_drive_url: str = '',
                              sentiment_map: dict = None,
@@ -165,6 +167,7 @@ class ATEPCCheckpointManager(CheckpointManager):
 
 class TextClassifierCheckpointManager(CheckpointManager):
     @staticmethod
+    @retry
     def get_text_classifier(checkpoint: str = None,
                             from_drive_url: str = '',
                             auto_device=True,
