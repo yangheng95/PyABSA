@@ -131,7 +131,7 @@ class Instructor:
                 "cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device)))
 
         if 'patience' in self.opt.args and self.opt.patience:
-            self.opt.patience = len(self.train_set) / self.opt.batch_size / self.opt.log_step * self.opt.patience
+            self.opt.patience = self.opt.patience
         else:
             self.opt.patience = 999999999
         print_args(self.opt, self.logger)
@@ -203,12 +203,12 @@ class Instructor:
             self.logger.info("Test set examples = %d", len(self.test_set))
         self.logger.info("Batch size = %d", self.opt.batch_size)
         self.logger.info("Num steps = %d", len(self.train_dataloaders[0]) // self.opt.batch_size * self.opt.num_epoch)
+        patience = self.opt.patience + self.opt.evaluate_begin
         if self.opt.log_step < 0:
-            self.opt.log_step = len(self.train_dataloaders[0])
-            self.opt.patience = math.inf
-            patience = self.opt.patience
+            self.opt.log_step = len(self.train_dataloaders[0]) if self.opt.log_step < 0 else self.opt.log_step
 
         for epoch in range(self.opt.num_epoch):
+            patience -= 1
             iterator = tqdm(self.train_dataloaders[0])
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
@@ -252,7 +252,7 @@ class Instructor:
 
                             if self.opt.model_path_to_save:
                                 if not os.path.exists(self.opt.model_path_to_save):
-                                    os.mkdir(self.opt.model_path_to_save)
+                                    os.makedirs(self.opt.model_path_to_save)
                                 if save_path:
                                     try:
                                         shutil.rmtree(save_path)
@@ -273,8 +273,7 @@ class Instructor:
                                     self.opt.max_test_metrics['max_test_f1'] = f1
 
                                 save_model(self.opt, self.model, self.tokenizer, save_path)
-                        else:
-                            patience -= 1
+
 
                         postfix = ('Epoch:{} | Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) |'
                                    ' Test F1:{:.2f}(max:{:.2f})'.format(epoch,
@@ -291,8 +290,9 @@ class Instructor:
             if patience < 0:
                 break
 
-        self.opt.MV.add_metric('Max-Test-Acc', max_fold_acc * 100)
-        self.opt.MV.add_metric('Max-Test-F1', max_fold_f1 * 100)
+        if not self.valid_dataloader:
+            self.opt.MV.add_metric('Max-Test-Acc w/o Valid Set', max_fold_acc * 100)
+            self.opt.MV.add_metric('Max-Test-F1 w/o Valid Set', max_fold_f1 * 100)
 
         if self.valid_dataloader:
             print('Loading best model: {} and evaluating on test set ...'.format(save_path))
@@ -343,10 +343,9 @@ class Instructor:
         self.opt.max_test_metrics = {'max_test_acc': 0, 'max_test_f1': 0}
 
         for f, (train_dataloader, val_dataloader) in enumerate(zip(self.train_dataloaders, self.val_dataloaders)):
+            patience = self.opt.patience + self.opt.evaluate_begin
             if self.opt.log_step < 0:
-                self.opt.log_step = len(train_dataloader) if self.opt.log_step < 0 else self.opt.log_step
-                self.opt.patience = math.inf
-                patience = self.opt.patience
+                self.opt.log_step = len(self.train_dataloaders[0]) if self.opt.log_step < 0 else self.opt.log_step
 
             self.logger.info("***** Running training for Text Classification *****")
             self.logger.info("Training set examples = %d", len(self.train_set))
@@ -361,6 +360,7 @@ class Instructor:
             max_fold_f1 = 0
             save_path = ''
             for epoch in range(self.opt.num_epoch):
+                patience -= 1
                 iterator = tqdm(train_dataloader)
                 postfix = ''
                 for i_batch, sample_batched in enumerate(iterator):
@@ -423,8 +423,6 @@ class Instructor:
                                         self.opt.max_test_metrics['max_test_f1'] = f1
 
                                     save_model(self.opt, self.model, self.tokenizer, save_path)
-                            else:
-                                patience -= 1
 
                             postfix = ('Epoch:{} | Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) |'
                                        ' Test F1:{:.2f}(max:{:.2f})'.format(epoch,
@@ -462,11 +460,11 @@ class Instructor:
             if os.path.exists('./init_state_dict.bin'):
                 self.reload_model()
 
-        mean_test_acc = numpy.mean(fold_test_acc)
-        mean_test_f1 = numpy.mean(fold_test_f1)
+        max_test_acc = numpy.max(fold_test_acc)
+        max_test_f1 = numpy.mean(fold_test_f1)
 
-        self.opt.MV.add_metric('Mean-Test-Acc', mean_test_acc * 100)
-        self.opt.MV.add_metric('Mean-Test-F1', mean_test_f1 * 100)
+        self.opt.MV.add_metric('Max-Test-Acc', max_test_acc * 100)
+        self.opt.MV.add_metric('Max-Test-F1', max_test_f1 * 100)
 
         # if self.opt.cross_validate_fold > 0:
         #     self.logger.info('-------------------------- Training Summary --------------------------')

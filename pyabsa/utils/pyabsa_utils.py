@@ -165,7 +165,16 @@ def retry(f):
 
             try:
                 return f(*args, **kwargs)
-            except TransformerConnectionError as e:
+            except (
+                TransformerConnectionError,
+                requests.exceptions.RequestException,
+                requests.exceptions.ConnectionError,
+                requests.exceptions.HTTPError,
+                requests.exceptions.ConnectTimeout,
+                requests.exceptions.ProxyError,
+                requests.exceptions.SSLError,
+                requests.exceptions.BaseHTTPError,
+            ) as e:
                 print('Training Exception: {}, will retry later'.format(e))
                 time.sleep(60)
                 count -= 1
