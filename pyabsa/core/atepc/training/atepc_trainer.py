@@ -127,7 +127,7 @@ class Instructor:
             len(self.train_data) / self.opt.batch_size / self.opt.gradient_accumulation_steps) * self.opt.num_epoch
 
         if 'patience' in self.opt.args and self.opt.patience:
-            self.opt.patience = len(self.train_data) / self.opt.batch_size / self.opt.log_step * self.opt.patience
+            self.opt.patience = self.opt.patience
         else:
             self.opt.patience = 999999999
 
@@ -165,11 +165,9 @@ class Instructor:
         print_args(self.opt, self.logger)
 
     def run(self):
-        patience = self.opt.patience
+        patience = self.opt.patience + self.opt.evaluate_begin
         if self.opt.log_step < 0:
             self.opt.log_step = len(self.train_dataloader) if self.opt.log_step < 0 else self.opt.log_step
-            self.opt.patience = math.inf
-            patience = self.opt.patience
 
         self.logger.info("***** Running training for Aspect Term Extraction *****")
         self.logger.info("  Num examples = %d", len(self.train_data))
@@ -187,6 +185,7 @@ class Instructor:
             nb_tr_examples, nb_tr_steps = 0, 0
             iterator = tqdm.tqdm(self.train_dataloader)
             postfix = ''
+            patience -= 1
             for step, batch in enumerate(iterator):
                 self.model.train()
                 input_ids_spc, segment_ids, input_mask, label_ids, polarity, \
@@ -267,8 +266,7 @@ class Instructor:
                                 )
 
                                 save_model(self.opt, self.model, self.tokenizer, save_path)
-                        else:
-                            patience -= 1
+
                         current_apc_test_acc = apc_result['apc_test_acc']
                         current_apc_test_f1 = apc_result['apc_test_f1']
                         current_ate_test_f1 = round(ate_result, 2)
