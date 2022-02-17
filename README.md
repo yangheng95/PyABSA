@@ -12,25 +12,33 @@
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/back-to-reality-leveraging-pattern-driven/aspect-based-sentiment-analysis-on-semeval)](https://paperswithcode.com/sota/aspect-based-sentiment-analysis-on-semeval?p=back-to-reality-leveraging-pattern-driven)
 
-PyABSA is a personal project which received many contributions from all the contributors. Please feel free to help make it developing, with regards for all the people who contribute to PyABSA.
-I am glad if PyABSA helps you, please star this repo as Each Star helps PyABSA go further, many thanks.
-
+PyABSA is a personal project which received many contributions from all the contributors. Please feel free to help make
+it developing, with regards for all the people who contribute to PyABSA. I am glad if PyABSA helps you, please star this
+repo as Each Star helps PyABSA go further, many thanks.
 
 ## Annotate Your Own Dataset
-The repo [ABSADatasets](https://github.com/yangheng95/ABSADatasets/tree/v1.2/DPT) provides an open-source dataset annotating tool, you can easily annotate your dataset before using PyABSA.
+
+The repo [ABSADatasets](https://github.com/yangheng95/ABSADatasets/tree/v1.2/DPT) provides an open-source dataset
+annotating tool, you can easily annotate your dataset before using PyABSA.
 
 ## Fit on Your Existing Dataset
+
 - First, refer to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) to prepare your dataset into acceptable
   format.
-- You can PR to contribute your dataset and use it like `ABDADatasets.your_dataset` (All the datasets are for research only, shall not danger your data copyright)
+- You can PR to contribute your dataset and use it like `ABDADatasets.your_dataset` (All the datasets are for research
+  only, shall not danger your data copyright)
 
 ## Training based on Existing Checkpoints
-Have no enough data to train your model, here are what you can do:
-- Combine multiple datasets with your dataset to train your model
-- Resume training from shared checkpoints, see [train_based_on_checkpoint.py](demos/aspect_polarity_classification/train_based_on_checkpoint.py), 
-[train_atepc_based_on_checkpoint.py](demos/aspect_term_extraction/train_atepc_based_on_checkpoint.py)
 
-### Learn to Use FindFile 
+Have no enough data to train your model, here are what you can do:
+
+- Combine multiple datasets with your dataset to train your model
+- Resume training from shared checkpoints,
+  see [train_based_on_checkpoint.py](demos/aspect_polarity_classification/train_based_on_checkpoint.py),
+  [train_atepc_based_on_checkpoint.py](demos/aspect_term_extraction/train_atepc_based_on_checkpoint.py)
+
+### Learn to Use FindFile
+
 PyABSA uses [FindFile](https://github.com/yangheng95/findfile) to locate the target file(s) so you can specify a
 dataset/checkpoint path by keywords instead of using absolute path. e.g.,
 
@@ -44,8 +52,10 @@ checkpoint = 'lcfs' # checkpoint path assignment is similar to above methods
 ```
 
 ### Learn to Use AutoCuda
-Auto select the free cuda for training & inference
-PyABSA use the AutoCUDA to support automatic cuda assignment, but you can still set a preferred device.
+
+Auto select the free cuda for training & inference PyABSA use the AutoCUDA to support automatic cuda assignment, but you
+can still set a preferred device.
+
 ```python3
 auto_device = True  # to auto assign a cuda device for training / inference
 auto_device = False  # to use cpu
@@ -54,8 +64,10 @@ auto_device = 'cpu'  # to specify a preferred device
 auto_device = 'allcuda'  # use all cuda to train
 ```
 
-### Use Human-readable Labels in Your Dataset 
-PyABSA encourages you to use string labels instead of numbers. e.g., sentiment labels = {negative, positive, Neutral, unknown}
+### Use Human-readable Labels in Your Dataset
+
+PyABSA encourages you to use string labels instead of numbers. e.g., sentiment labels = {negative, positive, Neutral,
+unknown}
 
 - What labels you use in the dataset, what labels will be output in inference
 - You can train a model using multiple datasets with same sentiment labels, and you can even contribute and define a
@@ -63,8 +75,11 @@ PyABSA encourages you to use string labels instead of numbers. e.g., sentiment l
 - The version information of PyABSA is also available in the output while loading checkpoints training args.
 
 ### Metric Visualization
-If you need to visualize the difference between the metrics, you can use [MetricVisualizer](https://github.com/yangheng95/metric_visualizer).
-Here is an example of using MetricVisualizer to visualize the FAST_LCF_BERT metrics under different max_seq_lens.
+
+If you need to visualize the difference between the metrics, you can
+use [MetricVisualizer](https://github.com/yangheng95/metric_visualizer). Here is an example of using MetricVisualizer to
+visualize the FAST_LCF_BERT metrics under different max_seq_lens.
+
 ```python3
 import autocuda
 import random
@@ -123,6 +138,7 @@ apc_config_english.MV.traj_plot_by_metric(save_path=save_path, xticks=max_seq_le
 apc_config_english.MV.violin_plot_by_metric(save_path=save_path, xticks=max_seq_lens, xlabel=r'max_seq_len')
 apc_config_english.MV.box_plot_by_metric(save_path=save_path, xticks=max_seq_lens, xlabel=r'max_seq_len')
 ```
+
 ![traj_plot_example](demos/documents/pic/traj_plot.png)
 
 ![box_plot_example](demos/documents/pic/box_plot.png)
@@ -130,6 +146,7 @@ apc_config_english.MV.box_plot_by_metric(save_path=save_path, xticks=max_seq_len
 ![violin_plot_example](demos/documents/pic/violin_plot.png)
 
 ## For Syntax-Parsing Models
+
 The default SpaCy english model is en_core_web_sm, if you didn't install it, PyABSA will download/install it
 automatically.
 
@@ -212,12 +229,11 @@ python setup.py install
   , [APC](https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_polarity_classification)
   , [Text Classification](https://github.com/yangheng95/PyABSA/tree/release/demos/text_classification)) to prepare your
   training script. (Welcome to share your demo script)
-- Format or Annotate your dataset referring to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) or use public dataset in
-  ABSADatasets
+- Format or Annotate your dataset referring to [ABSADatasets](https://github.com/yangheng95/ABSADatasets) or use public
+  dataset in ABSADatasets
 - Init your config to specify Model, Dataset, hyper-parameters
 - Training your model and get checkpoints
 - Share your checkpoint and dataset
-
 
 ## Learning to Use Checkpoint
 

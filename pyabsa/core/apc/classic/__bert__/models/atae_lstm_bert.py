@@ -12,7 +12,7 @@ from ..layers.squeeze_embedding import SqueezeEmbedding
 
 
 class ATAE_LSTM_BERT(nn.Module):
-    inputs = ['text_indices', 'aspect_indices']
+    inputs = ['text_bert_indices', 'aspect_indices']
 
     def __init__(self, bert, opt):
         super(ATAE_LSTM_BERT, self).__init__()
@@ -24,12 +24,12 @@ class ATAE_LSTM_BERT(nn.Module):
         self.dense = nn.Linear(opt.hidden_dim, opt.polarities_dim)
 
     def forward(self, inputs):
-        text_indices, aspect_indices = inputs['text_indices'], inputs['text_indices']
-        x_len = torch.sum(text_indices != 0, dim=-1)
+        text_bert_indices, aspect_indices = inputs['text_bert_indices'], inputs['text_bert_indices']
+        x_len = torch.sum(text_bert_indices != 0, dim=-1)
         x_len_max = torch.max(x_len)
         aspect_len = torch.sum(aspect_indices != 0, dim=-1).float()
 
-        x = self.embed(text_indices)['last_hidden_state']
+        x = self.embed(text_bert_indices)['last_hidden_state']
         x = self.squeeze_embedding(x, x_len)
         aspect = self.embed(aspect_indices)['last_hidden_state']
         aspect_pool = torch.div(torch.sum(aspect, dim=1), aspect_len.unsqueeze(1))

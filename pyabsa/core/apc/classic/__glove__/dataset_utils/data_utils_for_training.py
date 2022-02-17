@@ -25,7 +25,8 @@ def prepare_glove840_embedding(glove_path):
         return glove_path
     else:
         embedding_file = None
-        dir_path = os.path.dirname(glove_path)
+        # dir_path = os.path.dirname(glove_path)
+        dir_path = os.path.dirname(os.path.expandvars('$HOME'))
         if find_file(dir_path, 'glove.42B.300d.txt', exclude_key='.zip'):
             embedding_file = find_file(dir_path, 'glove.42B.300d.txt', exclude_key='.zip')
         elif find_file(dir_path, 'glove.840B.300d.txt', exclude_key='.zip'):

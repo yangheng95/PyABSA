@@ -11,7 +11,7 @@ from ..layers.dynamic_rnn import DynamicLSTM
 
 
 class IAN_BERT(nn.Module):
-    inputs = ['text_indices', 'aspect_indices']
+    inputs = ['text_bert_indices', 'aspect_indices']
 
     def __init__(self, bert, opt):
         super(IAN_BERT, self).__init__()
@@ -24,7 +24,7 @@ class IAN_BERT(nn.Module):
         self.dense = nn.Linear(opt.hidden_dim * 2, opt.polarities_dim)
 
     def forward(self, inputs):
-        text_raw_indices, aspect_indices = inputs['text_indices'], inputs['aspect_indices']
+        text_raw_indices, aspect_indices = inputs['text_bert_indices'], inputs['aspect_indices']
         text_raw_len = torch.sum(text_raw_indices != 0, dim=-1)
         aspect_len = torch.sum(aspect_indices != 0, dim=-1)
 

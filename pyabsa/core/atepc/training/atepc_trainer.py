@@ -237,8 +237,8 @@ class Instructor:
                         self.opt.metrics_of_this_checkpoint['ate_f1'] = ate_result
 
                         if apc_result['apc_test_acc'] > self.opt.max_test_metrics['max_apc_test_acc'] or \
-                                apc_result['apc_test_f1'] > self.opt.max_test_metrics['max_apc_test_f1'] or \
-                                ate_result > self.opt.max_test_metrics['max_ate_test_f1']:
+                            apc_result['apc_test_f1'] > self.opt.max_test_metrics['max_apc_test_f1'] or \
+                            ate_result > self.opt.max_test_metrics['max_ate_test_f1']:
                             patience = self.opt.patience
                             if apc_result['apc_test_acc'] > self.opt.max_test_metrics['max_apc_test_acc']:
                                 self.opt.max_test_metrics['max_apc_test_acc'] = apc_result['apc_test_acc']

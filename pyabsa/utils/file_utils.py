@@ -237,7 +237,7 @@ def detect_error_in_dataset(dataset):
         # print(lines[i].replace('$T$', lines[i + 1].replace('\n', '')))
         if i + 3 < len(lines):
             if is_similar(lines[i], lines[i + 3]) and len((lines[i] + " " + lines[i + 1]).split()) != len(
-                    (lines[i + 3] + " " + lines[i + 4]).split()):
+                (lines[i + 3] + " " + lines[i + 4]).split()):
                 print(lines[i].replace('$T$', lines[i + 1].replace('\n', '')))
                 print(lines[i + 3].replace('$T$', lines[i + 4].replace('\n', '')))
 

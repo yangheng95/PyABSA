@@ -96,7 +96,8 @@ def check_and_fix_labels(label_set, label_name, all_data, opt):
     for item in all_data:
         try:
             item[label_name] = label_to_index[item[label_name]]
-        except:
+        except Exception as e:
+            print(e)
             item.polarity = label_to_index[item.polarity]
 
 
@@ -209,8 +210,7 @@ def validate_version():
         versions = list(data["releases"].keys())
         versions.sort(key=parse_version, reverse=True)
         if __version__ not in versions:
-            print(colored('You are using a DEPRECATED or TEST version of PyABSA which may contain potential bug!'
-                          ' Consider update using pip install -U pyabsa!', 'red'))
+            print(colored('You are using a DEPRECATED or TEST version of PyABSA. Consider update using pip install -U pyabsa!', 'red'))
 
 
 optimizers = {

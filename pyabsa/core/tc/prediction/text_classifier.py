@@ -103,7 +103,7 @@ class TextClassifier:
                 raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, model_arg))
 
             if not hasattr(GloVeClassificationModelList, self.opt.model.__name__) \
-                    and not hasattr(BERTClassificationModelList, self.opt.model.__name__):
+                and not hasattr(BERTClassificationModelList, self.opt.model.__name__):
                 raise KeyError('The checkpoint you are loading is not from classifier model.')
 
         if hasattr(BERTClassificationModelList, self.opt.model.__name__):
@@ -126,7 +126,6 @@ class TextClassifier:
             torch.backends.cudnn.benchmark = False
 
         self.opt.initializer = self.opt.initializer
-
 
     def to(self, device=None):
         self.opt.device = device

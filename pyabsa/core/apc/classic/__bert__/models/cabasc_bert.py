@@ -12,7 +12,7 @@ from ..layers.squeeze_embedding import SqueezeEmbedding
 
 
 class Cabasc_BERT(nn.Module):
-    inputs = ['text_indices', 'aspect_indices', 'left_with_aspect_indices', 'right_with_aspect_indices']
+    inputs = ['text_bert_indices', 'aspect_indices', 'left_with_aspect_indices', 'right_with_aspect_indices']
 
     def __init__(self, bert, opt, _type='c'):
         super(Cabasc_BERT, self).__init__()
@@ -81,7 +81,7 @@ class Cabasc_BERT(nn.Module):
     def forward(self, inputs):
         # inputs
         text_raw_indices, aspect_indices, x_l, x_r = \
-            inputs['text_indices'], inputs['aspect_indices'], inputs['left_with_aspect_indices'], inputs['right_with_aspect_indices']
+            inputs['text_bert_indices'], inputs['aspect_indices'], inputs['left_with_aspect_indices'], inputs['right_with_aspect_indices']
         memory_len = torch.sum(text_raw_indices != 0, dim=-1)
         aspect_len = torch.sum(aspect_indices != 0, dim=-1)
 
