@@ -38,7 +38,6 @@ class TNet_LF_BERT_Unit(nn.Module):
 
     def __init__(self, bert, opt):
         super(TNet_LF_BERT_Unit, self).__init__()
-        print("this is TNet_LF model")
         self.embed = bert
         self.position = Absolute_Position_Embedding(opt)
         self.opt = opt
