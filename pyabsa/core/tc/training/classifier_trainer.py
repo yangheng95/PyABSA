@@ -274,7 +274,6 @@ class Instructor:
 
                                 save_model(self.opt, self.model, self.tokenizer, save_path)
 
-
                         postfix = ('Epoch:{} | Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) |'
                                    ' Test F1:{:.2f}(max:{:.2f})'.format(epoch,
                                                                         loss.item(),

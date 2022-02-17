@@ -28,4 +28,3 @@ sent_classifier = Trainer(config=config,  # set config=None to use default model
                           checkpoint_save_mode=1,
                           auto_device=True  # automatic choose CUDA or CPU
                           ).load_trained_model()
-

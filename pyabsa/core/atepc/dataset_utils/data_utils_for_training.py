@@ -97,7 +97,7 @@ def readfile(filename):
             polarity_padding = [str(SENTIMENT_PADDING)] * len(t)
             for p_idx in range(len(p) - 1):
                 if (p[p_idx] != p[p_idx + 1] and p[p_idx] != str(SENTIMENT_PADDING) and p[p_idx + 1] != str(SENTIMENT_PADDING)) \
-                        or (p[p_idx] != str(SENTIMENT_PADDING) and p[p_idx + 1] == str(SENTIMENT_PADDING)):
+                    or (p[p_idx] != str(SENTIMENT_PADDING) and p[p_idx + 1] == str(SENTIMENT_PADDING)):
                     _p = p[:p_idx + 1] + polarity_padding[p_idx + 1:]
                     p = polarity_padding[:p_idx + 1] + p[p_idx + 1:]
                     prepared_data.append((s, t, _p))

@@ -168,7 +168,7 @@ class ABSADataset(Dataset):
         self.opt.polarities_dim = len(label_set)
 
         if 'left_lcf_vec' in self.opt.inputs_cols or 'right_lcf_vec' in self.opt.inputs_cols \
-                or 'left_lcfs_vec' in self.opt.inputs_cols or 'right_lcfs_vec' in self.opt.inputs_cols:
+            or 'left_lcfs_vec' in self.opt.inputs_cols or 'right_lcfs_vec' in self.opt.inputs_cols:
             all_data = build_sentiment_window(all_data, self.tokenizer, self.opt.similarity_threshold)
             for data in all_data:
 

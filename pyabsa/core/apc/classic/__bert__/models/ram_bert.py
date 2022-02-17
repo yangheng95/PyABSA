@@ -11,7 +11,7 @@ from ..layers.dynamic_rnn import DynamicLSTM
 
 
 class RAM_BERT(nn.Module):
-    inputs = ['text_indices', 'aspect_indices', 'left_indices']
+    inputs = ['text_bert_indices', 'aspect_indices', 'left_indices']
 
     def locationed_memory(self, memory, memory_len, left_len, aspect_len):
         batch_size = memory.shape[0]
@@ -52,7 +52,7 @@ class RAM_BERT(nn.Module):
 
     def forward(self, inputs):
         text_raw_indices, aspect_indices, text_left_indices = \
-            inputs['text_indices'], inputs['aspect_indices'], inputs['left_indices']
+            inputs['text_bert_indices'], inputs['aspect_indices'], inputs['left_indices']
         left_len = torch.sum(text_left_indices != 0, dim=-1)
         memory_len = torch.sum(text_raw_indices != 0, dim=-1)
         aspect_len = torch.sum(aspect_indices != 0, dim=-1)

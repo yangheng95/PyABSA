@@ -1,52 +1,52 @@
 {
-  "Notice":{
+  "Notice": {
     "1": "Please note that the versions which are not listed here are deprecated test version."
   },
-  "1.8.25":{
+  "1.8.25": {
     "1": "General maintenance without feature update"
   },
-  "1.8.24":{
+  "1.8.24": {
     "1": "Revise some printing"
   },
-  "1.8.23":{
+  "1.8.23": {
     "1": "Fix a problem of dataset loading"
   },
-  "1.8.22":{
+  "1.8.22": {
     "1": "Fix path of 1.8.21"
   },
-  "1.8.21":{
+  "1.8.21": {
     "1": "Activate retry in case of handle network error",
     "2": "Remake metric summary board"
   },
-  "1.8.20":{
+  "1.8.20": {
     "1": "Update version dependency of MetricVisualizer"
   },
-  "1.8.19":{
+  "1.8.19": {
     "1": "Fix a problem about show_metric option"
   },
-  "1.8.16(17,18)":{
+  "1.8.16(17,18)": {
     "1": "Add simple MetricVisualizer (https://github.com/yangheng95/MetricVisualizer) integration. if you dont want to use MetricVisualizer, please set config.show_metric=False"
   },
-  "1.8.15":{
+  "1.8.15": {
     "1": "Minor revisions"
   },
-  "1.8.14":{
+  "1.8.14": {
     "1": "Fix text classification inference using pretrained model (GloVe based inference is not affected)",
     "2": "Improve stability in using GloVe based model (include APC, TC)"
   },
-  "1.8.13":{
+  "1.8.13": {
     "1": "Add confidence in text classification output"
   },
-  "1.8.12":{
+  "1.8.12": {
     "1": "Add GitEE support in integrated dataset downloading"
   },
-  "1.8.11":{
+  "1.8.11": {
     "1": "Fix version comparison in parsing checkpoints"
   },
-  "1.8.9(10)":{
+  "1.8.9(10)": {
     "1": "Minor doc fix"
   },
-  "1.8.8":{
+  "1.8.8": {
     "1": "Minor improvements"
   },
   "1.8.4(5)": {
