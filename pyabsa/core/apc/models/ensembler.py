@@ -100,7 +100,6 @@ class APCEnsembler(nn.Module):
 
             elif hasattr(GloVeAPCModelList, models[i].__name__):
                 if hasattr(ABSADatasetList, opt.dataset_name):
-                    opt.dataset_name = os.path.join(os.getcwd(), opt.dataset_name)
                     if not os.path.exists(os.path.join(os.getcwd(), opt.dataset_name)):
                         os.mkdir(os.path.join(os.getcwd(), opt.dataset_name))
 

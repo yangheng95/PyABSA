@@ -64,13 +64,13 @@ class SentimentClassifier:
                 self.opt = pickle.load(open(config_path, mode='rb'))
 
                 if state_dict_path or model_path:
-                    if hasattr(APCModelList, self.opt.model.__name__.upper()):
-                        if state_dict_path:
-                            self.model = APCEnsembler(self.opt, load_dataset=False)
-                            self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
-                        elif model_path:
-                            self.model = torch.load(model_path, map_location='cpu')
+                    if state_dict_path:
+                        self.model = APCEnsembler(self.opt, load_dataset=False)
+                        self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
+                    elif model_path:
+                        self.model = torch.load(model_path, map_location='cpu')
 
+                    if hasattr(APCModelList, self.opt.model.__name__.upper()):
                         try:
                             self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
                         except ValueError:
@@ -79,11 +79,6 @@ class SentimentClassifier:
                             else:
                                 raise TransformerConnectionError()
                     elif hasattr(BERTBaselineAPCModelList, self.opt.model.__name__.upper()):
-                        if state_dict_path:
-                            self.model = APCEnsembler(self.opt, load_dataset=False)
-                            self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
-                        elif model_path:
-                            self.model = torch.load(model_path, map_location='cpu')
 
                         if tokenizer_path:
                             self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
@@ -96,17 +91,6 @@ class SentimentClassifier:
                             dat_fname='{0}_tokenizer.dat'.format(os.path.basename(self.opt.dataset_name)),
                             opt=self.opt
                         )
-                        if model_path:
-                            self.model = torch.load(model_path, map_location='cpu')
-                        else:
-                            embedding_matrix = build_embedding_matrix(
-                                word2idx=tokenizer.word2idx,
-                                embed_dim=self.opt.embed_dim,
-                                dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(self.opt.embed_dim), os.path.basename(self.opt.dataset_name)),
-                                opt=self.opt
-                            )
-                            self.model = self.opt.model(embedding_matrix, self.opt).to(self.opt.device)
-                            self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
 
                         self.tokenizer = tokenizer
 

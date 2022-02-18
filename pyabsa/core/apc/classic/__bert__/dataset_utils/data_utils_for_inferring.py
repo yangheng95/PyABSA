@@ -5,6 +5,8 @@
 
 import numpy as np
 import tqdm
+from pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils import build_sentiment_window
+
 from pyabsa.core.apc.classic.__bert__.dataset_utils.dependency_graph import configure_spacy_model
 from torch.utils.data import Dataset
 from transformers import AutoTokenizer
@@ -208,6 +210,20 @@ class BERTBaselineABSADataset(Dataset):
                 all_data.append(data)
                 ex_id += 1
 
+                all_data = build_sentiment_window(all_data, self.tokenizer, self.opt.similarity_threshold, input_demands=self.opt.inputs_cols)
+                for data in all_data:
+
+                    cluster_ids = []
+                    for pad_idx in range(self.opt.max_seq_len):
+                        if pad_idx in data['cluster_ids']:
+                            cluster_ids.append(data['polarity'])
+                        else:
+                            cluster_ids.append(-100)
+                            # cluster_ids.append(3)
+
+                    data['cluster_ids'] = np.asarray(cluster_ids, dtype=np.int64)
+                    data['side_ex_ids'] = np.array(0)
+                    data['aspect_position'] = np.array(0)
             except Exception as e:
                 if ignore_error:
                     print('Ignore error while processing:', text)

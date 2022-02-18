@@ -89,9 +89,9 @@ class BERTBaselineABSADataset(Dataset):
         all_data = []
         label_set = set()
 
-        dep_cache_path = os.path.join(os.getcwd(), '{}_dependency_cache'.format(opt.dataset_name))
+        dep_cache_path = os.path.join(os.getcwd(), 'run/{}/dependency_cache/'.format(opt.dataset_name))
         if not os.path.exists(dep_cache_path):
-            os.mkdir(dep_cache_path)
+            os.makedirs(dep_cache_path)
         graph_path = prepare_dependency_graph(dataset_list, dep_cache_path, opt.max_seq_len)
         fin = open(graph_path, 'rb')
         idx2graph = pickle.load(fin)
@@ -113,7 +113,6 @@ class BERTBaselineABSADataset(Dataset):
 
             aspect_position = prepared_inputs['aspect_position']
 
-            validate_example(text_raw, aspect, polarity)
             text_indices = tokenizer.text_to_sequence('[CLS] ' + text_left + ' ' + aspect + ' ' + text_right + " [SEP]")
             context_indices = tokenizer.text_to_sequence(text_left + text_right)
             left_indices = tokenizer.text_to_sequence(text_left)

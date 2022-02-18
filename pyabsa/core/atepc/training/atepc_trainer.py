@@ -8,12 +8,15 @@ import math
 import os
 import pickle
 import random
+import time
+
 import numpy as np
 import torch
 import torch.nn.functional as F
 import tqdm
 from seqeval.metrics import classification_report
 from sklearn.metrics import f1_score
+from torch import cuda
 from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler, TensorDataset)
 from transformers import AutoTokenizer, AutoModel
 
@@ -319,6 +322,11 @@ class Instructor:
         # return the model paths of multiple training
         # in case of loading the best model after training
         if save_path:
+            del self.train_dataloader
+            del self.test_dataloader
+            del self.model
+            cuda.empty_cache()
+            time.sleep(3)
             return save_path
         else:
             # direct return model if do not evaluate
@@ -328,6 +336,10 @@ class Instructor:
                                                   self.opt.lcf,
                                                   )
                 save_model(self.opt, self.model, self.tokenizer, save_path)
+            del self.train_dataloader
+            del self.test_dataloader
+            cuda.empty_cache()
+            time.sleep(3)
             return self.model, self.opt, self.tokenizer, sum_apc_test_acc, sum_apc_test_f1, sum_ate_test_f1
 
     def evaluate(self, eval_ATE=True, eval_APC=True):

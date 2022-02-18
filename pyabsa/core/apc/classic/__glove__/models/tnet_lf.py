@@ -39,7 +39,6 @@ class TNet_LF(nn.Module):
 
     def __init__(self, embedding_matrix, opt):
         super(TNet_LF, self).__init__()
-        print("this is TNet_LF model")
         self.embed = nn.Embedding.from_pretrained(torch.tensor(embedding_matrix, dtype=torch.float))
         self.position = Absolute_Position_Embedding(opt)
         self.opt = opt

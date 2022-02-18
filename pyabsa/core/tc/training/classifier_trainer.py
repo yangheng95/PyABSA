@@ -16,6 +16,7 @@ import torch
 import torch.nn as nn
 from findfile import find_file
 from sklearn import metrics
+from torch import cuda
 from torch.utils.data import DataLoader, random_split, ConcatDataset, RandomSampler, SequentialSampler
 from tqdm import tqdm
 from transformers import AutoModel
@@ -185,7 +186,6 @@ class Instructor:
             return self._train_and_evaluate(criterion)
 
     def _train_and_evaluate(self, criterion):
-        patience = self.opt.patience
         sum_loss = 0
         sum_acc = 0
         sum_f1 = 0
@@ -316,6 +316,12 @@ class Instructor:
               'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
         print_args(self.opt, self.logger)
         if save_path:
+            del self.train_dataloaders
+            del self.test_dataloader
+            del self.val_dataloaders
+            del self.model
+            cuda.empty_cache()
+            time.sleep(3)
             return save_path
         else:
             # direct return model if do not evaluate
@@ -324,10 +330,14 @@ class Instructor:
                                               self.opt.model_name,
                                               )
                 save_model(self.opt, self.model, self.tokenizer, save_path)
+                del self.train_dataloaders
+                del self.test_dataloader
+                del self.val_dataloaders
+                cuda.empty_cache()
+                time.sleep(3)
             return self.model, self.opt, self.tokenizer, sum_acc, sum_f1
 
     def _k_fold_train_and_evaluate(self, criterion):
-        patience = self.opt.patience
         sum_loss = 0
         sum_acc = 0
         sum_f1 = 0
@@ -485,6 +495,12 @@ class Instructor:
             self.reload_model()
             os.remove('./init_state_dict.bin')
         if save_path_k_fold:
+            del self.train_dataloaders
+            del self.test_dataloader
+            del self.val_dataloaders
+            del self.model
+            cuda.empty_cache()
+            time.sleep(3)
             return save_path_k_fold
         else:
             # direct return model if do not evaluate
@@ -493,6 +509,11 @@ class Instructor:
                                                      self.opt.model_name,
                                                      )
                 save_model(self.opt, self.model, self.tokenizer, save_path_k_fold)
+            del self.train_dataloaders
+            del self.test_dataloader
+            del self.val_dataloaders
+            cuda.empty_cache()
+            time.sleep(3)
             return self.model, self.opt, self.tokenizer, sum_acc, sum_f1
 
     def _evaluate_acc_f1(self, test_dataloader):
