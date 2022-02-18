@@ -76,7 +76,7 @@ class Instructor:
             if hasattr(ClassificationDatasetList, opt.dataset_name):
                 opt.dataset_name = os.path.join(os.getcwd(), opt.dataset_name)
                 if not os.path.exists(os.path.join(os.getcwd(), opt.dataset_name)):
-                    os.mkdir(os.path.join(os.getcwd(), opt.dataset_name))
+                    os.makedirs(os.path.join(os.getcwd(), opt.dataset_name))
 
             self.tokenizer = build_tokenizer(
                 dataset_list=opt.dataset_file,
@@ -411,7 +411,7 @@ class Instructor:
 
                                 if self.opt.model_path_to_save:
                                     if not os.path.exists(self.opt.model_path_to_save):
-                                        os.mkdir(self.opt.model_path_to_save)
+                                        os.makedirs(self.opt.model_path_to_save)
                                     if save_path:
                                         try:
                                             shutil.rmtree(save_path)

@@ -217,7 +217,7 @@ class Instructor:
 
                             if self.opt.model_path_to_save:
                                 if not os.path.exists(self.opt.model_path_to_save):
-                                    os.mkdir(self.opt.model_path_to_save)
+                                    os.makedirs(self.opt.model_path_to_save)
                                 if save_path:
                                     try:
                                         shutil.rmtree(save_path)
