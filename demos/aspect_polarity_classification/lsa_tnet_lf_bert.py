@@ -48,37 +48,29 @@ apc_config_english.l2reg = 1e-8
 apc_config_english.seed = seeds
 apc_config_english.cross_validate_fold = -1  # disable cross_validate
 
-MV = MetricVisualizer(name='test', trial_tag='Model', trial_tag_list=['TNet w/o LSA', 'TNet w/ LSA'])
-apc_config_english.MV = MV
-
 for dataset in [
+    ABSADatasetList.Restaurant15,
+    ABSADatasetList.Restaurant16,
     ABSADatasetList.Laptop14,
-    # ABSADatasetList.Restaurant14,
-    # ABSADatasetList.Restaurant15,
-    # ABSADatasetList.Restaurant16,
-    # ABSADatasetList.MAMS
+    ABSADatasetList.Restaurant14,
 ]:
-    sent_classifier = Trainer(config=apc_config_english,
-                              dataset=dataset,
-                              checkpoint_save_mode=0,
-                              auto_device=True
-                              ).load_trained_model()
-apc_config_english.MV.next_trial()
+    MV = MetricVisualizer(name=dataset.name, trial_tag='Model', trial_tag_list=['{} w/o LSA'.format(dataset.name), '{} w/ LSA'.format(dataset.name)])
+    apc_config_english.MV = MV
 
+    apc_config_english.lsa = False
+    Trainer(config=apc_config_english,
+            dataset=dataset,
+            checkpoint_save_mode=0,
+            auto_device=device
+            ).destroy()
+    apc_config_english.MV.next_trial()
 
-apc_config_english.lsa = True
-for dataset in [
-    ABSADatasetList.Laptop14,
-    # ABSADatasetList.Restaurant14,
-    # ABSADatasetList.Restaurant15,
-    # ABSADatasetList.Restaurant16,
-    # ABSADatasetList.MAMS
-]:
-    sent_classifier = Trainer(config=apc_config_english,
-                              dataset=dataset,
-                              checkpoint_save_mode=0,
-                              auto_device=True
-                              ).load_trained_model()
-apc_config_english.MV.summary()
-apc_config_english.MV.violin_plot_by_trial()
-apc_config_english.MV.box_plot_by_trial()
+    apc_config_english.lsa = True
+    Trainer(config=apc_config_english,
+            dataset=dataset,
+            checkpoint_save_mode=0,
+            auto_device=device
+            ).destroy()
+    apc_config_english.MV.summary()
+    apc_config_english.MV.violin_plot_by_trial('dataset.name')
+    apc_config_english.MV.box_plot_by_trial('dataset.name')

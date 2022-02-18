@@ -6,10 +6,12 @@
 # Copyright (C) 2021. All Rights Reserved.
 import copy
 import os
+import time
 
 import findfile
 import torch
 import transformers
+from torch import cuda
 
 from pyabsa import __version__
 
@@ -97,12 +99,10 @@ class Trainer:
 
         self.config = config
         if isinstance(dataset, DatasetItem):
-            self.config.dataset_item = list(dataset)
             self.config.dataset_name = dataset.dataset_name
         else:
             custom_dataset = DatasetItem('custom_dataset', dataset)
-            self.config.dataset_item = list(custom_dataset)
-            self.config.dataset_name = os.path.basename(custom_dataset.dataset_name)
+            self.config.dataset_name = custom_dataset.dataset_name
         self.dataset_file = detect_dataset(dataset, task=self.task)
         self.config.dataset_file = self.dataset_file
 
@@ -168,6 +168,11 @@ class Trainer:
     def load_trained_model(self):
         self.inference_model.to(self.config.device)
         return self.inference_model
+
+    def destroy(self):
+        del self.inference_model
+        cuda.empty_cache()
+        time.sleep(3)
 
 
 class APCTrainer(Trainer):

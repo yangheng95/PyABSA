@@ -8,12 +8,14 @@ import math
 import os
 import random
 import shutil
+import time
 
 import numpy
 import torch
 import torch.nn as nn
 from findfile import find_file
 from sklearn import metrics
+from torch import cuda
 from torch.utils.data import DataLoader, random_split, ConcatDataset, RandomSampler, SequentialSampler
 from tqdm import tqdm
 from transformers import BertModel
@@ -279,6 +281,12 @@ class Instructor:
               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
 
         if save_path:
+            del self.train_dataloaders
+            del self.test_dataloader
+            del self.val_dataloaders
+            del self.model
+            cuda.empty_cache()
+            time.sleep(3)
             return save_path
         else:
             # direct return model if do not evaluate
@@ -287,6 +295,11 @@ class Instructor:
                                               self.opt.model_name
                                               )
                 save_model(self.opt, self.model, self.tokenizer, save_path)
+            del self.train_dataloaders
+            del self.test_dataloader
+            del self.val_dataloaders
+            cuda.empty_cache()
+            time.sleep(3)
             return self.model, self.opt, self.tokenizer, sum_acc, sum_f1
 
     def _k_fold_train_and_evaluate(self, criterion):
@@ -450,6 +463,12 @@ class Instructor:
             self.reload_model()
             os.remove('./init_state_dict.bin')
         if save_path_k_fold:
+            del self.train_dataloaders
+            del self.test_dataloader
+            del self.val_dataloaders
+            del self.model
+            cuda.empty_cache()
+            time.sleep(3)
             return save_path_k_fold
         else:
             # direct return model if do not evaluate
@@ -458,6 +477,11 @@ class Instructor:
                                                      self.opt.model_name
                                                      )
                 save_model(self.opt, self.model, self.tokenizer, save_path_k_fold)
+                del self.train_dataloaders
+                del self.test_dataloader
+                del self.val_dataloaders
+                cuda.empty_cache()
+                time.sleep(3)
             return self.model, self.opt, self.tokenizer, sum_acc, sum_f1
 
     def _evaluate_acc_f1(self, test_dataloader):

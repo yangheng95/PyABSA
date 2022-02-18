@@ -3,7 +3,9 @@
     "1": "Please note that the versions which are not listed here are deprecated test version."
   },
   "1.8.25": {
-    "1": "General maintenance without feature update"
+    "1": "Add raw LSA support option for TNet-LF and ASGCN-BERT",
+    "2": "Fix some problems",
+    "3": "General maintenance without feature update"
   },
   "1.8.24": {
     "1": "Revise some printing"

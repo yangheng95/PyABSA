@@ -5,6 +5,7 @@
 
 import os
 import pickle
+import zipfile
 
 import numpy as np
 import tqdm
@@ -24,7 +25,8 @@ def prepare_glove840_embedding(glove_path):
         return glove_path
     else:
         embedding_file = None
-        dir_path = os.path.dirname(glove_path)
+        dir_path = os.getenv('$HOME') if os.getenv('$HOME') else os.getcwd()
+
         if find_file(dir_path, 'glove.42B.300d.txt', exclude_key='.zip'):
             embedding_file = find_file(dir_path, 'glove.42B.300d.txt', exclude_key='.zip')
         elif find_file(dir_path, 'glove.840B.300d.txt', exclude_key='.zip'):
@@ -35,17 +37,26 @@ def prepare_glove840_embedding(glove_path):
         if embedding_file:
             print('Find potential embedding files: {}'.format(embedding_file))
             return embedding_file
-        zip_glove_path = os.path.join(os.path.dirname(glove_path), 'glove.840B.300d.txt.zip')
-        print('No GloVe embedding found at {},'
-              ' downloading glove.840B.300d.txt (2GB will be downloaded / 5.5GB after unzip)...'.format(glove_path))
-        gdd.download_file_from_google_drive(file_id=glove840_id,
-                                            dest_path=zip_glove_path,
-                                            unzip=True,
-                                            showsize=True
-                                            )
-        os.remove(zip_glove_path)
+
+        if find_cwd_file('glove.840B.300d.zip'):
+
+            with zipfile.ZipFile(find_cwd_file('glove.840B.300d.zip'), 'r') as z:
+                z.extractall()
+            print('Done.')
+
+        else:
+            zip_glove_path = os.path.join(os.path.dirname(glove_path), 'glove.840B.300d.zip')
+            print('No GloVe embedding found at {},'
+                  ' downloading glove.840B.300d.txt (2GB will be downloaded / 5.5GB after unzip)...'.format(glove_path))
+            gdd.download_file_from_google_drive(file_id=glove840_id,
+                                                dest_path=zip_glove_path,
+                                                unzip=True,
+                                                showsize=True
+                                                )
+
         glove_path = find_cwd_file(glove_path, exclude_key='.zip')
     return glove_path
+
 
 
 def build_tokenizer(dataset_list, max_seq_len, dat_fname, opt):

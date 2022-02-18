@@ -11,7 +11,7 @@ import zipfile
 from distutils.version import StrictVersion
 
 from autocuda import auto_cuda
-from findfile import find_files, find_dir, find_file
+from findfile import find_files, find_file
 from google_drive_downloader import GoogleDriveDownloader as gdd
 from termcolor import colored
 

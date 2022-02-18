@@ -126,7 +126,6 @@ class GloVeABSADataset(Dataset):
 
                 # check for given polarity
                 if '!sent!' in text:
-                    text = '[PADDING] ' + text + ' [PADDING]'
                     text, polarity = text.split('!sent!')[0].strip(), text.split('!sent!')[1].strip()
                     text = text.replace('[PADDING]', '')
 
