@@ -74,7 +74,6 @@ class Instructor:
         elif hasattr(GloVeClassificationModelList, opt.model.__name__):
             # init GloVe-based model and dataset
             if hasattr(ClassificationDatasetList, opt.dataset_name):
-                opt.dataset_name = os.path.join(os.getcwd(), opt.dataset_name)
                 if not os.path.exists(os.path.join(os.getcwd(), opt.dataset_name)):
                     os.makedirs(os.path.join(os.getcwd(), opt.dataset_name))
 
