@@ -75,7 +75,7 @@ def build_tokenizer(dataset_list, max_seq_len, dat_fname, opt):
                 lines = fin.readlines()
                 fin.close()
                 for i in range(0, len(lines)):
-                    text += lines[i + 1].lower().strip()
+                    text += lines[i].lower().strip()
 
         tokenizer = Tokenizer(max_seq_len)
         tokenizer.fit_on_text(text)
