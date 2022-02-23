@@ -7,6 +7,7 @@ import os
 import pickle
 import zipfile
 
+import gdown
 import numpy as np
 import tqdm
 from findfile import find_file, find_cwd_file
@@ -20,7 +21,7 @@ LABEL_PADDING = -999
 
 
 def prepare_glove840_embedding(glove_path):
-    glove840_id = '1G-vd6W1oF9ByyJ-pzp9dcqKnr_plh4Em'
+    glove840_id = 'https://drive.google.com/uc?id=1G-vd6W1oF9ByyJ-pzp9dcqKnr_plh4Em'
     if os.path.exists(glove_path) and os.path.isfile(glove_path):
         return glove_path
     else:
@@ -38,21 +39,22 @@ def prepare_glove840_embedding(glove_path):
             print('Find potential embedding files: {}'.format(embedding_file))
             return embedding_file
 
-        if find_cwd_file('glove.840B.300d.zip'):
-
-            with zipfile.ZipFile(find_cwd_file('glove.840B.300d.zip'), 'r') as z:
-                z.extractall()
-            print('Done.')
 
         else:
             zip_glove_path = os.path.join(os.path.dirname(glove_path), 'glove.840B.300d.zip')
             print('No GloVe embedding found at {},'
                   ' downloading glove.840B.300d.txt (2GB will be downloaded / 5.5GB after unzip)...'.format(glove_path))
-            gdd.download_file_from_google_drive(file_id=glove840_id,
-                                                dest_path=zip_glove_path,
-                                                unzip=True,
-                                                showsize=True
-                                                )
+            gdown.download(glove840_id, zip_glove_path)
+            # gdd.download_file_from_google_drive(file_id=glove840_id,
+            #                                     dest_path=zip_glove_path,
+            #                                     unzip=True,
+            #                                     showsize=True
+            #                                     )
+
+        if find_cwd_file('glove.840B.300d.zip'):
+            with zipfile.ZipFile(find_cwd_file('glove.840B.300d.zip'), 'r') as z:
+                z.extractall()
+            print('Done.')
 
         glove_path = find_cwd_file(glove_path, exclude_key='.zip')
     return glove_path

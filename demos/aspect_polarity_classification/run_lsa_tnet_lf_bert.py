@@ -38,21 +38,21 @@ apc_config_english.patience = 10
 apc_config_english.pretrained_bert = 'microsoft/deberta-v3-base'
 apc_config_english.hidden_dim = 768
 apc_config_english.embed_dim = 768
-apc_config_english.log_step = -1
+apc_config_english.log_step = 5
 apc_config_english.SRD = 3
 apc_config_english.learning_rate = 1e-5
 apc_config_english.batch_size = 16
 apc_config_english.num_epoch = 25
-apc_config_english.evaluate_begin = 5
+apc_config_english.evaluate_begin = 0
 apc_config_english.l2reg = 1e-8
 apc_config_english.seed = seeds
 apc_config_english.cross_validate_fold = -1  # disable cross_validate
 
 for dataset in [
-    ABSADatasetList.Restaurant15,
-    ABSADatasetList.Restaurant16,
     ABSADatasetList.Laptop14,
     ABSADatasetList.Restaurant14,
+    ABSADatasetList.Restaurant15,
+    ABSADatasetList.Restaurant16,
 ]:
     MV = MetricVisualizer(name=dataset.name, trial_tag='Model', trial_tag_list=['{} w/o LSA'.format(dataset.name), '{} w/ LSA'.format(dataset.name)])
     apc_config_english.MV = MV
@@ -63,7 +63,8 @@ for dataset in [
             checkpoint_save_mode=0,
             auto_device=device
             ).destroy()
-    apc_config_english.MV.next_trial()
+
+    MV.next_trial()
 
     apc_config_english.lsa = True
     Trainer(config=apc_config_english,
@@ -71,6 +72,5 @@ for dataset in [
             checkpoint_save_mode=0,
             auto_device=device
             ).destroy()
-    apc_config_english.MV.summary()
-    apc_config_english.MV.violin_plot_by_trial('dataset.name')
-    apc_config_english.MV.box_plot_by_trial('dataset.name')
+
+    apc_config_english.MV.summary(dataset.name)
