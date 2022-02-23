@@ -10,6 +10,7 @@ import sys
 import zipfile
 from distutils.version import StrictVersion
 
+import gdown
 from autocuda import auto_cuda
 from findfile import find_files, find_file
 from google_drive_downloader import GoogleDriveDownloader as gdd
@@ -308,15 +309,19 @@ def download_checkpoint(task='apc', language='chinese', archive_path='', model_n
 
     save_path = os.path.join(dest_path, '{}.zip'.format(model_name))
     try:
-        if '/' in archive_path:
-            archive_path = archive_path.split('/')[-2]
-        gdd.download_file_from_google_drive(file_id=archive_path,
-                                            dest_path=save_path,
-                                            unzip=True,
-                                            showsize=True)
+        # if '/' in archive_path:
+        #     archive_path = archive_path.split('/')[-2]
+
+        gdown.download(archive_path, save_path)
+        # gdd.download_file_from_google_drive(file_id=archive_path,
+        #                                     dest_path=save_path,
+        #                                     unzip=True,
+        #                                     showsize=True)
     except ConnectionError as e:
         raise ConnectionError("Fail to download checkpoint: {}".format(e))
     os.remove(save_path)
+    print(colored('Google Drive applies a restriction on public large file downloading,'
+                  ' if you find the checkpoint downloaded if None or small, please download it via browser: {} '.format(archive_path), 'yellow'))
     return dest_path
 
 
@@ -338,15 +343,18 @@ def download_checkpoint_from_drive_url(task='apc', language='unknown_lang', arch
 
     save_path = os.path.join(dest_path, '{}.zip'.format(model_name))
     try:
-        if '/' in archive_path:
-            archive_path = archive_path.split('/')[-2]
-        gdd.download_file_from_google_drive(file_id=archive_path,
-                                            dest_path=save_path,
-                                            unzip=True,
-                                            showsize=True)
+        # if '/' in archive_path:
+        #     archive_path = archive_path.split('/')[-2]
+        gdown.download(archive_path, save_path)
+        # gdd.download_file_from_google_drive(file_id=archive_path,
+        #                                     dest_path=save_path,
+        #                                     unzip=True,
+        #                                     showsize=True)
     except ConnectionError as e:
         raise ConnectionError("Fail to download checkpoint: {}".format(e))
     os.remove(save_path)
+    print(colored('Google Drive applies a restriction on public large file downloading,'
+                  ' if you find the checkpoint downloaded if None or small, please download it via browser: {} '.format(archive_path), 'yellow'))
     return dest_path
 
 

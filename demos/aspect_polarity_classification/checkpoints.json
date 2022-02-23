@@ -23,7 +23,7 @@
       "Training Model": "FAST-LSA-T",
       "Training Dataset": "English",
       "Description": "Trained on RTX2080 Ti",
-      "Available Version": "1.6.3",
+      "Available Version": "1.6.3+",
       "Checkpoint File": "fast_lsa_t_acc_84.84_f1_82.36.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
@@ -32,7 +32,7 @@
       "Training Model": "FAST-LCF-MDeBERTa",
       "Training Dataset": "Chinese",
       "Description": "Trained on RTX3090",
-      "Available Version": "1.8.2",
+      "Available Version": "1.8.2+",
       "Checkpoint File": "fast_lcf_bert_Chinese_acc_97.11_f1_96.54.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
@@ -41,7 +41,7 @@
       "Training Model": "FAST-LCF-Deberta",
       "Training Dataset": "Multilingual",
       "Description": "Trained on RTX3090",
-      "Available Version": "1.8.2",
+      "Available Version": "1.8.2+",
       "Checkpoint File": "fast_lcf_bert_Multilingual_acc_94.72_f1_90.07.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
@@ -74,7 +74,7 @@
       "Training Model": "FAST-LCF-ATEPC",
       "Training Dataset": "English",
       "Description": "Trained on RTX3090",
-      "Available Version": "1.8.4",
+      "Available Version": "1.8.4+",
       "Checkpoint File": "fast_lcf_atepc_English_cdw_apcacc_80.16_apcf1_78.34_atef1_75.39.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
@@ -83,7 +83,7 @@
       "Training Model": "FAST-LCF-DeBERTa",
       "Training Dataset": "Chinese",
       "Description": "Trained on RTX3090",
-      "Available Version": "1.8.4",
+      "Available Version": "1.8.4+",
       "Checkpoint File": "fast_lcf_atepc_Chinese_cdw_apcacc_96.69_apcf1_96.25_atef1_92.26.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
@@ -92,7 +92,7 @@
       "Training Model": "FAST-LCF-ATEPC",
       "Training Dataset": "ABSADatasets.Multilingual",
       "Description": "Trained on RTX3090",
-      "Available Version": "1.8.4",
+      "Available Version": "1.8.4+",
       "Checkpoint File": "fast_lcf_atepc_Multilingual_cdw_apcacc_79.61_apcf1_76.24_atef1_63.29.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
