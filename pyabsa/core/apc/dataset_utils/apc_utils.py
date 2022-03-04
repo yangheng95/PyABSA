@@ -372,7 +372,6 @@ def calculate_dep_dist(sentence, aspect):
         source = '{}_{}'.format(word.lower_, word.i)
         sum = 0
         flag = 1
-        max_dist = 0
         for term_id, term in zip(term_ids, terms):
             target = '{}_{}'.format(term, term_id)
             try:
@@ -383,7 +382,10 @@ def calculate_dep_dist(sentence, aspect):
         dist[i] = sum / len(terms)
         text[i] = word.text
         if flag == 1:
-            max_dist_temp.append(sum / len(terms))
-        if dist[i] > max_dist:
-            max_dist = dist[i]
+            max_dist_temp.append(dist[i])
+    max_dist = 0
+    for i in range(len(max_dist_temp)):
+        if max_dist_temp[i] > max_dist:
+            max_dist = max_dist_temp[i]
+
     return text, dist, max_dist
