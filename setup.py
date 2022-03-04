@@ -31,7 +31,7 @@ setup(
     license='MIT',
     install_requires=['findfile>=1.7.3',
                       'autocuda>=0.9',
-                      'metric-visualizer>=0.4.10',
+                      'metric-visualizer>=0.4.12',
                       'spacy',
                       'networkx',
                       'seqeval',
@@ -41,7 +41,7 @@ setup(
                       'termcolor',
                       'gitpython',
                       'gdown',
-                      'transformers>4.5',
+                      '4.5<transformers<5.0',
                       'torch>=1.0',
                       'sentencepiece'],
 )

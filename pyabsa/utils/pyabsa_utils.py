@@ -93,12 +93,16 @@ def check_and_fix_labels(label_set, label_name, all_data, opt):
         opt.index_to_label.update(index_to_label)
         opt.label_to_index.update(label_to_index)
 
+    num_label = {l: 0 for l in label_set}
+    num_label['Sum'] = len(all_data)
     for item in all_data:
+        num_label[item[label_name]] += 1
         try:
             item[label_name] = label_to_index[item[label_name]]
         except Exception as e:
             print(e)
             item.polarity = label_to_index[item.polarity]
+    print('Dataset Label Details: {}'.format(num_label))
 
 
 def check_and_fix_IOB_labels(label_map, opt):
