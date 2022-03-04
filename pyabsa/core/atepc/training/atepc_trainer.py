@@ -308,6 +308,8 @@ class Instructor:
         # )
         # self.logger.info('-------------------------------------Training Summary-------------------------------------')
 
+        self.logger.info(self.opt.MV.summary(no_print=True))
+
         self.opt.MV.add_metric('Max-APC-Test-Acc', self.opt.max_test_metrics['max_apc_test_acc'])
         self.opt.MV.add_metric('Max-APC-Test-F1', self.opt.max_test_metrics['max_apc_test_f1'])
         self.opt.MV.add_metric('Max-ATE-Test-F1', self.opt.max_test_metrics['max_ate_test_f1'])

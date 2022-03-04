@@ -13,7 +13,6 @@ from distutils.version import StrictVersion
 import gdown
 from autocuda import auto_cuda
 from findfile import find_files, find_file
-from google_drive_downloader import GoogleDriveDownloader as gdd
 from termcolor import colored
 
 from pyabsa import __version__
@@ -262,9 +261,11 @@ def available_checkpoints(task='', from_local=False):
         if not from_local:
             # checkpoint_url = '1jjaAQM6F9s_IEXNpaY-bQF9EOrhq0PBD'  # V1
             checkpoint_url = '1CBVGPA3xdQqdkFFwzO5T2Q4reFtzFIJZ'  # V2
+            # checkpoint_url = 'https://drive.google.com/file/d/1CBVGPA3xdQqdkFFwzO5T2Q4reFtzFIJZ/'
             if os.path.isfile('./checkpoints.json'):
                 os.remove('./checkpoints.json')
-            gdd.download_file_from_google_drive(file_id=checkpoint_url, dest_path='./checkpoints.json')
+            gdown.download(id=checkpoint_url, use_cookies=False, output='./checkpoints.json', quiet=False)
+            # gdd.download_file_from_google_drive(file_id=checkpoint_url, dest_path='./checkpoints.json')
         checkpoint_map = json.load(open('./checkpoints.json', 'r'))
 
         t_checkpoint_map = {}
@@ -291,7 +292,7 @@ def available_checkpoints(task='', from_local=False):
             sys.exit(-1)
 
 
-def download_checkpoint(task='apc', language='chinese', archive_path='', model_name='any_model'):
+def download_checkpoint(task='apc', language='chinese', archive_path='', model_name='model_checkpoint.tmp'):
     print(colored('Notice: The pretrained model are used for testing, '
                   'neither trained using fine-tuned hyper-parameters nor trained with enough steps, '
                   'it is recommended to train the model on your own custom datasets', 'red')
@@ -309,23 +310,24 @@ def download_checkpoint(task='apc', language='chinese', archive_path='', model_n
 
     save_path = os.path.join(dest_path, '{}.zip'.format(model_name))
     try:
-        # if '/' in archive_path:
-        #     archive_path = archive_path.split('/')[-2]
+        if '/' in archive_path:
+            archive_path = archive_path.split('/')[-2]
 
-        gdown.download(archive_path, save_path)
+        gdown.download(id=archive_path, output=save_path)
         # gdd.download_file_from_google_drive(file_id=archive_path,
         #                                     dest_path=save_path,
         #                                     unzip=True,
         #                                     showsize=True)
     except ConnectionError as e:
         raise ConnectionError("Fail to download checkpoint: {}".format(e))
+    unzip_checkpoint(save_path)
     os.remove(save_path)
     print(colored('Google Drive applies a restriction on public large file downloading,'
-                  ' if you find the checkpoint downloaded if None or small, please download it via browser: {} '.format(archive_path), 'yellow'))
+                  ' if you find the checkpoint downloaded is None or small, please download it via browser: {} '.format(archive_path), 'yellow'))
     return dest_path
 
 
-def download_checkpoint_from_drive_url(task='apc', language='unknown_lang', archive_path='', model_name='any_model'):
+def download_checkpoint_from_drive_url(task='apc', language='unknown_lang', archive_path='', model_name='model_checkpoint.tmp'):
     print(colored('Notice: The pretrained model are used for testing, '
                   'neither trained using fine-tuned the hyper-parameters nor trained with enough steps, '
                   'it is recommended to train the model on your own custom datasets', 'red')
@@ -343,18 +345,19 @@ def download_checkpoint_from_drive_url(task='apc', language='unknown_lang', arch
 
     save_path = os.path.join(dest_path, '{}.zip'.format(model_name))
     try:
-        # if '/' in archive_path:
-        #     archive_path = archive_path.split('/')[-2]
-        gdown.download(archive_path, save_path)
+        if '/' in archive_path:
+            archive_path = archive_path.split('/')[-2]
+        gdown.download(id=archive_path, output=save_path)
         # gdd.download_file_from_google_drive(file_id=archive_path,
         #                                     dest_path=save_path,
         #                                     unzip=True,
         #                                     showsize=True)
     except ConnectionError as e:
         raise ConnectionError("Fail to download checkpoint: {}".format(e))
+    unzip_checkpoint(save_path)
     os.remove(save_path)
     print(colored('Google Drive applies a restriction on public large file downloading,'
-                  ' if you find the checkpoint downloaded if None or small, please download it via browser: {} '.format(archive_path), 'yellow'))
+                  ' if you find the checkpoint downloaded is None or small, please download it via browser: {} '.format(archive_path), 'yellow'))
     return dest_path
 
 

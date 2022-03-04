@@ -309,7 +309,7 @@ class Instructor:
         # )
         # self.logger.info('-------------------------- Training Summary --------------------------')
 
-        self.opt.MV.summary()
+        self.logger.info(self.opt.MV.summary(no_print=True))
 
         print('Training finished, we hope you can share your checkpoint with everybody, please see:',
               'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
@@ -458,13 +458,7 @@ class Instructor:
             self.opt.MV.add_metric('Fold{}-Max-Valid-Acc'.format(f), max_fold_acc * 100)
             self.opt.MV.add_metric('Fold{}-Max-Valid-F1'.format(f), max_fold_f1 * 100)
 
-            # self.logger.info('-------------------------- Training Summary --------------------------')
-            # self.logger.info('Acc: {:.8f} F1: {:.8f} Accumulated Loss: {:.8f}'.format(
-            #     max_fold_acc * 100,
-            #     max_fold_f1 * 100,
-            #     sum_loss)
-            # )
-            # self.logger.info('-------------------------- Training Summary --------------------------')
+            self.logger.info(self.opt.MV.summary(no_print=True))
             if os.path.exists('./init_state_dict.bin'):
                 self.reload_model()
 
@@ -474,16 +468,9 @@ class Instructor:
         self.opt.MV.add_metric('Max-Test-Acc', max_test_acc * 100)
         self.opt.MV.add_metric('Max-Test-F1', max_test_f1 * 100)
 
-        # if self.opt.cross_validate_fold > 0:
-        #     self.logger.info('-------------------------- Training Summary --------------------------')
-        #     self.logger.info('{}-fold Besta Test Acc: {:.8f} Avg F1: {:.8f} Accumulated Loss: {:.8f}'.format(
-        #         self.opt.cross_validate_fold,
-        #         mean_test_acc * 100,
-        #         mean_test_f1 * 100,
-        #         sum_loss)
-        #     )
-        #     self.logger.info('-------------------------- Training Summary --------------------------')
-        self.opt.MV.summary()
+        if self.opt.cross_validate_fold > 0:
+            self.logger.info(self.opt.MV.summary(no_print=True))
+        # self.opt.MV.summary()
 
         print('Training finished, we hope you can share your checkpoint with community, please see:',
               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')

@@ -11,7 +11,7 @@ from pyabsa import APCCheckpointManager, ABSADatasetList, available_checkpoints
 
 os.environ['PYTHONIOENCODING'] = 'UTF8'
 
-checkpoint_map = available_checkpoints(from_local=True)
+# checkpoint_map = available_checkpoints(from_local=True)
 
 # examples = [
 #     'The [ASP]battery-life[ASP], and this [ASP]battery[ASP] is ok',

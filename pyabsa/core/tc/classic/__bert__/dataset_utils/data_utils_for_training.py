@@ -9,7 +9,6 @@ import pickle
 import numpy as np
 import tqdm
 from findfile import find_file
-from google_drive_downloader.google_drive_downloader import GoogleDriveDownloader as gdd
 from torch.utils.data import Dataset
 from transformers import AutoTokenizer
 
@@ -106,12 +105,13 @@ class Tokenizer4Pretraining:
         self.max_seq_len = max_seq_len
 
     def text_to_sequence(self, text, reverse=False, padding='post', truncating='post'):
-        sequence = self.tokenizer.convert_tokens_to_ids(self.tokenizer.tokenize(text))
-        if len(sequence) == 0:
-            sequence = [0]
-        if reverse:
-            sequence = sequence[::-1]
-        return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
+        # sequence = self.tokenizer.convert_tokens_to_ids(self.tokenizer.tokenize(text))
+        # if len(sequence) == 0:
+        #     sequence = [0]
+        # if reverse:
+        #     sequence = sequence[::-1]
+        # return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
+        return self.tokenizer.encode(text, truncation=True, padding='max_length', max_length=self.max_seq_len, return_tensors='pt')
 
 
 class BERTClassificationDataset(Dataset):
@@ -134,7 +134,7 @@ class BERTClassificationDataset(Dataset):
             text_indices = tokenizer.text_to_sequence('{} {} {}'.format(tokenizer.tokenizer.cls_token, text, tokenizer.tokenizer.sep_token))
 
             data = {
-                'text_bert_indices': text_indices,
+                'text_bert_indices': text_indices[0],
                 'label': label,
             }
 

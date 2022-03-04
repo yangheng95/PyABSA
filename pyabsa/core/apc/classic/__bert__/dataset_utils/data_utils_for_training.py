@@ -9,7 +9,6 @@ import pickle
 import numpy as np
 import tqdm
 from findfile import find_file
-from google_drive_downloader.google_drive_downloader import GoogleDriveDownloader as gdd
 from termcolor import colored
 from torch.utils.data import Dataset
 from transformers import AutoTokenizer
