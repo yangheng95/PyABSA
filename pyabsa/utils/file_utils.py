@@ -14,7 +14,6 @@ import urllib.request
 
 import torch
 from findfile import find_files, find_dir, find_cwd_file
-from google_drive_downloader import GoogleDriveDownloader as gdd
 from pyabsa.core.atepc.dataset_utils.atepc_utils import split_text
 from termcolor import colored
 

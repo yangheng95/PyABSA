@@ -267,6 +267,7 @@ class Instructor:
             self.opt.MV.add_metric('Max-Test-F1', max_fold_f1 * 100)
             # shutil.rmtree(save_path)
 
+        self.logger.info(self.opt.MV.summary(no_print=True))
         # self.logger.info('-------------------------- Training Summary --------------------------')
         # self.logger.info('Acc: {:.8f} F1: {:.8f} Accumulated Loss: {:.8f}'.format(
         #     max_fold_acc * 100,
@@ -274,8 +275,6 @@ class Instructor:
         #     sum_loss)
         # )
         # self.logger.info('-------------------------- Training Summary --------------------------')
-
-        self.opt.MV.summary()
 
         print('Training finished, we hope you can share your checkpoint with community, please see:',
               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
@@ -435,6 +434,9 @@ class Instructor:
             #     sum_loss)
             # )
             # self.logger.info('-------------------------- Training Summary --------------------------')
+
+            self.logger.info(self.opt.MV.summary(no_print=True))
+
             if os.path.exists('./init_state_dict.bin'):
                 self.reload_model()
 
@@ -454,7 +456,7 @@ class Instructor:
         #     )
         #     self.logger.info('-------------------------- Training Summary --------------------------')
 
-        self.opt.MV.summary()
+        self.logger.info(self.opt.MV.summary(no_print=True))
 
         print('Training finished, we hope you can share your checkpoint with everybody, please see:',
               'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
