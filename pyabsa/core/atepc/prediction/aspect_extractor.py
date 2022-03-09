@@ -339,7 +339,6 @@ class AspectExtractor:
         # Run prediction for full data
         self.opt.infer_batch_size = 128
         self.model.opt.use_bert_spc = True
-        # self.model.opt.use_bert_spc = False
 
         infer_sampler = SequentialSampler(infer_data)
         self.infer_dataloader = DataLoader(infer_data, sampler=infer_sampler, pin_memory=True, batch_size=self.opt.infer_batch_size)
@@ -368,7 +367,6 @@ class AspectExtractor:
                                                     attention_mask_label=l_mask,
                                                     lcf_cdm_vec=lcf_cdm_vec,
                                                     lcf_cdw_vec=lcf_cdw_vec)
-                print(apc_logits)
                 for i, i_apc_logits in enumerate(apc_logits):
                     if 'index_to_label' in self.opt.args and int(i_apc_logits.argmax(axis=-1)) in self.opt.index_to_label:
                         sent = self.opt.index_to_label.get(int(i_apc_logits.argmax(axis=-1)))
