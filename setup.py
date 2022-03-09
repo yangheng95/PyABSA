@@ -40,7 +40,7 @@ setup(
                       'tqdm',
                       'termcolor',
                       'gitpython',
-                      'gdown',
+                      'gdown>=4.4.0',
                       '4.5<transformers<5.0',
                       'torch>=1.0',
                       'sentencepiece'],

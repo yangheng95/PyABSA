@@ -96,11 +96,12 @@ def check_and_fix_labels(label_set, label_name, all_data, opt):
     num_label = {l: 0 for l in label_set}
     num_label['Sum'] = len(all_data)
     for item in all_data:
-        num_label[item[label_name]] += 1
         try:
+            num_label[item[label_name]] += 1
             item[label_name] = label_to_index[item[label_name]]
         except Exception as e:
-            print(e)
+            # print(e)
+            num_label[item.polarity] += 1
             item.polarity = label_to_index[item.polarity]
     print('Dataset Label Details: {}'.format(num_label))
 
