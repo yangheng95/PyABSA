@@ -3,7 +3,8 @@
     "1": "Please note that the versions which are not listed here are deprecated test version."
   },
   "1.8.32": {
-    "1": "This patch fixes the sentiment prediction in ATEPC"
+    "1": "This patch fixes the sentiment prediction in ATEPC",
+    "2": "Fix a training problem in ATEPC"
   },
   "1.8.30": {
     "1": "This patch fixes the checkpoint downloading problem"
