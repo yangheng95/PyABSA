@@ -111,19 +111,6 @@ class AspectExtractor:
             raise ValueError("Invalid gradient_accumulation_steps parameter: {}, should be >= 1".format(
                 self.opt.gradient_accumulation_steps))
 
-        param_optimizer = list(self.model.named_parameters())
-        no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
-        optimizer_grouped_parameters = [
-            {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)],
-             'weight_decay': self.opt.l2reg},
-            {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)],
-             'weight_decay': self.opt.l2reg}
-        ]
-
-        self.optimizer = optimizers[self.opt.optimizer](optimizer_grouped_parameters,
-                                                        lr=self.opt.learning_rate,
-                                                        weight_decay=self.opt.l2reg)
-
         self.eval_dataloader = None
         self.opt.infer_batch_size = eval_batch_size
         self.sentiment_map = None
@@ -190,11 +177,13 @@ class AspectExtractor:
                 )
         else:
             for item in sentence_res:
-                final_res[item[3]] = {
-                    'sentence': ' '.join(item[0]),
-                    'IOB': item[1],
-                    'tokens': item[0]
-                }
+                final_res.append(
+                    {
+                        'sentence': ' '.join(item[0]),
+                        'IOB': item[1],
+                        'tokens': item[0]
+                    }
+                )
 
         return final_res
 
@@ -349,7 +338,8 @@ class AspectExtractor:
                                    all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
         # Run prediction for full data
         self.opt.infer_batch_size = 128
-        self.opt.use_bert_spc = True
+        self.model.opt.use_bert_spc = True
+        # self.model.opt.use_bert_spc = False
 
         infer_sampler = SequentialSampler(infer_data)
         self.infer_dataloader = DataLoader(infer_data, sampler=infer_sampler, pin_memory=True, batch_size=self.opt.infer_batch_size)
@@ -359,7 +349,7 @@ class AspectExtractor:
 
         # Correct = {True: 'Correct', False: 'Wrong'}
         for i_batch, batch in enumerate(self.infer_dataloader):
-            input_ids_spc, segment_ids, input_mask, label_ids, \
+            input_ids_spc, input_mask, segment_ids, label_ids, \
             valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
             input_ids_spc = input_ids_spc.to(self.opt.device)
             input_mask = input_mask.to(self.opt.device)
@@ -378,6 +368,7 @@ class AspectExtractor:
                                                     attention_mask_label=l_mask,
                                                     lcf_cdm_vec=lcf_cdm_vec,
                                                     lcf_cdw_vec=lcf_cdw_vec)
+                print(apc_logits)
                 for i, i_apc_logits in enumerate(apc_logits):
                     if 'index_to_label' in self.opt.args and int(i_apc_logits.argmax(axis=-1)) in self.opt.index_to_label:
                         sent = self.opt.index_to_label.get(int(i_apc_logits.argmax(axis=-1)))

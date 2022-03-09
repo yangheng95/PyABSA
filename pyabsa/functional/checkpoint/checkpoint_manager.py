@@ -292,7 +292,7 @@ def available_checkpoints(task='', from_local=False):
             sys.exit(-1)
 
 
-def download_checkpoint(task='apc', language='chinese', archive_path='', model_name='model_checkpoint.tmp'):
+def download_checkpoint(task='apc', language='chinese', archive_path='', model_name='any_model'):
     print(colored('Notice: The pretrained model are used for testing, '
                   'neither trained using fine-tuned hyper-parameters nor trained with enough steps, '
                   'it is recommended to train the model on your own custom datasets', 'red')
@@ -327,7 +327,7 @@ def download_checkpoint(task='apc', language='chinese', archive_path='', model_n
     return dest_path
 
 
-def download_checkpoint_from_drive_url(task='apc', language='unknown_lang', archive_path='', model_name='model_checkpoint.tmp'):
+def download_checkpoint_from_drive_url(task='apc', language='unknown_lang', archive_path='', model_name='any_model'):
     print(colored('Notice: The pretrained model are used for testing, '
                   'neither trained using fine-tuned the hyper-parameters nor trained with enough steps, '
                   'it is recommended to train the model on your own custom datasets', 'red')

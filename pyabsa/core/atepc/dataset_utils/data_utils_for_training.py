@@ -185,7 +185,7 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
     features = []
     polarities_set = set()
     for (ex_index, example) in enumerate(tqdm.tqdm(examples, postfix='convert examples to features')):
-        text_spc_tokens = example.text_a[:]
+        text_tokens = example.text_a[:]
         aspect_tokens = example.text_b[:]
         IOB_label = example.IOB_label
         aspect_label = example.aspect_label
@@ -196,10 +196,8 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
         labels = []
         valid = []
         label_mask = []
-        text_spc_tokens.extend([eos_token])
-        text_spc_tokens.extend(aspect_tokens)
-        enum_tokens = text_spc_tokens
-        IOB_label.extend([eos_token])
+        enum_tokens = [bos_token] + text_tokens + [eos_token] + aspect_tokens + [eos_token]
+        IOB_label = [bos_token] + IOB_label + [eos_token] + aspect_label + [eos_token]
 
         aspect = ' '.join(example.text_b)
         try:
@@ -215,49 +213,34 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
         lcf_cdm_vec = prepared_inputs['lcf_cdm_vec']
         lcf_cdw_vec = prepared_inputs['lcf_cdw_vec']
 
-        IOB_label.extend(aspect_label)
-        label_lists = IOB_label
         for i, word in enumerate(enum_tokens):
             token = tokenizer.tokenize(word)
             tokens.extend(token)
-            label_1 = label_lists[i]
+            cur_iob = IOB_label[i]
             for m in range(len(token)):
                 if m == 0:
                     label_mask.append(1)
-                    labels.append(label_1)
+                    labels.append(cur_iob)
                     valid.append(1)
                 else:
                     valid.append(0)
-        if len(tokens) >= max_seq_len - 1:
-            tokens = tokens[0:(max_seq_len - 2)]
-            labels = labels[0:(max_seq_len - 2)]
-            valid = valid[0:(max_seq_len - 2)]
-            label_mask = label_mask[0:(max_seq_len - 2)]
-        ntokens = []
-        segment_ids = []
+        tokens = tokens[0:min(len(tokens), max_seq_len - 2)]
+        labels = labels[0:min(len(labels), max_seq_len - 2)]
+        valid = valid[0:min(len(valid), max_seq_len - 2)]
+        segment_ids = [0] * len(example.text_a[:]) + [1] * (max_seq_len - len([0] * len(example.text_a[:])))
+        segment_ids = segment_ids[:max_seq_len]
         label_ids = []
-        ntokens.append(bos_token)
-        segment_ids.append(0)
-        valid.insert(0, 1)
-        label_mask.insert(0, 1)
-        label_ids.append(label_map[bos_token])
+
         for i, token in enumerate(tokens):
-            ntokens.append(token)
-            segment_ids.append(0)
             if len(labels) > i:
                 label_ids.append(label_map[labels[i]])
-        ntokens.append(eos_token)
-        segment_ids.append(0)
-        valid.append(1)
-        label_mask.append(1)
-        label_ids.append(label_map[eos_token])
-        input_ids_spc = tokenizer.convert_tokens_to_ids(ntokens)
+
+        input_ids_spc = tokenizer.convert_tokens_to_ids(tokens)
         input_mask = [1] * len(input_ids_spc)
         label_mask = [1] * len(label_ids)
         while len(input_ids_spc) < max_seq_len:
             input_ids_spc.append(0)
             input_mask.append(0)
-            segment_ids.append(0)
             label_ids.append(0)
             label_mask.append(0)
             while len(valid) < max_seq_len:

@@ -230,8 +230,7 @@ class Instructor:
                 global_step += 1
                 if self.opt.dataset_file['test'] and global_step % self.opt.log_step == 0:
                     if epoch >= self.opt.evaluate_begin:
-                        apc_result, ate_result = self.evaluate(
-                            eval_ATE=not (self.opt.model_name == 'lcf_atepc' and self.opt.use_bert_spc))
+                        apc_result, ate_result = self.evaluate(eval_ATE=not self.opt.use_bert_spc)
                         sum_apc_test_acc += apc_result['apc_test_acc']
                         sum_apc_test_f1 += apc_result['apc_test_f1']
                         sum_ate_test_f1 += ate_result
@@ -314,8 +313,6 @@ class Instructor:
         self.opt.MV.add_metric('Max-APC-Test-F1', self.opt.max_test_metrics['max_apc_test_f1'])
         self.opt.MV.add_metric('Max-ATE-Test-F1', self.opt.max_test_metrics['max_ate_test_f1'])
 
-        self.opt.MV.summary()
-
         print('Training finished, we hope you can share your checkpoint with community, please see:',
               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
 
@@ -332,12 +329,6 @@ class Instructor:
             return save_path
         else:
             # direct return model if do not evaluate
-            if self.opt.model_path_to_save:
-                save_path = '{0}/{1}_{2}/'.format(self.opt.model_path_to_save,
-                                                  self.opt.model_name,
-                                                  self.opt.lcf,
-                                                  )
-                save_model(self.opt, self.model, self.tokenizer, save_path)
             del self.train_dataloader
             del self.test_dataloader
             cuda.empty_cache()
