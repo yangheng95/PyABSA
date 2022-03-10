@@ -10,6 +10,7 @@ import pickle
 import random
 import shutil
 import time
+from hashlib import sha256
 
 import numpy
 import torch
@@ -37,7 +38,9 @@ class Instructor:
         self.logger = logger
         self.opt = opt
 
-        cache_path = '{}.{}.dataset.cache'.format(self.opt.model_name, self.opt.dataset_name)
+        hash_tag = sha256(str(self.opt.args_call_count.values()).encode()).hexdigest()
+        cache_path = '{}.{}.dataset.{}.cache'.format(self.opt.model_name, self.opt.dataset_name, hash_tag)
+
         if os.path.exists(cache_path):
             print('Loading dataset cache:', cache_path)
             if self.opt.dataset_file['test']:
