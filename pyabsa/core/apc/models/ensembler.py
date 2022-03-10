@@ -7,6 +7,7 @@
 import copy
 import os
 import pickle
+import re
 from hashlib import sha256
 
 from torch import nn
@@ -47,6 +48,7 @@ class APCEnsembler(nn.Module):
         self.opt.inputs_cols = set()
         for model in models:
             self.opt.inputs_cols |= set(model.inputs)
+        self.opt.inputs_cols = sorted(self.opt.inputs_cols)
         self.inputs_cols = self.opt.inputs_cols
 
         self.models = ModuleList()
@@ -62,7 +64,8 @@ class APCEnsembler(nn.Module):
 
         for i in range(len(models)):
 
-            hash_tag = sha256(str(self.opt.args_call_count.values()).encode()).hexdigest()
+            config_str = re.sub(r'<.*?>', '', str(sorted([str(self.opt.args[k]) for k in self.opt.args if k != 'seed'])))
+            hash_tag = sha256(config_str.encode()).hexdigest()
             cache_path = '{}.{}.dataset.{}.cache'.format(self.opt.model_name, self.opt.dataset_name, hash_tag)
 
             if load_dataset and os.path.exists(cache_path):
