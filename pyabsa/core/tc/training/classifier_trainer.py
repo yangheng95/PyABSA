@@ -8,6 +8,7 @@ import math
 import os
 import pickle
 import random
+import re
 import shutil
 import time
 from hashlib import sha256
@@ -38,7 +39,8 @@ class Instructor:
         self.logger = logger
         self.opt = opt
 
-        hash_tag = sha256(str(self.opt.args_call_count.values()).encode()).hexdigest()
+        config_str = re.sub(r'<.*?>', '', str(sorted([str(self.opt.args[k]) for k in self.opt.args if k != 'seed'])))
+        hash_tag = sha256(config_str.encode()).hexdigest()
         cache_path = '{}.{}.dataset.{}.cache'.format(self.opt.model_name, self.opt.dataset_name, hash_tag)
 
         if os.path.exists(cache_path):

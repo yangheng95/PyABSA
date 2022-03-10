@@ -8,6 +8,7 @@ import math
 import os
 import pickle
 import random
+import re
 import time
 from hashlib import sha256
 
@@ -66,7 +67,10 @@ class Instructor:
 
         processor = ATEPCProcessor(self.tokenizer)
 
-        hash_tag = sha256(str(self.opt.args_call_count.values()).encode()).hexdigest()
+        # ['-1', '0', '0.5', '1', '1', '1.10.1+cuda11.3', '1.8.35', '16', '1e-05', '1e-08', '2', '2', '20', '2021.12.06', '3', '4.12.5', '768', '768', '80', '99999', "", '', 'False', 'False', 'False', 'Laptop14', 'NVIDIA GeForce RTX 2080', 'True', 'True', 'True', 'True', 'adamw', 'cdw', 'checkpoints', 'cuda:0', 'fast_lcf_atepc', 'lr', 'microsoft/deberta-v3-base', 'xavier_uniform_', "{'train': ['integrated_datasets\\\\atepc_datasets\\\\SemEval\\\\laptop14\\\\Laptops_Train.xml.seg.atepc'], 'test': ['integrated_datasets\\\\atepc_datasets\\\\SemEval\\\\laptop14\\\\Laptops_Test_Gold.xml.seg.atepc'], 'valid': []}"]
+        # ['-1', '0', '0.5', '1', '1', '1.10.1+cuda11.3', '1.8.35', '16', '1e-05', '1e-08', '2', '2', '20', '2021.12.06', '3', '4.12.5', '768', '768', '80', '99999', "", '', 'False', 'False', 'False', 'Laptop14', 'NVIDIA GeForce RTX 2080', 'True', 'True', 'True', 'True', 'adamw', 'cdw', 'checkpoints', 'cuda:0', 'fast_lcf_atepc', 'lr', 'microsoft/deberta-v3-base', 'xavier_uniform_', "{'train': ['integrated_datasets\\\\atepc_datasets\\\\SemEval\\\\laptop14\\\\Laptops_Train.xml.seg.atepc'], 'test': ['integrated_datasets\\\\atepc_datasets\\\\SemEval\\\\laptop14\\\\Laptops_Test_Gold.xml.seg.atepc'], 'valid': []}"]
+        config_str = re.sub(r'<.*?>', '', str(sorted([str(self.opt.args[k]) for k in self.opt.args if k != 'seed'])))
+        hash_tag = sha256(config_str.encode()).hexdigest()
         cache_path = '{}.{}.dataset.{}.cache'.format(self.opt.model_name, self.opt.dataset_name, hash_tag)
 
         if os.path.exists(cache_path):
