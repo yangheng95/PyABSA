@@ -7,6 +7,7 @@
 import copy
 import os
 import pickle
+from hashlib import sha256
 
 from torch import nn
 from torch.nn import ModuleList
@@ -61,7 +62,9 @@ class APCEnsembler(nn.Module):
 
         for i in range(len(models)):
 
-            cache_path = '{}.{}.dataset.cache'.format(self.opt.model_name, self.opt.dataset_name)
+            hash_tag = sha256(str(self.opt.args_call_count.values()).encode()).hexdigest()
+            cache_path = '{}.{}.dataset.{}.cache'.format(self.opt.model_name, self.opt.dataset_name, hash_tag)
+
             if load_dataset and os.path.exists(cache_path):
                 print('Loading dataset cache:', cache_path)
                 self.train_set, self.valid_set, self.test_set, opt = pickle.load(open(cache_path, mode='rb'))
