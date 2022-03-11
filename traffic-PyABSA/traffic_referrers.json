@@ -1,18 +1,18 @@
 [
   {
     "referrer": "github.com",
-    "count": 994,
-    "uniques": 126
-  },
-  {
-    "referrer": "Google",
-    "count": 586,
-    "uniques": 138
+    "count": 1120,
+    "uniques": 140
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 580,
+    "count": 591,
     "uniques": 131
+  },
+  {
+    "referrer": "Google",
+    "count": 544,
+    "uniques": 136
   },
   {
     "referrer": "libraries.io",
@@ -25,9 +25,19 @@
     "uniques": 12
   },
   {
+    "referrer": "searchbip.com",
+    "count": 11,
+    "uniques": 1
+  },
+  {
     "referrer": "com.linkedin.android",
     "count": 5,
     "uniques": 4
+  },
+  {
+    "referrer": "arxiv.org",
+    "count": 5,
+    "uniques": 1
   },
   {
     "referrer": "Bing",
@@ -37,16 +47,6 @@
   {
     "referrer": "pypi.org",
     "count": 2,
-    "uniques": 1
-  },
-  {
-    "referrer": "link.zhihu.com",
-    "count": 1,
-    "uniques": 1
-  },
-  {
-    "referrer": "reddit.com",
-    "count": 1,
     "uniques": 1
   }
 ]
