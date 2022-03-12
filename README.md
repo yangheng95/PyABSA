@@ -16,6 +16,20 @@ PyABSA is a personal project which received many contributions from all the cont
 it developing, with regards for all the people who contribute to PyABSA. I am glad if PyABSA helps you, please star this
 repo as Each Star helps PyABSA go further, many thanks.
 
+## Use Our Model via Transformers Model Hub
+To facilitate ABSA research and application, we train our fast-lcf-bert model based on the [microsoft/deberta-v3-base](https://huggingface.co/microsoft/deberta-v3-base) with all the english datasets 
+provided by [ABSADatasets](https://github.com/yangheng95/ABSADatasets), the model is available at [yangheng/deberta-v3-base-absa](https://huggingface.co/yangheng/deberta-v3-base-absa). You can use **yangheng/deberta-v3-base-absa**
+to **easily** improve your model if your model is based on the `transfomers`. e.g., you can use the base model in training Laptop14 dataset:
+```python3
+from transformers import AutoTokenizer, AutoModel
+
+tokenizer = AutoTokenizer.from_pretrained("yangheng/deberta-v3-base-absa")
+model = AutoModel.from_pretrained("yangheng/deberta-v3-base-absa")
+
+inputs = tokenizer("good product especially video and audio quality fantastic.", return_tensors="pt")
+outputs = model(**inputs)
+```
+
 ## Annotate Your Own Dataset
 
 The repo [ABSADatasets](https://github.com/yangheng95/ABSADatasets/tree/v1.2/DPT) provides an open-source dataset
