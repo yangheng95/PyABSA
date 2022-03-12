@@ -115,9 +115,18 @@ def detect_dataset(dataset_path, task='apc'):
     dataset_file = {'train': [], 'test': [], 'valid': []}
     for d in dataset_path:
         if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(ClassificationDatasetList, d):
+
             print('Loading {} dataset from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
             search_path = find_dir(os.getcwd(), [d, task, 'dataset'], exclude_key=['infer', 'test.'] + filter_key_words, disable_alert=False)
+            if '.augment.ignore' in str(os.listdir(search_path)):
+                print(colored('There is augmented datasets available at {}, remove .ignore to activate them.'.format(search_path), 'green'))
+            elif '.augment' in str(os.listdir(search_path)):
+                print(colored('Augmented datasets activated at {}'.format(search_path), 'green'))
+            # Our data augmentation tool can automatically improve your dataset's performance 1-2% with additional computation budget
+            # Currently, our augmentation tool © is not open-source. We encourage you to
+            # share your dataset at https://github.com/yangheng95/ABSADatasets, all the copyrights belong to the owner according to the licence
+
             dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['.inference', 'test.'] + filter_key_words)
             dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['.inference', 'train.'] + filter_key_words)
             dataset_file['valid'] += find_files(search_path, [d, 'valid', task], exclude_key=['.inference', 'train.'] + filter_key_words)
