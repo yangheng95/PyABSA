@@ -24,7 +24,7 @@ warnings.filterwarnings('ignore')
 seeds = [random.randint(0, 10000) for _ in range(2)]
 
 apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = APCModelList.FAST_LCF_BERT
+apc_config_english.model = APCModelList.FAST_LSA_T
 apc_config_english.lcf = 'cdw'
 apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
@@ -32,7 +32,7 @@ apc_config_english.dropout = 0
 apc_config_english.optimizer = 'adam'
 apc_config_english.cache_dataset = False
 apc_config_english.patience = 10
-apc_config_english.pretrained_bert = 'microsoft/deberta-v3-base'
+apc_config_english.pretrained_bert = 'yangheng/deberta-v3-base-absa'
 apc_config_english.hidden_dim = 768
 apc_config_english.embed_dim = 768
 apc_config_english.num_epoch = 30
@@ -82,7 +82,7 @@ Trainer(config=apc_config_english,
         )
 
 apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = APCModelList.FAST_LCFS_BERT
+apc_config_english.model = APCModelList.FAST_LSA_S
 apc_config_english.lcf = 'cdw'
 apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
@@ -90,7 +90,7 @@ apc_config_english.dropout = 0
 apc_config_english.cache_dataset = False
 apc_config_english.patience = 10
 apc_config_english.optimizer = 'adam'
-apc_config_english.pretrained_bert = 'microsoft/deberta-v3-base'
+apc_config_english.pretrained_bert = 'yangheng/deberta-v3-base-absa'
 apc_config_english.hidden_dim = 768
 apc_config_english.embed_dim = 768
 apc_config_english.num_epoch = 30

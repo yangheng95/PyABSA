@@ -98,6 +98,7 @@ class ABSADatasetList(list):
 class ClassificationDatasetList(list):
     SST1 = DatasetItem('SST1', 'SST1')
     SST2 = DatasetItem('SST2', 'SST2')
+    SST = DatasetItem('SST', ['SST2', 'SST2'])
 
     def __init__(self):
         dataset_list = [
