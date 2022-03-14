@@ -25,7 +25,7 @@ warnings.filterwarnings('ignore')
 seeds = [random.randint(0, 10000) for _ in range(2)]
 
 apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = APCModelList.FAST_LSA_S
+apc_config_english.model = APCModelList.FAST_LSA_T
 apc_config_english.lcf = 'cdw'
 apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
@@ -33,14 +33,15 @@ apc_config_english.dropout = 0
 apc_config_english.optimizer = 'adam'
 apc_config_english.cache_dataset = False
 apc_config_english.patience = 10
-apc_config_english.pretrained_bert = 'microsoft/deberta-v3-large'
+# apc_config_english.pretrained_bert = 'microsoft/deberta-v3-large'
+apc_config_english.pretrained_bert = 'yangheng/deberta-v3-large-absa'
 apc_config_english.hidden_dim = 1024
 apc_config_english.embed_dim = 1024
 apc_config_english.num_epoch = 30
 apc_config_english.log_step = 10
 apc_config_english.learning_rate = 1e-5
-apc_config_english.batch_size = 16
-apc_config_english.evaluate_begin = 1
+apc_config_english.batch_size = 32
+apc_config_english.evaluate_begin = 0
 apc_config_english.l2reg = 1e-8
 apc_config_english.seed = seeds
 
@@ -82,7 +83,7 @@ Trainer(config=apc_config_english,
         )
 
 apc_config_english = APCConfigManager.get_apc_config_english()
-apc_config_english.model = APCModelList.FAST_LSA_T
+apc_config_english.model = APCModelList.FAST_LSA_S
 apc_config_english.lcf = 'cdw'
 apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
@@ -90,7 +91,8 @@ apc_config_english.dropout = 0
 apc_config_english.cache_dataset = False
 apc_config_english.patience = 10
 apc_config_english.optimizer = 'adam'
-apc_config_english.pretrained_bert = 'microsoft/deberta-v3-large'
+# apc_config_english.pretrained_bert = 'microsoft/deberta-v3-large'
+apc_config_english.pretrained_bert = 'yangheng/deberta-v3-large-absa'
 apc_config_english.hidden_dim = 1024
 apc_config_english.embed_dim = 1024
 apc_config_english.num_epoch = 30
