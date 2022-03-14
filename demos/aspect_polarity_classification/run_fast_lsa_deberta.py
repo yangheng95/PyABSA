@@ -10,7 +10,10 @@
 #      "Back to Reality: Leveraging Pattern-driven Modeling to Enable Affordable Sentiment Dependency Learning"        #
 #                      but there are some changes in this paper, and it is under submission                            #
 ########################################################################################################################
+import os
 import random
+
+import findfile
 
 from pyabsa.functional import Trainer
 from pyabsa.functional import APCConfigManager
@@ -21,7 +24,7 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
-seeds = [random.randint(0, 10000) for _ in range(2)]
+seeds = [random.randint(0, 10000) for _ in range(3)]
 
 apc_config_english = APCConfigManager.get_apc_config_english()
 apc_config_english.model = APCModelList.FAST_LSA_T
@@ -44,6 +47,9 @@ apc_config_english.evaluate_begin = 3
 apc_config_english.l2reg = 1e-8
 apc_config_english.seed = seeds
 
+# for f in findfile.find_cwd_files('.augment.ignore'):
+#     os.rename(f, f.replace('.augment.ignore', '.augment'))
+
 apc_config_english.cross_validate_fold = -1  # disable cross_validate
 
 Laptop14 = ABSADatasetList.Laptop14
@@ -60,12 +66,12 @@ Trainer(config=apc_config_english,
         auto_device=True  # automatic choose CUDA or CPU
         )
 
-Restaurant15 = ABSADatasetList.Restaurant15
-Trainer(config=apc_config_english,
-        dataset=Restaurant15,  # train set and test set will be automatically detected
-        checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=True  # automatic choose CUDA or CPU
-        )
+# Restaurant15 = ABSADatasetList.Restaurant15
+# Trainer(config=apc_config_english,
+#         dataset=Restaurant15,  # train set and test set will be automatically detected
+#         checkpoint_save_mode=0,  # =None to avoid save model
+#         auto_device=True  # automatic choose CUDA or CPU
+#         )
 
 Restaurant16 = ABSADatasetList.Restaurant16
 Trainer(config=apc_config_english,
@@ -77,7 +83,7 @@ Trainer(config=apc_config_english,
 MAMS = ABSADatasetList.MAMS
 Trainer(config=apc_config_english,
         dataset=MAMS,  # train set and test set will be automatically detected
-        checkpoint_save_mode=1,  # =None to avoid save model
+        checkpoint_save_mode=0,  # =None to avoid save model
         auto_device=True  # automatic choose CUDA or CPU
         )
 
@@ -118,12 +124,12 @@ Trainer(config=apc_config_english,
         auto_device=True  # automatic choose CUDA or CPU
         )
 
-Restaurant15 = ABSADatasetList.Restaurant15
-Trainer(config=apc_config_english,
-        dataset=Restaurant15,  # train set and test set will be automatically detected
-        checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=True  # automatic choose CUDA or CPU
-        )
+# Restaurant15 = ABSADatasetList.Restaurant15
+# Trainer(config=apc_config_english,
+#         dataset=Restaurant15,  # train set and test set will be automatically detected
+#         checkpoint_save_mode=0,  # =None to avoid save model
+#         auto_device=True  # automatic choose CUDA or CPU
+#         )
 
 Restaurant16 = ABSADatasetList.Restaurant16
 Trainer(config=apc_config_english,

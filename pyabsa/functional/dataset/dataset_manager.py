@@ -114,6 +114,9 @@ def detect_dataset(dataset_path, task='apc'):
     if not isinstance(dataset_path, DatasetItem):
         dataset_path = DatasetItem(dataset_path)
     dataset_file = {'train': [], 'test': [], 'valid': []}
+
+    search_path = ''
+    d = ''
     for d in dataset_path:
         if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(ClassificationDatasetList, d):
 
@@ -139,8 +142,8 @@ def detect_dataset(dataset_path, task='apc'):
             dataset_file['valid'] += find_files(d, ['dev', task], exclude_key=['.inference', 'train.'] + filter_key_words)
 
     if len(dataset_file['train']) == 0:
-        if os.path.isdir(dataset_path.dataset_name):
-            print('No train set found from: {}, unrecognized files: {}'.format(dataset_path, ', '.join(os.listdir(dataset_path.dataset_name))))
+        if os.path.isdir(d) or os.path.isdir(search_path):
+            print('No train set found from: {}, detected files: {}'.format(dataset_path, ', '.join(os.listdir(d) + os.listdir(search_path))))
         raise RuntimeError(
             'Fail to locate dataset: {}. If you are using your own dataset, you may need rename your dataset according to {}'.format(
                 dataset_path,
