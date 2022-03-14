@@ -30,6 +30,8 @@ inputs = tokenizer("good product especially video and audio quality fantastic.",
 outputs = model(**inputs)
 ```
 
+Now, [yangheng/deberta-v3-large-absa](https://huggingface.co/yangheng/deberta-v3-large-absa) which is based on [microsoft/deberta-v3-large](https://huggingface.co/microsoft/deberta-v3-base) is also available now.
+
 ## Annotate Your Own Dataset
 
 The repo [ABSADatasets](https://github.com/yangheng95/ABSADatasets/tree/v1.2/DPT) provides an open-source dataset
