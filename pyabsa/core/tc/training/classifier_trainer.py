@@ -33,6 +33,12 @@ from ..classic.__glove__.dataset_utils.data_utils_for_training import (build_tok
 from pyabsa.utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError, optimizers
 
+try:
+    import apex.amp as amp
+    assert torch.version.__version__ < '1.10.0'
+    print('Use FP16 via Apex!')
+except Exception:
+    amp = None
 
 class Instructor:
     def __init__(self, opt, logger):
@@ -154,6 +160,10 @@ class Instructor:
         if self.opt.cross_validate_fold > 0:
             torch.save(self.model.state_dict(), './init_state_dict.bin')
 
+        if amp:
+            self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
+
+
     def reload_model(self):
         self.model.load_state_dict(torch.load('./init_state_dict.bin'))
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
@@ -226,8 +236,13 @@ class Instructor:
                 sen_logits = outputs
                 loss = criterion(sen_logits, targets)
                 sum_loss += loss.item()
-                loss.backward()
-                self.optimizer.step()
+                if amp:
+                    self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
+                    with amp.scale_loss(loss, self.optimizer) as scaled_loss:
+                        scaled_loss.backward()
+                else:
+                    loss.backward()
+                    self.optimizer.step()
 
                 # evaluate if test set is available
                 if self.opt.dataset_file['test'] and global_step % self.opt.log_step == 0:
@@ -388,8 +403,13 @@ class Instructor:
                     sen_logits = outputs
                     loss = criterion(sen_logits, targets)
                     sum_loss += loss.item()
-                    loss.backward()
-                    self.optimizer.step()
+                    if amp:
+                        self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
+                        with amp.scale_loss(loss, self.optimizer) as scaled_loss:
+                            scaled_loss.backward()
+                    else:
+                        loss.backward()
+                        self.optimizer.step()
 
                     # evaluate if test set is available
                     if self.opt.dataset_file['test'] and global_step % self.opt.log_step == 0:

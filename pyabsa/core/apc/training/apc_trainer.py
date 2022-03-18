@@ -25,6 +25,12 @@ from pyabsa.utils.pyabsa_utils import print_args, optimizers, resume_from_checkp
 
 from ..models.ensembler import APCEnsembler
 
+try:
+    import apex.amp as amp
+    assert torch.version.__version__ < '1.10.0'
+    print('Use FP16 via Apex!')
+except Exception:
+    amp = None
 
 class Instructor:
     def __init__(self, opt, logger):
@@ -74,6 +80,9 @@ class Instructor:
         )
         self.train_dataloaders = []
         self.val_dataloaders = []
+
+        if amp:
+            self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
 
         if os.path.exists('init_state_dict.bin'):
             os.remove('init_state_dict.bin')
@@ -189,8 +198,13 @@ class Instructor:
                     loss = loss.mean()
 
                 sum_loss += loss.item()
-                loss.backward()
-                self.optimizer.step()
+                if amp:
+                    self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
+                    with amp.scale_loss(loss, self.optimizer) as scaled_loss:
+                        scaled_loss.backward()
+                else:
+                    loss.backward()
+                    self.optimizer.step()
 
                 # evaluate if test set is available
                 if self.opt.dataset_file['test'] and global_step % self.opt.log_step == 0:
@@ -355,8 +369,13 @@ class Instructor:
                         loss = loss.mean()
 
                     sum_loss += loss.item()
-                    loss.backward()
-                    self.optimizer.step()
+                    if amp:
+                        self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
+                        with amp.scale_loss(loss, self.optimizer) as scaled_loss:
+                            scaled_loss.backward()
+                    else:
+                        loss.backward()
+                        self.optimizer.step()
 
                     # evaluate if test set is available
                     if self.opt.dataset_file['test'] and global_step % self.opt.log_step == 0:

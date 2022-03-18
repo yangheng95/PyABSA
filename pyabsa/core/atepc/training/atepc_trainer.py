@@ -26,6 +26,13 @@ from pyabsa.utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError
 from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
 
+try:
+    import apex.amp as amp
+    assert torch.version.__version__ < '1.10.0'
+    print('Use FP16 via Apex!')
+except Exception:
+    amp = None
+
 
 class Instructor:
 
@@ -67,8 +74,6 @@ class Instructor:
 
         processor = ATEPCProcessor(self.tokenizer)
 
-        # ['-1', '0', '0.5', '1', '1', '1.10.1+cuda11.3', '1.8.35', '16', '1e-05', '1e-08', '2', '2', '20', '2021.12.06', '3', '4.12.5', '768', '768', '80', '99999', "", '', 'False', 'False', 'False', 'Laptop14', 'NVIDIA GeForce RTX 2080', 'True', 'True', 'True', 'True', 'adamw', 'cdw', 'checkpoints', 'cuda:0', 'fast_lcf_atepc', 'lr', 'microsoft/deberta-v3-base', 'xavier_uniform_', "{'train': ['integrated_datasets\\\\atepc_datasets\\\\SemEval\\\\laptop14\\\\Laptops_Train.xml.seg.atepc'], 'test': ['integrated_datasets\\\\atepc_datasets\\\\SemEval\\\\laptop14\\\\Laptops_Test_Gold.xml.seg.atepc'], 'valid': []}"]
-        # ['-1', '0', '0.5', '1', '1', '1.10.1+cuda11.3', '1.8.35', '16', '1e-05', '1e-08', '2', '2', '20', '2021.12.06', '3', '4.12.5', '768', '768', '80', '99999', "", '', 'False', 'False', 'False', 'Laptop14', 'NVIDIA GeForce RTX 2080', 'True', 'True', 'True', 'True', 'adamw', 'cdw', 'checkpoints', 'cuda:0', 'fast_lcf_atepc', 'lr', 'microsoft/deberta-v3-base', 'xavier_uniform_', "{'train': ['integrated_datasets\\\\atepc_datasets\\\\SemEval\\\\laptop14\\\\Laptops_Train.xml.seg.atepc'], 'test': ['integrated_datasets\\\\atepc_datasets\\\\SemEval\\\\laptop14\\\\Laptops_Test_Gold.xml.seg.atepc'], 'valid': []}"]
         config_str = re.sub(r'<.*?>', '', str(sorted([str(self.opt.args[k]) for k in self.opt.args if k != 'seed'])))
         hash_tag = sha256(config_str.encode()).hexdigest()
         cache_path = '{}.{}.dataset.{}.cache'.format(self.opt.model_name, self.opt.dataset_name, hash_tag)
@@ -166,12 +171,15 @@ class Instructor:
             {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)],
              'weight_decay': self.opt.l2reg},
             {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)],
-             'weight_decay': self.opt.l2reg}
+             'weight_decay': 0}
         ]
         if isinstance(self.opt.optimizer, str):
             self.optimizer = self.optimizers[self.opt.optimizer](self.optimizer_grouped_parameters,
                                                                  lr=self.opt.learning_rate,
                                                                  weight_decay=self.opt.l2reg)
+        if amp:
+            self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
+
         print_args(self.opt, self.logger)
 
     def run(self):
@@ -228,10 +236,17 @@ class Instructor:
                 loss = loss_ate + loss_apc  # the optimal weight of loss may be different according to dataset
 
                 sum_loss += loss.item()
-                loss.backward()
+
+                if amp:
+                    self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
+                    with amp.scale_loss(loss, self.optimizer) as scaled_loss:
+                        scaled_loss.backward()
+                else:
+                    loss.backward()
+                    self.optimizer.step()
+
                 nb_tr_examples += input_ids_spc.size(0)
                 nb_tr_steps += 1
-                self.optimizer.step()
                 self.optimizer.zero_grad()
                 global_step += 1
                 global_step += 1
