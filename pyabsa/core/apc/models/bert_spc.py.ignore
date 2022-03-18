@@ -1,0 +1,40 @@
+# -*- coding: utf-8 -*-
+# file: BERT_SPC.py
+# author: songyouwei <youwei0314@gmail.com>
+# Copyright (C) 2019. All Rights Reserved.
+
+import torch.nn as nn
+from transformers import AutoConfig, AutoModel
+from transformers.models.bert.modeling_bert import BertPooler
+
+from pyabsa.network.sa_encoder import Encoder
+from transformers.models.deberta import DebertaForSequenceClassification
+
+class BERT_SPC(DebertaForSequenceClassification):
+    inputs = ['text_bert_indices']
+
+    def __init__(self, bert, opt):
+
+        super(BERT_SPC, self).__init__(AutoConfig.from_pretrained('microsoft/deberta-v3-base'))
+        # self.bert = bert
+        # self.opt = opt
+        self.config.num_label = 3
+        self.base_model = AutoModel.from_pretrained('microsoft/deberta-v3-base')
+        self.id2label = {0: 'Negative', 1: 'Neutral', 2: 'Positve'}
+        self.label2id = {'Negative': 0, 'Neutral': 1, 'Positve': 2}
+        self.num_labels = 3
+        # self.encoder = Encoder(bert.config, opt)
+        # self.dropout = nn.Dropout(opt.dropout)
+        # self.pooler = BertPooler(bert.config)
+        # self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
+        self.classifier = nn.Linear(opt.embed_dim, opt.polarities_dim)
+
+    def forward(self, inputs, **kwargs):
+        text_bert_indices = inputs['text_bert_indices']
+
+        inputs = {'inputs_ids': inputs['text_bert_indices']}
+        output = self.base_model(text_bert_indices)
+        pooled_output = output.last_hidden_state
+        pooled_output = self.pooler(pooled_output)
+        pooled_output = self.dropout(pooled_output)
+        return {'logits': self.classifier(pooled_output), 'hidden_state': pooled_output}

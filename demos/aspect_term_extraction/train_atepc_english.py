@@ -17,11 +17,12 @@ from pyabsa.functional import ATEPCConfigManager
 config = ATEPCConfigManager.get_atepc_config_english()
 config.model = ATEPCModelList.FAST_LCF_ATEPC
 config.pretrained_bert = 'microsoft/deberta-v3-base'
-config.evaluate_begin = 10
+# config.pretrained_bert = 'yangheng/deberta-v3-base-absa'
+config.evaluate_begin = 0
 config.num_epoch = 20
 config.l2reg = 1e-8
 config.learning_rate = 1e-5
-config.log_step = 100
+config.log_step = -1
 Dataset = ABSADatasetList.English
 aspect_extractor = Trainer(config=config,
                            dataset=Dataset,

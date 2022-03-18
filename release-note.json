@@ -2,6 +2,10 @@
   "Notice": {
     "1": "Please note that the versions which are not listed here are deprecated test version."
   },
+  "1.8.38": {
+    "1": "Fix the no decay bug in ATEPC training",
+    "2": "Add apex support (no test yet)"
+  },
   "1.8.37": {
     "1": "Fix the fine-tuned bert save function in text classification",
     "2": "Add SST entry in ClassificationDatasetList"
