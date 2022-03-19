@@ -20,17 +20,28 @@ repo as Each Star helps PyABSA go further, many thanks.
 To facilitate ABSA research and application, we train our fast-lcf-bert model based on the [microsoft/deberta-v3-base](https://huggingface.co/microsoft/deberta-v3-base) with all the english datasets 
 provided by [ABSADatasets](https://github.com/yangheng95/ABSADatasets), the model is available at [yangheng/deberta-v3-base-absa](https://huggingface.co/yangheng/deberta-v3-base-absa). You can use **yangheng/deberta-v3-base-absa**
 to **easily** improve your model if your model is based on the `transformers`. e.g.:
+### Use Our Pretrained model as a Base Model
 ```python3
 from transformers import AutoTokenizer, AutoModel
 
 tokenizer = AutoTokenizer.from_pretrained("yangheng/deberta-v3-base-absa")
 model = AutoModel.from_pretrained("yangheng/deberta-v3-base-absa")
+# model = AutoModel.from_pretrained("yangheng/deberta-v3-large-absa")
 
 inputs = tokenizer("good product especially video and audio quality fantastic.", return_tensors="pt")
 outputs = model(**inputs)
 ```
+### Use Our Pretrained model to Classify Sentiments
+```python3
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-Now, [yangheng/deberta-v3-large-absa](https://huggingface.co/yangheng/deberta-v3-large-absa) which is based on [microsoft/deberta-v3-large](https://huggingface.co/microsoft/deberta-v3-base) is also available now.
+tokenizer = AutoTokenizer.from_pretrained("yangheng/deberta-v3-base-absa-v1.1")
+model = AutoModelForSequenceClassification.from_pretrained("yangheng/deberta-v3-base-absa-v1.1")
+# model = AutoModelForSequenceClassification.from_pretrained("yangheng/deberta-v3-large-absa-v1.1")
+
+inputs = tokenizer("[CLS] when tables opened up, the manager sat another party before us. [SEP] manager [SEP]", return_tensors="pt")
+outputs = model(**inputs)
+```
 
 ## Annotate Your Own Dataset
 
