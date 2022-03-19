@@ -316,7 +316,6 @@ class Instructor:
             return self.model, self.opt, self.tokenizer, sum_acc, sum_f1
 
     def _k_fold_train_and_evaluate(self, criterion):
-        patience = self.opt.patience
         sum_loss = 0
         sum_acc = 0
         sum_f1 = 0
