@@ -35,10 +35,12 @@ from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry,
 
 try:
     import apex.amp as amp
+
     assert torch.version.__version__ < '1.10.0'
     print('Use FP16 via Apex!')
 except Exception:
     amp = None
+
 
 class Instructor:
     def __init__(self, opt, logger):
@@ -113,11 +115,11 @@ class Instructor:
             self.model = opt.model(self.embedding_matrix, opt).to(opt.device)
 
             # use DataParallel for training if device count larger than 1
-            if self.opt.auto_device == 'allcuda':
-                self.model.to(self.opt.device)
-                self.model = torch.nn.parallel.DataParallel(self.model)
-            else:
-                self.model.to(self.opt.device)
+        if self.opt.auto_device == 'allcuda':
+            self.model.to(self.opt.device)
+            self.model = torch.nn.parallel.DataParallel(self.model)
+        else:
+            self.model.to(self.opt.device)
 
         if self.test_set:
             self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
@@ -162,7 +164,6 @@ class Instructor:
 
         if amp:
             self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
-
 
     def reload_model(self):
         self.model.load_state_dict(torch.load('./init_state_dict.bin'))

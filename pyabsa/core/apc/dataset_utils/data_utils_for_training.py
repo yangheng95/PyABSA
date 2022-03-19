@@ -43,6 +43,7 @@ class ABSADataset(Dataset):
             prepared_inputs = prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect, input_demands=opt.inputs_cols)
 
             text_raw = prepared_inputs['text_raw']
+            text_spc = prepared_inputs['text_spc']
             aspect = prepared_inputs['aspect']
             aspect_position = prepared_inputs['aspect_position']
             text_bert_indices = prepared_inputs['text_bert_indices']
@@ -64,6 +65,8 @@ class ABSADataset(Dataset):
                 'ex_id': ex_id,
 
                 'text_raw': text_raw,
+
+                'text_spc': text_spc,
 
                 'aspect': aspect,
 

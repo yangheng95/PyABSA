@@ -277,7 +277,8 @@ def save_model(opt, model, tokenizer, save_path):
         elif hasattr(model_to_save, 'bert'):
             model_to_save = model_to_save.bert
         else:
-            raise RuntimeError('No pretrained model found to save')
+            model_to_save = model_to_save
+            # raise RuntimeError('No pretrained model found to save')
 
         torch.save(model_to_save.state_dict(), output_model_file)
         model_to_save.config.to_json_file(output_config_file)
