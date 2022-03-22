@@ -1,23 +1,23 @@
 [
   {
     "referrer": "github.com",
-    "count": 1214,
-    "uniques": 126
+    "count": 1191,
+    "uniques": 123
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 491,
-    "uniques": 125
+    "count": 462,
+    "uniques": 117
   },
   {
     "referrer": "Google",
-    "count": 477,
-    "uniques": 121
+    "count": 425,
+    "uniques": 107
   },
   {
     "referrer": "huggingface.co",
-    "count": 71,
-    "uniques": 8
+    "count": 75,
+    "uniques": 10
   },
   {
     "referrer": "link.zhihu.com",
@@ -45,8 +45,8 @@
     "uniques": 2
   },
   {
-    "referrer": "pypi.org",
+    "referrer": "Bing",
     "count": 3,
-    "uniques": 2
+    "uniques": 1
   }
 ]
