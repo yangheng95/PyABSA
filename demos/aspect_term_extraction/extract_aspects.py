@@ -12,17 +12,17 @@ from pyabsa import ATEPCCheckpointManager
 examples = ['But the staff was so perfect to us, but the service was bad .',
             ]
 
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='english',
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='english2',
                                                                auto_device=True  # False means load model on CPU
                                                                )
 
-# inference_source = ABSADatasetList.SemEval
+inference_source = ABSADatasetList.SemEval
 # inference_source = r'E:\PyABSA-Workspace\latest\PyABSA\examples\aspect_polarity_classification\integrated_datasets\datasets\apc_datasets\TShirt'
 # inference_source = 'integrated_datasets/datasets/apc_datasets/TShirt'
 # inference_source = ABSADatasetList.TShirt
 # inference_source = examples
-inference_source = ABSADatasetList.Chinese
-atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source,  #
+# inference_source = ABSADatasetList.Chinese
+# atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source,  #
                                                save_result=True,
                                                print_result=True,  # print the result
                                                pred_sentiment=True,  # Predict the sentiment of extracted aspect terms

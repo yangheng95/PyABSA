@@ -101,7 +101,7 @@ class APCEnsembler(nn.Module):
                     if self.opt.dataset_file['test']:
                         self.test_set = BERTBaselineABSADataset(self.opt.dataset_file['test'], self.tokenizer, self.opt) if not self.test_set else self.test_set
                     if self.opt.dataset_file['valid']:
-                        self.valid_set = ABSADataset(self.opt.dataset_file['valid'], self.tokenizer, self.opt) if not self.valid_set else self.valid_set
+                        self.valid_set = BERTBaselineABSADataset(self.opt.dataset_file['valid'], self.tokenizer, self.opt) if not self.valid_set else self.valid_set
                 self.models.append(models[i](copy.deepcopy(self.bert) if self.opt.deep_ensemble else self.bert, self.opt))
 
             elif hasattr(GloVeAPCModelList, models[i].__name__):
