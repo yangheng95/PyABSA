@@ -10,7 +10,7 @@ import pandas as pd
 
 from pyabsa import ATEPCCheckpointManager
 
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='lcf_atepc_cdw_apcacc_80.94_apcf1_75.95_atef1_67.11.zip',
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='fast_lcf_atepc_Chinese_cdw_apcacc_96.69_apcf1_96.25_atef1_92.26',
                                                                auto_device=True  # False means load model on CPU
                                                                )
 
