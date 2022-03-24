@@ -10,6 +10,8 @@ import pickle
 import random
 
 import json
+from collections import OrderedDict
+
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -144,7 +146,7 @@ class AspectExtractor:
         """
         final_res = []
         if results['polarity_res'] is not None:
-            merged_results = {}
+            merged_results = OrderedDict()
             pre_example_id = None
             # merge ate and apc results, assume they are same ordered
             for item1, item2 in zip(results['extraction_res'], results['polarity_res']):
@@ -188,7 +190,7 @@ class AspectExtractor:
         return final_res
 
     def extract_aspect(self, inference_source, save_result=True, print_result=True, pred_sentiment=True):
-        results = {'extraction_res': None, 'polarity_res': None}
+        results = {'extraction_res': OrderedDict(), 'polarity_res': OrderedDict()}
 
         if isinstance(inference_source, DatasetItem):
             # using integrated inference dataset
@@ -300,13 +302,31 @@ class AspectExtractor:
                     else:
                         polarity.append(SENTIMENT_PADDING)
 
+                # POLARITY_PADDING = [SENTIMENT_PADDING] * len(polarity)
+                # for iob_idx in range(len(polarity) - 1):
+                #     example_id = i_batch * self.opt.infer_batch_size + i
+                #     if pred_iobs[iob_idx].endswith('ASP') and not pred_iobs[iob_idx + 1].endswith('I-ASP'):
+                #         _polarity = polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
+                #         polarity = POLARITY_PADDING[:iob_idx + 1] + polarity[iob_idx + 1:]
+                #         extraction_res.append((all_tokens[i + (self.opt.infer_batch_size * i_batch)], pred_iobs, _polarity, example_id))
+
+                # Contributed by jkkl@github
+                # Ref. https://github.com/yangheng95/PyABSA/issues/156#issuecomment-1077443060
                 POLARITY_PADDING = [SENTIMENT_PADDING] * len(polarity)
-                for iob_idx in range(len(polarity) - 1):
-                    example_id = i_batch * self.opt.infer_batch_size + i
-                    if pred_iobs[iob_idx].endswith('ASP') and not pred_iobs[iob_idx + 1].endswith('I-ASP'):
-                        _polarity = polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
-                        polarity = POLARITY_PADDING[:iob_idx + 1] + polarity[iob_idx + 1:]
-                        extraction_res.append((all_tokens[i + (self.opt.infer_batch_size * i_batch)], pred_iobs, _polarity, example_id))
+                start_sentiment_index = -1
+                end_sentiment_index = -1
+                example_id = i_batch * self.opt.infer_batch_size + i
+                for idx in range(len(polarity)):
+                    if polarity[idx] != SENTIMENT_PADDING and (idx == 0 or polarity[idx] != polarity[idx - 1]):
+                        start_sentiment_index = idx
+                    elif polarity[idx] == SENTIMENT_PADDING and idx != 0 and polarity[idx - 1] != SENTIMENT_PADDING:
+                        end_sentiment_index = idx
+                        one_sentiment_labels = POLARITY_PADDING[:start_sentiment_index] + polarity[start_sentiment_index: end_sentiment_index] + POLARITY_PADDING[end_sentiment_index:]
+                        extraction_res.append((all_tokens[i + (self.opt.infer_batch_size * i_batch)], pred_iobs, one_sentiment_labels, example_id))
+                if start_sentiment_index > end_sentiment_index:
+                    # 处理尾部情况
+                    one_sentiment_labels = POLARITY_PADDING[:start_sentiment_index] + polarity[start_sentiment_index:]
+                    extraction_res.append((all_tokens[i + (self.opt.infer_batch_size * i_batch)], pred_iobs, one_sentiment_labels, example_id))
 
         return extraction_res, sentence_res
 

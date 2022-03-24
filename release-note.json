@@ -2,6 +2,10 @@
   "Notice": {
     "1": "Please note that the versions which are not listed here are deprecated test version."
   },
+  "1.8.41": {
+    "1": "Fix output order of ATEPC inference",
+    "2": "Fix process multi-aspect sentence in ATEPC"
+  },
   "1.8.40": {
     "1": "Fix valid set loading in BertBaseline APC training",
     "2": "Fix a bug in multi-cuda training of text classification "
