@@ -129,9 +129,9 @@ class ASGCN_BERT(nn.Module):
         res = {'logits': None}
         if self.opt.lsa:
             cat_feat = torch.cat(
-                (self.asgcn_left([inputs['left_text_bert_indices'], inputs['left_aspect_indices'], inputs['left_left_indices'], inputs['left_dependency_graph']]),
+                (self.asgcn_left([inputs['text_bert_indices'], inputs['left_aspect_indices'], inputs['left_left_indices'], inputs['left_dependency_graph']]),
                  self.asgcn_central([inputs['text_bert_indices'], inputs['aspect_indices'], inputs['left_indices'], inputs['dependency_graph']]),
-                 self.asgcn_right([inputs['right_text_bert_indices'], inputs['right_aspect_indices'], inputs['right_left_indices'], inputs['right_dependency_graph']])),
+                 self.asgcn_right([inputs['text_bert_indices'], inputs['right_aspect_indices'], inputs['right_left_indices'], inputs['right_dependency_graph']])),
                 -1)
             res['logits'] = self.dense(cat_feat)
         else:

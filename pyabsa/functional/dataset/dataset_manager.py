@@ -45,6 +45,11 @@ class ABSADatasetList(list):
     # SemEval
     Laptop14 = DatasetItem('Laptop14', 'Laptop14')
     Restaurant14 = DatasetItem('Restaurant14', 'Restaurant14')
+
+    # https://github.com/zhijing-jin/ARTS_TestSet
+    ARTS_Laptop14 = DatasetItem('ARTS_Laptop14', 'ARTS_Laptop14')
+    ARTS_Restaurant14 = DatasetItem('ARTS_Restaurant14', 'ARTS_Restaurant14')
+
     Restaurant15 = DatasetItem('Restaurant15', 'Restaurant15')
     Restaurant16 = DatasetItem('Restaurant16', 'Restaurant16')
 
@@ -107,10 +112,10 @@ class ClassificationDatasetList(list):
         super().__init__(dataset_list)
 
 
-filter_key_words = ['.py', '.ignore', '.md', 'readme', 'log', 'result', 'zip', '.state_dict', '.model', '.png', 'acc_', 'f1_']
+filter_key_words = ['.py', '.md', 'readme', 'log', 'result', 'zip', '.state_dict', '.model', '.png', 'acc_', 'f1_']
 
 
-def detect_dataset(dataset_path, task='apc'):
+def detect_dataset(dataset_path, task='apc', load_aug=False):
     if not isinstance(dataset_path, DatasetItem):
         dataset_path = DatasetItem(dataset_path)
     dataset_file = {'train': [], 'test': [], 'valid': []}
@@ -124,22 +129,34 @@ def detect_dataset(dataset_path, task='apc'):
             download_datasets_from_github(os.getcwd())
             search_path = find_dir(os.getcwd(), [d, task, 'dataset'], exclude_key=['infer', 'test.'] + filter_key_words, disable_alert=False)
             if '.augment.ignore' in str(os.listdir(search_path)):
-                print(colored('There is augmented datasets available at {}, remove .ignore to activate them.'.format(search_path), 'green'))
+                print(colored('There are augmented datasets available at {}, remove .ignore to activate them.'.format(search_path), 'green'))
             elif '.augment' in str(os.listdir(search_path)):
                 print(colored('Augmented datasets activated at {}'.format(search_path), 'green'))
             # Our data augmentation tool can automatically improve your dataset's performance 1-2% with additional computation budget
             # Currently, our augmentation tool © is not open-source. We encourage you to
             # share your dataset at https://github.com/yangheng95/ABSADatasets, all the copyrights belong to the owner according to the licence
+            if load_aug:
+                dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['.inference', 'test.'] + filter_key_words)
+                dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['.inference', 'train.'] + filter_key_words)
+                dataset_file['valid'] += find_files(search_path, [d, 'valid', task], exclude_key=['.inference', 'train.'] + filter_key_words)
+                dataset_file['valid'] += find_files(search_path, [d, 'dev', task], exclude_key=['.inference', 'train.'] + filter_key_words)
+            else:
+                dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['.inference', 'test.'] + filter_key_words + ['.ignore'])
+                dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['.inference', 'train.'] + filter_key_words + ['.ignore'])
+                dataset_file['valid'] += find_files(search_path, [d, 'valid', task], exclude_key=['.inference', 'train.'] + filter_key_words + ['.ignore'])
+                dataset_file['valid'] += find_files(search_path, [d, 'dev', task], exclude_key=['.inference', 'train.'] + filter_key_words + ['.ignore'])
 
-            dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['.inference', 'test.'] + filter_key_words)
-            dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['.inference', 'train.'] + filter_key_words)
-            dataset_file['valid'] += find_files(search_path, [d, 'valid', task], exclude_key=['.inference', 'train.'] + filter_key_words)
-            dataset_file['valid'] += find_files(search_path, [d, 'dev', task], exclude_key=['.inference', 'train.'] + filter_key_words)
         else:
-            dataset_file['train'] += find_files(d, ['train', task], exclude_key=['.inference', 'test.'] + filter_key_words)
-            dataset_file['test'] += find_files(d, ['test', task], exclude_key=['.inference', 'train.'] + filter_key_words)
-            dataset_file['valid'] += find_files(d, ['valid', task], exclude_key=['.inference', 'train.'] + filter_key_words)
-            dataset_file['valid'] += find_files(d, ['dev', task], exclude_key=['.inference', 'train.'] + filter_key_words)
+            if load_aug:
+                dataset_file['train'] += find_files(d, ['train', task], exclude_key=['.inference', 'test.'] + filter_key_words)
+                dataset_file['test'] += find_files(d, ['test', task], exclude_key=['.inference', 'train.'] + filter_key_words)
+                dataset_file['valid'] += find_files(d, ['valid', task], exclude_key=['.inference', 'train.'] + filter_key_words)
+                dataset_file['valid'] += find_files(d, ['dev', task], exclude_key=['.inference', 'train.'] + filter_key_words)
+            else:
+                dataset_file['train'] += find_files(d, ['train', task], exclude_key=['.inference', 'test.'] + filter_key_words + ['.ignore'])
+                dataset_file['test'] += find_files(d, ['test', task], exclude_key=['.inference', 'train.'] + filter_key_words + ['.ignore'])
+                dataset_file['valid'] += find_files(d, ['valid', task], exclude_key=['.inference', 'train.'] + filter_key_words + ['.ignore'])
+                dataset_file['valid'] += find_files(d, ['dev', task], exclude_key=['.inference', 'train.'] + filter_key_words + ['.ignore'])
 
     if len(dataset_file['train']) == 0:
         if os.path.isdir(d) or os.path.isdir(search_path):
@@ -153,12 +170,12 @@ def detect_dataset(dataset_path, task='apc'):
         print('Warning! auto_evaluate=True, however cannot find test set using for evaluating!')
 
     if len(dataset_path) > 1:
-        print(colored('Never mixing datasets with different sentiment labels for training & inference !', 'yellow'))
+        print(colored('Please DO NOT mix datasets with different sentiment labels for training & inference !', 'yellow'))
 
     return dataset_file
 
 
-def detect_infer_dataset(dataset_path, task='apc'):
+def detect_infer_dataset(dataset_path, task='apc', load_aug=False):
     if not isinstance(dataset_path, DatasetItem):
         dataset_path = DatasetItem(dataset_path)
     dataset_file = []
@@ -167,9 +184,16 @@ def detect_infer_dataset(dataset_path, task='apc'):
             print('Loading {} dataset from:  {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
             search_path = find_dir(os.getcwd(), [d, task, 'dataset'], exclude_key=filter_key_words, disable_alert=False)
-            dataset_file += find_files(search_path, ['.inference', d], exclude_key=['train.'] + filter_key_words)
+            if load_aug:
+                dataset_file += find_files(search_path, ['.inference', d], exclude_key=['train.'] + filter_key_words)
+            else:
+                dataset_file += find_files(search_path, ['.inference', d], exclude_key=['train.'] + filter_key_words + ['.ignore'])
+
         else:
-            dataset_file += find_files(d, ['.inference', task], exclude_key=['train.'] + filter_key_words)
+            if load_aug:
+                dataset_file += find_files(d, ['.inference', task], exclude_key=['train.'] + filter_key_words)
+            else:
+                dataset_file += find_files(d, ['.inference', task], exclude_key=['train.'] + filter_key_words + ['.ignore'])
 
     if len(dataset_file) == 0:
         if os.path.isdir(dataset_path.dataset_name):
@@ -180,7 +204,7 @@ def detect_infer_dataset(dataset_path, task='apc'):
                 'https://github.com/yangheng95/ABSADatasets#important-rename-your-dataset-filename-before-use-it-in-pyabsa')
         )
     if len(dataset_path) > 1:
-        print(colored('Never mixing datasets with different sentiment labels for training & inference !', 'yellow'))
+        print(colored('Please DO NOT mix datasets with different sentiment labels for training & inference !', 'yellow'))
 
     return dataset_file
 

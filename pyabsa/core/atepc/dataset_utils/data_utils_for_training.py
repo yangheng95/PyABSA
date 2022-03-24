@@ -203,9 +203,7 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
         try:
             text_left, _, text_right = [s.strip() for s in ' '.join(example.text_a).partition(aspect)]
         except:
-            text_left = ' '.join(example.text_a)
-            text_right = ''
-            aspect = ''
+            continue
         text_raw = text_left + ' ' + aspect + ' ' + text_right
         validate_example(text_raw, aspect, polarity)
 
