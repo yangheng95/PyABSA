@@ -49,11 +49,6 @@ def init_config(config, auto_device):
     config.TransformersVersion = transformers.__version__
     config.TorchVersion = '{}+cuda{}'.format(torch.version.__version__, torch.version.cuda)
 
-    if 'use_syntax_based_SRD' in config:
-        print('-' * 130)
-        print('Force to use syntax distance-based semantic-relative distance,'
-              ' however Chinese is not supported to parse syntax distance yet!  ')
-        print('-' * 130)
     return config
 
 

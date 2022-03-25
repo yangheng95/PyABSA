@@ -4,6 +4,7 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
+import warnings
 
 import tqdm
 
@@ -95,14 +96,54 @@ def readfile(filename):
         if len(s) > 0:
             # prepare the atepc dataset, refer to https://github.com/yangheng95/PyABSA/issues/78
             polarity_padding = [str(SENTIMENT_PADDING)] * len(t)
-            for p_idx in range(len(p) - 1):
-                if (p[p_idx] != p[p_idx + 1] and p[p_idx] != str(SENTIMENT_PADDING) and p[p_idx + 1] != str(SENTIMENT_PADDING)) \
-                    or (p[p_idx] != str(SENTIMENT_PADDING) and p[p_idx + 1] == str(SENTIMENT_PADDING)):
-                    _p = p[:p_idx + 1] + polarity_padding[p_idx + 1:]
-                    p = polarity_padding[:p_idx + 1] + p[p_idx + 1:]
+            # for p_idx in range(len(p) - 1):
+            #     if (p[p_idx] != p[p_idx + 1] and p[p_idx] != str(SENTIMENT_PADDING) and p[p_idx + 1] != str(SENTIMENT_PADDING)) \
+            #         or (p[p_idx] != str(SENTIMENT_PADDING) and p[p_idx + 1] == str(SENTIMENT_PADDING)):
+            #         _p = p[:p_idx + 1] + polarity_padding[p_idx + 1:]
+            #         p = polarity_padding[:p_idx + 1] + p[p_idx + 1:]
+            #         prepared_data.append((s, t, _p))
+
+            for t_idx in range(1, len(t)):
+
+                if p[t_idx] != str(SENTIMENT_PADDING) and t_idx == len(t) - 1 and split_aspect(t[t_idx]):
+                    _p = p[:t_idx + 1] + polarity_padding[t_idx + 1:]
+                    p = polarity_padding[:t_idx + 1] + p[t_idx + 1:]
+                    prepared_data.append((s, t, _p))
+
+                if p[t_idx - 1] != str(SENTIMENT_PADDING) and split_aspect(t[t_idx - 1], t[t_idx]):
+                    _p = p[:t_idx] + polarity_padding[t_idx:]
+                    p = polarity_padding[:t_idx] + p[t_idx:]
                     prepared_data.append((s, t, _p))
 
     return prepared_data
+
+
+def split_aspect(tag1, tag2=None):
+    if tag1 == 'B-ASP' and tag2 == 'B-ASP':
+        return True
+    if tag1 == 'B-ASP' and tag2 == 'O':
+        return True
+    elif tag1 == 'I-ASP' and tag2 == 'O':
+        return True
+    elif tag1 == 'I-ASP' and tag2 == 'B-ASP':
+        return True
+    elif (tag1 == 'B-ASP' or tag1 == 'I-ASP') and not tag2:
+        return True
+    elif tag1 == 'O' and tag2 == 'I-ASP':
+        warnings.warn('Invalid annotation! Found I-ASP without B-ASP')
+        return False
+    elif tag1 == 'O' and tag2 == 'O':
+        return False
+    elif tag1 == 'O' and tag2 == 'B-ASP':
+        return False
+    elif tag1 == 'O' and not tag2:
+        return False
+    elif tag1 == 'B-ASP' and tag2 == 'I-ASP':
+        return False
+    elif tag1 == 'I-ASP' and tag2 == 'I-ASP':
+        return False
+    else:
+        raise ValueError('Invalid IOB tag: {}, {}'.format(tag1, tag2))
 
 
 class DataProcessor(object):
@@ -225,8 +266,10 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
         tokens = tokens[0:min(len(tokens), max_seq_len - 2)]
         labels = labels[0:min(len(labels), max_seq_len - 2)]
         valid = valid[0:min(len(valid), max_seq_len - 2)]
-        segment_ids = [0] * len(example.text_a[:]) + [1] * (max_seq_len - len([0] * len(example.text_a[:])))
-        segment_ids = segment_ids[:max_seq_len]
+        # segment_ids = [0] * len(example.text_a[:]) + [1] * (max_seq_len - len([0] * len(example.text_a[:])))
+        # segment_ids = segment_ids[:max_seq_len]
+
+        segment_ids = [0] * max_seq_len # simply set segment_ids to all zeros
         label_ids = []
 
         for i, token in enumerate(tokens):

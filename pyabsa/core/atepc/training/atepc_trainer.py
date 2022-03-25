@@ -39,10 +39,10 @@ class Instructor:
     def __init__(self, opt, logger):
         self.opt = opt
         self.logger = logger
-        if opt.use_bert_spc:
-            self.logger.info('Warning: The use_bert_spc is disabled for extracting aspect,'
-                             ' reset use_bert_spc=False and go on... ')
-            opt.use_bert_spc = False
+        # if opt.use_bert_spc:
+        #     self.logger.info('Warning: The use_bert_spc is disabled for extracting aspect,'
+        #                      ' reset use_bert_spc=False and go on... ')
+        #     opt.use_bert_spc = False
         import warnings
         warnings.filterwarnings('ignore')
         if self.opt.gradient_accumulation_steps < 1:
@@ -146,10 +146,10 @@ class Instructor:
         else:
             self.opt.patience = 999999999
 
-        train_sampler = SequentialSampler(self.train_data)
+        train_sampler = RandomSampler(self.train_data)
         self.train_dataloader = DataLoader(self.train_data, sampler=train_sampler, pin_memory=True, batch_size=self.opt.batch_size)
         if self.opt.dataset_file['test']:
-            test_sampler = RandomSampler(self.test_data)
+            test_sampler = SequentialSampler(self.test_data)
             self.test_dataloader = DataLoader(self.test_data, sampler=test_sampler, pin_memory=True, batch_size=self.opt.batch_size)
 
         self.model = self.opt.model(bert_base_model, opt=self.opt)
@@ -252,7 +252,7 @@ class Instructor:
                 global_step += 1
                 if self.opt.dataset_file['test'] and global_step % self.opt.log_step == 0:
                     if epoch >= self.opt.evaluate_begin:
-                        apc_result, ate_result = self.evaluate(eval_ATE=not self.opt.use_bert_spc)
+                        apc_result, ate_result = self.evaluate()
                         sum_apc_test_acc += apc_result['apc_test_acc']
                         sum_apc_test_f1 += apc_result['apc_test_f1']
                         sum_ate_test_f1 += ate_result
