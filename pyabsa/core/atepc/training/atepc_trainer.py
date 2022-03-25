@@ -39,11 +39,11 @@ class Instructor:
     def __init__(self, opt, logger):
         self.opt = opt
         self.logger = logger
-        # if opt.use_bert_spc:
-        #     self.logger.info('Warning: The use_bert_spc is disabled for extracting aspect,'
-        #                      ' reset use_bert_spc=False and go on... ')
-        #     opt.use_bert_spc = False
-        import warnings
+        if opt.use_bert_spc:
+            self.logger.info('Warning: The use_bert_spc is disabled for extracting aspect,'
+                             ' reset use_bert_spc=False and go on... ')
+            opt.use_bert_spc = False
+        import warningsgit
         warnings.filterwarnings('ignore')
         if self.opt.gradient_accumulation_steps < 1:
             raise ValueError("Invalid gradient_accumulation_steps parameter: {}, should be >= 1".format(
