@@ -39,11 +39,11 @@ class Instructor:
     def __init__(self, opt, logger):
         self.opt = opt
         self.logger = logger
-        if opt.use_bert_spc:
-            self.logger.info('Warning: The use_bert_spc is disabled for extracting aspect,'
-                             ' reset use_bert_spc=False and go on... ')
-            opt.use_bert_spc = False
-        import warningsgit
+        # if opt.use_bert_spc:
+        #     self.logger.info('Warning: The use_bert_spc is disabled for extracting aspect,'
+        #                      ' reset use_bert_spc=False and go on... ')
+        #     opt.use_bert_spc = False
+        import warnings
         warnings.filterwarnings('ignore')
         if self.opt.gradient_accumulation_steps < 1:
             raise ValueError("Invalid gradient_accumulation_steps parameter: {}, should be >= 1".format(
@@ -306,10 +306,7 @@ class Instructor:
                                                                                          self.opt.max_test_metrics[
                                                                                              'max_apc_test_f1']
                                                                                          )
-                        if self.opt.model_name == 'lcf_atepc' and self.opt.use_bert_spc:
-                            postfix += 'ATE_F1: N.A. for LCF-ATEPC under use_bert_spc=True)'
-                        else:
-                            postfix += 'ATE_F1: {}(max:{})'.format(current_ate_test_f1, self.opt.max_test_metrics[
+                        postfix += 'ATE_F1: {}(max:{})'.format(current_ate_test_f1, self.opt.max_test_metrics[
                                 'max_ate_test_f1'])
                     else:
                         postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
@@ -329,11 +326,12 @@ class Instructor:
         # )
         # self.logger.info('-------------------------------------Training Summary-------------------------------------')
 
-        self.logger.info(self.opt.MV.summary(no_print=True))
-
         self.opt.MV.add_metric('Max-APC-Test-Acc', self.opt.max_test_metrics['max_apc_test_acc'])
         self.opt.MV.add_metric('Max-APC-Test-F1', self.opt.max_test_metrics['max_apc_test_f1'])
         self.opt.MV.add_metric('Max-ATE-Test-F1', self.opt.max_test_metrics['max_ate_test_f1'])
+
+        self.opt.MV.summary(no_print=True)
+        self.logger.info(self.opt.MV.summary(no_print=True))
 
         print('Training finished, we hope you can share your checkpoint with community, please see:',
               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')

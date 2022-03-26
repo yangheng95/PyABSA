@@ -14,6 +14,9 @@
 
 **Hi, there!** PyABSA is a personal project which received many contributions. Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks.
 
+# Instant try Inference API on Huggingface Space
+Thanks to Huggingface, we build a demo [ATEPC Inference API](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) to evaluate.
+
 ## Use Our Model via Transformers Model Hub
 **If you do not need the best models of APC or ATEPC, you can easily try our pretrained model to save your time!** 
 
@@ -43,6 +46,7 @@ model = AutoModel.from_pretrained("yangheng/deberta-v3-base-absa")
 inputs = tokenizer("good product especially video and audio quality fantastic.", return_tensors="pt")
 outputs = model(**inputs)
 ```
+
 ## Annotate Your Own Dataset
 
 The repo [ABSADatasets](https://github.com/yangheng95/ABSADatasets/tree/v1.2/DPT) provides an open-source dataset
