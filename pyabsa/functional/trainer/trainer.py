@@ -12,6 +12,7 @@ import findfile
 import torch
 import transformers
 from torch import cuda
+from transformers import AutoConfig
 
 from pyabsa import __version__
 
@@ -78,6 +79,9 @@ class Trainer:
         if not torch.cuda.device_count() > 1 and auto_device == 'allcuda':
             print('Cuda count <= 1, reset auto_device=True')
             auto_device = True
+        pretrain_config = AutoConfig.from_pretrained(config.pretrained_bert)
+        config.hidden_dim = pretrain_config.hidden_size
+        config.embed_dim = pretrain_config.hidden_size
         config.ABSADatasetsVersion = query_local_version()
         if isinstance(config, APCConfigManager):
             self.train_func = train4apc
