@@ -87,6 +87,15 @@
       "Checkpoint File": "fast_lcf_atepc_English_cdw_apcacc_82.93_apcf1_80.7_atef1_78.77.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
+    "english3": {
+      "id": "https://drive.google.com/file/d/1X9-IulQuk1MBNfoHoi_RIW8e3qUgeyH2/view?usp=sharing",
+      "Training Model": "FAST-LCFS-ATEPC",
+      "Training Dataset": "English",
+      "Description": "Trained on RTX3090, this checkpoint use bert-spc in ATEPC training",
+      "Available Version": "1.8.4+",
+      "Checkpoint File": "fast_lcfs_atepc_English_cdw_apcacc_85.03_apcf1_82.36_atef1_84.48.zip",
+      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
+    },
     "chinese": {
       "id": "https://drive.google.com/file/d/1SzzUkuMJLjfxGZmInqmBQi5U2ZxTeG2L/view?usp=sharing",
       "Training Model": "FAST-LCF-DeBERTa",
