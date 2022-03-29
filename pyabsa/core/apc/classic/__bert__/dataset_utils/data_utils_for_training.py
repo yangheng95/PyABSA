@@ -112,12 +112,14 @@ class BERTBaselineABSADataset(Dataset):
 
             aspect_position = prepared_inputs['aspect_position']
 
-            text_indices = tokenizer.text_to_sequence('[CLS] ' + text_left + ' ' + aspect + ' ' + text_right + " [SEP]")
+            # it is hard to decide whether [CLS] and [SEP] should be added into sequences, e.g., left_context or right_context,
+            # so we disable all [CLS]s and [SEP]s
+            text_indices = tokenizer.text_to_sequence(text_left + ' ' + aspect + ' ' + text_right)
             context_indices = tokenizer.text_to_sequence(text_left + text_right)
             left_indices = tokenizer.text_to_sequence(text_left)
-            left_with_aspect_indices = tokenizer.text_to_sequence('[CLS] ' + text_left + " " + aspect + " [SEP]")
+            left_with_aspect_indices = tokenizer.text_to_sequence(text_left + " " + aspect)
             right_indices = tokenizer.text_to_sequence(text_right, reverse=False)
-            right_with_aspect_indices = tokenizer.text_to_sequence(aspect + " " + text_right, reverse=False)
+            right_with_aspect_indices = tokenizer.text_to_sequence(aspect + ' ' + text_right, reverse=False)
             aspect_indices = tokenizer.text_to_sequence(aspect)
             aspect_len = np.sum(aspect_indices != 0)
             left_len = min(opt.max_seq_len - aspect_len, np.sum(left_indices != 0))
