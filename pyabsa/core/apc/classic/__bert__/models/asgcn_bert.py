@@ -76,7 +76,6 @@ class ASGCN_BERT_Unit(nn.Module):
                 mask[i].append(1)
             for j in range(aspect_double_idx[i, 1] + 1, seq_len):
                 mask[i].append(0)
-            # mask[i] = mask[i][:seq_len]
         mask = torch.tensor(mask, dtype=torch.float).unsqueeze(2).to(self.opt.device)
         return mask * x
 
