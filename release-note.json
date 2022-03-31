@@ -1,4 +1,7 @@
 {
+  "1.9.3": {
+    "1": "Test Version"
+  },
   "1.9.2": {
     "1": "General update, ref https://github.com/yangheng95/PyABSA/issues/159"
   },

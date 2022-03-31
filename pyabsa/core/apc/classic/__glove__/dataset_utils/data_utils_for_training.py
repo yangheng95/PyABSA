@@ -13,6 +13,8 @@ from findfile import find_file, find_cwd_file
 from termcolor import colored
 from torch.utils.data import Dataset
 
+from pyabsa.core.apc.classic.__glove__.dataset_utils.classic_glove_apc_utils import build_sentiment_window, prepare_input_for_apc
+
 from .dependency_graph import prepare_dependency_graph
 from pyabsa.core.apc.dataset_utils.apc_utils import load_apc_datasets
 from pyabsa.utils.pyabsa_utils import check_and_fix_labels, validate_example
@@ -207,6 +209,9 @@ class GloVeABSADataset(Dataset):
             dependency_graph = dependency_graph[:, range(0, opt.max_seq_len)]
             dependency_graph = dependency_graph[range(0, opt.max_seq_len), :]
 
+            aspect_begin = len(tokenizer.text_to_sequence(text_left))
+            aspect_position = set(range(aspect_begin, aspect_begin + np.count_nonzero(aspect_indices)))
+
             validate_example(text_raw, aspect, polarity)
 
             data = {
@@ -236,6 +241,8 @@ class GloVeABSADataset(Dataset):
                 'aspect_boundary': aspect_boundary
                 if 'aspect_boundary' in opt.inputs_cols else 0,
 
+                'aspect_position': aspect_position,
+
                 'dependency_graph': dependency_graph
                 if 'dependency_graph' in opt.inputs_cols else 0,
 
@@ -250,6 +257,20 @@ class GloVeABSADataset(Dataset):
         check_and_fix_labels(label_set, 'polarity', all_data, opt)
         opt.polarities_dim = len(label_set)
 
+        all_data = build_sentiment_window(all_data, tokenizer, opt.similarity_threshold, input_demands=opt.inputs_cols)
+        for data in all_data:
+
+            cluster_ids = []
+            for pad_idx in range(opt.max_seq_len):
+                if pad_idx in data['cluster_ids']:
+                    cluster_ids.append(data['polarity'])
+                else:
+                    cluster_ids.append(-100)
+                    # cluster_ids.append(3)
+
+            data['cluster_ids'] = np.asarray(cluster_ids, dtype=np.int64)
+            data['side_ex_ids'] = np.array(0)
+            data['aspect_position'] = np.array(0)
         self.data = all_data
 
     def __getitem__(self, index):
