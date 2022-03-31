@@ -8,13 +8,12 @@ import pickle
 
 import numpy as np
 import tqdm
-from findfile import find_file
 from termcolor import colored
 from torch.utils.data import Dataset
 from transformers import AutoTokenizer
 
 from pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils import build_sentiment_window, prepare_input_for_apc
-from pyabsa.core.apc.classic.__glove__.dataset_utils.dependency_graph import prepare_dependency_graph, configure_spacy_model
+from pyabsa.core.apc.classic.__bert__.dataset_utils.dependency_graph import prepare_dependency_graph, configure_spacy_model
 from pyabsa.core.apc.dataset_utils.apc_utils import load_apc_datasets
 from pyabsa.utils.pyabsa_utils import check_and_fix_labels, validate_example
 

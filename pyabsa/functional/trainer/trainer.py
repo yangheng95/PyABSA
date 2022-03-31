@@ -44,7 +44,7 @@ warnings.filterwarnings('once')
 def init_config(config, auto_device):
     config.device, config.device_name = get_device(auto_device)
     config.auto_device = auto_device
-    config.device = 'cuda' if auto_device == 'all_cuda' else config.device
+    config.device = 'cuda' if auto_device == 'allcuda' else config.device
     config.model_name = config.model.__name__.lower() if not isinstance(config.model, list) else 'ensemble'
     config.PyABSAVersion = __version__
     config.TransformersVersion = transformers.__version__
@@ -74,6 +74,8 @@ class Trainer:
                                      "checkpoint_save_mode=3" to save the fine-tuned BERT,
                                      otherwise avoid saving checkpoint but return the trained model after training
         :param auto_device: True or False, otherwise 'allcuda', 'cuda:1', 'cpu' works
+        :param path_to_save=None: Specify path to save checkpoints
+        :param load_aug=False: Load the available augmentation dataset if any
 
         """
         if not torch.cuda.device_count() > 1 and auto_device == 'allcuda':

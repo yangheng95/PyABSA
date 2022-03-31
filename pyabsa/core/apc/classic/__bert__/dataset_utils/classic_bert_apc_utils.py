@@ -123,10 +123,12 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
         text_left = ' '.join(text_left)
         text_right = ' '.join(text_right)
 
-    tokenizer.bos_token = tokenizer.bos_token if tokenizer.bos_token else '[CLS]'
-    tokenizer.eos_token = tokenizer.eos_token if tokenizer.eos_token else '[SEP]'
-    bos_token = tokenizer.bos_token
-    eos_token = tokenizer.eos_token
+    # tokenizer.bos_token = tokenizer.bos_token if tokenizer.bos_token else '[CLS]'
+    # tokenizer.eos_token = tokenizer.eos_token if tokenizer.eos_token else '[SEP]'
+    # bos_token = tokenizer.bos_token
+    # eos_token = tokenizer.eos_token
+    bos_token = ''
+    eos_token = ''
 
     text_raw = text_left + ' ' + aspect + ' ' + text_right
     text_spc = bos_token + ' ' + text_raw + ' ' + eos_token + ' ' + aspect + ' ' + eos_token

@@ -34,11 +34,10 @@ class Absolute_Position_Embedding(nn.Module):
         return weight
 
 
-class TNet_LF(nn.Module):
-    inputs = ['text_indices', 'aspect_indices', 'aspect_boundary']
+class TNet_LF_Unit(nn.Module):
 
     def __init__(self, embedding_matrix, opt):
-        super(TNet_LF, self).__init__()
+        super(TNet_LF_Unit, self).__init__()
         self.embed = nn.Embedding.from_pretrained(torch.tensor(embedding_matrix, dtype=torch.float))
         self.position = Absolute_Position_Embedding(opt)
         self.opt = opt
@@ -53,8 +52,7 @@ class TNet_LF(nn.Module):
         self.fc = nn.Linear(50, C)
 
     def forward(self, inputs):
-        text_raw_indices, aspect_indices, aspect_in_text = \
-            inputs['text_indices'], inputs['aspect_indices'], inputs['aspect_boundary']
+        text_raw_indices, aspect_indices, aspect_in_text = inputs[0], inputs[1], inputs[2]
         feature_len = torch.sum(text_raw_indices != 0, dim=-1)
         aspect_len = torch.sum(aspect_indices != 0, dim=-1)
         feature = self.embed(text_raw_indices)
@@ -76,5 +74,42 @@ class TNet_LF(nn.Module):
 
         z = F.relu(self.convs3(v))  # [(N,Co,L), ...]*len(Ks)
         z = F.max_pool1d(z, z.size(2)).squeeze(2)
-        out = self.fc(z)
-        return {'logits': out}
+
+        return z
+        # out = self.fc(z)
+        # return {'logits': out}
+
+
+class TNet_LF(nn.Module):
+    inputs = [
+        'text_indices',
+        'aspect_indices',
+        'aspect_boundary',
+        'left_aspect_indices',
+        'left_aspect_boundary',
+        'right_aspect_indices',
+        'right_aspect_boundary',
+    ]
+
+    def __init__(self, bert, opt):
+        super(TNet_LF, self).__init__()
+
+        self.opt = opt
+        self.asgcn_left = TNet_LF_Unit(bert, opt) if self.opt.lsa else None
+        self.asgcn_central = TNet_LF_Unit(bert, opt)
+        self.asgcn_right = TNet_LF_Unit(bert, opt) if self.opt.lsa else None
+        self.dense = nn.Linear(50 * 3, self.opt.polarities_dim) if self.opt.lsa else nn.Linear(50, self.opt.polarities_dim)
+
+    def forward(self, inputs):
+        res = {'logits': None}
+        if self.opt.lsa:
+            cat_feat = torch.cat(
+                (self.asgcn_left([inputs['text_indices'], inputs['left_aspect_indices'], inputs['left_aspect_boundary']]),
+                 self.asgcn_central([inputs['text_indices'], inputs['aspect_indices'], inputs['aspect_boundary']]),
+                 self.asgcn_right([inputs['text_indices'], inputs['right_aspect_indices'], inputs['right_aspect_boundary']])),
+                -1)
+            res['logits'] = self.dense(cat_feat)
+        else:
+            res['logits'] = self.dense(self.asgcn_central([inputs['text_indices'], inputs['aspect_indices'], inputs['aspect_boundary']]))
+
+        return res
