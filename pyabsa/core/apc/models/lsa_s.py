@@ -38,7 +38,7 @@ class LSA_S(nn.Module):
         text_bert_indices = inputs['text_bert_indices']
         left_text_bert_indices = inputs['left_text_bert_indices']
         right_text_bert_indices = inputs['right_text_bert_indices']
-        spc_mask_vec = inputs['spc_mask_vec']
+        spc_mask_vec = inputs['spc_mask_vec'].unsqueeze(2)
         lcf_matrix = inputs['lcfs_vec'].unsqueeze(2)
         left_lcf_matrix = inputs['left_lcfs_vec'].unsqueeze(2)
         right_lcf_matrix = inputs['right_lcfs_vec'].unsqueeze(2)
@@ -46,8 +46,6 @@ class LSA_S(nn.Module):
         global_context_features = self.bert4central(text_bert_indices)['last_hidden_state']
         left_global_context_features = self.bert4central(left_text_bert_indices)['last_hidden_state']
         right_global_context_features = self.bert4central(right_text_bert_indices)['last_hidden_state']
-        # left_global_context_features = self.bert4side(left_text_bert_indices)['last_hidden_state']
-        # right_global_context_features = self.bert4side(right_text_bert_indices)['last_hidden_state']
 
         # # --------------------------------------------------- #
         lcf_features = torch.mul(global_context_features, lcf_matrix)
