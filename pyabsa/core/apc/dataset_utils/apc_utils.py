@@ -254,29 +254,31 @@ def get_cdw_vec(opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical
 
 
 def build_spc_mask_vec(opt, text_ids):
-    spc_mask_vec = np.zeros((opt.max_seq_len, opt.hidden_dim), dtype=np.float32)
-    for i in range(len(text_ids)):
-        spc_mask_vec[i] = np.ones((opt.hidden_dim), dtype=np.float32)
+    spc_mask_vec = np.zeros((opt.max_seq_len), dtype=np.float32)
+    for i, ids in enumerate(text_ids):
+        if not ids:
+            break
+        spc_mask_vec[i] = 1
     return spc_mask_vec
 
 
-def build_sentiment_window(examples, tokenizer, similarity_threshold):
-    copy_side_aspect('left', examples[0], examples[0], examples)
+def build_sentiment_window(examples, tokenizer, similarity_threshold, input_demands=None):
+    copy_side_aspect('left', examples[0], examples[0], examples, input_demands)
     for idx in range(1, len(examples)):
         if is_similar(examples[idx - 1]['text_bert_indices'],
                       examples[idx]['text_bert_indices'],
                       tokenizer=tokenizer,
                       similarity_threshold=similarity_threshold):
-            copy_side_aspect('right', examples[idx - 1], examples[idx], examples)
-            copy_side_aspect('left', examples[idx], examples[idx - 1], examples)
+            copy_side_aspect('right', examples[idx - 1], examples[idx], examples, input_demands)
+            copy_side_aspect('left', examples[idx], examples[idx - 1], examples, input_demands)
         else:
-            copy_side_aspect('right', examples[idx - 1], examples[idx - 1], examples)
-            copy_side_aspect('left', examples[idx], examples[idx], examples)
-    copy_side_aspect('right', examples[-1], examples[-1], examples)
+            copy_side_aspect('right', examples[idx - 1], examples[idx - 1], examples, input_demands)
+            copy_side_aspect('left', examples[idx], examples[idx], examples, input_demands)
+    copy_side_aspect('right', examples[-1], examples[-1], examples, input_demands)
     return examples
 
 
-def copy_side_aspect(direct, target, source, examples):
+def copy_side_aspect(direct, target, source, examples, input_demands):
     if 'cluster_ids' not in target:
         target['cluster_ids'] = copy.deepcopy(target['aspect_position'])
         target['side_ex_ids'] = copy.deepcopy(set([target['ex_id']]))
@@ -295,7 +297,11 @@ def copy_side_aspect(direct, target, source, examples):
             examples[ex_id]['cluster_ids'] |= source['cluster_ids']
             examples[ex_id]['side_ex_ids'] |= target['side_ex_ids']
 
-    for data_item in ['text_bert_indices', 'lcf_vec', 'lcfs_vec']:
+    for data_item in input_demands:
+        if 'right_right_' in data_item or 'left_left_' in data_item:
+            data_item = data_item.replace('right_right_', 'right_', 1).replace('left_left_', 'left_', 1)
+        elif data_item.startswith('right_') or data_item.startswith('left_'):
+            continue
         target[direct + '_' + data_item] = source[data_item]
     target[direct + '_dist'] = int(abs(np.average(list(source['aspect_position'])) - np.average(list(target['aspect_position']))))
     # target[direct + '_dist'] = 0 if id(source['lcf_vec']) == id(target['lcf_vec']) else 1

@@ -167,28 +167,20 @@ class ABSADataset(Dataset):
 
         self.opt.polarities_dim = len(label_set)
 
-        if 'left_lcf_vec' in self.opt.inputs_cols or 'right_lcf_vec' in self.opt.inputs_cols \
-            or 'left_lcfs_vec' in self.opt.inputs_cols or 'right_lcfs_vec' in self.opt.inputs_cols:
-            all_data = build_sentiment_window(all_data, self.tokenizer, self.opt.similarity_threshold)
-            for data in all_data:
+        all_data = build_sentiment_window(all_data, self.tokenizer, self.opt.similarity_threshold, input_demands=self.opt.inputs_cols)
+        for data in all_data:
 
-                cluster_ids = []
-                for pad_idx in range(self.opt.max_seq_len):
-                    if pad_idx in data['cluster_ids']:
-                        # print(data['polarity'])
-                        cluster_ids.append(self.opt.label_to_index.get(self.opt.index_to_label.get(data['polarity'], 'N.A.'), -999))
-                    else:
-                        cluster_ids.append(-100)
-                        # cluster_ids.append(3)
+            cluster_ids = []
+            for pad_idx in range(self.opt.max_seq_len):
+                if pad_idx in data['cluster_ids']:
+                    cluster_ids.append(data['polarity'])
+                else:
+                    cluster_ids.append(-100)
+                    # cluster_ids.append(3)
 
-                data['cluster_ids'] = np.asarray(cluster_ids, dtype=np.int64)
-                data['side_ex_ids'] = np.array(0)
-                data['aspect_position'] = np.array(0)
-
-        else:
-            for data in all_data:
-                data['aspect_position'] = np.array(0)
-
+            data['cluster_ids'] = np.asarray(cluster_ids, dtype=np.int64)
+            data['side_ex_ids'] = np.array(0)
+            data['aspect_position'] = np.array(0)
         self.all_data = all_data
         return all_data
 

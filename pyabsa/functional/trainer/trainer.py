@@ -111,9 +111,9 @@ class Trainer:
 
         self.config = init_config(self.config, auto_device)
         if 'MV' not in self.config.args:
-            self.config.MV = MetricVisualizer(name=self.config.dataset_name + '-' + config.model.__name__,
-                                              trial_tag='Config',
-                                              trial_tag_list=['Config-0'])
+            self.config.MV = MetricVisualizer(name=config.model.__name__ + '-' + self.config.dataset_name,
+                                              trial_tag='Model & Dataset',
+                                              trial_tag_list=[config.model.__name__ + '-' + self.config.dataset_name])
 
         self.from_checkpoint = findfile.find_dir(os.getcwd(), from_checkpoint) if from_checkpoint else ''
         self.checkpoint_save_mode = checkpoint_save_mode

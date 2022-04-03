@@ -27,10 +27,12 @@ from ..models.ensembler import APCEnsembler
 
 try:
     import apex.amp as amp
+
     assert torch.version.__version__ < '1.10.0'
     print('Use FP16 via Apex!')
 except Exception:
     amp = None
+
 
 class Instructor:
     def __init__(self, opt, logger):
