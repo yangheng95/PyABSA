@@ -34,7 +34,7 @@ class FAST_LSA_T(nn.Module):
 
     def forward(self, inputs):
         text_bert_indices = inputs['text_bert_indices']
-        spc_mask_vec = inputs['spc_mask_vec']
+        spc_mask_vec = inputs['spc_mask_vec'].unsqueeze(2)
         lcf_matrix = inputs['lcf_vec'].unsqueeze(2)
         left_lcf_matrix = inputs['left_lcf_vec'].unsqueeze(2)
         right_lcf_matrix = inputs['right_lcf_vec'].unsqueeze(2)

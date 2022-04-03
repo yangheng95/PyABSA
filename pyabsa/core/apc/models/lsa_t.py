@@ -38,7 +38,7 @@ class LSA_T(nn.Module):
         text_bert_indices = inputs['text_bert_indices']
         left_text_bert_indices = inputs['left_text_bert_indices']
         right_text_bert_indices = inputs['right_text_bert_indices']
-        spc_mask_vec = inputs['spc_mask_vec']
+        spc_mask_vec = inputs['spc_mask_vec'].unsqueeze(2)
         lcf_matrix = inputs['lcf_vec'].unsqueeze(2)
         left_lcf_matrix = inputs['left_lcf_vec'].unsqueeze(2)
         right_lcf_matrix = inputs['right_lcf_vec'].unsqueeze(2)
