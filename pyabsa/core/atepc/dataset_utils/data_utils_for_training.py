@@ -269,7 +269,7 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
         # segment_ids = [0] * len(example.text_a[:]) + [1] * (max_seq_len - len([0] * len(example.text_a[:])))
         # segment_ids = segment_ids[:max_seq_len]
 
-        segment_ids = [0] * max_seq_len # simply set segment_ids to all zeros
+        segment_ids = [0] * max_seq_len  # simply set segment_ids to all zeros
         label_ids = []
 
         for i, token in enumerate(tokens):

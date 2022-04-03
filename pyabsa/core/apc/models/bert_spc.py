@@ -9,59 +9,63 @@ from transformers.models.bert.modeling_bert import BertPooler
 from pyabsa.network.sa_encoder import Encoder
 
 
-class BERT_SPC_Unit(nn.Module):
-
-    def __init__(self, bert, opt):
-        super(BERT_SPC_Unit, self).__init__()
-        self.bert = bert
-        self.opt = opt
-        self.encoder = Encoder(bert.config, opt)
-        self.dropout = nn.Dropout(opt.dropout)
-        self.pooler = BertPooler(bert.config)
-        # self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
-
-    def forward(self, inputs):
-        text_bert_indices = inputs
-        output = self.bert(text_bert_indices)
-        pooled_output = output.last_hidden_state
-        # pooled_output = self.pooler(pooled_output)
-        # pooled_output = self.dropout(pooled_output)
-        # logits = self.dense(pooled_output)
-        # return {'logits': logits, 'hidden_state': pooled_output}
-        return pooled_output
-
-
 class BERT_SPC(nn.Module):
-    inputs = ['text_bert_indices']
+    inputs = [
+        'text_bert_indices',
+        'left_text_bert_indices',
+        'right_text_bert_indices',
+        'spc_mask_vec',
+        'lcf_vec'
+    ]
 
     def __init__(self, bert, opt):
         super(BERT_SPC, self).__init__()
-
+        self.bert4central = bert
         self.opt = opt
-        self.bert_left = BERT_SPC_Unit(bert, opt) if self.opt.lsa else None
-        self.bert_central = BERT_SPC_Unit(bert, opt)
-        self.bert_right = BERT_SPC_Unit(bert, opt) if self.opt.lsa else None
-        # self.dense = nn.Linear(3 * opt.embed_dim, opt.polarities_dim) if self.opt.lsa else nn.Linear(opt.embed_dim, opt.polarities_dim)
-        self.dense = nn.Linear(3 * opt.embed_dim, opt.embed_dim) if self.opt.lsa else nn.Linear(opt.embed_dim, opt.embed_dim)
         self.dropout = nn.Dropout(opt.dropout)
-        self.pooler = BertPooler(bert.config)
-        self.logit_out = nn.Linear(opt.embed_dim, opt.polarities_dim)
 
+        self.post_linear = nn.Linear(opt.embed_dim * 2, opt.embed_dim)
+        self.linear_window_3h = nn.Linear(opt.embed_dim * 3, opt.embed_dim)
+        self.linear_window_2h = nn.Linear(opt.embed_dim * 2, opt.embed_dim)
+        self.post_encoder = Encoder(bert.config, opt)
+        self.bert_pooler = BertPooler(bert.config)
+        self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
 
     def forward(self, inputs):
-        res = {'logits': None}
-        if self.opt.lsa:
-            cat_feat = torch.cat(
-                (self.bert_left(inputs['text_bert_indices']),
-                 self.bert_central(inputs['text_bert_indices']),
-                 self.bert_right(inputs['text_bert_indices'])),
-                -1)
-            res['logits'] = self.dense(cat_feat)
-            res['logits'] = self.logit_out(self.pooler(self.dropout(res['logits'])))
 
+        text_bert_indices = inputs['text_bert_indices']
+        left_text_bert_indices = inputs['left_text_bert_indices']
+        right_text_bert_indices = inputs['right_text_bert_indices']
+
+        if not self.opt.lsa:
+            hidden_state = self.bert4central(text_bert_indices)['last_hidden_state']
+            dense_out = self.dense(self.bert_pooler(self.dropout(hidden_state)))
+            return {'logits': dense_out, 'hidden_state': hidden_state}
+
+        central_aspect_feature = self.bert4central(text_bert_indices)['last_hidden_state']
+        central_aspect_feature = self.bert_pooler(central_aspect_feature)
+
+        left_aspect_feature = self.bert4central(left_text_bert_indices)['last_hidden_state']
+        left_aspect_feature = self.bert_pooler(left_aspect_feature)
+
+        right_aspect_feature = self.bert4central(right_text_bert_indices)['last_hidden_state']
+        right_aspect_feature = self.bert_pooler(right_aspect_feature)
+
+        if 'lr' == self.opt.window or 'rl' == self.opt.window:
+            if self.opt.eta >= 0:
+                cat_features = torch.cat(
+                    (central_aspect_feature, self.opt.eta * left_aspect_feature, (1 - self.opt.eta) * right_aspect_feature), -1)
+            else:
+                cat_features = torch.cat((central_aspect_feature, left_aspect_feature, right_aspect_feature), -1)
+            sent_out = self.linear_window_3h(cat_features)
+        elif 'l' == self.opt.window:
+            sent_out = self.linear_window_2h(torch.cat((central_aspect_feature, left_aspect_feature), -1))
+        elif 'r' == self.opt.window:
+            sent_out = self.linear_window_2h(torch.cat((central_aspect_feature, right_aspect_feature), -1))
         else:
-            res['logits'] = self.dense(self.bert_central(inputs['text_bert_indices']))
-            res['logits'] = self.logit_out(self.pooler(self.dropout(res['logits'])))
+            raise KeyError('Invalid parameter of aggregation window building:', self.opt.window)
 
-        return res
+        sent_out = self.dropout(sent_out)
+        dense_out = self.dense(sent_out)
 
+        return {'logits': dense_out, 'hidden_state': sent_out}

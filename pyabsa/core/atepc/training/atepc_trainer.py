@@ -28,6 +28,7 @@ from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_exam
 
 try:
     import apex.amp as amp
+
     assert torch.version.__version__ < '1.10.0'
     print('Use FP16 via Apex!')
 except Exception:
@@ -307,7 +308,7 @@ class Instructor:
                                                                                              'max_apc_test_f1']
                                                                                          )
                         postfix += 'ATE_F1: {}(max:{})'.format(current_ate_test_f1, self.opt.max_test_metrics[
-                                'max_ate_test_f1'])
+                            'max_ate_test_f1'])
                     else:
                         postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
 
