@@ -111,7 +111,8 @@ def load_apc_datasets(fname):
 
 def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect, input_demands):
     if hasattr(opt, 'dynamic_truncate') and opt.dynamic_truncate:
-        _max_seq_len = opt.max_seq_len - len(aspect.split(' '))
+        reserved_num = 3
+        _max_seq_len = opt.max_seq_len - len(aspect.split(' ')) - reserved_num
         text_left = text_left.split(' ')
         text_right = text_right.split(' ')
         if _max_seq_len < (len(text_left) + len(text_right)):

@@ -1,6 +1,9 @@
 {
+  "1.9.4": {
+    "1": "Add LSA support for BERT-SPC models"
+  },
   "1.9.3": {
-    "1": "Test Version"
+    "1": "Test Version, No important modification"
   },
   "1.9.2": {
     "1": "General update, ref https://github.com/yangheng95/PyABSA/issues/159"
