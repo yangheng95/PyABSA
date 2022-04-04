@@ -32,16 +32,16 @@ class BERT_SPC(nn.Module):
             r_feat = self.bert(inputs['right_text_bert_indices'])['last_hidden_state']
             cat_feat = torch.cat((c_feat, l_feat, r_feat), -1)
             cat_feat = self.linear(cat_feat)
-            cat_feat = self.encoder(cat_feat)
             cat_feat = self.dropout(cat_feat)
+            cat_feat = self.encoder(cat_feat)
             cat_feat = self.pooler(cat_feat)
             res['logits'] = self.dense(cat_feat)
 
         else:
             cat_feat = self.bert(inputs['text_bert_indices'])['last_hidden_state']
             cat_feat = self.linear(cat_feat)
-            cat_feat = self.encoder(cat_feat)
             cat_feat = self.dropout(cat_feat)
+            cat_feat = self.encoder(cat_feat)
             cat_feat = self.pooler(cat_feat)
             res['logits'] = self.dense(cat_feat)
 
