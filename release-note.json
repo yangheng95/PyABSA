@@ -1,4 +1,7 @@
 {
+  "1.9.5": {
+    "1": "Set default optimizers to AdamW"
+  },
   "1.9.4": {
     "1": "Add LSA support for BERT-SPC models"
   },
