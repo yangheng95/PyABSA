@@ -12,7 +12,7 @@
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/back-to-reality-leveraging-pattern-driven/aspect-based-sentiment-analysis-on-semeval)](https://paperswithcode.com/sota/aspect-based-sentiment-analysis-on-semeval?p=back-to-reality-leveraging-pattern-driven)
 
-**Hi, there!** PyABSA is a personal project which received many contributions. Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks.
+**Hi, there!** Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks.
 
 # Instant try Inference API on Huggingface Space
 Thanks to Huggingface, we build a demo [ATEPC Inference API](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) to evaluate.
@@ -280,15 +280,6 @@ checkpoint_map = available_checkpoints()  # show available checkpoints of PyABSA
 ```
 
 If you can not access to Google Drive, you can download our checkpoints and load the unzipped checkpoint manually.
-如果您无法访问谷歌Drive，您可以从[此处 (提取码：ABSA)](https://pan.baidu.com/s/1oKkO7RJ6Ob9vY6flnJk3Sg)
-下载我们预训练的模型，并加载模型（本仓库为个人业余项目，没有精力再维护百度云，如果您可以帮助管理国内checkpoint的保存和下载请联系我）。
-
-## How to use our pretrained checkpoints on your dataset
-
-- [Aspect terms extraction & polarity classification](https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_term_extraction/extract_aspects.py)
-- [Aspect polarity classification](https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_polarity_classification/sentiment_inference.py)
-
-## [How to share checkpoints (e.g., checkpoints trained on your custom dataset) with community](demos/documents/share-checkpoint.md)
 
 ## Datasets
 
@@ -311,12 +302,6 @@ More datasets are available at [ABSADatasets](https://github.com/yangheng95/ABSA
 15. Multilingual (The sum of all datasets.)
 
 You don't have to download the datasets, as the datasets will be downloaded automatically.
-
-## Model Support
-
-Except for the following models, we provide a template model involving LCF vec, you can develop your model based on
-the [LCF-APC](pyabsa/core/apc/models/lcf_template_apc.py) model template
-or [LCF-ATEPC](pyabsa/core/atepc/models/lcf_template_atepc.py) model template.
 
 ### ATEPC
 
@@ -403,4 +388,4 @@ or [LCF-ATEPC](https://github.com/XuMayi/LCF-ATEPC).
 
 ## Acknowledgement
 
-This work build from LC-ABSA/LCF-ABSA and LCF-ATEPC, and other impressive works such as PyTorch-ABSA and LCFS-BERT.
+This work is built from LC-ABSA/LCF-ABSA and LCF-ATEPC, and other impressive works such as PyTorch-ABSA and LCFS-BERT.
