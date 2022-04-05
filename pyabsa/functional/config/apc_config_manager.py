@@ -51,7 +51,7 @@ _apc_config_template = {'model': APCModelList.BERT_SPC,
                         }
 
 _apc_config_base = {'model': APCModelList.BERT_SPC,
-                    'optimizer': "adam",
+                    'optimizer': "adamw",
                     'learning_rate': 0.00002,
                     'pretrained_bert': "microsoft/deberta-v3-base",
                     'cache_dataset': True,
@@ -85,7 +85,7 @@ _apc_config_base = {'model': APCModelList.BERT_SPC,
                     }
 
 _apc_config_english = {'model': APCModelList.BERT_SPC,
-                       'optimizer': "adam",
+                       'optimizer': "adamw",
                        'learning_rate': 0.00002,
                        'pretrained_bert': "microsoft/deberta-v3-base",
                        'cache_dataset': True,
@@ -119,7 +119,7 @@ _apc_config_english = {'model': APCModelList.BERT_SPC,
                        }
 
 _apc_config_multilingual = {'model': APCModelList.BERT_SPC,
-                            'optimizer': "adam",
+                            'optimizer': "adamw",
                             'learning_rate': 0.00002,
                             'pretrained_bert': "microsoft/mdeberta-v3-base",
                             'use_bert_spc': True,
@@ -154,7 +154,7 @@ _apc_config_multilingual = {'model': APCModelList.BERT_SPC,
                             }
 
 _apc_config_chinese = {'model': APCModelList.BERT_SPC,
-                       'optimizer': "adam",
+                       'optimizer': "adamw",
                        'learning_rate': 0.00002,
                        'pretrained_bert': "bert-base-chinese",
                        'use_bert_spc': True,
@@ -188,7 +188,7 @@ _apc_config_chinese = {'model': APCModelList.BERT_SPC,
                        }
 
 _apc_config_glove = {'model': TNet_LF,
-                     'optimizer': "adam",
+                     'optimizer': "adamw",
                      'learning_rate': 0.001,
                      'max_seq_len': 100,
                      'cache_dataset': True,
@@ -212,7 +212,7 @@ _apc_config_glove = {'model': TNet_LF,
                      }
 
 _apc_config_bert_baseline = {'model': TNet_LF_BERT,
-                             'optimizer': "adam",
+                             'optimizer': "adamw",
                              'learning_rate': 0.00002,
                              'max_seq_len': 100,
                              'deep_ensemble': False,

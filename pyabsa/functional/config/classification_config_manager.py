@@ -14,7 +14,7 @@ from pyabsa.core.tc.classic.__bert__.models import BERT
 from pyabsa.core.tc.classic.__glove__.models import LSTM
 
 _classification_config_template = {'model': BERT,
-                                   'optimizer': "adam",
+                                   'optimizer': "adamw",
                                    'learning_rate': 0.00002,
                                    'patience': 99999,
                                    'pretrained_bert': "microsoft/mdeberta-v3-base",
@@ -35,7 +35,7 @@ _classification_config_template = {'model': BERT,
                                    }
 
 _classification_config_base = {'model': BERT,
-                               'optimizer': "adam",
+                               'optimizer': "adamw",
                                'learning_rate': 0.00002,
                                'pretrained_bert': "microsoft/deberta-v3-base",
                                'cache_dataset': True,
@@ -56,7 +56,7 @@ _classification_config_base = {'model': BERT,
                                }
 
 _classification_config_english = {'model': BERT,
-                                  'optimizer': "adam",
+                                  'optimizer': "adamw",
                                   'learning_rate': 0.00002,
                                   'patience': 99999,
                                   'pretrained_bert': "microsoft/deberta-v3-base",
@@ -77,7 +77,7 @@ _classification_config_english = {'model': BERT,
                                   }
 
 _classification_config_multilingual = {'model': BERT,
-                                       'optimizer': "adam",
+                                       'optimizer': "adamw",
                                        'learning_rate': 0.00002,
                                        'patience': 99999,
                                        'pretrained_bert': "microsoft/mdeberta-v3-base",
@@ -98,7 +98,7 @@ _classification_config_multilingual = {'model': BERT,
                                        }
 
 _classification_config_chinese = {'model': BERT,
-                                  'optimizer': "adam",
+                                  'optimizer': "adamw",
                                   'learning_rate': 0.00002,
                                   'patience': 99999,
                                   'cache_dataset': True,
@@ -119,7 +119,7 @@ _classification_config_chinese = {'model': BERT,
                                   }
 
 _classification_config_glove = {'model': LSTM,
-                                'optimizer': "adam",
+                                'optimizer': "adamw",
                                 'learning_rate': 0.001,
                                 'cache_dataset': True,
                                 'show_metric': False,
@@ -145,7 +145,7 @@ class ClassificationConfigManager(ConfigManager):
     def __init__(self, args, **kwargs):
         """
         Available Params:  {'model': BERT,
-                            'optimizer': "adam",
+                            'optimizer': "adamw",
                             'learning_rate': 0.00002,
                             'pretrained_bert': "roberta-base",
                             'cache_dataset':True,
