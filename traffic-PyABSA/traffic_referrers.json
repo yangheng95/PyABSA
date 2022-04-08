@@ -1,37 +1,42 @@
 [
   {
     "referrer": "github.com",
-    "count": 1326,
-    "uniques": 150
+    "count": 1289,
+    "uniques": 151
   },
   {
     "referrer": "Google",
-    "count": 391,
-    "uniques": 98
+    "count": 430,
+    "uniques": 99
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 361,
-    "uniques": 89
+    "count": 382,
+    "uniques": 88
   },
   {
     "referrer": "huggingface.co",
-    "count": 72,
-    "uniques": 17
+    "count": 63,
+    "uniques": 18
+  },
+  {
+    "referrer": "l.facebook.com",
+    "count": 21,
+    "uniques": 3
   },
   {
     "referrer": "link.zhihu.com",
+    "count": 11,
+    "uniques": 8
+  },
+  {
+    "referrer": "ss.scnu.edu.cn",
     "count": 10,
-    "uniques": 6
+    "uniques": 2
   },
   {
     "referrer": "shell.cloud.google.com",
     "count": 9,
-    "uniques": 2
-  },
-  {
-    "referrer": "l.facebook.com",
-    "count": 6,
     "uniques": 2
   },
   {
@@ -43,10 +48,5 @@
     "referrer": "nlpprogress.com",
     "count": 5,
     "uniques": 1
-  },
-  {
-    "referrer": "arxiv.org",
-    "count": 4,
-    "uniques": 2
   }
 ]
