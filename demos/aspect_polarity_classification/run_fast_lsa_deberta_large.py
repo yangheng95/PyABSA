@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: run_fast_lsa_deberta.py
+# file: exp0.py
 # time: 2021/5/26 0026
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95

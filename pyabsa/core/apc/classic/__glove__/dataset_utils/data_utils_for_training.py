@@ -9,7 +9,7 @@ import pickle
 import gdown
 import numpy as np
 import tqdm
-from findfile import find_file, find_cwd_file
+from findfile import find_file, find_cwd_file, find_files
 from termcolor import colored
 from torch.utils.data import Dataset
 
@@ -27,19 +27,19 @@ def prepare_glove840_embedding(glove_path):
     if os.path.exists(glove_path) and os.path.isfile(glove_path):
         return glove_path
     else:
-        embedding_file = None
+        embedding_files = []
         dir_path = os.getenv('$HOME') if os.getenv('$HOME') else os.getcwd()
 
         if find_file(dir_path, 'glove.42B.300d.txt', exclude_key='.zip'):
-            embedding_file = find_file(dir_path, 'glove.42B.300d.txt', exclude_key='.zip')
+            embedding_files += find_files(dir_path, 'glove.42B.300d.txt', exclude_key='.zip')
         elif find_file(dir_path, 'glove.840B.300d.txt', exclude_key='.zip'):
-            embedding_file = find_file(dir_path, 'glove.840B.300d.txt', exclude_key='.zip')
+            embedding_files += find_files(dir_path, 'glove.840B.300d.txt', exclude_key='.zip')
         elif find_file(dir_path, 'glove.twitter.27B.txt', exclude_key='.zip'):
-            embedding_file = find_file(dir_path, 'glove.twitter.27B.txt', exclude_key='.zip')
+            embedding_files += find_files(dir_path, 'glove.twitter.27B.txt', exclude_key='.zip')
 
-        if embedding_file:
-            print('Find potential embedding files: {}'.format(embedding_file))
-            return embedding_file
+        if embedding_files:
+            print('Find embedding file: {}, use the first: {}'.format(embedding_files, embedding_files[0]))
+            return embedding_files[0]
 
         else:
             zip_glove_path = os.path.join(os.path.dirname(glove_path), 'glove.840B.300d.zip')
@@ -50,7 +50,7 @@ def prepare_glove840_embedding(glove_path):
         if find_cwd_file('glove.840B.300d.zip'):
             with zipfile.ZipFile(find_cwd_file('glove.840B.300d.zip'), 'r') as z:
                 z.extractall()
-            print('Done.')
+            print('Zip file extraction Done.')
 
         return prepare_glove840_embedding(glove_path)
 

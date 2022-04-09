@@ -26,6 +26,8 @@ from pyabsa.utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError
 from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
 
+import pytorch_warmup as warmup
+
 try:
     import apex.amp as amp
 
@@ -38,6 +40,8 @@ except Exception:
 class Instructor:
 
     def __init__(self, opt, logger):
+        self.warmup_scheduler = None
+        self.lr_scheduler = None
         self.opt = opt
         self.logger = logger
         # if opt.use_bert_spc:
@@ -188,6 +192,10 @@ class Instructor:
         if self.opt.log_step < 0:
             self.opt.log_step = len(self.train_dataloader) if self.opt.log_step < 0 else self.opt.log_step
 
+        if self.opt.warmup_step >= 0:
+            self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=len(self.train_dataloader) * self.opt.num_epoch)
+            self.warmup_scheduler = warmup.UntunedLinearWarmup(self.optimizer)
+
         self.logger.info("***** Running training for Aspect Term Extraction *****")
         self.logger.info("  Num examples = %d", len(self.train_data))
         self.logger.info("  Batch size = %d", self.opt.batch_size)
@@ -202,7 +210,7 @@ class Instructor:
         save_path = ''
         for epoch in range(int(self.opt.num_epoch)):
             nb_tr_examples, nb_tr_steps = 0, 0
-            iterator = tqdm.tqdm(self.train_dataloader)
+            iterator = tqdm.tqdm(self.train_dataloader, postfix='Epoch:{}'.format(epoch))
             postfix = ''
             patience -= 1
             for step, batch in enumerate(iterator):
@@ -245,6 +253,10 @@ class Instructor:
                 else:
                     loss.backward()
                     self.optimizer.step()
+
+                if self.opt.warmup_step >= 0:
+                    with self.warmup_scheduler.dampening():
+                        self.lr_scheduler.step()
 
                 nb_tr_examples += input_ids_spc.size(0)
                 nb_tr_steps += 1

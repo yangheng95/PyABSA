@@ -258,7 +258,7 @@ def build_spc_mask_vec(opt, text_ids):
     spc_mask_vec = np.zeros((opt.max_seq_len), dtype=np.float32)
     for i, ids in enumerate(text_ids):
         # if i == 0 or ids:
-            spc_mask_vec[i] = 1
+        spc_mask_vec[i] = 1
     return spc_mask_vec
 
 

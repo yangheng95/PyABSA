@@ -67,6 +67,21 @@ class FAST_LSA_S(nn.Module):
         else:
             raise KeyError('Invalid parameter:', self.opt.window)
 
+        # if 'lr' == self.opt.window or 'rl' == self.opt.window:
+        #     if self.opt.eta >= 0:
+        #         cat_features = torch.cat(
+        #             (lcf_features, self.opt.eta * left_lcf_features, (1 - self.opt.eta) * right_lcf_features), -1)
+        #         # (self.opt.eta * left_lcf_features, lcf_features, (1 - self.opt.eta) * right_lcf_features), -1)
+        #     else:
+        #         cat_features = torch.cat((left_lcf_features, lcf_features, right_lcf_features), -1)
+        #     sent_out = self.linear_window_3h(cat_features)
+        # elif 'l' == self.opt.window:
+        #     sent_out = self.linear_window_2h(torch.cat((left_lcf_features, lcf_features), -1))
+        # elif 'r' == self.opt.window:
+        #     sent_out = self.linear_window_2h(torch.cat((lcf_features, right_lcf_features), -1))
+        # else:
+        #     raise KeyError('Invalid parameter:', self.opt.window)
+
         sent_out = torch.cat((global_context_features, sent_out), -1)
         sent_out = self.post_linear(sent_out)
         sent_out = self.dropout(sent_out)

@@ -33,6 +33,8 @@ from ..classic.__glove__.dataset_utils.data_utils_for_training import (build_tok
 from pyabsa.utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError, optimizers
 
+import pytorch_warmup as warmup
+
 try:
     import apex.amp as amp
 
@@ -195,6 +197,11 @@ class Instructor:
 
     def _train(self, criterion):
         self.prepare_dataloader(self.train_set)
+
+        if self.opt.warmup_step >= 0:
+            self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=len(self.train_dataloaders[0]) * self.opt.num_epoch)
+            self.warmup_scheduler = warmup.UntunedLinearWarmup(self.optimizer)
+
         if self.val_dataloaders:
             return self._k_fold_train_and_evaluate(criterion)
         else:
@@ -224,7 +231,7 @@ class Instructor:
 
         for epoch in range(self.opt.num_epoch):
             patience -= 1
-            iterator = tqdm(self.train_dataloaders[0])
+            iterator = tqdm(self.train_dataloaders[0], postfix='Epoch:{}'.format(epoch))
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
                 # switch model to training_tutorials mode, clear gradient accumulators
@@ -244,6 +251,10 @@ class Instructor:
                 else:
                     loss.backward()
                     self.optimizer.step()
+
+                if self.opt.warmup_step >= 0:
+                    with self.warmup_scheduler.dampening():
+                        self.lr_scheduler.step()
 
                 # evaluate if test set is available
                 if self.opt.dataset_file['test'] and global_step % self.opt.log_step == 0:
@@ -390,7 +401,7 @@ class Instructor:
             save_path = ''
             for epoch in range(self.opt.num_epoch):
                 patience -= 1
-                iterator = tqdm(train_dataloader)
+                iterator = tqdm(train_dataloader, postfix='Epoch:{}'.format(epoch))
                 postfix = ''
                 for i_batch, sample_batched in enumerate(iterator):
                     global_step += 1
@@ -411,6 +422,10 @@ class Instructor:
                     else:
                         loss.backward()
                         self.optimizer.step()
+
+                    if self.opt.warm_step >= 0:
+                        with self.warmup_scheduler.dampening():
+                            self.lr_scheduler.step()
 
                     # evaluate if test set is available
                     if self.opt.dataset_file['test'] and global_step % self.opt.log_step == 0:

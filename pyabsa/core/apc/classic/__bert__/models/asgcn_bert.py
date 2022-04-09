@@ -6,7 +6,9 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from transformers.models.bert.modeling_bert import BertPooler
 
+from pyabsa.network.sa_encoder import Encoder
 from ..layers.dynamic_rnn import DynamicLSTM
 
 
@@ -120,9 +122,12 @@ class ASGCN_BERT(nn.Module):
         self.opt = opt
         self.asgcn_left = ASGCN_BERT_Unit(bert, opt) if self.opt.lsa else None
         self.asgcn_central = ASGCN_BERT_Unit(bert, opt)
+        self.encoder = Encoder(bert.config, opt)
+        self.dropout = nn.Dropout(opt.dropout)
+        self.pooler = BertPooler(bert.config)
         self.asgcn_right = ASGCN_BERT_Unit(bert, opt) if self.opt.lsa else None
-        self.dense = nn.Linear(self.opt.hidden_dim * 6, self.opt.polarities_dim) \
-            if self.opt.lsa else nn.Linear(self.opt.hidden_dim * 2, self.opt.polarities_dim)
+        self.linear = nn.Linear(self.opt.hidden_dim * 6, self.opt.polarities_dim)
+        self.dense = nn.Linear(self.opt.hidden_dim * 2, self.opt.polarities_dim)
 
     def forward(self, inputs):
         res = {'logits': None}
@@ -132,8 +137,11 @@ class ASGCN_BERT(nn.Module):
                  self.asgcn_central([inputs['text_bert_indices'], inputs['aspect_indices'], inputs['left_indices'], inputs['dependency_graph']]),
                  self.asgcn_right([inputs['text_bert_indices'], inputs['right_aspect_indices'], inputs['right_left_indices'], inputs['right_dependency_graph']])),
                 -1)
-            res['logits'] = self.dense(cat_feat)
+            cat_feat = self.dropout(cat_feat)
+            res['logits'] = self.linear(cat_feat)
         else:
-            res['logits'] = self.dense(self.asgcn_central([inputs['text_bert_indices'], inputs['aspect_indices'], inputs['left_indices'], inputs['dependency_graph']]))
+            cat_feat = self.asgcn_central([inputs['text_bert_indices'], inputs['aspect_indices'], inputs['left_indices'], inputs['dependency_graph']])
+            cat_feat = self.dropout(cat_feat)
+            res['logits'] = self.dense(cat_feat)
 
         return res
