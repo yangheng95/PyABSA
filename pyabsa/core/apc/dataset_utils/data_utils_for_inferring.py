@@ -166,18 +166,17 @@ class ABSADataset(Dataset):
                     raise RuntimeError('Catch Exception: {}, use ignore_error=True to remove error samples.'.format(e))
 
         self.opt.polarities_dim = len(label_set)
-
         all_data = build_sentiment_window(all_data, self.tokenizer, self.opt.similarity_threshold, input_demands=self.opt.inputs_cols)
         for data in all_data:
 
             cluster_ids = []
             for pad_idx in range(self.opt.max_seq_len):
                 if pad_idx in data['cluster_ids']:
-                    cluster_ids.append(data['polarity'])
+                    # print(data['polarity'])
+                    cluster_ids.append(self.opt.label_to_index.get(self.opt.index_to_label.get(data['polarity'], 'N.A.'), -999))
                 else:
                     cluster_ids.append(-100)
                     # cluster_ids.append(3)
-
             data['cluster_ids'] = np.asarray(cluster_ids, dtype=np.int64)
             data['side_ex_ids'] = np.array(0)
             data['aspect_position'] = np.array(0)

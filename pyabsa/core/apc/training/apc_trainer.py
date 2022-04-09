@@ -25,6 +25,8 @@ from pyabsa.utils.pyabsa_utils import print_args, optimizers, resume_from_checkp
 
 from ..models.ensembler import APCEnsembler
 
+import pytorch_warmup as warmup
+
 try:
     import apex.amp as amp
 
@@ -137,6 +139,11 @@ class Instructor:
 
     def _train(self, criterion):
         self.prepare_dataloader(self.train_set)
+
+        if self.opt.warmup_step >= 0:
+            self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=len(self.train_dataloaders[0]) * self.opt.num_epoch)
+            self.warmup_scheduler = warmup.UntunedLinearWarmup(self.optimizer)
+
         if len(self.val_dataloaders) > 1:
             return self._k_fold_train_and_evaluate(criterion)
         else:
@@ -181,7 +188,7 @@ class Instructor:
         postfix = ''
         for epoch in range(self.opt.num_epoch):
             patience -= 1
-            iterator = tqdm(self.train_dataloaders[0])
+            iterator = tqdm(self.train_dataloaders[0], postfix='Epoch:{}'.format(epoch))
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
                 # switch model to training_tutorials mode, clear gradient accumulators
@@ -207,6 +214,10 @@ class Instructor:
                 else:
                     loss.backward()
                     self.optimizer.step()
+
+                if self.opt.warmup_step >= 0:
+                    with self.warmup_scheduler.dampening():
+                        self.lr_scheduler.step()
 
                 # evaluate if test set is available
                 if self.opt.dataset_file['test'] and global_step % self.opt.log_step == 0:
@@ -284,13 +295,6 @@ class Instructor:
             # shutil.rmtree(save_path)
 
         self.logger.info(self.opt.MV.summary(no_print=True))
-        # self.logger.info('-------------------------- Training Summary --------------------------')
-        # self.logger.info('Acc: {:.8f} F1: {:.8f} Accumulated Loss: {:.8f}'.format(
-        #     max_fold_acc * 100,
-        #     max_fold_f1 * 100,
-        #     sum_loss)
-        # )
-        # self.logger.info('-------------------------- Training Summary --------------------------')
 
         print('Training finished, we hope you can share your checkpoint with community, please see:',
               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
@@ -350,7 +354,7 @@ class Instructor:
             save_path = ''
             for epoch in range(self.opt.num_epoch):
                 patience -= 1
-                iterator = tqdm(train_dataloader)
+                iterator = tqdm(train_dataloader, postfix='Epoch:{}'.format(epoch))
                 postfix = ''
                 for i_batch, sample_batched in enumerate(iterator):
                     global_step += 1
@@ -377,6 +381,10 @@ class Instructor:
                     else:
                         loss.backward()
                         self.optimizer.step()
+
+                    if self.opt.warmup_step >= 0:
+                        with self.warmup_scheduler.dampening():
+                            self.lr_scheduler.step()
 
                     # evaluate if test set is available
                     if self.opt.dataset_file['test'] and global_step % self.opt.log_step == 0:
@@ -447,14 +455,6 @@ class Instructor:
             self.opt.MV.add_metric('Fold{}-Max-Test-Acc'.format(f), max_fold_acc * 100)
             self.opt.MV.add_metric('Fold{}-Max-Test-F1'.format(f), max_fold_f1 * 100)
 
-            # self.logger.info('-------------------------- Training Summary --------------------------')
-            # self.logger.info('Acc: {:.8f} F1: {:.8f} Accumulated Loss: {:.8f}'.format(
-            #     max_fold_acc * 100,
-            #     max_fold_f1 * 100,
-            #     sum_loss)
-            # )
-            # self.logger.info('-------------------------- Training Summary --------------------------')
-
             self.logger.info(self.opt.MV.summary(no_print=True))
 
             if os.path.exists('./init_state_dict.bin'):
@@ -465,16 +465,6 @@ class Instructor:
 
         self.opt.MV.add_metric('Max-Test-Acc', max_test_acc * 100)
         self.opt.MV.add_metric('Max-Test-F1', max_test_f1 * 100)
-
-        # if self.opt.cross_validate_fold > 0:
-        #     self.logger.info('-------------------------- Training Summary --------------------------')
-        #     self.logger.info('{}-fold Best Test Acc: {:.8f} Avg F1: {:.8f} Accumulated Loss: {:.8f}'.format(
-        #         self.opt.cross_validate_fold,
-        #         mean_test_acc * 100,
-        #         mean_test_f1 * 100,
-        #         sum_loss)
-        #     )
-        #     self.logger.info('-------------------------- Training Summary --------------------------')
 
         self.logger.info(self.opt.MV.summary(no_print=True))
 

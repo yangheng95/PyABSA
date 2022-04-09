@@ -35,12 +35,12 @@ class BERT_SPC(nn.Module):
             if 'lr' == self.opt.window or 'rl' == self.opt.window:
                 if self.opt.eta >= 0:
                     cat_features = torch.cat(
-                        (c_feat, self.opt.eta * l_feat, (1 - self.opt.eta) * r_feat), -1)
+                        (self.opt.eta * l_feat, c_feat, (1 - self.opt.eta) * r_feat), -1)
                 else:
-                    cat_features = torch.cat((c_feat, l_feat, r_feat), -1)
+                    cat_features = torch.cat((l_feat, c_feat, r_feat), -1)
                 cat_feat = self.linear_window_3h(cat_features)
             elif 'l' == self.opt.window:
-                cat_feat = self.linear_window_2h(torch.cat((c_feat, l_feat), -1))
+                cat_feat = self.linear_window_2h(torch.cat((l_feat, c_feat), -1))
             elif 'r' == self.opt.window:
                 cat_feat = self.linear_window_2h(torch.cat((c_feat, r_feat), -1))
             else:
@@ -62,4 +62,3 @@ class BERT_SPC(nn.Module):
             res['logits'] = self.dense(cat_feat)
 
         return res
-

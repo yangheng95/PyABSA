@@ -1,7 +1,9 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from transformers.models.bert.modeling_bert import BertPooler
 
+from pyabsa.network.sa_encoder import Encoder
 from ..layers.dynamic_rnn import DynamicLSTM
 
 
@@ -98,7 +100,10 @@ class TNet_LF_BERT(nn.Module):
         self.asgcn_left = TNet_LF_BERT_Unit(bert, opt) if self.opt.lsa else None
         self.asgcn_central = TNet_LF_BERT_Unit(bert, opt)
         self.asgcn_right = TNet_LF_BERT_Unit(bert, opt) if self.opt.lsa else None
-        self.dense = nn.Linear(50 * 3, self.opt.polarities_dim) if self.opt.lsa else nn.Linear(50, self.opt.polarities_dim)
+        self.dropout = nn.Dropout(opt.dropout)
+        self.pooler = BertPooler(bert.config)
+        self.linear = nn.Linear(50 * 3, self.opt.polarities_dim)
+        self.dense = nn.Linear(50, self.opt.polarities_dim)
 
     def forward(self, inputs):
         res = {'logits': None}
@@ -108,8 +113,10 @@ class TNet_LF_BERT(nn.Module):
                  self.asgcn_central([inputs['text_bert_indices'], inputs['aspect_indices'], inputs['aspect_boundary']]),
                  self.asgcn_right([inputs['text_bert_indices'], inputs['right_aspect_indices'], inputs['right_aspect_boundary']])),
                 -1)
-            res['logits'] = self.dense(cat_feat)
+            cat_feat = self.dropout(cat_feat)
+            res['logits'] = self.linear(cat_feat)
         else:
-            res['logits'] = self.dense(self.asgcn_central([inputs['text_bert_indices'], inputs['aspect_indices'], inputs['aspect_boundary']]))
-
+            cat_feat = self.asgcn_central([inputs['text_bert_indices'], inputs['aspect_indices'], inputs['aspect_boundary']])
+            cat_feat = self.dropout(cat_feat)
+            res['logits'] = self.dense(cat_feat)
         return res

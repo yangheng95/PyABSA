@@ -1,4 +1,9 @@
 {
+  "1.9.6": {
+    "1": "Revert a change causing APC inference fault",
+    "2": "Modify some default hyper-params",
+    "3": "Add warmup support, e.g., config.warmup_step=1000"
+  },
   "1.9.5": {
     "1": "Set default optimizers to AdamW"
   },

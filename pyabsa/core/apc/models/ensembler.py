@@ -105,9 +105,9 @@ class APCEnsembler(nn.Module):
                 self.models.append(models[i](copy.deepcopy(self.bert) if self.opt.deep_ensemble else self.bert, self.opt))
 
             elif hasattr(GloVeAPCModelList, models[i].__name__):
-                if hasattr(ABSADatasetList, opt.dataset_name):
-                    if not os.path.exists(os.path.join(os.getcwd(), opt.dataset_name)):
-                        os.mkdir(os.path.join(os.getcwd(), opt.dataset_name))
+                # if hasattr(ABSADatasetList, opt.dataset_name):
+                #     if not os.path.exists(os.path.join(os.getcwd(), opt.dataset_name)):
+                #         os.mkdir(os.path.join(os.getcwd(), opt.dataset_name))
 
                 self.tokenizer = build_tokenizer(
                     dataset_list=opt.dataset_file,
