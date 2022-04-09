@@ -1,27 +1,32 @@
 [
   {
     "referrer": "github.com",
-    "count": 1289,
-    "uniques": 151
+    "count": 1299,
+    "uniques": 159
   },
   {
     "referrer": "Google",
-    "count": 430,
+    "count": 429,
     "uniques": 99
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 382,
-    "uniques": 88
+    "count": 399,
+    "uniques": 92
   },
   {
     "referrer": "huggingface.co",
-    "count": 63,
-    "uniques": 18
+    "count": 51,
+    "uniques": 16
   },
   {
     "referrer": "l.facebook.com",
-    "count": 21,
+    "count": 35,
+    "uniques": 4
+  },
+  {
+    "referrer": "zhihu.com",
+    "count": 13,
     "uniques": 3
   },
   {
@@ -40,13 +45,8 @@
     "uniques": 2
   },
   {
-    "referrer": "reddit.com",
+    "referrer": "hub.fastgit.xyz",
     "count": 5,
-    "uniques": 2
-  },
-  {
-    "referrer": "nlpprogress.com",
-    "count": 5,
-    "uniques": 1
+    "uniques": 3
   }
 ]
