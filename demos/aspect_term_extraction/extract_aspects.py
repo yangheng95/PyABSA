@@ -22,7 +22,7 @@ inference_source = ABSADatasetList.SemEval
 # inference_source = ABSADatasetList.TShirt
 # inference_source = examples
 # inference_source = ABSADatasetList.Chinese
-# atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source,  #
+atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source,  #
                                                save_result=True,
                                                print_result=True,  # print the result
                                                pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
