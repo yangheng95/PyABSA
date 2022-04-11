@@ -24,6 +24,10 @@ class BERT_SPC(nn.Module):
         self.encoder = Encoder(bert.config, opt)
         self.dropout = nn.Dropout(opt.dropout)
         self.pooler = BertPooler(bert.config)
+
+        self.eta1 = nn.Parameter(torch.tensor(self.opt.eta, dtype=torch.float))
+        self.eta2 = nn.Parameter(torch.tensor(self.opt.eta, dtype=torch.float))
+
         self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
 
     def forward(self, inputs):
@@ -34,8 +38,7 @@ class BERT_SPC(nn.Module):
             r_feat = self.bert(inputs['right_text_bert_indices'])['last_hidden_state']
             if 'lr' == self.opt.window or 'rl' == self.opt.window:
                 if self.opt.eta >= 0:
-                    cat_features = torch.cat(
-                        (self.opt.eta * l_feat, c_feat, (1 - self.opt.eta) * r_feat), -1)
+                    cat_features = torch.cat((self.eta1 * l_feat, c_feat, self.opt.eta2 * r_feat), -1)
                 else:
                     cat_features = torch.cat((l_feat, c_feat, r_feat), -1)
                 cat_feat = self.linear_window_3h(cat_features)

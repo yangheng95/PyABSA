@@ -30,6 +30,10 @@ class FAST_LSA_S(nn.Module):
         self.post_encoder = Encoder(bert.config, opt)
         self.post_encoder_ = Encoder(bert.config, opt)
         self.bert_pooler = BertPooler(bert.config)
+
+        self.eta1 = nn.Parameter(torch.tensor(self.opt.eta, dtype=torch.float))
+        self.eta2 = nn.Parameter(torch.tensor(self.opt.eta, dtype=torch.float))
+
         self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
 
     def forward(self, inputs):
@@ -56,7 +60,7 @@ class FAST_LSA_S(nn.Module):
         if 'lr' == self.opt.window or 'rl' == self.opt.window:
             if self.opt.eta >= 0:
                 cat_features = torch.cat(
-                    (lcf_features, self.opt.eta * left_lcf_features, (1 - self.opt.eta) * right_lcf_features), -1)
+                    (self.eta1 * left_lcf_features, lcf_features, self.eta2 * right_lcf_features), -1)
             else:
                 cat_features = torch.cat((lcf_features, left_lcf_features, right_lcf_features), -1)
             sent_out = self.linear_window_3h(cat_features)
@@ -68,10 +72,10 @@ class FAST_LSA_S(nn.Module):
             raise KeyError('Invalid parameter:', self.opt.window)
 
         # if 'lr' == self.opt.window or 'rl' == self.opt.window:
-        #     if self.opt.eta >= 0:
+        #     if self.eta >= 0:
         #         cat_features = torch.cat(
-        #             (lcf_features, self.opt.eta * left_lcf_features, (1 - self.opt.eta) * right_lcf_features), -1)
-        #         # (self.opt.eta * left_lcf_features, lcf_features, (1 - self.opt.eta) * right_lcf_features), -1)
+        #             (lcf_features, self.eta * left_lcf_features, (1 - self.eta) * right_lcf_features), -1)
+        #         # (self.eta * left_lcf_features, lcf_features, (1 - self.eta) * right_lcf_features), -1)
         #     else:
         #         cat_features = torch.cat((left_lcf_features, lcf_features, right_lcf_features), -1)
         #     sent_out = self.linear_window_3h(cat_features)
