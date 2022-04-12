@@ -227,7 +227,18 @@ optimizers = {
     'rmsprop': torch.optim.RMSprop,  # default lr=0.01
     'sgd': torch.optim.SGD,
     'adamw': torch.optim.AdamW,
-    'radam': torch.optim.RAdam if torch.version.__version__ > '1.9.1' else torch.optim.Adam,
-    'nadam': torch.optim.NAdam if torch.version.__version__ > '1.9.1' else torch.optim.Adam,
-    'sparseadam': torch.optim.SparseAdam if torch.version.__version__ > '1.9.1' else torch.optim.Adam,
+    # 'radam': torch.optim.Adam if torch.version.__version__ <= '1.9.1' else torch.optim.RAdam,
+    # 'nadam': torch.optim.Adam if torch.version.__version__ <= '1.9.1' else torch.optim.NAdam,
+    # 'sparseadam': torch.optim.Adam if torch.version.__version__ <= '1.9.1' else torch.optim.SparseAdam,
+    torch.optim.Adadelta: torch.optim.Adadelta,  # default lr=1.0
+    torch.optim.Adagrad: torch.optim.Adagrad,  # default lr=0.01
+    torch.optim.Adam: torch.optim.Adam,  # default lr=0.001
+    torch.optim.Adamax: torch.optim.Adamax,  # default lr=0.002
+    torch.optim.ASGD: torch.optim.ASGD,  # default lr=0.01
+    torch.optim.RMSprop: torch.optim.RMSprop,  # default lr=0.01
+    torch.optim.SGD: torch.optim.SGD,
+    torch.optim.AdamW: torch.optim.AdamW,
+    # torch.optim.RAdam: torch.optim.RAdam,
+    # torch.optim.NAdam: torch.optim.NAdam,
+    # torch.optim.SparseAdam: torch.optim.SparseAdam,
 }

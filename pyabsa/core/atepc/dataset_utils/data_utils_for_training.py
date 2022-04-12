@@ -96,24 +96,27 @@ def readfile(filename):
         if len(s) > 0:
             # prepare the atepc dataset, refer to https://github.com/yangheng95/PyABSA/issues/78
             polarity_padding = [str(SENTIMENT_PADDING)] * len(t)
-            # for p_idx in range(len(p) - 1):
-            #     if (p[p_idx] != p[p_idx + 1] and p[p_idx] != str(SENTIMENT_PADDING) and p[p_idx + 1] != str(SENTIMENT_PADDING)) \
-            #         or (p[p_idx] != str(SENTIMENT_PADDING) and p[p_idx + 1] == str(SENTIMENT_PADDING)):
-            #         _p = p[:p_idx + 1] + polarity_padding[p_idx + 1:]
-            #         p = polarity_padding[:p_idx + 1] + p[p_idx + 1:]
-            #         prepared_data.append((s, t, _p))
 
-            for t_idx in range(1, len(t)):
+            if len(Labels) > 3:
+            # for more IOB labels support, but can not split cases in some praticular conditions, e.g., (B,I,E,O)
+                for p_idx in range(len(p) - 1):
+                    if (p[p_idx] != p[p_idx + 1] and p[p_idx] != str(SENTIMENT_PADDING) and p[p_idx + 1] != str(SENTIMENT_PADDING)) \
+                        or (p[p_idx] != str(SENTIMENT_PADDING) and p[p_idx + 1] == str(SENTIMENT_PADDING)):
+                        _p = p[:p_idx + 1] + polarity_padding[p_idx + 1:]
+                        p = polarity_padding[:p_idx + 1] + p[p_idx + 1:]
+                        prepared_data.append((s, t, _p))
+            else:
+                for t_idx in range(1, len(t)):
+                    # for 3 IOB label (B, I, O)
+                    if p[t_idx] != str(SENTIMENT_PADDING) and t_idx == len(t) - 1 and split_aspect(t[t_idx]):
+                        _p = p[:t_idx + 1] + polarity_padding[t_idx + 1:]
+                        p = polarity_padding[:t_idx + 1] + p[t_idx + 1:]
+                        prepared_data.append((s, t, _p))
 
-                if p[t_idx] != str(SENTIMENT_PADDING) and t_idx == len(t) - 1 and split_aspect(t[t_idx]):
-                    _p = p[:t_idx + 1] + polarity_padding[t_idx + 1:]
-                    p = polarity_padding[:t_idx + 1] + p[t_idx + 1:]
-                    prepared_data.append((s, t, _p))
-
-                if p[t_idx - 1] != str(SENTIMENT_PADDING) and split_aspect(t[t_idx - 1], t[t_idx]):
-                    _p = p[:t_idx] + polarity_padding[t_idx:]
-                    p = polarity_padding[:t_idx] + p[t_idx:]
-                    prepared_data.append((s, t, _p))
+                    if p[t_idx - 1] != str(SENTIMENT_PADDING) and split_aspect(t[t_idx - 1], t[t_idx]):
+                        _p = p[:t_idx] + polarity_padding[t_idx:]
+                        p = polarity_padding[:t_idx] + p[t_idx:]
+                        prepared_data.append((s, t, _p))
 
     return prepared_data
 
@@ -143,7 +146,7 @@ def split_aspect(tag1, tag2=None):
     elif tag1 == 'I-ASP' and tag2 == 'I-ASP':
         return False
     else:
-        raise ValueError('Invalid IOB tag: {}, {}'.format(tag1, tag2))
+        raise ValueError('Invalid IOB tag combination: {}, {}'.format(tag1, tag2))
 
 
 class DataProcessor(object):

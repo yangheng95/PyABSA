@@ -30,7 +30,7 @@ import pytorch_warmup as warmup
 try:
     import apex.amp as amp
 
-    assert torch.version.__version__ < '1.10.0'
+    # assert torch.version.__version__ < '1.11.0'
     print('Use FP16 via Apex!')
 except Exception:
     amp = None
@@ -202,6 +202,9 @@ class Instructor:
         self.logger.info("Num steps = %d", len(self.train_dataloaders[0]) // self.opt.batch_size * self.opt.num_epoch)
         postfix = ''
         for epoch in range(self.opt.num_epoch):
+            # self.opt.ETA_MV.add_metric(r'$\eta_{1}$', self.model.models[0].eta1.item())
+            # self.opt.ETA_MV.add_metric(r'$\eta_{2}$', self.model.models[0].eta2.item())
+            # self.opt.ETA_MV.next_trial()
             patience -= 1
             iterator = tqdm(self.train_dataloaders[0], postfix='Epoch:{}'.format(epoch))
             for i_batch, sample_batched in enumerate(iterator):
@@ -223,7 +226,6 @@ class Instructor:
 
                 sum_loss += loss.item()
                 if amp:
-                    self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
                     with amp.scale_loss(loss, self.optimizer) as scaled_loss:
                         scaled_loss.backward()
                 else:
@@ -283,14 +285,14 @@ class Instructor:
 
                         postfix = ('Epoch:{} | Loss:{:.4f} | Acc:{:.2f}(max:{:.2f}) |'
                                    ' F1:{:.2f}(max:{:.2f}) {} {}'.format(epoch,
-                                                                         loss.item(),
-                                                                         test_acc * 100,
-                                                                         max_fold_acc * 100,
-                                                                         f1 * 100,
-                                                                         max_fold_f1 * 100,
-                                                                         round(self.model.models[0].eta1.item(), 2) if self.opt.eta != -1 else '',
-                                                                         round(self.model.models[0].eta2.item(), 2) if self.opt.eta != -1 else '',
-                                                                         ))
+                                                                            loss.item(),
+                                                                            test_acc * 100,
+                                                                            max_fold_acc * 100,
+                                                                            f1 * 100,
+                                                                            max_fold_f1 * 100,
+                                                                            round(self.model.models[0].eta1.item(), 2),
+                                                                            round(self.model.models[0].eta2.item(), 2),
+                                                                            ))
                     else:
                         postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
 
@@ -393,7 +395,6 @@ class Instructor:
 
                     sum_loss += loss.item()
                     if amp:
-                        self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
                         with amp.scale_loss(loss, self.optimizer) as scaled_loss:
                             scaled_loss.backward()
                     else:
@@ -452,14 +453,14 @@ class Instructor:
 
                             postfix = ('Epoch:{} | Loss:{:.4f} | Acc:{:.2f}(max:{:.2f}) |'
                                        ' F1:{:.2f}(max:{:.2f}) {} {}'.format(epoch,
-                                                                             loss.item(),
-                                                                             test_acc * 100,
-                                                                             max_fold_acc * 100,
-                                                                             f1 * 100,
-                                                                             max_fold_f1 * 100,
-                                                                             round(self.model.models[0].eta1.item(), 2) if self.opt.eta != -1 else '',
-                                                                             round(self.model.models[0].eta2.item(), 2) if self.opt.eta != -1 else '',
-                                                                             ))
+                                                                                loss.item(),
+                                                                                test_acc * 100,
+                                                                                max_fold_acc * 100,
+                                                                                f1 * 100,
+                                                                                max_fold_f1 * 100,
+                                                                                round(self.model.models[0].eta0.item(), 2),
+                                                                                round(self.model.models[0].eta1.item(), 2)
+                                                                                ))
                         else:
                             postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
 

@@ -33,24 +33,24 @@ class BERT_SPC(nn.Module):
     def forward(self, inputs):
         res = {'logits': None}
         if self.opt.lsa:
-            c_feat = self.bert(inputs['text_bert_indices'])['last_hidden_state']
-            l_feat = self.bert(inputs['left_text_bert_indices'])['last_hidden_state']
-            r_feat = self.bert(inputs['right_text_bert_indices'])['last_hidden_state']
+            feat = self.bert(inputs['text_bert_indices'])['last_hidden_state']
+            left_feat = self.bert(inputs['left_text_bert_indices'])['last_hidden_state']
+            right_feat = self.bert(inputs['right_text_bert_indices'])['last_hidden_state']
             if 'lr' == self.opt.window or 'rl' == self.opt.window:
                 if self.opt.eta >= 0:
-                    cat_features = torch.cat((self.eta1 * l_feat, c_feat, self.opt.eta2 * r_feat), -1)
+                    cat_features = torch.cat(
+                        (feat, self.eta1 * left_feat, self.eta2 * right_feat), -1)
                 else:
-                    cat_features = torch.cat((l_feat, c_feat, r_feat), -1)
-                cat_feat = self.linear_window_3h(cat_features)
+                    cat_features = torch.cat((feat, left_feat, right_feat), -1)
+                sent_out = self.linear_window_3h(cat_features)
             elif 'l' == self.opt.window:
-                cat_feat = self.linear_window_2h(torch.cat((l_feat, c_feat), -1))
+                sent_out = self.linear_window_2h(torch.cat((feat, self.eta1 * left_feat), -1))
             elif 'r' == self.opt.window:
-                cat_feat = self.linear_window_2h(torch.cat((c_feat, r_feat), -1))
+                sent_out = self.linear_window_2h(torch.cat((feat, self.eta2 * right_feat), -1))
             else:
                 raise KeyError('Invalid parameter:', self.opt.window)
 
-            # cat_feat = torch.cat((c_feat, l_feat, r_feat), -1)
-            cat_feat = self.linear(cat_feat)
+            cat_feat = self.linear(sent_out)
             cat_feat = self.dropout(cat_feat)
             cat_feat = self.encoder(cat_feat)
             cat_feat = self.pooler(cat_feat)

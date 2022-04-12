@@ -31,7 +31,7 @@ import pytorch_warmup as warmup
 try:
     import apex.amp as amp
 
-    assert torch.version.__version__ < '1.10.0'
+    # assert torch.version.__version__ < '1.10.0'
     print('Use FP16 via Apex!')
 except Exception:
     amp = None
@@ -247,7 +247,6 @@ class Instructor:
                 sum_loss += loss.item()
 
                 if amp:
-                    self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
                     with amp.scale_loss(loss, self.optimizer) as scaled_loss:
                         scaled_loss.backward()
                 else:
