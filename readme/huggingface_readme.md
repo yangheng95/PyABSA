@@ -18,7 +18,7 @@
 
 # Develop & Research based on PyABSA
 
-## Try the demo [Inference API]((https://huggingface.co/spaces/yangheng/PyABSA-ATEPC)) on Huggingface Space
+## Try the demo [Inference API](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) on Huggingface Space
 
 ## Use Our Model via Transformers Model Hub
 **If you do not need the best models of APC or ATEPC, you can easily try our pretrained model to save your time!** 
