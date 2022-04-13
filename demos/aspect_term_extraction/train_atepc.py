@@ -20,16 +20,7 @@ from pyabsa.functional import ATEPCConfigManager
 from pyabsa.functional.dataset import DatasetItem
 
 atepc_config = ATEPCConfigManager.get_atepc_config_english()
-atepc_config.num_epoch = 30
-atepc_config.evaluate_begin = 2
-atepc_config.log_step = -1
-atepc_config.dropout = 0.1
-atepc_config.l2reg = 1e-5
-atepc_config.batch_size = 16
-atepc_config.srd_alignment = True
 
-# atepc_config.pretrained_bert = 'bert-base-uncased'
-# atepc_config.pretrained_bert = 'roberta-base'
 atepc_config.pretrained_bert = 'microsoft/deberta-v3-base'
 atepc_config.model = ATEPCModelList.FAST_LCF_ATEPC
 dataset_path = ABSADatasetList.Restaurant14
