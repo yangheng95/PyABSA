@@ -100,8 +100,7 @@ class AspectExtractor:
                 raise KeyError('The checkpoint you are loading is not from ATEPC model.')
 
         self.processor = ATEPCProcessor(self.tokenizer)
-        self.label_list = self.processor.get_labels()
-        self.num_labels = len(self.label_list) + 1
+        self.num_labels = len(self.opt.label_list) + 1
         random.seed(self.opt.seed)
         np.random.seed(self.opt.seed)
         torch.manual_seed(self.opt.seed)
@@ -234,7 +233,7 @@ class AspectExtractor:
         self.infer_dataloader = None
         examples = self.processor.get_examples_for_aspect_extraction(examples)
         infer_features = convert_ate_examples_to_features(examples,
-                                                          self.label_list,
+                                                          self.opt.label_list,
                                                           self.opt.max_seq_len,
                                                           self.tokenizer,
                                                           self.opt)
@@ -258,7 +257,7 @@ class AspectExtractor:
         # extract_aspects
         self.model.eval()
         if 'index_to_IOB_label' not in self.opt.args:
-            label_map = {i: label for i, label in enumerate(self.label_list, 1)}
+            label_map = {i: label for i, label in enumerate(self.opt.label_list, 1)}
         else:
             label_map = self.opt.index_to_IOB_label
         for i_batch, (input_ids_spc, input_mask, segment_ids, label_ids, polarity, valid_ids, l_mask) in enumerate(self.infer_dataloader):
@@ -339,7 +338,7 @@ class AspectExtractor:
         self.infer_dataloader = None
         examples = self.processor.get_examples_for_sentiment_classification(examples)
         infer_features = convert_apc_examples_to_features(examples,
-                                                          self.label_list,
+                                                          self.opt.label_list,
                                                           self.opt.max_seq_len,
                                                           self.tokenizer,
                                                           self.opt)

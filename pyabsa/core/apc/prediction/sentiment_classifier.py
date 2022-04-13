@@ -98,7 +98,10 @@ class SentimentClassifier:
                 print_args(self.opt, mode=1)
 
             except Exception as e:
-                raise RuntimeError('Fail to load the model from {}! \nException: {} '.format(e, model_arg))
+                raise RuntimeError('Fail to load the model from {}! '
+                                   'Please make sure the version of checkpoint and PyABSA are compatible.'
+                                   ' Try to remove he checkpoint and download again'
+                                   ' \nException: {} '.format(e, model_arg))
 
         if isinstance(self.opt.model, list):
             if hasattr(APCModelList, self.opt.model[0].__name__):
