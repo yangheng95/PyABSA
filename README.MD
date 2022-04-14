@@ -13,7 +13,7 @@
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/back-to-reality-leveraging-pattern-driven/aspect-based-sentiment-analysis-on-semeval)](https://paperswithcode.com/sota/aspect-based-sentiment-analysis-on-semeval?p=back-to-reality-leveraging-pattern-driven)
 
 **Hi, there!** Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks.
-# | [Overview](./README.MD)  |  [About HuggingfaceHub](readme/huggingface_readme.md)  |  [About ABDADatasets](readme/dataset_readme.md)  |  [About Models](readme/model_readme.md) |  [Tutorials](readme/tutorial_readme.md) |  
+# | [Overview](./README.MD) | [HuggingfaceHub](readme/huggingface_readme.md) | [ABDADatasets](readme/dataset_readme.md) | [ABSA Models](readme/model_readme.md) |  [Tutorials](readme/tutorial_readme.md) |  
 
 ## Try our [APC Inference](https://huggingface.co/spaces/yangheng/PyABSA-APC) and [ATEPC Inference](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) demo on Huggingface Space
 
@@ -47,8 +47,6 @@
 </table>
 
 ## Installation
-
-Please do not install the version without corresponding release note to avoid installing a test version.
 
 ### install via pip
 
@@ -146,10 +144,7 @@ many ways, including:
 - Star this repository to keep it active
 
 ## Notice
-
-The LCF is a simple and adoptive mechanism proposed for ABSA. Many models based on LCF has been proposed and achieved
-SOTA performance. Developing your models based on LCF will significantly improve your ABSA models. If you are looking
-for the original proposal of local context focus, please redirect to the introduction of
+If you are looking for the original proposal of local context focus, please redirect to the introduction of
 [LCF](https://github.com/yangheng95/PyABSA/tree/release/demos/documents). If you are looking for the original codes of
 the LCF-related papers, please redirect to [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/LC-ABSA)
 or [LCF-ATEPC](https://github.com/XuMayi/LCF-ATEPC).
