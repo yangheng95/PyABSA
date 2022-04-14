@@ -40,7 +40,7 @@ class LCF_ATEPC(nn.Module):
         # convert tags of BERT-SPC input to BERT-BASE format
         labels = labels.detach().cpu().numpy()
         for text_i in range(len(labels)):
-            sep_index = np.argmax((labels[text_i] == self.num_labels-1))
+            sep_index = np.argmax((labels[text_i] == self.num_labels - 1))
             labels[text_i][sep_index + 1:] = 0
         return torch.tensor(labels).to(self.bert4global.device)
 

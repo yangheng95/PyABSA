@@ -227,8 +227,8 @@ class TextClassifierCheckpointManager(CheckpointManager):
 
 def parse_checkpoint_info(t_checkpoint_map, task='APC'):
     print('*' * 10, colored('Available {} model checkpoints for Version:{} (this version)'.format(task, __version__), 'green'), '*' * 10)
-    for i, checkpoint in enumerate(t_checkpoint_map):
-        checkpoint = t_checkpoint_map[checkpoint]
+    for i, checkpoint_name in enumerate(t_checkpoint_map):
+        checkpoint = t_checkpoint_map[checkpoint_name]
         try:
             c_version = checkpoint['Available Version']
         except:
@@ -242,10 +242,10 @@ def parse_checkpoint_info(t_checkpoint_map, task='APC'):
             min_ver = c_version
             max_ver = ''
         max_ver = max_ver if max_ver else 'N.A.'
-        StrictVersion()
         if max_ver == 'N.A.' or StrictVersion(min_ver) <= StrictVersion(__version__) <= StrictVersion(max_ver):
 
             print('-' * 100)
+            print('Checkpoint Name: {}'.format(checkpoint_name))
             for key in checkpoint:
                 print('{}: {}'.format(key, checkpoint[key]))
             print('-' * 100)

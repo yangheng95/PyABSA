@@ -284,15 +284,13 @@ class Instructor:
                                 save_model(self.opt, self.model, self.tokenizer, save_path)
 
                         postfix = ('Epoch:{} | Loss:{:.4f} | Acc:{:.2f}(max:{:.2f}) |'
-                                   ' F1:{:.2f}(max:{:.2f}) {} {}'.format(epoch,
-                                                                            loss.item(),
-                                                                            test_acc * 100,
-                                                                            max_fold_acc * 100,
-                                                                            f1 * 100,
-                                                                            max_fold_f1 * 100,
-                                                                            round(self.model.models[0].eta1.item(), 2),
-                                                                            round(self.model.models[0].eta2.item(), 2),
-                                                                            ))
+                                   ' F1:{:.2f}(max:{:.2f})'.format(epoch,
+                                                                   loss.item(),
+                                                                   test_acc * 100,
+                                                                   max_fold_acc * 100,
+                                                                   f1 * 100,
+                                                                   max_fold_f1 * 100
+                                                                   ))
                     else:
                         postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
 
@@ -452,15 +450,13 @@ class Instructor:
                                     save_model(self.opt, self.model, self.tokenizer, save_path)
 
                             postfix = ('Epoch:{} | Loss:{:.4f} | Acc:{:.2f}(max:{:.2f}) |'
-                                       ' F1:{:.2f}(max:{:.2f}) {} {}'.format(epoch,
-                                                                                loss.item(),
-                                                                                test_acc * 100,
-                                                                                max_fold_acc * 100,
-                                                                                f1 * 100,
-                                                                                max_fold_f1 * 100,
-                                                                                round(self.model.models[0].eta0.item(), 2),
-                                                                                round(self.model.models[0].eta1.item(), 2)
-                                                                                ))
+                                       ' F1:{:.2f}(max:{:.2f})'.format(epoch,
+                                                                       loss.item(),
+                                                                       test_acc * 100,
+                                                                       max_fold_acc * 100,
+                                                                       f1 * 100,
+                                                                       max_fold_f1 * 100
+                                                                       ))
                         else:
                             postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
 

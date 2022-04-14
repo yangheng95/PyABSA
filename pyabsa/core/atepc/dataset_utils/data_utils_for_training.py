@@ -98,7 +98,7 @@ def readfile(filename):
             polarity_padding = [str(SENTIMENT_PADDING)] * len(t)
 
             if len(Labels) > 3:
-            # for more IOB labels support, but can not split cases in some praticular conditions, e.g., (B,I,E,O)
+                # for more IOB labels support, but can not split cases in some praticular conditions, e.g., (B,I,E,O)
                 for p_idx in range(len(p) - 1):
                     if (p[p_idx] != p[p_idx + 1] and p[p_idx] != str(SENTIMENT_PADDING) and p[p_idx + 1] != str(SENTIMENT_PADDING)) \
                         or (p[p_idx] != str(SENTIMENT_PADDING) and p[p_idx + 1] == str(SENTIMENT_PADDING)):

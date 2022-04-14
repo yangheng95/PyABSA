@@ -8,11 +8,6 @@
 
 from pyabsa import APCTrainer, APCConfigManager, GloVeAPCModelList, ABSADatasetList
 
-########################################################################################################################
-#                To use GloVe-based model, you should put the GloVe embedding into the dataset path                    #
-#              or if you can access to Google, it will automatic download GloVe embedding if necessary                 #
-########################################################################################################################
-
 
 # Put glove embedding under current path first if you dont want to download GloVe embedding
 apc_config_english = APCConfigManager.get_apc_config_glove()
