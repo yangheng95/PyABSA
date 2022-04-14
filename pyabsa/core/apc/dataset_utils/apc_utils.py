@@ -311,6 +311,8 @@ def is_similar(s1, s2, tokenizer, similarity_threshold):
     # some reviews in the datasets are broken and can not use s1 == s2 to distinguish
     # the same text which contains multiple aspects, so the similarity check is used
     # similarity check is based on the observation and analysis of datasets
+    if isinstance(s1, int) or isinstance(s2, int):
+        return False
     if abs(np.count_nonzero(s1) - np.count_nonzero(s2)) > 5:
         return False
     count = 0.
