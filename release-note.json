@@ -1,4 +1,7 @@
 {
+  "1.10.2": {
+    "1": "General Update"
+  },
   "1.10.0": {
     "1": "Add more IOB tag support, ref: https://github.com/yangheng95/PyABSA/issues/161",
     "2": "WARNING: Modify some models, and some checkpoints on Google Drive may be unavailable due to this update"

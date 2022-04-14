@@ -21,7 +21,9 @@ class APCModelList(list):
     from .lcf_template_apc import LCF_TEMPLATE_BERT
     from .lcfs_bert import LCFS_BERT
     from .lcfs_dual_bert import LCFS_DUAL_BERT
+    from .fast_lsa_t_v2 import FAST_LSA_T_V2
     from .fast_lsa_t import FAST_LSA_T
+    from .fast_lsa_s_v2 import FAST_LSA_S_V2
     from .fast_lsa_s import FAST_LSA_S
     from .lsa_t import LSA_T
     from .lsa_s import LSA_S
@@ -34,6 +36,9 @@ class APCModelList(list):
     LSA_S = LSA_S
     FAST_LSA_T = FAST_LSA_T
     FAST_LSA_S = FAST_LSA_S
+
+    FAST_LSA_T_V2 = FAST_LSA_T_V2
+    FAST_LSA_S_V2 = FAST_LSA_S_V2
 
     DLCF_DCA_BERT = DLCF_DCA_BERT
     DLCFS_DCA_BERT = DLCFS_DCA_BERT
@@ -66,6 +71,9 @@ class APCModelList(list):
             self.LSA_S,
             self.FAST_LSA_T,
             self.FAST_LSA_S,
+            self.FAST_LSA_T_V2,
+            self.FAST_LSA_S,
+            self.FAST_LSA_S_V2,
             self.DLCF_DCA_BERT,
             self.DLCFS_DCA_BERT,
             self.LCF_BERT,
