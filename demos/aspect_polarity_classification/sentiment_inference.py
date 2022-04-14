@@ -24,7 +24,7 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 #     'I have had my computer for 2 weeks already and it [ASP]works[ASP] perfectly . !sent! Positive',
 #     'And I may be the only one but I am really liking [ASP]Windows 8[ASP] . !sent! Positive',
 # ]
-sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='english',
+sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='multilingual',
                                                                 auto_device=True,  # Use CUDA if available
                                                                 )
 

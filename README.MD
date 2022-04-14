@@ -15,7 +15,7 @@
 **Hi, there!** Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks.
 # | [Overview](./README.MD)  |  [About HuggingfaceHub](readme/huggingface_readme.md)  |  [About ABDADatasets](readme/dataset_readme.md)  |  [About Models](readme/model_readme.md) |  [Tutorials](readme/tutorial_readme.md) |  
 
-## Try our demo [Inference API](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) on Huggingface Space
+## Try our [APC Inference](https://huggingface.co/spaces/yangheng/PyABSA-APC) and [ATEPC Inference](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) demo on Huggingface Space
 
 ## Package Overview
 
