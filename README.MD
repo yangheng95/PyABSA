@@ -13,7 +13,7 @@
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/back-to-reality-leveraging-pattern-driven/aspect-based-sentiment-analysis-on-semeval)](https://paperswithcode.com/sota/aspect-based-sentiment-analysis-on-semeval?p=back-to-reality-leveraging-pattern-driven)
 
 **Hi, there!** Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks.
-# | [Overview](./README.MD) | [HuggingfaceHub](readme/huggingface_readme.md) | [ABDADatasets](readme/dataset_readme.md) | [ABSA Models](readme/model_readme.md) |  [Tutorials](readme/tutorial_readme.md) |  
+# | [Overview](./README.MD) | [HuggingfaceHub](readme/huggingface_readme.md) | [ABDADatasets](readme/dataset_readme.md) | [ABSA Models](readme/model_readme.md) | [Colab Tutorials](readme/tutorial_readme.md) |  
 
 ## Try our [APC Inference](https://huggingface.co/spaces/yangheng/PyABSA-APC) and [ATEPC Inference](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) demo on Huggingface Space
 

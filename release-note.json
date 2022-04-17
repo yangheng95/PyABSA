@@ -1,4 +1,7 @@
 {
+  "1.10.3": {
+    "1": "Add V2 for LSA models, note V2 is not the better model for all scenarios"
+  },
   "1.10.2": {
     "1": "General Update"
   },
