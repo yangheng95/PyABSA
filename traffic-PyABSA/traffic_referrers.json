@@ -1,23 +1,23 @@
 [
   {
     "referrer": "github.com",
-    "count": 1135,
-    "uniques": 158
+    "count": 1164,
+    "uniques": 162
   },
   {
     "referrer": "Google",
-    "count": 586,
-    "uniques": 124
+    "count": 630,
+    "uniques": 127
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 487,
-    "uniques": 109
+    "count": 498,
+    "uniques": 111
   },
   {
     "referrer": "huggingface.co",
-    "count": 89,
-    "uniques": 21
+    "count": 83,
+    "uniques": 20
   },
   {
     "referrer": "l.facebook.com",
@@ -25,14 +25,14 @@
     "uniques": 3
   },
   {
+    "referrer": "link.zhihu.com",
+    "count": 21,
+    "uniques": 11
+  },
+  {
     "referrer": "arxiv.org",
     "count": 17,
     "uniques": 2
-  },
-  {
-    "referrer": "link.zhihu.com",
-    "count": 14,
-    "uniques": 10
   },
   {
     "referrer": "zhihu.com",
@@ -45,8 +45,8 @@
     "uniques": 3
   },
   {
-    "referrer": "hub.fastgit.xyz",
-    "count": 7,
-    "uniques": 5
+    "referrer": "cn.bing.com",
+    "count": 8,
+    "uniques": 6
   }
 ]
