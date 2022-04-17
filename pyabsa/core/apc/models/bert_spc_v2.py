@@ -9,13 +9,13 @@ from transformers.models.bert.modeling_bert import BertPooler
 from pyabsa.network.sa_encoder import Encoder
 
 
-class BERT_SPC(nn.Module):
+class BERT_SPC_V2(nn.Module):
     inputs = ['text_bert_indices',
               'left_text_bert_indices',
               'right_text_bert_indices']
 
     def __init__(self, bert, opt):
-        super(BERT_SPC, self).__init__()
+        super(BERT_SPC_V2, self).__init__()
         self.bert = bert
         self.opt = opt
         self.linear = nn.Linear(opt.embed_dim, opt.embed_dim)
@@ -37,9 +37,12 @@ class BERT_SPC(nn.Module):
             left_feat = self.bert(inputs['left_text_bert_indices'])['last_hidden_state']
             right_feat = self.bert(inputs['right_text_bert_indices'])['last_hidden_state']
             if 'lr' == self.opt.window or 'rl' == self.opt.window:
+                if self.eta1 <= 0 or self.eta2 <= 0:
+                    torch.nn.init.uniform_(self.eta1)
+                    torch.nn.init.uniform_(self.eta2)
+                    print('reset eta(s) to {} {}'.format(self.eta1.item(), self.eta2.item()))
                 if self.opt.eta >= 0:
-                    cat_features = torch.cat(
-                        (feat, self.eta1 * left_feat, self.eta2 * right_feat), -1)
+                    cat_features = torch.cat((feat, self.eta1 * left_feat, self.eta2 * right_feat), -1)
                 else:
                     cat_features = torch.cat((feat, left_feat, right_feat), -1)
                 sent_out = self.linear_window_3h(cat_features)

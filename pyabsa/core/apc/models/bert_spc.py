@@ -24,10 +24,6 @@ class BERT_SPC(nn.Module):
         self.encoder = Encoder(bert.config, opt)
         self.dropout = nn.Dropout(opt.dropout)
         self.pooler = BertPooler(bert.config)
-
-        self.eta1 = nn.Parameter(torch.tensor(self.opt.eta, dtype=torch.float))
-        self.eta2 = nn.Parameter(torch.tensor(self.opt.eta, dtype=torch.float))
-
         self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
 
     def forward(self, inputs):
@@ -38,15 +34,14 @@ class BERT_SPC(nn.Module):
             right_feat = self.bert(inputs['right_text_bert_indices'])['last_hidden_state']
             if 'lr' == self.opt.window or 'rl' == self.opt.window:
                 if self.opt.eta >= 0:
-                    cat_features = torch.cat(
-                        (feat, self.eta1 * left_feat, self.eta2 * right_feat), -1)
+                    cat_features = torch.cat((feat, self.opt.eta * left_feat, (1 - self.opt.eta) * right_feat), -1)
                 else:
                     cat_features = torch.cat((feat, left_feat, right_feat), -1)
                 sent_out = self.linear_window_3h(cat_features)
             elif 'l' == self.opt.window:
-                sent_out = self.linear_window_2h(torch.cat((feat, self.eta1 * left_feat), -1))
+                sent_out = self.linear_window_2h(torch.cat((feat, left_feat), -1))
             elif 'r' == self.opt.window:
-                sent_out = self.linear_window_2h(torch.cat((feat, self.eta2 * right_feat), -1))
+                sent_out = self.linear_window_2h(torch.cat((feat, right_feat), -1))
             else:
                 raise KeyError('Invalid parameter:', self.opt.window)
 

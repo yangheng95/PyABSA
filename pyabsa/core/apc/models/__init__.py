@@ -10,6 +10,7 @@ import pyabsa.core.apc.classic.__bert__.models
 class APCModelList(list):
     from .bert_base import BERT_BASE
     from .bert_spc import BERT_SPC
+    from .bert_spc_v2 import BERT_SPC_V2
     from .dlcf_dca_bert import DLCF_DCA_BERT
     from .dlcfs_dca_bert import DLCFS_DCA_BERT
     from .fast_lcf_bert import FAST_LCF_BERT
@@ -55,6 +56,7 @@ class APCModelList(list):
 
     BERT_BASE = BERT_BASE
     BERT_SPC = BERT_SPC
+    BERT_SPC_V2 = BERT_SPC_V2
 
     FAST_LCF_BERT_ATT = FAST_LCF_BERT_ATT
 

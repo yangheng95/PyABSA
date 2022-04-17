@@ -75,6 +75,9 @@ class Instructor:
         }
         self.initializer = initializers[self.opt.initializer]
         if hasattr(self.model.models[0], 'eta1') and hasattr(self.model.models[0], 'eta2'):
+            if self.opt.eta == 0:
+                torch.nn.init.uniform_(self.model.models[0].eta1)
+                torch.nn.init.uniform_(self.model.models[0].eta2)
             eta1_id = id(self.model.models[0].eta1)
             eta2_id = id(self.model.models[0].eta2)
             base_params = filter(lambda p: id(p) != eta1_id and id(p) != eta2_id, self.model.models[0].parameters())
@@ -85,7 +88,6 @@ class Instructor:
                     {'params': self.model.models[0].eta1, 'lr': self.opt.eta_lr, 'weight_decay': self.opt.l2reg},
                     {'params': self.model.models[0].eta2, 'lr': self.opt.eta_lr, 'weight_decay': self.opt.l2reg}
                 ],
-                # self.model.parameters(),
                 lr=self.opt.learning_rate,
                 weight_decay=self.opt.l2reg
             )
@@ -202,14 +204,14 @@ class Instructor:
         self.logger.info("Num steps = %d", len(self.train_dataloaders[0]) // self.opt.batch_size * self.opt.num_epoch)
         postfix = ''
         for epoch in range(self.opt.num_epoch):
-            # self.opt.ETA_MV.add_metric(r'$\eta_{1}$', self.model.models[0].eta1.item())
-            # self.opt.ETA_MV.add_metric(r'$\eta_{2}$', self.model.models[0].eta2.item())
-            # self.opt.ETA_MV.next_trial()
+            self.opt.ETA_MV.add_metric(r'$\eta_{l}^{*}$'+str(self.opt.seed), self.model.models[0].eta1.item())
+            self.opt.ETA_MV.add_metric(r'$\eta_{r}^{*}$'+str(self.opt.seed), self.model.models[0].eta2.item())
+            self.opt.ETA_MV.next_trial()
             patience -= 1
             iterator = tqdm(self.train_dataloaders[0], postfix='Epoch:{}'.format(epoch))
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
-                # switch model to training_tutorials mode, clear gradient accumulators
+                # switch model to training mode, clear gradient accumulators
                 self.model.train()
                 self.optimizer.zero_grad()
                 inputs = {col: sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols}
@@ -285,12 +287,13 @@ class Instructor:
 
                         postfix = ('Epoch:{} | Loss:{:.4f} | Acc:{:.2f}(max:{:.2f}) |'
                                    ' F1:{:.2f}(max:{:.2f})'.format(epoch,
-                                                                         loss.item(),
-                                                                         test_acc * 100,
-                                                                         max_fold_acc * 100,
-                                                                         f1 * 100,
-                                                                         max_fold_f1 * 100,
-                                                                         ))
+                                                                   loss.item(),
+                                                                   test_acc * 100,
+                                                                   max_fold_acc * 100,
+                                                                   f1 * 100,
+                                                                   max_fold_f1 * 100
+                                                                   ))
+
                     else:
                         postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
 
