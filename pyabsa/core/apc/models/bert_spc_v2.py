@@ -37,10 +37,12 @@ class BERT_SPC_V2(nn.Module):
             left_feat = self.bert(inputs['left_text_bert_indices'])['last_hidden_state']
             right_feat = self.bert(inputs['right_text_bert_indices'])['last_hidden_state']
             if 'lr' == self.opt.window or 'rl' == self.opt.window:
-                if self.eta1 <= 0 or self.eta2 <= 0:
+                if self.eta1 <= 0:
                     torch.nn.init.uniform_(self.eta1)
+                    print('reset eta1 to: {}'.format(self.eta1.item()))
+                if self.eta2 <= 0:
                     torch.nn.init.uniform_(self.eta2)
-                    print('reset eta(s) to {} {}'.format(self.eta1.item(), self.eta2.item()))
+                    print('reset eta2 to: {}'.format(self.eta2.item()))
                 if self.opt.eta >= 0:
                     cat_features = torch.cat((feat, self.eta1 * left_feat, self.eta2 * right_feat), -1)
                 else:
