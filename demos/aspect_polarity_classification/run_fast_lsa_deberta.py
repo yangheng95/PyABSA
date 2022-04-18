@@ -50,7 +50,8 @@ config.seed = seeds
 config.cross_validate_fold = -1  # disable cross_validate
 
 dataset = ABSADatasetList.Laptop14
-
+config.MV = MetricVisualizer(config.model.__name__ + '-' + dataset.dataset_name, trial_tag='Model & Dataset',
+                             trial_tag_list=[config.model.__name__ + '-' + dataset.dataset_name])
 Trainer(config=config,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
@@ -58,7 +59,8 @@ Trainer(config=config,
         )
 
 dataset = ABSADatasetList.Restaurant14
-
+config.MV = MetricVisualizer(config.model.__name__ + '-' + dataset.dataset_name, trial_tag='Model & Dataset',
+                             trial_tag_list=[config.model.__name__ + '-' + dataset.dataset_name])
 Trainer(config=config,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
@@ -68,7 +70,8 @@ Trainer(config=config,
 config.log_step = -1
 config.patience = 5
 dataset = ABSADatasetList.MAMS
-
+config.MV = MetricVisualizer(config.model.__name__ + '-' + dataset.dataset_name, trial_tag='Model & Dataset',
+                             trial_tag_list=[config.model.__name__ + '-' + dataset.dataset_name])
 Trainer(config=config,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
@@ -98,7 +101,8 @@ config.seed = seeds
 config.cross_validate_fold = -1  # disable cross_validate
 
 dataset = ABSADatasetList.Laptop14
-
+config.MV = MetricVisualizer(config.model.__name__ + '-' + dataset.dataset_name, trial_tag='Model & Dataset',
+                             trial_tag_list=[config.model.__name__ + '-' + dataset.dataset_name])
 Trainer(config=config,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
@@ -106,7 +110,8 @@ Trainer(config=config,
         )
 
 dataset = ABSADatasetList.Restaurant14
-
+config.MV = MetricVisualizer(config.model.__name__ + '-' + dataset.dataset_name, trial_tag='Model & Dataset',
+                             trial_tag_list=[config.model.__name__ + '-' + dataset.dataset_name])
 Trainer(config=config,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
@@ -116,7 +121,8 @@ Trainer(config=config,
 config.log_step = -1
 config.patience = 5
 dataset = ABSADatasetList.MAMS
-
+config.MV = MetricVisualizer(config.model.__name__ + '-' + dataset.dataset_name, trial_tag='Model & Dataset',
+                             trial_tag_list=[config.model.__name__ + '-' + dataset.dataset_name])
 Trainer(config=config,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
@@ -146,7 +152,8 @@ config.seed = seeds
 config.cross_validate_fold = -1  # disable cross_validate
 
 dataset = ABSADatasetList.Laptop14
-
+config.MV = MetricVisualizer(config.model.__name__ + '-' + dataset.dataset_name, trial_tag='Model & Dataset',
+                             trial_tag_list=[config.model.__name__ + '-' + dataset.dataset_name])
 Trainer(config=config,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
@@ -154,7 +161,8 @@ Trainer(config=config,
         )
 
 dataset = ABSADatasetList.Restaurant14
-
+config.MV = MetricVisualizer(config.model.__name__ + '-' + dataset.dataset_name, trial_tag='Model & Dataset',
+                             trial_tag_list=[config.model.__name__ + '-' + dataset.dataset_name])
 Trainer(config=config,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
@@ -164,7 +172,8 @@ Trainer(config=config,
 config.log_step = -1
 config.patience = 5
 dataset = ABSADatasetList.MAMS
-
+config.MV = MetricVisualizer(config.model.__name__ + '-' + dataset.dataset_name, trial_tag='Model & Dataset',
+                             trial_tag_list=[config.model.__name__ + '-' + dataset.dataset_name])
 Trainer(config=config,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
