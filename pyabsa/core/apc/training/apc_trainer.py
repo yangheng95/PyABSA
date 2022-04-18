@@ -204,9 +204,9 @@ class Instructor:
         self.logger.info("Num steps = %d", len(self.train_dataloaders[0]) // self.opt.batch_size * self.opt.num_epoch)
         postfix = ''
         for epoch in range(self.opt.num_epoch):
-            self.opt.ETA_MV.add_metric(r'$\eta_{l}^{*}$'+str(self.opt.seed), self.model.models[0].eta1.item())
-            self.opt.ETA_MV.add_metric(r'$\eta_{r}^{*}$'+str(self.opt.seed), self.model.models[0].eta2.item())
-            self.opt.ETA_MV.next_trial()
+            # self.opt.ETA_MV.add_metric(r'$\eta_{l}^{*}$'+str(self.opt.seed), self.model.models[0].eta1.item())
+            # self.opt.ETA_MV.add_metric(r'$\eta_{r}^{*}$'+str(self.opt.seed), self.model.models[0].eta2.item())
+            # self.opt.ETA_MV.next_trial()
             patience -= 1
             iterator = tqdm(self.train_dataloaders[0], postfix='Epoch:{}'.format(epoch))
             for i_batch, sample_batched in enumerate(iterator):
