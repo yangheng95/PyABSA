@@ -9,6 +9,8 @@
 #                                          This code is for paper:                                                     #
 #      "Back to Reality: Leveraging Pattern-driven Modeling to Enable Affordable Sentiment Dependency Learning"        #
 #                      but there are some changes in this paper, and it is under submission                            #
+#                              The DeBERTa-BASE experiments are available at:                                          #
+#    https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_polarity_classification/run_fast_lsa_deberta.py    #
 ########################################################################################################################
 import random
 
