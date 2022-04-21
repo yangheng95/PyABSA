@@ -21,7 +21,7 @@ from pyabsa import __version__
 
 # convert atepc_datasets in this repo for inferring_tutorials
 from pyabsa.functional.dataset import DatasetItem
-from pyabsa.utils.pyabsa_utils import save_args
+from pyabsa.utils.pyabsa_utils import save_args, time_out
 
 
 def generate_inference_set_for_apc(dataset_path):
@@ -296,6 +296,7 @@ def check_update_log():
     print(colored('check release notes at https://github.com/yangheng95/PyABSA/blob/release/release-note.json', 'red'))
 
 
+@time_out(5)
 def query_remote_version():
     try:
         dataset_url = 'https://raw.githubusercontent.com/yangheng95/ABSADatasets/v1.2/datasets/__init__.py'
@@ -303,17 +304,18 @@ def query_remote_version():
         content = content.read().decode("utf-8").split('\'')
         version = content[-2]
     except Exception as e:
-        return 'N.A.'
+        return None
     return version
 
 
+@time_out(5)
 def query_local_version():
     try:
         fin = open(find_cwd_file(['__init__.py', 'integrated_datasets']))
         local_version = fin.read().split('\'')[-2]
         fin.close()
     except:
-        return 'N.A.'
+        return None
     return local_version
 
 
@@ -322,11 +324,11 @@ def check_dataset():  # retry_count is for unstable conn to GitHub
         local_version = query_local_version()
         remote_version = query_remote_version()
         print('Remote ABSADataset version: {} Local ABSADatasets version: {}'.format(remote_version, local_version))
-        if remote_version == 'N.A.':
+        if not remote_version:
             print('Unknown remote version for ABSADatasets, please check the latest version of ABSADatasets at https://github.com/yangheng95/ABSADatasets')
-        elif local_version == 'N.A.':
+        if not local_version:
             print('Unknown local version for ABSADatasets, please check the latest version of ABSADatasets at https://github.com/yangheng95/ABSADatasets')
-        elif remote_version > local_version:
+        if remote_version and local_version and remote_version > local_version:
             print(colored('There is a new version of ABSADatasets({}), please remove the downloaded datasets to automatically download the new version.'.format(remote_version), 'green'))
     except Exception as e:
         print(colored('ABSADatasets version check failed: {}, please check the latest datasets at https://github.com/yangheng95/ABSADatasets manually.'.format(e), 'red'))

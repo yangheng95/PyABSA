@@ -16,8 +16,10 @@
 
 # | [Overview](./README.MD) | [HuggingfaceHub](readme/huggingface_readme.md) | [ABDADatasets](readme/dataset_readme.md) | [ABSA Models](readme/model_readme.md) | [Colab Tutorials](readme/tutorial_readme.md) |
 
-## Try our [APC Inference](https://huggingface.co/spaces/yangheng/PyABSA-APC) and [ATEPC Inference](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) demo on Huggingface Space
-
+## Try our demos on Huggingface Space
+- [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC) 
+- [Aspect term extraction & sentiment classification (English)](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC)
+- [Aspect term extraction & sentiment classification (Chinese)]()
 ## Package Overview
 
 <table>

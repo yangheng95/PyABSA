@@ -183,7 +183,8 @@ class SentimentClassifier:
     def infer(self, text: str = None,
               print_result=True,
               clear_input_samples=True):
-
+        if text.count('[ASP]') < 2:
+            text = '[ASP]ERROR, Please warp the aspect first![ASP]' + text
         if clear_input_samples:
             self.clear_input_samples()
         if text:

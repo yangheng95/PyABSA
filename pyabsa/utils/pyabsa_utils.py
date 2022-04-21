@@ -7,6 +7,7 @@
 import json
 import os
 import pickle
+import threading
 import time
 
 import requests
@@ -38,32 +39,6 @@ def print_args(config, logger=None, mode=0):
             logger.info('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
         else:
             print('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
-
-    # activated_args = []
-    # default_args = []
-    # args = [key for key in sorted(config.args.keys())]
-    # for arg in args:
-    #     if isinstance(arg, str) and os.path.exists(arg):
-    #         arg = os.path.basename(arg)
-    #     if config.args_call_count[arg]:
-    #         activated_args.append('>>> {0}: {1}  --> Active'.format(arg, config.args[arg]))
-    #     else:
-    #         if mode == 0:
-    #             default_args.append('>>> {0}: {1}  --> Default'.format(arg, config.args[arg]))
-    #         else:
-    #             default_args.append('>>> {0}: {1}  --> Not Used'.format(arg, config.args[arg]))
-    #
-    # for line in activated_args:
-    #     if logger:
-    #         logger.info(line)
-    #     else:
-    #         print(colored(line, 'green'))
-    #
-    # for line in default_args:
-    #     if logger:
-    #         logger.info(line)
-    #     else:
-    #         print(colored(line, 'yellow'))
 
 
 def validate_example(text: str, aspect: str, polarity: str):
@@ -186,6 +161,23 @@ def retry(f):
                 count -= 1
 
     return decorated
+
+
+def time_out(interval=5, callback=None):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            t = threading.Thread(target=func, args=args, kwargs=kwargs)
+            t.setDaemon(True)  # 设置主线程结束子线程立刻结束
+            t.start()
+            t.join(interval)  # 主线程阻塞等待interval秒
+            if t.is_alive() and callback:
+                return threading.Timer(0, callback).start()  # 立即执行回调函数
+            else:
+                return
+
+        return wrapper
+
+    return decorator
 
 
 def save_json(dic, save_path):
