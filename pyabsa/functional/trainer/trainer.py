@@ -104,9 +104,9 @@ class Trainer:
         if isinstance(dataset, DatasetItem):
             self.config.dataset_name = dataset.dataset_name
         else:
-            custom_dataset = DatasetItem('custom_dataset', dataset)
-            self.config.dataset_name = custom_dataset.dataset_name
-        self.dataset_file = detect_dataset(self.config.dataset_name, task=self.task, load_aug=load_aug)
+            dataset = DatasetItem('custom_dataset', dataset)
+            self.config.dataset_name = dataset.dataset_name
+        self.dataset_file = detect_dataset(dataset, task=self.task, load_aug=load_aug)
         self.config.dataset_file = self.dataset_file
 
         self.config = init_config(self.config, auto_device)
