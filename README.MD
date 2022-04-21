@@ -19,7 +19,7 @@
 ## Try our demos on Huggingface Space
 - [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC) 
 - [Aspect term extraction & sentiment classification (English)](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC)
-- [Aspect term extraction & sentiment classification (Chinese)]()
+- [Aspect term extraction & sentiment classification (Chinese)](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC-Chinese)
 ## Package Overview
 
 <table>
