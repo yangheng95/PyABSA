@@ -13,8 +13,8 @@
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/back-to-reality-leveraging-pattern-driven/aspect-based-sentiment-analysis-on-semeval)](https://paperswithcode.com/sota/aspect-based-sentiment-analysis-on-semeval?p=back-to-reality-leveraging-pattern-driven)
 
 **Hi, there!** Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks.
-# | [Overview](../README.MD) | [HuggingfaceHub](huggingface_readme.md) | [ABDADatasets](dataset_readme.md) | [ABSA Models](model_readme.md) | [Colab Tutorials](tutorial_readme.md) | 
 
+# | [Overview](../README.MD) | [HuggingfaceHub](huggingface_readme.md) | [ABDADatasets](dataset_readme.md) | [ABSA Models](model_readme.md) | [Colab Tutorials](tutorial_readme.md) |
 
 ## Public and Community-shared ABSADatasets
 
@@ -45,10 +45,12 @@ annotating tool, you can easily annotate your dataset before using PyABSA.
 
 ### Important: Rename your dataset filename before use it in PyABSA
 
-Although the integrated datasets have no ids, it is recommended to assign an id for your dataset. 
-While merge your datasets into ABSADatasets, please keep the id remained. 
+Although the integrated datasets have no ids, it is recommended to assign an id for your dataset. While merge your
+datasets into ABSADatasets, please keep the id remained.
 
-- APC dataset name should be {id}.{dataset name}, and the dataset files should be named in {dataset name}.{type}.dat.atepc e.g., 
+- APC dataset name should be {id}.{dataset name}, and the dataset files should be named in {dataset
+  name}.{type}.dat.atepc e.g.,
+
 ```tree
 datasets
 ├── 101.restaurant
@@ -58,8 +60,8 @@ datasets
 └── others
 ```
 
-- ATEPC dataset files should be {id}.{dataset name}.{type}.dat.atepc,
-e.g., 
+- ATEPC dataset files should be {id}.{dataset name}.{type}.dat.atepc, e.g.,
+
 ```tree
 datasets
 ├── 101.restaurant
@@ -76,7 +78,6 @@ datasets
 - You can PR to contribute your dataset and use it like `ABDADatasets.your_dataset` (All the datasets are for research
   only, shall not danger your data copyright)
 
-  
 ## Use Human-readable Labels in Your Dataset
 
 PyABSA encourages you to use string labels instead of numbers. e.g., sentiment labels = {negative, positive, Neutral,
