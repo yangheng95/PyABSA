@@ -8,7 +8,6 @@
 
 from pyabsa import APCTrainer, APCConfigManager, GloVeAPCModelList, ABSADatasetList
 
-
 # Put glove embedding under current path first if you dont want to download GloVe embedding
 apc_config_english = APCConfigManager.get_apc_config_glove()
 apc_config_english.model = GloVeAPCModelList.TNet_LF

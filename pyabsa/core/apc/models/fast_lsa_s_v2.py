@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: lsa_s.py
+# file: FAST_LSA_S_V2.py
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # Copyright (C) 2021. All Rights Reserved.
 

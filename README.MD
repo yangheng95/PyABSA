@@ -13,7 +13,8 @@
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/back-to-reality-leveraging-pattern-driven/aspect-based-sentiment-analysis-on-semeval)](https://paperswithcode.com/sota/aspect-based-sentiment-analysis-on-semeval?p=back-to-reality-leveraging-pattern-driven)
 
 **Hi, there!** Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks.
-# | [Overview](./README.MD) | [HuggingfaceHub](readme/huggingface_readme.md) | [ABDADatasets](readme/dataset_readme.md) | [ABSA Models](readme/model_readme.md) | [Colab Tutorials](readme/tutorial_readme.md) |  
+
+# | [Overview](./README.MD) | [HuggingfaceHub](readme/huggingface_readme.md) | [ABDADatasets](readme/dataset_readme.md) | [ABSA Models](readme/model_readme.md) | [Colab Tutorials](readme/tutorial_readme.md) |
 
 ## Try our [APC Inference](https://huggingface.co/spaces/yangheng/PyABSA-APC) and [ATEPC Inference](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) demo on Huggingface Space
 
@@ -65,12 +66,15 @@ python setup.py install
 ```
 
 ## Examples
+
 1. Train a model of aspect term extraction
+
 ```python3
 from pyabsa.functional import ATEPCModelList
 from pyabsa.functional import Trainer, ATEPCTrainer
 from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import ATEPCConfigManager
+
 atepc_config = ATEPCConfigManager.get_atepc_config_english()
 
 atepc_config.pretrained_bert = 'microsoft/deberta-v3-base'
@@ -90,7 +94,9 @@ aspect_extractor = ATEPCTrainer(config=atepc_config,
 
 
 ```
+
 2. Inference Example of aspect term extraction
+
 ```python3
 from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import ATEPCCheckpointManager
@@ -113,6 +119,7 @@ atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source
                                                )
 
 ```
+
 3. Get available checkpoints from Google Drive
 
 PyABSA will check the latest available checkpoints before and load the latest checkpoint from Google Drive. To view
@@ -144,6 +151,7 @@ many ways, including:
 - Star this repository to keep it active
 
 ## Notice
+
 If you are looking for the original proposal of local context focus, please redirect to the introduction of
 [LCF](https://github.com/yangheng95/PyABSA/tree/release/demos/documents). If you are looking for the original codes of
 the LCF-related papers, please redirect to [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/LC-ABSA)

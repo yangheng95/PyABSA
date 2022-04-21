@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: BERT_SPC.py
+# file: BERT_SPC_V2.py
 # author: songyouwei <youwei0314@gmail.com>
 # Copyright (C) 2019. All Rights Reserved.
 import torch

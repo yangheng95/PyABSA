@@ -13,23 +13,30 @@
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/back-to-reality-leveraging-pattern-driven/aspect-based-sentiment-analysis-on-semeval)](https://paperswithcode.com/sota/aspect-based-sentiment-analysis-on-semeval?p=back-to-reality-leveraging-pattern-driven)
 
 **Hi, there!** Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks.
-# | [Overview](../README.MD) | [HuggingfaceHub](huggingface_readme.md) | [ABDADatasets](dataset_readme.md) | [ABSA Models](model_readme.md) | [Colab Tutorials](tutorial_readme.md) | 
 
+# | [Overview](../README.MD) | [HuggingfaceHub](huggingface_readme.md) | [ABDADatasets](dataset_readme.md) | [ABSA Models](model_readme.md) | [Colab Tutorials](tutorial_readme.md) |
 
 # Develop & Research based on PyABSA
 
 ## Try the demo [Inference API](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) on Huggingface Space
 
 ## Use Our Model via Transformers Model Hub
-**If you do not need the best models of APC or ATEPC, you can easily try our pretrained model to save your time!** 
 
-To facilitate ABSA research and application, we train our fast-lcf-bert model based on the [microsoft/deberta-v3-base](https://huggingface.co/microsoft/deberta-v3-base) with all the english datasets 
-provided by [ABSADatasets](https://github.com/yangheng95/ABSADatasets), the model is available at [yangheng/deberta-v3-base-absa-v1.1](https://huggingface.co/yangheng/deberta-v3-base-absa-v1.1). You can use **yangheng/deberta-v3-base-absa**
+**If you do not need the best models of APC or ATEPC, you can easily try our pretrained model to save your time!**
+
+To facilitate ABSA research and application, we train our fast-lcf-bert model based on
+the [microsoft/deberta-v3-base](https://huggingface.co/microsoft/deberta-v3-base) with all the english datasets provided
+by [ABSADatasets](https://github.com/yangheng95/ABSADatasets), the model is available
+at [yangheng/deberta-v3-base-absa-v1.1](https://huggingface.co/yangheng/deberta-v3-base-absa-v1.1). You can use **
+yangheng/deberta-v3-base-absa**
 to **easily** improve your model if your model is based on the `transformers`. e.g.:
 
 ### Use Our Pretrained model to Classify Sentiments
-The `yangheng/deberta-v3-base-absa-v1.1` and `yangheng/deberta-v3-large-absa-v1.1` are fine-tuned on the english datasets (30k+ examples) from 
-[ABSADatasets](https://github.com/yangheng95/ABSADatasets), and have the output layer to be used in the sentiment-analysis pipeline in huggingface hub.
+
+The `yangheng/deberta-v3-base-absa-v1.1` and `yangheng/deberta-v3-large-absa-v1.1` are fine-tuned on the english
+datasets (30k+ examples) from
+[ABSADatasets](https://github.com/yangheng95/ABSADatasets), and have the output layer to be used in the
+sentiment-analysis pipeline in huggingface hub.
 
 ```python3
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
@@ -40,9 +47,14 @@ model = AutoModelForSequenceClassification.from_pretrained("yangheng/deberta-v3-
 inputs = tokenizer("[CLS] when tables opened up, the manager sat another party before us. [SEP] manager [SEP]", return_tensors="pt")
 outputs = model(**inputs)
 ```
+
 ### Use Our Pretrained model as a Backbone Model
-The `yangheng/deberta-v3-base-absa` and `yangheng/deberta-v3-large-absa` are fine-tuned on the english datasets (including the augmentation data, 180k+ examples) from 
-[ABSADatasets](https://github.com/yangheng95/ABSADatasets), and have no output layer. They are more effective when being used as backbone model compared to `v1.1`
+
+The `yangheng/deberta-v3-base-absa` and `yangheng/deberta-v3-large-absa` are fine-tuned on the english datasets (
+including the augmentation data, 180k+ examples) from
+[ABSADatasets](https://github.com/yangheng95/ABSADatasets), and have no output layer. They are more effective when being
+used as backbone model compared to `v1.1`
+
 ```python3
 from transformers import AutoTokenizer, AutoModel
 
