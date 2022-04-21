@@ -73,19 +73,21 @@ class ABSADatasetList(list):
 
     # Chinese (triple polarity)
     # brightgems@github https://github.com/brightgems
+    # Note that the annotation strategy of this dataset is highly different from other datasets,
+    # please dont mix this dataset with any other dataset in training
     Shampoo = DatasetItem('Shampoo', 'Shampoo')
     # jmc123@github https://github.com/jmc-123
     MOOC = DatasetItem('MOOC', 'MOOC')
 
-    # assembled dataset_utils
-    Chinese = DatasetItem('Chinese', ['Phone', 'Camera', 'Notebook', 'Car'])
+    # assembled dataset
+    Chinese = DatasetItem('Chinese', ['Phone', 'Camera', 'Notebook', 'Car', 'MOOC'])
     Binary_Polarity_Chinese = DatasetItem('Chinese', ['Phone', 'Camera', 'Notebook', 'Car'])
-    Triple_Polarity_Chinese = DatasetItem('Chinese', ['MOOC' 'Shampoo'])
+    Triple_Polarity_Chinese = DatasetItem('Chinese', ['MOOC', 'Shampoo'])
 
     English = DatasetItem('English', ['Laptop14', 'Restaurant14', 'Restaurant16', 'ACL_Twitter', 'MAMS', 'Television', 'TShirt', 'Yelp'])
     SemEval = DatasetItem('SemEval', ['Laptop14', 'Restaurant14', 'Restaurant16'])  # Abandon rest15 dataset due to data leakage, See https://github.com/yangheng95/PyABSA/issues/53
     Restaurant = DatasetItem('Restaurant', ['Restaurant14', 'Restaurant16'])
-    Multilingual = DatasetItem('Multilingual', ['Laptop14', 'Restaurant16', 'ACL_Twitter', 'MAMS', 'Television', 'TShirt', 'Yelp', 'Phone', 'Camera', 'Notebook', 'Car'])
+    Multilingual = DatasetItem('Multilingual', ['Laptop14', 'Restaurant16', 'ACL_Twitter', 'MAMS', 'Television', 'TShirt', 'Yelp', 'Phone', 'Camera', 'Notebook', 'Car', 'MOOC'])
 
     def __init__(self):
         dataset_list = [
@@ -133,7 +135,7 @@ def detect_dataset(dataset_path, task='apc', load_aug=False):
             elif '.augment' in str(os.listdir(search_path)):
                 print(colored('Augmented datasets activated at {}'.format(search_path), 'green'))
             # Our data augmentation tool can automatically improve your dataset's performance 1-2% with additional computation budget
-            # Currently, our augmentation tool © is not open-source. We encourage you to
+            # The project of data augmentation is on github: https://github.com/yangheng95/BoostAug
             # share your dataset at https://github.com/yangheng95/ABSADatasets, all the copyrights belong to the owner according to the licence
             if load_aug:
                 dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['.inference', 'test.'] + filter_key_words)
