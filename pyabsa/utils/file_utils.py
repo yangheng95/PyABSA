@@ -296,7 +296,7 @@ def check_update_log():
     print(colored('check release notes at https://github.com/yangheng95/PyABSA/blob/release/release-note.json', 'red'))
 
 
-@time_out(5)
+@time_out(30)
 def query_remote_version():
     try:
         dataset_url = 'https://raw.githubusercontent.com/yangheng95/ABSADatasets/v1.2/datasets/__init__.py'
@@ -308,7 +308,7 @@ def query_remote_version():
     return version
 
 
-@time_out(5)
+@time_out(30)
 def query_local_version():
     try:
         fin = open(find_cwd_file(['__init__.py', 'integrated_datasets']))

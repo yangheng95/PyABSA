@@ -32,18 +32,20 @@
 
 #### Bert-based APC models
 
-1. [SLIDE-LCF-BERT](../pyabsa/core/apc/models/lsa_t.py) (Faster & Performs Better than LCF/LCFS-BERT)
-2. [SLIDE-LCFS-BERT](../pyabsa/core/apc/models/lsa_s.py) (Faster & Performs Better than LCF/LCFS-BERT)
-3. [LCF-BERT](../pyabsa/core/apc/models/lcf_bert.py) (Reimplemented & Enhanced)
-4. [LCFS-BERT](../pyabsa/core/apc/models/lcfs_bert.py) (Reimplemented & Enhanced)
-5. [FAST-LCF-BERT](../pyabsa/core/apc/models/fast_lcf_bert.py) (Faster with slightly performance loss)
-6. [FAST_LCFS-BERT](../pyabsa/core/apc/models/fast_lcfs_bert.py) (Faster with slightly performance loss)
-7. [LCF-DUAL-BERT](../pyabsa/core/apc/models/lcf_dual_bert.py) (Dual BERT)
-8. [LCFS-DUAL-BERT](../pyabsa/core/apc/models/lcfs_dual_bert.py) (Dual BERT)
-9. [BERT-BASE](../pyabsa/core/apc/models/bert_base.py)
-10. [BERT-SPC](../pyabsa/core/apc/models/bert_spc.py)
-11. [LCA-Net](../pyabsa/core/apc/models/lca_bert.py)
-12. [DLCF-DCA-BERT *](../pyabsa/core/apc/models/dlcf_dca_bert.py)
+1. [LSA-T](../pyabsa/core/apc/models/lsa_t.py) (Faster & Performs Better than LCF/LCFS-BERT)
+2. [LSA-S](../pyabsa/core/apc/models/lsa_s.py) (Faster & Performs Better than LCF/LCFS-BERT)
+3. [Fast-LSA-T](../pyabsa/core/apc/models/fast_lsa_t_v2.py) (Faster & Performs Better than LCF/LCFS-BERT)
+4. [Fast-LSA-S](../pyabsa/core/apc/models/fast_lsa_s_v2.py) (Faster & Performs Better than LCF/LCFS-BERT)
+5. [LCF-BERT](../pyabsa/core/apc/models/lcf_bert.py) (Reimplemented & Enhanced)
+6. [LCFS-BERT](../pyabsa/core/apc/models/lcfs_bert.py) (Reimplemented & Enhanced)
+7. [FAST-LCF-BERT](../pyabsa/core/apc/models/fast_lcf_bert.py) (Faster with slightly performance loss)
+8. [FAST_LCFS-BERT](../pyabsa/core/apc/models/fast_lcfs_bert.py) (Faster with slightly performance loss)
+9. [LCF-DUAL-BERT](../pyabsa/core/apc/models/lcf_dual_bert.py) (Dual BERT)
+10. [LCFS-DUAL-BERT](../pyabsa/core/apc/models/lcfs_dual_bert.py) (Dual BERT)
+11. [BERT-BASE](../pyabsa/core/apc/models/bert_base.py)
+12. [BERT-SPC](../pyabsa/core/apc/models/bert_spc.py)
+13. [LCA-Net](../pyabsa/core/apc/models/lca_bert.py)
+14. [DLCF-DCA-BERT *](../pyabsa/core/apc/models/dlcf_dca_bert.py)
 
 #### Bert-based APC baseline models
 

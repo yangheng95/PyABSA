@@ -33,7 +33,7 @@ More datasets are available at [ABSADatasets](https://github.com/yangheng95/ABSA
 11. TShirt
 12. Television
 13. MOOC
-14. Shampoo
+14. Shampoo (The annotation of this dataset is highly different from other datasets, please dont mix this dataset with other dataset)
 15. Yelp
 
 You don't have to download the datasets, as the datasets will be downloaded automatically.
