@@ -19,7 +19,7 @@
 ## Try our demos on Huggingface Space
 - [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC) 
 - [Aspect term extraction & sentiment classification (English)](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC)
-- [Aspect term extraction & sentiment classification (Chinese)](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC-Chinese)
+- [方面术语提取和情感分类（中文）](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC-Chinese)
 ## Package Overview
 
 <table>
@@ -83,9 +83,6 @@ atepc_config.pretrained_bert = 'microsoft/deberta-v3-base'
 atepc_config.model = ATEPCModelList.FAST_LCF_ATEPC
 dataset_path = ABSADatasetList.Restaurant14
 # or your local dataset: dataset_path = 'your local dataset path'
-
-# for f in findfile.find_cwd_files(['.augment.ignore'] + dataset_path):
-#     os.rename(f, f.replace('.augment.ignore', '.augment'))
 
 aspect_extractor = ATEPCTrainer(config=atepc_config,
                                 dataset=dataset_path,

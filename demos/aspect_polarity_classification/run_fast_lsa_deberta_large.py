@@ -30,14 +30,14 @@ seeds = [random.randint(0, 10000) for _ in range(3)]
 device = autocuda.auto_cuda()
 
 config = APCConfigManager.get_apc_config_english()
-config.model = APCModelList.FAST_LSA_T
+config.model = APCModelList.FAST_LSA_T_V2
 config.lcf = 'cdw'
 config.similarity_threshold = 1
 config.max_seq_len = 80
 config.hidden_dim = 1024
 config.embed_dim = 1024
-config.dropout = 0.1
-config.optimizer = 'adam'
+config.dropout = 0
+config.optimizer = 'adamw'
 config.cache_dataset = False
 config.patience = 15
 config.pretrained_bert = 'microsoft/deberta-v3-large'
@@ -49,7 +49,7 @@ config.eta = -1
 config.learning_rate = 1e-5
 config.batch_size = 16
 config.evaluate_begin = 0
-config.l2reg = 1e-8
+config.l2reg = 1e-5
 config.seed = seeds
 config.cross_validate_fold = -1  # disable cross_validate
 
@@ -83,16 +83,16 @@ Trainer(config=config,
         )
 
 config = APCConfigManager.get_apc_config_english()
-config.model = APCModelList.FAST_LSA_S
+config.model = APCModelList.FAST_LSA_S_V2
 config.lcf = 'cdw'
 config.similarity_threshold = 1
 config.max_seq_len = 80
 config.hidden_dim = 1024
 config.embed_dim = 1024
-config.dropout = 0.1
+config.dropout = 0
 config.cache_dataset = False
 config.patience = 15
-config.optimizer = 'adam'
+config.optimizer = 'adamw'
 config.pretrained_bert = 'microsoft/deberta-v3-large'
 config.num_epoch = 50
 config.log_step = 5
@@ -102,7 +102,7 @@ config.eta = -1
 config.learning_rate = 1e-5
 config.batch_size = 16
 config.evaluate_begin = 2
-config.l2reg = 1e-8
+config.l2reg = 1e-5
 config.seed = seeds
 config.cross_validate_fold = -1  # disable cross_validate
 
@@ -136,16 +136,16 @@ Trainer(config=config,
         )
 
 config = APCConfigManager.get_apc_config_english()
-config.model = APCModelList.BERT_SPC
+config.model = APCModelList.BERT_SPC_V2
 config.lcf = 'cdw'
 config.similarity_threshold = 1
 config.max_seq_len = 80
 config.hidden_dim = 1024
 config.embed_dim = 1024
-config.dropout = 0.1
+config.dropout = 0
 config.cache_dataset = False
 config.patience = 15
-config.optimizer = 'adam'
+config.optimizer = 'adamw'
 config.pretrained_bert = 'microsoft/deberta-v3-large'
 config.num_epoch = 50
 config.log_step = 5
@@ -155,7 +155,7 @@ config.eta = -1
 config.learning_rate = 1e-5
 config.batch_size = 16
 config.evaluate_begin = 2
-config.l2reg = 1e-8
+config.l2reg = 1e-5
 config.seed = seeds
 config.cross_validate_fold = -1  # disable cross_validate
 
