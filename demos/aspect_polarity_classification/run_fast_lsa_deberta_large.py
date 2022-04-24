@@ -12,6 +12,7 @@
 #                              The DeBERTa-BASE experiments are available at:                                          #
 #    https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_polarity_classification/run_fast_lsa_deberta.py    #
 ########################################################################################################################
+
 import random
 
 import autocuda
@@ -37,19 +38,20 @@ config.max_seq_len = 80
 config.hidden_dim = 1024
 config.embed_dim = 1024
 config.dropout = 0
-config.optimizer = 'adamw'
+config.optimizer = 'adam'
 config.cache_dataset = False
 config.patience = 15
+# config.pretrained_bert = 'yangheng/deberta-v3-large-absa'
 config.pretrained_bert = 'microsoft/deberta-v3-large'
 config.num_epoch = 50
 config.log_step = 5
 config.SRD = 3
 config.lsa = True
-config.eta = -1
+config.eta = 0.5
 config.learning_rate = 1e-5
 config.batch_size = 16
 config.evaluate_begin = 0
-config.l2reg = 1e-5
+config.l2reg = 1e-8
 config.seed = seeds
 config.cross_validate_fold = -1  # disable cross_validate
 
@@ -92,17 +94,18 @@ config.embed_dim = 1024
 config.dropout = 0
 config.cache_dataset = False
 config.patience = 15
-config.optimizer = 'adamw'
+config.optimizer = 'adam'
+# config.pretrained_bert = 'yangheng/deberta-v3-large-absa'
 config.pretrained_bert = 'microsoft/deberta-v3-large'
 config.num_epoch = 50
 config.log_step = 5
 config.SRD = 3
 config.lsa = True
-config.eta = -1
+config.eta = 0.5
 config.learning_rate = 1e-5
 config.batch_size = 16
-config.evaluate_begin = 2
-config.l2reg = 1e-5
+config.evaluate_begin = 0
+config.l2reg = 1e-8
 config.seed = seeds
 config.cross_validate_fold = -1  # disable cross_validate
 
@@ -145,17 +148,18 @@ config.embed_dim = 1024
 config.dropout = 0
 config.cache_dataset = False
 config.patience = 15
-config.optimizer = 'adamw'
+config.optimizer = 'adam'
+# config.pretrained_bert = 'yangheng/deberta-v3-large-absa'
 config.pretrained_bert = 'microsoft/deberta-v3-large'
 config.num_epoch = 50
 config.log_step = 5
 config.SRD = 3
 config.lsa = True
-config.eta = -1
+config.eta = 0.5
 config.learning_rate = 1e-5
 config.batch_size = 16
-config.evaluate_begin = 2
-config.l2reg = 1e-5
+config.evaluate_begin = 0
+config.l2reg = 1e-8
 config.seed = seeds
 config.cross_validate_fold = -1  # disable cross_validate
 
