@@ -52,22 +52,6 @@ class Instructor:
         self.train_dataloader = self.model.train_dataloader
         self.tokenizer = self.model.tokenizer
 
-        if 'patience' in self.opt.args and self.opt.patience:
-            self.opt.patience = self.opt.patience
-        else:
-            self.opt.patience = 999999999
-
-        # use DataParallel for training if device count larger than 1
-        if self.opt.auto_device == 'allcuda':
-            self.model.to(self.opt.device)
-            self.model = torch.nn.parallel.DataParallel(self.model)
-        else:
-            self.model.to(self.opt.device)
-
-        self.opt.device = torch.device(self.opt.device)
-        if self.opt.device.type == 'cuda':
-            self.logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device)))
-
         initializers = {
             'xavier_uniform_': torch.nn.init.xavier_uniform_,
             'xavier_normal_': torch.nn.init.xavier_normal_,
@@ -107,6 +91,17 @@ class Instructor:
             os.remove('init_state_dict.bin')
         if self.opt.cross_validate_fold > 0:
             torch.save(self.model.state_dict(), 'init_state_dict.bin')
+
+        # use DataParallel for training if device count larger than 1
+        if self.opt.auto_device == 'allcuda':
+            self.model.to(self.opt.device)
+            self.model = torch.nn.parallel.DataParallel(self.model)
+        else:
+            self.model.to(self.opt.device)
+
+        self.opt.device = torch.device(self.opt.device)
+        if self.opt.device.type == 'cuda':
+            self.logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device)))
 
         print_args(self.opt, self.logger)
 

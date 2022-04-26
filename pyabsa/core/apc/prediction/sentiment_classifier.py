@@ -22,10 +22,10 @@ from pyabsa.core.apc.models import (APCModelList,
                                     GloVeAPCModelList,
                                     BERTBaselineAPCModelList
                                     )
-from pyabsa.core.apc.classic.__bert__.dataset_utils.data_utils_for_inferring import BERTBaselineABSADataset
-from pyabsa.core.apc.classic.__glove__.dataset_utils.data_utils_for_inferring import GloVeABSADataset
+from pyabsa.core.apc.classic.__bert__.dataset_utils.data_utils_for_inference import BERTBaselineABSADataset
+from pyabsa.core.apc.classic.__glove__.dataset_utils.data_utils_for_inference import GloVeABSADataset
 from pyabsa.core.apc.dataset_utils.apc_utils import LABEL_PADDING
-from pyabsa.core.apc.dataset_utils.data_utils_for_inferring import ABSADataset
+from pyabsa.core.apc.dataset_utils.data_utils_for_inference import ABSADataset
 
 
 class SentimentClassifier:
@@ -34,11 +34,6 @@ class SentimentClassifier:
             from_train_model: load inferring_tutorials model from trained model
         '''
 
-        self.initializers = {
-            'xavier_uniform_': torch.nn.init.xavier_uniform_,
-            'xavier_normal_': torch.nn.init.xavier_normal,
-            'orthogonal_': torch.nn.init.orthogonal_
-        }
         # load from a training
         if not isinstance(model_arg, str):
             print('Load sentiment classifier from training')
@@ -70,7 +65,7 @@ class SentimentClassifier:
                     elif model_path:
                         self.model = torch.load(model_path, map_location='cpu')
 
-                    if hasattr(APCModelList, self.opt.model.__name__.upper()):
+                    if hasattr(APCModelList, self.opt.model.__name__):
                         try:
                             self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
                         except ValueError:
@@ -78,8 +73,7 @@ class SentimentClassifier:
                                 self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
                             else:
                                 raise TransformerConnectionError()
-                    elif hasattr(BERTBaselineAPCModelList, self.opt.model.__name__.upper()):
-
+                    elif hasattr(BERTBaselineAPCModelList, self.opt.model.__name__):
                         if tokenizer_path:
                             self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
                         else:
@@ -113,7 +107,7 @@ class SentimentClassifier:
             elif hasattr(GloVeAPCModelList, self.opt.model[0].__name__):
                 self.dataset = GloVeABSADataset(tokenizer=self.tokenizer, opt=self.opt)
             else:
-                raise KeyError('The ref_checkpoint you are loading is not from APC model.')
+                raise KeyError('The checkpoint you are loading is not from APC model.')
         else:
             if hasattr(APCModelList, self.opt.model.__name__):
                 self.dataset = ABSADataset(tokenizer=self.tokenizer, opt=self.opt)
@@ -124,7 +118,7 @@ class SentimentClassifier:
             elif hasattr(GloVeAPCModelList, self.opt.model.__name__):
                 self.dataset = GloVeABSADataset(tokenizer=self.tokenizer, opt=self.opt)
             else:
-                raise KeyError('The ref_checkpoint you are loading is not from APC model.')
+                raise KeyError('The checkpoint you are loading is not from APC model.')
 
         self.infer_dataloader = None
 
@@ -182,13 +176,14 @@ class SentimentClassifier:
 
     def infer(self, text: str = None,
               print_result=True,
+              ignore_error=True,
               clear_input_samples=True):
         if text.count('[ASP]') < 2:
             text = '[ASP]ERROR, Please warp the aspect first![ASP]' + text
         if clear_input_samples:
             self.clear_input_samples()
         if text:
-            self.dataset.prepare_infer_sample(text)
+            self.dataset.prepare_infer_sample(text, ignore_error=ignore_error)
         else:
             raise RuntimeError('Please specify your datasets path!')
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.opt.eval_batch_size, shuffle=False)

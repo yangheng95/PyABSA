@@ -116,13 +116,6 @@ class Instructor:
                 self.valid_set = None
             self.model = opt.model(self.embedding_matrix, opt).to(opt.device)
 
-            # use DataParallel for training if device count larger than 1
-        if self.opt.auto_device == 'allcuda':
-            self.model.to(self.opt.device)
-            self.model = torch.nn.parallel.DataParallel(self.model)
-        else:
-            self.model.to(self.opt.device)
-
         if self.test_set:
             self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
         else:
@@ -140,16 +133,6 @@ class Instructor:
             else:
                 pickle.dump((self.train_set, self.opt), open(cache_path, mode='wb'))
 
-        self.opt.device = torch.device(self.opt.device)
-        if self.opt.device.type == 'cuda':
-            self.logger.info(
-                "cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device)))
-
-        if 'patience' in self.opt.args and self.opt.patience:
-            self.opt.patience = self.opt.patience
-        else:
-            self.opt.patience = 999999999
-        print_args(self.opt, self.logger)
         self.optimizer = optimizers[self.opt.optimizer](
             self.model.parameters(),
             lr=self.opt.learning_rate,
@@ -166,6 +149,20 @@ class Instructor:
 
         if amp:
             self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
+
+        # use DataParallel for training if device count larger than 1
+        if self.opt.auto_device == 'allcuda':
+            self.model.to(self.opt.device)
+            self.model = torch.nn.parallel.DataParallel(self.model)
+        else:
+            self.model.to(self.opt.device)
+
+        self.opt.device = torch.device(self.opt.device)
+        if self.opt.device.type == 'cuda':
+            self.logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device)))
+
+        print_args(self.opt, self.logger)
+
 
     def reload_model(self):
         self.model.load_state_dict(torch.load('./init_state_dict.bin'))

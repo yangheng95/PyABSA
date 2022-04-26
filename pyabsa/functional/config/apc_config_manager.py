@@ -119,7 +119,7 @@ _apc_config_english = {'model': APCModelList.BERT_SPC,
                        'log_step': 5,
                        'dynamic_truncate': True,
                        'srd_alignment': True,  # for srd_alignment
-                       'evaluate_begin': 2,
+                       'evaluate_begin': 0,
                        'similarity_threshold': 1,  # disable same text check for different examples
                        'cross_validate_fold': -1  # split train and test datasets into 5 folds and repeat 3 training
                        }
@@ -155,7 +155,7 @@ _apc_config_multilingual = {'model': APCModelList.BERT_SPC,
                             'log_step': 5,
                             'dynamic_truncate': True,
                             'srd_alignment': True,  # for srd_alignment
-                            'evaluate_begin': 2,
+                            'evaluate_begin': 0,
                             'similarity_threshold': 1,  # disable same text check for different examples
                             'cross_validate_fold': -1
                             # split train and test datasets into 5 folds and repeat 3 training
@@ -192,7 +192,7 @@ _apc_config_chinese = {'model': APCModelList.BERT_SPC,
                        'log_step': 5,
                        'dynamic_truncate': True,
                        'srd_alignment': True,  # for srd_alignment
-                       'evaluate_begin': 2,
+                       'evaluate_begin': 0,
                        'similarity_threshold': 1,  # disable same text check for different examples
                        'cross_validate_fold': -1  # split train and test datasets into 5 folds and repeat 3 training
                        }
@@ -342,29 +342,29 @@ class APCConfigManager(ConfigManager):
         APCConfigManager.set_apc_config('bert_baseline', newitem)
 
     @staticmethod
-    def get_apc_config_template():
+    def get_apc_config_template() -> ConfigManager:
         return APCConfigManager(copy.deepcopy(_apc_config_template))
 
     @staticmethod
-    def get_apc_config_base():
+    def get_apc_config_base() -> ConfigManager:
         return APCConfigManager(copy.deepcopy(_apc_config_base))
 
     @staticmethod
-    def get_apc_config_english():
+    def get_apc_config_english() -> ConfigManager:
         return APCConfigManager(copy.deepcopy(_apc_config_english))
 
     @staticmethod
-    def get_apc_config_chinese():
+    def get_apc_config_chinese() -> ConfigManager:
         return APCConfigManager(copy.deepcopy(_apc_config_chinese))
 
     @staticmethod
-    def get_apc_config_multilingual():
+    def get_apc_config_multilingual() -> ConfigManager:
         return APCConfigManager(copy.deepcopy(_apc_config_multilingual))
 
     @staticmethod
-    def get_apc_config_glove():
+    def get_apc_config_glove() -> ConfigManager:
         return APCConfigManager(copy.deepcopy(_apc_config_glove))
 
     @staticmethod
-    def get_apc_config_bert_baseline():
+    def get_apc_config_bert_baseline() -> ConfigManager:
         return APCConfigManager(copy.deepcopy(_apc_config_bert_baseline))

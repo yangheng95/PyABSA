@@ -197,7 +197,7 @@ def load_json(save_path):
     return dic
 
 
-def validate_version():
+def validate_pyabsa_version():
     try:
         response = requests.get("https://pypi.org/pypi/pyabsa/json", timeout=1)
     except requests.exceptions.RequestException:
