@@ -227,21 +227,21 @@ class ATEPCConfigManager(ConfigManager):
         ATEPCConfigManager.set_atepc_config('multilingual', newitem)
 
     @staticmethod
-    def get_atepc_config_template():
+    def get_atepc_config_template() -> ConfigManager:
         return ATEPCConfigManager(copy.deepcopy(_atepc_config_template))
 
     @staticmethod
-    def get_atepc_config_base():
+    def get_atepc_config_base() -> ConfigManager:
         return ATEPCConfigManager(copy.deepcopy(_atepc_config_base))
 
     @staticmethod
-    def get_atepc_config_english():
+    def get_atepc_config_english() -> ConfigManager:
         return ATEPCConfigManager(copy.deepcopy(_atepc_config_english))
 
     @staticmethod
-    def get_atepc_config_chinese():
+    def get_atepc_config_chinese() -> ConfigManager:
         return ATEPCConfigManager(copy.deepcopy(_atepc_config_chinese))
 
     @staticmethod
-    def get_atepc_config_multilingual():
+    def get_atepc_config_multilingual() -> ConfigManager:
         return ATEPCConfigManager(copy.deepcopy(_atepc_config_multilingual))

@@ -115,7 +115,7 @@ class Trainer:
                                               trial_tag='Model & Dataset',
                                               trial_tag_list=[config.model.__name__ + '-' + self.config.dataset_name])
 
-        self.config.ETA_MV = MetricVisualizer('eta-' + self.config.model.__name__ + '-' + self.config.dataset_name, trial_tag='Model & Dataset')
+        # self.config.ETA_MV = MetricVisualizer('eta-' + self.config.model.__name__ + '-' + self.config.dataset_name, trial_tag='Model & Dataset')
 
         self.from_checkpoint = findfile.find_dir(os.getcwd(), from_checkpoint) if from_checkpoint else ''
         self.checkpoint_save_mode = checkpoint_save_mode

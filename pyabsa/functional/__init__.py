@@ -20,4 +20,4 @@ from pyabsa.core.apc.models import BERTBaselineAPCModelList
 from pyabsa.core.atepc.models import ATEPCModelList
 from pyabsa.core.tc.models import BERTClassificationModelList, GloVeClassificationModelList
 
-from pyabsa.utils.file_utils import check_dataset
+from pyabsa.utils.file_utils import validate_datasets_version

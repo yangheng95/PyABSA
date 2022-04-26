@@ -24,7 +24,7 @@ from pyabsa.functional.dataset import detect_infer_dataset, DatasetItem
 from pyabsa.core.atepc.models import ATEPCModelList
 from pyabsa.core.atepc.dataset_utils.atepc_utils import load_atepc_inference_datasets
 from pyabsa.utils.pyabsa_utils import print_args, save_json, TransformerConnectionError
-from ..dataset_utils.data_utils_for_inferring import (ATEPCProcessor,
+from ..dataset_utils.data_utils_for_inference import (ATEPCProcessor,
                                                       convert_ate_examples_to_features,
                                                       convert_apc_examples_to_features,
                                                       SENTIMENT_PADDING)

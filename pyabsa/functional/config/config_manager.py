@@ -41,6 +41,7 @@ def config_check(args):
         if 'dca_layer' in args:
             assert args['dca_layer'] >= 1
         if args['model'] == pyabsa.APCModelList.LCA_BERT:
+            print('LCF must be cdm mode for LCA_NeT model!')
             assert args['lcf'] == 'cdm'  # LCA-Net only support CDM mode
         if 'ensemble_mode' in args:
             assert args['ensemble_mode'] in {'cat', 'mean'}
@@ -106,6 +107,7 @@ class ConfigManager(Namespace):
                 args_call_count[arg_name] = 0
                 super().__setattr__('args_call_count', args_call_count)
 
-            config_check(args)
         except Exception as e:
             super().__setattr__(arg_name, value)
+
+        config_check(args)

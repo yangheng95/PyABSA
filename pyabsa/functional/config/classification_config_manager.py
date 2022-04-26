@@ -222,25 +222,25 @@ class ClassificationConfigManager(ConfigManager):
         ClassificationConfigManager.set_classification_config('glove', newitem)
 
     @staticmethod
-    def get_classification_config_template():
+    def get_classification_config_template() -> ConfigManager:
         return ClassificationConfigManager(copy.deepcopy(_classification_config_template))
 
     @staticmethod
-    def get_classification_config_base():
+    def get_classification_config_base() -> ConfigManager:
         return ClassificationConfigManager(copy.deepcopy(_classification_config_base))
 
     @staticmethod
-    def get_classification_config_english():
+    def get_classification_config_english() -> ConfigManager:
         return ClassificationConfigManager(copy.deepcopy(_classification_config_english))
 
     @staticmethod
-    def get_classification_config_chinese():
+    def get_classification_config_chinese() -> ConfigManager:
         return ClassificationConfigManager(copy.deepcopy(_classification_config_chinese))
 
     @staticmethod
-    def get_classification_config_multilingual():
+    def get_classification_config_multilingual() -> ConfigManager:
         return ClassificationConfigManager(copy.deepcopy(_classification_config_multilingual))
 
     @staticmethod
-    def get_classification_config_glove():
+    def get_classification_config_glove() -> ConfigManager:
         return ClassificationConfigManager(copy.deepcopy(_classification_config_glove))

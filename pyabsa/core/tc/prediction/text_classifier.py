@@ -17,8 +17,8 @@ from transformers import AutoTokenizer, AutoModel
 from pyabsa.functional.dataset import detect_infer_dataset
 
 from ..models import GloVeClassificationModelList, BERTClassificationModelList
-from ..classic.__glove__.dataset_utils.data_utils_for_inferring import GloVeClassificationDataset
-from ..classic.__bert__.dataset_utils.data_utils_for_inferring import BERTClassificationDataset, Tokenizer4Pretraining
+from ..classic.__glove__.dataset_utils.data_utils_for_inference import GloVeClassificationDataset
+from ..classic.__bert__.dataset_utils.data_utils_for_inference import BERTClassificationDataset, Tokenizer4Pretraining
 
 from ..classic.__glove__.dataset_utils.data_utils_for_training import LABEL_PADDING, build_embedding_matrix, build_tokenizer
 
@@ -31,11 +31,6 @@ class TextClassifier:
             from_train_model: load inferring_tutorials model from trained model
         '''
 
-        self.initializers = {
-            'xavier_uniform_': torch.nn.init.xavier_uniform_,
-            'xavier_normal_': torch.nn.init.xavier_normal,
-            'orthogonal_': torch.nn.init.orthogonal_
-        }
         # load from a training
         if not isinstance(model_arg, str):
             print('Load text classifier from training')
@@ -60,7 +55,7 @@ class TextClassifier:
                 self.opt = pickle.load(open(config_path, mode='rb'))
 
                 if state_dict_path or model_path:
-                    if hasattr(BERTClassificationModelList, self.opt.model.__name__.upper()):
+                    if hasattr(BERTClassificationModelList, self.opt.model.__name__):
                         if state_dict_path:
                             self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
                             self.model = self.opt.model(self.bert, self.opt)

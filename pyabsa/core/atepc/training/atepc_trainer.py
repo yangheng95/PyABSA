@@ -146,11 +146,6 @@ class Instructor:
         self.num_train_optimization_steps = int(
             len(self.train_data) / self.opt.batch_size / self.opt.gradient_accumulation_steps) * self.opt.num_epoch
 
-        if 'patience' in self.opt.args and self.opt.patience:
-            self.opt.patience = self.opt.patience
-        else:
-            self.opt.patience = 999999999
-
         train_sampler = RandomSampler(self.train_data)
         self.train_dataloader = DataLoader(self.train_data, sampler=train_sampler, pin_memory=True, batch_size=self.opt.batch_size)
         if self.opt.dataset_file['test']:
@@ -158,17 +153,6 @@ class Instructor:
             self.test_dataloader = DataLoader(self.test_data, sampler=test_sampler, pin_memory=True, batch_size=self.opt.batch_size)
 
         self.model = self.opt.model(bert_base_model, opt=self.opt)
-
-        if self.opt.auto_device == 'allcuda':
-            self.model.to(self.opt.device)
-            self.model = torch.nn.parallel.DataParallel(self.model)
-        else:
-            self.model.to(self.opt.device)
-
-        self.opt.device = torch.device(self.opt.device)
-        if self.opt.device.type == 'cuda':
-            self.logger.info(
-                "cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device)))
 
         param_optimizer = list(self.model.named_parameters())
         no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
@@ -184,6 +168,17 @@ class Instructor:
                                                                  weight_decay=self.opt.l2reg)
         if amp:
             self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
+
+        if self.opt.auto_device == 'allcuda':
+            self.model.to(self.opt.device)
+            self.model = torch.nn.parallel.DataParallel(self.model)
+        else:
+            self.model.to(self.opt.device)
+
+        self.opt.device = torch.device(self.opt.device)
+        if self.opt.device.type == 'cuda':
+            self.logger.info(
+                "cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device)))
 
         print_args(self.opt, self.logger)
 

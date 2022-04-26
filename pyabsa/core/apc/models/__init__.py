@@ -60,9 +60,6 @@ class APCModelList(list):
 
     FAST_LCF_BERT_ATT = FAST_LCF_BERT_ATT
 
-    SSW_S = SSW_S
-    SSW_T = SSW_T
-
     LCF_TEMPLATE_BERT = LCF_TEMPLATE_BERT
 
     def __init__(self):
@@ -88,8 +85,6 @@ class APCModelList(list):
             self.BERT_BASE,
             self.BERT_SPC,
             self.FAST_LCF_BERT_ATT,
-            self.SSW_S,
-            self.SSW_T
         ]
         super().__init__(model_list)
 

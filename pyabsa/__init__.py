@@ -6,7 +6,7 @@
 
 # Copyright (C) 2021. All Rights Reserved.
 
-__version__ = '1.10.4'
+__version__ = '1.10.5'
 __name__ = 'pyabsa'
 
 from termcolor import colored
@@ -29,12 +29,12 @@ from pyabsa.functional.dataset import ABSADatasetList, ClassificationDatasetList
 from pyabsa.functional.config import APCConfigManager
 from pyabsa.functional.config import ATEPCConfigManager
 from pyabsa.functional.config import ClassificationConfigManager
-from pyabsa.utils.file_utils import check_update_log, check_dataset
-from pyabsa.utils.pyabsa_utils import validate_version
+from pyabsa.utils.file_utils import check_update_log, validate_datasets_version
+from pyabsa.utils.pyabsa_utils import validate_pyabsa_version
 
-validate_version()
+validate_pyabsa_version()
 
-check_dataset()
+validate_datasets_version()
 
 checker = UpdateChecker()
 check_result = checker.check(__name__, __version__)

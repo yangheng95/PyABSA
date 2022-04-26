@@ -21,7 +21,7 @@ from pyabsa import __version__
 
 # convert atepc_datasets in this repo for inferring_tutorials
 from pyabsa.functional.dataset import DatasetItem
-from pyabsa.utils.pyabsa_utils import save_args, time_out
+from pyabsa.utils.pyabsa_utils import save_args
 
 
 def generate_inference_set_for_apc(dataset_path):
@@ -31,9 +31,9 @@ def generate_inference_set_for_apc(dataset_path):
     else:
         dataset_name = dataset_path
 
-    train_datasets = find_files(os.getcwd(), ['dataset', 'train', 'apc', dataset_name], exclude_key='.inference')
-    valid_datasets = find_files(os.getcwd(), ['dataset', 'valid', 'apc', dataset_name], exclude_key='.inference')
-    test_datasets = find_files(os.getcwd(), ['dataset', 'test', 'apc', dataset_name], exclude_key='.inference')
+    train_datasets = find_files(os.getcwd(), ['dataset', 'train', 'apc', dataset_name], exclude_key=['.inference', 'readme'])
+    valid_datasets = find_files(os.getcwd(), ['dataset', 'valid', 'apc', dataset_name], exclude_key=['.inference', 'readme'])
+    test_datasets = find_files(os.getcwd(), ['dataset', 'test', 'apc', dataset_name], exclude_key=['.inference', 'readme'])
     for file in train_datasets + valid_datasets + test_datasets:
         try:
             fin = open(file, 'r', newline='\n', encoding='utf-8')
@@ -46,9 +46,9 @@ def generate_inference_set_for_apc(dataset_path):
                 sample = lines[i].strip().replace('$T$', '[ASP]{}[ASP]'.format(lines[i + 1].strip()))
                 fout.write(sample + ' !sent! ' + lines[i + 2].strip() + '\n')
             fout.close()
+            print('save in: {}'.format(path_to_save))
         except:
             print('Unprocessed file:', file)
-        print('save in: {}'.format(path_to_save))
     print('Inference set generation finished')
 
 
@@ -135,7 +135,7 @@ def split_aspects(sentence):
 
 
 def convert_atepc(fname):
-    print('converting:', fname)
+    print('coverting {} to {}.atepc'.format(fname, fname))
     dist_fname = fname.replace('apc_datasets', 'atepc_datasets')
     if not os.path.exists(os.path.dirname(dist_fname)):
         os.makedirs(os.path.dirname(dist_fname))
@@ -161,15 +161,13 @@ def convert_apc_set_to_atepc_set(path):
     if isinstance(path, DatasetItem):
         path = path.dataset_name
     if not os.path.exists(path):
-        files = find_files(os.getcwd(), [path, 'dataset', 'apc'], exclude_key='.inference')
+        files = find_files(os.getcwd(), [path, 'dataset', 'apc'], exclude_key=['.inference', 'readme'])
     else:
-        files = find_files(path, ['dataset', 'apc'], exclude_key='infer')
+        files = find_files(path, ['dataset', 'apc'], exclude_key=['infer', 'readme'])
 
     print('Find datasets files at {}:'.format(path))
-    for f in files:
-        print(f)
     for target_file in files:
-        if not (target_file.endswith('.inference') or target_file.endswith('.atepc')):
+        if not target_file.endswith('.atepc'):
             try:
                 convert_atepc(target_file)
             except:
@@ -319,7 +317,7 @@ def query_local_version():
     return local_version
 
 
-def check_dataset():  # retry_count is for unstable conn to GitHub
+def validate_datasets_version():  # retry_count is for unstable conn to GitHub
     try:
         local_version = query_local_version()
         remote_version = query_remote_version()

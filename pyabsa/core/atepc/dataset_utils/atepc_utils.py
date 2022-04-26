@@ -15,8 +15,11 @@ from pyabsa.core.apc.dataset_utils.apc_utils import (get_syntax_distance,
 def split_text(text):
     text = text.strip()
     word_list = []
-    #   输入小写化
     s = text.lower()
+    # plain split for Chinese, Koeran, Japanese
+    # if not re.match(u'[\u4e00-\u9fa5]+[\uac00-\ud7ff]+[\u30a0-\u30ff]+', s):
+    if not re.match(u'[\u4e00-\u9fa5\uac00-\ud7ff\u30a0-\u30ff]+', s):
+        return text.split()
     while len(s) > 0:
         match = re.match(r'[a-z]+', s)
         if match:
