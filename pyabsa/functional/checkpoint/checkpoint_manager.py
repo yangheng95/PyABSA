@@ -266,7 +266,8 @@ def available_checkpoints(task='', from_local=False):
                 os.remove('./checkpoints.json')
             gdown.download(id=checkpoint_url, use_cookies=False, output='./checkpoints.json', quiet=False)
             # gdd.download_file_from_google_drive(file_id=checkpoint_url, dest_path='./checkpoints.json')
-        checkpoint_map = json.load(open('./checkpoints.json', 'r'))
+        with open('./checkpoints.json', 'r') as f:
+            checkpoint_map = json.load(f)
 
         t_checkpoint_map = {}
         if task:

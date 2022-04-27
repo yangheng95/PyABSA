@@ -1,4 +1,7 @@
 {
+  "1.10.6": {
+    "1": "Fix latent resource warning"
+  },
   "1.10.5": {
     "1": "Fix config check function",
     "2": "Fix inference of baseline APC models",

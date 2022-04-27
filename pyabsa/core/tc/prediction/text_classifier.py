@@ -52,7 +52,9 @@ class TextClassifier:
                 print('model: {}'.format(model_path))
                 print('tokenizer: {}'.format(tokenizer_path))
 
-                self.opt = pickle.load(open(config_path, mode='rb'))
+                with open(config_path, mode='rb') as f:
+                    self.opt = pickle.load(f)
+
 
                 if state_dict_path or model_path:
                     if hasattr(BERTClassificationModelList, self.opt.model.__name__):
@@ -67,7 +69,8 @@ class TextClassifier:
                             self.tokenizer = Tokenizer4Pretraining(max_seq_len=self.opt.max_seq_len, opt=self.opt)
                         except ValueError:
                             if tokenizer_path:
-                                self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
+                                with open(tokenizer_path, mode='rb') as f:
+                                    self.tokenizer = pickle.load(f)
                             else:
                                 raise TransformerConnectionError()
                     else:
@@ -241,12 +244,12 @@ class TextClassifier:
                     text_printing += text_info
                     print(text_printing)
             if save_path:
-                fout = open(save_path, 'w', encoding='utf8')
-                json.dump(json.JSONEncoder().encode({'results': results}), fout, ensure_ascii=False)
-                # fout.write('Total samples:{}\n'.format(n_total))
-                # fout.write('Labeled samples:{}\n'.format(n_labeled))
-                # fout.write('Prediction Accuracy:{}%\n'.format(100 * n_correct / n_labeled)) if n_labeled else 'N.A.'
-                print('inference result saved in: {}'.format(save_path))
+                with open(save_path, 'w', encoding='utf8') as fout:
+                    json.dump(json.JSONEncoder().encode({'results': results}), fout, ensure_ascii=False)
+                    # fout.write('Total samples:{}\n'.format(n_total))
+                    # fout.write('Labeled samples:{}\n'.format(n_labeled))
+                    # fout.write('Prediction Accuracy:{}%\n'.format(100 * n_correct / n_labeled)) if n_labeled else 'N.A.'
+                    print('inference result saved in: {}'.format(save_path))
         except Exception as e:
             print('Can not save result: {}, Exception: {}'.format(text_raw, e))
 

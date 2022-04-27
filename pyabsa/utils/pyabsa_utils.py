@@ -48,11 +48,17 @@ def validate_example(text: str, aspect: str, polarity: str):
     if aspect.strip().lower() not in text.strip().lower():
         raise ValueError(colored('AspectNotInTextError -> <aspect: {}> is not in <text: {}>>'.format(aspect, text), 'yellow'))
 
+    warning = False
+
     if len(aspect.split(' ')) > 10:
         print(colored('AspectTooLongWarning -> <aspect: {}> is too long, <text: {}>, <polarity: {}>'.format(aspect, text, polarity), 'yellow'))
+        warning = True
 
     if len(polarity.split(' ')) > 3:
         print(colored('LabelTooLongWarning -> <label: {}> is too long, <text: {}>, <aspect: {}>'.format(polarity, text, aspect), 'yellow'))
+        warning = True
+
+    return warning
 
 
 def check_and_fix_labels(label_set, label_name, all_data, opt):

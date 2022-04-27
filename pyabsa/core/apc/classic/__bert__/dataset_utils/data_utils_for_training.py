@@ -133,7 +133,8 @@ class BERTBaselineABSADataset(Dataset):
             dependency_graph = dependency_graph[:, range(0, opt.max_seq_len)]
             dependency_graph = dependency_graph[range(0, opt.max_seq_len), :]
 
-            validate_example(text_raw, aspect, polarity)
+            if validate_example(text_raw, aspect, polarity):
+                continue
 
             data = {
                 'ex_id': ex_id,
