@@ -66,7 +66,9 @@ class AspectExtractor:
                 print('model: {}'.format(model_path))
                 print('tokenizer: {}'.format(tokenizer_path))
 
-                self.opt = pickle.load(open(config_path, mode='rb'))
+                with open(config_path, mode='rb') as f:
+                    self.opt = pickle.load(f)
+
 
                 if 'pretrained_bert_name' in self.opt.args:
                     self.opt.pretrained_bert = self.opt.pretrained_bert_name
@@ -86,7 +88,8 @@ class AspectExtractor:
                     self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
                 except ValueError:
                     if tokenizer_path:
-                        self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
+                        with open(tokenizer_path, mode='rb') as f:
+                            self.tokenizer = pickle.load(f)
                     else:
                         raise TransformerConnectionError()
 
@@ -218,7 +221,8 @@ class AspectExtractor:
             if save_result:
                 save_path = os.path.join(os.getcwd(), 'atepc_inference.result.json')
                 print('The results of aspect term extraction have been saved in {}'.format(save_path))
-                json.dump(json.JSONEncoder().encode({'results': results}), open(save_path, 'w'), ensure_ascii=False)
+                with open(save_path, 'w') as f:
+                    json.dump(json.JSONEncoder().encode({'results': results}), f, ensure_ascii=False)
             if print_result:
                 for r in results:
                     print(r)

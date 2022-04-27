@@ -52,6 +52,7 @@ for dataset in ABSADatasetList()[:1]:
         config.model = model
         config.cache_dataset = True
         config.num_epoch = 1
+        config.lcf = 'cdm'
         config.max_seq_len = 10
         config.evaluate_begin = 0
         config.log_step = -1

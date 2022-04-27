@@ -70,11 +70,12 @@ class APCEnsembler(nn.Module):
 
             if load_dataset and os.path.exists(cache_path):
                 print('Loading dataset cache:', cache_path)
-                self.train_set, self.valid_set, self.test_set, opt = pickle.load(open(cache_path, mode='rb'))
-                # reset output dim according to dataset labels
-                self.opt.polarities_dim = opt.polarities_dim
-                self.opt.label_to_index = opt.label_to_index
-                self.opt.index_to_label = opt.index_to_label
+                with open(cache_path, mode='rb') as f:
+                    self.train_set, self.valid_set, self.test_set, opt = pickle.load(f)
+                    # reset output dim according to dataset labels
+                    self.opt.polarities_dim = opt.polarities_dim
+                    self.opt.label_to_index = opt.label_to_index
+                    self.opt.index_to_label = opt.index_to_label
 
             if hasattr(APCModelList, models[i].__name__):
                 try:
@@ -132,7 +133,8 @@ class APCEnsembler(nn.Module):
 
             if self.opt.cache_dataset and not os.path.exists(cache_path):
                 print('Caching dataset... please remove cached dataset if change model or dataset')
-                pickle.dump((self.train_set, self.valid_set, self.test_set, self.opt), open(cache_path, mode='wb'))
+                with open(cache_path, mode='wb') as f:
+                    pickle.dump((self.train_set, self.valid_set, self.test_set, self.opt), f)
 
             if load_dataset:
                 train_sampler = RandomSampler(self.train_set if not self.train_set else self.train_set)

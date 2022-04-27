@@ -56,7 +56,8 @@ class SentimentClassifier:
                 print('model: {}'.format(model_path))
                 print('tokenizer: {}'.format(tokenizer_path))
 
-                self.opt = pickle.load(open(config_path, mode='rb'))
+                with open(config_path, mode='rb') as f:
+                    self.opt = pickle.load(f)
 
                 if state_dict_path or model_path:
                     if state_dict_path:
@@ -64,29 +65,29 @@ class SentimentClassifier:
                         self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
                     elif model_path:
                         self.model = torch.load(model_path, map_location='cpu')
-
-                    if hasattr(APCModelList, self.opt.model.__name__):
-                        try:
-                            self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
-                        except ValueError:
+                    with open(tokenizer_path, mode='rb') as f:
+                        if hasattr(APCModelList, self.opt.model.__name__):
+                            try:
+                                self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
+                            except ValueError:
+                                if tokenizer_path:
+                                    self.tokenizer = pickle.load(f)
+                                else:
+                                    raise TransformerConnectionError()
+                        elif hasattr(BERTBaselineAPCModelList, self.opt.model.__name__):
                             if tokenizer_path:
-                                self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
+                                self.tokenizer = pickle.load(f)
                             else:
-                                raise TransformerConnectionError()
-                    elif hasattr(BERTBaselineAPCModelList, self.opt.model.__name__):
-                        if tokenizer_path:
-                            self.tokenizer = pickle.load(open(tokenizer_path, mode='rb'))
+                                raise ValueError('No .tokenizer file found in checkpoint path!')
                         else:
-                            raise ValueError('No .tokenizer file found in checkpoint path!')
-                    else:
-                        tokenizer = build_tokenizer(
-                            dataset_list=self.opt.dataset_file,
-                            max_seq_len=self.opt.max_seq_len,
-                            dat_fname='{0}_tokenizer.dat'.format(os.path.basename(self.opt.dataset_name)),
-                            opt=self.opt
-                        )
+                            tokenizer = build_tokenizer(
+                                dataset_list=self.opt.dataset_file,
+                                max_seq_len=self.opt.max_seq_len,
+                                dat_fname='{0}_tokenizer.dat'.format(os.path.basename(self.opt.dataset_name)),
+                                opt=self.opt
+                            )
 
-                        self.tokenizer = tokenizer
+                            self.tokenizer = tokenizer
 
                 print('Config used in Training:')
                 print_args(self.opt, mode=1)
@@ -179,7 +180,7 @@ class SentimentClassifier:
               ignore_error=True,
               clear_input_samples=True):
         if text.count('[ASP]') < 2:
-            text = '[ASP]ERROR, Please warp the aspect first![ASP]' + text
+            text = '[ASP]ERROR, Please WRAP the target aspects![ASP]' + text
         if clear_input_samples:
             self.clear_input_samples()
         if text:
@@ -296,12 +297,12 @@ class SentimentClassifier:
                         text_printing = text_printing.replace(result['aspect'][i], aspect_info)
                     print(text_printing)
             if save_path:
-                fout = open(save_path, 'w', encoding='utf8')
-                json.dump(json.JSONEncoder().encode({'results': results}), fout, ensure_ascii=False)
-                # fout.write('Total samples:{}\n'.format(n_total))
-                # fout.write('Labeled samples:{}\n'.format(n_labeled))
-                # fout.write('Prediction Accuracy:{}%\n'.format(100 * n_correct / n_labeled)) if n_labeled else 'N.A.'
-                print('inference result saved in: {}'.format(save_path))
+                with open(save_path, 'w', encoding='utf8') as fout:
+                    json.dump(json.JSONEncoder().encode({'results': results}), fout, ensure_ascii=False)
+                    # fout.write('Total samples:{}\n'.format(n_total))
+                    # fout.write('Labeled samples:{}\n'.format(n_labeled))
+                    # fout.write('Prediction Accuracy:{}%\n'.format(100 * n_correct / n_labeled)) if n_labeled else 'N.A.'
+                    print('inference result saved in: {}'.format(save_path))
         except Exception as e:
             print('Can not save result: {}, Exception: {}'.format(text_raw, e))
 

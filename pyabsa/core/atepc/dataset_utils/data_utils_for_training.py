@@ -249,7 +249,9 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
         except:
             continue
         text_raw = text_left + ' ' + aspect + ' ' + text_right
-        validate_example(text_raw, aspect, polarity)
+
+        if validate_example(text_raw, aspect, polarity):
+            continue
 
         prepared_inputs = prepare_input_for_atepc(opt, tokenizer, text_left, text_right, aspect)
         lcf_cdm_vec = prepared_inputs['lcf_cdm_vec']

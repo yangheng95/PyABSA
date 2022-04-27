@@ -212,7 +212,8 @@ class GloVeABSADataset(Dataset):
             aspect_begin = len(tokenizer.text_to_sequence(text_left))
             aspect_position = set(range(aspect_begin, aspect_begin + np.count_nonzero(aspect_indices)))
 
-            validate_example(text_raw, aspect, polarity)
+            if validate_example(text_raw, aspect, polarity):
+                continue
 
             data = {
                 'ex_id': ex_id,

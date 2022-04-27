@@ -85,13 +85,14 @@ class Instructor:
 
         if os.path.exists(cache_path):
             print('Loading dataset cache:', cache_path)
-            if self.opt.dataset_file['test']:
-                self.train_data, self.test_data, opt = pickle.load(open(cache_path, mode='rb'))
+            with open(cache_path, mode='rb') as f:
+                if self.opt.dataset_file['test']:
+                    self.train_data, self.test_data, opt = pickle.load(f)
 
-            else:
-                self.train_data, opt = pickle.load(open(cache_path, mode='rb'))
-            # reset output dim according to dataset labels
-            self.opt.polarities_dim = opt.polarities_dim
+                else:
+                    self.train_data, opt = pickle.load(f)
+                # reset output dim according to dataset labels
+                self.opt.polarities_dim = opt.polarities_dim
 
         else:
             self.train_examples = processor.get_train_examples(self.opt.dataset_file['train'], 'train')
@@ -129,10 +130,11 @@ class Instructor:
 
             if self.opt.cache_dataset and not os.path.exists(cache_path):
                 print('Caching dataset... please remove cached dataset if change model or dataset')
-                if self.opt.dataset_file['test']:
-                    pickle.dump((self.train_data, self.test_data, self.opt), open(cache_path, mode='wb'))
-                else:
-                    pickle.dump((self.train_data, self.opt), open(cache_path, mode='wb'))
+                with open(cache_path, mode='wb') as f:
+                    if self.opt.dataset_file['test']:
+                        pickle.dump((self.train_data, self.test_data, self.opt), f)
+                    else:
+                        pickle.dump((self.train_data, self.opt), f)
 
         # only identify the labels in training set, make sure the labels are the same type in the test set
         for key in opt.args:
