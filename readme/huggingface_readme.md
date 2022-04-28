@@ -16,6 +16,40 @@
 
 # | [Overview](../README.MD) | [HuggingfaceHub](huggingface_readme.md) | [ABDADatasets](dataset_readme.md) | [ABSA Models](model_readme.md) | [Colab Tutorials](tutorial_readme.md) |
 
+
+## Try our demos on Huggingface Space
+- [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC) 
+- [Aspect term extraction & sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC)
+- [方面术语提取和情感分类（中文）](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC-Chinese)
+
+## Try our demos on Huggingface Space via API
+- [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC) 
+```python3
+import requests
+r = requests.post(url='https://hf.space/embed/yangheng/PyABSA-APC/+/api/predict/',
+                  json={"data": ["I have had my [ASP]computer[ASP] for 2 weeks already and it [ASP]works[ASP] perfectly . !sent!  Positive, Positive"]})
+r.json()
+```
+
+- [Aspect term extraction & sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC)
+```python3
+import requests
+r = requests.post(
+    url='https://hf.space/embed/yangheng/PyABSA-ATEPC/+/api/predict/',
+    json={"data": ['The wine list is incredible and extensive and diverse , '
+                   'the food is all incredible and the staff was all very nice ,'
+                   'good at their jobs and cultured .']})
+r.json() 
+```
+
+- [方面术语提取和情感分类（中文）](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC-Chinese)
+```python3
+import requests
+r = requests.post(url='https://hf.space/embed/yangheng/PyABSA-ATEPC-Chinese/+/api/predict/',
+                  json={"data": ["这款手机真的很薄，但是颜色不太好看，总体上我很满意啦。"]})
+r.json()
+```
+
 # Develop & Research based on PyABSA
 
 ## Use Our Model via Transformers Model Hub

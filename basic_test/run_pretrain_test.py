@@ -49,10 +49,10 @@ for dataset in ABSADatasetList()[:1]:
     for model in APCModelList():
         cuda.empty_cache()
         config = APCConfigManager.get_apc_config_english()
+        config.lcf = 'cdm'
         config.model = model
         config.cache_dataset = True
         config.num_epoch = 1
-        config.lcf = 'cdm'
         config.max_seq_len = 10
         config.evaluate_begin = 0
         config.log_step = -1

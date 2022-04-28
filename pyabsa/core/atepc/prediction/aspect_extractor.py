@@ -23,11 +23,12 @@ from transformers.models.bert.modeling_bert import BertModel
 from pyabsa.functional.dataset import detect_infer_dataset, DatasetItem
 from pyabsa.core.atepc.models import ATEPCModelList
 from pyabsa.core.atepc.dataset_utils.atepc_utils import load_atepc_inference_datasets
-from pyabsa.utils.pyabsa_utils import print_args, save_json, TransformerConnectionError
+from pyabsa.utils.pyabsa_utils import print_args, save_json, TransformerConnectionError, iob_processing
 from ..dataset_utils.data_utils_for_inference import (ATEPCProcessor,
                                                       convert_ate_examples_to_features,
                                                       convert_apc_examples_to_features,
                                                       SENTIMENT_PADDING)
+from ..dataset_utils.data_utils_for_training import split_aspect
 
 
 class AspectExtractor:
@@ -301,35 +302,24 @@ class AspectExtractor:
                 for t, l in zip(all_tokens[i + (self.opt.infer_batch_size * i_batch)], pred_iobs):
                     ate_result.append('{}({})'.format(t, l))
                     if 'ASP' in l:
-                        polarity.append(-SENTIMENT_PADDING)
+                        polarity.append(1)  # 1 tags the valid position aspect terms
                     else:
                         polarity.append(SENTIMENT_PADDING)
 
-                # POLARITY_PADDING = [SENTIMENT_PADDING] * len(polarity)
-                # for iob_idx in range(len(polarity) - 1):
-                #     example_id = i_batch * self.opt.infer_batch_size + i
-                #     if pred_iobs[iob_idx].endswith('ASP') and not pred_iobs[iob_idx + 1].endswith('I-ASP'):
-                #         _polarity = polarity[:iob_idx + 1] + POLARITY_PADDING[iob_idx + 1:]
-                #         polarity = POLARITY_PADDING[:iob_idx + 1] + polarity[iob_idx + 1:]
-                #         extraction_res.append((all_tokens[i + (self.opt.infer_batch_size * i_batch)], pred_iobs, _polarity, example_id))
-
-                # Contributed by jkkl@github
-                # Ref. https://github.com/yangheng95/PyABSA/issues/156#issuecomment-1077443060
                 POLARITY_PADDING = [SENTIMENT_PADDING] * len(polarity)
-                start_sentiment_index = -1
-                end_sentiment_index = -1
                 example_id = i_batch * self.opt.infer_batch_size + i
-                for idx in range(len(polarity)):
-                    if polarity[idx] != SENTIMENT_PADDING and (idx == 0 or polarity[idx] != polarity[idx - 1]):
-                        start_sentiment_index = idx
-                    elif polarity[idx] == SENTIMENT_PADDING and idx != 0 and polarity[idx - 1] != SENTIMENT_PADDING:
-                        end_sentiment_index = idx
-                        one_sentiment_labels = POLARITY_PADDING[:start_sentiment_index] + polarity[start_sentiment_index: end_sentiment_index] + POLARITY_PADDING[end_sentiment_index:]
-                        extraction_res.append((all_tokens[i + (self.opt.infer_batch_size * i_batch)], pred_iobs, one_sentiment_labels, example_id))
-                if start_sentiment_index > end_sentiment_index:
-                    # 处理尾部情况
-                    one_sentiment_labels = POLARITY_PADDING[:start_sentiment_index] + polarity[start_sentiment_index:]
-                    extraction_res.append((all_tokens[i + (self.opt.infer_batch_size * i_batch)], pred_iobs, one_sentiment_labels, example_id))
+                pred_iobs = iob_processing(pred_iobs)
+                for idx in range(1, len(polarity)):
+
+                    if polarity[idx - 1] != str(SENTIMENT_PADDING) and split_aspect(pred_iobs[idx - 1], pred_iobs[idx]):
+                        _polarity = polarity[:idx] + POLARITY_PADDING[idx:]
+                        polarity = POLARITY_PADDING[:idx] + polarity[idx:]
+                        extraction_res.append((all_tokens[i + (self.opt.infer_batch_size * i_batch)], pred_iobs, _polarity, example_id))
+
+                    if polarity[idx] != str(SENTIMENT_PADDING) and idx == len(polarity) - 1 and split_aspect(pred_iobs[idx]):
+                        _polarity = polarity[:idx + 1] + POLARITY_PADDING[idx + 1:]
+                        polarity = POLARITY_PADDING[:idx + 1] + polarity[idx + 1:]
+                        extraction_res.append((all_tokens[i + (self.opt.infer_batch_size * i_batch)], pred_iobs, _polarity, example_id))
 
         return extraction_res, sentence_res
 
