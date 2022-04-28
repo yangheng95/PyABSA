@@ -302,7 +302,7 @@ class AspectExtractor:
                 for t, l in zip(all_tokens[i + (self.opt.infer_batch_size * i_batch)], pred_iobs):
                     ate_result.append('{}({})'.format(t, l))
                     if 'ASP' in l:
-                        polarity.append(1)  # 1 tags the valid position aspect terms
+                        polarity.append(-SENTIMENT_PADDING)  # 1 tags the valid position aspect terms
                     else:
                         polarity.append(SENTIMENT_PADDING)
 

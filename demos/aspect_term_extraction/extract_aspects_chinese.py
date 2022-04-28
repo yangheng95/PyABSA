@@ -18,7 +18,6 @@ examples1 = ['照 大 尺 寸 的 照 片 的 时 候 手 机 反 映 速 度 �
 
 # 从Google Drive下载提供的预训练模型
 aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='chinese', eval_batch_size=256)
-# model_path = 'state_dict/lcf_atepc_cdw_apcacc_96.88_apcf1_96.35_atef1_91.2'
 
 # examples = examples1
 examples = ABSADatasetList.Phone

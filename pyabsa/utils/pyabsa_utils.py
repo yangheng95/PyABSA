@@ -94,11 +94,12 @@ def check_and_fix_IOB_labels(label_map, opt):
 
 
 def iob_processing(iobs: list):
+    _iobs = iobs[:]
     for i in range(1, len(iobs)):
         if iobs[i-1] == 'O' and 'ASP' in iobs[i]:
-            iobs[i] = 'B-ASP'
+            _iobs[i] = 'B-ASP'
 
-    return iobs
+    return _iobs
 
 def get_device(auto_device):
     if isinstance(auto_device, str) and auto_device == 'allcuda':
