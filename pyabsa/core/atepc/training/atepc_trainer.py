@@ -23,7 +23,7 @@ from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler, Tens
 from transformers import AutoTokenizer, AutoModel
 
 from pyabsa.utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError
+from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError, optimizers
 from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
 
 import pytorch_warmup as warmup
@@ -44,6 +44,9 @@ class Instructor:
         self.lr_scheduler = None
         self.opt = opt
         self.logger = logger
+
+        self.train_dataloader = None
+        self.test_dataloader = None
         # if opt.use_bert_spc:
         #     self.logger.info('Warning: The use_bert_spc is disabled for extracting aspect,'
         #                      ' reset use_bert_spc=False and go on... ')
@@ -64,10 +67,6 @@ class Instructor:
         if self.opt.model_path_to_save and not os.path.exists(self.opt.model_path_to_save):
             os.makedirs(self.opt.model_path_to_save)
 
-        self.optimizers = {
-            'adam': torch.optim.Adam,
-            'adamw': torch.optim.AdamW
-        }
         try:
             self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
             bert_base_model = AutoModel.from_pretrained(self.opt.pretrained_bert)
@@ -97,7 +96,7 @@ class Instructor:
         else:
             self.train_examples = processor.get_train_examples(self.opt.dataset_file['train'], 'train')
             train_features = convert_examples_to_features(self.train_examples, self.opt.max_seq_len, self.tokenizer, self.opt)
-            self.opt.label_list = processor.get_labels()
+            self.opt.label_list = sorted(list(self.opt.IOB_label_to_index.keys()))
             self.opt.num_labels = len(self.opt.label_list) + 1
             all_spc_input_ids = torch.tensor([f.input_ids_spc for f in train_features], dtype=torch.long)
             all_input_mask = torch.tensor([f.input_mask for f in train_features], dtype=torch.long)
@@ -112,7 +111,7 @@ class Instructor:
             self.train_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
                                             all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
 
-            if 'test' in self.opt.dataset_file:
+            if self.opt.dataset_file['test']:
                 self.test_examples = processor.get_test_examples(self.opt.dataset_file['test'], 'test')
                 test_features = convert_examples_to_features(self.test_examples, self.opt.max_seq_len,
                                                              self.tokenizer, self.opt)
@@ -165,9 +164,9 @@ class Instructor:
              'weight_decay': 0}
         ]
         if isinstance(self.opt.optimizer, str):
-            self.optimizer = self.optimizers[self.opt.optimizer](self.optimizer_grouped_parameters,
-                                                                 lr=self.opt.learning_rate,
-                                                                 weight_decay=self.opt.l2reg)
+            self.optimizer = optimizers[self.opt.optimizer](self.optimizer_grouped_parameters,
+                                                            lr=self.opt.learning_rate,
+                                                            weight_decay=self.opt.l2reg)
         if amp:
             self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
 
@@ -204,7 +203,10 @@ class Instructor:
         self.opt.max_test_metrics = {'max_apc_test_acc': 0, 'max_apc_test_f1': 0, 'max_ate_test_f1': 0}
         self.opt.metrics_of_this_checkpoint = {'apc_acc': 0, 'apc_f1': 0, 'ate_f1': 0}
         global_step = 0
-        save_path = ''
+        save_path = '{0}/{1}_{2}'.format(self.opt.model_path_to_save,
+                                          self.opt.model_name,
+                                          self.opt.dataset_name
+                                          )
         for epoch in range(int(self.opt.num_epoch)):
             nb_tr_examples, nb_tr_steps = 0, 0
             iterator = tqdm.tqdm(self.train_dataloader, postfix='Epoch:{}'.format(epoch))
@@ -259,8 +261,8 @@ class Instructor:
                 self.optimizer.zero_grad()
                 global_step += 1
                 global_step += 1
-                if self.opt.dataset_file['test'] and global_step % self.opt.log_step == 0:
-                    if epoch >= self.opt.evaluate_begin:
+                if global_step % self.opt.log_step == 0:
+                    if self.opt.dataset_file['test'] and epoch >= self.opt.evaluate_begin:
                         apc_result, ate_result = self.evaluate()
                         sum_apc_test_acc += apc_result['apc_test_acc']
                         sum_apc_test_f1 += apc_result['apc_test_f1']
@@ -318,6 +320,7 @@ class Instructor:
                         postfix += 'ATE_F1: {}(max:{})'.format(current_ate_test_f1, self.opt.max_test_metrics[
                             'max_ate_test_f1'])
                     else:
+                        save_model(self.opt, self.model, self.tokenizer, save_path+'_{}/'.format(loss.item()))
                         postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
 
                 iterator.postfix = postfix
@@ -325,15 +328,6 @@ class Instructor:
 
             if patience < 0:
                 break
-        # self.logger.info('-------------------------------------Training Summary-------------------------------------')
-        # self.logger.info(
-        #     '  Max APC Acc: {:.5f} Max APC F1: {:.5f} Max ATE F1: {:.5f} Accumulated Loss: {}'.format(
-        #         self.opt.max_test_metrics['max_apc_test_acc'],
-        #         self.opt.max_test_metrics['max_apc_test_f1'],
-        #         self.opt.max_test_metrics['max_ate_test_f1'],
-        #         sum_loss)
-        # )
-        # self.logger.info('-------------------------------------Training Summary-------------------------------------')
 
         self.opt.MV.add_metric('Max-APC-Test-Acc', self.opt.max_test_metrics['max_apc_test_acc'])
         self.opt.MV.add_metric('Max-APC-Test-F1', self.opt.max_test_metrics['max_apc_test_f1'])
