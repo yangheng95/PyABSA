@@ -69,7 +69,7 @@ def assemble_aspects(fname):
     fin.close()
     for i in range(len(lines)):
         if i % 3 == 0 or i % 3 == 1:
-            lines[i] = ' '.join(split_text(lines[i].strip())).replace('$ t $', '$T$')
+            lines[i] = ' '.join(split_text(lines[i].strip())).replace('$ t $', '$T$').replace('$ T $', '$T$')
         else:
             lines[i] = lines[i].strip()
 

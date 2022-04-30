@@ -55,7 +55,6 @@ class TextClassifier:
                 with open(config_path, mode='rb') as f:
                     self.opt = pickle.load(f)
 
-
                 if state_dict_path or model_path:
                     if hasattr(BERTClassificationModelList, self.opt.model.__name__):
                         if state_dict_path:
