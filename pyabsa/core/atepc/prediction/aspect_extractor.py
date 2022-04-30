@@ -34,18 +34,7 @@ from ..dataset_utils.data_utils_for_training import split_aspect
 class AspectExtractor:
 
     def __init__(self, model_arg=None, sentiment_map=None, eval_batch_size=128):
-        # print('This is the aspect extractor aims to extract aspect and predict sentiment,'
-        #       ' note that use_bert_spc is disabled while extracting aspects and classifying sentiment!')
-        # optimizers = {
-        #     'adadelta': torch.optim.Adadelta,  # default lr=1.0
-        #     'adagrad': torch.optim.Adagrad,  # default lr=0.01
-        #     'adam': torch.optim.Adam,  # default lr=0.001
-        #     'adamax': torch.optim.Adamax,  # default lr=0.002
-        #     'asgd': torch.optim.ASGD,  # default lr=0.01
-        #     'rmsprop': torch.optim.RMSprop,  # default lr=0.01
-        #     'sgd': torch.optim.SGD,
-        #     'adamw': torch.optim.AdamW
-        # }
+
         # load from a training
         if not isinstance(model_arg, str):
             print('Load aspect extractor from training')
@@ -69,7 +58,6 @@ class AspectExtractor:
 
                 with open(config_path, mode='rb') as f:
                     self.opt = pickle.load(f)
-
 
                 if 'pretrained_bert_name' in self.opt.args:
                     self.opt.pretrained_bert = self.opt.pretrained_bert_name

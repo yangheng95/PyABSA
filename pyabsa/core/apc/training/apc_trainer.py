@@ -169,7 +169,11 @@ class Instructor:
         global_step = 0
         max_fold_acc = 0
         max_fold_f1 = 0
-        save_path = ''
+        save_path = '{0}/{1}_{2}'.format(self.opt.model_path_to_save,
+                                          self.opt.model_name,
+                                          self.opt.dataset_name
+                                          )
+
         self.opt.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
         self.opt.max_test_metrics = {'max_apc_test_acc': 0, 'max_apc_test_f1': 0}
 
@@ -234,8 +238,8 @@ class Instructor:
                         self.lr_scheduler.step()
 
                 # evaluate if test set is available
-                if self.opt.dataset_file['test'] and global_step % self.opt.log_step == 0:
-                    if epoch >= self.opt.evaluate_begin:
+                if global_step % self.opt.log_step == 0:
+                    if self.opt.dataset_file['test'] and epoch >= self.opt.evaluate_begin:
                         if self.val_dataloaders:
                             test_acc, f1 = self._evaluate_acc_f1(self.val_dataloaders[0])
                         else:
@@ -290,6 +294,7 @@ class Instructor:
                                                                    ))
 
                     else:
+                        save_model(self.opt, self.model, self.tokenizer, save_path+'_{}/'.format(loss.item()))
                         postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
 
                 iterator.postfix = postfix
@@ -367,7 +372,10 @@ class Instructor:
             global_step = 0
             max_fold_acc = 0
             max_fold_f1 = 0
-            save_path = ''
+            save_path = '{0}/{1}_{2}'.format(self.opt.model_path_to_save,
+                                              self.opt.model_name,
+                                              self.opt.dataset_name
+                                              )
             for epoch in range(self.opt.num_epoch):
                 patience -= 1
                 iterator = tqdm(train_dataloader, postfix='Epoch:{}'.format(epoch))
@@ -402,8 +410,8 @@ class Instructor:
                             self.lr_scheduler.step()
 
                     # evaluate if test set is available
-                    if self.opt.dataset_file['test'] and global_step % self.opt.log_step == 0:
-                        if epoch >= self.opt.evaluate_begin:
+                    if global_step % self.opt.log_step == 0:
+                        if self.opt.dataset_file['test'] and epoch >= self.opt.evaluate_begin:
 
                             test_acc, f1 = self._evaluate_acc_f1(val_dataloader)
 

@@ -171,6 +171,8 @@ class Trainer:
             self.inference_model = model
 
     def load_trained_model(self):
+        if not self.inference_model:
+            print('No trained model found, this could happen while training only using training set.')
         self.inference_model.to(self.config.device)
         return self.inference_model
 

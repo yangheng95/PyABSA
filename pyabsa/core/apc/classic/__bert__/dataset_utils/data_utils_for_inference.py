@@ -15,6 +15,7 @@ from pyabsa.utils.pyabsa_utils import validate_example
 from .dependency_graph import dependency_adj_matrix
 from pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils import load_apc_datasets, LABEL_PADDING, prepare_input_for_apc
 
+
 def pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating='post', value=0):
     x = (np.ones(maxlen) * value).astype(dtype)
     if truncating == 'pre':
