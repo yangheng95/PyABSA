@@ -219,7 +219,7 @@ class AspectExtractor:
             return results
 
     # Temporal code, pending optimization
-    def _extract(self, examples):
+    def _extract(self, examples, infer_batch_size=256):
         sentence_res = []  # extraction result by sentence
         extraction_res = []  # extraction result flatten by aspect
 
@@ -243,8 +243,7 @@ class AspectExtractor:
                                    all_polarities, all_valid_ids, all_lmask_ids)
         # Run prediction for full data
         infer_sampler = SequentialSampler(infer_data)
-        if 'infer_batch_size' not in self.opt.args:
-            self.opt.infer_batch_size = 128
+        self.opt.infer_batch_size = infer_batch_size
         self.infer_dataloader = DataLoader(infer_data, sampler=infer_sampler, pin_memory=True, batch_size=self.opt.infer_batch_size)
 
         # extract_aspects
