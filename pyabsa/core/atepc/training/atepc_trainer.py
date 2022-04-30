@@ -320,7 +320,8 @@ class Instructor:
                         postfix += 'ATE_F1: {}(max:{})'.format(current_ate_test_f1, self.opt.max_test_metrics[
                             'max_ate_test_f1'])
                     else:
-                        save_model(self.opt, self.model, self.tokenizer, save_path+'_{}/'.format(loss.item()))
+                        if self.opt.save_mode:
+                            save_model(self.opt, self.model, self.tokenizer, save_path+'_{}/'.format(loss.item()))
                         postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
 
                 iterator.postfix = postfix
@@ -343,7 +344,7 @@ class Instructor:
 
         # return the model paths of multiple training
         # in case of loading the best model after training
-        if save_path:
+        if self.opt.save_mode:
             del self.train_dataloader
             del self.test_dataloader
             del self.model

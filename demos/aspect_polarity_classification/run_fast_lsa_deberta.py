@@ -32,10 +32,10 @@ config.model = APCModelList.FAST_LSA_T_V2
 config.lcf = 'cdw'
 config.similarity_threshold = 1
 config.max_seq_len = 80
-config.dropout = 0.5
+config.dropout = 0
 config.optimizer = 'adamw'
 config.cache_dataset = False
-config.patience = 30
+config.patience = 5
 config.pretrained_bert = 'yangheng/deberta-v3-base-absa'
 # config.pretrained_bert = 'microsoft/deberta-v3-base'
 config.num_epoch = 30
@@ -58,6 +58,8 @@ Trainer(config=config,
         checkpoint_save_mode=0,  # =None to avoid save model
         auto_device=device  # automatic choose CUDA or CPU
         )
+config.MV.avg_bar_plot()
+config.MV.box_plot()
 
 dataset = ABSADatasetList.Restaurant14
 config.MV = MetricVisualizer(config.model.__name__ + '-' + dataset.dataset_name, trial_tag='Model & Dataset',
@@ -67,6 +69,8 @@ Trainer(config=config,
         checkpoint_save_mode=0,  # =None to avoid save model
         auto_device=device  # automatic choose CUDA or CPU
         )
+config.MV.avg_bar_plot()
+config.MV.box_plot()
 
 config.log_step = -1
 config.patience = 5
@@ -78,13 +82,15 @@ Trainer(config=config,
         checkpoint_save_mode=0,  # =None to avoid save model
         auto_device=device  # automatic choose CUDA or CPU
         )
+config.MV.avg_bar_plot()
+config.MV.box_plot()
 
 config = APCConfigManager.get_apc_config_english()
 config.model = APCModelList.FAST_LSA_S_V2
 config.lcf = 'cdw'
 config.similarity_threshold = 1
 config.max_seq_len = 80
-config.dropout = 0.5
+config.dropout = 0
 config.cache_dataset = False
 config.patience = 30
 config.optimizer = 'adamw'
@@ -110,6 +116,8 @@ Trainer(config=config,
         checkpoint_save_mode=0,  # =None to avoid save model
         auto_device=device  # automatic choose CUDA or CPU
         )
+config.MV.avg_bar_plot()
+config.MV.box_plot()
 
 dataset = ABSADatasetList.Restaurant14
 config.MV = MetricVisualizer(config.model.__name__ + '-' + dataset.dataset_name, trial_tag='Model & Dataset',
@@ -119,6 +127,8 @@ Trainer(config=config,
         checkpoint_save_mode=0,  # =None to avoid save model
         auto_device=device  # automatic choose CUDA or CPU
         )
+config.MV.avg_bar_plot()
+config.MV.box_plot()
 
 config.log_step = -1
 config.patience = 5
@@ -130,13 +140,15 @@ Trainer(config=config,
         checkpoint_save_mode=0,  # =None to avoid save model
         auto_device=device  # automatic choose CUDA or CPU
         )
+config.MV.avg_bar_plot()
+config.MV.box_plot()
 
 config = APCConfigManager.get_apc_config_english()
 config.model = APCModelList.BERT_SPC_V2
 config.lcf = 'cdw'
 config.similarity_threshold = 1
 config.max_seq_len = 80
-config.dropout = 0.5
+config.dropout = 0
 config.cache_dataset = False
 config.patience = 30
 config.optimizer = 'adamw'
@@ -162,6 +174,8 @@ Trainer(config=config,
         checkpoint_save_mode=0,  # =None to avoid save model
         auto_device=device  # automatic choose CUDA or CPU
         )
+config.MV.avg_bar_plot()
+config.MV.box_plot()
 
 dataset = ABSADatasetList.Restaurant14
 config.MV = MetricVisualizer(config.model.__name__ + '-' + dataset.dataset_name, trial_tag='Model & Dataset',
@@ -171,6 +185,8 @@ Trainer(config=config,
         checkpoint_save_mode=0,  # =None to avoid save model
         auto_device=device  # automatic choose CUDA or CPU
         )
+config.MV.avg_bar_plot()
+config.MV.box_plot()
 
 config.log_step = -1
 config.patience = 5
@@ -182,3 +198,5 @@ Trainer(config=config,
         checkpoint_save_mode=0,  # =None to avoid save model
         auto_device=device  # automatic choose CUDA or CPU
         )
+config.MV.avg_bar_plot()
+config.MV.box_plot()
