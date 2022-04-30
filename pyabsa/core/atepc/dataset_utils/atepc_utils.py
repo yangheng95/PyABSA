@@ -19,9 +19,9 @@ def split_text(text):
     # return text
     text = text.strip()
 
-    # punctuation = '！？｡，,.?!'
-    # for p in punctuation:
-    #     text = text.replace('{}'.format(p), ' {}'.format(p))
+    punctuation = '！？｡，,.?!'
+    for p in punctuation:
+        text = text.replace('{} '.format(p), ' {} '.format(p))
     # text = ' '.join(re.compile(r'\w+|[{}]'.format(re.escape(punctuation))).findall(text)).replace('$ T $', '$T$')
 
     # plain split for Chinese, Koeran, Japanese
