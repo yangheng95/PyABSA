@@ -266,7 +266,7 @@ def available_checkpoints(task='', from_local=False):
                 os.remove('./checkpoints.json')
             gdown.download(id=checkpoint_url, use_cookies=False, output='./checkpoints.json', quiet=False)
             # gdd.download_file_from_google_drive(file_id=checkpoint_url, dest_path='./checkpoints.json')
-        with open('./checkpoints.json', 'r') as f:
+        with open('./checkpoints.json', 'r', encoding='utf8') as f:
             checkpoint_map = json.load(f)
 
         t_checkpoint_map = {}
@@ -315,10 +315,6 @@ def download_checkpoint(task='apc', language='chinese', archive_path='', model_n
             archive_path = archive_path.split('/')[-2]
 
         gdown.download(id=archive_path, output=save_path)
-        # gdd.download_file_from_google_drive(file_id=archive_path,
-        #                                     dest_path=save_path,
-        #                                     unzip=True,
-        #                                     showsize=True)
     except ConnectionError as e:
         raise ConnectionError("Fail to download checkpoint: {}".format(e))
     unzip_checkpoint(save_path)

@@ -5,21 +5,31 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
+# from transformers import AutoTokenizer
 import re
-
 from pyabsa.core.apc.dataset_utils.apc_utils import (get_syntax_distance,
                                                      get_cdw_vec,
                                                      get_lca_ids_and_cdm_vec)
 
+# It is hard to tokenize multilingual text, I decide to use a pretrained tokenizer, you can alter according to your demands
+# tokenizer = AutoTokenizer.from_pretrained('bert-base-multilingual-cased')
 
 def split_text(text):
+    # text = ' '.join(tokenizer.tokenize(text)[1:])
+    # return text
     text = text.strip()
-    word_list = []
-    s = text.lower()
+
+    # punctuation = '！？｡，,.?!'
+    # for p in punctuation:
+    #     text = text.replace('{}'.format(p), ' {}'.format(p))
+    # text = ' '.join(re.compile(r'\w+|[{}]'.format(re.escape(punctuation))).findall(text)).replace('$ T $', '$T$')
+
     # plain split for Chinese, Koeran, Japanese
-    # if not re.match(u'[\u4e00-\u9fa5]+[\uac00-\ud7ff]+[\u30a0-\u30ff]+', s):
-    if not re.match(u'[\u4e00-\u9fa5\uac00-\ud7ff\u30a0-\u30ff]+', s):
+    if not re.match('[\u4e00-\u9fa5]+', text) or re.match('[\uac00-\ud7ff]', text) or re.match('[\u30a0-\u30ff]+', text):
         return text.split()
+
+    s = text
+    word_list = []
     while len(s) > 0:
         match = re.match(r'[a-z]+', s)
         if match:

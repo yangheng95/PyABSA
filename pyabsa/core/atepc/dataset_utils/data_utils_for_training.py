@@ -193,7 +193,7 @@ class ATEPCProcessor(DataProcessor):
             self._read_tsv(data_dir), set_tag)
 
     def get_labels(self):
-        return list(Labels) + [self.tokenizer.bos_token, self.tokenizer.eos_token]
+        return sorted(list(Labels) + [self.tokenizer.bos_token, self.tokenizer.eos_token])
 
     def _create_examples(self, lines, set_type):
         examples = []
@@ -225,7 +225,7 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
 
     bos_token = tokenizer.bos_token
     eos_token = tokenizer.eos_token
-    label_map = {label: i for i, label in enumerate(list(Labels) + [tokenizer.bos_token, tokenizer.eos_token], 1)}
+    label_map = {label: i for i, label in enumerate(sorted(list(Labels) + [tokenizer.bos_token, tokenizer.eos_token]), 1)}
     opt.IOB_label_to_index = label_map
     features = []
     polarities_set = set()
