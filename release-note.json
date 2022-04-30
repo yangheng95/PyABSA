@@ -1,4 +1,7 @@
 {
+  "1.13.0(1,2)": {
+    "1": "Bug Fixes"
+  },
   "1.10.6": {
     "1": "Fix latent resource warning"
   },

@@ -294,7 +294,8 @@ class Instructor:
                                                                    ))
 
                     else:
-                        save_model(self.opt, self.model, self.tokenizer, save_path+'_{}/'.format(loss.item()))
+                        if self.opt.save_mode:
+                            save_model(self.opt, self.model, self.tokenizer, save_path+'_{}/'.format(loss.item()))
                         postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
 
                 iterator.postfix = postfix
@@ -320,7 +321,7 @@ class Instructor:
         print('Training finished, we hope you can share your checkpoint with community, please see:',
               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
 
-        if save_path:
+        if self.opt.save_mode:
             del self.train_dataloaders
             del self.test_dataloader
             del self.val_dataloaders
