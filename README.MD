@@ -20,7 +20,7 @@
 - [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC) 
 - [Aspect term extraction & sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC)
 - [方面术语提取和情感分类（中文）](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC-Chinese)
-- 
+
 ## Package Overview
 
 <table>
@@ -111,7 +111,7 @@ examples = ['But the staff was so nice to us .',
             ]
 
 inference_source = ABSADatasetList.Restaurant14
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='english')
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='multilingual2')
 atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source,
                                                save_result=True,
                                                print_result=True,  # print the result
@@ -128,6 +128,7 @@ available checkpoints, you can use the following code and load the checkpoint by
 ```python3
 from pyabsa import available_checkpoints
 
+# The results of available_checkpoints() depend on the PyABSA version
 checkpoint_map = available_checkpoints()  # show available checkpoints of PyABSA of current version 
 ```
 

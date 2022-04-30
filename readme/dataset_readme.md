@@ -20,23 +20,24 @@
 
 More datasets are available at [ABSADatasets](https://github.com/yangheng95/ABSADatasets).
 
-1. Twitter
-2. Laptop14
-3. Restaurant14
-4. Restaurant15
-5. Restaurant16
-6. Phone
-7. Car
-8. Camera
-9. Notebook
-10. MAMS
-11. TShirt
-12. Television
-13. MOOC
-14. Shampoo (The annotation of this dataset is highly different from other datasets, please dont mix this dataset with other dataset)
-15. Yelp
-
-You don't have to download the datasets, as the datasets will be downloaded automatically.
+- MAMS https://github.com/siat-nlp/MAMS-for-ABSA
+- SemEval 2014: https://alt.qcri.org/semeval2014/task4/index.php?id=data-and-tools
+- SemEval 2015: https://alt.qcri.org/semeval2015/task12/index.php?id=data-and-tools
+- Chinese: https://www.sciencedirect.com/science/article/abs/pii/S0950705118300972?via%3Dihub
+- Shampoo: [brightgems@GitHub](https://github.com/brightgems/ABSADatasets)
+- MOOC: [jmc-123@GitHub](https://github.com/jmc-123/ABSADatasets) with GPL License
+- Twitter: https://dl.acm.org/doi/10.5555/2832415.2832437
+- Television & TShirt: https://github.com/rajdeep345/ABSA-Reproducibility
+- Yelp: [WeiLi9811@GitHub](https://github.com/WeiLi9811)
+- SemEval2016Task5: [YaxinCui@GitHub](https://github.com/YaxinCui/ABSADataset)
+  - Arabic Hotel Reviews
+  - Dutch Restaurant Reviews
+  - English Restaurant Reviews
+  - French Restaurant Reviews
+  - Russian Restaurant Reviews
+  - Spanish Restaurant Reviews
+  - Turkish Restaurant Reviews
+  You don't have to download the datasets, as the datasets will be downloaded automatically.
 
 ## Annotate Your Own Dataset
 
