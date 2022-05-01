@@ -210,8 +210,8 @@ class AspectExtractor:
             if save_result:
                 save_path = os.path.join(os.getcwd(), 'atepc_inference.result.json')
                 print('The results of aspect term extraction have been saved in {}'.format(save_path))
-                with open(save_path, 'w') as f:
-                    json.dump(json.JSONEncoder().encode({'results': results}), f, ensure_ascii=False)
+                with open(save_path, 'w', encoding="utf8") as f:
+                    json.dump(results, f, ensure_ascii=False)
             if print_result:
                 for r in results:
                     print(r)
