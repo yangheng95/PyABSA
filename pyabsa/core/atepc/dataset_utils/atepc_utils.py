@@ -13,6 +13,7 @@ from pyabsa.core.apc.dataset_utils.apc_utils import (get_syntax_distance,
                                                      get_cdw_vec,
                                                      get_lca_ids_and_cdm_vec)
 
+
 # It is hard to tokenize multilingual text, I decide to use a pretrained tokenizer, you can alter according to your demands
 # tokenizer = AutoTokenizer.from_pretrained('bert-base-multilingual-cased')
 
@@ -44,6 +45,18 @@ def split_text(text):
         #   从文本中去掉提取的 word，并去除文本收尾的空格字符
         s = s.replace(word, '', 1).strip(' ')
     return word_list
+
+
+def process_iob_tags(iob_tags: list) -> list:
+    for i in range(len(iob_tags) - 1):
+
+        if iob_tags[i] == 'O' and 'ASP' in iob_tags[i+1]:
+            iob_tags[i+1] = 'B-ASP'
+
+        # if 'ASP' in iob_tags[i] and 'B-ASP' in iob_tags[i + 1]:
+        #     iob_tags[i + 1] = 'I-ASP'
+
+    return iob_tags
 
 
 def prepare_input_for_atepc(opt, tokenizer, text_left, text_right, aspect):
