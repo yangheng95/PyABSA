@@ -22,8 +22,8 @@ from transformers.models.bert.modeling_bert import BertModel
 
 from pyabsa.functional.dataset import detect_infer_dataset, DatasetItem
 from pyabsa.core.atepc.models import ATEPCModelList
-from pyabsa.core.atepc.dataset_utils.atepc_utils import load_atepc_inference_datasets
-from pyabsa.utils.pyabsa_utils import print_args, save_json, TransformerConnectionError, iob_processing
+from pyabsa.core.atepc.dataset_utils.atepc_utils import load_atepc_inference_datasets, process_iob_tags
+from pyabsa.utils.pyabsa_utils import print_args, save_json, TransformerConnectionError
 from ..dataset_utils.data_utils_for_inference import (ATEPCProcessor,
                                                       convert_ate_examples_to_features,
                                                       convert_apc_examples_to_features,
@@ -295,7 +295,7 @@ class AspectExtractor:
 
                 POLARITY_PADDING = [SENTIMENT_PADDING] * len(polarity)
                 example_id = i_batch * self.opt.infer_batch_size + i
-                pred_iobs = iob_processing(pred_iobs)
+                pred_iobs = process_iob_tags(pred_iobs)
                 for idx in range(1, len(polarity)):
 
                     if polarity[idx - 1] != str(SENTIMENT_PADDING) and split_aspect(pred_iobs[idx - 1], pred_iobs[idx]):

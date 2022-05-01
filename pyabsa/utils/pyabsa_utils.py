@@ -93,14 +93,6 @@ def check_and_fix_IOB_labels(label_map, opt):
     opt.index_to_IOB_label = index_to_IOB_label
 
 
-def iob_processing(iobs: list):
-    _iobs = iobs[:]
-    for i in range(1, len(iobs)):
-        if iobs[i - 1] == 'O' and 'ASP' in iobs[i]:
-            _iobs[i] = 'B-ASP'
-
-    return _iobs
-
 
 def get_device(auto_device):
     if isinstance(auto_device, str) and auto_device == 'allcuda':
