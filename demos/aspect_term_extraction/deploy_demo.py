@@ -10,9 +10,7 @@ import pandas as pd
 
 from pyabsa import ATEPCCheckpointManager
 
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='multilingual2',
-                                                               auto_device=True  # False means load model on CPU
-                                                               )
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='multilingual')
 
 
 def inference(text):
@@ -21,7 +19,8 @@ def inference(text):
 
     result = pd.DataFrame({
         'aspect': result[0]['aspect'],
-        'sentiment': result[0]['sentiment']
+        'sentiment': result[0]['sentiment'],
+        'position': result[0]['position']
     })
 
     return result
@@ -31,19 +30,25 @@ if __name__ == '__main__':
     iface = gr.Interface(
         fn=inference,
         inputs=["text"],
-        examples=[['The wine list is incredible and extensive and diverse , the food is all incredible and the staff was all very nice ,'
-                   ' good at their jobs and cultured .'],
-                  ['Though the menu includes some unorthodox offerings (a peanut butter roll, for instance), the classics are pure and '
-                   'great--we have never had better sushi anywhere, including Japan.'],
-                  ['Everything, from the soft bread, soggy salad, and 50 minute wait time, with an incredibly rude service to deliver'
-                   ' below average food .'],
-                  ['Even though it is running Snow Leopard, 2.4 GHz C2D is a bit of an antiquated CPU and thus the occasional spinning '
-                   'wheel would appear when running Office Mac applications such as Word or Excel .'],
-                  ['This demo is trained on the laptop and restaurant and other review datasets from ABSADatasets (https://github.com/yangheng95/ABSADatasets)'],
-                  ['To fit on your data, please train the model on your own data, see the PyABSA (https://github.com/yangheng95/PyABSA)'],
-                  ],
+        examples=[
+            ['Even though it is running Snow Leopard, 2.4 GHz C2D is a bit of an antiquated CPU and thus the occasional spinning '
+             'wheel would appear when running Office Mac applications such as Word or Excel .'],
+            ['从这门课程的内容丰富程度还有老师的授课及讨论区的答疑上来说，我都是很喜欢的。但是吧，我觉得每个章的内容太多了，三个学分的量就分在了上个章节三次小测'],
+            ['Als je geen steak liefhebber bent is er een visalternatief, eend en lam aan aanvaardbare prijzen.'],
+            ['سأوصي بالتأكيد بموقع المدينة القديمة إلا إنه عليك الحذر من الأسعار السياحية الأكثر ارتفاعاً'],
+            ['Nous avons bien aimé l\'ambiance, sur la promenade principale de Narbonne-Plage, et la qualité du service.'],
+            ['По поводу интерьера: место спокойное, шумных компаний нет (не было, по крайней мере, в момент нашего посещения), очень приятная и уютная атмосфера, все в лучших традициях.'],
+            ['la calidad del producto, el servicio, el entorno todo fue excelente'],
+            ['Yemekler iyi hos, lezzetler iyi ama heyecan verici bi taraflari yok, iyi bir baligi iyi bir sekilde izgara yapmak artik atla deve bi olay degil.'],
+            ['This demo is trained on the public and community shared datasets from ABSADatasets (https://github.com/yangheng95/ABSADatasets),'
+             ' please feel free to share your data to improve this work'],
+            ['To fit on your data, please train our ATEPC models on your own data, see the PyABSA (https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_term_extraction)'],
+        ],
         outputs="dataframe",
-        title='Aspect Term Extraction for Short Texts (powered by PyABSA)'
+        title='Multilingual Aspect Term Extraction for Short Texts (powered by PyABSA v1.13.3)'
     )
 
-    iface.launch()
+    try:
+        iface.launch(share=True)
+    except:
+        iface.launch()
