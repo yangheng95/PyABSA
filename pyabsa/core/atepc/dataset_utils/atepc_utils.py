@@ -7,6 +7,8 @@
 
 # from transformers import AutoTokenizer
 import re
+import string
+
 from pyabsa.core.apc.dataset_utils.apc_utils import (get_syntax_distance,
                                                      get_cdw_vec,
                                                      get_lca_ids_and_cdm_vec)
@@ -19,9 +21,10 @@ def split_text(text):
     # return text
     text = text.strip()
 
-    punctuation = '！？｡，,.?!'
+    Chinese_punctuation = '＃＄％＆＇（）＊＋，－／：；＜＝＞＠［＼］＾＿｀｛｜｝～｟｠｢｣､　、〃〈〉《》「」『』【】〔〕〖〗〘〙〚〛〜〝〞〟〰〾〿–—‘’‛“”„‟…‧﹏﹑﹔·！？｡。'
+    punctuation = string.punctuation + Chinese_punctuation
     for p in punctuation:
-        text = text.replace('{} '.format(p), ' {} '.format(p))
+        text = text.replace('{}'.format(p), ' {} '.format(p))
     # text = ' '.join(re.compile(r'\w+|[{}]'.format(re.escape(punctuation))).findall(text)).replace('$ T $', '$T$')
 
     # plain split for Chinese, Koeran, Japanese
