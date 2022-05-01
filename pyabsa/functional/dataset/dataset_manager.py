@@ -85,6 +85,13 @@ class ABSADatasetList(list):
     Triple_Polarity_Chinese = DatasetItem('Chinese', ['MOOC', 'Shampoo'])
 
     SemEval2016Task5 = DatasetItem('SemEval2016Task5', ['SemEval2016Task5'])
+    Arabic_SemEval2016Task5 = DatasetItem('SemEval2016Task5', ['Arabic'])
+    Dutch_SemEval2016Task5 = DatasetItem('SemEval2016Task5', ['Dutch'])
+    Spanish_SemEval2016Task5 = DatasetItem('SemEval2016Task5', ['Spanish'])
+    Turkish_SemEval2016Task5 = DatasetItem('SemEval2016Task5', ['Turkish'])
+    Russian_SemEval2016Task5 = DatasetItem('SemEval2016Task5', ['Russian'])
+    French_SemEval2016Task5 = DatasetItem('SemEval2016Task5', ['French '])
+
 
     English = DatasetItem('English', ['Laptop14', 'Restaurant14', 'Restaurant16', 'ACL_Twitter', 'MAMS', 'Television', 'TShirt', 'Yelp'])
     SemEval = DatasetItem('SemEval', ['Laptop14', 'Restaurant14', 'Restaurant16'])  # Abandon rest15 dataset due to data leakage, See https://github.com/yangheng95/PyABSA/issues/53

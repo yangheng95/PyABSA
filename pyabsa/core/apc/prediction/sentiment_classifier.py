@@ -298,7 +298,7 @@ class SentimentClassifier:
                     print(text_printing)
             if save_path:
                 with open(save_path, 'w', encoding='utf8') as fout:
-                    json.dump(json.JSONEncoder().encode({'results': results}), fout, ensure_ascii=False)
+                    json.dump(results, fout, ensure_ascii=False)
                     # fout.write('Total samples:{}\n'.format(n_total))
                     # fout.write('Labeled samples:{}\n'.format(n_labeled))
                     # fout.write('Prediction Accuracy:{}%\n'.format(100 * n_correct / n_labeled)) if n_labeled else 'N.A.'

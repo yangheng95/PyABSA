@@ -20,7 +20,8 @@ text_classifier = TextClassifierCheckpointManager.get_text_classifier(checkpoint
 # batch inferring_tutorials returns the results, save the result if necessary using save_result=True
 inference_sets = ClassificationDatasetList.SST2
 results = text_classifier.batch_infer(target_file=inference_sets,
-                                      print_result=True,
-                                      save_result=True,
-                                      ignore_error=True,
+                                      print_result=False,
+                                      save_result=False,
+                                      ignore_error=False,
                                       )
+print(results)
