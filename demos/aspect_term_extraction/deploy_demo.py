@@ -34,6 +34,13 @@ if __name__ == '__main__':
             ['Even though it is running Snow Leopard, 2.4 GHz C2D is a bit of an antiquated CPU and thus the occasional spinning '
              'wheel would appear when running Office Mac applications such as Word or Excel .'],
             ['从这门课程的内容丰富程度还有老师的授课及讨论区的答疑上来说，我都是很喜欢的。但是吧，我觉得每个章的内容太多了，三个学分的量就分在了上个章节三次小测'],
+            ['このレストランのサービスはまあまあで,待ち時間は長かったが,料理はまずまずのものだった'],
+            ['이 식당의 서비스는 아주 평범했는데, 대기 시간이 오래 걸렸지만, 요리는 그런대로 만족스러웠다'],
+            ['Die wartezeit war recht mittelmäßig, aber das Essen war befriedigend'],
+            ['O serviço é médio, o tempo de espera é longo, mas os pratos são razoavelmente satisfatórios'],
+            ['Dịch vụ của nhà hàng này rất trung bình và thời gian chờ đợi rất dài, nhưng món ăn thì khá là thỏa mãn'],
+            ['Pelayanan di restoran biasa dan penantian yang lama, tetapi hasilnya cukup memuaskan'],
+            ['ร้านนี้ มีบริการทั่วไปรอเป็นเวลานาน แต่อาหารก็น่าพอใจ'],
             ['Als je geen steak liefhebber bent is er een visalternatief, eend en lam aan aanvaardbare prijzen.'],
             ['سأوصي بالتأكيد بموقع المدينة القديمة إلا إنه عليك الحذر من الأسعار السياحية الأكثر ارتفاعاً'],
             ['Nous avons bien aimé l\'ambiance, sur la promenade principale de Narbonne-Plage, et la qualité du service.'],

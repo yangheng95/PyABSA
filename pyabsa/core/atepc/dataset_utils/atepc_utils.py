@@ -28,8 +28,16 @@ def split_text(text):
         text = text.replace('{}'.format(p), ' {} '.format(p))
     # text = ' '.join(re.compile(r'\w+|[{}]'.format(re.escape(punctuation))).findall(text)).replace('$ T $', '$T$')
 
-    # plain split for Chinese, Koeran, Japanese
-    if not re.match('[\u4e00-\u9fa5]+', text) or re.match('[\uac00-\ud7ff]', text) or re.match('[\u30a0-\u30ff]+', text):
+    # for non-latin Languages
+    non_latin_unicode = [
+        '[\u4e00-\u9fa5]+',  # Chinese
+        '[\u0800-\u4e00]+',  # Japanese
+        '[\uac00-\ud7a3]+',  # Korean
+        '[\u0e00-\u0e7f]+',  # Thai
+        '[\u1000-\u109F]+',  # Myanmar
+    ]
+    latin_lan = not any([re.match(lan, text) for lan in non_latin_unicode])
+    if latin_lan:
         return text.split()
 
     s = text
@@ -50,8 +58,8 @@ def split_text(text):
 def process_iob_tags(iob_tags: list) -> list:
     for i in range(len(iob_tags) - 1):
 
-        if iob_tags[i] == 'O' and 'ASP' in iob_tags[i+1]:
-            iob_tags[i+1] = 'B-ASP'
+        if iob_tags[i] == 'O' and 'ASP' in iob_tags[i + 1]:
+            iob_tags[i + 1] = 'B-ASP'
 
         # if 'ASP' in iob_tags[i] and 'B-ASP' in iob_tags[i + 1]:
         #     iob_tags[i + 1] = 'I-ASP'
