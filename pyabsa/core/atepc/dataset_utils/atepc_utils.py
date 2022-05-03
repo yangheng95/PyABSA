@@ -30,11 +30,11 @@ def split_text(text):
 
     # for non-latin Languages
     non_latin_unicode = [
-        '[\u4e00-\u9fa5]+',  # Chinese
-        '[\u0800-\u4e00]+',  # Japanese
-        '[\uac00-\ud7a3]+',  # Korean
-        '[\u0e00-\u0e7f]+',  # Thai
-        '[\u1000-\u109F]+',  # Myanmar
+        '[\u4e00-\u9fa5]',  # Chinese
+        '[\u0800-\u4e00]',  # Japanese
+        '[\uac00-\ud7a3]',  # Korean
+        '[\u0e00-\u0e7f]',  # Thai
+        '[\u1000-\u109F]',  # Myanmar
     ]
     latin_lan = not any([re.match(lan, text) for lan in non_latin_unicode])
     if latin_lan:
@@ -43,7 +43,7 @@ def split_text(text):
     s = text
     word_list = []
     while len(s) > 0:
-        match = re.match(r'[a-z][A-Z]+', s)
+        match = re.match('^({})'.format(''.join(non_latin_unicode)), s)
         if match:
             word = match.group(0)
         else:
