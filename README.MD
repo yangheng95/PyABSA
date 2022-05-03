@@ -21,6 +21,33 @@
 - [Aspect term extraction & sentiment classification](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) (English, Chinese, Arabic, Dutch, French, Russian, Spanish, Turkish, etc.)
 - [方面术语提取和情感分类](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC-Chinese) （中文, etc.）
 
+### About Performance
+<details>
+<summary>
+Aspect-term extraction
+</summary>
+
+|             Models             | Laptop14 (APC-Acc) | Laptop14 (ATE-F1) | Restaurant14 (APC-Acc) | Restaurant14 (ATE-F1) |
+|:------------------------------:|:------------------:|:-----------------:|:----------------------:|:---------------------:|
+|     FAST-LCF-ATEPC (BERT)      |       80.72        |       85.75       |         86.40          |         89.29         |
+|    FAST-LCF-ATEPC (DeBERTa)    |       83.65        |       89.03       |         90.52          |         91.77         |
+| FAST-LCF-ATEPC (DeBERTa-Large) |       85.06        |       87.76       |          89.8          |         92.5          |
+
+</details>
+
+<details>
+<summary>
+Aspect-based sentiment analysis
+</summary>
+
+|          Models           | Laptop14 (Acc) | Restaurant14 (acc) |          Models           | Laptop14 (Acc) | Restaurant14 (acc) |
+|:-------------------------:|:--------------:|:------------------:|:-------------------------:|:--------------:|:------------------:|
+|    FAST-LSA-T(DeBERTa)    |     84.80      |       89.91        | FAST-LSA-T(DeBERTa-Large) |     86.31      |       90.86        | 
+|    FAST-LSA-S(DeBERTa)    |     84.17      |       89.64        | FAST-LSA-S(DeBERTa-Large) |     86.21      |       89.38        | 
+|    FAST-LSA-P(DeBERTa)    |     84.33      |       89.91        | FAST-LSA-P(DeBERTa-Large) |     86.00      |       90.33        | 
+</details>
+
+
 ## Package Overview
 
 <table>
