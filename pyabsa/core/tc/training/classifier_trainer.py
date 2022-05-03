@@ -212,9 +212,9 @@ class Instructor:
         max_fold_acc = 0
         max_fold_f1 = 0
         save_path = '{0}/{1}_{2}'.format(self.opt.model_path_to_save,
-                                          self.opt.model_name,
-                                          self.opt.dataset_name
-                                          )
+                                         self.opt.model_name,
+                                         self.opt.dataset_name
+                                         )
         self.opt.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
         self.opt.max_test_metrics = {'max_test_acc': 0, 'max_test_f1': 0}
 
@@ -312,7 +312,7 @@ class Instructor:
                                                                         max_fold_f1 * 100))
                     else:
                         if self.opt.save_mode:
-                            save_model(self.opt, self.model, self.tokenizer, save_path+'_{}/'.format(loss.item()))
+                            save_model(self.opt, self.model, self.tokenizer, save_path + '_{}/'.format(loss.item()))
                         postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
 
                     iterator.postfix = postfix
@@ -391,9 +391,9 @@ class Instructor:
             max_fold_acc = 0
             max_fold_f1 = 0
             save_path = '{0}/{1}_{2}'.format(self.opt.model_path_to_save,
-                                              self.opt.model_name,
-                                              self.opt.dataset_name
-                                              )
+                                             self.opt.model_name,
+                                             self.opt.dataset_name
+                                             )
             for epoch in range(self.opt.num_epoch):
                 patience -= 1
                 iterator = tqdm(train_dataloader, postfix='Epoch:{}'.format(epoch))

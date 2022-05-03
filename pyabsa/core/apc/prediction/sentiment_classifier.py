@@ -275,14 +275,14 @@ class SentimentClassifier:
                     for i in range(len(result['aspect'])):
                         if result['ref_sentiment'][i] != -999 and result['ref_sentiment'][i] != '-999':
                             if result['sentiment'][i] == result['ref_sentiment'][i]:
-                                aspect_info = colored('{} -> {}(confidence:{}, ref:{})'.format(
+                                aspect_info = colored('<{}:{}(confidence:{}, ref:{})>'.format(
                                     result['aspect'][i],
                                     result['sentiment'][i],
                                     round(result['confidence'][i], 3),
                                     result['ref_sentiment'][i]),
                                     'green')
                             else:
-                                aspect_info = colored('{} -> {}(confidence:{}, ref:{})'.format(
+                                aspect_info = colored('<{}:{}(confidence:{}, ref:{})>'.format(
                                     result['aspect'][i],
                                     result['sentiment'][i],
                                     round(result['confidence'][i], 3),
@@ -290,10 +290,10 @@ class SentimentClassifier:
                                     'red')
 
                         else:
-                            aspect_info = '{} -> {}(confidence:{})'.format(result['aspect'][i],
-                                                                           result['sentiment'][i],
-                                                                           round(result['confidence'][i], 3)
-                                                                           )
+                            aspect_info = '<{}:{}(confidence:{})>'.format(result['aspect'][i],
+                                                                          result['sentiment'][i],
+                                                                          round(result['confidence'][i], 3)
+                                                                          )
 
                         text_printing = text_printing.replace(result['aspect'][i], aspect_info)
                     print(text_printing)

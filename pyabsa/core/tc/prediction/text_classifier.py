@@ -234,9 +234,9 @@ class TextClassifier:
 
                     if result['ref_label'] != -999:
                         if result['label'] == result['ref_label']:
-                            text_info = colored(' -> {}(ref:{})'.format(result['label'], result['ref_label']), 'green')
+                            text_info = colored(' -> <{}(ref:{})>'.format(result['label'], result['ref_label']), 'green')
                         else:
-                            text_info = colored(' -> {}(ref:{})'.format(result['label'], result['ref_label']), 'red')
+                            text_info = colored(' -> <{}(ref:{})>'.format(result['label'], result['ref_label']), 'red')
                     else:
                         text_info = ' -> {}'.format(result['label'])
 

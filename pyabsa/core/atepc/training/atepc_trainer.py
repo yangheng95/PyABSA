@@ -204,9 +204,9 @@ class Instructor:
         self.opt.metrics_of_this_checkpoint = {'apc_acc': 0, 'apc_f1': 0, 'ate_f1': 0}
         global_step = 0
         save_path = '{0}/{1}_{2}'.format(self.opt.model_path_to_save,
-                                          self.opt.model_name,
-                                          self.opt.dataset_name
-                                          )
+                                         self.opt.model_name,
+                                         self.opt.dataset_name
+                                         )
         for epoch in range(int(self.opt.num_epoch)):
             nb_tr_examples, nb_tr_steps = 0, 0
             iterator = tqdm.tqdm(self.train_dataloader, postfix='Epoch:{}'.format(epoch))
@@ -321,7 +321,7 @@ class Instructor:
                             'max_ate_test_f1'])
                     else:
                         if self.opt.save_mode:
-                            save_model(self.opt, self.model, self.tokenizer, save_path+'_{}/'.format(loss.item()))
+                            save_model(self.opt, self.model, self.tokenizer, save_path + '_{}/'.format(loss.item()))
                         postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
 
                 iterator.postfix = postfix
