@@ -61,8 +61,8 @@ def process_iob_tags(iob_tags: list) -> list:
         if iob_tags[i] == 'O' and 'ASP' in iob_tags[i + 1]:
             iob_tags[i + 1] = 'B-ASP'
 
-        # if 'ASP' in iob_tags[i] and 'B-ASP' in iob_tags[i + 1]:
-        #     iob_tags[i + 1] = 'I-ASP'
+        if 'ASP' in iob_tags[i] and 'B-ASP' in iob_tags[i + 1]:
+            iob_tags[i + 1] = 'I-ASP'
 
     return iob_tags
 

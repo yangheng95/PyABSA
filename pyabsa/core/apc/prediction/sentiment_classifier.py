@@ -291,8 +291,9 @@ class SentimentClassifier:
 
                         else:
                             aspect_info = '{} -> {}(confidence:{})'.format(result['aspect'][i],
-                                                                           round(result['confidence'][i], 3),
-                                                                           result['sentiment'][i])
+                                                                           result['sentiment'][i],
+                                                                           round(result['confidence'][i], 3)
+                                                                           )
 
                         text_printing = text_printing.replace(result['aspect'][i], aspect_info)
                     print(text_printing)
