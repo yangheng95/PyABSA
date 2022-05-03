@@ -43,7 +43,8 @@ def split_text(text):
     s = text
     word_list = []
     while len(s) > 0:
-        match = re.match('^({})'.format(''.join(non_latin_unicode)), s)
+        # match = re.match('^({})'.format(''.join(non_latin_unicode)), s)
+        match = re.match(r'^[a-z,A-Z]+', s)
         if match:
             word = match.group(0)
         else:
