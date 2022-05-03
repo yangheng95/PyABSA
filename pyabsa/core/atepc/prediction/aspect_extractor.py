@@ -16,6 +16,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from findfile import find_file
+from termcolor import colored
 from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
 from transformers import BertTokenizer, AutoTokenizer, AutoModel
 from transformers.models.bert.modeling_bert import BertModel
@@ -214,7 +215,18 @@ class AspectExtractor:
                     json.dump(results, f, ensure_ascii=False)
             if print_result:
                 for r in results:
-                    print(r)
+                    for aspect, sentiment in zip(r['aspect'], r['sentiment']):
+                        if sentiment.upper() == 'POSITIVE':
+                            colored_aspect = colored('<{}:{}>'.format(aspect, sentiment), 'green')
+                        elif sentiment.upper() == 'NEUTRAL':
+                            colored_aspect = colored('<{}:{}>'.format(aspect, sentiment), 'cyan')
+                        elif sentiment.upper() == 'NEGATIVE':
+                            colored_aspect = colored('<{}:{}>'.format(aspect, sentiment), 'red')
+                        else:
+                            colored_aspect = colored('<{}:{}>'.format(aspect, sentiment), 'magenta')
+                        r['sentence'] = r['sentence'].replace(aspect, colored_aspect, 1)
+                    res_format = 'Text: {}'.format(r['sentence'])
+                    print(res_format)
 
             return results
 
