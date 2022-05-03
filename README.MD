@@ -42,9 +42,9 @@ Aspect-based sentiment analysis
 
 |          Models           | Laptop14 (Acc) | Restaurant14 (acc) |          Models           | Laptop14 (Acc) | Restaurant14 (acc) |
 |:-------------------------:|:--------------:|:------------------:|:-------------------------:|:--------------:|:------------------:|
+|    FAST-LSA-P(DeBERTa)    |     84.33      |       89.91        | FAST-LSA-P(DeBERTa-Large) |     86.00      |       90.33        | 
 |    FAST-LSA-T(DeBERTa)    |     84.80      |       89.91        | FAST-LSA-T(DeBERTa-Large) |     86.31      |       90.86        | 
 |    FAST-LSA-S(DeBERTa)    |     84.17      |       89.64        | FAST-LSA-S(DeBERTa-Large) |     86.21      |       89.38        | 
-|    FAST-LSA-P(DeBERTa)    |     84.33      |       89.91        | FAST-LSA-P(DeBERTa-Large) |     86.00      |       90.33        | 
 </details>
 
 
