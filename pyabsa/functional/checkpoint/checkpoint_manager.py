@@ -289,7 +289,7 @@ def available_checkpoints(task='', from_local=False):
         else:
             print('\nFailed to query checkpoints (Error: {}), you can try manually download the checkpoints from: \n'.format(e) +
                   '[1]\tGoogle Drive\t: https://drive.google.com/file/d/1CBVGPA3xdQqdkFFwzO5T2Q4reFtzFIJZ/view?usp=sharing\n'
-                  '[2]\tBaidu NetDisk\t: https://pan.baidu.com/s/1K8aYQ4EIrPm1GjQv_mnxEg (Access Code: absa)\n')
+                  '[2]\tBaidu NetDisk\t: https://pan.baidu.com/s/1dvGqmnGG2T7MYm0VC9jWTg (Access Code: absa)\n')
             sys.exit(-1)
 
 
