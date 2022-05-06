@@ -108,7 +108,8 @@ class ABSADataset(Dataset):
                 lcfs_vec = prepared_inputs['lcfs_vec']
                 lcf_vec = prepared_inputs['lcf_vec']
 
-                validate_example(text_raw, aspect, polarity)
+                if validate_example(text_raw, aspect, polarity) or not aspect:
+                    continue
 
                 if self.opt.model_name == 'dlcf_dca_bert' or self.opt.model_name == 'dlcfs_dca_bert':
                     configure_dlcf_spacy_model(self.opt)

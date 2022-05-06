@@ -140,6 +140,9 @@ class GloVeABSADataset(Dataset):
                 text_right = text_right.replace(' [PADDING]', '')
                 text = text_left + ' ' + aspect + ' ' + text_right
 
+                if validate_example(text, aspect, polarity) or not aspect:
+                    continue
+
                 text_indices = self.tokenizer.text_to_sequence(text_left + " " + aspect + " " + text_right)
                 context_indices = self.tokenizer.text_to_sequence(text_left + " " + text_right)
                 left_indices = self.tokenizer.text_to_sequence(text_left)

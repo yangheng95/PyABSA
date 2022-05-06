@@ -64,13 +64,13 @@ class APCModelList(list):
 
     def __init__(self):
         model_list = [
-            self.SLIDE_LCF_BERT,
-            self.SLIDE_LCFS_BERT,
-            self.LSA_T,
-            self.LSA_S,
-            self.FAST_LSA_T,
-            self.FAST_LSA_S,
-            self.FAST_LSA_T_V2,
+            # self.SLIDE_LCF_BERT,
+            # self.SLIDE_LCFS_BERT,
+            # self.LSA_T,
+            # self.LSA_S,
+            # self.FAST_LSA_T,
+            # self.FAST_LSA_S,
+            # self.FAST_LSA_T_V2,
             self.FAST_LSA_S,
             self.FAST_LSA_S_V2,
             self.DLCF_DCA_BERT,

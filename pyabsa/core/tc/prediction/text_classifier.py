@@ -7,12 +7,13 @@ import os
 import pickle
 import random
 
+import autocuda
 import numpy
 import torch
 from findfile import find_file
 from termcolor import colored
 from torch.utils.data import DataLoader
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModel, AutoConfig, DebertaV2ForMaskedLM, RobertaForMaskedLM, BertForMaskedLM
 
 from pyabsa.functional.dataset import detect_infer_dataset
 
@@ -23,6 +24,24 @@ from ..classic.__bert__.dataset_utils.data_utils_for_inference import BERTClassi
 from ..classic.__glove__.dataset_utils.data_utils_for_training import LABEL_PADDING, build_embedding_matrix, build_tokenizer
 
 from pyabsa.utils.pyabsa_utils import print_args, TransformerConnectionError
+
+
+def get_mlm_and_tokenizer(text_classifier, config):
+    if isinstance(text_classifier, TextClassifier):
+        base_model = text_classifier.model.bert.base_model
+    else:
+        base_model = text_classifier.bert.base_model
+    pretrained_config = AutoConfig.from_pretrained(config.pretrained_bert)
+    if 'deberta-v3' in config.pretrained_bert:
+        MLM = DebertaV2ForMaskedLM(pretrained_config).to(text_classifier.opt.device)
+        MLM.deberta = base_model
+    elif 'roberta' in config.pretrained_bert:
+        MLM = RobertaForMaskedLM(pretrained_config).to(text_classifier.opt.device)
+        MLM.roberta = base_model
+    else:
+        MLM = BertForMaskedLM(pretrained_config).to(text_classifier.opt.device)
+        MLM.bert = base_model
+    return MLM, AutoTokenizer.from_pretrained(config.pretrained_bert)
 
 
 class TextClassifier:
@@ -124,6 +143,11 @@ class TextClassifier:
 
         self.opt.initializer = self.opt.initializer
 
+        try:
+            self.MLM, self.MLM_tokenizer = get_mlm_and_tokenizer(self, self.opt)
+        except Exception as e:
+            self.MLM, self.MLM_tokenizer = None, None
+
     def to(self, device=None):
         self.opt.device = device
         self.model.to(device)
@@ -218,12 +242,23 @@ class TextClassifier:
 
                     text_raw = sample['text_raw'][i]
 
+                    if self.MLM:
+                        ids = self.MLM_tokenizer(text_raw, return_tensors="pt")
+                        ids['labels'] = ids['input_ids'].clone()
+                        ids = ids.to(self.opt.device)
+                        loss = self.MLM(**ids)['loss']
+                        perplexity = int(torch.exp(loss / ids['input_ids'].size(1)))
+                        # ids = self.MLM_tokenizer(text_raw, return_tensors="pt").input_ids.clone().to(self.opt.device)
+                        # perplexity = float(torch.exp(self.MLM(**ids)['loss'] / ids['input_ids'].size(1)))
+                    else:
+                        perplexity = 'N.A.'
                     results.append({
                         'text': text_raw,
                         'label': sent,
                         'confidence': float(max(i_probs)),
                         'ref_label': real_sent,
                         'ref_check': correct[sent == real_sent] if real_sent != '-999' else '',
+                        'perplexity': perplexity,
                     })
                     n_total += 1
 
@@ -240,7 +275,7 @@ class TextClassifier:
                     else:
                         text_info = ' -> {}'.format(result['label'])
 
-                    text_printing += text_info
+                    text_printing += text_info + colored('<perplexity:{}>'.format(result['perplexity']), 'yellow')
                     print(text_printing)
             if save_path:
                 with open(save_path, 'w', encoding='utf8') as fout:
