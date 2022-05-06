@@ -1,4 +1,9 @@
 {
+  "1.14.3(2)": {
+    "1": "Refactor pre-tokenization before inference for multilingual ATEPC",
+    "2": "Reset default checkpoint host to Huggingface Hub (useful for Chinese users), please test and report if it works",
+    "3": "Other bug fixes and improvement, see source code"
+  },
   "1.14.1": {
     "1": "Minor update"
   },

@@ -116,8 +116,11 @@ class Instructor:
                             stdv = 1. / math.sqrt(p.shape[0])
                             torch.nn.init.uniform_(p, a=-stdv, b=stdv)
 
-    def reload_model(self):
-        self.model.load_state_dict(torch.load('./init_state_dict.bin'))
+    def reload_model(self, ckpt='./init_state_dict.bin'):
+        if self.opt.auto_device == 'allcuda':
+            self.model.module.load_state_dict(torch.load(ckpt))
+        else:
+            self.model.load_state_dict(torch.load(ckpt))
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
         self.optimizer = optimizers[self.opt.optimizer](_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
@@ -309,7 +312,7 @@ class Instructor:
 
         if self.val_dataloaders:
             print('Loading best model: {} and evaluating on test set ...'.format(save_path))
-            self.model.load_state_dict(torch.load(find_file(save_path, '.state_dict')))
+            self.reload_model(find_file(save_path, '.state_dict'))
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
 
             self.opt.MV.add_metric('Max-Test-Acc', max_fold_acc * 100)
@@ -471,7 +474,7 @@ class Instructor:
                     iterator.refresh()
                 if patience < 0:
                     break
-            self.model.load_state_dict(torch.load(find_file(save_path, '.state_dict')))
+            self.reload_model(find_file(save_path, '.state_dict'))
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
             if max_fold_acc > max_fold_acc_k_fold:
                 save_path_k_fold = save_path

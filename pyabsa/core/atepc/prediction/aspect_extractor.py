@@ -60,8 +60,6 @@ class AspectExtractor:
                 with open(config_path, mode='rb') as f:
                     self.opt = pickle.load(f)
 
-                if 'pretrained_bert_name' in self.opt.args:
-                    self.opt.pretrained_bert = self.opt.pretrained_bert_name
                 if state_dict_path:
                     try:
                         bert_base_model = AutoModel.from_pretrained(self.opt.pretrained_bert)

@@ -9,6 +9,7 @@ import zipfile
 
 import gdown
 import numpy as np
+import requests
 import tqdm
 from findfile import find_file, find_cwd_file, find_files
 from torch.utils.data import Dataset
@@ -42,9 +43,19 @@ def prepare_glove840_embedding(glove_path):
             zip_glove_path = os.path.join(os.path.dirname(glove_path), 'glove.840B.300d.zip')
             print('No GloVe embedding found at {},'
                   ' downloading glove.840B.300d.txt (2GB will be downloaded / 5.5GB after unzip)...'.format(glove_path))
-            gdown.download(id=glove840_id, output=zip_glove_path)
+            try:
+                response = requests.get('https://huggingface.co/spaces/yangheng/PyABSA-ATEPC/resolve/main/open-access/glove.840B.300d.zip', stream=True)
+                with open(zip_glove_path, "wb") as f:
+                    for chunk in tqdm.tqdm(response.iter_content(chunk_size=1024 * 1024),
+                                           unit='MB',
+                                           total=int(response.headers['content-length']) // 1024 // 1024,
+                                           postfix='Downloading checkpoint...'):
+                        f.write(chunk)
+            except Exception as e:
+                gdown.download(id=glove840_id, output=zip_glove_path)
 
         if find_cwd_file('glove.840B.300d.zip'):
+            print('unzip glove.840B.300d.zip...')
             with zipfile.ZipFile(find_cwd_file('glove.840B.300d.zip'), 'r') as z:
                 z.extractall()
             print('Zip file extraction Done.')

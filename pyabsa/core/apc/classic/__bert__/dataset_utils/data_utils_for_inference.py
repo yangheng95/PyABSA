@@ -153,6 +153,10 @@ class BERTBaselineABSADataset(Dataset):
                 text_right = text_right.replace(' [PADDING]', '')
                 text = text_left + ' ' + aspect + ' ' + text_right
                 # polarity = int(polarity)
+
+                if validate_example(text, aspect, polarity) or not aspect:
+                    continue
+
                 prepared_inputs = prepare_input_for_apc(self.opt, self.tokenizer.tokenizer, text_left, text_right, aspect)
 
                 aspect_position = prepared_inputs['aspect_position']

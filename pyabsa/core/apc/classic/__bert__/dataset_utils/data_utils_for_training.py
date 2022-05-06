@@ -107,6 +107,10 @@ class BERTBaselineABSADataset(Dataset):
             text_raw = text_left + ' ' + aspect + ' ' + text_right
             polarity = lines[i + 2].strip()
             # polarity = int(polarity)
+
+            if validate_example(text_raw, aspect, polarity):
+                continue
+
             prepared_inputs = prepare_input_for_apc(opt, tokenizer.tokenizer, text_left, text_right, aspect)
 
             aspect_position = prepared_inputs['aspect_position']
@@ -132,9 +136,6 @@ class BERTBaselineABSADataset(Dataset):
 
             dependency_graph = dependency_graph[:, range(0, opt.max_seq_len)]
             dependency_graph = dependency_graph[range(0, opt.max_seq_len), :]
-
-            if validate_example(text_raw, aspect, polarity):
-                continue
 
             data = {
                 'ex_id': ex_id,

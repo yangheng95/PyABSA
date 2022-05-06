@@ -95,6 +95,7 @@ class Trainer:
             self.train_func = train4atepc
             self.model_class = AspectExtractor
             self.task = 'atepc'
+
         elif isinstance(config, ClassificationConfigManager):
             self.train_func = train4classification
             self.model_class = TextClassifier

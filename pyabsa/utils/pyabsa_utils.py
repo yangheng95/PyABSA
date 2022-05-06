@@ -55,7 +55,11 @@ def validate_example(text: str, aspect: str, polarity: str):
         warning = True
 
     if len(polarity.split(' ')) > 3:
-        print(colored('LabelTooLongWarning -> <label: {}> is too long, <text: {}>, <aspect: {}>'.format(polarity, text, aspect), 'yellow'))
+        print(colored('LabelTooLongWarning -> <polarity: {}> is too long, <text: {}>, <aspect: {}>'.format(polarity, text, aspect), 'yellow'))
+        warning = True
+
+    if text.strip() == aspect.strip():
+        print(colored('AspectEqualsTextWarning -> <aspect: {}> equals <text: {}>, <polarity: {}>'.format(aspect, text, polarity), 'yellow'))
         warning = True
 
     return warning
