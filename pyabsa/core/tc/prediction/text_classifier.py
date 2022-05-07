@@ -9,6 +9,7 @@ import random
 
 import autocuda
 import numpy
+import numpy as np
 import torch
 from findfile import find_file
 from termcolor import colored
@@ -24,6 +25,7 @@ from ..classic.__bert__.dataset_utils.data_utils_for_inference import BERTClassi
 from ..classic.__glove__.dataset_utils.data_utils_for_training import LABEL_PADDING, build_embedding_matrix, build_tokenizer
 
 from pyabsa.utils.pyabsa_utils import print_args, TransformerConnectionError
+from ...atepc.dataset_utils.atepc_utils import split_text
 
 
 def get_mlm_and_tokenizer(text_classifier, config):
@@ -247,7 +249,7 @@ class TextClassifier:
                         ids['labels'] = ids['input_ids'].clone()
                         ids = ids.to(self.opt.device)
                         loss = self.MLM(**ids)['loss']
-                        perplexity = int(torch.exp(loss / ids['input_ids'].size(1)))
+                        perplexity = float(torch.exp(loss / ids['input_ids'].size(1)))
                         # ids = self.MLM_tokenizer(text_raw, return_tensors="pt").input_ids.clone().to(self.opt.device)
                         # perplexity = float(torch.exp(self.MLM(**ids)['loss'] / ids['input_ids'].size(1)))
                     else:
@@ -259,6 +261,7 @@ class TextClassifier:
                         'ref_label': real_sent,
                         'ref_check': correct[sent == real_sent] if real_sent != '-999' else '',
                         'perplexity': perplexity,
+                        'Wperplexity': perplexity*len(split_text(text_raw)),
                     })
                     n_total += 1
 
@@ -269,13 +272,13 @@ class TextClassifier:
 
                     if result['ref_label'] != -999:
                         if result['label'] == result['ref_label']:
-                            text_info = colored(' -> <{}(ref:{})>'.format(result['label'], result['ref_label']), 'green')
+                            text_info = colored(' -> <{}(Confidence:{}, ref:{})>'.format(result['label'], result['confidence'], result['ref_label']), 'green')
                         else:
-                            text_info = colored(' -> <{}(ref:{})>'.format(result['label'], result['ref_label']), 'red')
+                            text_info = colored(' -> <{}(Confidence:{}, ref:{})>'.format(result['label'], result['confidence'], result['ref_label']), 'red')
                     else:
                         text_info = ' -> {}'.format(result['label'])
 
-                    text_printing += text_info + colored('<perplexity:{}>'.format(result['perplexity']), 'yellow')
+                    text_printing += text_info + colored('<Wperplexity:{}>'.format(result['Wperplexity']), 'yellow')
                     print(text_printing)
             if save_path:
                 with open(save_path, 'w', encoding='utf8') as fout:
