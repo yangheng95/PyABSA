@@ -1,38 +1,38 @@
 [
   {
     "referrer": "github.com",
-    "count": 1478,
-    "uniques": 174
+    "count": 1486,
+    "uniques": 175
   },
   {
     "referrer": "Google",
-    "count": 398,
-    "uniques": 112
+    "count": 428,
+    "uniques": 117
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 375,
-    "uniques": 106
+    "count": 391,
+    "uniques": 107
   },
   {
     "referrer": "link.zhihu.com",
-    "count": 136,
-    "uniques": 24
+    "count": 131,
+    "uniques": 25
   },
   {
     "referrer": "colab.research.google.com",
-    "count": 47,
-    "uniques": 9
+    "count": 49,
+    "uniques": 10
+  },
+  {
+    "referrer": "huggingface.co",
+    "count": 28,
+    "uniques": 13
   },
   {
     "referrer": "hub.xn--p8jhe.tw",
     "count": 28,
     "uniques": 2
-  },
-  {
-    "referrer": "huggingface.co",
-    "count": 26,
-    "uniques": 12
   },
   {
     "referrer": "notebooks.githubusercontent.com",
