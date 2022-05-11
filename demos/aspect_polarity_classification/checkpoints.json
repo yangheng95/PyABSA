@@ -4,6 +4,7 @@
       "id": "https://drive.google.com/file/d/1JIFhaAdoCeZI5CQqfOix3pnrYa6_Mf9S/view?usp=sharing",
       "Training Model": "FAST-LSA-S",
       "Training Dataset": "English",
+      "Language": "English",
       "Description": "Trained on RTX3090",
       "Available Version": "1.6.3+",
       "Checkpoint File": "fast_lsa_s_acc_84.9_f1_82.11.zip",
@@ -13,6 +14,7 @@
       "id": "https://drive.google.com/file/d/1Y46DArhdHXRCygxiqUqfcTnGkylPkQ5g/view?usp=sharing",
       "Training Model": "FAST-LSA-S",
       "Training Dataset": "English",
+      "Language": "English",
       "Description": "Trained on RTX2080 Ti",
       "Available Version": "1.6.3+",
       "Checkpoint File": "fast_lsa_s_acc_84.9_f1_82.11.zip",
@@ -22,6 +24,7 @@
       "id": "https://drive.google.com/file/d/1CtrXK4zy4ELdQiYa141L5TtiAu4isfFS/view?usp=sharing",
       "Training Model": "FAST-LSA-T",
       "Training Dataset": "English",
+      "Language": "English",
       "Description": "Trained on RTX2080 Ti",
       "Available Version": "1.6.3+",
       "Checkpoint File": "fast_lsa_t_acc_84.84_f1_82.36.zip",
@@ -31,6 +34,7 @@
       "id": "https://drive.google.com/file/d/1B0RHazOCm2eOWLWExQkeapHr9d3OiZl7/view?usp=sharing",
       "Training Model": "FAST-LCF-MDeBERTa",
       "Training Dataset": "Chinese",
+      "Language": "Chinese",
       "Description": "Trained on RTX3090",
       "Available Version": "1.8.2+",
       "Checkpoint File": "fast_lcf_bert_Chinese_acc_97.11_f1_96.54.zip",
@@ -40,15 +44,27 @@
       "id": "https://drive.google.com/file/d/15ls1hcGvk27UnfMsXZtk780h7tTBbNws/view?usp=sharing",
       "Training Model": "FAST-LCF-Deberta",
       "Training Dataset": "Multilingual",
+      "Language": "Multilingual",
       "Description": "Trained on RTX3090",
       "Available Version": "1.8.2+",
       "Checkpoint File": "fast_lcf_bert_Multilingual_acc_94.72_f1_90.07.zip",
+      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
+    },
+    "multilingual2": {
+      "id": "https://drive.google.com/file/d/1YCYKpEnff-DBUHd-8vWmgsnng5ZT_2cs/view?usp=sharing",
+      "Training Model": "FAST-LCF-Deberta",
+      "Training Dataset": "Multilingual",
+      "Language": "Multilingual",
+      "Description": "Trained on RTX3090",
+      "Available Version": "1.10.5+",
+      "Checkpoint File": "fast_lsa_t_v2_Multilingual_acc_88.44_f1_82.66.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "dlcf-dca-bert1": {
       "id": "https://drive.google.com/file/d/1w-NtWujPglsvZu4-jC6Vmu8Iz8CvX-1u/view?usp=sharing",
       "Training Model": "dlcf-dca-bert",
       "Training Dataset": "Laptop 14",
+      "Language": "English",
       "Description": "Trained on T4",
       "Available Version": "1.1.17-1.1.23",
       "Author": "M, Xu (xumayi@m.scnu.edu.cn)"
@@ -57,6 +73,7 @@
       "id": "https://drive.google.com/file/d/1w-NtWujPglsvZu4-jC6Vmu8Iz8CvX-1u/view?usp=sharing",
       "Training Model": "dlcf-dca-bert",
       "Training Dataset": "Restaurant 14",
+      "Language": "English",
       "Description": "Trained on T4",
       "Available Version": "1.1.17-1.1.23",
       "Author": "M, Xu (xumayi@m.scnu.edu.cn)"
@@ -70,66 +87,43 @@
   },
   "ATEPC": {
     "english": {
-      "id": "https://drive.google.com/file/d/1HjJm80Ed5LLVYCLldRl_r9a_VJ_E9AcQ/view?usp=sharing",
-      "Training Model": "FAST-LCF-ATEPC",
-      "Training Dataset": "English",
-      "Description": "Trained on RTX3090",
-      "Available Version": "1.8.4+",
-      "Checkpoint File": "fast_lcf_atepc_English_cdw_apcacc_80.16_apcf1_78.34_atef1_75.39.zip",
-      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
-    },
-    "english2": {
-      "id": "https://drive.google.com/file/d/1GvfHAWVJeEKXoy2-bPtourWEniCfwwv0/view?usp=sharing",
-      "Training Model": "FAST-LCF-ATEPC",
-      "Training Dataset": "English",
-      "Description": "Trained on RTX3090",
-      "Available Version": "1.8.4+",
-      "Checkpoint File": "fast_lcf_atepc_English_cdw_apcacc_82.93_apcf1_80.7_atef1_78.77.zip",
-      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
-    },
-    "english3": {
-      "id": "https://drive.google.com/file/d/1X9-IulQuk1MBNfoHoi_RIW8e3qUgeyH2/view?usp=sharing",
+      "id": "https://drive.google.com/file/d/1_oBCLi_bjs4CxmEXfVIw8qZCmbJvr-PE/view?usp=sharing",
       "Training Model": "FAST-LCFS-ATEPC",
       "Training Dataset": "English",
+      "Language": "English",
       "Description": "Trained on RTX3090, this checkpoint use bert-spc in ATEPC training",
       "Available Version": "1.8.4+",
-      "Checkpoint File": "fast_lcfs_atepc_English_cdw_apcacc_85.03_apcf1_82.36_atef1_84.48.zip",
+      "Checkpoint File": "fast_lcf_atepc_English_cdw_apcacc_85.03_apcf1_82.76_atef1_84.8.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "chinese": {
-      "id": "https://drive.google.com/file/d/1SzzUkuMJLjfxGZmInqmBQi5U2ZxTeG2L/view?usp=sharing",
-      "Training Model": "FAST-LCF-DeBERTa",
-      "Training Dataset": "Chinese",
-      "Description": "Trained on RTX3090",
-      "Available Version": "1.8.4+",
-      "Checkpoint File": "fast_lcf_atepc_Chinese_cdw_apcacc_96.69_apcf1_96.25_atef1_92.26.zip",
-      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
-    },
-    "chinese2": {
-      "id": "https://drive.google.com/file/d/1SzzUkuMJLjfxGZmInqmBQi5U2ZxTeG2L/view?usp=sharing",
+      "id": "https://drive.google.com/file/d/1wHlEeKbQg51LEgr-J353HQhyPgPDEMrp/view?usp=sharing",
       "Training Model": "FAST-LCF-ATEPC",
-      "Training Dataset": "Chinese (with MOOC dataset)",
-      "Description": "based on bert-base-chinese, Trained on RTX3090",
-      "Available Version": "1.10.4+",
-      "Checkpoint File": "fast_lcf_atepc_Chinese_cdw_apcacc_96.69_apcf1_96.25_atef1_92.26.zip",
+      "Training Dataset": "Chinese",
+      "Language": "Chinese",
+      "Description": "Trained on RTX3090 BERT-BASE-CHINESE",
+      "Available Version": "1.8.4+",
+      "Checkpoint File": "fast_lcf_atepc_Chinese_cdw_apcacc_96.0_apcf1_94.96_atef1_91.34.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "multilingual": {
-      "id": "https://drive.google.com/file/d/155itPM5hz037ytvqu6XuMArbxy3B2Vr8/view?usp=sharing",
+      "id": "https://drive.google.com/file/d/17r-dMGCUBKnWSQ-djN3MegASuJ7WLAwl/view?usp=sharing",
       "Training Model": "FAST-LCF-ATEPC",
       "Training Dataset": "ABSADatasets.Multilingual",
+      "Language": "Multilingual",
       "Description": "Trained on RTX3090",
-      "Available Version": "1.8.4+",
-      "Checkpoint File": "fast_lcf_atepc_Multilingual_cdw_apcacc_79.61_apcf1_76.24_atef1_63.29.zip",
+      "Available Version": "1.10.5+",
+      "Checkpoint File": "fast_lcf_atepc_Multilingual_cdw_apcacc_87.21_apcf1_81.53_atef1_82.82.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
-    "multilingual2": {
-      "id": "https://drive.google.com/file/d/1LAC-AJfCf50r_7dtDzj73kn02Mr5g2ky/view?usp=sharing",
+    "multilingual4": {
+      "id": "https://drive.google.com/file/d/1MAnpTiCHyjUDazel2kgHgaKXaDeE0NYW/view?usp=sharing",
       "Training Model": "FAST-LCF-ATEPC",
       "Training Dataset": "ABSADatasets.Multilingual",
+      "Language": "Multilingual",
       "Description": "Trained on RTX3090",
-      "Available Version": "1.8.4+",
-      "Checkpoint File": "fast_lcf_atepc_Multilingual_cdw_apcacc_86.37_apcf1_82.94_atef1_84.78.zip",
+      "Available Version": "1.10.5+",
+      "Checkpoint File": "fast_lcf_atepc_Multilingual_cdw_apcacc_88.96_apcf1_81.58_atef1_81.92.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
     "HELP-WANTED": {
