@@ -30,25 +30,29 @@ def split_text(text):
 
     # for non-latin Languages
     non_latin_unicode = [
-        '[\u4e00-\u9fa5]',  # Chinese
-        '[\u0800-\u4e00]',  # Japanese
-        '[\uac00-\ud7a3]',  # Korean
-        '[\u0e00-\u0e7f]',  # Thai
-        '[\u1000-\u109F]',  # Myanmar
+        '\u4e00-\u9fa5',  # Chinese
+        '\u0800-\u4e00',  # Japanese
+        '\uac00-\ud7a3',  # Korean
+        '\u0e00-\u0e7f',  # Thai
+        '\u1000-\u109F',  # Myanmar
     ]
-    latin_lan = not any([re.match(lan, text) for lan in non_latin_unicode])
-    if latin_lan:
+    # latin_lan = ([re.match(lan, text) for lan in non_latin_unicode])
+    latin_lan = ([re.findall('[{}]'.format(lan), text) for lan in non_latin_unicode])
+    if not any(latin_lan):
         return text.split()
 
     s = text
     word_list = []
     while len(s) > 0:
-        # match = re.match('^({})'.format(''.join(non_latin_unicode)), s)
-        match = re.match(r'^[a-z,A-Z]+', s)
-        if match:
-            word = match.group(0)
+        match_ch = re.match('[{}]'.format(''.join(non_latin_unicode)), s)
+        if match_ch:
+            word = s[0:1]
         else:
-            word = s[0:1]  # 若非英文单词，直接获取第一个字符
+            match_en = re.match(r'[a-zA-Z\d]+', s)
+            if match_en:
+                word = match_en.group(0)
+            else:
+                word = s[0:1]  # 若非英文单词，直接获取第一个字符
         if word:
             word_list.append(word)
         #   从文本中去掉提取的 word，并去除文本收尾的空格字符
