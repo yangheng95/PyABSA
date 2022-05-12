@@ -7,7 +7,7 @@
 import numpy as np
 from pyabsa.utils.pyabsa_utils import check_and_fix_labels, validate_example
 from torch.utils.data import Dataset
-from tqdm import tqdm
+import tqdm
 
 from .apc_utils import (build_sentiment_window,
                         build_spc_mask_vec,
@@ -72,8 +72,8 @@ class ABSADataset(Dataset):
         all_data = []
         label_set = set()
         ex_id = 0
-        if len(samples) > 1:
-            it = tqdm(samples, postfix='building word indices...')
+        if len(samples) > 100:
+            it = tqdm.tqdm(samples, postfix='preparing apc inference dataloader...')
         else:
             it = samples
         for i, text in enumerate(it):

@@ -55,7 +55,7 @@ class Tokenizer(object):
         return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
 
 
-class GloVeClassificationDataset(Dataset):
+class GloVeTCDataset(Dataset):
 
     def __init__(self, tokenizer, opt):
         self.glove_input_colses = {
@@ -84,7 +84,7 @@ class GloVeClassificationDataset(Dataset):
     def process_data(self, samples, ignore_error=True):
         all_data = []
 
-        if len(samples) > 1:
+        if len(samples) > 100:
             it = tqdm.tqdm(samples, postfix='building word indices...')
         else:
             it = samples

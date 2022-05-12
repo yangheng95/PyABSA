@@ -5,4 +5,4 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from .trainer import Trainer, APCTrainer, ATEPCTrainer, TextClassificationTrainer
+from .trainer import Trainer, APCTrainer, ATEPCTrainer, TCTrainer, AOTCTrainer

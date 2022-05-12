@@ -7,4 +7,5 @@
 
 from .apc_config_manager import APCConfigManager
 from .atepc_config_manager import ATEPCConfigManager
-from .classification_config_manager import ClassificationConfigManager
+from .tc_config_manager import TCConfigManager
+from .bi_tc_config_manager import AOTCConfigManager
