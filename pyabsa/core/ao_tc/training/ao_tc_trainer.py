@@ -99,10 +99,6 @@ class Instructor:
 
         elif hasattr(AOGloVeTCModelList, opt.model.__name__):
             # init GloVe-based model and dataset
-            if hasattr(TCDatasetList, opt.dataset_name):
-                if not os.path.exists(os.path.join(os.getcwd(), opt.dataset_name)):
-                    os.makedirs(os.path.join(os.getcwd(), opt.dataset_name))
-
             self.tokenizer = build_tokenizer(
                 dataset_list=opt.dataset_file,
                 max_seq_len=opt.max_seq_len,
@@ -174,8 +170,11 @@ class Instructor:
 
         print_args(self.opt, self.logger)
 
-    def reload_model(self):
-        self.model.load_state_dict(torch.load('./init_state_dict.bin'))
+    def reload_model(self, ckpt='./init_state_dict.bin'):
+        if self.opt.auto_device == 'allcuda':
+            self.model.module.load_state_dict(torch.load(ckpt))
+        else:
+            self.model.load_state_dict(torch.load(ckpt))
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
         self.optimizer = optimizers[self.opt.optimizer](_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
@@ -412,7 +411,7 @@ class Instructor:
             self.opt.MV.add_metric('Max-OODDet-F1 w/o Valid Set', max_ooddet_label_fold_f1 * 100)
         if self.valid_dataloader:
             print('Loading best model: {} and evaluating on test set ...'.format(save_path))
-            self.model.load_state_dict(torch.load(find_file(save_path, '.state_dict')))
+            self.reload_model(find_file(save_path, '.state_dict'))
             max_label_fold_acc, max_label_fold_f1, max_advdet_label_fold_acc, max_advdet_label_fold_f1, test_ooddet_label_acc, test_ooddet_label_f1 = \
                 self._evaluate_acc_f1(self.test_dataloader)
 
@@ -573,7 +572,7 @@ class Instructor:
     #             if patience < 0:
     #                 break
     #
-    #         self.model.load_state_dict(torch.load(find_file(save_path, '.state_dict')))
+    #         self.reload_model(find_file(save_path, '.state_dict'))
     #
     #         max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
     #         if max_fold_acc > max_fold_acc_k_fold:
