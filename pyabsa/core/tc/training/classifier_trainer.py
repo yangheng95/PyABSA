@@ -23,13 +23,13 @@ from torch.utils.data import DataLoader, random_split, ConcatDataset, RandomSamp
 from tqdm import tqdm
 from transformers import AutoModel
 
-from pyabsa.functional.dataset import ClassificationDatasetList
-from ..models import GloVeClassificationModelList, BERTClassificationModelList
+from pyabsa.functional.dataset import TCDatasetList
+from ..models import GloVeTCModelList, BERTTCModelList
 from ..classic.__bert__.dataset_utils.data_utils_for_training import (Tokenizer4Pretraining,
-                                                                      BERTClassificationDataset)
+                                                                      BERTTCDataset)
 from ..classic.__glove__.dataset_utils.data_utils_for_training import (build_tokenizer,
                                                                        build_embedding_matrix,
-                                                                       GloVeClassificationDataset)
+                                                                       GloVeTCDataset)
 from pyabsa.utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError, optimizers
 
@@ -65,16 +65,16 @@ class Instructor:
             self.opt.index_to_label = opt.index_to_label
 
         # init BERT-based model and dataset
-        if hasattr(BERTClassificationModelList, opt.model.__name__):
+        if hasattr(BERTTCModelList, opt.model.__name__):
             self.tokenizer = Tokenizer4Pretraining(self.opt.max_seq_len, self.opt)
             if not os.path.exists(cache_path):
-                self.train_set = BERTClassificationDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
+                self.train_set = BERTTCDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
                 if self.opt.dataset_file['test']:
-                    self.test_set = BERTClassificationDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
+                    self.test_set = BERTTCDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
                 else:
                     self.test_set = None
                 if self.opt.dataset_file['valid']:
-                    self.valid_set = BERTClassificationDataset(self.opt.dataset_file['valid'], self.tokenizer, self.opt)
+                    self.valid_set = BERTTCDataset(self.opt.dataset_file['valid'], self.tokenizer, self.opt)
                 else:
                     self.valid_set = None
             try:
@@ -86,9 +86,9 @@ class Instructor:
             # init the model behind the construction of datasets in case of updating polarities_dim
             self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
 
-        elif hasattr(GloVeClassificationModelList, opt.model.__name__):
+        elif hasattr(GloVeTCModelList, opt.model.__name__):
             # init GloVe-based model and dataset
-            if hasattr(ClassificationDatasetList, opt.dataset_name):
+            if hasattr(TCDatasetList, opt.dataset_name):
                 if not os.path.exists(os.path.join(os.getcwd(), opt.dataset_name)):
                     os.makedirs(os.path.join(os.getcwd(), opt.dataset_name))
 
@@ -104,14 +104,14 @@ class Instructor:
                 dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(opt.embed_dim), os.path.basename(opt.dataset_name)),
                 opt=self.opt
             )
-            self.train_set = GloVeClassificationDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
+            self.train_set = GloVeTCDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
 
             if self.opt.dataset_file['test']:
-                self.test_set = GloVeClassificationDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
+                self.test_set = GloVeTCDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
             else:
                 self.test_set = None
             if self.opt.dataset_file['valid']:
-                self.valid_set = GloVeClassificationDataset(self.opt.dataset_file['valid'], self.tokenizer, self.opt)
+                self.valid_set = GloVeTCDataset(self.opt.dataset_file['valid'], self.tokenizer, self.opt)
             else:
                 self.valid_set = None
             self.model = opt.model(self.embedding_matrix, opt).to(opt.device)
@@ -163,11 +163,8 @@ class Instructor:
 
         print_args(self.opt, self.logger)
 
-    def reload_model(self, ckpt='./init_state_dict.bin'):
-        if self.opt.auto_device == 'allcuda':
-            self.model.module.load_state_dict(torch.load(ckpt))
-        else:
-            self.model.load_state_dict(torch.load(ckpt))
+    def reload_model(self):
+        self.model.load_state_dict(torch.load('./init_state_dict.bin'))
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
         self.optimizer = optimizers[self.opt.optimizer](_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
@@ -329,7 +326,7 @@ class Instructor:
 
         if self.valid_dataloader:
             print('Loading best model: {} and evaluating on test set ...'.format(save_path))
-            self.reload_model(find_file(save_path, '.state_dict'))
+            self.model.load_state_dict(torch.load(find_file(save_path, '.state_dict')))
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
 
             self.opt.MV.add_metric('Max-Test-Acc', max_fold_acc * 100)
@@ -485,7 +482,7 @@ class Instructor:
                 if patience < 0:
                     break
 
-            self.reload_model(find_file(save_path, '.state_dict'))
+            self.model.load_state_dict(torch.load(find_file(save_path, '.state_dict')))
 
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
             if max_fold_acc > max_fold_acc_k_fold:
@@ -575,17 +572,17 @@ class Instructor:
 
 
 @retry
-def train4classification(opt, from_checkpoint_path, logger):
+def train4tc(opt, from_checkpoint_path, logger):
     random.seed(opt.seed)
     numpy.random.seed(opt.seed)
     torch.manual_seed(opt.seed)
     torch.cuda.manual_seed(opt.seed)
 
-    if hasattr(BERTClassificationModelList, opt.model.__name__):
-        opt.inputs_cols = BERTClassificationDataset.bert_baseline_input_colses[opt.model.__name__.lower()]
+    if hasattr(BERTTCModelList, opt.model.__name__):
+        opt.inputs_cols = BERTTCDataset.bert_baseline_input_colses[opt.model.__name__.lower()]
 
-    elif hasattr(GloVeClassificationModelList, opt.model.__name__):
-        opt.inputs_cols = GloVeClassificationDataset.glove_input_colses[opt.model.__name__.lower()]
+    elif hasattr(GloVeTCModelList, opt.model.__name__):
+        opt.inputs_cols = GloVeTCDataset.glove_input_colses[opt.model.__name__.lower()]
 
     opt.device = torch.device(opt.device)
 

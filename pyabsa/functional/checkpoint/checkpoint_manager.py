@@ -21,6 +21,7 @@ from pyabsa import __version__
 from pyabsa.core.apc.prediction.sentiment_classifier import SentimentClassifier
 from pyabsa.core.atepc.prediction.aspect_extractor import AspectExtractor
 from pyabsa.core.tc.prediction.text_classifier import TextClassifier
+from pyabsa.core.ao_tc.prediction.ao_tc_classifier import AOTCTextClassifier
 from pyabsa.utils.pyabsa_utils import get_device, retry
 
 
@@ -151,7 +152,7 @@ class ATEPCCheckpointManager(CheckpointManager):
                                    checkpoint=atepc_checkpoint[checkpoint])
 
 
-class TextClassifierCheckpointManager(CheckpointManager):
+class TCCheckpointManager(CheckpointManager):
     @staticmethod
     @retry
     def get_text_classifier(checkpoint: str = None,
@@ -175,13 +176,65 @@ class TextClassifierCheckpointManager(CheckpointManager):
         elif checkpoint.endswith('.zip'):
             checkpoint = unzip_checkpoint(checkpoint if os.path.exists(checkpoint) else find_file(os.getcwd(), checkpoint))
         else:
-            checkpoint = TextClassifierCheckpointManager.get_checkpoint(checkpoint)
+            checkpoint = TCCheckpointManager.get_checkpoint(checkpoint)
 
         text_classifier = TextClassifier(checkpoint, eval_batch_size=eval_batch_size)
         device, device_name = get_device(auto_device)
         text_classifier.opt.device = device
         text_classifier.to(device)
         return text_classifier
+
+    @staticmethod
+    def get_checkpoint(checkpoint: str = 'Chinese'):
+        """
+        download the checkpoint and return the path of the downloaded checkpoint
+        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
+        This param is for someone wants to load a checkpoint not registered in PyABSA
+        :return:
+        """
+
+        text_classification_checkpoint = available_checkpoints('TC')
+        if checkpoint.lower() in [k.lower() for k in text_classification_checkpoint.keys()]:
+            print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint), 'green'))
+        else:
+            print(colored('Checkpoint:{} is not found.'.format(checkpoint), 'red'))
+            sys.exit(-1)
+        return download_checkpoint(task='TC',
+                                   language=checkpoint.lower(),
+                                   checkpoint=text_classification_checkpoint[checkpoint.lower()])
+
+
+class AOTCCheckpointManager(CheckpointManager):
+    @staticmethod
+    @retry
+    def get_ao_text_classifier(checkpoint: str = None,
+                            auto_device=True,
+                            eval_batch_size=128):
+        """
+
+        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
+        This param is for someone wants to load a checkpoint not registered in PyABSA
+        :param auto_device: True or False, otherwise 'cuda', 'cpu' works
+        :param eval_batch_size: eval batch_size in modeling
+
+        :return:
+        """
+        if os.path.exists(checkpoint):
+            checkpoint_config = find_file(checkpoint, ['.config'])
+        else:
+            checkpoint_config = find_file(os.getcwd(), [checkpoint, '.config'])
+        if checkpoint_config:
+            checkpoint = os.path.dirname(checkpoint_config)
+        elif checkpoint.endswith('.zip'):
+            checkpoint = unzip_checkpoint(checkpoint if os.path.exists(checkpoint) else find_file(os.getcwd(), checkpoint))
+        else:
+            checkpoint = AOTCCheckpointManager.get_checkpoint(checkpoint)
+
+        ao_text_classifier = AOTCTextClassifier(checkpoint, eval_batch_size=eval_batch_size)
+        device, device_name = get_device(auto_device)
+        ao_text_classifier.opt.device = device
+        ao_text_classifier.to(device)
+        return ao_text_classifier
 
     @staticmethod
     def get_checkpoint(checkpoint: str = 'Chinese'):

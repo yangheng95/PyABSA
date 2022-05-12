@@ -65,10 +65,15 @@ def validate_example(text: str, aspect: str, polarity: str):
     return warning
 
 
-def check_and_fix_labels(label_set, label_name, all_data, opt):
+def check_and_fix_labels(label_set: set, label_name, all_data, opt):
     # update polarities_dim, init model behind execution of this function!
-    label_to_index = {origin_label: int(idx) for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
-    index_to_label = {int(idx): origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+    if '-100' in label_set:
+
+        label_to_index = {origin_label: int(idx) - 1 if origin_label != '-100' else -100 for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+        index_to_label = {int(idx) - 1 if origin_label != '-100' else -100: origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+    else:
+        label_to_index = {origin_label: int(idx) for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+        index_to_label = {int(idx): origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
     if 'index_to_label' not in opt.args:
         opt.index_to_label = index_to_label
         opt.label_to_index = label_to_index
@@ -77,7 +82,6 @@ def check_and_fix_labels(label_set, label_name, all_data, opt):
         # raise KeyError('Fail to fix the labels, the number of labels are not equal among all datasets!')
         opt.index_to_label.update(index_to_label)
         opt.label_to_index.update(label_to_index)
-
     num_label = {l: 0 for l in label_set}
     num_label['Sum'] = len(all_data)
     for item in all_data:

@@ -26,7 +26,7 @@ class Tokenizer4Pretraining:
         return self.tokenizer.encode(text, truncation=True, padding='max_length', max_length=self.max_seq_len, return_tensors='pt')
 
 
-class BERTClassificationDataset(Dataset):
+class AOBERTTCDataset(Dataset):
 
     def __init__(self, tokenizer, opt):
         self.bert_baseline_input_colses = {
@@ -55,7 +55,7 @@ class BERTClassificationDataset(Dataset):
     def process_data(self, samples, ignore_error=True):
         all_data = []
         if len(samples) > 100:
-            it = tqdm.tqdm(samples, postfix='preparing text classification dataloader...')
+            it = tqdm.tqdm(samples, postfix='preparing text classification inference dataloader...')
         else:
             it = samples
         for text in it:
@@ -65,22 +65,30 @@ class BERTClassificationDataset(Dataset):
                     raise RuntimeError('Invalid Input!')
 
                 if '!ref!' in text:
-                    text, _, label = text.strip().partition('!ref!')
-                    label = label.strip()
-                    text = text.strip().lower()
-
+                    text, _, labels = text.strip().partition('!ref!')
+                    text = text.strip()
+                    text = text.strip()
+                    label, advdet_label, ood_label = labels.strip().split(',')
+                    label, advdet_label, ood_label = label.strip(), advdet_label.strip(), ood_label.strip()
+                    # label = -100
                 else:
-                    label = LABEL_PADDING
+                    text = text.strip()
+                    label = -100
+                    advdet_label = -100
+                    ood_label = -100
 
                 text_indices = self.tokenizer.text_to_sequence('{}'.format(text))
 
                 data = {
-                    'text_bert_indices': text_indices[0]
-                    if 'text_bert_indices' in self.opt.model.inputs else 0,
+                    'text_bert_indices': text_indices[0],
 
                     'text_raw': text,
 
-                    'label': label,
+                    'label': self.opt.label_to_index[label] if isinstance(label, str) else label,
+
+                    'advdet_label': self.opt.adv_label_to_index[advdet_label] if isinstance(advdet_label, str) else advdet_label,
+
+                    'ood_label': self.opt.ood_label_to_index[ood_label] if isinstance(ood_label, str) else ood_label,
                 }
 
                 all_data.append(data)

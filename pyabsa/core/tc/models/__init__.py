@@ -8,7 +8,8 @@ import pyabsa.core.tc.classic.__glove__.models
 import pyabsa.core.tc.classic.__bert__.models
 
 
-class GloVeClassificationModelList(list):
+
+class GloVeTCModelList(list):
     LSTM = pyabsa.core.tc.classic.__glove__.models.LSTM
 
     def __init__(self):
@@ -16,9 +17,10 @@ class GloVeClassificationModelList(list):
         super().__init__(model_list)
 
 
-class BERTClassificationModelList(list):
+class BERTTCModelList(list):
     BERT = pyabsa.core.tc.classic.__bert__.BERT
 
     def __init__(self):
         model_list = [self.BERT]
         super().__init__(model_list)
+

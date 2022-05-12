@@ -5,19 +5,20 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa.functional.trainer import APCTrainer, ATEPCTrainer, TextClassificationTrainer, Trainer
+from pyabsa.functional.trainer import APCTrainer, ATEPCTrainer, TCTrainer, Trainer
 from pyabsa.functional.config import APCConfigManager
 from pyabsa.functional.config import ATEPCConfigManager
-from pyabsa.functional.config import ClassificationConfigManager
-from pyabsa.functional.dataset import ABSADatasetList, ClassificationDatasetList
+from pyabsa.functional.config import TCConfigManager
+from pyabsa.functional.dataset import ABSADatasetList, TCDatasetList
 from pyabsa.functional.checkpoint import APCCheckpointManager
 from pyabsa.functional.checkpoint import ATEPCCheckpointManager
-from pyabsa.functional.checkpoint import TextClassifierCheckpointManager
+from pyabsa.functional.checkpoint import TCCheckpointManager
+from pyabsa.functional.checkpoint import AOTCCheckpointManager
 from pyabsa.core.apc.models import APCModelList
 from pyabsa.core.apc.models import GloVeAPCModelList
 from pyabsa.core.apc.models import BERTBaselineAPCModelList
 
 from pyabsa.core.atepc.models import ATEPCModelList
-from pyabsa.core.tc.models import BERTClassificationModelList, GloVeClassificationModelList
+from pyabsa.core.tc.models import BERTTCModelList, GloVeTCModelList
 
 from pyabsa.utils.file_utils import validate_datasets_version

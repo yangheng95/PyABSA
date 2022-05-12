@@ -12,25 +12,38 @@ __name__ = 'pyabsa'
 from termcolor import colored
 from update_checker import UpdateChecker
 
-from pyabsa.functional.trainer import APCTrainer, ATEPCTrainer, TextClassificationTrainer
+from pyabsa.functional.trainer import APCTrainer, ATEPCTrainer, TCTrainer, AOTCTrainer
 from pyabsa.core.apc.models import (APCModelList,
                                     BERTBaselineAPCModelList,
                                     GloVeAPCModelList)
-from pyabsa.core.tc.models import (GloVeClassificationModelList,
-                                   BERTClassificationModelList)
+from pyabsa.core.tc.models import (GloVeTCModelList,
+                                   BERTTCModelList)
+from pyabsa.core.ao_tc.models import (AOGloVeTCModelList,
+                                      AOBERTTCModelList)
 from pyabsa.core.atepc.models import ATEPCModelList
-from pyabsa.functional import (TextClassifierCheckpointManager,
+
+from pyabsa.functional import (TCCheckpointManager,
+                               AOTCCheckpointManager,
                                APCCheckpointManager,
-                               ATEPCCheckpointManager)
+                               ATEPCCheckpointManager,
+                               )
 from pyabsa.functional.checkpoint.checkpoint_manager import (APCCheckpointManager,
                                                              ATEPCCheckpointManager,
                                                              available_checkpoints)
-from pyabsa.functional.dataset import ABSADatasetList, ClassificationDatasetList
+from pyabsa.functional.dataset import ABSADatasetList, TCDatasetList, AdvTCDatasetList
 from pyabsa.functional.config import APCConfigManager
 from pyabsa.functional.config import ATEPCConfigManager
-from pyabsa.functional.config import ClassificationConfigManager
+from pyabsa.functional.config import TCConfigManager
+from pyabsa.functional.config import AOTCConfigManager
 from pyabsa.utils.file_utils import check_update_log, validate_datasets_version
 from pyabsa.utils.pyabsa_utils import validate_pyabsa_version
+
+# compatible for v1.14.3 and earlier versions
+ClassificationDatasetList = TCDatasetList
+TextClassifierCheckpointManager = TCCheckpointManager
+GloVeClassificationModelList = GloVeTCModelList
+BERTClassificationModelList = BERTTCModelList
+ClassificationConfigManager = TCConfigManager
 
 validate_pyabsa_version()
 
