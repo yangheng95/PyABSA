@@ -61,6 +61,7 @@ Trainer(config=config,
         )
 config.MV.avg_bar_plot()
 config.MV.box_plot()
+# see the usage of metric-visualizer at https://github.com/yangheng95/PyABSA/blob/release/readme/metric_readme.md
 
 dataset = ABSADatasetList.Restaurant14
 config.MV = MetricVisualizer(config.model.__name__ + '-' + dataset.dataset_name, trial_tag='Model & Dataset',
