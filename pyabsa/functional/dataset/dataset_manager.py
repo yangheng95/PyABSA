@@ -110,10 +110,72 @@ class ABSADatasetList(list):
         super().__init__(dataset_list)
 
 
-class ClassificationDatasetList(list):
-    SST1 = DatasetItem('SST1', 'SST1')
+class TCDatasetList(list):
+    SST1 = DatasetItem('SST5', 'SST1')
+    SST5 = DatasetItem('SST5', 'SST1')
     SST2 = DatasetItem('SST2', 'SST2')
-    SST = DatasetItem('SST', ['SST2', 'SST2'])
+    AGNews10K = DatasetItem('AGNews10K', 'AGNews10K')
+    IMDB10K = DatasetItem('IMDB10K', 'IMDB10K')
+    AGNews120K = DatasetItem('AGNews120K', 'AGNews120K')
+    IMDB50K = DatasetItem('IMDB50K', 'IMDB50K')
+    SST = DatasetItem('SST', ['SST2'])
+
+    def __init__(self):
+        dataset_list = [
+            self.SST5, self.SST2
+        ]
+        super().__init__(dataset_list)
+
+
+class AdvTCDatasetList(list):
+    SST1 = DatasetItem('SST5', 'SST1')
+    SST5 = DatasetItem('SST5', 'SST1')
+    SST2 = DatasetItem('SST2', 'SST2')
+    AGNews10K = DatasetItem('AGNews10K', 'AGNews10K')
+    IMDB10K = DatasetItem('IMDB10K', 'IMDB10K')
+    AGNews120K = DatasetItem('AGNews120K', 'AGNews120K')
+    IMDB50K = DatasetItem('IMDB50K', 'IMDB50K')
+    SST = DatasetItem('SST', ['SST2'])
+
+    Adv_SST2 = DatasetItem('SST2', ['Adv'])
+    BAEAdv_SST2 = DatasetItem('SST2', ['BAEAdv_SST2'])
+    TextFoolerAdv_SST2 = DatasetItem('SST2', ['TextFoolerAdv_SST2'])
+    PWWSAdv_SST2 = DatasetItem('SST2', ['PWWSAdv_SST2'])
+    IGAAdv_SST2 = DatasetItem('SST2', ['IGAAdv_SST2'])
+    AlzantotAdv_SST2 = DatasetItem('SST2', ['AlzantotAdv_SST2'])
+    PSOAdv_SST2 = DatasetItem('SST2', ['PSOAdv_SST2'])
+
+    Adv_IMDB10K = DatasetItem('IMDB10K', ['Adv'])
+    BAEAdv_IMDB10K = DatasetItem('IMDB10K', ['BAEAdv_IMDB10K'])
+    TextFoolerAdv_IMDB10K = DatasetItem('IMDB10K', ['TextFoolerAdv_IMDB10K'])
+    PWWSAdv_IMDB10K = DatasetItem('IMDB10K', ['PWWSAdv_IMDB10K'])
+    IGAAdv_IMDB10K = DatasetItem('IMDB10K', ['IGAAdv_IMDB10K'])
+    AlzantotAdv_IMDB10K = DatasetItem('IMDB10K', ['AlzantotAdv_IMDB10K'])
+    PSOAdv_IMDB10K = DatasetItem('IMDB10K', ['PSOAdv_IMDB10K'])
+
+    Adv_IMDB50K = DatasetItem('IMDB50K', ['Adv'])
+    BAEAdv_IMDB50K = DatasetItem('IMDB50K', ['BAEAdv_IMDB50K'])
+    TextFoolerAdv_IMDB50K = DatasetItem('IMDB50K', ['TextFoolerAdv_IMDB50K'])
+    PWWSAdv_IMDB50K = DatasetItem('IMDB50K', ['PWWSAdv_IMDB50K'])
+    IGAAdv_IMDB50K = DatasetItem('IMDB50K', ['IGAAdv_IMDB50K'])
+    AlzantotAdv_IMDB50K = DatasetItem('IMDB50K', ['AlzantotAdv_IMDB50K'])
+    PSOAdv_IMDB50K = DatasetItem('IMDB50K', ['PSOAdv_IMDB50K'])
+
+    Adv_AGNews10K = DatasetItem('AGNews10K', ['Adv'])
+    BAEAdv_AGNews10K = DatasetItem('AGNews10K', ['BAEAdv_AGNews10K'])
+    TextFoolerAdv_AGNews10K = DatasetItem('AGNews10K', ['TextFoolerAdv_AGNews10K'])
+    PWWSAdv_AGNews10K = DatasetItem('AGNews10K', ['PWWSAdv_AGNews10K'])
+    IGAAdv_AGNews10K = DatasetItem('AGNews10K', ['IGAAdv_AGNews10K'])
+    AlzantotAdv_AGNews10K = DatasetItem('AGNews10K', ['AlzantotAdv_AGNews10K'])
+    PSOAdv_AGNews10K = DatasetItem('AGNews10K', ['PSOAdv_AGNews10K'])
+
+    Adv_AGNews120K = DatasetItem('AGNews120K', ['Adv'])
+    BAEAdv_AGNews120K = DatasetItem('AGNews120K', ['BAEAdv_AGNews120K'])
+    TextFoolerAdv_AGNews120K = DatasetItem('AGNews120K', ['TextFoolerAdv_AGNews120K'])
+    PWWSAdv_AGNews120K = DatasetItem('AGNews120K', ['PWWSAdv_AGNews120K'])
+    IGAAdv_AGNews120K = DatasetItem('AGNews120K', ['IGAAdv_AGNews120K'])
+    AlzantotAdv_AGNews120K = DatasetItem('AGNews120K', ['AlzantotAdv_AGNews120K'])
+    PSOAdv_AGNews120K = DatasetItem('AGNews120K', ['PSOAdv_AGNews120K'])
 
     def __init__(self):
         dataset_list = [
@@ -133,7 +195,7 @@ def detect_dataset(dataset_path, task='apc', load_aug=False):
     search_path = ''
     d = ''
     for d in dataset_path:
-        if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(ClassificationDatasetList, d):
+        if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(TCDatasetList, d) or hasattr(AdvTCDatasetList, d):
 
             print('Loading {} dataset from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
@@ -197,7 +259,7 @@ def detect_infer_dataset(dataset_path, task='apc', load_aug=False):
         dataset_path = DatasetItem(dataset_path)
     dataset_file = []
     for d in dataset_path:
-        if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(ClassificationDatasetList, d):
+        if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(TCDatasetList, d):
             print('Loading {} dataset from:  {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
             search_path = find_dir(os.getcwd(), [d, task, 'dataset'], exclude_key=filter_key_words, disable_alert=False)

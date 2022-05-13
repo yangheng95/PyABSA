@@ -5,7 +5,8 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 from pyabsa.functional.dataset.dataset_manager import (ABSADatasetList,
-                                                       ClassificationDatasetList,
+                                                       TCDatasetList,
+                                                       AdvTCDatasetList,
                                                        detect_dataset,
                                                        detect_infer_dataset,
                                                        DatasetItem)

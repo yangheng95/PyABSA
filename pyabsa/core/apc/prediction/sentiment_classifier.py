@@ -188,7 +188,7 @@ class SentimentClassifier:
         else:
             raise RuntimeError('Please specify your datasets path!')
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.opt.eval_batch_size, shuffle=False)
-        return self._infer(print_result=print_result)
+        return self._infer(print_result=print_result)[0]
 
     def merge_results(self, results):
         """ merge APC results have the same input text

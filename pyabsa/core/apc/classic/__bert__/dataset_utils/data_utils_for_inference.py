@@ -132,7 +132,11 @@ class BERTBaselineABSADataset(Dataset):
         all_data = []
 
         ex_id = 0
-        for text in tqdm.tqdm(samples, postfix='building word indices...'):
+        if len(samples) > 100:
+            it = tqdm.tqdm(samples, postfix='preparing apc inference dataloader...')
+        else:
+            it = samples
+        for text in it:
             try:
                 # handle for empty lines in inferring_tutorials dataset_utils
                 if text is None or '' == text.strip():
