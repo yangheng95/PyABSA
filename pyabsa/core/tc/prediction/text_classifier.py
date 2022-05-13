@@ -9,7 +9,6 @@ import random
 
 import autocuda
 import numpy
-import numpy as np
 import torch
 from findfile import find_file
 from termcolor import colored
@@ -18,14 +17,13 @@ from transformers import AutoTokenizer, AutoModel, AutoConfig, DebertaV2ForMaske
 
 from pyabsa.functional.dataset import detect_infer_dataset
 
-from ..models import GloVeClassificationModelList, BERTClassificationModelList
-from ..classic.__glove__.dataset_utils.data_utils_for_inference import GloVeClassificationDataset
+from ..models import GloVeTCModelList, BERTTCModelList
+from ..classic.__glove__.dataset_utils.data_utils_for_inference import GloVeTCDataset
 from ..classic.__bert__.dataset_utils.data_utils_for_inference import BERTClassificationDataset, Tokenizer4Pretraining
 
 from ..classic.__glove__.dataset_utils.data_utils_for_training import LABEL_PADDING, build_embedding_matrix, build_tokenizer
 
 from pyabsa.utils.pyabsa_utils import print_args, TransformerConnectionError
-from ...atepc.dataset_utils.atepc_utils import split_text
 
 
 def get_mlm_and_tokenizer(text_classifier, config):
@@ -77,7 +75,7 @@ class TextClassifier:
                     self.opt = pickle.load(f)
 
                 if state_dict_path or model_path:
-                    if hasattr(BERTClassificationModelList, self.opt.model.__name__):
+                    if hasattr(BERTTCModelList, self.opt.model.__name__):
                         if state_dict_path:
                             self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
                             self.model = self.opt.model(self.bert, self.opt)
@@ -120,15 +118,15 @@ class TextClassifier:
             except Exception as e:
                 raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, model_arg))
 
-            if not hasattr(GloVeClassificationModelList, self.opt.model.__name__) \
-                and not hasattr(BERTClassificationModelList, self.opt.model.__name__):
+            if not hasattr(GloVeTCModelList, self.opt.model.__name__) \
+                and not hasattr(BERTTCModelList, self.opt.model.__name__):
                 raise KeyError('The checkpoint you are loading is not from classifier model.')
 
-        if hasattr(BERTClassificationModelList, self.opt.model.__name__):
+        if hasattr(BERTTCModelList, self.opt.model.__name__):
             self.dataset = BERTClassificationDataset(tokenizer=self.tokenizer, opt=self.opt)
 
-        elif hasattr(GloVeClassificationModelList, self.opt.model.__name__):
-            self.dataset = GloVeClassificationDataset(tokenizer=self.tokenizer, opt=self.opt)
+        elif hasattr(GloVeTCModelList, self.opt.model.__name__):
+            self.dataset = GloVeTCDataset(tokenizer=self.tokenizer, opt=self.opt)
 
         self.infer_dataloader = None
         self.opt.eval_batch_size = eval_batch_size
@@ -207,7 +205,7 @@ class TextClassifier:
         else:
             raise RuntimeError('Please specify your datasets path!')
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.opt.eval_batch_size, shuffle=False)
-        return self._infer(print_result=print_result)
+        return self._infer(print_result=print_result)[0]
 
     def _infer(self, save_path=None, print_result=True):
 
@@ -215,7 +213,7 @@ class TextClassifier:
 
         correct = {True: 'Correct', False: 'Wrong'}
         results = []
-
+        perplexity = 'N.A.'
         with torch.no_grad():
             self.model.eval()
             n_correct = 0
@@ -244,16 +242,17 @@ class TextClassifier:
 
                     text_raw = sample['text_raw'][i]
 
-                    if self.MLM:
-                        ids = self.MLM_tokenizer(text_raw, return_tensors="pt")
-                        ids['labels'] = ids['input_ids'].clone()
-                        ids = ids.to(self.opt.device)
-                        loss = self.MLM(**ids)['loss']
-                        perplexity = float(torch.exp(loss / ids['input_ids'].size(1)))
-                        # ids = self.MLM_tokenizer(text_raw, return_tensors="pt").input_ids.clone().to(self.opt.device)
-                        # perplexity = float(torch.exp(self.MLM(**ids)['loss'] / ids['input_ids'].size(1)))
-                    else:
-                        perplexity = 'N.A.'
+                    # if self.MLM:
+                    #     ids = self.MLM_tokenizer(text_raw, return_tensors="pt")
+                    #     ids['labels'] = ids['input_ids'].clone()
+                    #     ids = ids.to(self.opt.device)
+                    #     loss = self.MLM(**ids)['loss']
+                    #     perplexity = float(torch.exp(loss / ids['input_ids'].size(1)))
+                    #     # ids = self.MLM_tokenizer(text_raw, return_tensors="pt").input_ids.clone().to(self.opt.device)
+                    #     # perplexity = float(torch.exp(self.MLM(**ids)['loss'] / ids['input_ids'].size(1)))
+                    # else:
+                    #     perplexity = 'N.A.'
+
                     results.append({
                         'text': text_raw,
                         'label': sent,
@@ -261,7 +260,6 @@ class TextClassifier:
                         'ref_label': real_sent,
                         'ref_check': correct[sent == real_sent] if real_sent != '-999' else '',
                         'perplexity': perplexity,
-                        'Wperplexity': perplexity*len(split_text(text_raw)),
                     })
                     n_total += 1
 
@@ -272,13 +270,13 @@ class TextClassifier:
 
                     if result['ref_label'] != -999:
                         if result['label'] == result['ref_label']:
-                            text_info = colored(' -> <{}(Confidence:{}, ref:{})>'.format(result['label'], result['confidence'], result['ref_label']), 'green')
+                            text_info = colored(' -> <{}(ref:{})>'.format(result['label'], result['ref_label']), 'green')
                         else:
-                            text_info = colored(' -> <{}(Confidence:{}, ref:{})>'.format(result['label'], result['confidence'], result['ref_label']), 'red')
+                            text_info = colored(' -> <{}(ref:{})>'.format(result['label'], result['ref_label']), 'red')
                     else:
                         text_info = ' -> {}'.format(result['label'])
 
-                    text_printing += text_info + colored('<Wperplexity:{}>'.format(result['Wperplexity']), 'yellow')
+                    text_printing += text_info + colored('<perplexity:{}>'.format(result['perplexity']), 'yellow')
                     print(text_printing)
             if save_path:
                 with open(save_path, 'w', encoding='utf8') as fout:

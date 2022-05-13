@@ -5,6 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 import numpy as np
+import tqdm
 
 from pyabsa.core.apc.dataset_utils.apc_utils import configure_spacy_model
 from pyabsa.core.atepc.dataset_utils.atepc_utils import prepare_input_for_atepc, split_text
@@ -121,7 +122,11 @@ def convert_ate_examples_to_features(examples, label_list, max_seq_len, tokenize
     eos_token = tokenizer.eos_token
     label_map = {label: i for i, label in enumerate(label_list, 1)}
     features = []
-    for (ex_index, example) in enumerate(examples):
+    if len(examples) > 100:
+        it = tqdm.tqdm(examples, postfix='preparing apc inference dataloader...')
+    else:
+        it = examples
+    for (ex_index, example) in enumerate(it):
         text_tokens = example.text_a[:]
         aspect_tokens = example.text_b[:]
         IOB_label = example.IOB_label
@@ -199,7 +204,11 @@ def convert_apc_examples_to_features(examples, label_list, max_seq_len, tokenize
     label_map = {label: i for i, label in enumerate(label_list, 1)}
     opt.IOB_label_to_index = label_map
     features = []
-    for (ex_index, example) in enumerate(examples):
+    if len(examples) > 100:
+        it = tqdm.tqdm(examples, postfix='preparing apc inference dataloader...')
+    else:
+        it = examples
+    for (ex_index, example) in enumerate(it):
         text_tokens = example.text_a[:]
         aspect_tokens = example.text_b[:]
         IOB_label = example.IOB_label

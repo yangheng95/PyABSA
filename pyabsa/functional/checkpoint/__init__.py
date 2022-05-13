@@ -7,4 +7,6 @@
 
 from .checkpoint_manager import (APCCheckpointManager,
                                  ATEPCCheckpointManager,
-                                 TextClassifierCheckpointManager)
+                                 TCCheckpointManager,
+                                 AOTCCheckpointManager
+                                 )

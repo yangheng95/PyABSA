@@ -114,8 +114,8 @@ class GloVeABSADataset(Dataset):
         all_data = []
 
         ex_id = 0
-        if len(samples) > 1:
-            it = tqdm.tqdm(samples, postfix='building word indices...')
+        if len(samples) > 100:
+            it = tqdm.tqdm(samples, postfix='preparing apc inference dataloader...')
         else:
             it = samples
         for text in it:

@@ -11,63 +11,19 @@ from transformers import AutoTokenizer
 from pyabsa.core.apc.dataset_utils.apc_utils import load_apc_datasets, LABEL_PADDING
 
 
-def pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating='post', value=0):
-    x = (np.ones(maxlen) * value).astype(dtype)
-    if truncating == 'pre':
-        trunc = sequence[-maxlen:]
-    else:
-        trunc = sequence[:maxlen]
-    trunc = np.asarray(trunc, dtype=dtype)
-    if padding == 'post':
-        x[:len(trunc)] = trunc
-    else:
-        x[-len(trunc):] = trunc
-    return x
-
-
-class Tokenizer(object):
-    def __init__(self, max_seq_len, lower=True):
-        self.lower = lower
-        self.max_seq_len = max_seq_len
-        self.word2idx = {}
-        self.idx2word = {}
-        self.idx = 1
-
-    def fit_on_text(self, text):
-        if self.lower:
-            text = text.lower()
-        words = text.split()
-        for word in words:
-            if word not in self.word2idx:
-                self.word2idx[word] = self.idx
-                self.idx2word[self.idx] = word
-                self.idx += 1
-
-    def text_to_sequence(self, text, reverse=False, padding='post', truncating='post'):
-        if self.lower:
-            text = text.lower()
-        words = text.split()
-        unknownidx = len(self.word2idx) + 1
-        sequence = [self.word2idx[w] if w in self.word2idx else unknownidx for w in words]
-        if len(sequence) == 0:
-            sequence = [0]
-        if reverse:
-            sequence = sequence[::-1]
-        return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
-
-
 class Tokenizer4Pretraining:
     def __init__(self, max_seq_len, opt):
         self.tokenizer = AutoTokenizer.from_pretrained(opt.pretrained_bert, do_lower_case='uncased' in opt.pretrained_bert)
         self.max_seq_len = max_seq_len
 
     def text_to_sequence(self, text, reverse=False, padding='post', truncating='post'):
-        sequence = self.tokenizer.convert_tokens_to_ids(self.tokenizer.tokenize(text))
-        if len(sequence) == 0:
-            sequence = [0]
-        if reverse:
-            sequence = sequence[::-1]
-        return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
+        # sequence = self.tokenizer.convert_tokens_to_ids(self.tokenizer.tokenize(text))
+        # if len(sequence) == 0:
+        #     sequence = [0]
+        # if reverse:
+        #     sequence = sequence[::-1]
+        # return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
+        return self.tokenizer.encode(text, truncation=True, padding='max_length', max_length=self.max_seq_len, return_tensors='pt')
 
 
 class BERTClassificationDataset(Dataset):
@@ -98,8 +54,8 @@ class BERTClassificationDataset(Dataset):
 
     def process_data(self, samples, ignore_error=True):
         all_data = []
-        if len(samples) > 1:
-            it = tqdm.tqdm(samples, postfix='building word indices...')
+        if len(samples) > 100:
+            it = tqdm.tqdm(samples, postfix='preparing text classification dataloader...')
         else:
             it = samples
         for text in it:
@@ -116,10 +72,10 @@ class BERTClassificationDataset(Dataset):
                 else:
                     label = LABEL_PADDING
 
-                text_indices = self.tokenizer.text_to_sequence('{} {} {}'.format(self.tokenizer.tokenizer.cls_token, text, self.tokenizer.tokenizer.sep_token))
+                text_indices = self.tokenizer.text_to_sequence('{}'.format(text))
 
                 data = {
-                    'text_bert_indices': text_indices
+                    'text_bert_indices': text_indices[0]
                     if 'text_bert_indices' in self.opt.model.inputs else 0,
 
                     'text_raw': text,

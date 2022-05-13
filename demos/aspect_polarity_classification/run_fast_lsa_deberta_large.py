@@ -27,7 +27,8 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
-seeds = [random.randint(0, 10000) for _ in range(3)]
+# seeds = [random.randint(0, 10000) for _ in range(3)]
+seeds = [random.randint(0, 10000) for _ in range(1)]
 device = autocuda.auto_cuda()
 
 config = APCConfigManager.get_apc_config_english()
@@ -35,8 +36,6 @@ config.model = APCModelList.FAST_LSA_T_V2
 config.lcf = 'cdw'
 config.similarity_threshold = 1
 config.max_seq_len = 80
-config.hidden_dim = 1024
-config.embed_dim = 1024
 config.dropout = 0
 config.optimizer = 'adam'
 config.cache_dataset = False
@@ -97,8 +96,6 @@ config.model = APCModelList.FAST_LSA_S_V2
 config.lcf = 'cdw'
 config.similarity_threshold = 1
 config.max_seq_len = 80
-config.hidden_dim = 1024
-config.embed_dim = 1024
 config.dropout = 0
 config.cache_dataset = False
 config.patience = 15
@@ -157,8 +154,6 @@ config.model = APCModelList.BERT_SPC_V2
 config.lcf = 'cdw'
 config.similarity_threshold = 1
 config.max_seq_len = 60
-config.hidden_dim = 1024
-config.embed_dim = 1024
 config.dropout = 0
 config.cache_dataset = False
 config.patience = 15
