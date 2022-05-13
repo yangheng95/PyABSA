@@ -1,4 +1,7 @@
 {
+  "1.14.4": {
+    "1": "This version contain breaking experimental changes, if you find any bug please roll back and report on Github"
+  },
   "1.14.3(2)": {
     "1": "Refactor pre-tokenization before inference for multilingual ATEPC",
     "2": "Reset default checkpoint host to Huggingface Hub (useful for Chinese users), please test and report if it works",
