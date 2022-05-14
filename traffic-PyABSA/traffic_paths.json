@@ -2,61 +2,61 @@
   {
     "path": "/yangheng95/PyABSA",
     "title": "yangheng95/PyABSA: Open Framework for Aspect-based Sentiment Analysis based o...",
-    "count": 1199,
-    "uniques": 326
-  },
-  {
-    "path": "/yangheng95/PyABSA/issues",
-    "title": "Issues · yangheng95/PyABSA · GitHub",
-    "count": 292,
-    "uniques": 44
+    "count": 1229,
+    "uniques": 337
   },
   {
     "path": "/yangheng95/PyABSA/tree/release/pyabsa",
     "title": "PyABSA/pyabsa at release · yangheng95/PyABSA · GitHub",
-    "count": 273,
-    "uniques": 85
+    "count": 294,
+    "uniques": 88
+  },
+  {
+    "path": "/yangheng95/PyABSA/issues",
+    "title": "Issues · yangheng95/PyABSA · GitHub",
+    "count": 288,
+    "uniques": 45
   },
   {
     "path": "/yangheng95/PyABSA/tree/release/demos",
     "title": "PyABSA/demos at release · yangheng95/PyABSA · GitHub",
-    "count": 203,
-    "uniques": 76
+    "count": 214,
+    "uniques": 77
   },
   {
     "path": "/yangheng95/PyABSA/tree/release/demos/aspect_polarity_classification",
     "title": "PyABSA/demos/aspect_polarity_classification at release · yangheng95/PyABSA · ...",
-    "count": 168,
-    "uniques": 71
+    "count": 173,
+    "uniques": 72
   },
   {
     "path": "/yangheng95/PyABSA/blob/release/demos/aspect_polarity_classification/run_fast_lsa_deberta_large.py",
     "title": "PyABSA/run_fast_lsa_deberta_large.py at release · yangheng95/PyABSA · GitHub",
     "count": 134,
-    "uniques": 90
+    "uniques": 85
   },
   {
     "path": "/yangheng95/PyABSA/tree/release/pyabsa/functional",
     "title": "PyABSA/pyabsa/functional at release · yangheng95/PyABSA · GitHub",
-    "count": 112,
-    "uniques": 42
+    "count": 121,
+    "uniques": 44
   },
   {
     "path": "/yangheng95/PyABSA/tree/release/pyabsa/core",
     "title": "PyABSA/pyabsa/core at release · yangheng95/PyABSA · GitHub",
-    "count": 108,
-    "uniques": 39
+    "count": 121,
+    "uniques": 42
+  },
+  {
+    "path": "/yangheng95/PyABSA/tree/release/pyabsa/core/apc",
+    "title": "PyABSA/pyabsa/core/apc at release · yangheng95/PyABSA · GitHub",
+    "count": 112,
+    "uniques": 28
   },
   {
     "path": "/yangheng95/PyABSA/blob/release/readme/tutorial_readme.md",
     "title": "PyABSA/tutorial_readme.md at release · yangheng95/PyABSA · GitHub",
-    "count": 98,
-    "uniques": 40
-  },
-  {
-    "path": "/yangheng95/PyABSA/tree/release/demos/aspect_term_extraction",
-    "title": "PyABSA/demos/aspect_term_extraction at release · yangheng95/PyABSA · GitHub",
-    "count": 92,
-    "uniques": 40
+    "count": 104,
+    "uniques": 43
   }
 ]
