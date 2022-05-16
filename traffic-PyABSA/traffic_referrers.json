@@ -1,28 +1,23 @@
 [
   {
     "referrer": "github.com",
-    "count": 1203,
-    "uniques": 151
+    "count": 1112,
+    "uniques": 139
   },
   {
     "referrer": "Google",
-    "count": 546,
+    "count": 489,
     "uniques": 118
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 526,
-    "uniques": 102
+    "count": 484,
+    "uniques": 94
   },
   {
     "referrer": "link.zhihu.com",
-    "count": 63,
-    "uniques": 25
-  },
-  {
-    "referrer": "colab.research.google.com",
-    "count": 60,
-    "uniques": 7
+    "count": 69,
+    "uniques": 26
   },
   {
     "referrer": "pythonlang.dev",
@@ -30,9 +25,19 @@
     "uniques": 5
   },
   {
+    "referrer": "colab.research.google.com",
+    "count": 43,
+    "uniques": 5
+  },
+  {
     "referrer": "huggingface.co",
     "count": 27,
     "uniques": 8
+  },
+  {
+    "referrer": "cn.bing.com",
+    "count": 8,
+    "uniques": 3
   },
   {
     "referrer": "notebooks.githubusercontent.com",
@@ -43,10 +48,5 @@
     "referrer": "confluence.2gis.ru",
     "count": 5,
     "uniques": 1
-  },
-  {
-    "referrer": "zzun.app",
-    "count": 4,
-    "uniques": 2
   }
 ]
