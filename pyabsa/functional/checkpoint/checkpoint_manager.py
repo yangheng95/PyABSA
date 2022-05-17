@@ -70,7 +70,7 @@ class APCCheckpointManager(CheckpointManager):
             checkpoint_config = find_file(checkpoint, ['.config'])
         # use "checkpoint" as a keyword to search ckpt
         if not checkpoint_config:
-            checkpoint_config = find_cwd_file(os.getcwd(), [checkpoint, '.config'])
+            checkpoint_config = find_cwd_file([checkpoint, '.config'])
 
         # obtain ckpt location if it is found in the local envs
         if checkpoint_config:
@@ -137,7 +137,7 @@ class ATEPCCheckpointManager(CheckpointManager):
             checkpoint_config = find_file(checkpoint, ['.config'])
         # use "checkpoint" as a keyword to search ckpt
         if not checkpoint_config:
-            checkpoint_config = find_cwd_file(os.getcwd(), [checkpoint, '.config'])
+            checkpoint_config = find_cwd_file([checkpoint, '.config'])
 
         # obtain ckpt location if it is found in the local envs
         if checkpoint_config:
@@ -201,7 +201,7 @@ class AOTCCheckpointManager(CheckpointManager):
             checkpoint_config = find_file(checkpoint, ['.config'])
         # use "checkpoint" as a keyword to search ckpt
         if not checkpoint_config:
-            checkpoint_config = find_cwd_file(os.getcwd(), [checkpoint, '.config'])
+            checkpoint_config = find_cwd_file([checkpoint, '.config'])
 
         # obtain ckpt location if it is found in the local envs
         if checkpoint_config:
@@ -216,7 +216,7 @@ class AOTCCheckpointManager(CheckpointManager):
         return ao_text_classifier
 
     @staticmethod
-    def get_checkpoint(checkpoint: str = 'Chinese', from_drive_url=''):
+    def get_checkpoint(checkpoint: str = 'Chinese'):
         """
         download the checkpoint and return the path of the downloaded checkpoint
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
@@ -230,7 +230,7 @@ class AOTCCheckpointManager(CheckpointManager):
         else:
             print(colored('Checkpoint:{} is not found.'.format(checkpoint), 'red'))
             sys.exit(-1)
-        return download_checkpoint(task='AO-TC',
+        return download_checkpoint(task='AOTC',
                                    language=checkpoint.lower(),
                                    archive_path=text_classification_checkpoint[checkpoint.lower()]['id'])
 
@@ -264,7 +264,7 @@ class TCCheckpointManager(CheckpointManager):
             checkpoint_config = find_file(checkpoint, ['.config'])
         # use "checkpoint" as a keyword to search ckpt
         if not checkpoint_config:
-            checkpoint_config = find_cwd_file(os.getcwd(), [checkpoint, '.config'])
+            checkpoint_config = find_cwd_file([checkpoint, '.config'])
 
         # obtain ckpt location if it is found in the local envs
         if checkpoint_config:

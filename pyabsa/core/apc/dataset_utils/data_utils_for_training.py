@@ -32,7 +32,7 @@ class ABSADataset(Dataset):
 
         ex_id = 0
 
-        for i in tqdm.tqdm(range(0, len(lines), 3), postfix='building word indices...'):
+        for i in tqdm.tqdm(range(0, len(lines), 3), postfix='prepraing dataloader...'):
             if lines[i].count("$T$") > 1:
                 continue
             text_left, _, text_right = [s.strip() for s in lines[i].partition("$T$")]

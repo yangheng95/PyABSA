@@ -107,7 +107,7 @@ class Trainer:
         elif isinstance(config, AOTCConfigManager):
             self.train_func = train4ao_tc
             self.model_class = AOTCTextClassifier
-            self.task = 'bi_tc'
+            self.task = 'ao_tc'
 
         self.config = config
         if isinstance(dataset, DatasetItem):

@@ -1,4 +1,8 @@
 {
+  "1.14.5": {
+    "1": "Revert Python version dependency",
+    "2": "Revert Torch dependency"
+  },
   "1.14.4": {
     "1": "This version contain breaking experimental changes, if you find any bug please roll back and report on Github"
   },
