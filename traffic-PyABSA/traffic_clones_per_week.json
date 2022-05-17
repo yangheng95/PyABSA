@@ -3,11 +3,6 @@
   "uniques": 41,
   "clones": [
     {
-      "timestamp": "2022-05-09T00:00:00Z",
-      "count": 5,
-      "uniques": 3
-    },
-    {
       "timestamp": "2022-05-10T00:00:00Z",
       "count": 6,
       "uniques": 3
@@ -34,6 +29,11 @@
     },
     {
       "timestamp": "2022-05-15T00:00:00Z",
+      "count": 5,
+      "uniques": 3
+    },
+    {
+      "timestamp": "2022-05-16T00:00:00Z",
       "count": 5,
       "uniques": 3
     }
