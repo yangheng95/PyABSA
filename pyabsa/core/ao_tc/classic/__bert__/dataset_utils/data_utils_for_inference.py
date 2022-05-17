@@ -84,11 +84,11 @@ class AOBERTTCDataset(Dataset):
 
                     'text_raw': text,
 
-                    'label': self.opt.label_to_index[label] if isinstance(label, str) else label,
+                    'label': self.opt.label_to_index.get(label, -100) if isinstance(label, str) else label,
 
-                    'advdet_label': self.opt.adv_label_to_index[advdet_label] if isinstance(advdet_label, str) else advdet_label,
+                    'advdet_label': self.opt.adv_label_to_index.get(advdet_label, -100) if isinstance(advdet_label, str) else advdet_label,
 
-                    'ood_label': self.opt.ood_label_to_index[ood_label] if isinstance(ood_label, str) else ood_label,
+                    'ood_label': self.opt.ood_label_to_index.get(ood_label, -100) if isinstance(ood_label, str) else ood_label,
                 }
 
                 all_data.append(data)

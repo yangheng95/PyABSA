@@ -23,7 +23,7 @@ setup(
     # Author details
     author='Yang Heng',
     author_email='hy345@exeter.ac.uk',
-    python_requires=">=3.9",
+    python_requires=">=3.6",
     packages=find_packages(),
     include_package_data=True,
     exclude_package_date={'': ['.gitignore']},
@@ -43,7 +43,7 @@ setup(
                       'gitpython',
                       'gdown>=4.4.0',
                       'transformers>4.5',
-                      'torch>1.0.0',
+                      'torch>1.0.0, <1.11.0',
                       'sentencepiece'
                       ],
 )

@@ -185,7 +185,7 @@ class AOTCTextClassifier:
 
         save_path = os.path.join(os.getcwd(), 'ao_text_classification.result.json')
 
-        target_file = detect_infer_dataset(target_file, task='bi_tc')
+        target_file = detect_infer_dataset(target_file, task='ao_tc')
         if not target_file:
             raise FileNotFoundError('Can not find inference datasets!')
 
@@ -306,15 +306,17 @@ class AOTCTextClassifier:
 
                     # AdvDet
                     if result['adv_label'] != '-100':
-                        text_info += colored(' -> <AdvDet:{}(ref:{})>'.format(result['adv_label'], result['ref_adv_check']), 'green')
-                    else:
-                        text_info += colored(' -> <AdvDet:{}(ref:{})>'.format(result['adv_label'], result['ref_adv_check']), 'red')
+                        if result['adv_label'] == result['ref_adv_label']:
+                            text_info += colored(' -> <AdvDet:{}(ref:{})>'.format(result['adv_label'], result['ref_adv_check']), 'green')
+                        else:
+                            text_info += colored(' -> <AdvDet:{}(ref:{})>'.format(result['adv_label'], result['ref_adv_check']), 'red')
 
                     # OODDet
                     if result['ood_label'] != '-100':
-                        text_info += colored(' -> <AdvDet:{}(ref:{})>'.format(result['ood_label'], result['ref_ood_check']), 'green')
-                    else:
-                        text_info += colored(' -> <AdvDet:{}(ref:{})>'.format(result['ood_label'], result['ref_ood_check']), 'red')
+                        if result['ood_label'] == result['ref_ood_label']:
+                            text_info += colored(' -> <OODDet:{}(ref:{})>'.format(result['ood_label'], result['ref_ood_check']), 'green')
+                        else:
+                            text_info += colored(' -> <OODDet:{}(ref:{})>'.format(result['ood_label'], result['ref_ood_check']), 'red')
 
                     text_printing += text_info + colored('<perplexity:{}>'.format(result['perplexity']), 'yellow')
                     print(text_printing)

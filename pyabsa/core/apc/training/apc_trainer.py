@@ -117,12 +117,13 @@ class Instructor:
                             torch.nn.init.uniform_(p, a=-stdv, b=stdv)
 
     def reload_model(self, ckpt='./init_state_dict.bin'):
-        if self.opt.auto_device == 'allcuda':
-            self.model.module.load_state_dict(torch.load(ckpt))
-        else:
-            self.model.load_state_dict(torch.load(ckpt))
-        _params = filter(lambda p: p.requires_grad, self.model.parameters())
-        self.optimizer = optimizers[self.opt.optimizer](_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
+        if os.path.exists(ckpt):
+            if self.opt.auto_device == 'allcuda':
+                self.model.module.load_state_dict(torch.load(ckpt))
+            else:
+                self.model.load_state_dict(torch.load(ckpt))
+            _params = filter(lambda p: p.requires_grad, self.model.parameters())
+            self.optimizer = optimizers[self.opt.optimizer](_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
     def prepare_dataloader(self, train_set):
         if self.train_dataloader and self.val_dataloader:
@@ -324,7 +325,7 @@ class Instructor:
         print('Training finished, we hope you can share your checkpoint with community, please see:',
               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
 
-        if self.opt.save_mode:
+        if self.val_dataloader or self.val_dataloaders:
             del self.train_dataloaders
             del self.test_dataloader
             del self.val_dataloaders
@@ -334,17 +335,17 @@ class Instructor:
             return save_path
         else:
             # direct return model if do not evaluate
-            if self.opt.model_path_to_save:
-                save_path = '{0}/{1}/'.format(self.opt.model_path_to_save,
-                                              self.opt.model_name
-                                              )
-                save_model(self.opt, self.model, self.tokenizer, save_path)
+            # if self.opt.model_path_to_save:
+            #     save_path = '{0}/{1}/'.format(self.opt.model_path_to_save,
+            #                                   self.opt.model_name
+            #                                   )
+            #     save_model(self.opt, self.model, self.tokenizer, save_path)
             del self.train_dataloaders
             del self.test_dataloader
             del self.val_dataloaders
             cuda.empty_cache()
             time.sleep(3)
-            return self.model, self.opt, self.tokenizer, sum_acc, sum_f1
+            return self.model, self.opt, self.tokenizer
 
     def _k_fold_train_and_evaluate(self, criterion):
         sum_loss = 0
@@ -474,7 +475,6 @@ class Instructor:
                     iterator.refresh()
                 if patience < 0:
                     break
-            self.reload_model(find_file(save_path, '.state_dict'))
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
             if max_fold_acc > max_fold_acc_k_fold:
                 save_path_k_fold = save_path
@@ -486,8 +486,7 @@ class Instructor:
 
             self.logger.info(self.opt.MV.summary(no_print=True))
 
-            if os.path.exists('./init_state_dict.bin'):
-                self.reload_model()
+            self.reload_model()
 
         max_test_acc = numpy.max(fold_test_acc)
         max_test_f1 = numpy.max(fold_test_f1)
@@ -496,34 +495,33 @@ class Instructor:
         self.opt.MV.add_metric('Max-Test-F1', max_test_f1 * 100)
 
         self.logger.info(self.opt.MV.summary(no_print=True))
-
+        self.reload_model(save_path_k_fold)
         print('Training finished, we hope you can share your checkpoint with everybody, please see:',
               'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
 
         if os.path.exists('./init_state_dict.bin'):
-            self.reload_model()
             os.remove('./init_state_dict.bin')
-        if save_path_k_fold:
+        if self.val_dataloader:
             del self.train_dataloaders
             del self.test_dataloader
             del self.val_dataloaders
             del self.model
             cuda.empty_cache()
             time.sleep(3)
-            return save_path_k_fold
+            return save_path
         else:
             # direct return model if do not evaluate
-            if self.opt.model_path_to_save:
-                save_path_k_fold = '{0}/{1}/'.format(self.opt.model_path_to_save,
-                                                     self.opt.model_name
-                                                     )
-                save_model(self.opt, self.model, self.tokenizer, save_path_k_fold)
-                del self.train_dataloaders
-                del self.test_dataloader
-                del self.val_dataloaders
-                cuda.empty_cache()
-                time.sleep(3)
-            return self.model, self.opt, self.tokenizer, sum_acc, sum_f1
+            # if self.opt.model_path_to_save:
+            #     save_path = '{0}/{1}/'.format(self.opt.model_path_to_save,
+            #                                   self.opt.model_name
+            #                                   )
+            #     save_model(self.opt, self.model, self.tokenizer, save_path)
+            del self.train_dataloaders
+            del self.test_dataloader
+            del self.val_dataloaders
+            cuda.empty_cache()
+            time.sleep(3)
+            return self.model, self.opt, self.tokenizer
 
     def _evaluate_acc_f1(self, test_dataloader):
         # switch model to evaluation mode

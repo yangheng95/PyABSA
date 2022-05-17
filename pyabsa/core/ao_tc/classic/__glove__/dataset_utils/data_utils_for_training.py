@@ -177,7 +177,7 @@ class AOGloVeTCDataset(Dataset):
 
         label_set = set()
 
-        for i in tqdm.tqdm(range(len(lines)), postfix='building word indices...'):
+        for i in tqdm.tqdm(range(len(lines)), postfix='prepraing dataloader...'):
             line = lines[i].strip().split('$LABEL$')
             text, label = line[0], line[1]
             text = text.strip().lower()

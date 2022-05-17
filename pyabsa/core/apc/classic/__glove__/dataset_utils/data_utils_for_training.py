@@ -193,7 +193,7 @@ class GloVeABSADataset(Dataset):
         if len(lines) % 3 != 0:
             print(colored('ERROR: one or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.', 'red'))
 
-        for i in tqdm.tqdm(range(0, len(lines), 3), postfix='building word indices...'):
+        for i in tqdm.tqdm(range(0, len(lines), 3), postfix='prepraing dataloader...'):
             if lines[i].count("$T$") > 1:
                 continue
             text_left, _, text_right = [s.lower().strip() for s in lines[i].partition("$T$")]
