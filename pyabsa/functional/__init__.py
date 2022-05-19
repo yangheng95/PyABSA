@@ -5,20 +5,33 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa.functional.trainer import APCTrainer, ATEPCTrainer, TCTrainer, Trainer
+
+from pyabsa.functional.trainer import APCTrainer, ATEPCTrainer, TCTrainer, AOTCTrainer, Trainer
+from pyabsa.core.apc.models import (APCModelList,
+                                    BERTBaselineAPCModelList,
+                                    GloVeAPCModelList)
+from pyabsa.core.tc.models import (GloVeTCModelList,
+                                   BERTTCModelList)
+from pyabsa.core.ao_tc.models import (AOGloVeTCModelList,
+                                      AOBERTTCModelList)
+from pyabsa.core.atepc.models import ATEPCModelList
+
+from pyabsa.functional.checkpoint.checkpoint_manager import (APCCheckpointManager,
+                                                             ATEPCCheckpointManager,
+                                                             TCCheckpointManager,
+                                                             AOTCCheckpointManager,
+                                                             available_checkpoints)
+from pyabsa.functional.dataset import ABSADatasetList, TCDatasetList, AdvTCDatasetList
 from pyabsa.functional.config import APCConfigManager
 from pyabsa.functional.config import ATEPCConfigManager
 from pyabsa.functional.config import TCConfigManager
-from pyabsa.functional.dataset import ABSADatasetList, TCDatasetList
-from pyabsa.functional.checkpoint import APCCheckpointManager
-from pyabsa.functional.checkpoint import ATEPCCheckpointManager
-from pyabsa.functional.checkpoint import TCCheckpointManager
-from pyabsa.functional.checkpoint import AOTCCheckpointManager
-from pyabsa.core.apc.models import APCModelList
-from pyabsa.core.apc.models import GloVeAPCModelList
-from pyabsa.core.apc.models import BERTBaselineAPCModelList
+from pyabsa.functional.config import AOTCConfigManager
+from pyabsa.utils.file_utils import check_update_log, validate_datasets_version
+from pyabsa.utils.pyabsa_utils import validate_pyabsa_version
 
-from pyabsa.core.atepc.models import ATEPCModelList
-from pyabsa.core.tc.models import BERTTCModelList, GloVeTCModelList
-
-from pyabsa.utils.file_utils import validate_datasets_version
+# compatible for v1.14.3 and earlier versions
+ClassificationDatasetList = TCDatasetList
+TextClassifierCheckpointManager = TCCheckpointManager
+GloVeClassificationModelList = GloVeTCModelList
+BERTClassificationModelList = BERTTCModelList
+ClassificationConfigManager = TCConfigManager
