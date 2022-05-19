@@ -23,7 +23,7 @@ from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler, Tens
 from transformers import AutoTokenizer, AutoModel
 
 from pyabsa.utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError, optimizers
+from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError, init_optimizer
 from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
 
 import pytorch_warmup as warmup
@@ -163,18 +163,19 @@ class Instructor:
             {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)],
              'weight_decay': 0}
         ]
-        if isinstance(self.opt.optimizer, str):
-            self.optimizer = optimizers[self.opt.optimizer](self.optimizer_grouped_parameters,
-                                                            lr=self.opt.learning_rate,
-                                                            weight_decay=self.opt.l2reg)
-        if amp:
-            self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
 
         if self.opt.auto_device == 'allcuda':
             self.model.to(self.opt.device)
             self.model = torch.nn.parallel.DataParallel(self.model)
         else:
             self.model.to(self.opt.device)
+
+        if isinstance(self.opt.optimizer, str):
+            self.optimizer = init_optimizer(self.opt.optimizer)(self.optimizer_grouped_parameters,
+                                                            lr=self.opt.learning_rate,
+                                                            weight_decay=self.opt.l2reg)
+        if amp:
+            self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
 
         self.opt.device = torch.device(self.opt.device)
         if self.opt.device.type == 'cuda':

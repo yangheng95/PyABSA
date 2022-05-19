@@ -4,7 +4,7 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-import math
+
 import os
 import pickle
 import random
@@ -23,7 +23,6 @@ from torch.utils.data import DataLoader, random_split, ConcatDataset, RandomSamp
 from tqdm import tqdm
 from transformers import AutoModel
 
-from pyabsa.functional.dataset import TCDatasetList
 from ..models import GloVeTCModelList, BERTTCModelList
 from ..classic.__bert__.dataset_utils.data_utils_for_training import (Tokenizer4Pretraining,
                                                                       BERTTCDataset)
@@ -31,7 +30,7 @@ from ..classic.__glove__.dataset_utils.data_utils_for_training import (build_tok
                                                                        build_embedding_matrix,
                                                                        GloVeTCDataset)
 from pyabsa.utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError, optimizers
+from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError, init_optimizer
 
 import pytorch_warmup as warmup
 
@@ -121,7 +120,14 @@ class Instructor:
             else:
                 pickle.dump((self.train_set, self.opt), open(cache_path, mode='wb'))
 
-        self.optimizer = optimizers[self.opt.optimizer](
+        # use DataParallel for training if device count larger than 1
+        if self.opt.auto_device == 'allcuda':
+            self.model.to(self.opt.device)
+            self.model = torch.nn.parallel.DataParallel(self.model)
+        else:
+            self.model.to(self.opt.device)
+
+        self.optimizer = init_optimizer(self.opt.optimizer)(
             self.model.parameters(),
             lr=self.opt.learning_rate,
             weight_decay=self.opt.l2reg
@@ -138,13 +144,6 @@ class Instructor:
         if amp:
             self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
 
-        # use DataParallel for training if device count larger than 1
-        if self.opt.auto_device == 'allcuda':
-            self.model.to(self.opt.device)
-            self.model = torch.nn.parallel.DataParallel(self.model)
-        else:
-            self.model.to(self.opt.device)
-
         self.opt.device = torch.device(self.opt.device)
         if self.opt.device.type == 'cuda':
             self.logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device)))
@@ -157,8 +156,6 @@ class Instructor:
                 self.model.module.load_state_dict(torch.load(ckpt))
             else:
                 self.model.load_state_dict(torch.load(ckpt))
-            _params = filter(lambda p: p.requires_grad, self.model.parameters())
-            self.optimizer = optimizers[self.opt.optimizer](_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
     def prepare_dataloader(self, train_set):
         if self.opt.cross_validate_fold < 1:
