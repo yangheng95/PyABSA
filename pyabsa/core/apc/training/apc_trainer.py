@@ -21,7 +21,7 @@ from tqdm import tqdm
 from transformers import BertModel
 
 from pyabsa.utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args, optimizers, resume_from_checkpoint, retry
+from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, init_optimizer
 
 from ..models.ensembler import APCEnsembler
 
@@ -58,6 +58,14 @@ class Instructor:
             'orthogonal_': torch.nn.init.orthogonal_,
         }
         self.initializer = initializers[self.opt.initializer]
+
+        # use DataParallel for training if device count larger than 1
+        if self.opt.auto_device == 'allcuda':
+            self.model.to(self.opt.device)
+            self.model = torch.nn.parallel.DataParallel(self.model)
+        else:
+            self.model.to(self.opt.device)
+
         if hasattr(self.model.models[0], 'eta1') and hasattr(self.model.models[0], 'eta2'):
             if self.opt.eta == 0:
                 torch.nn.init.uniform_(self.model.models[0].eta1)
@@ -66,7 +74,7 @@ class Instructor:
             eta2_id = id(self.model.models[0].eta2)
             base_params = filter(lambda p: id(p) != eta1_id and id(p) != eta2_id, self.model.models[0].parameters())
             self.opt.eta_lr = self.opt.learning_rate * 1000 if 'eta_lr' not in self.opt.args else self.opt.args['eta_lr']
-            self.optimizer = optimizers[self.opt.optimizer](
+            self.optimizer = init_optimizer(self.opt.optimizer)(
                 [
                     {'params': base_params},
                     {'params': self.model.models[0].eta1, 'lr': self.opt.eta_lr, 'weight_decay': self.opt.l2reg},
@@ -76,7 +84,7 @@ class Instructor:
                 weight_decay=self.opt.l2reg
             )
         else:
-            self.optimizer = optimizers[self.opt.optimizer](
+            self.optimizer = init_optimizer(self.opt.optimizer)(
                 self.model.parameters(),
                 lr=self.opt.learning_rate,
                 weight_decay=self.opt.l2reg
@@ -91,13 +99,6 @@ class Instructor:
             os.remove('init_state_dict.bin')
         if self.opt.cross_validate_fold > 0:
             torch.save(self.model.state_dict(), 'init_state_dict.bin')
-
-        # use DataParallel for training if device count larger than 1
-        if self.opt.auto_device == 'allcuda':
-            self.model.to(self.opt.device)
-            self.model = torch.nn.parallel.DataParallel(self.model)
-        else:
-            self.model.to(self.opt.device)
 
         self.opt.device = torch.device(self.opt.device)
         if self.opt.device.type == 'cuda':
@@ -122,8 +123,6 @@ class Instructor:
                 self.model.module.load_state_dict(torch.load(ckpt))
             else:
                 self.model.load_state_dict(torch.load(ckpt))
-            _params = filter(lambda p: p.requires_grad, self.model.parameters())
-            self.optimizer = optimizers[self.opt.optimizer](_params, lr=self.opt.learning_rate, weight_decay=self.opt.l2reg)
 
     def prepare_dataloader(self, train_set):
         if self.train_dataloader and self.val_dataloader:

@@ -35,3 +35,4 @@ TextClassifierCheckpointManager = TCCheckpointManager
 GloVeClassificationModelList = GloVeTCModelList
 BERTClassificationModelList = BERTTCModelList
 ClassificationConfigManager = TCConfigManager
+TextClassificationTrainer = TCTrainer

@@ -6,7 +6,7 @@
 
 # Copyright (C) 2021. All Rights Reserved.
 
-__version__ = '1.14.6'
+__version__ = '1.14.7'
 __name__ = 'pyabsa'
 
 from termcolor import colored
@@ -44,6 +44,7 @@ TextClassifierCheckpointManager = TCCheckpointManager
 GloVeClassificationModelList = GloVeTCModelList
 BERTClassificationModelList = BERTTCModelList
 ClassificationConfigManager = TCConfigManager
+TextClassificationTrainer = TCTrainer
 
 validate_pyabsa_version()
 
