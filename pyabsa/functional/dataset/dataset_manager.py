@@ -130,7 +130,7 @@ class TCDatasetList(list):
 
 
 class AdvTCDatasetList(list):
-    SST1 = DatasetItem('SST5', 'SST1')
+    SST1 = DatasetItem('SST1', 'SST1')
     SST5 = DatasetItem('SST5', 'SST1')
     SST2 = DatasetItem('SST2', 'SST2')
     AGNews10K = DatasetItem('AGNews10K', 'AGNews10K')
@@ -206,72 +206,6 @@ class AdvTCDatasetList(list):
     IGAAdv_AGNews120K = DatasetItem('IGAAdv_AGNews120K', ['IGAAdv_AGNews120K'])
     AlzantotAdv_AGNews120K = DatasetItem('AlzantotAdv_AGNews120K', ['AlzantotAdv_AGNews120K'])
     PSOAdv_AGNews120K = DatasetItem('PSOAdv_AGNews120K', ['PSOAdv_AGNews120K'])
-
-    # # AO Inference
-    # Adv_SST2_AO_Inference = DatasetItem('Adv_SST2', ['BAEAdv_SST2_AO_Inference',
-    #                                                  'TextFoolerAdv_SST2_AO_Inference',
-    #                                                  'PWWSAdv_SST2_AO_Inference',
-    #                                                  'IGAAdv_SST2_AO_Inference',
-    #                                                  'AlzantotAdv_SST2_AO_Inference',
-    #                                                  'PSOAdv_SST2_AO_Inference'])
-    # BAEAdv_SST2_AO_Inference = DatasetItem('BAEAdv_SST2', ['BAEAdv_SST2_AO_Inference'])
-    # TextFoolerAdv_SST2_AO_Inference = DatasetItem('TextFoolerAdv_SST2', ['TextFoolerAdv_SST2_AO_Inference'])
-    # PWWSAdv_SST2_AO_Inference = DatasetItem('PWWSAdv_SST2', ['PWWSAdv_SST2_AO_Inference'])
-    # IGAAdv_SST2_AO_Inference = DatasetItem('IGAAdv_SST2', ['IGAAdv_SST2_AO_Inference'])
-    # AlzantotAdv_SST2_AO_Inference = DatasetItem('AlzantotAdv_SST2', ['AlzantotAdv_SST2_AO_Inference'])
-    # PSOAdv_SST2_AO_Inference = DatasetItem('PSOAdv_SST2', ['PSOAdv_SST2_AO_Inference'])
-    #
-    # Adv_IMDB10K_AO_Inference = DatasetItem('Adv_IMDB10K', ['BAEAdv_IMDB10K_AO_Inference',
-    #                                                        'TextFoolerAdv_IMDB10K_AO_Inference',
-    #                                                        'PWWSAdv_IMDB10K_AO_Inference',
-    #                                                        'IGAAdv_IMDB10K_AO_Inference',
-    #                                                        'AlzantotAdv_IMDB10K_AO_Inference',
-    #                                                        'PSOAdv_IMDB10K_AO_Inference'])
-    # BAEAdv_IMDB10K_AO_Inference = DatasetItem('BAEAdv_IMDB10K', ['BAEAdv_IMDB10K_AO_Inference'])
-    # TextFoolerAdv_IMDB10K_AO_Inference = DatasetItem('TextFoolerAdv_IMDB10K', ['TextFoolerAdv_IMDB10K_AO_Inference'])
-    # PWWSAdv_IMDB10K_AO_Inference = DatasetItem('PWWSAdv_IMDB10K', ['PWWSAdv_IMDB10K_AO_Inference'])
-    # IGAAdv_IMDB10K_AO_Inference = DatasetItem('IGAAdv_IMDB10K', ['IGAAdv_IMDB10K_AO_Inference'])
-    # AlzantotAdv_IMDB10K_AO_Inference = DatasetItem('AlzantotAdv_IMDB10K', ['AlzantotAdv_IMDB10K_AO_Inference'])
-    # PSOAdv_IMDB10K_AO_Inference = DatasetItem('PSOAdv_IMDB10K', ['PSOAdv_IMDB10K_AO_Inference'])
-    #
-    # Adv_IMDB50K_AO_Inference = DatasetItem('Adv_IMDB50K', ['BAEAdv_IMDB50K_AO_Inference',
-    #                                                        'TextFoolerAdv_IMDB50K_AO_Inference',
-    #                                                        'PWWSAdv_IMDB50K_AO_Inference',
-    #                                                        'IGAAdv_IMDB50K_AO_Inference',
-    #                                                        'AlzantotAdv_IMDB50K_AO_Inference',
-    #                                                        'PSOAdv_IMDB50K_AO_Inference'])
-    # BAEAdv_IMDB50K_AO_Inference = DatasetItem('BAEAdv_IMDB50K', ['BAEAdv_IMDB50K_AO_Inference'])
-    # TextFoolerAdv_IMDB50K_AO_Inference = DatasetItem('TextFoolerAdv_IMDB50K', ['TextFoolerAdv_IMDB50K_AO_Inference'])
-    # PWWSAdv_IMDB50K_AO_Inference = DatasetItem('PWWSAdv_IMDB50K', ['PWWSAdv_IMDB50K_AO_Inference'])
-    # IGAAdv_IMDB50K_AO_Inference = DatasetItem('IGAAdv_IMDB50K', ['IGAAdv_IMDB50K_AO_Inference'])
-    # AlzantotAdv_IMDB50K_AO_Inference = DatasetItem('AlzantotAdv_IMDB50K', ['AlzantotAdv_IMDB50K_AO_Inference'])
-    # PSOAdv_IMDB50K_AO_Inference = DatasetItem('PSOAdv_IMDB50K', ['PSOAdv_IMDB50K_AO_Inference'])
-    #
-    # Adv_AGNews10K_AO_Inference = DatasetItem('Adv_AGNews10K', ['BAEAdv_AGNews10K_AO_Inference',
-    #                                                            'TextFoolerAdv_AGNews10K_AO_Inference',
-    #                                                            'PWWSAdv_AGNews10K_AO_Inference',
-    #                                                            'IGAAdv_AGNews10K_AO_Inference',
-    #                                                            'AlzantotAdv_AGNews10K_AO_Inference',
-    #                                                            'PSOAdv_AGNews10K_AO_Inference'])
-    # BAEAdv_AGNews10K_AO_Inference = DatasetItem('BAEAdv_AGNews10K', ['BAEAdv_AGNews10K_AO_Inference'])
-    # TextFoolerAdv_AGNews10K_AO_Inference = DatasetItem('TextFoolerAdv_AGNews10K', ['TextFoolerAdv_AGNews10K_AO_Inference'])
-    # PWWSAdv_AGNews10K_AO_Inference = DatasetItem('PWWSAdv_AGNews10K', ['PWWSAdv_AGNews10K_AO_Inference'])
-    # IGAAdv_AGNews10K_AO_Inference = DatasetItem('IGAAdv_AGNews10K', ['IGAAdv_AGNews10K_AO_Inference'])
-    # AlzantotAdv_AGNews10K_AO_Inference = DatasetItem('AlzantotAdv_AGNews10K', ['AlzantotAdv_AGNews10K_AO_Inference'])
-    # PSOAdv_AGNews10K_AO_Inference = DatasetItem('PSOAdv_AGNews10K', ['PSOAdv_AGNews10K_AO_Inference'])
-    #
-    # Adv_AGNews120K_AO_Inference = DatasetItem('Adv_AGNews120K', ['BAEAdv_AGNews120K_AO_Inference',
-    #                                                              'TextFoolerAdv_AGNews120K_AO_Inference',
-    #                                                              'PWWSAdv_AGNews120K_AO_Inference',
-    #                                                              'IGAAdv_AGNews120K_AO_Inference',
-    #                                                              'AlzantotAdv_AGNews120K_AO_Inference',
-    #                                                              'PSOAdv_AGNews120K_AO_Inference'])
-    # BAEAdv_AGNews120K_AO_Inference = DatasetItem('BAEAdv_AGNews120K', ['BAEAdv_AGNews120K_AO_Inference'])
-    # TextFoolerAdv_AGNews120K_AO_Inference = DatasetItem('TextFoolerAdv_AGNews120K', ['TextFoolerAdv_AGNews120K_AO_Inference'])
-    # PWWSAdv_AGNews120K_AO_Inference = DatasetItem('PWWSAdv_AGNews120K', ['PWWSAdv_AGNews120K_AO_Inference'])
-    # IGAAdv_AGNews120K_AO_Inference = DatasetItem('IGAAdv_AGNews120K', ['IGAAdv_AGNews120K_AO_Inference'])
-    # AlzantotAdv_AGNews120K_AO_Inference = DatasetItem('AlzantotAdv_AGNews120K', ['AlzantotAdv_AGNews120K_AO_Inference'])
-    # PSOAdv_AGNews120K_AO_Inference = DatasetItem('PSOAdv_AGNews120K', ['PSOAdv_AGNews120K_AO_Inference'])
 
     ## OOD Inference
     SST2_OOD_Inference = DatasetItem('SST2', ['AGNews10K_OOD_Inference',

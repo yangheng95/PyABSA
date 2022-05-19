@@ -1,4 +1,7 @@
 {
+  "1.14.6": {
+    "1": "General update"
+  },
   "1.14.5": {
     "1": "Revert Python version dependency",
     "2": "Revert Torch dependency"
