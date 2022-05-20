@@ -324,7 +324,7 @@ class Instructor:
         print('Training finished, we hope you can share your checkpoint with community, please see:',
               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
 
-        if self.val_dataloader or self.val_dataloaders:
+        if self.val_dataloader or self.opt.save_mode:
             del self.train_dataloaders
             del self.test_dataloader
             del self.val_dataloaders
@@ -500,7 +500,7 @@ class Instructor:
 
         if os.path.exists('./init_state_dict.bin'):
             os.remove('./init_state_dict.bin')
-        if self.val_dataloader:
+        if self.val_dataloaders or self.opt.save_mode:
             del self.train_dataloaders
             del self.test_dataloader
             del self.val_dataloaders
