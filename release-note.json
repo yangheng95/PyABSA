@@ -1,9 +1,11 @@
 {
   "1.14.7": {
-    "1": "Refactor optimizer support, you can use torch optimizer either by a string or an optimizer object from torch.optim"
+    "1": "Refactor optimizer support, you can use torch optimizer either by a string or an optimizer object from torch.optim",
+    "2": "Fix checkpoint saving in some scenarios",
+    "3": "Minor fixes"
   },
   "1.14.6": {
-    "1": "General update"
+    "1": "Minor fixes"
   },
   "1.14.5": {
     "1": "Revert Python version dependency",

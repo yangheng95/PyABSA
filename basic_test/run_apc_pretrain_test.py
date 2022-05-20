@@ -46,7 +46,7 @@ apc_examples = [
 
 # # for dataset in ABSADatasetList():
 for dataset in ABSADatasetList()[:1]:
-    for model in APCModelList():
+    for model in APCModelList()[:1]:
         cuda.empty_cache()
         config = APCConfigManager.get_apc_config_english()
         config.lcf = 'cdm'

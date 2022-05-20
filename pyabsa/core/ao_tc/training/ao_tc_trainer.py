@@ -425,7 +425,7 @@ class Instructor:
               'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
         print_args(self.opt, self.logger)
 
-        if self.val_dataloader:
+        if self.val_dataloader or self.opt.save_mode:
             del self.train_dataloaders
             del self.test_dataloader
             del self.val_dataloader
