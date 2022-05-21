@@ -14,14 +14,18 @@
 
 **Hi, there!** Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks.
 
-# | [Overview](./README.MD) | [HuggingfaceHub](readme/huggingface_readme.md) | [ABDADatasets](readme/dataset_readme.md) | [ABSA Models](readme/model_readme.md) | [Colab Tutorials](readme/tutorial_readme.md) |
+# | [Overview](./README.MD) | [HuggingfaceHub](readme/huggingface_readme.md) | [ABDADatasets](readme/dataset_readme.md) | [ABSA Models](readme/model_readme.md) | [Colab Tutorials](readme/tutorial_readme.md) | [Troubleshooting(常见问题解决)](https://github.com/yangheng95/PyABSA/issues/189)
 
 ## Try our demos on Huggingface Space
-- [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC) （English, Chinese, etc.）
-- [Aspect term extraction & sentiment classification](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) (English, Chinese, Arabic, Dutch, French, Russian, Spanish, Turkish, etc.)
+
+- [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC) （English,
+  Chinese, etc.）
+- [Aspect term extraction & sentiment classification](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) (English,
+  Chinese, Arabic, Dutch, French, Russian, Spanish, Turkish, etc.)
 - [方面术语提取和情感分类](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC-Chinese) （中文, etc.）
 
 ### About Performance
+
 <details>
 <summary>
 Aspect-term extraction
@@ -45,8 +49,8 @@ Aspect-based sentiment analysis
 |    FAST-LSA-P(DeBERTa)    |     84.33      |       89.91        | FAST-LSA-P(DeBERTa-Large) |     86.00      |       90.33        | 
 |    FAST-LSA-T(DeBERTa)    |     84.80      |       89.91        | FAST-LSA-T(DeBERTa-Large) |     86.31      |       90.86        | 
 |    FAST-LSA-S(DeBERTa)    |     84.17      |       89.64        | FAST-LSA-S(DeBERTa-Large) |     86.21      |       89.38        | 
-</details>
 
+</details>
 
 ## Package Overview
 

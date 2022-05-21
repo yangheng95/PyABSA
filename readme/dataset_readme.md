@@ -30,14 +30,14 @@ More datasets are available at [ABSADatasets](https://github.com/yangheng95/ABSA
 - Television & TShirt: https://github.com/rajdeep345/ABSA-Reproducibility
 - Yelp: [WeiLi9811@GitHub](https://github.com/WeiLi9811)
 - SemEval2016Task5: [YaxinCui@GitHub](https://github.com/YaxinCui/ABSADataset)
-  - Arabic Hotel Reviews
-  - Dutch Restaurant Reviews
-  - English Restaurant Reviews
-  - French Restaurant Reviews
-  - Russian Restaurant Reviews
-  - Spanish Restaurant Reviews
-  - Turkish Restaurant Reviews
-  You don't have to download the datasets, as the datasets will be downloaded automatically.
+    - Arabic Hotel Reviews
+    - Dutch Restaurant Reviews
+    - English Restaurant Reviews
+    - French Restaurant Reviews
+    - Russian Restaurant Reviews
+    - Spanish Restaurant Reviews
+    - Turkish Restaurant Reviews
+      You don't have to download the datasets, as the datasets will be downloaded automatically.
 
 ## Annotate Your Own Dataset
 

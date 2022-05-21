@@ -172,8 +172,8 @@ class Instructor:
 
         if isinstance(self.opt.optimizer, str):
             self.optimizer = init_optimizer(self.opt.optimizer)(self.optimizer_grouped_parameters,
-                                                            lr=self.opt.learning_rate,
-                                                            weight_decay=self.opt.l2reg)
+                                                                lr=self.opt.learning_rate,
+                                                                weight_decay=self.opt.l2reg)
         if amp:
             self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
 

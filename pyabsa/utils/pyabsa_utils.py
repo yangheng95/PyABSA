@@ -223,6 +223,7 @@ def validate_pyabsa_version():
         if __version__ not in versions:
             print(colored('You are using a DEPRECATED or TEST version of PyABSA. Consider update using pip install -U pyabsa!', 'red'))
 
+
 def init_optimizer(optimizer):
     optimizers = {
         'adadelta': torch.optim.Adadelta,  # default lr=1.0
@@ -254,5 +255,3 @@ def init_optimizer(optimizer):
         return optimizer
     else:
         raise KeyError('Unsupported optimizer: {}. Please use string or the optimizers in torch.optim as your optimizer'.format(optimizer))
-
-

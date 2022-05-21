@@ -72,7 +72,6 @@ for dataset in ABSADatasetList()[:1]:
         except Exception as e:
             print(e)
 
-
     for model in BERTBaselineAPCModelList():
         config = APCConfigManager.get_apc_config_english()
         cuda.empty_cache()
