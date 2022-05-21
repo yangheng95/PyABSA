@@ -16,14 +16,18 @@
 
 # | [Overview](../README.MD) | [HuggingfaceHub](huggingface_readme.md) | [ABDADatasets](dataset_readme.md) | [ABSA Models](model_readme.md) | [Colab Tutorials](tutorial_readme.md) |
 
-
 ## Try our demos on Huggingface Space
-- [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC) （English, Chinese, etc.）
-- [Aspect term extraction & sentiment classification](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) (English, Chinese, Arabic, Dutch, French, Russian, Spanish, Turkish, etc.)
+
+- [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC) （English,
+  Chinese, etc.）
+- [Aspect term extraction & sentiment classification](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) (English,
+  Chinese, Arabic, Dutch, French, Russian, Spanish, Turkish, etc.)
 - [方面术语提取和情感分类](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC-Chinese) （中文, etc.）
 
 ## Try our demos on Huggingface Space via API
-- [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC) 
+
+- [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC)
+
 ```python3
 import requests
 r = requests.post(url='https://hf.space/embed/yangheng/PyABSA-APC/+/api/predict/',
@@ -32,6 +36,7 @@ r.json()
 ```
 
 - [Aspect term extraction & sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC)
+
 ```python3
 import requests
 r = requests.post(
@@ -43,6 +48,7 @@ r.json()
 ```
 
 - [方面术语提取和情感分类（中文）](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC-Chinese)
+
 ```python3
 import requests
 r = requests.post(url='https://hf.space/embed/yangheng/PyABSA-ATEPC-Chinese/+/api/predict/',
