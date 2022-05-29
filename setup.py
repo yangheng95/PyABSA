@@ -44,6 +44,7 @@ setup(
                       'gdown>=4.4.0',
                       'transformers>4.5',
                       'torch>1.0.0, <1.11.0',
-                      'sentencepiece'
+                      'sentencepiece',
+                      'protobuf<=3.20.0'
                       ],
 )
