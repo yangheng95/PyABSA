@@ -31,7 +31,7 @@ from pyabsa.core.ao_tc.training.ao_tc_trainer import train4ao_tc
 from pyabsa.functional.config.apc_config_manager import APCConfigManager
 from pyabsa.functional.config.atepc_config_manager import ATEPCConfigManager
 from pyabsa.functional.config.tc_config_manager import TCConfigManager
-from pyabsa.functional.config.bi_tc_config_manager import AOTCConfigManager
+from pyabsa.functional.config.ao_tc_config_manager import AOTCConfigManager
 from pyabsa.utils.file_utils import query_local_version
 
 from pyabsa.utils.logger import get_logger
