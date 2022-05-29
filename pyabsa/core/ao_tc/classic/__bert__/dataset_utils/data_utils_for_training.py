@@ -49,7 +49,7 @@ class AOBERTTCDataset(Dataset):
         label_set2 = set()
         label_set3 = set()
 
-        for i in tqdm.tqdm(range(len(lines)), postfix='prepraing dataloader...'):
+        for i in tqdm.tqdm(range(len(lines)), postfix='preparing dataloader...'):
             line = lines[i].strip().split('$LABEL$')
             text, labels = line[0], line[1]
             text = text.strip()

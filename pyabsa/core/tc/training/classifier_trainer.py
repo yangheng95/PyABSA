@@ -305,7 +305,7 @@ class Instructor:
                                                                         f1 * 100,
                                                                         max_fold_f1 * 100))
                     else:
-                        if self.opt.save_mode:
+                        if self.opt.save_mode and epoch >= self.opt.evaluate_begin:
                             save_model(self.opt, self.model, self.tokenizer, save_path + '_{}/'.format(loss.item()))
                         postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.opt.evaluate_begin)
 

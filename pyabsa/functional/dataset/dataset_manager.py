@@ -306,7 +306,6 @@ def detect_dataset(dataset_path, task='apc', load_aug=False):
     d = ''
     for d in dataset_path:
         if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(TCDatasetList, d) or hasattr(AdvTCDatasetList, d):
-
             print('Loading {} dataset from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
             search_path = find_dir(os.getcwd(), [d, task, 'dataset'], exclude_key=['infer', 'test.'] + filter_key_words, disable_alert=False)
@@ -331,6 +330,7 @@ def detect_dataset(dataset_path, task='apc', load_aug=False):
                 dataset_file['valid'] += find_files(search_path, [d, 'dev', task], exclude_key=['.inference', 'train.'] + filter_key_words + ['.ignore'])
 
         else:
+            print('Try to load {} dataset from local')
             if load_aug:
                 dataset_file['train'] += find_files(d, ['train', task], exclude_key=['.inference', 'test.'] + filter_key_words)
                 dataset_file['test'] += find_files(d, ['test', task], exclude_key=['.inference', 'train.'] + filter_key_words)
@@ -381,6 +381,7 @@ def detect_infer_dataset(dataset_path, task='apc', load_aug=False):
                 dataset_file += find_files(search_path, ['.inference', d], exclude_key=['train.'] + filter_key_words + ['.ignore'])
 
         else:
+            print('Try to load {} dataset from local')
             if load_aug:
                 dataset_file += find_files(d, ['.inference', task], exclude_key=['train.'] + filter_key_words)
             else:
