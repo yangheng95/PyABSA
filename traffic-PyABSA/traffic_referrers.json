@@ -1,28 +1,28 @@
 [
   {
     "referrer": "github.com",
-    "count": 833,
-    "uniques": 125
+    "count": 710,
+    "uniques": 119
   },
   {
     "referrer": "Google",
-    "count": 438,
-    "uniques": 92
+    "count": 410,
+    "uniques": 81
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 348,
-    "uniques": 76
-  },
-  {
-    "referrer": "huggingface.co",
-    "count": 64,
-    "uniques": 14
+    "count": 365,
+    "uniques": 70
   },
   {
     "referrer": "link.zhihu.com",
-    "count": 44,
-    "uniques": 14
+    "count": 43,
+    "uniques": 13
+  },
+  {
+    "referrer": "huggingface.co",
+    "count": 23,
+    "uniques": 10
   },
   {
     "referrer": "pythonlang.dev",
@@ -35,18 +35,18 @@
     "uniques": 2
   },
   {
-    "referrer": "bytedance.feishu.cn",
-    "count": 6,
-    "uniques": 1
-  },
-  {
-    "referrer": "gitee.com",
-    "count": 5,
+    "referrer": "l.facebook.com",
+    "count": 4,
     "uniques": 2
   },
   {
-    "referrer": "Bing",
-    "count": 5,
+    "referrer": "ss.scnu.edu.cn",
+    "count": 4,
+    "uniques": 1
+  },
+  {
+    "referrer": "yandex.ru",
+    "count": 4,
     "uniques": 1
   }
 ]
