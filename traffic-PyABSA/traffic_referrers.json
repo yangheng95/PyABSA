@@ -1,28 +1,28 @@
 [
   {
     "referrer": "github.com",
-    "count": 700,
+    "count": 687,
     "uniques": 120
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 364,
-    "uniques": 69
+    "count": 371,
+    "uniques": 67
   },
   {
     "referrer": "Google",
-    "count": 349,
-    "uniques": 75
+    "count": 318,
+    "uniques": 72
   },
   {
     "referrer": "link.zhihu.com",
-    "count": 42,
+    "count": 61,
     "uniques": 12
   },
   {
     "referrer": "huggingface.co",
-    "count": 19,
-    "uniques": 10
+    "count": 20,
+    "uniques": 11
   },
   {
     "referrer": "pythonlang.dev",
