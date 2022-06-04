@@ -18,11 +18,39 @@
 
 ## Try our demos on Huggingface Space
 
-- [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC) （English,
-  Chinese, etc.）
-- [Aspect term extraction & sentiment classification](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) (English,
+- [(Gradio) Aspect term extraction & sentiment classification](https://huggingface.co/spaces/Gradio-Blocks/Multilingual-Aspect-Based-Sentiment-Analysis) (English,
+  Chinese, Arabic, Dutch, French, Russian, Spanish, Turkish, etc.)
+- [(Prototype) Aspect term extraction & sentiment classification](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) (English,
   Chinese, Arabic, Dutch, French, Russian, Spanish, Turkish, etc.)
 - [方面术语提取和情感分类](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC-Chinese) （中文, etc.）
+- [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC) （English,
+  Chinese, etc.）
+  
+## Notice
+This repository is based on our papers for ABSA research. Here are the papers that you can cite or refer to for your implementations:
+
+<details>
+<summary>
+Aspect sentiment polarity classification models
+</summary>
+  
+1. [Back to Reality: Leveraging Pattern-driven Modeling to Enable Affordable Sentiment Dependency Learning](https://arxiv.org/abs/2110.08604) (e.g., Fast-LSA, 2020)
+2. [Learning for target-dependent sentiment based on local context-aware embedding](https://link.springer.com/article/10.1007/s11227-021-04047-1) (e.g., LCA-Net, 2020)
+3. [LCF: A Local Context Focus Mechanism for Aspect-Based Sentiment Classification](https://www.mdpi.com/2076-3417/9/16/3389) (e.g., LCF-BERT, 2019)
+</details>
+
+<details>
+<summary>
+Aspect sentiment polarity classification & Aspect term extraction models
+</summary>
+  
+1. [A multi-task learning model for Chinese-oriented aspect polarity classification and aspect term extraction](https://www.sciencedirect.com/science/article/pii/S0925231220312534)] (e.g., Fast-LCF-ATEPC, 2020)
+2. [(Arxiv) A multi-task learning model for Chinese-oriented aspect polarity classification and aspect term extraction](https://arxiv.org/pdf/1912.07976.pdf) 
+  
+</details>
+
+If you are looking for the original proposal of local context focus, here are some introduction at 
+[here](https://github.com/yangheng95/PyABSA/tree/release/demos/documents). 
 
 ### About Performance
 
@@ -182,12 +210,6 @@ many ways, including:
   hyperparameters)
 - Star this repository to keep it active
 
-## Notice
-
-If you are looking for the original proposal of local context focus, please redirect to the introduction of
-[LCF](https://github.com/yangheng95/PyABSA/tree/release/demos/documents). If you are looking for the original codes of
-the LCF-related papers, please redirect to [LC-ABSA / LCF-ABSA](https://github.com/yangheng95/LC-ABSA/tree/LC-ABSA)
-or [LCF-ATEPC](https://github.com/XuMayi/LCF-ATEPC).
 
 ## Acknowledgement
 
