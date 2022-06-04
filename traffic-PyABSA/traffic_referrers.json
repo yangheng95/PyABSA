@@ -1,23 +1,23 @@
 [
   {
     "referrer": "github.com",
-    "count": 815,
+    "count": 810,
     "uniques": 121
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 408,
-    "uniques": 70
+    "count": 393,
+    "uniques": 73
   },
   {
     "referrer": "Google",
-    "count": 275,
-    "uniques": 62
+    "count": 287,
+    "uniques": 60
   },
   {
     "referrer": "link.zhihu.com",
-    "count": 59,
-    "uniques": 11
+    "count": 74,
+    "uniques": 13
   },
   {
     "referrer": "huggingface.co",
