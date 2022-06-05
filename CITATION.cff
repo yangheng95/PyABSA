@@ -1,0 +1,15 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  PyABSA - Open Framework for Aspect-based Sentiment
+  Analysis
+message: 'https://github.com/yangheng95/PyABSA'
+type: software
+authors:
+  - given-names: YANG
+    name-particle: HENG
+    email: hy345@exeter.ac.uk
+    affiliation: University of Exeter
+    orcid: 'https://orcid.org/0000-0002-6831-196X'
