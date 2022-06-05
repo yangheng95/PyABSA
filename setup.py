@@ -29,9 +29,9 @@ setup(
     exclude_package_date={'': ['.gitignore']},
     # Choose your license
     license='MIT',
-    install_requires=['findfile>=1.7.9.1',
-                      'autocuda>=0.9',
-                      'metric-visualizer>=0.4.21',
+    install_requires=['findfile>=1.7.9.2',
+                      'autocuda>=0.11',
+                      'metric-visualizer>=0.4.22',
                       'spacy',
                       'networkx',
                       'seqeval',
