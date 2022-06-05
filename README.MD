@@ -219,6 +219,3 @@ many ways, including:
 This work is built from LC-ABSA/LCF-ABSA and LCF-ATEPC, and other impressive works such as PyTorch-ABSA and LCFS-BERT.
 
 ### [Donation](readme/donation.MD)
-
-## Donation
-Development and maintenance are difficult and labor-intensive. If this repository helps you or resolves your problem, please kindly consider [donating](readme/donation.MD) to cover the checkpoint hosting and other costs. 
