@@ -37,7 +37,7 @@ config.max_seq_len = 80
 config.dropout = 0
 config.optimizer = 'adamw'
 config.cache_dataset = False
-config.patience = 5
+config.patience = 15
 config.pretrained_bert = 'yangheng/deberta-v3-base-absa'
 # config.pretrained_bert = 'microsoft/deberta-v3-base'
 config.num_epoch = 50
@@ -76,7 +76,7 @@ config.MV.avg_bar_plot()
 config.MV.box_plot()
 
 config.log_step = -1
-config.patience = 5
+config.patience = 15
 dataset = ABSADatasetList.MAMS
 config.MV = MetricVisualizer(config.model.__name__ + '-' + dataset.dataset_name, trial_tag='Model & Dataset',
                              trial_tag_list=[config.model.__name__ + '-' + dataset.dataset_name])
@@ -134,7 +134,7 @@ config.MV.avg_bar_plot()
 config.MV.box_plot()
 
 config.log_step = -1
-config.patience = 5
+config.patience = 15
 dataset = ABSADatasetList.MAMS
 config.MV = MetricVisualizer(config.model.__name__ + '-' + dataset.dataset_name, trial_tag='Model & Dataset',
                              trial_tag_list=[config.model.__name__ + '-' + dataset.dataset_name])
@@ -192,7 +192,7 @@ config.MV.avg_bar_plot()
 config.MV.box_plot()
 
 config.log_step = -1
-config.patience = 5
+config.patience = 15
 dataset = ABSADatasetList.MAMS
 config.MV = MetricVisualizer(config.model.__name__ + '-' + dataset.dataset_name, trial_tag='Model & Dataset',
                              trial_tag_list=[config.model.__name__ + '-' + dataset.dataset_name])
