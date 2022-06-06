@@ -143,17 +143,27 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect, input_d
     # else:
     #     syntactical_dist = None
 
-    if 'lcfs_vec' in input_demands:
+    if 'lcfs_cdm_vec' in input_demands:
         syntactical_dist, _ = get_syntax_distance(text_raw, aspect, tokenizer, opt)
-        if opt.lcf == 'cdm':
-            lcfs_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices, aspect_begin, syntactical_dist)
-        elif opt.lcf == 'cdw':
-            lcfs_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices, aspect_begin, syntactical_dist)
-    if 'lcf_vec' in input_demands:
-        if opt.lcf == 'cdm':
-            lcf_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices, aspect_begin, None)
-        elif opt.lcf == 'cdw':
-            lcf_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices, aspect_begin, None)
+        lcfs_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices, aspect_begin, syntactical_dist)
+    else:
+        lcfs_cdm_vec = 0
+
+    if 'lcfs_cdw_vec' in input_demands or 'lcfs_vec' in input_demands:
+        syntactical_dist, _ = get_syntax_distance(text_raw, aspect, tokenizer, opt)
+        lcfs_cdw_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices, aspect_begin, syntactical_dist)
+    else:
+        lcfs_cdw_vec = 0
+
+    if 'lcf_cdm_vec' in input_demands:
+        lcf_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices, aspect_begin, None)
+    else:
+        lcf_cdm_vec = 0
+
+    if 'lcf_cdw_vec' in input_demands or 'lcf_vec' in input_demands:
+        lcf_cdw_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices, aspect_begin, None)
+    else:
+        lcf_cdw_vec = 0
 
     inputs = {
         'text_raw': text_raw,
@@ -163,8 +173,12 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect, input_d
         'text_bert_indices': text_bert_indices,
         'text_raw_bert_indices': text_raw_bert_indices,
         'aspect_bert_indices': aspect_bert_indices,
-        'lcf_vec': lcf_vec if 'lcf_vec' in input_demands else 0,
-        'lcfs_vec': lcfs_vec if 'lcfs_vec' in input_demands else 0,
+        'lcf_cdw_vec': lcf_cdw_vec if 'lcf_cdw_vec' in input_demands else 0,
+        'lcf_cdm_vec': lcf_cdm_vec if 'lcf_cdm_vec' in input_demands else 0,
+        'lcf_vec': lcf_cdw_vec,
+        'lcfs_cdw_vec': lcfs_cdw_vec if 'lcfs_cdw_vec' in input_demands else 0,
+        'lcfs_cdm_vec': lcfs_cdm_vec if 'lcfs_cdm_vec' in input_demands else 0,
+        'lcfs_vec': lcfs_cdw_vec,
     }
 
     return inputs

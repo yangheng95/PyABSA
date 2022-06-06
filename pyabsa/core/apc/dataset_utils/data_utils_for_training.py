@@ -49,8 +49,14 @@ class ABSADataset(Dataset):
             text_bert_indices = prepared_inputs['text_bert_indices']
             text_raw_bert_indices = prepared_inputs['text_raw_bert_indices']
             aspect_bert_indices = prepared_inputs['aspect_bert_indices']
-            lcfs_vec = prepared_inputs['lcfs_vec']
+
+            lcf_cdw_vec = prepared_inputs['lcf_cdw_vec']
+            lcf_cdm_vec = prepared_inputs['lcf_cdm_vec']
             lcf_vec = prepared_inputs['lcf_vec']
+
+            lcfs_cdw_vec = prepared_inputs['lcfs_cdw_vec']
+            lcfs_cdm_vec = prepared_inputs['lcfs_cdm_vec']
+            lcfs_vec = prepared_inputs['lcfs_vec']
 
             if validate_example(text_raw, aspect, polarity):
                 continue
@@ -76,8 +82,12 @@ class ABSADataset(Dataset):
                 'lca_ids': lcf_vec,  # the lca indices are the same as the refactored CDM (lcf != CDW or Fusion) lcf vec
 
                 'lcf_vec': lcf_vec if 'lcf_vec' in opt.inputs_cols else 0,
+                'lcf_cdw_vec': lcf_cdw_vec if 'lcf_cdw_vec' in opt.inputs_cols else 0,
+                'lcf_cdm_vec': lcf_cdm_vec if 'lcf_cdm_vec' in opt.inputs_cols else 0,
 
                 'lcfs_vec': lcfs_vec if 'lcfs_vec' in opt.inputs_cols else 0,
+                'lcfs_cdw_vec': lcfs_cdw_vec if 'lcfs_cdw_vec' in opt.inputs_cols else 0,
+                'lcfs_cdm_vec': lcfs_cdm_vec if 'lcfs_cdm_vec' in opt.inputs_cols else 0,
 
                 'dlcf_vec': dlcf_vec if 'dlcf_vec' in opt.inputs_cols else 0,
 

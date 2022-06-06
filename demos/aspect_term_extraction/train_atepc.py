@@ -23,6 +23,7 @@ atepc_config = ATEPCConfigManager.get_atepc_config_english()
 
 atepc_config.pretrained_bert = 'microsoft/deberta-v3-base'
 atepc_config.model = ATEPCModelList.FAST_LCF_ATEPC
+atepc_config.lcf = 'fusion'
 dataset_path = ABSADatasetList.Restaurant14
 # or your local dataset: dataset_path = 'your local dataset path'
 
