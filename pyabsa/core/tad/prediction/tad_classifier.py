@@ -305,6 +305,14 @@ class TADTextClassifier:
                     else:
                         perplexity = 'N.A.'
 
+                    if attack_defense:
+                        if advdet != 0 and real_label != perturb_label and real_label != -100:
+                            augs = self.augmentor.single_augment(text_raw, real_label, 1)
+                            if augs:
+                                for aug in augs:
+                                    fixed_infer_res = self.augmentor.tad_classifier.infer(aug + '!ref!{},-100,-100'.format(real_label), attack_defense=False)
+
+
                     results.append({
                         'text': text_raw,
                         'label': self.opt.index_to_label[pred_label],
@@ -319,16 +327,15 @@ class TADTextClassifier:
                         'ref_is_adv_label': self.opt.index_to_is_adv[real_adv] if isinstance(real_adv, int) else real_adv,
                         'ref_is_adv_check': correct[advdet == real_adv] if real_adv != -100 and isinstance(real_adv, int) else '',
 
+                        'fixed_label': fixed_infer_res['label'] if self.opt.index_to_is_adv[advdet] == 1 else '',
+                        'fixed_probs': fixed_infer_res['probs'] if self.opt.index_to_is_adv[advdet] == 1 else '',
+                        'fixed_confidence': fixed_infer_res['confidence'] if self.opt.index_to_is_adv[advdet] == 1 else '',
+                        'fixed_ref_label_check': correct[fixed_infer_res['label'] == real_label] if real_label != -100 and isinstance(real_label, int) else '',
+
                         'perplexity': perplexity,
                     })
 
-                    if attack_defense:
-                        if advdet != 0 and real_label != perturb_label and real_label != -100:
-                            augs = self.augmentor.single_augment(text_raw, real_label, 1, attack_defense=False)
-                            if augs:
-                                for aug in augs:
-                                    infer_res = self.augmentor.tad_classifier.infer(aug + '!ref!{},-100,-100'.format(real_label), attack_defense=False)
-                            print('\n')
+
         try:
             if print_result:
                 for result in results:

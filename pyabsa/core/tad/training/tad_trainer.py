@@ -28,6 +28,7 @@ from ..classic.__bert__.dataset_utils.data_utils_for_training import (Tokenizer4
 from ..classic.__glove__.dataset_utils.data_utils_for_training import (build_tokenizer,
                                                                        build_embedding_matrix,
                                                                        TADGloVeTCDataset)
+from ..models import TADBERTTCModelList, TADGloVeTCModelList
 from pyabsa.utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError, init_optimizer
 
@@ -76,7 +77,7 @@ class Instructor:
             self.opt.index_to_ood_label = opt.index_to_ood_label
 
         # init BERT-based model and dataset
-        if hasattr(TADBERTTCDataset, opt.model.__name__):
+        if hasattr(TADBERTTCModelList, opt.model.__name__):
             self.tokenizer = Tokenizer4Pretraining(self.opt.max_seq_len, self.opt)
             if not os.path.exists(cache_path):
                 self.train_set = TADBERTTCDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
@@ -97,7 +98,7 @@ class Instructor:
             # init the model behind the construction of datasets in case of updating polarities_dim
             self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
 
-        elif hasattr(TADGloVeTCDataset, opt.model.__name__):
+        elif hasattr(TADGloVeTCModelList, opt.model.__name__):
             # init GloVe-based model and dataset
             self.tokenizer = build_tokenizer(
                 dataset_list=opt.dataset_file,
@@ -231,7 +232,7 @@ class Instructor:
                                      'max_adv_det_test_f1': 0,
                                      }
 
-        self.logger.info("***** Running training for Adversarial Attack & OOD Text Classification *****")
+        self.logger.info("***** Running training for Text Classification with Adversarial Attack Defense *****")
         self.logger.info("Training set examples = %d", len(self.train_set))
         if self.test_set:
             self.logger.info("Test set examples = %d", len(self.test_set))
@@ -462,10 +463,10 @@ def train4tad(opt, from_checkpoint_path, logger):
     torch.manual_seed(opt.seed)
     torch.cuda.manual_seed(opt.seed)
 
-    if hasattr(TADBERTTCDataset, opt.model.__name__):
+    if hasattr(TADBERTTCModelList, opt.model.__name__):
         opt.inputs_cols = TADBERTTCDataset.bert_baseline_input_colses[opt.model.__name__.lower()]
 
-    elif hasattr(TADGloVeTCDataset, opt.model.__name__):
+    elif hasattr(TADGloVeTCModelList, opt.model.__name__):
         opt.inputs_cols = TADGloVeTCDataset.glove_input_colses[opt.model.__name__.lower()]
 
     opt.device = torch.device(opt.device)
