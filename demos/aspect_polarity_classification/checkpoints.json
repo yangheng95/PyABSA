@@ -116,6 +116,16 @@
       "Checkpoint File": "fast_lcf_atepc_Multilingual_cdw_apcacc_87.21_apcf1_81.53_atef1_82.82.zip",
       "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
     },
+    "multilingual-1.14.7": {
+      "id": "https://drive.google.com/file/d/1gZRkcpSIqGfDacdTV4suqgRIfCbWgiHp/view?usp=sharing",
+      "Training Model": "FAST-LCF-ATEPC",
+      "Training Dataset": "ABSADatasets.Multilingual",
+      "Language": "Multilingual",
+      "Description": "Trained on RTX3090",
+      "Available Version": "1.10.5+",
+      "Checkpoint File": "fast_lcf_atepc_Multilingual_cdw_apcacc_87.09_apcf1_83.57_atef1_84.49.zip",
+      "Author": "H, Yang (yangheng@m.scnu.edu.cn)"
+    },
     "multilingual4": {
       "id": "https://drive.google.com/file/d/1MAnpTiCHyjUDazel2kgHgaKXaDeE0NYW/view?usp=sharing",
       "Training Model": "FAST-LCF-ATEPC",

@@ -165,7 +165,7 @@ class Tokenizer(object):
         return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
 
 
-class AOGloVeTCDataset(Dataset):
+class TADGloVeTCDataset(Dataset):
     glove_input_colses = {
         'lstm': ['text_indices']
     }

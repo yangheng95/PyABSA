@@ -37,7 +37,8 @@ class Tokenizer4Pretraining:
 
 class BERTTCDataset(Dataset):
     bert_baseline_input_colses = {
-        'bert': ['text_bert_indices']
+        'bert': ['text_bert_indices'],
+        'huggingfaceencoder': ['text_bert_indices'],
     }
 
     def __init__(self, dataset_list, tokenizer, opt):

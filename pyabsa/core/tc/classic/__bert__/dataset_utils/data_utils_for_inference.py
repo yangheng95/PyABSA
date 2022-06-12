@@ -40,8 +40,8 @@ class BERTClassificationDataset(Dataset):
     def parse_sample(self, text):
         return [text]
 
-    def prepare_infer_sample(self, text: str):
-        self.process_data(self.parse_sample(text))
+    def prepare_infer_sample(self, text: str, ignore_error):
+        self.process_data(self.parse_sample(text), ignore_error=ignore_error)
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
 

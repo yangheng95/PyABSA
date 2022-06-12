@@ -153,9 +153,9 @@ class Instructor:
     def reload_model(self, ckpt='./init_state_dict.bin'):
         if os.path.exists(ckpt):
             if self.opt.auto_device == 'allcuda':
-                self.model.module.load_state_dict(torch.load(ckpt))
+                self.model.module.load_state_dict(torch.load(find_file(ckpt, or_key=['.bin', 'state_dict'])))
             else:
-                self.model.load_state_dict(torch.load(ckpt))
+                self.model.load_state_dict(torch.load(find_file(ckpt, or_key=['.bin', 'state_dict'])))
 
     def prepare_dataloader(self, train_set):
         if self.opt.cross_validate_fold < 1:
@@ -184,6 +184,8 @@ class Instructor:
                     DataLoader(dataset=train_set, batch_size=self.opt.batch_size, sampler=train_sampler))
                 self.val_dataloaders.append(
                     DataLoader(dataset=val_set, batch_size=self.opt.batch_size, sampler=val_sampler))
+                if self.test_set:
+                    self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.opt.batch_size, shuffle=False)
 
     def _train(self, criterion):
         self.prepare_dataloader(self.train_set)
@@ -227,7 +229,7 @@ class Instructor:
             iterator = tqdm(self.train_dataloaders[0], postfix='Epoch:{}'.format(epoch))
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
-                # switch model to training_tutorials mode, clear gradient accumulators
+                # switch model to train mode, clear gradient accumulators
                 self.model.train()
                 self.optimizer.zero_grad()
                 inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
@@ -394,7 +396,7 @@ class Instructor:
                 postfix = ''
                 for i_batch, sample_batched in enumerate(iterator):
                     global_step += 1
-                    # switch model to training_tutorials mode, clear gradient accumulators
+                    # switch model to train mode, clear gradient accumulators
                     self.model.train()
                     self.optimizer.zero_grad()
                     inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
@@ -411,7 +413,7 @@ class Instructor:
                         loss.backward()
                         self.optimizer.step()
 
-                    if self.opt.warm_step >= 0:
+                    if self.opt.warmup_step >= 0:
                         with self.warmup_scheduler.dampening():
                             self.lr_scheduler.step()
 

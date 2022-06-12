@@ -141,6 +141,7 @@ _tc_config_glove = {'model': LSTM,
                     'hidden_dim': 300,
                     'polarities_dim': 3,
                     'log_step': 5,
+                    'warm_step': -1,
                     'hops': 3,  # valid in MemNet and RAM only
                     'evaluate_begin': 0,
                     'cross_validate_fold': -1
