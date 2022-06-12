@@ -10,10 +10,10 @@ import copy
 # if you find the optimal param set of some situation, e.g., some model on some datasets
 # please share the main use template main
 from pyabsa.functional.config.config_manager import ConfigManager
-from pyabsa.core.ao_tc.classic.__bert__.models import AOBERT
-from pyabsa.core.ao_tc.classic.__glove__.models import LSTM
+from pyabsa.core.tad.classic.__bert__.models import TADBERT
+from pyabsa.core.tad.classic.__glove__.models import TADLSTM
 
-_ao_tc_config_template = {'model': AOBERT,
+_tad_config_template = {'model': TADBERT,
                           'optimizer': "adamw",
                           'learning_rate': 0.00002,
                           'patience': 99999,
@@ -35,7 +35,7 @@ _ao_tc_config_template = {'model': AOBERT,
                           # split train and test datasets into 5 folds and repeat 3 training
                           }
 
-_ao_tc_config_base = {'model': AOBERT,
+_tad_config_base = {'model': TADBERT,
                       'optimizer': "adamw",
                       'learning_rate': 0.00002,
                       'pretrained_bert': "microsoft/deberta-v3-base",
@@ -57,7 +57,7 @@ _ao_tc_config_base = {'model': AOBERT,
                       # split train and test datasets into 5 folds and repeat 3 training
                       }
 
-_ao_tc_config_english = {'model': AOBERT,
+_tad_config_english = {'model': TADBERT,
                          'optimizer': "adamw",
                          'learning_rate': 0.00002,
                          'patience': 99999,
@@ -79,7 +79,7 @@ _ao_tc_config_english = {'model': AOBERT,
                          # split train and test datasets into 5 folds and repeat 3 training
                          }
 
-_ao_tc_config_multilingual = {'model': AOBERT,
+_tad_config_multilingual = {'model': TADBERT,
                               'optimizer': "adamw",
                               'learning_rate': 0.00002,
                               'patience': 99999,
@@ -101,7 +101,7 @@ _ao_tc_config_multilingual = {'model': AOBERT,
                               # split train and test datasets into 5 folds and repeat 3 training
                               }
 
-_ao_tc_config_chinese = {'model': AOBERT,
+_tad_config_chinese = {'model': TADBERT,
                          'optimizer': "adamw",
                          'learning_rate': 0.00002,
                          'patience': 99999,
@@ -123,7 +123,7 @@ _ao_tc_config_chinese = {'model': AOBERT,
                          # split train and test datasets into 5 folds and repeat 3 training
                          }
 
-_ao_tc_config_glove = {'model': LSTM,
+_tad_config_glove = {'model': TADLSTM,
                        'optimizer': "adamw",
                        'learning_rate': 0.001,
                        'cache_dataset': True,
@@ -147,7 +147,7 @@ _ao_tc_config_glove = {'model': LSTM,
                        }
 
 
-class AOTCConfigManager(ConfigManager):
+class TADConfigManager(ConfigManager):
     def __init__(self, args, **kwargs):
         """
         Available Params:  {'model': BERT,
@@ -178,69 +178,69 @@ class AOTCConfigManager(ConfigManager):
         super().__init__(args, **kwargs)
 
     @staticmethod
-    def set_ao_tc_config(configType: str, newitem: dict):
+    def set_tad_config(configType: str, newitem: dict):
         if isinstance(newitem, dict):
             if configType == 'template':
-                _ao_tc_config_template.update(newitem)
+                _tad_config_template.update(newitem)
             elif configType == 'base':
-                _ao_tc_config_base.update(newitem)
+                _tad_config_base.update(newitem)
             elif configType == 'english':
-                _ao_tc_config_english.update(newitem)
+                _tad_config_english.update(newitem)
             elif configType == 'chinese':
-                _ao_tc_config_chinese.update(newitem)
+                _tad_config_chinese.update(newitem)
             elif configType == 'multilingual':
-                _ao_tc_config_multilingual.update(newitem)
+                _tad_config_multilingual.update(newitem)
             elif configType == 'glove':
-                _ao_tc_config_glove.update(newitem)
+                _tad_config_glove.update(newitem)
             else:
                 raise ValueError("Wrong value of config type supplied, please use one from following type: template, base, english, chinese, multilingual, glove")
         else:
             raise TypeError("Wrong type of new config item supplied, please use dict e.g.{'NewConfig': NewValue}")
 
     @staticmethod
-    def set_ao_tc_config_template(newitem):
-        AOTCConfigManager.set_ao_tc_config('template', newitem)
+    def set_tad_config_template(newitem):
+        TADConfigManager.set_tad_config('template', newitem)
 
     @staticmethod
-    def set_ao_tc_config_base(newitem):
-        AOTCConfigManager.set_ao_tc_config('base', newitem)
+    def set_tad_config_base(newitem):
+        TADConfigManager.set_tad_config('base', newitem)
 
     @staticmethod
-    def set_ao_tc_config_english(newitem):
-        AOTCConfigManager.set_ao_tc_config('english', newitem)
+    def set_tad_config_english(newitem):
+        TADConfigManager.set_tad_config('english', newitem)
 
     @staticmethod
-    def set_ao_tc_config_chinese(newitem):
-        AOTCConfigManager.set_ao_tc_config('chinese', newitem)
+    def set_tad_config_chinese(newitem):
+        TADConfigManager.set_tad_config('chinese', newitem)
 
     @staticmethod
-    def set_ao_tc_config_multilingual(newitem):
-        AOTCConfigManager.set_ao_tc_config('multilingual', newitem)
+    def set_tad_config_multilingual(newitem):
+        TADConfigManager.set_tad_config('multilingual', newitem)
 
     @staticmethod
-    def set_ao_tc_config_glove(newitem):
-        AOTCConfigManager.set_ao_tc_config('glove', newitem)
+    def set_tad_config_glove(newitem):
+        TADConfigManager.set_tad_config('glove', newitem)
 
     @staticmethod
-    def get_ao_tc_config_template() -> ConfigManager:
-        return AOTCConfigManager(copy.deepcopy(_ao_tc_config_template))
+    def get_tad_config_template() -> ConfigManager:
+        return TADConfigManager(copy.deepcopy(_tad_config_template))
 
     @staticmethod
-    def get_ao_tc_config_base() -> ConfigManager:
-        return AOTCConfigManager(copy.deepcopy(_ao_tc_config_base))
+    def get_tad_config_base() -> ConfigManager:
+        return TADConfigManager(copy.deepcopy(_tad_config_base))
 
     @staticmethod
-    def get_ao_tc_config_english() -> ConfigManager:
-        return AOTCConfigManager(copy.deepcopy(_ao_tc_config_english))
+    def get_tad_config_english() -> ConfigManager:
+        return TADConfigManager(copy.deepcopy(_tad_config_english))
 
     @staticmethod
-    def get_ao_tc_config_chinese() -> ConfigManager:
-        return AOTCConfigManager(copy.deepcopy(_ao_tc_config_chinese))
+    def get_tad_config_chinese() -> ConfigManager:
+        return TADConfigManager(copy.deepcopy(_tad_config_chinese))
 
     @staticmethod
-    def get_ao_tc_config_multilingual() -> ConfigManager:
-        return AOTCConfigManager(copy.deepcopy(_ao_tc_config_multilingual))
+    def get_tad_config_multilingual() -> ConfigManager:
+        return TADConfigManager(copy.deepcopy(_tad_config_multilingual))
 
     @staticmethod
-    def get_ao_tc_config_glove() -> ConfigManager:
-        return AOTCConfigManager(copy.deepcopy(_ao_tc_config_glove))
+    def get_tad_config_glove() -> ConfigManager:
+        return TADConfigManager(copy.deepcopy(_tad_config_glove))

@@ -35,9 +35,9 @@ class Tokenizer4Pretraining:
         return self.tokenizer.encode(text, truncation=True, padding='max_length', max_length=self.max_seq_len, return_tensors='pt')
 
 
-class AOBERTTCDataset(Dataset):
+class TADBERTTCDataset(Dataset):
     bert_baseline_input_colses = {
-        'aobert': ['text_bert_indices']
+        'tadbert': ['text_bert_indices']
     }
 
     def __init__(self, dataset_list, tokenizer, opt):
@@ -53,8 +53,15 @@ class AOBERTTCDataset(Dataset):
             line = lines[i].strip().split('$LABEL$')
             text, labels = line[0], line[1]
             text = text.strip()
-            label, advdet_label, ood_label = labels.strip().split(',')
-            label, advdet_label, ood_label = label.strip(), advdet_label.strip(), ood_label.strip()
+            label, perturb_label, is_adv = labels.strip().split(',')
+            label, perturb_label, is_adv = label.strip(), perturb_label.strip(), is_adv.strip()
+
+            # if label == perturb_label:
+            #     continue
+
+            if is_adv == '1' or is_adv == 1:
+                label = '-100'
+
             text_indices = tokenizer.text_to_sequence('{}'.format(text))
 
             data = {
@@ -64,23 +71,22 @@ class AOBERTTCDataset(Dataset):
 
                 'label': label,
 
-                'advdet_label': advdet_label,
+                'perturb_label': perturb_label,
 
-                'ood_label': ood_label,
+                'is_adv': is_adv,
             }
 
             label_set1.add(label)
-            label_set2.add(advdet_label)
-            label_set3.add(ood_label)
+            label_set2.add(perturb_label)
+            label_set3.add(is_adv)
 
             all_data.append(data)
 
         check_and_fix_labels(label_set1, 'label', all_data, opt)
-        check_and_fix_adv_labels(label_set2, 'advdet_label', all_data, opt)
-        check_and_fix_ood_labels(label_set3, 'ood_label', all_data, opt)
-        opt.polarities_dim1 = len(label_set1)
-        opt.polarities_dim2 = len(label_set2)
-        opt.polarities_dim3 = len(label_set3)
+        check_and_fix_perturb_labels(label_set2, 'perturb_label', all_data, opt)
+        check_and_fix_is_adv_labels(label_set3, 'is_adv', all_data, opt)
+        opt.class_dim = len(label_set1-{'-100'})
+        opt.adv_det_dim = len(label_set3-{'-100'})
 
         self.data = all_data
 
@@ -91,59 +97,59 @@ class AOBERTTCDataset(Dataset):
         return len(self.data)
 
 
-def check_and_fix_adv_labels(label_set: set, label_name, all_data, opt):
+def check_and_fix_perturb_labels(label_set: set, label_name, all_data, opt):
     # update polarities_dim, init model behind execution of this function!
     if '-100' in label_set:
-        adv_label_to_index = {origin_label: int(idx) - 1 if origin_label != '-100' else -100 for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
-        index_to_adv_label = {int(idx) - 1 if origin_label != '-100' else -100: origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+        perturb_label_to_index = {origin_label: int(idx) - 1 if origin_label != '-100' else -100 for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+        index_to_perturb_label = {int(idx) - 1 if origin_label != '-100' else -100: origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
     else:
-        adv_label_to_index = {origin_label: int(idx) for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
-        index_to_adv_label = {int(idx): origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
-    if 'index_to_adv_label' not in opt.args:
-        opt.index_to_adv_label = index_to_adv_label
-        opt.adv_label_to_index = adv_label_to_index
+        perturb_label_to_index = {origin_label: int(idx) for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+        index_to_perturb_label = {int(idx): origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+    if 'index_to_perturb_label' not in opt.args:
+        opt.index_to_perturb_label = index_to_perturb_label
+        opt.perturb_label_to_index = perturb_label_to_index
 
-    if opt.index_to_adv_label != index_to_adv_label:
+    if opt.index_to_perturb_label != index_to_perturb_label:
         # raise KeyError('Fail to fix the labels, the number of labels are not equal among all datasets!')
-        opt.index_to_adv_label.update(index_to_adv_label)
-        opt.adv_label_to_index.update(adv_label_to_index)
+        opt.index_to_perturb_label.update(index_to_perturb_label)
+        opt.perturb_label_to_index.update(perturb_label_to_index)
     num_label = {l: 0 for l in label_set}
     num_label['Sum'] = len(all_data)
     for item in all_data:
         try:
             num_label[item[label_name]] += 1
-            item[label_name] = adv_label_to_index[item[label_name]]
+            item[label_name] = perturb_label_to_index[item[label_name]]
         except Exception as e:
             # print(e)
             num_label[item.polarity] += 1
-            item.polarity = adv_label_to_index[item.polarity]
+            item.polarity = perturb_label_to_index[item.polarity]
     print('Dataset Label Details: {}'.format(num_label))
 
 
-def check_and_fix_ood_labels(label_set: set, label_name, all_data, opt):
+def check_and_fix_is_adv_labels(label_set: set, label_name, all_data, opt):
     # update polarities_dim, init model behind execution of this function!
     if '-100' in label_set:
-        ood_label_to_index = {origin_label: int(idx) - 1 if origin_label != '-100' else -100 for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
-        index_to_ood_label = {int(idx) - 1 if origin_label != '-100' else -100: origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+        is_adv_to_index = {origin_label: int(idx) - 1 if origin_label != '-100' else -100 for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+        index_to_is_adv = {int(idx) - 1 if origin_label != '-100' else -100: origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
     else:
-        ood_label_to_index = {origin_label: int(idx) for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
-        index_to_ood_label = {int(idx): origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
-    if 'index_to_ood_label' not in opt.args:
-        opt.index_to_ood_label = index_to_ood_label
-        opt.ood_label_to_index = ood_label_to_index
+        is_adv_to_index = {origin_label: int(idx) for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+        index_to_is_adv = {int(idx): origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+    if 'index_to_is_adv' not in opt.args:
+        opt.index_to_is_adv = index_to_is_adv
+        opt.is_adv_to_index = is_adv_to_index
 
-    if opt.index_to_ood_label != index_to_ood_label:
+    if opt.index_to_is_adv != index_to_is_adv:
         # raise KeyError('Fail to fix the labels, the number of labels are not equal among all datasets!')
-        opt.index_to_ood_label.update(index_to_ood_label)
-        opt.ood_label_to_index.update(ood_label_to_index)
+        opt.index_to_is_adv.update(index_to_is_adv)
+        opt.is_adv_to_index.update(is_adv_to_index)
     num_label = {l: 0 for l in label_set}
     num_label['Sum'] = len(all_data)
     for item in all_data:
         try:
             num_label[item[label_name]] += 1
-            item[label_name] = ood_label_to_index[item[label_name]]
+            item[label_name] = is_adv_to_index[item[label_name]]
         except Exception as e:
             # print(e)
             num_label[item.polarity] += 1
-            item.polarity = ood_label_to_index[item.polarity]
+            item.polarity = is_adv_to_index[item.polarity]
     print('Dataset Label Details: {}'.format(num_label))

@@ -6,24 +6,24 @@
 
 # Copyright (C) 2021. All Rights Reserved.
 
-__version__ = '1.14.8'
+__version__ = '1.15b7'
 __name__ = 'pyabsa'
 
 from termcolor import colored
 from update_checker import UpdateChecker
 
-from pyabsa.functional.trainer import APCTrainer, ATEPCTrainer, TCTrainer, AOTCTrainer
+from pyabsa.functional.trainer import APCTrainer, ATEPCTrainer, TCTrainer, TADTrainer
 from pyabsa.core.apc.models import (APCModelList,
                                     BERTBaselineAPCModelList,
                                     GloVeAPCModelList)
 from pyabsa.core.tc.models import (GloVeTCModelList,
                                    BERTTCModelList)
-from pyabsa.core.ao_tc.models import (AOGloVeTCModelList,
-                                      AOBERTTCModelList)
+from pyabsa.core.tad.models import (TADGloVeTCModelList,
+                                    TADBERTTCModelList)
 from pyabsa.core.atepc.models import ATEPCModelList
 
 from pyabsa.functional import (TCCheckpointManager,
-                               AOTCCheckpointManager,
+                               TADCheckpointManager,
                                APCCheckpointManager,
                                ATEPCCheckpointManager,
                                )
@@ -34,7 +34,7 @@ from pyabsa.functional.dataset import ABSADatasetList, TCDatasetList, AdvTCDatas
 from pyabsa.functional.config import APCConfigManager
 from pyabsa.functional.config import ATEPCConfigManager
 from pyabsa.functional.config import TCConfigManager
-from pyabsa.functional.config import AOTCConfigManager
+from pyabsa.functional.config import TADConfigManager
 from pyabsa.utils.file_utils import check_update_log, validate_datasets_version
 from pyabsa.utils.pyabsa_utils import validate_pyabsa_version
 

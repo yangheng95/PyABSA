@@ -8,5 +8,5 @@
 from .checkpoint_manager import (APCCheckpointManager,
                                  ATEPCCheckpointManager,
                                  TCCheckpointManager,
-                                 AOTCCheckpointManager
+                                 TADCheckpointManager
                                  )

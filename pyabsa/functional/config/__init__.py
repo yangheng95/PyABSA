@@ -8,4 +8,4 @@
 from .apc_config_manager import APCConfigManager
 from .atepc_config_manager import ATEPCConfigManager
 from .tc_config_manager import TCConfigManager
-from .ao_tc_config_manager import AOTCConfigManager
+from .tad_config_manager import TADConfigManager

@@ -25,13 +25,13 @@ from pyabsa.core.atepc.prediction.aspect_extractor import AspectExtractor
 from pyabsa.core.atepc.training.atepc_trainer import train4atepc
 from pyabsa.core.tc.prediction.text_classifier import TextClassifier
 from pyabsa.core.tc.training.classifier_trainer import train4tc
-from pyabsa.core.ao_tc.prediction.ao_tc_classifier import AOTCTextClassifier
-from pyabsa.core.ao_tc.training.ao_tc_trainer import train4ao_tc
+from pyabsa.core.tad.prediction.tad_classifier import TADTextClassifier
+from pyabsa.core.tad.training.tad_trainer import train4tad
 
 from pyabsa.functional.config.apc_config_manager import APCConfigManager
 from pyabsa.functional.config.atepc_config_manager import ATEPCConfigManager
 from pyabsa.functional.config.tc_config_manager import TCConfigManager
-from pyabsa.functional.config.ao_tc_config_manager import AOTCConfigManager
+from pyabsa.functional.config.tad_config_manager import TADConfigManager
 from pyabsa.utils.file_utils import query_local_version
 
 from pyabsa.utils.logger import get_logger
@@ -104,10 +104,10 @@ class Trainer:
             self.model_class = TextClassifier
             self.task = 'classification'
 
-        elif isinstance(config, AOTCConfigManager):
-            self.train_func = train4ao_tc
-            self.model_class = AOTCTextClassifier
-            self.task = 'ao_tc'
+        elif isinstance(config, TADConfigManager):
+            self.train_func = train4tad
+            self.model_class = TADTextClassifier
+            self.task = 'text_defense'
 
         self.config = config
         if isinstance(dataset, DatasetItem):
@@ -203,5 +203,5 @@ class TCTrainer(Trainer):
     pass
 
 
-class AOTCTrainer(Trainer):
+class TADTrainer(Trainer):
     pass

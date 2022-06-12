@@ -120,9 +120,9 @@ class Instructor:
     def reload_model(self, ckpt='./init_state_dict.bin'):
         if os.path.exists(ckpt):
             if self.opt.auto_device == 'allcuda':
-                self.model.module.load_state_dict(torch.load(ckpt))
+                self.model.module.load_state_dict(torch.load(find_file(ckpt, or_key=['.bin', 'state_dict'])))
             else:
-                self.model.load_state_dict(torch.load(ckpt))
+                self.model.load_state_dict(torch.load(find_file(ckpt, or_key=['.bin', 'state_dict'])))
 
     def prepare_dataloader(self, train_set):
         if self.train_dataloader and self.val_dataloader:

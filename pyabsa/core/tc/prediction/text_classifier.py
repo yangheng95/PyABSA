@@ -45,11 +45,11 @@ def get_mlm_and_tokenizer(text_classifier, config):
 
 
 class TextClassifier:
-    def __init__(self, model_arg=None, eval_batch_size=128):
+    def __init__(self, model_arg=None, cal_perplexity=False, eval_batch_size=128):
         '''
             from_train_model: load inferring_tutorials model from trained model
         '''
-
+        self.cal_perplexity = cal_perplexity
         # load from a training
         if not isinstance(model_arg, str):
             print('Load text classifier from training')
@@ -131,8 +131,6 @@ class TextClassifier:
         self.infer_dataloader = None
         self.opt.eval_batch_size = eval_batch_size
 
-        self.model.to(self.opt.device)
-
         if self.opt.seed is not None:
             random.seed(self.opt.seed)
             numpy.random.seed(self.opt.seed)
@@ -143,10 +141,11 @@ class TextClassifier:
 
         self.opt.initializer = self.opt.initializer
 
-        try:
-            self.MLM, self.MLM_tokenizer = get_mlm_and_tokenizer(self, self.opt)
-        except Exception as e:
-            self.MLM, self.MLM_tokenizer = None, None
+        if cal_perplexity:
+            try:
+                self.MLM, self.MLM_tokenizer = get_mlm_and_tokenizer(self, self.opt)
+            except Exception as e:
+                self.MLM, self.MLM_tokenizer = None, None
 
     def to(self, device=None):
         self.opt.device = device
@@ -196,12 +195,13 @@ class TextClassifier:
 
     def infer(self, text: str = None,
               print_result=True,
+              ignore_error=True,
               clear_input_samples=True):
 
         if clear_input_samples:
             self.clear_input_samples()
         if text:
-            self.dataset.prepare_infer_sample(text)
+            self.dataset.prepare_infer_sample(text, ignore_error=ignore_error)
         else:
             raise RuntimeError('Please specify your datasets path!')
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.opt.eval_batch_size, shuffle=False)
@@ -242,21 +242,22 @@ class TextClassifier:
 
                     text_raw = sample['text_raw'][i]
 
-                    # if self.MLM:
-                    #     ids = self.MLM_tokenizer(text_raw, return_tensors="pt")
-                    #     ids['labels'] = ids['input_ids'].clone()
-                    #     ids = ids.to(self.opt.device)
-                    #     loss = self.MLM(**ids)['loss']
-                    #     perplexity = float(torch.exp(loss / ids['input_ids'].size(1)))
-                    #     # ids = self.MLM_tokenizer(text_raw, return_tensors="pt").input_ids.clone().to(self.opt.device)
-                    #     # perplexity = float(torch.exp(self.MLM(**ids)['loss'] / ids['input_ids'].size(1)))
-                    # else:
-                    #     perplexity = 'N.A.'
+                    if self.cal_perplexity:
+                        ids = self.MLM_tokenizer(text_raw, return_tensors="pt")
+                        ids['labels'] = ids['input_ids'].clone()
+                        ids = ids.to(self.opt.device)
+                        loss = self.MLM(**ids)['loss']
+                        perplexity = float(torch.exp(loss / ids['input_ids'].size(1)))
+                        # ids = self.MLM_tokenizer(text_raw, return_tensors="pt").input_ids.clone().to(self.opt.device)
+                        # perplexity = float(torch.exp(self.MLM(**ids)['loss'] / ids['input_ids'].size(1)))
+                    else:
+                        perplexity = 'N.A.'
 
                     results.append({
                         'text': text_raw,
                         'label': sent,
                         'confidence': float(max(i_probs)),
+                        'probs': i_probs.cpu().numpy(),
                         'ref_label': real_sent,
                         'ref_check': correct[sent == real_sent] if real_sent != '-999' else '',
                         'perplexity': perplexity,
@@ -280,10 +281,7 @@ class TextClassifier:
                     print(text_printing)
             if save_path:
                 with open(save_path, 'w', encoding='utf8') as fout:
-                    json.dump(results, fout, ensure_ascii=False)
-                    # fout.write('Total samples:{}\n'.format(n_total))
-                    # fout.write('Labeled samples:{}\n'.format(n_labeled))
-                    # fout.write('Prediction Accuracy:{}%\n'.format(100 * n_correct / n_labeled)) if n_labeled else 'N.A.'
+                    json.dump(str(results), fout, ensure_ascii=False)
                     print('inference result saved in: {}'.format(save_path))
         except Exception as e:
             print('Can not save result: {}, Exception: {}'.format(text_raw, e))

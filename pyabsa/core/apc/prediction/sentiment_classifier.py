@@ -10,9 +10,10 @@ import random
 import numpy
 import torch
 from findfile import find_file
+from pyabsa.core.tad.prediction.tad_classifier import TADTextClassifier
 from termcolor import colored
 from torch.utils.data import DataLoader
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModel, AutoConfig, DebertaV2ForMaskedLM, RobertaForMaskedLM, BertForMaskedLM
 
 from pyabsa.core.apc.classic.__glove__.dataset_utils.data_utils_for_training import build_embedding_matrix, build_tokenizer
 from pyabsa.core.apc.models.ensembler import APCEnsembler
@@ -27,13 +28,29 @@ from pyabsa.core.apc.classic.__glove__.dataset_utils.data_utils_for_inference im
 from pyabsa.core.apc.dataset_utils.apc_utils import LABEL_PADDING
 from pyabsa.core.apc.dataset_utils.data_utils_for_inference import ABSADataset
 
+def get_mlm_and_tokenizer(text_classifier, config):
+    if isinstance(text_classifier, TADTextClassifier):
+        base_model = text_classifier.model.bert.base_model
+    else:
+        base_model = text_classifier.bert.base_model
+    pretrained_config = AutoConfig.from_pretrained(config.pretrained_bert)
+    if 'deberta-v3' in config.pretrained_bert:
+        MLM = DebertaV2ForMaskedLM(pretrained_config).to(text_classifier.opt.device)
+        MLM.deberta = base_model
+    elif 'roberta' in config.pretrained_bert:
+        MLM = RobertaForMaskedLM(pretrained_config).to(text_classifier.opt.device)
+        MLM.roberta = base_model
+    else:
+        MLM = BertForMaskedLM(pretrained_config).to(text_classifier.opt.device)
+        MLM.bert = base_model
+    return MLM, AutoTokenizer.from_pretrained(config.pretrained_bert)
 
 class SentimentClassifier:
-    def __init__(self, model_arg=None, sentiment_map=None, eval_batch_size=128):
+    def __init__(self, model_arg=None, cal_perplexity=False, eval_batch_size=128):
         '''
             from_train_model: load inferring_tutorials model from trained model
         '''
-
+        self.cal_perplexity = cal_perplexity
         # load from a training
         if not isinstance(model_arg, str):
             print('Load sentiment classifier from training')
@@ -135,7 +152,12 @@ class SentimentClassifier:
         self.opt.eval_batch_size = eval_batch_size
 
         self.sentiment_map = None
-        self.set_sentiment_map(sentiment_map)
+
+        if self.cal_perplexity:
+            try:
+                self.MLM, self.MLM_tokenizer = get_mlm_and_tokenizer(self, self.opt)
+            except Exception as e:
+                self.MLM, self.MLM_tokenizer = None, None
 
     def set_sentiment_map(self, sentiment_map):
         if sentiment_map:
@@ -159,8 +181,8 @@ class SentimentClassifier:
                     target_file=None,
                     print_result=True,
                     save_result=False,
-                    clear_input_samples=True,
-                    ignore_error=True):
+                    ignore_error=True,
+                    clear_input_samples=True):
 
         if clear_input_samples:
             self.clear_input_samples()
@@ -200,6 +222,7 @@ class SentimentClassifier:
                 final_res[-1]['aspect'].append(result['aspect'])
                 final_res[-1]['sentiment'].append(result['sentiment'])
                 final_res[-1]['confidence'].append(result['confidence'])
+                final_res[-1]['probs'].append(result['probs'])
                 final_res[-1]['ref_sentiment'].append(result['ref_sentiment'])
                 final_res[-1]['ref_check'].append(result['ref_check'])
             else:
@@ -209,6 +232,7 @@ class SentimentClassifier:
                         'aspect': [result['aspect']],
                         'sentiment': [result['sentiment']],
                         'confidence': [result['confidence']],
+                        'probs': [result['probs']],
                         'ref_sentiment': [result['ref_sentiment']],
                         'ref_check': [result['ref_check']]
                     }
@@ -251,11 +275,23 @@ class SentimentClassifier:
                     aspect = sample['aspect'][i]
                     text_raw = sample['text_raw'][i]
 
+                    if self.cal_perplexity:
+                        ids = self.MLM_tokenizer(text_raw, return_tensors="pt")
+                        ids['labels'] = ids['input_ids'].clone()
+                        ids = ids.to(self.opt.device)
+                        loss = self.MLM(**ids)['loss']
+                        perplexity = float(torch.exp(loss / ids['input_ids'].size(1)))
+                        # ids = self.MLM_tokenizer(text_raw, return_tensors="pt").input_ids.clone().to(self.opt.device)
+                        # perplexity = float(torch.exp(self.MLM(**ids)['loss'] / ids['input_ids'].size(1)))
+                    else:
+                        perplexity = 'N.A.'
+
                     results.append({
                         'text': text_raw,
                         'aspect': aspect,
                         'sentiment': sent,
                         'confidence': confidence,
+                        'probs': i_probs.cpu().numpy(),
                         'ref_sentiment': real_sent,
                         'ref_check': correct[sent == real_sent] if real_sent != '-999' else '',
                     })
@@ -294,15 +330,12 @@ class SentimentClassifier:
                                                                           result['sentiment'][i],
                                                                           round(result['confidence'][i], 3)
                                                                           )
-
                         text_printing = text_printing.replace(result['aspect'][i], aspect_info)
+                    text_printing += colored('<perplexity:{}>'.format(result['perplexity']), 'yellow')
                     print(text_printing)
             if save_path:
                 with open(save_path, 'w', encoding='utf8') as fout:
-                    json.dump(results, fout, ensure_ascii=False)
-                    # fout.write('Total samples:{}\n'.format(n_total))
-                    # fout.write('Labeled samples:{}\n'.format(n_labeled))
-                    # fout.write('Prediction Accuracy:{}%\n'.format(100 * n_correct / n_labeled)) if n_labeled else 'N.A.'
+                    json.dump(str(results), fout, ensure_ascii=False)
                     print('inference result saved in: {}'.format(save_path))
         except Exception as e:
             print('Can not save result: {}, Exception: {}'.format(text_raw, e))

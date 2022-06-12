@@ -29,7 +29,7 @@ setup(
     exclude_package_date={'': ['.gitignore']},
     # Choose your license
     license='MIT',
-    install_requires=['findfile>=1.7.9.2',
+    install_requires=['findfile>=1.7.9.3',
                       'autocuda>=0.11',
                       'metric-visualizer>=0.4.22',
                       'spacy',
@@ -44,7 +44,6 @@ setup(
                       'gdown>=4.4.0',
                       'transformers>4.5',
                       'torch>1.0.0, <1.11.0',
-                      'sentencepiece',
-                      'protobuf<=3.20.0'
+                      'sentencepiece'
                       ],
 )

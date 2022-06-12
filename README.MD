@@ -214,8 +214,10 @@ many ways, including:
 - Star this repository to keep it active
 
 
-## Acknowledgement
+## License
+PyABSA is released under MIT licence, please cite this repo (or papers) or attach the author information in your work 
+(repository, blog, product, etc.)
 
-This work is built from LC-ABSA/LCF-ABSA and LCF-ATEPC, and other impressive works such as PyTorch-ABSA and LCFS-BERT.
-
-### [Donation](readme/donation.MD)
+This repository is developed and maintained by HENG YANG ([yangheng95@GitHub](https://github.com/yangheng95)), 
+with great contribution from community researchers. You can try [donating](readme/donation.MD) to help improve PyABSA. 
+Thanks very much!

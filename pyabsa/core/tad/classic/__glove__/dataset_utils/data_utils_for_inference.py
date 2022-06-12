@@ -55,7 +55,7 @@ class Tokenizer(object):
         return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
 
 
-class AOGloVeTCDataset(Dataset):
+class TADGloVeTCDataset(Dataset):
 
     def __init__(self, tokenizer, opt):
         self.glove_input_colses = {
@@ -69,8 +69,8 @@ class AOGloVeTCDataset(Dataset):
     def parse_sample(self, text):
         return [text]
 
-    def prepare_infer_sample(self, text: str):
-        self.process_data(self.parse_sample(text))
+    def prepare_infer_sample(self, text: str, ignore_error):
+        self.process_data(self.parse_sample(text), ignore_error=ignore_error)
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
 

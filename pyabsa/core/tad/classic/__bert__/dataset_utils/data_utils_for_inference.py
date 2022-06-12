@@ -26,7 +26,7 @@ class Tokenizer4Pretraining:
         return self.tokenizer.encode(text, truncation=True, padding='max_length', max_length=self.max_seq_len, return_tensors='pt')
 
 
-class AOBERTTCDataset(Dataset):
+class TADBERTTCDataset(Dataset):
 
     def __init__(self, tokenizer, opt):
         self.bert_baseline_input_colses = {
@@ -40,8 +40,8 @@ class AOBERTTCDataset(Dataset):
     def parse_sample(self, text):
         return [text]
 
-    def prepare_infer_sample(self, text: str):
-        self.process_data(self.parse_sample(text))
+    def prepare_infer_sample(self, text: str, ignore_error):
+        self.process_data(self.parse_sample(text), ignore_error=ignore_error)
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
 
@@ -67,15 +67,21 @@ class AOBERTTCDataset(Dataset):
                 if '!ref!' in text:
                     text, _, labels = text.strip().partition('!ref!')
                     text = text.strip()
-                    text = text.strip()
-                    label, advdet_label, ood_label = labels.strip().split(',')
-                    label, advdet_label, ood_label = label.strip(), advdet_label.strip(), ood_label.strip()
+                    label, perturb_label, is_adv = labels.strip().split(',')
+                    label, perturb_label, is_adv = label.strip(), perturb_label.strip(), is_adv.strip()
+
                     # label = -100
                 else:
                     text = text.strip()
                     label = -100
-                    advdet_label = -100
-                    ood_label = -100
+                    perturb_label = -100
+                    is_adv = -100
+
+                # if label == perturb_label:
+                #     continue
+
+                if is_adv == '1' or is_adv == 1:
+                    label = '-100'
 
                 text_indices = self.tokenizer.text_to_sequence('{}'.format(text))
 
@@ -84,11 +90,16 @@ class AOBERTTCDataset(Dataset):
 
                     'text_raw': text,
 
-                    'label': self.opt.label_to_index.get(label, -100) if isinstance(label, str) else label,
+                    'label': label,
 
-                    'advdet_label': self.opt.adv_label_to_index.get(advdet_label, -100) if isinstance(advdet_label, str) else advdet_label,
+                    'perturb_label': perturb_label,
 
-                    'ood_label': self.opt.ood_label_to_index.get(ood_label, -100) if isinstance(ood_label, str) else ood_label,
+                    'is_adv': is_adv,
+                    # 'label': self.opt.label_to_index.get(label, -100) if isinstance(label, str) else label,
+                    #
+                    # 'perturb_label': self.opt.perturb_label_to_index.get(perturb_label, -100) if isinstance(perturb_label, str) else perturb_label,
+                    #
+                    # 'is_adv': self.opt.is_adv_to_index.get(is_adv, -100) if isinstance(is_adv, str) else is_adv,
                 }
 
                 all_data.append(data)
