@@ -15,6 +15,7 @@ from collections import OrderedDict
 import numpy as np
 import torch
 import torch.nn.functional as F
+import tqdm
 from findfile import find_file
 from termcolor import colored
 from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
@@ -117,14 +118,20 @@ class AspectExtractor:
     def to(self, device=None):
         self.opt.device = device
         self.model.to(device)
+        if hasattr(self, 'MLM'):
+            self.MLM.to(self.opt.device)
 
     def cpu(self):
         self.opt.device = 'cpu'
         self.model.to('cpu')
+        if hasattr(self, 'MLM'):
+            self.MLM.to('cpu')
 
     def cuda(self, device='cuda:0'):
         self.opt.device = device
         self.model.to(device)
+        if hasattr(self, 'MLM'):
+            self.MLM.to(device)
 
     def merge_result(self, sentence_res, results):
         """ merge ate sentence result and apc results, and restore to original sentence order
@@ -262,7 +269,11 @@ class AspectExtractor:
             label_map = {i: label for i, label in enumerate(self.opt.label_list, 1)}
         else:
             label_map = self.opt.index_to_IOB_label
-        for i_batch, (input_ids_spc, input_mask, segment_ids, label_ids, polarity, valid_ids, l_mask) in enumerate(self.infer_dataloader):
+        if len(self.infer_dataloader) >= 100:
+            it = tqdm.tqdm(self.infer_dataloader, postfix='inferring...')
+        else:
+            it = self.infer_dataloader
+        for i_batch, (input_ids_spc, input_mask, segment_ids, label_ids, polarity, valid_ids, l_mask) in enumerate(it):
             input_ids_spc = input_ids_spc.to(self.opt.device)
             input_mask = input_mask.to(self.opt.device)
             segment_ids = segment_ids.to(self.opt.device)
@@ -357,7 +368,11 @@ class AspectExtractor:
         self.model.eval()
 
         # Correct = {True: 'Correct', False: 'Wrong'}
-        for i_batch, batch in enumerate(self.infer_dataloader):
+        if len(self.infer_dataloader) >= 100:
+            it = tqdm.tqdm(self.infer_dataloader, postfix='inferring...')
+        else:
+            it = self.infer_dataloader
+        for i_batch, batch in enumerate(it):
             input_ids_spc, input_mask, segment_ids, label_ids, \
             valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
             input_ids_spc = input_ids_spc.to(self.opt.device)

@@ -148,7 +148,7 @@ class AdvTCDatasetList(list):
         super().__init__(dataset_list)
 
 
-filter_key_words = ['.py', '.md', 'readme', 'log', 'result', 'zip', '.state_dict', '.model', '.png', 'acc_', 'f1_']
+filter_key_words = ['.py', '.md', 'readme', 'log', 'result', 'zip', '.state_dict', '.model', '.png', 'acc_', 'f1_', '.backup', '.bak']
 
 
 def detect_dataset(dataset_path, task='apc', load_aug=False):
