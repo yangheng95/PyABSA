@@ -80,8 +80,8 @@ class TADBERTTCDataset(Dataset):
                 # if label == perturb_label:
                 #     continue
 
-                if is_adv == '1' or is_adv == 1:
-                    label = '-100'
+                # if is_adv == '1' or is_adv == 1:
+                #     label = '-100'
 
                 text_indices = self.tokenizer.text_to_sequence('{}'.format(text))
 

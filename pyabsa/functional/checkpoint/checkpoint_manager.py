@@ -290,10 +290,11 @@ def available_checkpoints(task='', from_local=False):
     try:
         if not from_local:
             try:  # from huggingface space
-                checkpoint_url = 'https://huggingface.co/spaces/yangheng/PyABSA-ATEPC/raw/main/checkpoint-v1.2.json'
+                # checkpoint_url = 'https://huggingface.co/spaces/yangheng/PyABSA-ATEPC/raw/main/checkpoint-v1.2.json'
+                checkpoint_url = 'https://huggingface.co/spaces/yangheng/Multilingual-Aspect-Based-Sentiment-Analysis/blob/main/checkpoint-v1.2.json'
                 response = requests.get(checkpoint_url)
                 with open('./checkpoints.json', "wb") as f:
-                    f.write(response.content)
+                    f.write(response.json())
             except Exception as e:
                 try:  # from google drive
                     checkpoint_url = '1CBVGPA3xdQqdkFFwzO5T2Q4reFtzFIJZ'  # V2

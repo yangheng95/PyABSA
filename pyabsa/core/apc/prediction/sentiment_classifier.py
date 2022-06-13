@@ -9,8 +9,8 @@ import random
 
 import numpy
 import torch
+import tqdm
 from findfile import find_file
-from pyabsa.core.tad.prediction.tad_classifier import TADTextClassifier
 from termcolor import colored
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, AutoModel, AutoConfig, DebertaV2ForMaskedLM, RobertaForMaskedLM, BertForMaskedLM
@@ -29,19 +29,19 @@ from pyabsa.core.apc.dataset_utils.apc_utils import LABEL_PADDING
 from pyabsa.core.apc.dataset_utils.data_utils_for_inference import ABSADataset
 
 def get_mlm_and_tokenizer(text_classifier, config):
-    if isinstance(text_classifier, TADTextClassifier):
+    if isinstance(text_classifier, SentimentClassifier):
         base_model = text_classifier.model.bert.base_model
     else:
         base_model = text_classifier.bert.base_model
     pretrained_config = AutoConfig.from_pretrained(config.pretrained_bert)
     if 'deberta-v3' in config.pretrained_bert:
-        MLM = DebertaV2ForMaskedLM(pretrained_config).to(text_classifier.opt.device)
+        MLM = DebertaV2ForMaskedLM(pretrained_config)
         MLM.deberta = base_model
     elif 'roberta' in config.pretrained_bert:
-        MLM = RobertaForMaskedLM(pretrained_config).to(text_classifier.opt.device)
+        MLM = RobertaForMaskedLM(pretrained_config)
         MLM.roberta = base_model
     else:
-        MLM = BertForMaskedLM(pretrained_config).to(text_classifier.opt.device)
+        MLM = BertForMaskedLM(pretrained_config)
         MLM.bert = base_model
     return MLM, AutoTokenizer.from_pretrained(config.pretrained_bert)
 
@@ -168,14 +168,20 @@ class SentimentClassifier:
     def to(self, device=None):
         self.opt.device = device
         self.model.to(device)
+        if hasattr(self, 'MLM'):
+            self.MLM.to(self.opt.device)
 
     def cpu(self):
         self.opt.device = 'cpu'
         self.model.to('cpu')
+        if hasattr(self, 'MLM'):
+            self.MLM.to('cpu')
 
     def cuda(self, device='cuda:0'):
         self.opt.device = device
         self.model.to(device)
+        if hasattr(self, 'MLM'):
+            self.MLM.to(device)
 
     def batch_infer(self,
                     target_file=None,
@@ -252,7 +258,11 @@ class SentimentClassifier:
             n_correct = 0
             n_labeled = 0
             n_total = 0
-            for _, sample in enumerate(self.infer_dataloader):
+            if len(self.infer_dataloader) >= 100:
+                it = tqdm.tqdm(self.infer_dataloader, postfix='inferring...')
+            else:
+                it = self.infer_dataloader
+            for _, sample in enumerate(it):
                 inputs = {col: sample[col].to(self.opt.device) for col in self.opt.inputs_cols if col != 'polarity'}
                 self.model.eval()
                 outputs = self.model(inputs)
@@ -340,7 +350,7 @@ class SentimentClassifier:
         except Exception as e:
             print('Can not save result: {}, Exception: {}'.format(text_raw, e))
 
-        if len(self.infer_dataloader) > 1:
+        if len(results) > 1:
             print('Total samples:{}'.format(n_total))
             print('Labeled samples:{}'.format(n_labeled))
             print('Prediction Accuracy:{}%'.format(100 * n_correct / n_labeled if n_labeled else 'N.A.'))
