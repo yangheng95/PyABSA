@@ -44,6 +44,7 @@ def get_mlm_and_tokenizer(text_classifier, config):
         MLM.bert = base_model
     return MLM, AutoTokenizer.from_pretrained(config.pretrained_bert)
 
+
 class TextClassifier:
     def __init__(self, model_arg=None, cal_perplexity=False, eval_batch_size=128):
         '''
@@ -281,9 +282,9 @@ class TextClassifier:
 
                     if result['ref_label'] != -999:
                         if result['label'] == result['ref_label']:
-                            text_info = colored(' -> <{}(ref:{})>'.format(result['label'], result['ref_label']), 'green')
+                            text_info = colored(' -> <{}(ref:{} confidence:{})>'.format(result['label'], result['ref_label'], result['confidence']), 'green')
                         else:
-                            text_info = colored(' -> <{}(ref:{})>'.format(result['label'], result['ref_label']), 'red')
+                            text_info = colored(' -> <{}(ref:{}) confidence:{}>'.format(result['label'], result['ref_label'], result['confidence']), 'red')
                     else:
                         text_info = ' -> {}'.format(result['label'])
 
