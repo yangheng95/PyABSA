@@ -9,6 +9,7 @@ from transformers.models.bert.modeling_bert import BertPooler
 from pyabsa.network.lsa import LSA
 from pyabsa.network.sa_encoder import Encoder
 
+
 class FAST_LSA_S_V2(nn.Module):
     inputs = ['text_bert_indices', 'spc_mask_vec',
               'lcfs_cdw_vec', 'left_lcfs_cdw_vec', 'right_lcfs_cdw_vec',

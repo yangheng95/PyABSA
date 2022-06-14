@@ -28,6 +28,7 @@ from pyabsa.core.apc.classic.__glove__.dataset_utils.data_utils_for_inference im
 from pyabsa.core.apc.dataset_utils.apc_utils import LABEL_PADDING
 from pyabsa.core.apc.dataset_utils.data_utils_for_inference import ABSADataset
 
+
 def get_mlm_and_tokenizer(text_classifier, config):
     if isinstance(text_classifier, SentimentClassifier):
         base_model = text_classifier.model.bert.base_model
@@ -44,6 +45,7 @@ def get_mlm_and_tokenizer(text_classifier, config):
         MLM = BertForMaskedLM(pretrained_config)
         MLM.bert = base_model
     return MLM, AutoTokenizer.from_pretrained(config.pretrained_bert)
+
 
 class SentimentClassifier:
     def __init__(self, model_arg=None, cal_perplexity=False, eval_batch_size=128):

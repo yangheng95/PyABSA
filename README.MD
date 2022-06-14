@@ -15,45 +15,55 @@
 
 **Hi, there!** Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks.
 
-PyABSA is a free and open-soruce tool for everyone, but please do not forget to attach the (informal or formal) author information and project address in your works, products and publications, etc. 
+PyABSA is a free and open-soruce tool for everyone, but please do not forget to attach the (informal or formal) author
+information and project address in your works, products and publications, etc.
 
 # | [Overview](./README.MD) | [HuggingfaceHub](readme/huggingface_readme.md) | [ABDADatasets](readme/dataset_readme.md) | [ABSA Models](readme/model_readme.md) | [Colab Tutorials](readme/tutorial_readme.md) | [Troubleshooting(常见问题解决)](https://github.com/yangheng95/PyABSA/issues/189)
 
 ## Try our demos on Huggingface Space
 
-- [(Gradio) Aspect term extraction & sentiment classification](https://huggingface.co/spaces/Gradio-Blocks/Multilingual-Aspect-Based-Sentiment-Analysis) (English,
+- [(Gradio) Aspect term extraction & sentiment classification](https://huggingface.co/spaces/Gradio-Blocks/Multilingual-Aspect-Based-Sentiment-Analysis) (
+  English,
   Chinese, Arabic, Dutch, French, Russian, Spanish, Turkish, etc.)
-- [(Prototype) Aspect term extraction & sentiment classification](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) (English,
+- [(Prototype) Aspect term extraction & sentiment classification](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) (
+  English,
   Chinese, Arabic, Dutch, French, Russian, Spanish, Turkish, etc.)
 - [方面术语提取和情感分类](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC-Chinese) （中文, etc.）
 - [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC) （English,
   Chinese, etc.）
-  
+
 ## Notice
-This repository is based on our papers for ABSA research. Here are the papers that you can cite or refer to for your implementations:
+
+This repository is based on our papers for ABSA research. Here are the papers that you can cite or refer to for your
+implementations:
 
 <details>
 <summary>
 Aspect sentiment polarity classification models
 </summary>
-  
-1. [Back to Reality: Leveraging Pattern-driven Modeling to Enable Affordable Sentiment Dependency Learning](https://arxiv.org/abs/2110.08604) (e.g., Fast-LSA, 2020)
-2. [Learning for target-dependent sentiment based on local context-aware embedding](https://link.springer.com/article/10.1007/s11227-021-04047-1) (e.g., LCA-Net, 2020)
-3. [LCF: A Local Context Focus Mechanism for Aspect-Based Sentiment Classification](https://www.mdpi.com/2076-3417/9/16/3389) (e.g., LCF-BERT, 2019)
+
+1. [Back to Reality: Leveraging Pattern-driven Modeling to Enable Affordable Sentiment Dependency Learning](https://arxiv.org/abs/2110.08604) (
+   e.g., Fast-LSA, 2020)
+2. [Learning for target-dependent sentiment based on local context-aware embedding](https://link.springer.com/article/10.1007/s11227-021-04047-1) (
+   e.g., LCA-Net, 2020)
+3. [LCF: A Local Context Focus Mechanism for Aspect-Based Sentiment Classification](https://www.mdpi.com/2076-3417/9/16/3389) (
+   e.g., LCF-BERT, 2019)
+
 </details>
 
 <details>
 <summary>
 Aspect sentiment polarity classification & Aspect term extraction models
 </summary>
-  
-1. [A multi-task learning model for Chinese-oriented aspect polarity classification and aspect term extraction](https://www.sciencedirect.com/science/article/pii/S0925231220312534)] (e.g., Fast-LCF-ATEPC, 2020)
-2. [(Arxiv) A multi-task learning model for Chinese-oriented aspect polarity classification and aspect term extraction](https://arxiv.org/pdf/1912.07976.pdf) 
-  
+
+1. [A multi-task learning model for Chinese-oriented aspect polarity classification and aspect term extraction](https://www.sciencedirect.com/science/article/pii/S0925231220312534)] (
+   e.g., Fast-LCF-ATEPC, 2020)
+2. [(Arxiv) A multi-task learning model for Chinese-oriented aspect polarity classification and aspect term extraction](https://arxiv.org/pdf/1912.07976.pdf)
+
 </details>
 
-If you are looking for the original proposal of local context focus, here are some introduction at 
-[here](https://github.com/yangheng95/PyABSA/tree/release/demos/documents). 
+If you are looking for the original proposal of local context focus, here are some introduction at
+[here](https://github.com/yangheng95/PyABSA/tree/release/demos/documents).
 
 ### About Performance
 
@@ -213,11 +223,11 @@ many ways, including:
   hyperparameters)
 - Star this repository to keep it active
 
-
 ## License
-PyABSA is released under MIT licence, please cite this repo (or papers) or attach the author information in your work 
+
+PyABSA is released under MIT licence, please cite this repo (or papers) or attach the author information in your work
 (repository, blog, product, etc.)
 
-This repository is developed and maintained by HENG YANG ([yangheng95@GitHub](https://github.com/yangheng95)), 
-with great contribution from community researchers. You can try [donating](readme/donation.MD) to help improve PyABSA. 
+This repository is developed and maintained by HENG YANG ([yangheng95@GitHub](https://github.com/yangheng95)),
+with great contribution from community researchers. You can try [donating](readme/donation.MD) to help improve PyABSA.
 Thanks very much!

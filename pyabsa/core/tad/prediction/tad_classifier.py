@@ -11,14 +11,12 @@ import numpy
 import numpy as np
 import torch
 import tqdm
-from autocuda import auto_cuda
 from findfile import find_file
 from termcolor import colored
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, AutoModel, AutoConfig, DebertaV2ForMaskedLM, RobertaForMaskedLM, BertForMaskedLM
 
 from ....functional.config import TADConfigManager
-from ....functional.dataset import TCDatasetList
 
 from ....functional.dataset import detect_infer_dataset
 
@@ -160,7 +158,7 @@ class TADTextClassifier:
         self.augmentor = TADBoostAug(ROOT=os.getcwd(),
                                      AUGMENT_BACKEND=backend,
                                      CLASSIFIER_TRAINING_NUM=2,
-                                     AUGMENT_NUM_PER_CASE=10,
+                                     AUGMENT_NUM_PER_CASE=16,
                                      CONFIDENCE_THRESHOLD=0.99,
                                      PERPLEXITY_THRESHOLD=3,
                                      USE_LABEL=False,
@@ -290,8 +288,6 @@ class TADTextClassifier:
                                     fixed_infer_res = self.augmentor.tad_classifier.infer(aug + '!ref!{},-100,-100'.format(real_label), print_result=True, attack_defense=False)
                                     probs = probs + fixed_infer_res['probs'] if probs is not None else fixed_infer_res['probs']
                                 fixed_infer_res['label'] = np.argmax(probs / len(augs))
-
-
 
                     if self.cal_perplexity:
                         ids = self.MLM_tokenizer(text_raw, return_tensors="pt")

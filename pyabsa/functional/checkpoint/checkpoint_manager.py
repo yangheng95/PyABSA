@@ -13,7 +13,6 @@ from distutils.version import StrictVersion
 import gdown
 import requests
 import tqdm
-from autocuda import auto_cuda
 from findfile import find_files, find_file, find_cwd_files
 from termcolor import colored
 
@@ -48,7 +47,8 @@ class APCCheckpointManager(CheckpointManager):
     @retry
     def get_sentiment_classifier(checkpoint: str = None,
                                  auto_device=True,
-                                 eval_batch_size=128):
+                                 eval_batch_size=128,
+                                 **kwargs):
         """
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
@@ -70,7 +70,7 @@ class APCCheckpointManager(CheckpointManager):
         else:
             checkpoint = APCCheckpointManager.get_checkpoint(checkpoint)
 
-        sent_classifier = SentimentClassifier(checkpoint, eval_batch_size=eval_batch_size)
+        sent_classifier = SentimentClassifier(checkpoint, eval_batch_size=eval_batch_size, **kwargs)
         device, device_name = get_device(auto_device)
         sent_classifier.opt.device = device
         sent_classifier.to(device)
@@ -101,9 +101,9 @@ class ATEPCCheckpointManager(CheckpointManager):
     @staticmethod
     @retry
     def get_aspect_extractor(checkpoint: str = None,
-                             sentiment_map: dict = None,
                              auto_device=True,
-                             eval_batch_size=128):
+                             eval_batch_size=128,
+                             **kwargs):
         """
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
@@ -125,7 +125,7 @@ class ATEPCCheckpointManager(CheckpointManager):
         else:
             checkpoint = ATEPCCheckpointManager.get_checkpoint(checkpoint)
 
-        aspect_extractor = AspectExtractor(checkpoint, sentiment_map=sentiment_map, eval_batch_size=eval_batch_size)
+        aspect_extractor = AspectExtractor(checkpoint, eval_batch_size=eval_batch_size, **kwargs)
         device, device_name = get_device(auto_device)
         aspect_extractor.opt.device = device
         aspect_extractor.to(device)
@@ -156,7 +156,8 @@ class TCCheckpointManager(CheckpointManager):
     @retry
     def get_text_classifier(checkpoint: str = None,
                             auto_device=True,
-                            eval_batch_size=128):
+                            eval_batch_size=128,
+                            **kwargs):
         """
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
@@ -177,7 +178,7 @@ class TCCheckpointManager(CheckpointManager):
         else:
             checkpoint = TCCheckpointManager.get_checkpoint(checkpoint)
 
-        text_classifier = TextClassifier(checkpoint, eval_batch_size=eval_batch_size)
+        text_classifier = TextClassifier(checkpoint, eval_batch_size=eval_batch_size, **kwargs)
         device, device_name = get_device(auto_device)
         text_classifier.opt.device = device
         text_classifier.to(device)
@@ -207,8 +208,9 @@ class TADCheckpointManager(CheckpointManager):
     @staticmethod
     @retry
     def get_tad_text_classifier(checkpoint: str = None,
-                            auto_device=True,
-                            eval_batch_size=128):
+                                auto_device=True,
+                                eval_batch_size=128,
+                                **kwargs):
         """
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
@@ -229,7 +231,7 @@ class TADCheckpointManager(CheckpointManager):
         else:
             checkpoint = TADCheckpointManager.get_checkpoint(checkpoint)
 
-        tad_text_classifier = TADTextClassifier(checkpoint, eval_batch_size=eval_batch_size)
+        tad_text_classifier = TADTextClassifier(checkpoint, eval_batch_size=eval_batch_size, **kwargs)
         device, device_name = get_device(auto_device)
         tad_text_classifier.opt.device = device
         tad_text_classifier.to(device)
@@ -291,10 +293,10 @@ def available_checkpoints(task='', from_local=False):
         if not from_local:
             try:  # from huggingface space
                 # checkpoint_url = 'https://huggingface.co/spaces/yangheng/PyABSA-ATEPC/raw/main/checkpoint-v1.2.json'
-                checkpoint_url = 'https://huggingface.co/spaces/yangheng/Multilingual-Aspect-Based-Sentiment-Analysis/blob/main/checkpoint-v1.2.json'
+                checkpoint_url = 'https://huggingface.co/spaces/yangheng/Multilingual-Aspect-Based-Sentiment-Analysis/raw/main/checkpoint-v1.2.json'
                 response = requests.get(checkpoint_url)
-                with open('./checkpoints.json', "wb") as f:
-                    f.write(response.json())
+                with open('./checkpoints.json', "w") as f:
+                    json.dump(response.json(), f)
             except Exception as e:
                 try:  # from google drive
                     checkpoint_url = '1CBVGPA3xdQqdkFFwzO5T2Q4reFtzFIJZ'  # V2
@@ -371,4 +373,3 @@ def download_checkpoint(task: str, language: str, checkpoint: dict):
     print(colored('Google Drive applies a restriction on public large file downloading,'
                   ' if you find the checkpoint downloaded is None or small, please download it via browser: {} '.format(huggingface_checkpoint_url), 'yellow'))
     return dest_path
-

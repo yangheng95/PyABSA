@@ -85,8 +85,8 @@ class TADBERTTCDataset(Dataset):
         check_and_fix_labels(label_set1, 'label', all_data, opt)
         check_and_fix_perturb_labels(label_set2, 'perturb_label', all_data, opt)
         check_and_fix_is_adv_labels(label_set3, 'is_adv', all_data, opt)
-        opt.class_dim = len(label_set1-{'-100'})
-        opt.adv_det_dim = len(label_set3-{'-100'})
+        opt.class_dim = len(label_set1 - {'-100'})
+        opt.adv_det_dim = len(label_set3 - {'-100'})
 
         self.data = all_data
 
