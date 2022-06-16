@@ -53,6 +53,7 @@ for dataset in ABSADatasetList()[:1]:
         config.cache_dataset = True
         config.num_epoch = 1
         config.evaluate_begin = 0
+        config.max_seq_len = 10
         config.log_step = -1
         aspect_extractor = Trainer(config=config,
                                    dataset=dataset,
@@ -76,6 +77,7 @@ for dataset in ClassificationDatasetList():
         config.model = model
         config.num_epoch = 1
         config.evaluate_begin = 0
+        config.max_seq_len = 10
         config.log_step = -1
         text_classifier = Trainer(config=config,
                                   dataset=dataset,

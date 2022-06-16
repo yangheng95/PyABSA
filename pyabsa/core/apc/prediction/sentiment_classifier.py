@@ -233,6 +233,7 @@ class SentimentClassifier:
                 final_res[-1]['probs'].append(result['probs'])
                 final_res[-1]['ref_sentiment'].append(result['ref_sentiment'])
                 final_res[-1]['ref_check'].append(result['ref_check'])
+                final_res[-1]['perplexity'] = result['perplexity']
             else:
                 final_res.append(
                     {
@@ -242,7 +243,8 @@ class SentimentClassifier:
                         'confidence': [result['confidence']],
                         'probs': [result['probs']],
                         'ref_sentiment': [result['ref_sentiment']],
-                        'ref_check': [result['ref_check']]
+                        'ref_check': [result['ref_check']],
+                        'perplexity': result['perplexity']
                     }
                 )
 
@@ -260,7 +262,7 @@ class SentimentClassifier:
             n_correct = 0
             n_labeled = 0
             n_total = 0
-            if len(self.infer_dataloader) >= 100:
+            if len(self.infer_dataloader.dataset) >= 100:
                 it = tqdm.tqdm(self.infer_dataloader, postfix='inferring...')
             else:
                 it = self.infer_dataloader
@@ -269,7 +271,7 @@ class SentimentClassifier:
                 self.model.eval()
                 outputs = self.model(inputs)
                 sen_logits = outputs['logits']
-                t_probs = torch.softmax(sen_logits, dim=-1).cpu().numpy()
+                t_probs = torch.softmax(sen_logits, dim=-1)
                 for i, i_probs in enumerate(t_probs):
                     if 'index_to_label' in self.opt.args and int(i_probs.argmax(axis=-1)) in self.opt.index_to_label:
                         sent = self.opt.index_to_label[int(i_probs.argmax(axis=-1))]
@@ -293,8 +295,6 @@ class SentimentClassifier:
                         ids = ids.to(self.opt.device)
                         loss = self.MLM(**ids)['loss']
                         perplexity = float(torch.exp(loss / ids['input_ids'].size(1)))
-                        # ids = self.MLM_tokenizer(text_raw, return_tensors="pt").input_ids.clone().to(self.opt.device)
-                        # perplexity = float(torch.exp(self.MLM(**ids)['loss'] / ids['input_ids'].size(1)))
                     else:
                         perplexity = 'N.A.'
 
@@ -306,6 +306,7 @@ class SentimentClassifier:
                         'probs': i_probs.cpu().numpy(),
                         'ref_sentiment': real_sent,
                         'ref_check': correct[sent == real_sent] if real_sent != '-999' else '',
+                        'perplexity': perplexity
                     })
                     n_total += 1
 

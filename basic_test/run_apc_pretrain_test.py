@@ -77,6 +77,7 @@ for dataset in ABSADatasetList()[:1]:
         cuda.empty_cache()
         config.model = model
         config.cache_dataset = True
+        config.max_seq_len = 10
         config.num_epoch = 1
         config.evaluate_begin = 0
         config.log_step = -1

@@ -269,7 +269,7 @@ class AspectExtractor:
             label_map = {i: label for i, label in enumerate(self.opt.label_list, 1)}
         else:
             label_map = self.opt.index_to_IOB_label
-        if len(self.infer_dataloader) >= 100:
+        if len(infer_data) >= 100:
             it = tqdm.tqdm(self.infer_dataloader, postfix='inferring...')
         else:
             it = self.infer_dataloader
@@ -368,7 +368,7 @@ class AspectExtractor:
         self.model.eval()
 
         # Correct = {True: 'Correct', False: 'Wrong'}
-        if len(self.infer_dataloader) >= 100:
+        if len(infer_data) >= 100:
             it = tqdm.tqdm(self.infer_dataloader, postfix='inferring...')
         else:
             it = self.infer_dataloader

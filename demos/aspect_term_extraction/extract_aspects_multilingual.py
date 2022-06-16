@@ -23,7 +23,7 @@ examples = ['But the staff was so nice to us .',
             ]
 
 # 从Google Drive下载提供的预训练模型
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='chinese')
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='multilingual')
 
 atepc_result = aspect_extractor.extract_aspect(inference_source=examples,  # list-support only, for current
                                                print_result=True,  # print the result
