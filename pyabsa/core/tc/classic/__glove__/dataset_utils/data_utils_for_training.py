@@ -90,7 +90,7 @@ def build_tokenizer(dataset_list, max_seq_len, dat_fname, opt):
 def _load_word_vec(path, word2idx=None, embed_dim=300):
     fin = open(path, 'r', encoding='utf-8', newline='\n', errors='ignore')
     word_vec = {}
-    for line in tqdm.tqdm(fin, postfix='Loading embedding file...'):
+    for line in tqdm.tqdm(fin.readlines(), postfix='Loading embedding file...'):
         tokens = line.rstrip().split()
         word, vec = ' '.join(tokens[:-embed_dim]), tokens[-embed_dim:]
         if word in word2idx.keys():

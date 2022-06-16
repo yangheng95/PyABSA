@@ -146,7 +146,7 @@ def split_aspect(tag1, tag2=None):
     elif tag1 == 'I-ASP' and tag2 == 'I-ASP':
         return False
     else:
-        return True
+        return False
         # raise ValueError('Invalid IOB tag combination: {}, {}'.format(tag1, tag2))
 
 

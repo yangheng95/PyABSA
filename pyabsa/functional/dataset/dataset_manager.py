@@ -124,7 +124,11 @@ class TCDatasetList(list):
 
     def __init__(self):
         dataset_list = [
-            self.SST5, self.SST2
+            self.SST5,
+            self.SST2,
+            self.Yelp10K,
+            self.IMDB10K,
+            self.AGNews10K,
         ]
         super().__init__(dataset_list)
 

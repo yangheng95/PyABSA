@@ -259,7 +259,7 @@ class TADTextClassifier:
 
             n_advdet_correct = 0
             n_advdet_labeled = 0
-            if len(self.infer_dataloader) >= 100:
+            if len(self.infer_dataloader.dataset) >= 100:
                 it = tqdm.tqdm(self.infer_dataloader, postfix='inferring...')
             else:
                 it = self.infer_dataloader
@@ -285,9 +285,9 @@ class TADTextClassifier:
                             probs = None
                             if augs:
                                 for aug in augs:
-                                    fixed_infer_res = self.augmentor.tad_classifier.infer(aug + '!ref!{},-100,-100'.format(real_label), print_result=True, attack_defense=False)
+                                    fixed_infer_res = self.augmentor.tad_classifier.infer(aug + '!ref!{},-100,-100'.format(real_label), print_result=False, attack_defense=False)
                                     probs = probs + fixed_infer_res['probs'] if probs is not None else fixed_infer_res['probs']
-                                fixed_infer_res['label'] = np.argmax(probs / len(augs))
+                                fixed_infer_res['label'] = str(np.argmax(probs / len(augs)))
 
                     if self.cal_perplexity:
                         ids = self.MLM_tokenizer(text_raw, return_tensors="pt")
@@ -311,6 +311,7 @@ class TADTextClassifier:
                         'is_adv_label': self.opt.index_to_is_adv[advdet],
                         'is_adv_probs': advdet_prob.cpu().numpy(),
                         'is_adv_confidence': float(max(advdet_prob)),
+                        'perturb_label': perturb_label,
                         'ref_is_adv_label': self.opt.index_to_is_adv[real_adv] if isinstance(real_adv, int) else real_adv,
                         'ref_is_adv_check': correct[advdet == real_adv] if real_adv != -100 and isinstance(real_adv, int) else '',
 
@@ -373,11 +374,11 @@ class TADTextClassifier:
                     # AdvDet
                     if result['is_adv_label'] != '-100':
                         if not result['ref_is_adv_label']:
-                            text_info += ' -> <AdvDet:{}(ref:{})>'.format(result['is_adv_label'], result['ref_is_adv_check'])
+                            text_info += ' -> <AdvDet:{}(ref:{} confidence:{})>'.format(result['is_adv_label'], result['ref_is_adv_check'], result['is_adv_confidence'])
                         elif result['is_adv_label'] == result['ref_is_adv_label']:
-                            text_info += colored(' -> <AdvDet:{}(ref:{})>'.format(result['is_adv_label'], result['ref_is_adv_check']), 'green')
+                            text_info += colored(' -> <AdvDet:{}(ref:{} confidence:{})>'.format(result['is_adv_label'], result['ref_is_adv_check'], result['is_adv_confidence']), 'green')
                         else:
-                            text_info += colored(' -> <AdvDet:{}(ref:{})>'.format(result['is_adv_label'], result['ref_is_adv_check']), 'red')
+                            text_info += colored(' -> <AdvDet:{}(ref:{} confidence:{})>'.format(result['is_adv_label'], result['ref_is_adv_check'], result['is_adv_confidence']), 'red')
 
                     text_printing += text_info + colored('<perplexity:{}>'.format(result['perplexity']), 'yellow')
                     print(text_printing)

@@ -226,7 +226,7 @@ class TextClassifier:
             n_correct = 0
             n_labeled = 0
             n_total = 0
-            if len(self.infer_dataloader) >= 100:
+            if len(self.infer_dataloader.dataset) >= 100:
                 it = tqdm.tqdm(self.infer_dataloader, postfix='inferring...')
             else:
                 it = self.infer_dataloader
@@ -259,8 +259,6 @@ class TextClassifier:
                         ids = ids.to(self.opt.device)
                         loss = self.MLM(**ids)['loss']
                         perplexity = float(torch.exp(loss / ids['input_ids'].size(1)))
-                        # ids = self.MLM_tokenizer(text_raw, return_tensors="pt").input_ids.clone().to(self.opt.device)
-                        # perplexity = float(torch.exp(self.MLM(**ids)['loss'] / ids['input_ids'].size(1)))
                     else:
                         perplexity = 'N.A.'
 
