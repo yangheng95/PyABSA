@@ -211,10 +211,6 @@ class Instructor:
             return self._train_and_evaluate(criterion)
 
     def _train_and_evaluate(self, criterion):
-        sum_loss = 0
-        sum_acc = 0
-        sum_f1 = 0
-
         global_step = 0
         max_label_fold_acc = 0
         max_label_fold_f1 = 0
@@ -265,8 +261,6 @@ class Instructor:
                 adv_det_loss = criterion(adv_det_logits, adv_det_targets)
                 adv_train_loss = criterion(adv_tr_logits, adv_tr_targets)
                 loss = sen_loss + adv_det_loss + adv_train_loss
-
-                sum_loss += sen_loss.item() + 10 * adv_det_loss.item() + 10 * adv_train_loss.item()
 
                 if amp:
                     with amp.scale_loss(loss, self.optimizer) as scaled_loss:
@@ -364,16 +358,16 @@ class Instructor:
 
                                 save_model(self.opt, self.model, self.tokenizer, save_path)
 
-                        postfix = ('Epoch:{} | Loss:{:.4f} | CLS F1:{:.2f}(max:{:.2f}) | AdvDet F1:{:.2f}(max:{:.2f})'
-                                   ' | AdvCLS F1:{:.2f}(max:{:.2f})'.format(epoch,
-                                                                            sen_loss.item() + adv_det_loss.item() + adv_train_loss.item(),
-                                                                            test_label_f1 * 100,
-                                                                            max_label_fold_f1 * 100,
-                                                                            test_adv_det_f1 * 100,
-                                                                            max_adv_det_fold_f1 * 100,
-                                                                            test_adv_tr_f1 * 100,
-                                                                            max_adv_tr_fold_f1 * 100,
-                                                                            ))
+                        postfix = ('Epoch:{} | Loss:{:.4f} | CLS ACC:{:.2f}(max:{:.2f}) | AdvDet ACC:{:.2f}(max:{:.2f})'
+                                   ' | AdvCLS ACC:{:.2f}(max:{:.2f})'.format(epoch,
+                                                                             sen_loss.item() + adv_det_loss.item() + adv_train_loss.item(),
+                                                                             test_label_acc * 100,
+                                                                             max_label_fold_acc * 100,
+                                                                             test_adv_det_acc * 100,
+                                                                             max_adv_det_fold_acc * 100,
+                                                                             test_adv_tr_acc * 100,
+                                                                             max_adv_tr_fold_acc * 100,
+                                                                             ))
                     else:
                         if self.opt.save_mode and epoch >= self.opt.evaluate_begin:
                             save_model(self.opt, self.model, self.tokenizer, save_path + '_{}/'.format(loss.item()))
