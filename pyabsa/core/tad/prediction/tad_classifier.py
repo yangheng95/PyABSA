@@ -11,6 +11,7 @@ import numpy
 import numpy as np
 import torch
 import tqdm
+from autocuda import auto_cuda
 from findfile import find_file
 from termcolor import colored
 from torch.utils.data import DataLoader
@@ -26,7 +27,7 @@ from ..classic.__bert__.dataset_utils.data_utils_for_inference import TADBERTTCD
 
 from ..classic.__glove__.dataset_utils.data_utils_for_training import build_embedding_matrix, build_tokenizer
 
-from ....utils.pyabsa_utils import print_args, TransformerConnectionError
+from ....utils.pyabsa_utils import print_args, TransformerConnectionError, get_device
 
 
 def get_mlm_and_tokenizer(text_classifier, config):
@@ -48,7 +49,7 @@ def get_mlm_and_tokenizer(text_classifier, config):
 
 
 class TADTextClassifier:
-    def __init__(self, model_arg=None, cal_perplexity=False, eval_batch_size=128):
+    def __init__(self, model_arg=None, cal_perplexity=False, **kwargs):
         '''
             from_train_model: load inferring_tutorials model from trained model
         '''
@@ -76,6 +77,7 @@ class TADTextClassifier:
 
                 with open(config_path, mode='rb') as f:
                     self.opt = pickle.load(f)
+                    self.opt.device = get_device(kwargs.pop('auto_device', True))[0]
 
                 if state_dict_path or model_path:
                     if hasattr(TADBERTTCModelList, self.opt.model.__name__):
@@ -132,7 +134,7 @@ class TADTextClassifier:
         #     self.dataset = TADGloVeTCDataset(tokenizer=self.tokenizer, opt=self.opt)
 
         self.infer_dataloader = None
-        self.opt.eval_batch_size = eval_batch_size
+        self.opt.eval_batch_size = kwargs.pop('eval_batch_size', 128)
 
         if self.opt.seed is not None:
             random.seed(self.opt.seed)
@@ -150,21 +152,7 @@ class TADTextClassifier:
             except Exception as e:
                 self.MLM, self.MLM_tokenizer = None, None
 
-        from boost_aug import AugmentBackend, TADBoostAug
-
-        tc_config = TADConfigManager.get_tad_config_english()
-        tc_config.model = TADBERTTCModelList.TADBERT  # 'BERT' model can be used for DeBERTa or BERT
-        backend = AugmentBackend.EDA
-        self.augmentor = TADBoostAug(ROOT=os.getcwd(),
-                                     AUGMENT_BACKEND=backend,
-                                     CLASSIFIER_TRAINING_NUM=2,
-                                     AUGMENT_NUM_PER_CASE=16,
-                                     CONFIDENCE_THRESHOLD=0.99,
-                                     PERPLEXITY_THRESHOLD=3,
-                                     USE_LABEL=False,
-                                     device=self.opt.device)
-
-        self.augmentor.load_augmentor(self)
+        self.to(self.opt.device)
 
     def to(self, device=None):
         self.opt.device = device
@@ -200,7 +188,6 @@ class TADTextClassifier:
 
     def batch_infer(self,
                     target_file=None,
-                    attack_defense=True,
                     print_result=True,
                     save_result=False,
                     ignore_error=True):
@@ -222,11 +209,10 @@ class TADTextClassifier:
 
         dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
         self.infer_dataloader = DataLoader(dataset=dataset, batch_size=self.opt.eval_batch_size, pin_memory=True, shuffle=False)
-        return self._infer(save_path=save_path if save_result else None, print_result=print_result, attack_defense=attack_defense)
+        return self._infer(save_path=save_path if save_result else None, print_result=print_result)
 
     def infer(self,
               text: str = None,
-              attack_defense=True,
               print_result=True,
               ignore_error=True,
               ):
@@ -242,15 +228,15 @@ class TADTextClassifier:
         else:
             raise RuntimeError('Please specify your datasets path!')
         self.infer_dataloader = DataLoader(dataset=dataset, batch_size=self.opt.eval_batch_size, shuffle=False)
-        return self._infer(print_result=print_result, attack_defense=attack_defense)[0]
+        return self._infer(print_result=print_result)[0]
 
-    def _infer(self, save_path=None, print_result=True, attack_defense=True):
+    def _infer(self, save_path=None, print_result=True):
 
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
 
         correct = {True: 'Correct', False: 'Wrong'}
         results = []
-        perplexity = 'N.A.'
+
 
         with torch.no_grad():
             self.model.eval()
@@ -266,28 +252,18 @@ class TADTextClassifier:
             for _, sample in enumerate(it):
                 inputs = [sample[col].to(self.opt.device) for col in self.opt.inputs_cols]
 
-                logits, advdet_logits = self.model(inputs)
-                probs, advdet_probs = torch.softmax(logits, dim=-1), torch.softmax(advdet_logits, dim=-1)
+                logits, advdet_logits, adv_tr_logits = self.model(inputs)
+                probs, advdet_probs, adv_tr_probs = torch.softmax(logits, dim=-1), torch.softmax(advdet_logits, dim=-1), torch.softmax(adv_tr_logits, dim=-1)
 
-                for i, (prob, advdet_prob) in enumerate(zip(probs, advdet_probs)):
+                for i, (prob, advdet_prob, adv_tr_prob) in enumerate(zip(probs, advdet_probs, adv_tr_probs)):
                     text_raw = sample['text_raw'][i]
 
                     pred_label = int(prob.argmax(axis=-1))
-                    advdet = int(advdet_prob.argmax(axis=-1))
-                    real_label = int(sample['label'][i]) if int(sample['label'][i]) in self.opt.index_to_label else ''
-                    perturb_label = int(sample['perturb_label'][i]) if int(sample['perturb_label'][i]) in self.opt.index_to_perturb_label else ''
-                    real_adv = int(sample['is_adv'][i]) if int(sample['is_adv'][i]) in self.opt.index_to_is_adv else ''
-
-                    fixed_infer_res = None
-                    if attack_defense:
-                        if advdet != 0 and real_label != -100:
-                            augs = self.augmentor.single_augment(text_raw, real_label, 1)
-                            probs = None
-                            if augs:
-                                for aug in augs:
-                                    fixed_infer_res = self.augmentor.tad_classifier.infer(aug + '!ref!{},-100,-100'.format(real_label), print_result=False, attack_defense=False)
-                                    probs = probs + fixed_infer_res['probs'] if probs is not None else fixed_infer_res['probs']
-                                fixed_infer_res['label'] = str(np.argmax(probs / len(augs)))
+                    pred_is_adv_label = int(advdet_prob.argmax(axis=-1))
+                    pred_adv_tr_label = int(adv_tr_prob.argmax(axis=-1))
+                    ref_label = int(sample['label'][i]) if int(sample['label'][i]) in self.opt.index_to_label else ''
+                    ref_is_adv_label = int(sample['is_adv'][i]) if int(sample['is_adv'][i]) in self.opt.index_to_is_adv else ''
+                    ref_adv_tr_label = int(sample['adv_train_label'][i]) if int(sample['adv_train_label'][i]) in self.opt.index_to_adv_train_label else ''
 
                     if self.cal_perplexity:
                         ids = self.MLM_tokenizer(text_raw, return_tensors="pt")
@@ -300,42 +276,41 @@ class TADTextClassifier:
 
                     results.append({
                         'text': text_raw,
-                        'label': fixed_infer_res['label'] if fixed_infer_res else self.opt.index_to_label[pred_label],
-                        'probs': fixed_infer_res['probs'] if fixed_infer_res else prob.cpu().numpy(),
-                        'confidence': fixed_infer_res['confidence'] if fixed_infer_res else float(max(prob)),
-                        'ref_label': self.opt.index_to_label[real_label] if isinstance(real_label, int) else real_label,
-                        'ref_label_check': fixed_infer_res['ref_label_check'] if fixed_infer_res else
-                        correct[pred_label == real_label] if real_label != -100 and isinstance(real_label, int) else '',
-                        'is_fixed': True if fixed_infer_res else False,
 
-                        'is_adv_label': self.opt.index_to_is_adv[advdet],
+                        'label': self.opt.index_to_adv_train_label[pred_adv_tr_label] if pred_is_adv_label else self.opt.index_to_label[pred_label],
+                        'probs': adv_tr_prob.cpu().numpy() if pred_is_adv_label else prob.cpu().numpy(),
+                        'confidence': float(max(adv_tr_prob)) if pred_is_adv_label else float(max(prob)),
+                        'ref_label': self.opt.index_to_label[ref_label] if isinstance(ref_label, int) else ref_label,
+                        'ref_label_check': (correct[pred_label == ref_label] if ref_label != -100 else '') if pred_is_adv_label else
+                        (correct[pred_adv_tr_label == ref_label] if ref_label != -100 else ''),
+                        'is_fixed': True if pred_is_adv_label else False,
+
+                        # 'label': self.opt.index_to_label[pred_label],
+                        # 'probs': prob.cpu().numpy(),
+                        # 'confidence': float(max(prob)),
+                        # 'ref_label': self.opt.index_to_label[ref_label] if isinstance(ref_label, int) else ref_label,
+                        # 'ref_label_check': correct[pred_label == ref_label] if ref_label != -100 else '',
+                        # 'is_fixed': True if pred_is_adv_label else False,
+
+                        'is_adv_label': self.opt.index_to_is_adv[pred_is_adv_label],
                         'is_adv_probs': advdet_prob.cpu().numpy(),
                         'is_adv_confidence': float(max(advdet_prob)),
-                        'perturb_label': perturb_label,
-                        'ref_is_adv_label': self.opt.index_to_is_adv[real_adv] if isinstance(real_adv, int) else real_adv,
-                        'ref_is_adv_check': correct[advdet == real_adv] if real_adv != -100 and isinstance(real_adv, int) else '',
-
-                        # 'fixed_label': fixed_infer_res['label'] if fixed_infer_res else '',
-                        # 'fixed_probs': fixed_infer_res['probs'] if fixed_infer_res else '',
-                        # 'fixed_confidence': fixed_infer_res['confidence'] if fixed_infer_res == 1 else -1,
-                        # 'fixed_ref_label_check': correct[fixed_infer_res['label'] == real_label] if fixed_infer_res and real_label != -100 and isinstance(real_label, int) else '',
+                        'ref_adv_tr_label': ref_adv_tr_label,
+                        'ref_is_adv_label': self.opt.index_to_is_adv[ref_is_adv_label] if isinstance(ref_is_adv_label, int) else ref_is_adv_label,
+                        'ref_is_adv_check': correct[pred_is_adv_label == ref_is_adv_label] if ref_is_adv_label != -100 and isinstance(ref_is_adv_label, int) else '',
 
                         'perplexity': perplexity,
                     })
 
-                    if real_label != -100:
+                    if ref_label != -100:
                         n_labeled += 1
-                        # if not advdet and pred_label == real_label:
-                        #     n_correct += 1
-                        # elif fixed_infer_res and self.opt.label_to_index[fixed_infer_res['label']] == real_label:
-                        #     n_correct += 1
 
-                        if results[-1]['ref_label_check'] == 'Correct':
+                        if results[-1]['label'] == results[-1]['ref_label']:
                             n_correct += 1
 
-                    if real_adv != -100:
+                    if ref_is_adv_label != -100:
                         n_advdet_labeled += 1
-                        if real_adv == advdet:
+                        if ref_is_adv_label == pred_is_adv_label:
                             n_advdet_correct += 1
 
         try:
@@ -352,33 +327,15 @@ class TADTextClassifier:
                             text_info += colored(' -> <CLS:{}(ref:{} confidence:{})>'.format(result['label'], result['ref_label'], result['confidence']), 'green')
                         else:
                             text_info += colored(' -> <CLS:{}(ref:{} confidence:{})>'.format(result['label'], result['ref_label'], result['confidence']), 'red')
-                    # if not result['fixed_label']:
-                    #     # CLS
-                    #     if result['label'] != '-100':
-                    #         if not result['ref_label']:
-                    #             text_info += ' -> <CLS:{}(ref:{} confidence:{})>'.format(result['label'], result['ref_label'], result['confidence'])
-                    #         elif result['label'] == result['ref_label']:
-                    #             text_info += colored(' -> <CLS:{}(ref:{} confidence:{})>'.format(result['label'], result['ref_label'], result['confidence']), 'green')
-                    #         else:
-                    #             text_info += colored(' -> <CLS:{}(ref:{} confidence:{})>'.format(result['label'], result['ref_label'], result['confidence']), 'red')
-                    # else:
-                    #     # Fix prediction
-                    #     if result['fixed_label'] != '-100':
-                    #         if not result['ref_label']:
-                    #             text_info += ' -> <Fixed CLS:{}(ref:{} confidence:{})>'.format(result['fixed_label'], result['ref_label'], result['confidence'])
-                    #         elif result['fixed_label'] == result['ref_label']:
-                    #             text_info += colored(' -> <Fixed CLS:{}(ref:{} confidence:{})>'.format(result['fixed_label'], result['ref_label'], result['confidence']), 'green')
-                    #         else:
-                    #             text_info += colored(' -> <Fixed CLS:{}(ref:{} confidence:{})>'.format(result['fixed_label'], result['ref_label'], result['confidence']), 'red')
 
                     # AdvDet
                     if result['is_adv_label'] != '-100':
                         if not result['ref_is_adv_label']:
                             text_info += ' -> <AdvDet:{}(ref:{} confidence:{})>'.format(result['is_adv_label'], result['ref_is_adv_check'], result['is_adv_confidence'])
                         elif result['is_adv_label'] == result['ref_is_adv_label']:
-                            text_info += colored(' -> <AdvDet:{}(ref:{} confidence:{})>'.format(result['is_adv_label'], result['ref_is_adv_check'], result['is_adv_confidence']), 'green')
+                            text_info += colored(' -> <AdvDet:{}(ref:{} confidence:{})>'.format(result['is_adv_label'], result['ref_is_adv_label'], result['is_adv_confidence']), 'green')
                         else:
-                            text_info += colored(' -> <AdvDet:{}(ref:{} confidence:{})>'.format(result['is_adv_label'], result['ref_is_adv_check'], result['is_adv_confidence']), 'red')
+                            text_info += colored(' -> <AdvDet:{}(ref:{} confidence:{})>'.format(result['is_adv_label'], result['ref_is_adv_label'], result['is_adv_confidence']), 'red')
 
                     text_printing += text_info + colored('<perplexity:{}>'.format(result['perplexity']), 'yellow')
                     print(text_printing)

@@ -16,6 +16,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import tqdm
+from autocuda import auto_cuda
 from findfile import find_file
 from termcolor import colored
 from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
@@ -25,7 +26,7 @@ from transformers.models.bert.modeling_bert import BertModel
 from pyabsa.functional.dataset import detect_infer_dataset, DatasetItem
 from pyabsa.core.atepc.models import ATEPCModelList
 from pyabsa.core.atepc.dataset_utils.atepc_utils import load_atepc_inference_datasets, process_iob_tags
-from pyabsa.utils.pyabsa_utils import print_args, save_json, TransformerConnectionError
+from pyabsa.utils.pyabsa_utils import print_args, save_json, TransformerConnectionError, get_device
 from ..dataset_utils.data_utils_for_inference import (ATEPCProcessor,
                                                       convert_ate_examples_to_features,
                                                       convert_apc_examples_to_features,
@@ -35,7 +36,7 @@ from ..dataset_utils.data_utils_for_training import split_aspect
 
 class AspectExtractor:
 
-    def __init__(self, model_arg=None, sentiment_map=None, eval_batch_size=128):
+    def __init__(self, model_arg=None, **kwargs):
 
         # load from a training
         if not isinstance(model_arg, str):
@@ -60,6 +61,7 @@ class AspectExtractor:
 
                 with open(config_path, mode='rb') as f:
                     self.opt = pickle.load(f)
+                    self.opt.device = get_device(kwargs.pop('auto_device', True))[0]
 
                 if state_dict_path:
                     try:
@@ -105,15 +107,10 @@ class AspectExtractor:
                 self.opt.gradient_accumulation_steps))
 
         self.eval_dataloader = None
-        self.opt.infer_batch_size = eval_batch_size
-        self.sentiment_map = None
-        self.set_sentiment_map(sentiment_map)
+        self.opt.eval_batch_size = kwargs.pop('eval_batch_size', 128)
 
-    def set_sentiment_map(self, sentiment_map):
-        if sentiment_map and SENTIMENT_PADDING not in sentiment_map:
-            print('Warning: set_sentiment_map is deprecated, please directly set labels within dataset.')
-            sentiment_map[SENTIMENT_PADDING] = ''
-        self.sentiment_map = sentiment_map
+        self.to(self.opt.device)
+
 
     def to(self, device=None):
         self.opt.device = device

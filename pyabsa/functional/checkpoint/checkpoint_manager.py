@@ -21,7 +21,7 @@ from pyabsa.core.apc.prediction.sentiment_classifier import SentimentClassifier
 from pyabsa.core.atepc.prediction.aspect_extractor import AspectExtractor
 from pyabsa.core.tad.prediction.tad_classifier import TADTextClassifier
 from pyabsa.core.tc.prediction.text_classifier import TextClassifier
-from pyabsa.utils.pyabsa_utils import get_device, retry
+from pyabsa.utils.pyabsa_utils import retry
 
 
 def unzip_checkpoint(zip_path):
@@ -46,8 +46,6 @@ class APCCheckpointManager(CheckpointManager):
     @staticmethod
     @retry
     def get_sentiment_classifier(checkpoint: str = None,
-                                 auto_device=True,
-                                 eval_batch_size=128,
                                  **kwargs):
         """
 
@@ -70,10 +68,7 @@ class APCCheckpointManager(CheckpointManager):
         else:
             checkpoint = APCCheckpointManager.get_checkpoint(checkpoint)
 
-        sent_classifier = SentimentClassifier(checkpoint, eval_batch_size=eval_batch_size, **kwargs)
-        device, device_name = get_device(auto_device)
-        sent_classifier.opt.device = device
-        sent_classifier.to(device)
+        sent_classifier = SentimentClassifier(checkpoint, **kwargs)
         return sent_classifier
 
     @staticmethod
@@ -101,8 +96,6 @@ class ATEPCCheckpointManager(CheckpointManager):
     @staticmethod
     @retry
     def get_aspect_extractor(checkpoint: str = None,
-                             auto_device=True,
-                             eval_batch_size=128,
                              **kwargs):
         """
 
@@ -125,10 +118,7 @@ class ATEPCCheckpointManager(CheckpointManager):
         else:
             checkpoint = ATEPCCheckpointManager.get_checkpoint(checkpoint)
 
-        aspect_extractor = AspectExtractor(checkpoint, eval_batch_size=eval_batch_size, **kwargs)
-        device, device_name = get_device(auto_device)
-        aspect_extractor.opt.device = device
-        aspect_extractor.to(device)
+        aspect_extractor = AspectExtractor(checkpoint, **kwargs)
         return aspect_extractor
 
     @staticmethod
@@ -155,8 +145,6 @@ class TCCheckpointManager(CheckpointManager):
     @staticmethod
     @retry
     def get_text_classifier(checkpoint: str = None,
-                            auto_device=True,
-                            eval_batch_size=128,
                             **kwargs):
         """
 
@@ -178,10 +166,7 @@ class TCCheckpointManager(CheckpointManager):
         else:
             checkpoint = TCCheckpointManager.get_checkpoint(checkpoint)
 
-        text_classifier = TextClassifier(checkpoint, eval_batch_size=eval_batch_size, **kwargs)
-        device, device_name = get_device(auto_device)
-        text_classifier.opt.device = device
-        text_classifier.to(device)
+        text_classifier = TextClassifier(checkpoint, **kwargs)
         return text_classifier
 
     @staticmethod
@@ -232,9 +217,6 @@ class TADCheckpointManager(CheckpointManager):
             checkpoint = TADCheckpointManager.get_checkpoint(checkpoint)
 
         tad_text_classifier = TADTextClassifier(checkpoint, eval_batch_size=eval_batch_size, **kwargs)
-        device, device_name = get_device(auto_device)
-        tad_text_classifier.opt.device = device
-        tad_text_classifier.to(device)
         return tad_text_classifier
 
     @staticmethod
