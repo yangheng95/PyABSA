@@ -67,21 +67,18 @@ class TADBERTTCDataset(Dataset):
                 if '!ref!' in text:
                     text, _, labels = text.strip().partition('!ref!')
                     text = text.strip()
-                    label, perturb_label, is_adv = labels.strip().split(',')
-                    label, perturb_label, is_adv = label.strip(), perturb_label.strip(), is_adv.strip()
+                    label, is_adv, adv_train_label = labels.strip().split(',')
+                    label, is_adv, adv_train_label = label.strip(), is_adv.strip(), adv_train_label.strip()
 
-                    # label = -100
+                    label = int(label)
+                    adv_train_label = int(adv_train_label)
+                    is_adv = int(is_adv)
+
                 else:
                     text = text.strip()
                     label = -100
-                    perturb_label = -100
+                    adv_train_label = -100
                     is_adv = -100
-
-                # if label == perturb_label:
-                #     continue
-
-                # if is_adv == '1' or is_adv == 1:
-                #     label = '-100'
 
                 text_indices = self.tokenizer.text_to_sequence('{}'.format(text))
 
@@ -92,12 +89,13 @@ class TADBERTTCDataset(Dataset):
 
                     'label': label,
 
-                    'perturb_label': perturb_label,
+                    'adv_train_label': adv_train_label,
 
                     'is_adv': is_adv,
+
                     # 'label': self.opt.label_to_index.get(label, -100) if isinstance(label, str) else label,
                     #
-                    # 'perturb_label': self.opt.perturb_label_to_index.get(perturb_label, -100) if isinstance(perturb_label, str) else perturb_label,
+                    # 'adv_train_label': self.opt.adv_train_label_to_index.get(adv_train_label, -100) if isinstance(adv_train_label, str) else adv_train_label,
                     #
                     # 'is_adv': self.opt.is_adv_to_index.get(is_adv, -100) if isinstance(is_adv, str) else is_adv,
                 }
