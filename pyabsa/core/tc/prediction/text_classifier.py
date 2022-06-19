@@ -11,6 +11,7 @@ import autocuda
 import numpy
 import torch
 import tqdm
+from autocuda import auto_cuda
 from findfile import find_file
 from termcolor import colored
 from torch.utils.data import DataLoader
@@ -24,7 +25,7 @@ from ..classic.__bert__.dataset_utils.data_utils_for_inference import BERTClassi
 
 from ..classic.__glove__.dataset_utils.data_utils_for_training import LABEL_PADDING, build_embedding_matrix, build_tokenizer
 
-from pyabsa.utils.pyabsa_utils import print_args, TransformerConnectionError
+from pyabsa.utils.pyabsa_utils import print_args, TransformerConnectionError, get_device
 
 
 def get_mlm_and_tokenizer(text_classifier, config):
@@ -46,7 +47,7 @@ def get_mlm_and_tokenizer(text_classifier, config):
 
 
 class TextClassifier:
-    def __init__(self, model_arg=None, cal_perplexity=False, eval_batch_size=128):
+    def __init__(self, model_arg=None, cal_perplexity=False, **kwargs):
         '''
             from_train_model: load inferring_tutorials model from trained model
         '''
@@ -74,6 +75,7 @@ class TextClassifier:
 
                 with open(config_path, mode='rb') as f:
                     self.opt = pickle.load(f)
+                    self.opt.device = get_device(kwargs.pop('auto_device', True))[0]
 
                 if state_dict_path or model_path:
                     if hasattr(BERTTCModelList, self.opt.model.__name__):
@@ -130,7 +132,7 @@ class TextClassifier:
             self.dataset = GloVeTCDataset(tokenizer=self.tokenizer, opt=self.opt)
 
         self.infer_dataloader = None
-        self.opt.eval_batch_size = eval_batch_size
+        self.opt.eval_batch_size = kwargs.pop('eval_batch_size', 128)
 
         if self.opt.seed is not None:
             random.seed(self.opt.seed)
@@ -147,6 +149,9 @@ class TextClassifier:
                 self.MLM, self.MLM_tokenizer = get_mlm_and_tokenizer(self, self.opt)
             except Exception as e:
                 self.MLM, self.MLM_tokenizer = None, None
+
+        self.to(self.opt.device)
+
 
     def to(self, device=None):
         self.opt.device = device
