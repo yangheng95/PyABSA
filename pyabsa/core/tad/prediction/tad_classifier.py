@@ -277,20 +277,20 @@ class TADTextClassifier:
                     results.append({
                         'text': text_raw,
 
-                        # 'label': self.opt.index_to_adv_train_label[pred_adv_tr_label] if pred_is_adv_label else self.opt.index_to_label[pred_label],
-                        # 'probs': adv_tr_prob.cpu().numpy() if pred_is_adv_label else prob.cpu().numpy(),
-                        # 'confidence': float(max(adv_tr_prob)) if pred_is_adv_label else float(max(prob)),
-                        # 'ref_label': self.opt.index_to_label[ref_label] if isinstance(ref_label, int) else ref_label,
-                        # 'ref_label_check': (correct[pred_label == ref_label] if ref_label != -100 else '') if pred_is_adv_label else
-                        # (correct[pred_adv_tr_label == ref_label] if ref_label != -100 else ''),
-                        # 'is_fixed': True if pred_is_adv_label else False,
-
-                        'label': self.opt.index_to_label[pred_label],
-                        'probs': prob.cpu().numpy(),
-                        'confidence': float(max(prob)),
+                        'label': self.opt.index_to_adv_train_label[pred_adv_tr_label] if pred_is_adv_label else self.opt.index_to_label[pred_label],
+                        'probs': adv_tr_prob.cpu().numpy() if pred_is_adv_label else prob.cpu().numpy(),
+                        'confidence': float(max(adv_tr_prob)) if pred_is_adv_label else float(max(prob)),
                         'ref_label': self.opt.index_to_label[ref_label] if isinstance(ref_label, int) else ref_label,
-                        'ref_label_check': correct[pred_label == ref_label] if ref_label != -100 else '',
+                        'ref_label_check': (correct[pred_label == ref_label] if ref_label != -100 else '') if pred_is_adv_label else
+                        (correct[pred_adv_tr_label == ref_label] if ref_label != -100 else ''),
                         'is_fixed': True if pred_is_adv_label else False,
+
+                        # 'label': self.opt.index_to_label[pred_label],
+                        # 'probs': prob.cpu().numpy(),
+                        # 'confidence': float(max(prob)),
+                        # 'ref_label': self.opt.index_to_label[ref_label] if isinstance(ref_label, int) else ref_label,
+                        # 'ref_label_check': correct[pred_label == ref_label] if ref_label != -100 else '',
+                        # 'is_fixed': True if pred_is_adv_label else False,
 
                         'is_adv_label': self.opt.index_to_is_adv[pred_is_adv_label],
                         'is_adv_probs': advdet_prob.cpu().numpy(),
