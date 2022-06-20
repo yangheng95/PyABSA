@@ -354,7 +354,7 @@ class TADTextClassifier:
                             time.sleep(10)
                             os.system('pip install git+https://github.com/yangheng95/TextAttack')
                             os.system('pip install tensorflow_text')
-                            raise RuntimeError('Installation finished, please retry...')
+                            raise RuntimeError('Installation done, please run again...')
 
                     if ref_label != -100:
                         n_labeled += 1
