@@ -211,15 +211,13 @@ class Instructor:
             return self._train_and_evaluate(criterion)
 
     def _train_and_evaluate(self, criterion):
-        sum_loss = 0
-        sum_acc = 0
-        sum_f1 = 0
-
         global_step = 0
         max_label_fold_acc = 0
         max_label_fold_f1 = 0
         max_adv_det_fold_acc = 0
         max_adv_det_fold_f1 = 0
+        max_adv_tr_fold_acc = 0
+        max_adv_tr_fold_f1 = 0
 
         save_path = '{0}/{1}_{2}'.format(self.opt.model_path_to_save,
                                          self.opt.model_name,
@@ -230,6 +228,8 @@ class Instructor:
                                      'max_cls_test_f1': 0,
                                      'max_adv_det_test_acc': 0,
                                      'max_adv_det_test_f1': 0,
+                                     'max_adv_tr_test_acc': 0,
+                                     'max_adv_tr_test_f1': 0,
                                      }
 
         self.logger.info("***** Running training for Text Classification with Adversarial Attack Defense *****")
@@ -253,14 +253,15 @@ class Instructor:
                 inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
                 outputs = self.model(inputs)
                 label_targets = sample_batched['label'].to(self.opt.device)
+                adv_tr_targets = sample_batched['adv_train_label'].to(self.opt.device)
                 adv_det_targets = sample_batched['is_adv'].to(self.opt.device)
 
-                sen_logits, adv_det_logits = outputs
+                sen_logits, adv_det_logits, adv_tr_logits = outputs
                 sen_loss = criterion(sen_logits, label_targets)
                 adv_det_loss = criterion(adv_det_logits, adv_det_targets)
-                loss = sen_loss + adv_det_loss
+                adv_train_loss = criterion(adv_tr_logits, adv_tr_targets)
+                loss = sen_loss + adv_det_loss + adv_train_loss
 
-                sum_loss += sen_loss.item() + adv_det_loss.item()
                 if amp:
                     with amp.scale_loss(loss, self.optimizer) as scaled_loss:
                         scaled_loss.backward()
@@ -277,19 +278,22 @@ class Instructor:
                     if self.opt.dataset_file['test'] and epoch >= self.opt.evaluate_begin:
 
                         if self.val_dataloader:
-                            test_label_acc, test_label_f1, test_adv_det_acc, test_adv_det_f1 = \
+                            test_label_acc, test_label_f1, test_adv_det_acc, test_adv_det_f1, test_adv_tr_acc, test_adv_tr_f1 = \
                                 self._evaluate_acc_f1(self.val_dataloader)
                         else:
-                            test_label_acc, test_label_f1, test_adv_det_acc, test_adv_det_f1 = \
+                            test_label_acc, test_label_f1, test_adv_det_acc, test_adv_det_f1, test_adv_tr_acc, test_adv_tr_f1 = \
                                 self._evaluate_acc_f1(self.test_dataloader)
 
                         self.opt.metrics_of_this_checkpoint['max_cls_test_acc'] = test_label_acc
                         self.opt.metrics_of_this_checkpoint['max_cls_test_f1'] = test_label_f1
                         self.opt.metrics_of_this_checkpoint['max_adv_det_test_acc'] = test_adv_det_acc
                         self.opt.metrics_of_this_checkpoint['max_adv_det_test_f1'] = test_adv_det_f1
+                        self.opt.metrics_of_this_checkpoint['max_adv_tr_test_acc'] = test_adv_tr_acc
+                        self.opt.metrics_of_this_checkpoint['max_adv_tr_test_f1'] = test_adv_tr_f1
 
                         if test_label_acc > max_label_fold_acc or test_label_acc > max_label_fold_f1 \
-                            or test_adv_det_acc > max_adv_det_fold_acc or test_adv_det_acc > max_adv_det_fold_f1:
+                            or test_adv_det_acc > max_adv_det_fold_acc or test_adv_det_f1 > max_adv_det_fold_f1 \
+                            or test_adv_tr_acc > max_adv_tr_fold_acc or test_adv_tr_f1 > max_adv_tr_fold_f1:
 
                             if test_label_acc > max_label_fold_acc:
                                 patience = self.opt.patience
@@ -307,6 +311,14 @@ class Instructor:
                                 patience = self.opt.patience
                                 max_adv_det_fold_f1 = test_adv_det_f1
 
+                            if test_adv_tr_acc > max_adv_tr_fold_acc:
+                                patience = self.opt.patience
+                                max_adv_tr_fold_acc = test_adv_tr_acc
+
+                            if test_adv_tr_f1 > max_adv_tr_fold_f1:
+                                patience = self.opt.patience
+                                max_adv_tr_fold_f1 = test_adv_tr_f1
+
                             if self.opt.model_path_to_save:
                                 if not os.path.exists(self.opt.model_path_to_save):
                                     os.makedirs(self.opt.model_path_to_save)
@@ -317,14 +329,17 @@ class Instructor:
                                     except:
                                         # logger.info('Can not remove sub-optimal trained model:', save_path)
                                         pass
-                                save_path = '{0}/{1}_{2}_cls_acc_{3}_cls_f1_{4}_adv_det_acc_{5}_adv_det_f1_{6}/'.format(self.opt.model_path_to_save,
-                                                                                                                        self.opt.model_name,
-                                                                                                                        self.opt.dataset_name,
-                                                                                                                        round(test_label_acc * 100, 2),
-                                                                                                                        round(test_label_f1 * 100, 2),
-                                                                                                                        round(test_adv_det_acc * 100, 2),
-                                                                                                                        round(test_adv_det_f1 * 100, 2),
-                                                                                                                        )
+                                save_path = '{0}/{1}_{2}_cls_acc_{3}_cls_f1_{4}_adv_det_acc_{5}_adv_det_f1_{6}' \
+                                            '_adv_training_acc_{7}_adv_training_f1_{8}/'.format(self.opt.model_path_to_save,
+                                                                                                self.opt.model_name,
+                                                                                                self.opt.dataset_name,
+                                                                                                round(test_label_acc * 100, 2),
+                                                                                                round(test_label_f1 * 100, 2),
+                                                                                                round(test_adv_det_acc * 100, 2),
+                                                                                                round(test_adv_det_f1 * 100, 2),
+                                                                                                round(test_adv_tr_acc * 100, 2),
+                                                                                                round(test_adv_tr_f1 * 100, 2),
+                                                                                                )
 
                                 if test_label_acc > self.opt.max_test_metrics['max_cls_test_acc']:
                                     self.opt.max_test_metrics['max_cls_test_acc'] = test_label_acc
@@ -336,15 +351,23 @@ class Instructor:
                                 if test_adv_det_f1 > self.opt.max_test_metrics['max_adv_det_test_f1']:
                                     self.opt.max_test_metrics['max_adv_det_test_f1'] = test_adv_det_f1
 
+                                if test_adv_tr_acc > self.opt.max_test_metrics['max_adv_tr_test_acc']:
+                                    self.opt.max_test_metrics['max_adv_tr_test_acc'] = test_adv_tr_acc
+                                if test_adv_tr_f1 > self.opt.max_test_metrics['max_adv_tr_test_f1']:
+                                    self.opt.max_test_metrics['max_adv_tr_test_f1'] = test_adv_tr_f1
+
                                 save_model(self.opt, self.model, self.tokenizer, save_path)
 
-                        postfix = ('Epoch:{} | Loss:{:.4f} | CLS F1:{:.2f}(max:{:.2f}) | AdvDet F1:{:.2f}(max:{:.2f})'.format(epoch,
-                                                                                                                              sen_loss.item() + adv_det_loss.item(),
-                                                                                                                              test_label_f1 * 100,
-                                                                                                                              max_label_fold_f1 * 100,
-                                                                                                                              test_adv_det_f1 * 100,
-                                                                                                                              max_adv_det_fold_f1 * 100,
-                                                                                                                              ))
+                        postfix = ('Epoch:{} | Loss:{:.4f} | CLS ACC:{:.2f}(max:{:.2f}) | AdvDet ACC:{:.2f}(max:{:.2f})'
+                                   ' | AdvCLS ACC:{:.2f}(max:{:.2f})'.format(epoch,
+                                                                             sen_loss.item() + adv_det_loss.item() + adv_train_loss.item(),
+                                                                             test_label_acc * 100,
+                                                                             max_label_fold_acc * 100,
+                                                                             test_adv_det_acc * 100,
+                                                                             max_adv_det_fold_acc * 100,
+                                                                             test_adv_tr_acc * 100,
+                                                                             max_adv_tr_fold_acc * 100,
+                                                                             ))
                     else:
                         if self.opt.save_mode and epoch >= self.opt.evaluate_begin:
                             save_model(self.opt, self.model, self.tokenizer, save_path + '_{}/'.format(loss.item()))
@@ -363,13 +386,15 @@ class Instructor:
         if self.val_dataloader:
             print('Loading best model: {} and evaluating on test set ...'.format(save_path))
             self.reload_model(find_file(save_path, '.state_dict'))
-            max_label_fold_acc, max_label_fold_f1, max_adv_det_fold_acc, max_adv_det_fold_f1 = \
+            max_label_fold_acc, max_label_fold_f1, max_adv_det_fold_acc, max_adv_det_fold_f1, max_adv_tr_fold_acc, max_adv_tr_fold_f1 = \
                 self._evaluate_acc_f1(self.test_dataloader)
 
             self.opt.MV.add_metric('Max-CLS-Acc', max_label_fold_acc * 100)
             self.opt.MV.add_metric('Max-CLS-F1', max_label_fold_f1 * 100)
             self.opt.MV.add_metric('Max-AdvDet-Acc', max_adv_det_fold_acc * 100)
             self.opt.MV.add_metric('Max-AdvDet-F1', max_adv_det_fold_f1 * 100)
+            self.opt.MV.add_metric('Max-AdvCLS-Acc', max_adv_tr_fold_acc * 100)
+            self.opt.MV.add_metric('Max-AdvCLS-F1', max_adv_tr_fold_f1 * 100)
 
         self.logger.info(self.opt.MV.summary(no_print=True))
 
@@ -398,56 +423,76 @@ class Instructor:
         self.model.eval()
         n_label_test_correct, n_label_test_total = 0, 0
         n_adv_det_test_correct, n_adv_det_test_total = 0, 0
+        n_adv_tr_test_correct, n_adv_tr_test_total = 1e-10, 1e-10
         t_label_targets_all, t_label_outputs_all = None, None
         t_adv_det_targets_all, t_adv_det_outputs_all = None, None
+        t_adv_tr_targets_all, t_adv_tr_outputs_all = None, None
         with torch.no_grad():
             for t_batch, t_sample_batched in enumerate(test_dataloader):
 
                 t_inputs = [t_sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
                 t_label_targets = t_sample_batched['label'].to(self.opt.device)
+                t_adv_tr_targets = t_sample_batched['adv_train_label'].to(self.opt.device)
                 t_adv_det_targets = t_sample_batched['is_adv'].to(self.opt.device)
 
-                outputs, adv_det_logits = self.model(t_inputs)
-                y = torch.tensor([y for y in t_label_targets.cpu() if y != -100]).to(self.opt.device)
-                y_valid = [True if y != -100 else False for y in t_label_targets.cpu()]
-                y_hat = outputs[y_valid]
+                sent_logits, advdet_logits, adv_tr_logits = self.model(t_inputs)
 
-                t_label_targets = y
-                outputs = y_hat
+                # --------------------------------------------------------------------------------------------#
+                valid_label_targets = torch.tensor([x for x in t_label_targets.cpu() if x != -100]).to(self.opt.device)
+                if any(valid_label_targets):
+                    valid_label_logit_ids = [True if x != -100 else False for x in t_label_targets.cpu()]
+                    valid_label_logits = sent_logits[valid_label_logit_ids]
 
-                if any(y):
-
-                    n_label_test_correct += (torch.argmax(outputs, -1) == t_label_targets).sum().item()
-                    n_label_test_total += len(outputs)
+                    n_label_test_correct += (torch.argmax(valid_label_logits, -1) == valid_label_targets).sum().item()
+                    n_label_test_total += len(valid_label_logits)
 
                     if t_label_targets_all is None:
-                        t_label_targets_all = t_label_targets
-                        t_label_outputs_all = outputs
+                        t_label_targets_all = valid_label_targets
+                        t_label_outputs_all = valid_label_logits
                     else:
-                        t_label_targets_all = torch.cat((t_label_targets_all, t_label_targets), dim=0)
-                        t_label_outputs_all = torch.cat((t_label_outputs_all, outputs), dim=0)
+                        t_label_targets_all = torch.cat((t_label_targets_all, valid_label_targets), dim=0)
+                        t_label_outputs_all = torch.cat((t_label_outputs_all, valid_label_logits), dim=0)
 
-                n_adv_det_test_correct += (torch.argmax(adv_det_logits, -1) == t_adv_det_targets).sum().item()
-                n_adv_det_test_total += len(adv_det_logits)
+                # --------------------------------------------------------------------------------------------#
+                n_adv_det_test_correct += (torch.argmax(advdet_logits, -1) == t_adv_det_targets).sum().item()
+                n_adv_det_test_total += len(advdet_logits)
 
                 if t_adv_det_targets_all is None:
                     t_adv_det_targets_all = t_adv_det_targets
-                    t_adv_det_outputs_all = adv_det_logits
+                    t_adv_det_outputs_all = advdet_logits
                 else:
                     t_adv_det_targets_all = torch.cat((t_adv_det_targets_all, t_adv_det_targets), dim=0)
-                    t_adv_det_outputs_all = torch.cat((t_adv_det_outputs_all, adv_det_logits), dim=0)
+                    t_adv_det_outputs_all = torch.cat((t_adv_det_outputs_all, advdet_logits), dim=0)
+
+                # --------------------------------------------------------------------------------------------#
+                valid_adv_tr_targets = torch.tensor([x for x in t_adv_tr_targets.cpu() if x != -100]).to(self.opt.device)
+                if any(t_adv_tr_targets):
+                    valid_adv_tr_logit_ids = [True if x != -100 else False for x in t_adv_tr_targets.cpu()]
+                    valid_adv_tr_logits = adv_tr_logits[valid_adv_tr_logit_ids]
+
+                    n_adv_tr_test_correct += (torch.argmax(valid_adv_tr_logits, -1) == valid_adv_tr_targets).sum().item()
+                    n_adv_tr_test_total += len(valid_adv_tr_logits)
+
+                    if t_adv_tr_targets_all is None:
+                        t_adv_tr_targets_all = valid_adv_tr_targets
+                        t_adv_tr_outputs_all = valid_adv_tr_logits
+                    else:
+                        t_adv_tr_targets_all = torch.cat((t_adv_tr_targets_all, valid_adv_tr_targets), dim=0)
+                        t_adv_tr_outputs_all = torch.cat((t_adv_tr_outputs_all, valid_adv_tr_logits), dim=0)
 
         label_test_acc = n_label_test_correct / n_label_test_total
-
         label_test_f1 = metrics.f1_score(t_label_targets_all.cpu(), torch.argmax(t_label_outputs_all, -1).cpu(),
                                          labels=list(range(self.opt.class_dim)), average='macro')
 
         adv_det_test_acc = n_adv_det_test_correct / n_adv_det_test_total
-
         adv_det_test_f1 = metrics.f1_score(t_adv_det_targets_all.cpu(), torch.argmax(t_adv_det_outputs_all, -1).cpu(),
                                            labels=list(range(self.opt.adv_det_dim)), average='macro')
 
-        return label_test_acc, label_test_f1, adv_det_test_acc, adv_det_test_f1
+        adv_tr_test_acc = n_adv_tr_test_correct / n_adv_tr_test_total
+        adv_tr_test_f1 = metrics.f1_score(t_adv_tr_targets_all.cpu(), torch.argmax(t_adv_tr_outputs_all, -1).cpu(),
+                                          labels=list(range(self.opt.class_dim)), average='macro')
+
+        return label_test_acc, label_test_f1, adv_det_test_acc, adv_det_test_f1, adv_tr_test_acc, adv_tr_test_f1
 
     def run(self):
         # Loss and Optimizer
