@@ -6,6 +6,7 @@ import json
 import os
 import pickle
 import random
+import time
 
 import numpy
 import numpy as np
@@ -14,14 +15,9 @@ import tqdm
 from autocuda import auto_cuda
 from findfile import find_file
 from termcolor import colored
-from textattack import Attacker
-from textattack.attack_recipes import BAEGarg2019, PWWSRen2019, TextFoolerJin2019, PSOZang2020, IGAWang2019, GeneticAlgorithmAlzantot2018, DeepWordBugGao2018
-from textattack.datasets import Dataset
-from textattack.models.wrappers import HuggingFaceModelWrapper
+
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, AutoModel, AutoConfig, DebertaV2ForMaskedLM, RobertaForMaskedLM, BertForMaskedLM
-
-from ....functional.config import TADConfigManager
 
 from ....functional.dataset import detect_infer_dataset
 
@@ -33,42 +29,53 @@ from ..classic.__glove__.dataset_utils.data_utils_for_training import build_embe
 
 from ....utils.pyabsa_utils import print_args, TransformerConnectionError, get_device
 
-
-class PyABSAMOdelWrapper(HuggingFaceModelWrapper):
-    def __init__(self, model):
-        self.model = model  # pipeline = pipeline
-
-    def __call__(self, text_inputs, **kwargs):
-        outputs = []
-        for text_input in text_inputs:
-            raw_outputs = self.model.infer(text_input, print_result=False, **kwargs)
-            outputs.append(raw_outputs['probs'])
-        return outputs
+try:
+    from textattack import Attacker
+    from textattack.attack_recipes import BAEGarg2019, PWWSRen2019, TextFoolerJin2019, PSOZang2020, IGAWang2019, GeneticAlgorithmAlzantot2018, DeepWordBugGao2018
+    from textattack.datasets import Dataset
+    from textattack.models.wrappers import HuggingFaceModelWrapper
 
 
-class SentAttacker:
+    class PyABSAMOdelWrapper(HuggingFaceModelWrapper):
+        def __init__(self, model):
+            self.model = model  # pipeline = pipeline
 
-    def __init__(self, model, recipe_class=BAEGarg2019):
-        model = model
-        model_wrapper = PyABSAMOdelWrapper(model)
-
-        recipe = recipe_class.build(model_wrapper)
-
-        _dataset = [('', 0)]
-        _dataset = Dataset(_dataset)
-
-        self.attacker = Attacker(recipe, _dataset)
+        def __call__(self, text_inputs, **kwargs):
+            outputs = []
+            for text_input in text_inputs:
+                raw_outputs = self.model.infer(text_input, print_result=False, **kwargs)
+                outputs.append(raw_outputs['probs'])
+            return outputs
 
 
-attackers = {
-    'bae': BAEGarg2019,
-    'pwws': PWWSRen2019,
-    'textfooler': TextFoolerJin2019,
-    'pso': PSOZang2020,
-    'iga': IGAWang2019,
-    'ga': GeneticAlgorithmAlzantot2018,
-    'wordbugger': DeepWordBugGao2018,
-}
+    class SentAttacker:
+
+        def __init__(self, model, recipe_class=BAEGarg2019):
+            model = model
+            model_wrapper = PyABSAMOdelWrapper(model)
+
+            recipe = recipe_class.build(model_wrapper)
+
+            _dataset = [('', 0)]
+            _dataset = Dataset(_dataset)
+
+            self.attacker = Attacker(recipe, _dataset)
+
+
+    attackers = {
+        'bae': BAEGarg2019,
+        'pwws': PWWSRen2019,
+        'textfooler': TextFoolerJin2019,
+        'pso': PSOZang2020,
+        'iga': IGAWang2019,
+        'ga': GeneticAlgorithmAlzantot2018,
+        'wordbugger': DeepWordBugGao2018,
+    }
+
+except Exception as e:
+    print('If you need to evaluate text adversarial attack, please make sure you have installed:\n',
+          colored('[1] pip install git+https://github.com/yangheng95/TextAttack\n', 'red'), 'and \n',
+          colored('[2] pip install tensorflow_text \n', 'red'))
 
 
 def get_mlm_and_tokenizer(text_classifier, config):
@@ -167,12 +174,6 @@ class TADTextClassifier:
             if not hasattr(TADGloVeTCModelList, self.opt.model.__name__) \
                 and not hasattr(TADBERTTCModelList, self.opt.model.__name__):
                 raise KeyError('The checkpoint you are loading is not from classifier model.')
-
-        # if hasattr(TADBERTTCModelList, self.opt.model.__name__):
-        #     self.dataset = TADBERTTCDataset(tokenizer=self.tokenizer, opt=self.opt)
-        #
-        # elif hasattr(TADGloVeTCModelList, self.opt.model.__name__):
-        #     self.dataset = TADGloVeTCDataset(tokenizer=self.tokenizer, opt=self.opt)
 
         self.infer_dataloader = None
         self.opt.eval_batch_size = kwargs.pop('eval_batch_size', 128)
@@ -344,11 +345,16 @@ class TADTextClassifier:
                                 self.sent_attacker = SentAttacker(self, attackers[defense])
                             if results[-1]['is_adv_label'] == '1':
                                 res = self.sent_attacker.attacker.simple_attack(text_raw, int(results[-1]['label']))
+                                results[-1]['perturbed_label'] = results[-1]['label']
                                 results[-1]['label'] = self.infer(res.perturbed_result.attacked_text.text, print_result=False)['label']
+                                results[-1]['ref_label_check'] = correct[int(results[-1]['label']) == ref_label] if ref_label != -100 else ''
                                 results[-1]['is_fixed'] = True
                         except Exception as e:
-                            os.system('pip install ftextattack')
-                            raise RuntimeError('Something wrong in defense process: {}, please make sure you have run: pip install ftextattack'.format(e))
+                            print('Error may caused by ModuleNotFoundError, try install TextAttack and tensorflow_text after 10 seconds...')
+                            time.sleep(10)
+                            os.system('pip install git+https://github.com/yangheng95/TextAttack')
+                            os.system('pip install tensorflow_text')
+                            raise RuntimeError('Installation finished, please retry...')
 
                     if ref_label != -100:
                         n_labeled += 1
