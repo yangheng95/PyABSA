@@ -200,10 +200,6 @@ class Instructor:
             return self._train_and_evaluate(criterion)
 
     def _train_and_evaluate(self, criterion):
-        sum_loss = 0
-        sum_acc = 0
-        sum_f1 = 0
-
         global_step = 0
         max_fold_acc = 0
         max_fold_f1 = 0
@@ -238,7 +234,6 @@ class Instructor:
 
                 sen_logits = outputs
                 loss = criterion(sen_logits, targets)
-                sum_loss += loss.item()
                 if amp:
                     with amp.scale_loss(loss, self.optimizer) as scaled_loss:
                         scaled_loss.backward()
@@ -261,9 +256,6 @@ class Instructor:
 
                         self.opt.metrics_of_this_checkpoint['acc'] = test_acc
                         self.opt.metrics_of_this_checkpoint['f1'] = f1
-
-                        sum_acc += test_acc
-                        sum_f1 += f1
 
                         if test_acc > max_fold_acc or f1 > max_fold_f1:
 
@@ -357,10 +349,6 @@ class Instructor:
             return self.model, self.opt, self.tokenizer
 
     def _k_fold_train_and_evaluate(self, criterion):
-        sum_loss = 0
-        sum_acc = 0
-        sum_f1 = 0
-
         fold_test_acc = []
         fold_test_f1 = []
 
@@ -405,7 +393,6 @@ class Instructor:
 
                     sen_logits = outputs
                     loss = criterion(sen_logits, targets)
-                    sum_loss += loss.item()
                     if amp:
                         with amp.scale_loss(loss, self.optimizer) as scaled_loss:
                             scaled_loss.backward()
@@ -425,10 +412,6 @@ class Instructor:
 
                             self.opt.metrics_of_this_checkpoint['acc'] = test_acc
                             self.opt.metrics_of_this_checkpoint['f1'] = f1
-
-                            sum_acc += test_acc
-                            sum_f1 += f1
-
                             if test_acc > max_fold_acc or f1 > max_fold_f1:
 
                                 if test_acc > max_fold_acc:
@@ -528,7 +511,7 @@ class Instructor:
             del self.val_dataloaders
             cuda.empty_cache()
             time.sleep(3)
-            return self.model, self.opt, self.tokenizer, sum_acc, sum_f1
+            return self.model, self.opt, self.tokenizer
 
     def _evaluate_acc_f1(self, test_dataloader):
         # switch model to evaluation mode
