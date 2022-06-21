@@ -6,6 +6,7 @@ import json
 import os
 import pickle
 import random
+import time
 
 import numpy
 import numpy as np
@@ -14,10 +15,9 @@ import tqdm
 from autocuda import auto_cuda
 from findfile import find_file
 from termcolor import colored
+
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, AutoModel, AutoConfig, DebertaV2ForMaskedLM, RobertaForMaskedLM, BertForMaskedLM
-
-from ....functional.config import TADConfigManager
 
 from ....functional.dataset import detect_infer_dataset
 
@@ -28,6 +28,54 @@ from ..classic.__bert__.dataset_utils.data_utils_for_inference import TADBERTTCD
 from ..classic.__glove__.dataset_utils.data_utils_for_training import build_embedding_matrix, build_tokenizer
 
 from ....utils.pyabsa_utils import print_args, TransformerConnectionError, get_device
+
+try:
+    from textattack import Attacker
+    from textattack.attack_recipes import BAEGarg2019, PWWSRen2019, TextFoolerJin2019, PSOZang2020, IGAWang2019, GeneticAlgorithmAlzantot2018, DeepWordBugGao2018
+    from textattack.datasets import Dataset
+    from textattack.models.wrappers import HuggingFaceModelWrapper
+
+
+    class PyABSAMOdelWrapper(HuggingFaceModelWrapper):
+        def __init__(self, model):
+            self.model = model  # pipeline = pipeline
+
+        def __call__(self, text_inputs, **kwargs):
+            outputs = []
+            for text_input in text_inputs:
+                raw_outputs = self.model.infer(text_input, print_result=False, **kwargs)
+                outputs.append(raw_outputs['probs'])
+            return outputs
+
+
+    class SentAttacker:
+
+        def __init__(self, model, recipe_class=BAEGarg2019):
+            model = model
+            model_wrapper = PyABSAMOdelWrapper(model)
+
+            recipe = recipe_class.build(model_wrapper)
+
+            _dataset = [('', 0)]
+            _dataset = Dataset(_dataset)
+
+            self.attacker = Attacker(recipe, _dataset)
+
+
+    attackers = {
+        'bae': BAEGarg2019,
+        'pwws': PWWSRen2019,
+        'textfooler': TextFoolerJin2019,
+        'pso': PSOZang2020,
+        'iga': IGAWang2019,
+        'ga': GeneticAlgorithmAlzantot2018,
+        'wordbugger': DeepWordBugGao2018,
+    }
+
+except Exception as e:
+    print('If you need to evaluate text adversarial attack, please make sure you have installed:\n',
+          colored('[1] pip install git+https://github.com/yangheng95/TextAttack\n', 'red'), 'and \n',
+          colored('[2] pip install tensorflow_text \n', 'red'))
 
 
 def get_mlm_and_tokenizer(text_classifier, config):
@@ -127,12 +175,6 @@ class TADTextClassifier:
                 and not hasattr(TADBERTTCModelList, self.opt.model.__name__):
                 raise KeyError('The checkpoint you are loading is not from classifier model.')
 
-        # if hasattr(TADBERTTCModelList, self.opt.model.__name__):
-        #     self.dataset = TADBERTTCDataset(tokenizer=self.tokenizer, opt=self.opt)
-        #
-        # elif hasattr(TADGloVeTCModelList, self.opt.model.__name__):
-        #     self.dataset = TADGloVeTCDataset(tokenizer=self.tokenizer, opt=self.opt)
-
         self.infer_dataloader = None
         self.opt.eval_batch_size = kwargs.pop('eval_batch_size', 128)
 
@@ -190,7 +232,9 @@ class TADTextClassifier:
                     target_file=None,
                     print_result=True,
                     save_result=False,
-                    ignore_error=True):
+                    ignore_error=True,
+                    defense: str = None
+                    ):
 
         # if clear_input_samples:
         #     self.clear_input_samples()
@@ -209,12 +253,13 @@ class TADTextClassifier:
 
         dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
         self.infer_dataloader = DataLoader(dataset=dataset, batch_size=self.opt.eval_batch_size, pin_memory=True, shuffle=False)
-        return self._infer(save_path=save_path if save_result else None, print_result=print_result)
+        return self._infer(save_path=save_path if save_result else None, print_result=print_result, defense=defense)
 
     def infer(self,
               text: str = None,
               print_result=True,
               ignore_error=True,
+              defense: str = None
               ):
 
         if hasattr(TADBERTTCModelList, self.opt.model.__name__):
@@ -228,15 +273,14 @@ class TADTextClassifier:
         else:
             raise RuntimeError('Please specify your datasets path!')
         self.infer_dataloader = DataLoader(dataset=dataset, batch_size=self.opt.eval_batch_size, shuffle=False)
-        return self._infer(print_result=print_result)[0]
+        return self._infer(print_result=print_result, defense=defense)[0]
 
-    def _infer(self, save_path=None, print_result=True):
+    def _infer(self, save_path=None, print_result=True, defense=None):
 
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
 
         correct = {True: 'Correct', False: 'Wrong'}
         results = []
-
 
         with torch.no_grad():
             self.model.eval()
@@ -277,30 +321,40 @@ class TADTextClassifier:
                     results.append({
                         'text': text_raw,
 
-                        'label': self.opt.index_to_adv_train_label[pred_adv_tr_label] if pred_is_adv_label else self.opt.index_to_label[pred_label],
-                        'probs': adv_tr_prob.cpu().numpy() if pred_is_adv_label else prob.cpu().numpy(),
-                        'confidence': float(max(adv_tr_prob)) if pred_is_adv_label else float(max(prob)),
+                        'label': self.opt.index_to_label[pred_label],
+                        'probs': prob.cpu().numpy(),
+                        'confidence': float(max(prob)),
                         'ref_label': self.opt.index_to_label[ref_label] if isinstance(ref_label, int) else ref_label,
-                        'ref_label_check': (correct[pred_label == ref_label] if ref_label != -100 else '') if pred_is_adv_label else
-                        (correct[pred_adv_tr_label == ref_label] if ref_label != -100 else ''),
-                        'is_fixed': True if pred_is_adv_label else False,
-
-                        # 'label': self.opt.index_to_label[pred_label],
-                        # 'probs': prob.cpu().numpy(),
-                        # 'confidence': float(max(prob)),
-                        # 'ref_label': self.opt.index_to_label[ref_label] if isinstance(ref_label, int) else ref_label,
-                        # 'ref_label_check': correct[pred_label == ref_label] if ref_label != -100 else '',
-                        # 'is_fixed': True if pred_is_adv_label else False,
+                        'ref_label_check': correct[pred_label == ref_label] if ref_label != -100 else '',
+                        'is_fixed': False,
 
                         'is_adv_label': self.opt.index_to_is_adv[pred_is_adv_label],
                         'is_adv_probs': advdet_prob.cpu().numpy(),
                         'is_adv_confidence': float(max(advdet_prob)),
+                        'pred_adv_tr_label': pred_adv_tr_label,
                         'ref_adv_tr_label': ref_adv_tr_label,
                         'ref_is_adv_label': self.opt.index_to_is_adv[ref_is_adv_label] if isinstance(ref_is_adv_label, int) else ref_is_adv_label,
                         'ref_is_adv_check': correct[pred_is_adv_label == ref_is_adv_label] if ref_is_adv_label != -100 and isinstance(ref_is_adv_label, int) else '',
 
                         'perplexity': perplexity,
                     })
+
+                    if defense:
+                        try:
+                            if not hasattr(self, 'sent_attacker'):
+                                self.sent_attacker = SentAttacker(self, attackers[defense])
+                            if results[-1]['is_adv_label'] == '1':
+                                res = self.sent_attacker.attacker.simple_attack(text_raw, int(results[-1]['label']))
+                                results[-1]['perturbed_label'] = results[-1]['label']
+                                results[-1]['label'] = self.infer(res.perturbed_result.attacked_text.text, print_result=False)['label']
+                                results[-1]['ref_label_check'] = correct[int(results[-1]['label']) == ref_label] if ref_label != -100 else ''
+                                results[-1]['is_fixed'] = True
+                        except Exception as e:
+                            print('Error may caused by ModuleNotFoundError, try install TextAttack and tensorflow_text after 10 seconds...')
+                            time.sleep(10)
+                            os.system('pip install git+https://github.com/yangheng95/TextAttack')
+                            os.system('pip install tensorflow_text')
+                            raise RuntimeError('Installation done, please run again...')
 
                     if ref_label != -100:
                         n_labeled += 1
@@ -318,8 +372,6 @@ class TADTextClassifier:
                 for result in results:
                     text_printing = result['text']
                     text_info = ''
-                    # if not result['fixed_label']:
-                    # CLS
                     if result['label'] != '-100':
                         if not result['ref_label']:
                             text_info += ' -> <CLS:{}(ref:{} confidence:{})>'.format(result['label'], result['ref_label'], result['confidence'])
