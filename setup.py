@@ -42,8 +42,8 @@ setup(
                       'termcolor',
                       'gitpython',
                       'gdown>=4.4.0',
-                      'transformers>4.5',
-                      'torch>1.0.0, <1.11.0',
+                      'transformers>4.20.0',
+                      'torch>1.0.0',
                       'sentencepiece'
                       ],
 )

@@ -12,8 +12,8 @@ from pyabsa.core.apc.models import (APCModelList,
                                     GloVeAPCModelList)
 from pyabsa.core.tc.models import (GloVeTCModelList,
                                    BERTTCModelList)
-from pyabsa.core.tad.models import (TADGloVeTCModelList,
-                                    TADBERTTCModelList)
+from pyabsa.core.tad.models import (GloVeTADModelList,
+                                    BERTTADModelList)
 from pyabsa.core.atepc.models import ATEPCModelList
 
 from pyabsa.functional.checkpoint.checkpoint_manager import (APCCheckpointManager,

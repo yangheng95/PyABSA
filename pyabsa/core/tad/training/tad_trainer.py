@@ -24,15 +24,16 @@ from tqdm import tqdm
 from transformers import AutoModel
 
 from ..classic.__bert__.dataset_utils.data_utils_for_training import (Tokenizer4Pretraining,
-                                                                      TADBERTTCDataset)
+                                                                      BERTTADDataset)
 from ..classic.__glove__.dataset_utils.data_utils_for_training import (build_tokenizer,
                                                                        build_embedding_matrix,
-                                                                       TADGloVeTCDataset)
-from ..models import TADBERTTCModelList, TADGloVeTCModelList
+                                                                       GloVeTADDataset)
 from pyabsa.utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError, init_optimizer
 
 import pytorch_warmup as warmup
+
+from ..models import BERTTADModelList, GloVeTADModelList
 
 try:
     import apex.amp as amp
@@ -77,16 +78,16 @@ class Instructor:
             self.opt.index_to_ood_label = opt.index_to_ood_label
 
         # init BERT-based model and dataset
-        if hasattr(TADBERTTCModelList, opt.model.__name__):
+        if hasattr(BERTTADModelList, opt.model.__name__):
             self.tokenizer = Tokenizer4Pretraining(self.opt.max_seq_len, self.opt)
             if not os.path.exists(cache_path):
-                self.train_set = TADBERTTCDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
+                self.train_set = BERTTADDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
                 if self.opt.dataset_file['test']:
-                    self.test_set = TADBERTTCDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
+                    self.test_set = BERTTADDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
                 else:
                     self.test_set = None
                 if self.opt.dataset_file['valid']:
-                    self.valid_set = TADBERTTCDataset(self.opt.dataset_file['valid'], self.tokenizer, self.opt)
+                    self.valid_set = BERTTADDataset(self.opt.dataset_file['valid'], self.tokenizer, self.opt)
                 else:
                     self.valid_set = None
             try:
@@ -98,7 +99,7 @@ class Instructor:
             # init the model behind the construction of datasets in case of updating polarities_dim
             self.model = self.opt.model(self.bert, self.opt).to(self.opt.device)
 
-        elif hasattr(TADGloVeTCModelList, opt.model.__name__):
+        elif hasattr(GloVeTADModelList, opt.model.__name__):
             # init GloVe-based model and dataset
             self.tokenizer = build_tokenizer(
                 dataset_list=opt.dataset_file,
@@ -260,7 +261,7 @@ class Instructor:
                 sen_loss = criterion(sen_logits, label_targets)
                 adv_det_loss = criterion(adv_det_logits, adv_det_targets)
                 adv_train_loss = criterion(adv_tr_logits, adv_tr_targets)
-                loss = sen_loss + adv_det_loss + adv_train_loss
+                loss = sen_loss + 5 * adv_det_loss + 5 * adv_train_loss
 
                 if amp:
                     with amp.scale_loss(loss, self.optimizer) as scaled_loss:
@@ -418,6 +419,9 @@ class Instructor:
             time.sleep(3)
             return self.model, self.opt, self.tokenizer
 
+    def _k_fold_train_and_evaluate(self):
+        raise NotImplementedError()
+
     def _evaluate_acc_f1(self, test_dataloader):
         # switch model to evaluation mode
         self.model.eval()
@@ -508,11 +512,11 @@ def train4tad(opt, from_checkpoint_path, logger):
     torch.manual_seed(opt.seed)
     torch.cuda.manual_seed(opt.seed)
 
-    if hasattr(TADBERTTCModelList, opt.model.__name__):
-        opt.inputs_cols = TADBERTTCDataset.bert_baseline_input_colses[opt.model.__name__.lower()]
+    if hasattr(BERTTADModelList, opt.model.__name__):
+        opt.inputs_cols = BERTTADDataset.bert_baseline_input_colses[opt.model.__name__.lower()]
 
-    elif hasattr(TADGloVeTCModelList, opt.model.__name__):
-        opt.inputs_cols = TADGloVeTCDataset.glove_input_colses[opt.model.__name__.lower()]
+    elif hasattr(GloVeTADModelList, opt.model.__name__):
+        opt.inputs_cols = GloVeTADDataset.glove_input_colses[opt.model.__name__.lower()]
 
     opt.device = torch.device(opt.device)
 
