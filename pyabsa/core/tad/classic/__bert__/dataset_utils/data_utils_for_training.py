@@ -35,7 +35,7 @@ class Tokenizer4Pretraining:
         return self.tokenizer.encode(text, truncation=True, padding='max_length', max_length=self.max_seq_len, return_tensors='pt')
 
 
-class TADBERTTCDataset(Dataset):
+class BERTTADDataset(Dataset):
     bert_baseline_input_colses = {
         'tadbert': ['text_bert_indices']
     }

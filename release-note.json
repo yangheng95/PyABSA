@@ -1,9 +1,14 @@
 {
+  "1.15.4": {
+    "1": "Fix some bugs",
+    "2": "Add some new features",
+    "3": "Add a english MOOC dataset"
+  },
   "1.15.0": {
-    "3": "Fix some bugs"
+    "1": "Fix some bugs"
   },
   "1.14.8": {
-    "3": "Minor fixes"
+    "1": "Minor fixes"
   },
   "1.14.7": {
     "1": "Refactor optimizer support, you can use torch optimizer either by a string or an optimizer object from torch.optim",

@@ -26,7 +26,7 @@ class Tokenizer4Pretraining:
         return self.tokenizer.encode(text, truncation=True, padding='max_length', max_length=self.max_seq_len, return_tensors='pt')
 
 
-class TADBERTTCDataset(Dataset):
+class BERTTADDataset(Dataset):
 
     def __init__(self, tokenizer, opt):
         self.bert_baseline_input_colses = {
@@ -67,8 +67,22 @@ class TADBERTTCDataset(Dataset):
                 if '!ref!' in text:
                     text, _, labels = text.strip().partition('!ref!')
                     text = text.strip()
-                    label, is_adv, adv_train_label = labels.strip().split(',')
-                    label, is_adv, adv_train_label = label.strip(), is_adv.strip(), adv_train_label.strip()
+                    if labels.count(',') == 2:
+                        label, is_adv, adv_train_label = labels.strip().split(',')
+                        label, is_adv, adv_train_label = label.strip(), is_adv.strip(), adv_train_label.strip()
+                    elif labels.count(',') == 1:
+                        label, is_adv = labels.strip().split(',')
+                        label, is_adv = label.strip(), is_adv.strip()
+                        adv_train_label = '-100'
+                    elif labels.count(',') == 0:
+                        label, is_adv = labels.strip().split(',')
+                        label = label.strip()
+                        adv_train_label = '-100'
+                        is_adv = '-100'
+                    else:
+                        label = '-100'
+                        adv_train_label = '-100'
+                        is_adv = '-100'
 
                     label = int(label)
                     adv_train_label = int(adv_train_label)
