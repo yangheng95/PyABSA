@@ -55,11 +55,11 @@ class Tokenizer(object):
         return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
 
 
-class TADGloVeTCDataset(Dataset):
+class GloVeTADDataset(Dataset):
 
     def __init__(self, tokenizer, opt):
         self.glove_input_colses = {
-            'lstm': ['text_indices']
+            'tadlstm': ['text_indices']
         }
 
         self.tokenizer = tokenizer
@@ -83,39 +83,64 @@ class TADGloVeTCDataset(Dataset):
 
     def process_data(self, samples, ignore_error=True):
         all_data = []
-
         if len(samples) > 100:
             it = tqdm.tqdm(samples, postfix='preparing text classification inference dataloader...')
         else:
             it = samples
-
         for text in it:
             try:
-                # handle for empty lines in inferring_tutorials dataset_utils
+                # handle for empty lines in inference datasets
                 if text is None or '' == text.strip():
                     raise RuntimeError('Invalid Input!')
 
                 if '!ref!' in text:
-                    text, label = text.split('!ref!')[0].strip(), text.split('!ref!')[1].strip()
-                    label = int(label) if label else LABEL_PADDING
-                    text = text.replace('[PADDING]', '')
+                    text, _, labels = text.strip().partition('!ref!')
+                    text = text.strip()
+                    if labels.count(',') == 2:
+                        label, is_adv, adv_train_label = labels.strip().split(',')
+                        label, is_adv, adv_train_label = label.strip(), is_adv.strip(), adv_train_label.strip()
+                    elif labels.count(',') == 1:
+                        label, is_adv = labels.strip().split(',')
+                        label, is_adv = label.strip(), is_adv.strip()
+                        adv_train_label = '-100'
+                    elif labels.count(',') == 0:
+                        label, is_adv = labels.strip().split(',')
+                        label = label.strip()
+                        adv_train_label = '-100'
+                        is_adv = '-100'
+                    else:
+                        label = '-100'
+                        adv_train_label = '-100'
+                        is_adv = '-100'
 
-                    if label < 0:
-                        raise RuntimeError(
-                            'Invalid label detected, only please label the sentiment between {0, N-1} '
-                            '(assume there are N types of labels.)')
+                    label = int(label)
+                    adv_train_label = int(adv_train_label)
+                    is_adv = int(is_adv)
+
                 else:
-                    label = LABEL_PADDING
+                    text = text.strip()
+                    label = -100
+                    adv_train_label = -100
+                    is_adv = -100
 
-                text_indices = self.tokenizer.text_to_sequence(text)
+                text_indices = self.tokenizer.text_to_sequence('{}'.format(text))
 
                 data = {
-                    'text_indices': text_indices
-                    if 'text_indices' in self.opt.model.inputs else 0,
+                    'text_indices': text_indices[0],
 
                     'text_raw': text,
 
                     'label': label,
+
+                    'adv_train_label': adv_train_label,
+
+                    'is_adv': is_adv,
+
+                    # 'label': self.opt.label_to_index.get(label, -100) if isinstance(label, str) else label,
+                    #
+                    # 'adv_train_label': self.opt.adv_train_label_to_index.get(adv_train_label, -100) if isinstance(adv_train_label, str) else adv_train_label,
+                    #
+                    # 'is_adv': self.opt.is_adv_to_index.get(is_adv, -100) if isinstance(is_adv, str) else is_adv,
                 }
 
                 all_data.append(data)
