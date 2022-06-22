@@ -8,7 +8,7 @@ import pyabsa.core.tad.classic.__glove__.models
 import pyabsa.core.tad.classic.__bert__.models
 
 
-class TADGloVeTCModelList(list):
+class GloVeTADModelList(list):
     TADLSTM = pyabsa.core.tad.classic.__glove__.models.TADLSTM
 
     def __init__(self):
@@ -16,7 +16,7 @@ class TADGloVeTCModelList(list):
         super().__init__(model_list)
 
 
-class TADBERTTCModelList(list):
+class BERTTADModelList(list):
     TADBERT = pyabsa.core.tad.classic.__bert__.TADBERT
 
     def __init__(self):

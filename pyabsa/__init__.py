@@ -7,7 +7,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 
-__version__ = '1.15.3'
+__version__ = '1.15.4'
 
 __name__ = 'pyabsa'
 
@@ -20,8 +20,8 @@ from pyabsa.core.apc.models import (APCModelList,
                                     GloVeAPCModelList)
 from pyabsa.core.tc.models import (GloVeTCModelList,
                                    BERTTCModelList)
-from pyabsa.core.tad.models import (TADGloVeTCModelList,
-                                    TADBERTTCModelList)
+from pyabsa.core.tad.models import (GloVeTADModelList,
+                                    BERTTADModelList)
 from pyabsa.core.atepc.models import ATEPCModelList
 
 from pyabsa.functional import (TCCheckpointManager,

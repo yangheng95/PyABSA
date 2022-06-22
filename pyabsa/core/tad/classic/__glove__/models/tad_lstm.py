@@ -16,14 +16,16 @@ class TADLSTM(nn.Module):
         super(TADLSTM, self).__init__()
         self.embed = nn.Embedding.from_pretrained(torch.tensor(embedding_matrix, dtype=torch.float))
         self.lstm = DynamicLSTM(opt.embed_dim, opt.hidden_dim, num_layers=1, batch_first=True)
-        self.dense1 = nn.Linear(opt.hidden_dim, opt.polarities_dim1)
-        self.dense2 = nn.Linear(opt.hidden_dim, opt.polarities_dim2)
+        self.dense1 = nn.Linear(opt.hidden_dim, opt.class_dim)
+        self.dense2 = nn.Linear(opt.hidden_dim, opt.adv_det_dim)
+        self.dense2 = nn.Linear(opt.hidden_dim, opt.class_dim)
 
     def forward(self, inputs):
         text_raw_indices = inputs[0]
         x = self.embed(text_raw_indices)
         x_len = torch.sum(text_raw_indices != 0, dim=-1)
         _, (h_n, _) = self.lstm(x, x_len)
-        out1 = self.dense1(h_n[0])
-        out2 = self.dense2(h_n[0])
-        return out1, out2
+        sent_logits = self.dense1(h_n[0])
+        advdet_logits = self.dense2(h_n[0])
+        adv_tr_logits = self.dense2(h_n[0])
+        return sent_logits, advdet_logits, adv_tr_logits
