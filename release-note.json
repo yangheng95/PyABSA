@@ -1,4 +1,7 @@
 {
+  "1.15.5": {
+    "1": "Minor fixes of tad inference"
+  },
   "1.15.4": {
     "1": "Fix some bugs",
     "2": "Add some new features",
