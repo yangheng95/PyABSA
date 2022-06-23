@@ -342,7 +342,7 @@ class TADTextClassifier:
                     if defense:
                         try:
                             if not hasattr(self, 'sent_attacker'):
-                                self.sent_attacker = init_attacker(self, defense)
+                                self.sent_attacker = init_attacker(self, defense.lower())
                             if results[-1]['is_adv_label'] == '1':
                                 res = self.sent_attacker.attacker.simple_attack(text_raw, int(results[-1]['label']))
                                 new_infer_res = self.infer(res.perturbed_result.attacked_text.text, print_result=False)

@@ -7,11 +7,10 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 
-__version__ = '1.15.4'
+__version__ = '1.15.5'
 
 __name__ = 'pyabsa'
 
-from termcolor import colored
 from update_checker import UpdateChecker
 
 from pyabsa.functional.trainer import APCTrainer, ATEPCTrainer, TCTrainer, TADTrainer
