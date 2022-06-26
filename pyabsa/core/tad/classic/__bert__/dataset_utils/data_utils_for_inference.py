@@ -75,8 +75,7 @@ class BERTTADDataset(Dataset):
                         label, is_adv = label.strip(), is_adv.strip()
                         adv_train_label = '-100'
                     elif labels.count(',') == 0:
-                        label, is_adv = labels.strip().split(',')
-                        label = label.strip()
+                        label = labels.strip()
                         adv_train_label = '-100'
                         is_adv = '-100'
                     else:
