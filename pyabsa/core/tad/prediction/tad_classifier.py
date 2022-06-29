@@ -9,11 +9,9 @@ import random
 import time
 
 import numpy
-import numpy as np
 import torch
 import tqdm
-from autocuda import auto_cuda
-from findfile import find_file
+from findfile import find_file, find_cwd_dir
 from termcolor import colored
 
 from torch.utils.data import DataLoader
@@ -25,9 +23,9 @@ from ..models import GloVeTADModelList, BERTTADModelList
 from ..classic.__glove__.dataset_utils.data_utils_for_inference import GloVeTADDataset
 from ..classic.__bert__.dataset_utils.data_utils_for_inference import BERTTADDataset, Tokenizer4Pretraining
 
-from ..classic.__glove__.dataset_utils.data_utils_for_training import build_embedding_matrix, build_tokenizer
+from ..classic.__glove__.dataset_utils.data_utils_for_training import build_tokenizer
 
-from ....utils.pyabsa_utils import print_args, TransformerConnectionError, get_device
+from ....utils.pyabsa_utils import print_args, TransformerConnectionError, get_device, build_embedding_matrix
 
 
 def init_attacker(tad_classifier, defense):
@@ -130,14 +128,17 @@ class TADTextClassifier:
                 if state_dict_path or model_path:
                     if hasattr(BERTTADModelList, self.opt.model.__name__):
                         if state_dict_path:
-                            self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
+                            if kwargs.pop('offline', False):
+                                self.bert = AutoModel.from_pretrained(find_cwd_dir(self.opt.pretrained_bert.split('/')[-1]))
+                            else:
+                                self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
                             self.model = self.opt.model(self.bert, self.opt)
                             self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
                         elif model_path:
                             self.model = torch.load(model_path, map_location='cpu')
 
                         try:
-                            self.tokenizer = Tokenizer4Pretraining(max_seq_len=self.opt.max_seq_len, opt=self.opt)
+                            self.tokenizer = Tokenizer4Pretraining(max_seq_len=self.opt.max_seq_len, opt=self.opt, **kwargs)
                         except ValueError:
                             if tokenizer_path:
                                 with open(tokenizer_path, mode='rb') as f:
@@ -318,7 +319,7 @@ class TADTextClassifier:
                     else:
                         perplexity = 'N.A.'
 
-                    results.append({
+                    result = {
                         'text': text_raw,
 
                         'label': self.opt.index_to_label[pred_label],
@@ -337,38 +338,41 @@ class TADTextClassifier:
                         'ref_is_adv_check': correct[pred_is_adv_label == ref_is_adv_label] if ref_is_adv_label != -100 and isinstance(ref_is_adv_label, int) else '',
 
                         'perplexity': perplexity,
-                    })
-
+                    }
                     if defense:
                         try:
                             if not hasattr(self, 'sent_attacker'):
                                 self.sent_attacker = init_attacker(self, defense.lower())
-                            if results[-1]['is_adv_label'] == '1':
-                                res = self.sent_attacker.attacker.simple_attack(text_raw, int(results[-1]['label']))
+                            if result['is_adv_label'] == '1':
+                                res = self.sent_attacker.attacker.simple_attack(text_raw, int(result['label']))
                                 new_infer_res = self.infer(res.perturbed_result.attacked_text.text, print_result=False)
-                                results[-1]['perturbed_label'] = results[-1]['label']
-                                results[-1]['label'] = new_infer_res['label']
-                                results[-1]['probs'] = new_infer_res['probs']
-                                results[-1]['ref_label_check'] = correct[int(results[-1]['label']) == ref_label] if ref_label != -100 else ''
-                                results[-1]['restored_text'] = res.perturbed_result.attacked_text.text
-                                results[-1]['is_fixed'] = True
+                                result['perturbed_label'] = result['label']
+                                result['label'] = new_infer_res['label']
+                                result['probs'] = new_infer_res['probs']
+                                result['ref_label_check'] = correct[int(result['label']) == ref_label] if ref_label != -100 else ''
+                                result['restored_text'] = res.perturbed_result.attacked_text.text
+                                result['is_fixed'] = True
+                            else:
+                                result['restored_text'] = ''
+                                result['is_fixed'] = False
+
                         except Exception as e:
                             print('Error:{}, try install TextAttack and tensorflow_text after 10 seconds...'.format(e))
                             time.sleep(10)
-                            os.system('pip install git+https://github.com/yangheng95/TextAttack')
-                            os.system('pip install tensorflow_text')
                             raise RuntimeError('Installation done, please run again...')
 
                     if ref_label != -100:
                         n_labeled += 1
 
-                        if results[-1]['label'] == results[-1]['ref_label']:
+                        if result['label'] == result['ref_label']:
                             n_correct += 1
 
                     if ref_is_adv_label != -100:
                         n_advdet_labeled += 1
                         if ref_is_adv_label == pred_is_adv_label:
                             n_advdet_correct += 1
+
+                    results.append(result)
 
         try:
             if print_result:

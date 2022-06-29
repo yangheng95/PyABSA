@@ -27,10 +27,9 @@ from ..models import GloVeTCModelList, BERTTCModelList
 from ..classic.__bert__.dataset_utils.data_utils_for_training import (Tokenizer4Pretraining,
                                                                       BERTTCDataset)
 from ..classic.__glove__.dataset_utils.data_utils_for_training import (build_tokenizer,
-                                                                       build_embedding_matrix,
                                                                        GloVeTCDataset)
 from pyabsa.utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError, init_optimizer
+from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError, init_optimizer, build_embedding_matrix
 
 import pytorch_warmup as warmup
 
@@ -123,7 +122,7 @@ class Instructor:
         # use DataParallel for training if device count larger than 1
         if self.opt.auto_device == 'allcuda':
             self.model.to(self.opt.device)
-            self.model = torch.nn.parallel.DataParallel(self.model)
+            self.model = torch.nn.parallel.DataParallel(self.model).module
         else:
             self.model.to(self.opt.device)
 
@@ -152,10 +151,7 @@ class Instructor:
 
     def reload_model(self, ckpt='./init_state_dict.bin'):
         if os.path.exists(ckpt):
-            if self.opt.auto_device == 'allcuda':
-                self.model.module.load_state_dict(torch.load(find_file(ckpt, or_key=['.bin', 'state_dict'])))
-            else:
-                self.model.load_state_dict(torch.load(find_file(ckpt, or_key=['.bin', 'state_dict'])))
+            self.model.load_state_dict(torch.load(find_file(ckpt, or_key=['.bin', 'state_dict'])))
 
     def prepare_dataloader(self, train_set):
         if self.opt.cross_validate_fold < 1:
@@ -538,6 +534,10 @@ class Instructor:
         test_acc = n_test_correct / n_test_total
         f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
                               labels=list(range(self.opt.polarities_dim)), average='macro')
+        if self.opt.args.get('show_metric', False):
+            print('\n---------------------------- Classification Report ----------------------------\n')
+            print(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(), target_names=[self.opt.index_to_label[x] for x in self.opt.index_to_label]))
+            print('\n---------------------------- Classification Report ----------------------------\n')
         return test_acc, f1
 
     def run(self):

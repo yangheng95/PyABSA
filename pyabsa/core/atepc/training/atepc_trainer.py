@@ -13,6 +13,7 @@ import time
 from hashlib import sha256
 
 import numpy as np
+import sklearn.metrics as metrics
 import torch
 import torch.nn.functional as F
 import tqdm
@@ -167,6 +168,7 @@ class Instructor:
         if self.opt.auto_device == 'allcuda':
             self.model.to(self.opt.device)
             self.model = torch.nn.parallel.DataParallel(self.model)
+            self.model = self.model.module
         else:
             self.model.to(self.opt.device)
 
@@ -239,9 +241,6 @@ class Instructor:
                 # for multi-gpu, average loss by gpu instance number
                 if self.opt.auto_device == 'allcuda':
                     loss_ate, loss_apc = loss_ate.mean(), loss_apc.mean()
-                # loss_ate = loss_ate.item() / (loss_ate.item() + loss_apc.item()) * loss_ate
-                # loss_apc = loss_apc.item() / (loss_ate.item() + loss_apc.item()) * loss_apc
-                # loss = loss_ate + loss_apc
                 loss = loss_ate + loss_apc  # the optimal weight of loss may be different according to dataset
 
                 sum_loss += loss.item()
@@ -383,28 +382,17 @@ class Instructor:
             lcf_cdm_vec = lcf_cdm_vec.to(self.opt.device)
             lcf_cdw_vec = lcf_cdw_vec.to(self.opt.device)
             with torch.no_grad():
-                if self.opt.auto_device == 'allcuda':
-                    ate_logits, apc_logits = self.model.module(input_ids_spc,
-                                                               token_type_ids=segment_ids,
-                                                               attention_mask=input_mask,
-                                                               labels=None,
-                                                               polarity=polarity,
-                                                               valid_ids=valid_ids,
-                                                               attention_mask_label=l_mask,
-                                                               lcf_cdm_vec=lcf_cdm_vec,
-                                                               lcf_cdw_vec=lcf_cdw_vec
-                                                               )
-                else:
-                    ate_logits, apc_logits = self.model(input_ids_spc,
-                                                        token_type_ids=segment_ids,
-                                                        attention_mask=input_mask,
-                                                        labels=None,
-                                                        polarity=polarity,
-                                                        valid_ids=valid_ids,
-                                                        attention_mask_label=l_mask,
-                                                        lcf_cdm_vec=lcf_cdm_vec,
-                                                        lcf_cdw_vec=lcf_cdw_vec
-                                                        )
+
+                ate_logits, apc_logits = self.model(input_ids_spc,
+                                                    token_type_ids=segment_ids,
+                                                    attention_mask=input_mask,
+                                                    labels=None,
+                                                    polarity=polarity,
+                                                    valid_ids=valid_ids,
+                                                    attention_mask_label=l_mask,
+                                                    lcf_cdm_vec=lcf_cdm_vec,
+                                                    lcf_cdw_vec=lcf_cdw_vec
+                                                    )
             if eval_APC:
                 n_test_correct += (torch.argmax(apc_logits, -1) == polarity).sum().item()
                 n_test_total += len(polarity)
@@ -418,10 +406,7 @@ class Instructor:
 
             if eval_ATE:
                 if not self.opt.use_bert_spc:
-                    if self.opt.auto_device == 'allcuda':
-                        label_ids = self.model.module.get_batch_token_labels_bert_base_indices(label_ids)
-                    else:
-                        label_ids = self.model.get_batch_token_labels_bert_base_indices(label_ids)
+                    label_ids = self.model.get_batch_token_labels_bert_base_indices(label_ids)
                 ate_logits = torch.argmax(F.log_softmax(ate_logits, dim=2), dim=2)
                 ate_logits = ate_logits.detach().cpu().numpy()
                 label_ids = label_ids.to('cpu').numpy()
@@ -448,11 +433,26 @@ class Instructor:
             test_acc = round(test_acc * 100, 2)
             test_f1 = round(test_f1 * 100, 2)
             apc_result = {'apc_test_acc': test_acc, 'apc_test_f1': test_f1}
-
+            if self.opt.args.get('show_metric', False):
+                try:
+                    apc_report = metrics.classification_report(test_apc_logits_all.cpu(), torch.argmax(test_polarities_all, -1).cpu(),
+                                                               target_names=[self.opt.index_to_label[x] for x in self.opt.index_to_label])
+                    print('\n---------------------------- APC Classification Report ----------------------------\n')
+                    print(apc_report)
+                    print('\n---------------------------- APC Classification Report ----------------------------\n')
+                except:
+                    # No enough data to calculate the report
+                    pass
         if eval_ATE:
             report = classification_report(y_true, y_pred, digits=4)
             tmps = report.split()
             ate_result = round(float(tmps[7]) * 100, 2)
+
+            if self.opt.args.get('show_metric', False):
+                print('\n---------------------------- ATE Classification Report ----------------------------\n')
+                print(report)
+                print('\n---------------------------- ATE Classification Report ----------------------------\n')
+
         return apc_result, ate_result
 
 

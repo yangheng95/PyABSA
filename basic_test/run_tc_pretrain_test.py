@@ -55,7 +55,7 @@ for dataset in ClassificationDatasetList():
         text_classifier = Trainer(config=config,
                                   dataset=dataset,
                                   checkpoint_save_mode=1,
-                                  auto_device=True
+                                  auto_device='allcuda'
                                   ).load_trained_model()
         text_classifier.infer('I love it very much!')
         try:

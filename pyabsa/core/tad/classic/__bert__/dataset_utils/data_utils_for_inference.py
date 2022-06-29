@@ -5,6 +5,7 @@
 
 import numpy as np
 import tqdm
+from findfile import find_dir
 from torch.utils.data import Dataset
 from transformers import AutoTokenizer
 
@@ -12,8 +13,11 @@ from pyabsa.core.apc.dataset_utils.apc_utils import load_apc_datasets, LABEL_PAD
 
 
 class Tokenizer4Pretraining:
-    def __init__(self, max_seq_len, opt):
-        self.tokenizer = AutoTokenizer.from_pretrained(opt.pretrained_bert, do_lower_case='uncased' in opt.pretrained_bert)
+    def __init__(self, max_seq_len, opt, **kwargs):
+        if kwargs.pop('offline', False):
+            self.tokenizer = AutoTokenizer.from_pretrained(find_cwd_dir(opt.pretrained_bert.split('/')[-1]), do_lower_case='uncased' in opt.pretrained_bert)
+        else:
+            self.tokenizer = AutoTokenizer.from_pretrained(opt.pretrained_bert, do_lower_case='uncased' in opt.pretrained_bert)
         self.max_seq_len = max_seq_len
 
     def text_to_sequence(self, text, reverse=False, padding='post', truncating='post'):

@@ -8,12 +8,9 @@ import shutil
 
 from torch import cuda
 
-from pyabsa import APCModelList, BERTBaselineAPCModelList, GloVeAPCModelList, \
-    ATEPCModelList, BERTClassificationModelList, GloVeClassificationModelList
-from pyabsa import ABSADatasetList, ClassificationDatasetList
+from pyabsa import APCModelList, BERTBaselineAPCModelList
+from pyabsa import ABSADatasetList
 from pyabsa import APCConfigManager
-from pyabsa import ATEPCConfigManager
-from pyabsa import ClassificationConfigManager
 from pyabsa.functional import Trainer
 
 from findfile import find_cwd_dir

@@ -167,9 +167,6 @@ class Trainer:
                 model = self.model_class(model_arg=self.train_func(self.config, self.from_checkpoint, self.logger))
         self.config.seed = seeds
 
-        # save_path = '{}_{}'.format(self.config.model_name, self.config.dataset_name)
-        # self.config.MV.summary(save_path)
-
         while self.logger.handlers:
             self.logger.removeHandler(self.logger.handlers[0])
 

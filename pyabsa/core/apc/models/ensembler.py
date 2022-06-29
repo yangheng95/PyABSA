@@ -10,21 +10,20 @@ import pickle
 import re
 from hashlib import sha256
 
+from findfile import find_cwd_dir
 from torch import nn
 from torch.nn import ModuleList
 
 import torch
-from torch.utils.data import DataLoader, DistributedSampler, RandomSampler, SequentialSampler
+from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
 from transformers import AutoTokenizer, AutoModel
 
-from pyabsa.functional.dataset import ABSADatasetList
-from pyabsa.utils.pyabsa_utils import TransformerConnectionError
+from pyabsa.utils.pyabsa_utils import TransformerConnectionError, build_embedding_matrix
 
 from ..models import BERTBaselineAPCModelList, GloVeAPCModelList, APCModelList
 from ..classic.__bert__.dataset_utils.data_utils_for_training import (Tokenizer4Pretraining,
                                                                       BERTBaselineABSADataset)
 from ..classic.__glove__.dataset_utils.data_utils_for_training import (build_tokenizer,
-                                                                       build_embedding_matrix,
                                                                        GloVeABSADataset)
 from ..dataset_utils.data_utils_for_training import ABSADataset
 
@@ -38,7 +37,7 @@ def model_pool_check(models):
 
 
 class APCEnsembler(nn.Module):
-    def __init__(self, opt, load_dataset=True):
+    def __init__(self, opt, load_dataset=True, **kwargs):
         super(APCEnsembler, self).__init__()
         self.opt = opt
 
@@ -79,8 +78,13 @@ class APCEnsembler(nn.Module):
 
             if hasattr(APCModelList, models[i].__name__):
                 try:
-                    self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert) if not self.tokenizer else self.tokenizer
-                    self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert) if not self.bert else self.bert  # share the underlying bert between models
+
+                    if kwargs.pop('offline', False):
+                        self.tokenizer = AutoTokenizer.from_pretrained(find_cwd_dir(self.opt.pretrained_bert.split('/')[-1]), do_lower_case='uncased' in self.opt.pretrained_bert)
+                        self.bert = AutoModel.from_pretrained(find_cwd_dir(self.opt.pretrained_bert.split('/')[-1])) if not self.bert else self.bert  # share the underlying bert between models
+                    else:
+                        self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
+                        self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert) if not self.bert else self.bert
                 except ValueError as e:
                     print('Init pretrained model failed, exception: {}'.format(e))
                     raise TransformerConnectionError()
