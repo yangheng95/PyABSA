@@ -7,12 +7,10 @@ import os
 import pickle
 import random
 
-import autocuda
 import numpy
 import torch
 import tqdm
-from autocuda import auto_cuda
-from findfile import find_file
+from findfile import find_file, find_dir
 from termcolor import colored
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, AutoModel, AutoConfig, DebertaV2ForMaskedLM, RobertaForMaskedLM, BertForMaskedLM
@@ -23,9 +21,9 @@ from ..models import GloVeTCModelList, BERTTCModelList
 from ..classic.__glove__.dataset_utils.data_utils_for_inference import GloVeTCDataset
 from ..classic.__bert__.dataset_utils.data_utils_for_inference import BERTClassificationDataset, Tokenizer4Pretraining
 
-from ..classic.__glove__.dataset_utils.data_utils_for_training import LABEL_PADDING, build_embedding_matrix, build_tokenizer
+from ..classic.__glove__.dataset_utils.data_utils_for_training import build_tokenizer
 
-from pyabsa.utils.pyabsa_utils import print_args, TransformerConnectionError, get_device
+from pyabsa.utils.pyabsa_utils import print_args, TransformerConnectionError, get_device, build_embedding_matrix
 
 
 def get_mlm_and_tokenizer(text_classifier, config):
@@ -80,14 +78,17 @@ class TextClassifier:
                 if state_dict_path or model_path:
                     if hasattr(BERTTCModelList, self.opt.model.__name__):
                         if state_dict_path:
-                            self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
+                            if kwargs.pop('offline', False):
+                                self.bert = AutoModel.from_pretrained(find_cwd_dir(self.opt.pretrained_bert.split('/')[-1]))
+                            else:
+                                self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
                             self.model = self.opt.model(self.bert, self.opt)
                             self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
                         elif model_path:
                             self.model = torch.load(model_path, map_location='cpu')
 
                         try:
-                            self.tokenizer = Tokenizer4Pretraining(max_seq_len=self.opt.max_seq_len, opt=self.opt)
+                            self.tokenizer = Tokenizer4Pretraining(max_seq_len=self.opt.max_seq_len, opt=self.opt, **kwargs)
                         except ValueError:
                             if tokenizer_path:
                                 with open(tokenizer_path, mode='rb') as f:
@@ -151,7 +152,6 @@ class TextClassifier:
                 self.MLM, self.MLM_tokenizer = None, None
 
         self.to(self.opt.device)
-
 
     def to(self, device=None):
         self.opt.device = device

@@ -10,13 +10,12 @@ import random
 import numpy
 import torch
 import tqdm
-from autocuda import auto_cuda
-from findfile import find_file
+from findfile import find_file, find_cwd_dir
 from termcolor import colored
 from torch.utils.data import DataLoader
-from transformers import AutoTokenizer, AutoModel, AutoConfig, DebertaV2ForMaskedLM, RobertaForMaskedLM, BertForMaskedLM
+from transformers import AutoTokenizer, AutoConfig, DebertaV2ForMaskedLM, RobertaForMaskedLM, BertForMaskedLM
 
-from pyabsa.core.apc.classic.__glove__.dataset_utils.data_utils_for_training import build_embedding_matrix, build_tokenizer
+from pyabsa.core.apc.classic.__glove__.dataset_utils.data_utils_for_training import build_tokenizer
 from pyabsa.core.apc.models.ensembler import APCEnsembler
 from pyabsa.utils.pyabsa_utils import print_args, TransformerConnectionError, get_device
 from pyabsa.functional.dataset import detect_infer_dataset
@@ -26,7 +25,6 @@ from pyabsa.core.apc.models import (APCModelList,
                                     )
 from pyabsa.core.apc.classic.__bert__.dataset_utils.data_utils_for_inference import BERTBaselineABSADataset
 from pyabsa.core.apc.classic.__glove__.dataset_utils.data_utils_for_inference import GloVeABSADataset
-from pyabsa.core.apc.dataset_utils.apc_utils import LABEL_PADDING
 from pyabsa.core.apc.dataset_utils.data_utils_for_inference import ABSADataset
 
 
@@ -82,14 +80,17 @@ class SentimentClassifier:
 
                 if state_dict_path or model_path:
                     if state_dict_path:
-                        self.model = APCEnsembler(self.opt, load_dataset=False)
+                        self.model = APCEnsembler(self.opt, load_dataset=False, **kwargs)
                         self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
                     elif model_path:
                         self.model = torch.load(model_path, map_location='cpu')
                     with open(tokenizer_path, mode='rb') as f:
                         if hasattr(APCModelList, self.opt.model.__name__):
                             try:
-                                self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
+                                if kwargs.pop('offline', False):
+                                    self.tokenizer = AutoTokenizer.from_pretrained(find_cwd_dir(self.opt.pretrained_bert.split('/')[-1]), do_lower_case='uncased' in self.opt.pretrained_bert)
+                                else:
+                                    self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
                             except ValueError:
                                 if tokenizer_path:
                                     self.tokenizer = pickle.load(f)

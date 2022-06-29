@@ -16,17 +16,15 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import tqdm
-from autocuda import auto_cuda
-from findfile import find_file
+from findfile import find_file, find_cwd_dir
 from termcolor import colored
 from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
-from transformers import BertTokenizer, AutoTokenizer, AutoModel
-from transformers.models.bert.modeling_bert import BertModel
+from transformers import AutoTokenizer, AutoModel
 
 from pyabsa.functional.dataset import detect_infer_dataset, DatasetItem
 from pyabsa.core.atepc.models import ATEPCModelList
 from pyabsa.core.atepc.dataset_utils.atepc_utils import load_atepc_inference_datasets, process_iob_tags
-from pyabsa.utils.pyabsa_utils import print_args, save_json, TransformerConnectionError, get_device
+from pyabsa.utils.pyabsa_utils import print_args, TransformerConnectionError, get_device
 from ..dataset_utils.data_utils_for_inference import (ATEPCProcessor,
                                                       convert_ate_examples_to_features,
                                                       convert_apc_examples_to_features,
@@ -65,7 +63,10 @@ class AspectExtractor:
 
                 if state_dict_path:
                     try:
-                        bert_base_model = AutoModel.from_pretrained(self.opt.pretrained_bert)
+                        if kwargs.pop('offline', False):
+                            bert_base_model = AutoModel.from_pretrained(find_cwd_dir(self.opt.pretrained_bert.split('/')[-1]))
+                        else:
+                            bert_base_model = AutoModel.from_pretrained(self.opt.pretrained_bert)
                     except ValueError:
                         raise TransformerConnectionError()
 
@@ -76,7 +77,10 @@ class AspectExtractor:
                     self.model = torch.load(model_path, map_location='cpu')
                     self.model.opt = self.opt
                 try:
-                    self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
+                    if kwargs.pop('offline', False):
+                        self.tokenizer = AutoTokenizer.from_pretrained(find_cwd_dir(self.opt.pretrained_bert.split('/')[-1]))
+                    else:
+                        self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
                 except ValueError:
                     if tokenizer_path:
                         with open(tokenizer_path, mode='rb') as f:
@@ -110,7 +114,6 @@ class AspectExtractor:
         self.opt.eval_batch_size = kwargs.pop('eval_batch_size', 128)
 
         self.to(self.opt.device)
-
 
     def to(self, device=None):
         self.opt.device = device

@@ -4,7 +4,6 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-import math
 import os
 import pickle
 import random
@@ -26,10 +25,9 @@ from transformers import AutoModel
 from ..classic.__bert__.dataset_utils.data_utils_for_training import (Tokenizer4Pretraining,
                                                                       BERTTADDataset)
 from ..classic.__glove__.dataset_utils.data_utils_for_training import (build_tokenizer,
-                                                                       build_embedding_matrix,
                                                                        GloVeTADDataset)
 from pyabsa.utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError, init_optimizer
+from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry, TransformerConnectionError, init_optimizer, build_embedding_matrix
 
 import pytorch_warmup as warmup
 
@@ -113,14 +111,14 @@ class Instructor:
                 dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(opt.embed_dim), os.path.basename(opt.dataset_name)),
                 opt=self.opt
             )
-            self.train_set = TADGloVeTCDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
+            self.train_set = GloVeTADDataset(self.opt.dataset_file['train'], self.tokenizer, self.opt)
 
             if self.opt.dataset_file['test']:
-                self.test_set = TADGloVeTCDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
+                self.test_set = GloVeTADDataset(self.opt.dataset_file['test'], self.tokenizer, self.opt)
             else:
                 self.test_set = None
             if self.opt.dataset_file['valid']:
-                self.valid_set = TADGloVeTCDataset(self.opt.dataset_file['valid'], self.tokenizer, self.opt)
+                self.valid_set = GloVeTADDataset(self.opt.dataset_file['valid'], self.tokenizer, self.opt)
             else:
                 self.valid_set = None
             self.model = opt.model(self.embedding_matrix, opt).to(opt.device)
@@ -135,7 +133,7 @@ class Instructor:
         # use DataParallel for training if device count larger than 1
         if self.opt.auto_device == 'allcuda':
             self.model.to(self.opt.device)
-            self.model = torch.nn.parallel.DataParallel(self.model)
+            self.model = torch.nn.parallel.DataParallel(self.model).module
         else:
             self.model.to(self.opt.device)
 
@@ -164,10 +162,7 @@ class Instructor:
 
     def reload_model(self, ckpt='./init_state_dict.bin'):
         if os.path.exists(ckpt):
-            if self.opt.auto_device == 'allcuda':
-                self.model.module.load_state_dict(torch.load(find_file(ckpt, or_key=['.bin', 'state_dict'])))
-            else:
-                self.model.load_state_dict(torch.load(find_file(ckpt, or_key=['.bin', 'state_dict'])))
+            self.model.load_state_dict(torch.load(find_file(ckpt, or_key=['.bin', 'state_dict'])))
 
     def prepare_dataloader(self, train_set):
         if self.opt.cross_validate_fold < 1:
@@ -487,6 +482,10 @@ class Instructor:
         label_test_acc = n_label_test_correct / n_label_test_total
         label_test_f1 = metrics.f1_score(t_label_targets_all.cpu(), torch.argmax(t_label_outputs_all, -1).cpu(),
                                          labels=list(range(self.opt.class_dim)), average='macro')
+        if self.opt.args.get('show_metric', False):
+            print('\n---------------------------- Standard Classification Report ----------------------------\n')
+            print(metrics.classification_report(t_label_targets_all.cpu(), torch.argmax(t_label_outputs_all, -1).cpu(), target_names=[self.opt.index_to_label[x] for x in self.opt.index_to_label]))
+            print('\n---------------------------- Standard Classification Report ----------------------------\n')
 
         adv_det_test_acc = n_adv_det_test_correct / n_adv_det_test_total
         adv_det_test_f1 = metrics.f1_score(t_adv_det_targets_all.cpu(), torch.argmax(t_adv_det_outputs_all, -1).cpu(),

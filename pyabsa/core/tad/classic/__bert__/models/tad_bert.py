@@ -26,7 +26,6 @@ class TADBERT(nn.Module):
         self.encoder3 = Encoder(self.bert.config, opt=opt)
 
     def forward(self, inputs):
-
         text_raw_indices = inputs[0]
         last_hidden_state = self.bert(text_raw_indices)['last_hidden_state']
 

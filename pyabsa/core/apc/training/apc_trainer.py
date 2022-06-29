@@ -62,10 +62,9 @@ class Instructor:
         # use DataParallel for training if device count larger than 1
         if self.opt.auto_device == 'allcuda':
             self.model.to(self.opt.device)
-            self.model = torch.nn.parallel.DataParallel(self.model)
+            self.model = torch.nn.parallel.DataParallel(self.model).module
         else:
             self.model.to(self.opt.device)
-
         if hasattr(self.model.models[0], 'eta1') and hasattr(self.model.models[0], 'eta2'):
             if self.opt.eta == 0:
                 torch.nn.init.uniform_(self.model.models[0].eta1)
@@ -538,6 +537,11 @@ class Instructor:
         test_acc = n_test_correct / n_test_total
         f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
                               labels=list(range(self.opt.polarities_dim)), average='macro')
+
+        if self.opt.args.get('show_metric', False):
+            print('\n---------------------------- APC Classification Report ----------------------------\n')
+            print(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(), target_names=[self.opt.index_to_label[x] for x in self.opt.index_to_label]))
+            print('\n---------------------------- APC Classification Report ----------------------------\n')
         return test_acc, f1
 
     def run(self):

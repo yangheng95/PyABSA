@@ -7,19 +7,15 @@
 
 
 import copy
-import json
 import os
 import pickle
 import urllib.request
 
 import torch
-from findfile import find_files, find_dir, find_cwd_file
+from findfile import find_files, find_cwd_file
 from pyabsa.core.atepc.dataset_utils.atepc_utils import split_text
 from termcolor import colored
 
-from pyabsa import __version__
-
-# convert atepc_datasets in this repo for inferring_tutorials
 from pyabsa.functional.dataset import DatasetItem
 from pyabsa.utils.pyabsa_utils import save_args
 
@@ -302,7 +298,14 @@ def query_remote_version():
         content = content.read().decode("utf-8").split('\'')
         version = content[-2]
     except Exception as e:
-        return None
+        try:
+            dataset_url = 'https://raw.githubusercontent.com/yangheng95/ABSADatasets/v1.2/datasets/__init__.py'
+            content = urllib.request.urlopen(dataset_url, timeout=5)
+            content = content.read().decode("utf-8").split('\'')
+            version = content[-2]
+        except Exception as e:
+            print(colored('failed to query remote version', 'red'))
+            return None
     return version
 
 
