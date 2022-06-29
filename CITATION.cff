@@ -8,8 +8,8 @@ title: >-
 message: 'https://github.com/yangheng95/PyABSA'
 type: software
 authors:
-  - given-names: YANG
-    name-particle: HENG
+  - given-names: HENG
+    name-particle: YANG
     email: hy345@exeter.ac.uk
     affiliation: University of Exeter
     orcid: 'https://orcid.org/0000-0002-6831-196X'
