@@ -69,23 +69,17 @@ class FAST_LSA_T_V2(nn.Module):
             sent_out = self.post_linear(sent_out)
 
         elif self.opt.lcf == 'fusion':
-            # cdw_sent_out = self.CDW_LSA(global_context_features,
-            #                             spc_mask_vec=spc_mask_vec,
-            #                             lcf_matrix=lcf_cdw_matrix,
-            #                             left_lcf_matrix=left_lcf_cdw_matrix,
-            #                             right_lcf_matrix=right_lcf_cdw_matrix)
-            # cdm_sent_out = self.CDM_LSA(global_context_features,
-            #                             spc_mask_vec=spc_mask_vec,
-            #                             lcf_matrix=lcf_cdm_matrix,
-            #                             left_lcf_matrix=left_lcf_cdm_matrix,
-            #                             right_lcf_matrix=right_lcf_cdm_matrix)
-            # sent_out = self.fusion_linear(torch.cat((global_context_features, cdw_sent_out, cdm_sent_out), -1))
-            sent_out = self.CDW_LSA(global_context_features,
-                                    spc_mask_vec=spc_mask_vec,
-                                    lcf_matrix=lcf_cdw_matrix,
-                                    left_lcf_matrix=left_lcf_cdm_matrix,
-                                    right_lcf_matrix=right_lcf_cdm_matrix)
-            sent_out = torch.cat((global_context_features, sent_out), -1)
+            cdw_sent_out = self.CDW_LSA(global_context_features,
+                                        spc_mask_vec=spc_mask_vec,
+                                        lcf_matrix=lcf_cdw_matrix,
+                                        left_lcf_matrix=left_lcf_cdw_matrix,
+                                        right_lcf_matrix=right_lcf_cdw_matrix)
+            cdm_sent_out = self.CDM_LSA(global_context_features,
+                                        spc_mask_vec=spc_mask_vec,
+                                        lcf_matrix=lcf_cdm_matrix,
+                                        left_lcf_matrix=left_lcf_cdm_matrix,
+                                        right_lcf_matrix=right_lcf_cdm_matrix)
+            sent_out = self.fusion_linear(torch.cat((global_context_features, cdw_sent_out, cdm_sent_out), -1))
             sent_out = self.post_linear(sent_out)
 
         else:
