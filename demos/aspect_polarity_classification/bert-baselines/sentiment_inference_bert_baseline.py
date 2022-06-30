@@ -4,7 +4,7 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-# Usage: Evaluate on given text or inference dataset_utils
+# Usage: Evaluate on given text or inference dataset
 
 from pyabsa import APCCheckpointManager, ABSADatasetList
 
@@ -20,7 +20,7 @@ sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint=check
 text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated . !sent! 1 1'
 sent_classifier.infer(text, print_result=True)
 
-# batch inferring_tutorials returns the results, save the result if necessary using save_result=True
+# batch inference returns the results, save the result if necessary using save_result=True
 inference_sets = ABSADatasetList.Laptop14
 
 results = sent_classifier.batch_infer(target_file=inference_sets,

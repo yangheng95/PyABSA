@@ -120,7 +120,7 @@ class GloVeABSADataset(Dataset):
             it = samples
         for text in it:
             try:
-                # handle for empty lines in inferring_tutorials dataset_utils
+                # handle for empty lines in inference dataset
                 if text is None or '' == text.strip():
                     raise RuntimeError('Invalid Input!')
 

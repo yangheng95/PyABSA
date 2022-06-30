@@ -16,7 +16,7 @@ param_dict = {
     'num_epoch': 10,
     'optimizer': "adam",  # {adam, adamw}
     'learning_rate': 0.00002,
-    'pretrained_bert_name': "bert-base-chinese",  # choose a suitable pretrained BERT to train on your dataset_utils
+    'pretrained_bert_name': "bert-base-chinese",  # choose a suitable pretrained BERT to train on your dataset
     'use_bert_spc': True,  # Enable to enhance APC, do not use this parameter in ATE or ATEPC
     'max_seq_len': 80,
     'log_step': 10,  # Evaluate per steps

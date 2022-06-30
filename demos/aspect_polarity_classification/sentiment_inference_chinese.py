@@ -4,7 +4,7 @@
 # author: yangheng <yangheng@m.scnu.edu.cn>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-# Usage: Evaluate on given text or inference dataset_utils
+# Usage: Evaluate on given text or inference dataset
 
 from pyabsa import APCCheckpointManager, ABSADatasetList, available_checkpoints
 

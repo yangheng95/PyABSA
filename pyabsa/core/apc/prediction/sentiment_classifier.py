@@ -49,7 +49,7 @@ def get_mlm_and_tokenizer(text_classifier, config):
 class SentimentClassifier:
     def __init__(self, model_arg=None, cal_perplexity=False, **kwargs):
         '''
-            from_train_model: load inferring_tutorials model from trained model
+            from_train_model: load inference model from trained model
         '''
         self.cal_perplexity = cal_perplexity
         # load from a training

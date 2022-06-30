@@ -29,7 +29,7 @@ To install requirements, run `pip install -r requirements.txt`.
 ### Training
 
 ```sh
-python train.py --model_name bert_spc --dataset_utils restaurant
+python train.py --model_name bert_spc --dataset restaurant
 ```
 
 * All implemented models are listed in [models directory](./models/).
