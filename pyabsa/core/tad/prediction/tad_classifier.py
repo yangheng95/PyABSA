@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # file: text_classifier.py
-# author: yangheng <yangheng@m.scnu.edu.cn>
+# author: yangheng <hy345@exeter.ac.uk>
 # Copyright (C) 2020. All Rights Reserved.
 import json
 import os

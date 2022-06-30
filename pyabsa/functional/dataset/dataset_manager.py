@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: dataset_manager.py
 # time: 2021/6/8 0008
-# author: yangheng <yangheng@m.scnu.edu.cn>
+# author: yangheng <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
@@ -78,7 +78,7 @@ class ABSADatasetList(list):
     Shampoo = DatasetItem('Shampoo', 'Shampoo')
     # jmc123@github https://github.com/jmc-123
     MOOC = DatasetItem('MOOC', 'MOOC')
-    MOOC_En = DatasetItem('MOOC_En', 'MOOC-En')
+    MOOC_En = DatasetItem('MOOC_En', 'MOOC_En')
 
     # assembled dataset
     Chinese = DatasetItem('Chinese', ['Phone', 'Camera', 'Notebook', 'Car', 'MOOC'])
@@ -93,11 +93,11 @@ class ABSADatasetList(list):
     Russian_SemEval2016Task5 = DatasetItem('SemEval2016Task5', ['Russian'])
     French_SemEval2016Task5 = DatasetItem('SemEval2016Task5', ['French'])
 
-    English = DatasetItem('English', ['Laptop14', 'Restaurant14', 'Restaurant16', 'ACL_Twitter', 'MAMS', 'Television', 'TShirt', 'Yelp', 'MOOC-En'])
+    English = DatasetItem('English', ['Laptop14', 'Restaurant14', 'Restaurant16', 'ACL_Twitter', 'MAMS', 'Television', 'TShirt', 'Yelp', 'MOOC_En'])
     SemEval = DatasetItem('SemEval', ['Laptop14', 'Restaurant14', 'Restaurant16'])  # Abandon rest15 dataset due to data leakage, See https://github.com/yangheng95/PyABSA/issues/53
     Restaurant = DatasetItem('Restaurant', ['Restaurant14', 'Restaurant16'])
     Multilingual = DatasetItem('Multilingual', ['Laptop14', 'Restaurant16', 'ACL_Twitter', 'MAMS', 'Television', 'TShirt', 'Yelp',
-                                                'Phone', 'Camera', 'Notebook', 'Car', 'MOOC', 'SemEval2016Task5', 'MOOC-En'])
+                                                'Phone', 'Camera', 'Notebook', 'Car', 'MOOC', 'SemEval2016Task5', 'MOOC_En'])
 
     def __init__(self):
         dataset_list = [

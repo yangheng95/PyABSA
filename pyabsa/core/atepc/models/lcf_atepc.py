@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # file: lcf_atepc.py
-# author: yangheng <yangheng@m.scnu.edu.cn>
+# author: yangheng <hy345@exeter.ac.uk>
 # Copyright (C) 2019. All Rights Reserved.
 
 

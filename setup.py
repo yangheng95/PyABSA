@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: setup.py
 # time: 2021/4/22 0022
-# author: yangheng <yangheng@m.scnu.edu.cn>
+# author: yangheng <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
@@ -40,7 +40,7 @@ setup(
                       'tqdm',
                       'pytorch_warmup',
                       'termcolor',
-                      'gitpython',
+                      'gitpython',  # need git installed in your OS
                       'gdown>=4.4.0',
                       'transformers>4.20.0',
                       'torch>1.0.0',

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: lcf_template_apc.py
 # time: 2021/6/22
-# author: yangheng <yangheng@m.scnu.edu.cn>
+# author: yangheng <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 

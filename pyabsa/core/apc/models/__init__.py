@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # file: __init__.py
-# author: yangheng <yangheng@m.scnu.edu.cn>
+# author: yangheng <hy345@exeter.ac.uk>
 # Copyright (C) 2021. All Rights Reserved.
 
 import pyabsa.core.apc.classic.__glove__.models
