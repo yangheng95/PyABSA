@@ -32,7 +32,7 @@ try:
 
     # assert torch.version.__version__ < '1.11.0'
     print('Use FP16 via Apex!')
-except Exception:
+except Exception as e:
     amp = None
 
 
@@ -65,6 +65,8 @@ class Instructor:
             self.model = torch.nn.parallel.DataParallel(self.model).module
         else:
             self.model.to(self.opt.device)
+
+        # eta1 and eta2 works only on LSA models, read the LSA paper for more details
         if hasattr(self.model.models[0], 'eta1') and hasattr(self.model.models[0], 'eta2'):
             if self.opt.eta == 0:
                 torch.nn.init.uniform_(self.model.models[0].eta1)

@@ -78,7 +78,7 @@ class ABSADataset(Dataset):
             it = samples
         for i, text in enumerate(it):
             try:
-                # handle for empty lines in inferring_tutorials dataset_utils
+                # handle for empty lines in inference dataset
                 if text is None or '' == text.strip():
                     raise RuntimeError('Invalid Input!')
 

@@ -11,7 +11,7 @@ from pyabsa import ABSADatasetList
 from pyabsa import APCCheckpointManager
 
 ########################################################################################################################
-#                To use GloVe-based model, you should put the GloVe embedding into the dataset_utils path                   #
+#                To use GloVe-based model, you should put the GloVe embedding into the dataset path                   #
 #              or if you can access to Google, it will automatic download GloVe embedding if necessary                 #
 ########################################################################################################################
 
@@ -31,7 +31,7 @@ sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint=model
 text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated . !sent! 1 1'
 sent_classifier.infer(text, print_result=True)
 
-# batch inferring_tutorials returns the results, save the result if necessary using save_result=True
+# batch inference returns the results, save the result if necessary using save_result=True
 inference_sets = ABSADatasetList.SemEval
 results = sent_classifier.batch_infer(target_file=inference_sets,
                                       print_result=True,
