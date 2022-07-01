@@ -1,11 +1,10 @@
 {
   "1.15.6": {
-    "1": "Add classification report (including precision, recall, F1) display after training",
+    "1": "Add classification report (including precision, recall, F1) display after training, set config.show_metric to activate",
     "2": "Add offline option to load huggingface model in inference: set get_xxx(offline=True) to auto detect and load local pretrained model",
-    "3": "Add confusion matrix display after training",
-    "4": "Fix lcf-fusion in fast-lsa-t-v2",
-    "5": "Fix some typos",
-    "6": "Rename MOOC-En dataset to MOOC_En"
+    "3": "Fix lcf-fusion in fast-lsa-t-v2",
+    "4": "Fix some typos",
+    "5": "Rename MOOC-En dataset to MOOC_En"
   },
   "1.15.5": {
     "1": "Minor fixes of tad inference"
