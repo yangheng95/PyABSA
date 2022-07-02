@@ -80,7 +80,6 @@ class FAST_LSA_T_V2(nn.Module):
                                         left_lcf_matrix=left_lcf_cdm_matrix,
                                         right_lcf_matrix=right_lcf_cdm_matrix)
             sent_out = self.fusion_linear(torch.cat((global_context_features, cdw_sent_out, cdm_sent_out), -1))
-            sent_out = self.post_linear(sent_out)
 
         else:
             print('Invalid LCF mode: {}'.format(self.opt.lcf))
