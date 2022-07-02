@@ -30,8 +30,8 @@ device = autocuda.auto_cuda()
 
 config = APCConfigManager.get_apc_config_english()
 config.model = APCModelList.FAST_LSA_T_V2
-# config.lcf = 'cdw'
-config.lcf = 'fusion'
+config.lcf = 'cdw'
+# config.lcf = 'fusion'
 config.similarity_threshold = 1
 config.max_seq_len = 80
 config.dropout = 0

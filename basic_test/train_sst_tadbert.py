@@ -22,7 +22,7 @@ seeds = [random.randint(1, 10000) for _ in range(1)]
 def get_config():
     config = TADConfigManager.get_tad_config_english()
     config.model = BERTTADModelList.TADBERT
-    config.num_epoch = 30
+    config.num_epoch = 1
     config.pretrained_bert = 'bert-base-uncased'
     config.patience = 5
     config.evaluate_begin = 0
