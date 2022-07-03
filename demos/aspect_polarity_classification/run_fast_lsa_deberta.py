@@ -24,10 +24,9 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
-# seeds = [random.randint(0, 10000) for _ in range(3)]
-seeds = [random.randint(0, 10000) for _ in range(1)]
+seeds = [random.randint(0, 10000) for _ in range(3)]
+# seeds = [random.randint(0, 10000) for _ in range(1)]
 device = autocuda.auto_cuda()
-
 config = APCConfigManager.get_apc_config_english()
 config.model = APCModelList.FAST_LSA_T_V2
 config.lcf = 'cdw'

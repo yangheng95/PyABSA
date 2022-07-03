@@ -16,12 +16,13 @@ long_description = (cwd / "README.md").read_text(encoding='utf8')
 setup(
     name=__name__,
     version=__version__,
-    description='This tool provides the state-of-the-art models for aspect term extraction (ATE), aspect polarity classification (APC), and text classification (TC).',
+    description='This tool provides the state-of-the-art models for aspect term extraction (ATE), '
+                'aspect polarity classification (APC), and text classification (TC).',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/yangheng95/PyABSA',
     # Author details
-    author='Yang Heng',
+    author='Yang, Heng',
     author_email='hy345@exeter.ac.uk',
     python_requires=">=3.6",
     packages=find_packages(),
@@ -29,7 +30,7 @@ setup(
     exclude_package_date={'': ['.gitignore']},
     # Choose your license
     license='MIT',
-    install_requires=['findfile>=1.7.9.4',
+    install_requires=['findfile>=1.7.9.5',
                       'autocuda>=0.11',
                       'metric-visualizer>=0.4.23',
                       'spacy',

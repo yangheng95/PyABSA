@@ -15,7 +15,7 @@
 
 **Hi, there!** Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks.
 
-PyABSA is a free and open-soruce tool for everyone, but please do not forget to attach the (informal or formal) author
+PyABSA is a free and open-source tool for everyone, but please do not forget to attach the (informal or formal) author
 information and project address in your works, products and publications, etc.
 
 # | [Overview](./README.MD) | [HuggingfaceHub](readme/huggingface_readme.md) | [ABDADatasets](readme/dataset_readme.md) | [ABSA Models](readme/model_readme.md) | [Colab Tutorials](readme/tutorial_readme.md) | [Troubleshooting(常见问题解决)](https://github.com/yangheng95/PyABSA/issues/189)
@@ -220,7 +220,7 @@ many ways, including:
 - Correct/Rewrite some error-messages or code comment (The comments are not written by native english speaker, you can
   help us improve documents)
 - Create an example script in a particular situation (Such as specify a SpaCy model, pretrained-bert type, some
-  hyperparameters)
+  hyper-parameters)
 - Star this repository to keep it active
 
 ## License
