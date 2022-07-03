@@ -1,4 +1,7 @@
 {
+  "1.15.7": {
+    "1": "Minor fixes"
+  },
   "1.15.6": {
     "1": "Add classification report (including precision, recall, F1) display after training, set config.show_metric to activate",
     "2": "Add offline option to load huggingface model in inference: set get_xxx(offline=True) to auto detect and load local pretrained model",
