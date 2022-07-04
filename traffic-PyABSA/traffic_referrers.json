@@ -1,38 +1,38 @@
 [
   {
     "referrer": "github.com",
-    "count": 1350,
-    "uniques": 132
+    "count": 1306,
+    "uniques": 127
   },
   {
     "referrer": "Google",
-    "count": 483,
+    "count": 485,
     "uniques": 86
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 338,
-    "uniques": 82
+    "count": 322,
+    "uniques": 80
   },
   {
     "referrer": "huggingface.co",
-    "count": 62,
-    "uniques": 14
+    "count": 68,
+    "uniques": 18
   },
   {
     "referrer": "youtube.com",
-    "count": 39,
-    "uniques": 22
+    "count": 54,
+    "uniques": 26
   },
   {
     "referrer": "hf.space",
-    "count": 35,
-    "uniques": 16
+    "count": 39,
+    "uniques": 18
   },
   {
     "referrer": "reddit.com",
-    "count": 30,
-    "uniques": 11
+    "count": 31,
+    "uniques": 12
   },
   {
     "referrer": "link.zhihu.com",
@@ -40,13 +40,13 @@
     "uniques": 10
   },
   {
+    "referrer": "notebooks.githubusercontent.com",
+    "count": 24,
+    "uniques": 11
+  },
+  {
     "referrer": "out.reddit.com",
     "count": 20,
     "uniques": 17
-  },
-  {
-    "referrer": "notebooks.githubusercontent.com",
-    "count": 14,
-    "uniques": 10
   }
 ]
