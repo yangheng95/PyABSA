@@ -117,7 +117,7 @@ def get_device(auto_device):
         try:
             torch.device(device)
         except RuntimeError as e:
-            print('Device assignment error: {}, redirect to CPU'.format(e))
+            print(colored('Device assignment error: {}, redirect to CPU'.format(e), 'red'))
             device = 'cpu'
     device_name = auto_cuda_name()
     return device, device_name
@@ -135,7 +135,7 @@ def resume_from_checkpoint(trainer, from_checkpoint_path):
             config = pickle.load(open(config_path[0], 'rb'))
             if model_path:
                 if config.model != trainer.opt.model:
-                    print(colored('Warning, the checkpoint was not trained using {} from param_dict'.format(trainer.opt.model.__name__)), 'red')
+                    print(colored('Warning, the checkpoint was not trained using {} from param_dict'.format(trainer.opt.model.__name__)), 'yellow')
                 trainer.model = torch.load(model_path[0])
             if state_dict_path:
                 if torch.cuda.device_count() > 1 and trainer.opt.device == 'allcuda':
@@ -145,10 +145,10 @@ def resume_from_checkpoint(trainer, from_checkpoint_path):
                 trainer.model.opt = trainer.opt
                 trainer.model.to(trainer.opt.device)
             else:
-                print('.model or .state_dict file is missing!')
+                print(colored('.model or .state_dict file is missing!', 'red'))
         else:
-            print('No checkpoint found in {}'.format(from_checkpoint_path))
-        print('Resume training from Checkpoint: {}!'.format(from_checkpoint_path))
+            print(colored('No checkpoint found in {}'.format(from_checkpoint_path), 'red'))
+        print(colored('Resume training from Checkpoint: {}!'.format(from_checkpoint_path), 'green'))
 
 
 def prepare_glove840_embedding(glove_path):
@@ -167,29 +167,29 @@ def prepare_glove840_embedding(glove_path):
             embedding_files += find_files(dir_path, 'glove.twitter.27B.txt', exclude_key='.zip')
 
         if embedding_files:
-            print('Find embedding file: {}, use: {}'.format(embedding_files, embedding_files[0]))
+            print(colored('Find embedding file: {}, use: {}'.format(embedding_files, embedding_files[0]), 'green'))
             return embedding_files[0]
 
         else:
             zip_glove_path = os.path.join(os.path.dirname(glove_path), 'glove.840B.300d.zip')
-            print('No GloVe embedding found at {},'
-                  ' downloading glove.840B.300d.txt (2GB will be downloaded / 5.5GB after unzip)...'.format(glove_path))
+            print(colored('No GloVe embedding found at {},'
+                  ' downloading glove.840B.300d.txt (2GB will be downloaded / 5.5GB after unzip)...'.format(glove_path), 'yellow'))
             try:
                 response = requests.get('https://huggingface.co/spaces/yangheng/PyABSA-ATEPC/resolve/main/open-access/glove.840B.300d.zip', stream=True)
                 with open(zip_glove_path, "wb") as f:
                     for chunk in tqdm.tqdm(response.iter_content(chunk_size=1024 * 1024),
                                            unit='MB',
                                            total=int(response.headers['content-length']) // 1024 // 1024,
-                                           postfix='Downloading GloVe-840B embedding...'):
+                                           postfix=colored('Downloading GloVe-840B embedding...', 'yellow')):
                         f.write(chunk)
             except Exception as e:
                 gdown.download(id=glove840_id, output=zip_glove_path)
 
         if find_cwd_file('glove.840B.300d.zip'):
-            print('unzip glove.840B.300d.zip...')
+            print(colored('unzip glove.840B.300d.zip...', 'yellow'))
             with zipfile.ZipFile(find_cwd_file('glove.840B.300d.zip'), 'r') as z:
                 z.extractall()
-            print('Zip file extraction Done.')
+            print(colored('Zip file extraction Done.', 'green'))
 
         return prepare_glove840_embedding(glove_path)
 
@@ -210,7 +210,7 @@ def build_embedding_matrix(word2idx, embed_dim, dat_fname, opt):
         os.makedirs('run')
     embed_matrix_path = 'run/{}'.format(os.path.join(opt.dataset_name, dat_fname))
     if os.path.exists(embed_matrix_path):
-        print('Loading cached embedding_matrix for {}'.format(embed_matrix_path))
+        print(colored('Loading cached embedding_matrix from {} (Please remove all cached files if there is any problem!)'.format(embed_matrix_path), 'green'))
         embedding_matrix = pickle.load(open(embed_matrix_path, 'rb'))
     else:
         glove_path = prepare_glove840_embedding(embed_matrix_path)
@@ -218,7 +218,7 @@ def build_embedding_matrix(word2idx, embed_dim, dat_fname, opt):
 
         word_vec = _load_word_vec(glove_path, word2idx=word2idx, embed_dim=embed_dim)
 
-        for word, i in tqdm.tqdm(word2idx.items(), postfix='Building embedding_matrix {}'.format(dat_fname)):
+        for word, i in tqdm.tqdm(word2idx.items(), postfix=colored('Building embedding_matrix {}'.format(dat_fname), 'yellow')):
             vec = word_vec.get(word)
             if vec is not None:
                 # words not found in embedding index will be all-zeros.
@@ -264,7 +264,7 @@ def retry(f):
                 requests.exceptions.SSLError,
                 requests.exceptions.BaseHTTPError,
             ) as e:
-                print('Training Exception: {}, will retry later'.format(e))
+                print(colored('Training Exception: {}, will retry later'.format(e)))
                 time.sleep(60)
                 count -= 1
 
@@ -328,9 +328,6 @@ def init_optimizer(optimizer):
         'rmsprop': torch.optim.RMSprop,  # default lr=0.01
         'sgd': torch.optim.SGD,
         'adamw': torch.optim.AdamW,
-        # 'radam': torch.optim.Adam if torch.version.__version__ <= '1.9.1' else torch.optim.RAdam,
-        # 'nadam': torch.optim.Adam if torch.version.__version__ <= '1.9.1' else torch.optim.NAdam,
-        # 'sparseadam': torch.optim.Adam if torch.version.__version__ <= '1.9.1' else torch.optim.SparseAdam,
         torch.optim.Adadelta: torch.optim.Adadelta,  # default lr=1.0
         torch.optim.Adagrad: torch.optim.Adagrad,  # default lr=0.01
         torch.optim.Adam: torch.optim.Adam,  # default lr=0.001
@@ -339,13 +336,10 @@ def init_optimizer(optimizer):
         torch.optim.RMSprop: torch.optim.RMSprop,  # default lr=0.01
         torch.optim.SGD: torch.optim.SGD,
         torch.optim.AdamW: torch.optim.AdamW,
-        # torch.optim.RAdam: torch.optim.RAdam,
-        # torch.optim.NAdam: torch.optim.NAdam,
-        # torch.optim.SparseAdam: torch.optim.SparseAdam,
     }
     if optimizer in optimizers:
         return optimizers[optimizer]
     elif hasattr(torch.optim, optimizer.__name__):
         return optimizer
     else:
-        raise KeyError('Unsupported optimizer: {}. Please use string or the optimizers in torch.optim as your optimizer'.format(optimizer))
+        raise KeyError('Unsupported optimizer: {}. Please use string or the optimizer objects in torch.optim as your optimizer'.format(optimizer))

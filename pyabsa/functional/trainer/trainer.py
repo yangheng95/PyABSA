@@ -146,9 +146,9 @@ class Trainer:
 
         self.inference_model = None
 
-        self.train()
+        self._run()
 
-    def train(self):
+    def _run(self):
         """
         just return the trained model for inference (e.g., polarity classification, aspect-term extraction)
         """
