@@ -1,6 +1,8 @@
 {
   "1.15.7": {
-    "1": "Minor fixes"
+    "1": "Update findfile to 1.7.9.5",
+    "2": "Default to activate use_bert_spc for ATEPC models to improve ATE and APC performance",
+    "3": "Minor fixes"
   },
   "1.15.6": {
     "1": "Add classification report (including precision, recall, F1) display after training, set config.show_metric to activate",
