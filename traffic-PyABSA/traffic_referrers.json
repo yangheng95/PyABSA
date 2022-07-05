@@ -1,23 +1,23 @@
 [
   {
     "referrer": "github.com",
-    "count": 1306,
-    "uniques": 127
+    "count": 1201,
+    "uniques": 116
   },
   {
     "referrer": "Google",
-    "count": 485,
-    "uniques": 86
+    "count": 441,
+    "uniques": 81
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 322,
-    "uniques": 80
+    "count": 296,
+    "uniques": 74
   },
   {
     "referrer": "huggingface.co",
-    "count": 68,
-    "uniques": 18
+    "count": 59,
+    "uniques": 17
   },
   {
     "referrer": "youtube.com",
@@ -26,13 +26,8 @@
   },
   {
     "referrer": "hf.space",
-    "count": 39,
-    "uniques": 18
-  },
-  {
-    "referrer": "reddit.com",
-    "count": 31,
-    "uniques": 12
+    "count": 38,
+    "uniques": 17
   },
   {
     "referrer": "link.zhihu.com",
@@ -41,12 +36,17 @@
   },
   {
     "referrer": "notebooks.githubusercontent.com",
-    "count": 24,
-    "uniques": 11
+    "count": 23,
+    "uniques": 10
   },
   {
-    "referrer": "out.reddit.com",
-    "count": 20,
-    "uniques": 17
+    "referrer": "reddit.com",
+    "count": 22,
+    "uniques": 8
+  },
+  {
+    "referrer": "pypi.org",
+    "count": 18,
+    "uniques": 5
   }
 ]
