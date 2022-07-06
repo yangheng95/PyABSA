@@ -20,7 +20,7 @@ examples1 = ['照 大 尺 寸 的 照 片 的 时 候 手 机 反 映 速 度 �
 aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='chinese', eval_batch_size=256)
 
 # examples = examples1
-examples = ABSADatasetList.Phone
+examples = ABSADatasetList.Chinese
 res = aspect_extractor.extract_aspect(inference_source=examples,  # list-support only, for now
                                       print_result=True,  # print the result
                                       pred_sentiment=True,  # Predict the sentiment of extracted aspect terms

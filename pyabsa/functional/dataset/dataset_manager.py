@@ -43,61 +43,66 @@ class DatasetItem(list):
 
 class ABSADatasetList(list):
     # SemEval
-    Laptop14 = DatasetItem('Laptop14', 'Laptop14')
-    Restaurant14 = DatasetItem('Restaurant14', 'Restaurant14')
+    Laptop14 = DatasetItem('Laptop14', '113.Laptop14')
+    Restaurant14 = DatasetItem('Restaurant14', '114.Restaurant14')
 
     # https://github.com/zhijing-jin/ARTS_TestSet
-    ARTS_Laptop14 = DatasetItem('ARTS_Laptop14', 'ARTS_Laptop14')
-    ARTS_Restaurant14 = DatasetItem('ARTS_Restaurant14', 'ARTS_Restaurant14')
+    ARTS_Laptop14 = DatasetItem('ARTS_Laptop14', '111.ARTS_Laptop14')
+    ARTS_Restaurant14 = DatasetItem('ARTS_Restaurant14', '112.ARTS_Restaurant14')
 
-    Restaurant15 = DatasetItem('Restaurant15', 'Restaurant15')
-    Restaurant16 = DatasetItem('Restaurant16', 'Restaurant16')
+    Restaurant15 = DatasetItem('Restaurant15', '115.Restaurant15')
+    Restaurant16 = DatasetItem('Restaurant16', '116.Restaurant16')
 
     # Twitter
-    ACL_Twitter = DatasetItem('Twitter', 'Twitter')
+    ACL_Twitter = DatasetItem('Twitter', '101.Twitter')
 
-    MAMS = DatasetItem('MAMS', 'MAMS')
+    MAMS = DatasetItem('MAMS', '109.MAMS')
 
     # @R Mukherjee et al.
-    Television = DatasetItem('Television', 'Television')
-    TShirt = DatasetItem('TShirt', 'TShirt')
+    Television = DatasetItem('Television', '117.Television')
+    TShirt = DatasetItem('TShirt', '118.TShirt')
 
     # @WeiLi9811 https://github.com/WeiLi9811
-    Yelp = DatasetItem('Yelp', 'Yelp')
+    Yelp = DatasetItem('Yelp', '119.Yelp')
 
     # Chinese (binary polarity)
-    Phone = DatasetItem('Phone', 'Phone')
-    Car = DatasetItem('Car', 'Car')
-    Notebook = DatasetItem('Notebook', 'Notebook')
-    Camera = DatasetItem('Camera', 'Camera')
+    Phone = DatasetItem('Phone', '107.Phone')
+    Car = DatasetItem('Car', '104.Car')
+    Notebook = DatasetItem('Notebook', '106.Notebook')
+    Camera = DatasetItem('Camera', '103.Camera')
 
     # Chinese (triple polarity)
     # brightgems@github https://github.com/brightgems
     # Note that the annotation strategy of this dataset is highly different from other datasets,
     # please dont mix this dataset with any other dataset in training
-    Shampoo = DatasetItem('Shampoo', 'Shampoo')
+    Shampoo = DatasetItem('Shampoo', '108.Shampoo')
     # jmc123@github https://github.com/jmc-123
-    MOOC = DatasetItem('MOOC', 'MOOC')
-    MOOC_En = DatasetItem('MOOC_En', 'MOOC_En')
+    MOOC = DatasetItem('MOOC', '105.MOOC')
+    MOOC_En = DatasetItem('MOOC_En', '121.MOOC_En')
 
     # assembled dataset
-    Chinese = DatasetItem('Chinese', ['Phone', 'Camera', 'Notebook', 'Car', 'MOOC'])
-    Binary_Polarity_Chinese = DatasetItem('Chinese', ['Phone', 'Camera', 'Notebook', 'Car'])
-    Triple_Polarity_Chinese = DatasetItem('Chinese', ['MOOC', 'Shampoo'])
+    Chinese = DatasetItem('Chinese', ['107.Phone', '103.Camera', '106.Notebook', '104.Car', '105.MOOC'])
+    Binary_Polarity_Chinese = DatasetItem('Chinese', ['107.Phone', '103.Camera', '106.Notebook', '104.Car'])
+    Triple_Polarity_Chinese = DatasetItem('Chinese', ['105.MOOC'])
 
-    SemEval2016Task5 = DatasetItem('SemEval2016Task5', ['SemEval2016Task5'])
-    Arabic_SemEval2016Task5 = DatasetItem('SemEval2016Task5', ['Arabic'])
-    Dutch_SemEval2016Task5 = DatasetItem('SemEval2016Task5', ['Dutch'])
-    Spanish_SemEval2016Task5 = DatasetItem('SemEval2016Task5', ['Spanish'])
-    Turkish_SemEval2016Task5 = DatasetItem('SemEval2016Task5', ['Turkish'])
-    Russian_SemEval2016Task5 = DatasetItem('SemEval2016Task5', ['Russian'])
-    French_SemEval2016Task5 = DatasetItem('SemEval2016Task5', ['French'])
+    SemEval2016Task5 = DatasetItem('SemEval2016Task5', ['120.SemEval2016Task5'])
+    Arabic_SemEval2016Task5 = DatasetItem('Arabic_SemEval2016Task5', ['122.Arabic'])
+    Dutch_SemEval2016Task5 = DatasetItem('Dutch_SemEval2016Task5', ['123.Dutch'])
+    Spanish_SemEval2016Task5 = DatasetItem('Spanish_SemEval2016Task5', ['127.Spanish'])
+    Turkish_SemEval2016Task5 = DatasetItem('Turkish_SemEval2016Task5', ['128.Turkish'])
+    Russian_SemEval2016Task5 = DatasetItem('Russian_SemEval2016Task5', ['126.Russian'])
+    French_SemEval2016Task5 = DatasetItem('French_SemEval2016Task5', ['125.French'])
+    English_SemEval2016Task5 = DatasetItem('English_SemEval2016Task5', ['125.English'])
 
-    English = DatasetItem('English', ['Laptop14', 'Restaurant14', 'Restaurant16', 'ACL_Twitter', 'MAMS', 'Television', 'TShirt', 'Yelp', 'MOOC_En'])
-    SemEval = DatasetItem('SemEval', ['Laptop14', 'Restaurant14', 'Restaurant16'])  # Abandon rest15 dataset due to data leakage, See https://github.com/yangheng95/PyABSA/issues/53
-    Restaurant = DatasetItem('Restaurant', ['Restaurant14', 'Restaurant16'])
-    Multilingual = DatasetItem('Multilingual', ['Laptop14', 'Restaurant16', 'ACL_Twitter', 'MAMS', 'Television', 'TShirt', 'Yelp',
-                                                'Phone', 'Camera', 'Notebook', 'Car', 'MOOC', 'SemEval2016Task5', 'MOOC_En'])
+    English = DatasetItem('English', ['Laptop14', 'Restaurant14', 'Restaurant16', 'ACL_Twitter',
+                                      'MAMS', 'Television', 'TShirt', 'Yelp', 'MOOC_En'])
+
+    # Abandon rest15 dataset due to data leakage, See https://github.com/yangheng95/PyABSA/issues/53
+    SemEval = DatasetItem('SemEval', ['113.Laptop14', '114.Laptop14', '116.Restaurant16'])
+    Restaurant = DatasetItem('Restaurant', ['114.Restaurant14', '116.Restaurant16'])
+    Multilingual = DatasetItem('Multilingual', ['113.Laptop14', '114.Restaurant14', '116.Restaurant16', '101.ACL_Twitter', '109.MAMS', '117.Television',
+                                                '118.TShirt', '119.Yelp', '107.Phone', '103.Camera', '106.Notebook', '104.Car', '105.MOOC',
+                                                '120.SemEval2016Task5', '121.MOOC_En'])
 
     def __init__(self):
         dataset_list = [
@@ -113,16 +118,16 @@ class ABSADatasetList(list):
 
 
 class TCDatasetList(list):
-    SST1 = DatasetItem('SST5', 'SST1')
-    SST5 = DatasetItem('SST5', 'SST1')
-    SST2 = DatasetItem('SST2', 'SST2')
-    AGNews10K = DatasetItem('AGNews10K', 'AGNews10K')
-    IMDB10K = DatasetItem('IMDB10K', 'IMDB10K')
-    AGNews120K = DatasetItem('AGNews120K', 'AGNews120K')
-    IMDB50K = DatasetItem('IMDB50K', 'IMDB50K')
-    Yelp700K = DatasetItem('Yelp700K', 'Yelp700K')
-    Yelp10K = DatasetItem('Yelp10K', 'Yelp10K')
-    SST = DatasetItem('SST', ['SST2'])
+    SST1 = DatasetItem('SST5', '200.SST1')
+    SST5 = DatasetItem('SST5', '200.SST1')
+    SST2 = DatasetItem('SST2', '201.SST2')
+    AGNews10K = DatasetItem('AGNews10K', '204.AGNews10K')
+    IMDB10K = DatasetItem('IMDB10K', '202.IMDB10K')
+    AGNews120K = DatasetItem('AGNews120K', '203.AGNews120K')
+    IMDB50K = DatasetItem('IMDB50K', '205.IMDB50K')
+    Yelp10K = DatasetItem('Yelp10K', '206.Yelp10K')
+    Yelp700K = DatasetItem('Yelp700K', '207.Yelp700K')
+    SST = DatasetItem('SST', ['201.SST2'])
 
     def __init__(self):
         dataset_list = [
@@ -135,26 +140,12 @@ class TCDatasetList(list):
         super().__init__(dataset_list)
 
 
-class AdvTCDatasetList(list):
-    SST1 = DatasetItem('SST1', 'SST1')
-    SST5 = DatasetItem('SST5', 'SST1')
-    SST2 = DatasetItem('SST2', 'SST2')
-    AGNews10K = DatasetItem('AGNews10K', 'AGNews10K')
-    IMDB10K = DatasetItem('IMDB10K', 'IMDB10K')
-    AGNews120K = DatasetItem('AGNews120K', 'AGNews120K')
-    IMDB50K = DatasetItem('IMDB50K', 'IMDB50K')
-    Yelp700K = DatasetItem('Yelp700K', 'Yelp700K')
-    Yelp10K = DatasetItem('Yelp10K', 'Yelp10K')
-    SST = DatasetItem('SST', ['SST2'])
-
-    def __init__(self):
-        dataset_list = [
-            self.SST2, self.SST5, self.IMDB10K, self.Yelp10K, self.AGNews10K
-        ]
-        super().__init__(dataset_list)
+class AdvTCDatasetList(TCDatasetList):
+    pass
 
 
-filter_key_words = ['.py', '.md', 'readme', 'log', 'result', 'zip', '.state_dict', '.model', '.png', 'acc_', 'f1_', '.backup', '.bak']
+filter_key_words = ['.py', '.md', 'readme', 'log', 'result', 'zip',
+                    '.state_dict', '.model', '.png', 'acc_', 'f1_', '.backup', '.bak']
 
 
 def detect_dataset(dataset_path, task='apc', load_aug=False):

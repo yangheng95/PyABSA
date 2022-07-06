@@ -60,7 +60,6 @@ class AspectExtractor:
                 with open(config_path, mode='rb') as f:
                     self.opt = pickle.load(f)
                     self.opt.device = get_device(kwargs.pop('auto_device', True))[0]
-
                 if state_dict_path:
                     try:
                         if kwargs.pop('offline', False):
@@ -95,7 +94,7 @@ class AspectExtractor:
                 raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, model_arg))
 
             if not hasattr(ATEPCModelList, self.model.__class__.__name__):
-                raise KeyError('The checkpoint you are loading is not from ATEPC model.')
+                raise KeyError('The checkpoint you are loading is not from any ATEPC model.')
 
         self.processor = ATEPCProcessor(self.tokenizer)
         self.num_labels = len(self.opt.label_list) + 1
@@ -248,15 +247,15 @@ class AspectExtractor:
                                                           self.tokenizer,
                                                           self.opt)
         all_spc_input_ids = torch.tensor([f.input_ids_spc for f in infer_features], dtype=torch.long)
-        all_input_mask = torch.tensor([f.input_mask for f in infer_features], dtype=torch.long)
         all_segment_ids = torch.tensor([f.segment_ids for f in infer_features], dtype=torch.long)
+        all_input_mask = torch.tensor([f.input_mask for f in infer_features], dtype=torch.long)
         all_label_ids = torch.tensor([f.label_id for f in infer_features], dtype=torch.long)
         all_polarities = torch.tensor([f.polarity for f in infer_features], dtype=torch.long)
         all_valid_ids = torch.tensor([f.valid_ids for f in infer_features], dtype=torch.long)
         all_lmask_ids = torch.tensor([f.label_mask for f in infer_features], dtype=torch.long)
 
         all_tokens = [f.tokens for f in infer_features]
-        infer_data = TensorDataset(all_spc_input_ids, all_input_mask, all_segment_ids, all_label_ids,
+        infer_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
                                    all_polarities, all_valid_ids, all_lmask_ids)
         # Run prediction for full data
         infer_sampler = SequentialSampler(infer_data)
@@ -270,30 +269,31 @@ class AspectExtractor:
         else:
             label_map = self.opt.index_to_IOB_label
         if len(infer_data) >= 100:
-            it = tqdm.tqdm(self.infer_dataloader, postfix='inferring...')
+            it = tqdm.tqdm(self.infer_dataloader, postfix='extracting aspect terms...')
         else:
             it = self.infer_dataloader
-        for i_batch, (input_ids_spc, input_mask, segment_ids, label_ids, polarity, valid_ids, l_mask) in enumerate(it):
+        for i_batch, (input_ids_spc, segment_ids, input_mask, label_ids, polarity, valid_ids, l_mask) in enumerate(it):
             input_ids_spc = input_ids_spc.to(self.opt.device)
-            input_mask = input_mask.to(self.opt.device)
             segment_ids = segment_ids.to(self.opt.device)
-            valid_ids = valid_ids.to(self.opt.device)
+            input_mask = input_mask.to(self.opt.device)
             label_ids = label_ids.to(self.opt.device)
             polarity = polarity.to(self.opt.device)
+            valid_ids = valid_ids.to(self.opt.device)
             l_mask = l_mask.to(self.opt.device)
             with torch.no_grad():
                 ate_logits, apc_logits = self.model(input_ids_spc,
-                                                    segment_ids,
-                                                    input_mask,
-                                                    valid_ids=valid_ids,
+                                                    token_type_ids=segment_ids,
+                                                    attention_mask=input_mask,
+                                                    labels=None,
                                                     polarity=polarity,
+                                                    valid_ids=valid_ids,
                                                     attention_mask_label=l_mask,
                                                     )
-
+            if self.opt.use_bert_spc:
+                label_ids = self.model.get_batch_token_labels_bert_base_indices(label_ids)
             ate_logits = torch.argmax(F.log_softmax(ate_logits, dim=2), dim=2)
             ate_logits = ate_logits.detach().cpu().numpy()
             label_ids = label_ids.to('cpu').numpy()
-            input_mask = input_mask.to('cpu').numpy()
             for i, i_ate_logits in enumerate(ate_logits):
                 pred_iobs = []
                 sentence_res.append((all_tokens[i + (self.opt.infer_batch_size * i_batch)], pred_iobs))
@@ -345,8 +345,8 @@ class AspectExtractor:
                                                           self.tokenizer,
                                                           self.opt)
         all_spc_input_ids = torch.tensor([f.input_ids_spc for f in infer_features], dtype=torch.long)
-        all_input_mask = torch.tensor([f.input_mask for f in infer_features], dtype=torch.long)
         all_segment_ids = torch.tensor([f.segment_ids for f in infer_features], dtype=torch.long)
+        all_input_mask = torch.tensor([f.input_mask for f in infer_features], dtype=torch.long)
         all_label_ids = torch.tensor([f.label_id for f in infer_features], dtype=torch.long)
         all_valid_ids = torch.tensor([f.valid_ids for f in infer_features], dtype=torch.long)
         all_lmask_ids = torch.tensor([f.label_mask for f in infer_features], dtype=torch.long)
@@ -355,7 +355,7 @@ class AspectExtractor:
         all_tokens = [f.tokens for f in infer_features]
         all_aspects = [f.aspect for f in infer_features]
         all_positions = [f.positions for f in infer_features]
-        infer_data = TensorDataset(all_spc_input_ids, all_input_mask, all_segment_ids, all_label_ids,
+        infer_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
                                    all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
         # Run prediction for full data
         self.opt.infer_batch_size = 128
@@ -369,17 +369,17 @@ class AspectExtractor:
 
         # Correct = {True: 'Correct', False: 'Wrong'}
         if len(infer_data) >= 100:
-            it = tqdm.tqdm(self.infer_dataloader, postfix='inferring...')
+            it = tqdm.tqdm(self.infer_dataloader, postfix='classifying aspect sentiments...')
         else:
             it = self.infer_dataloader
         for i_batch, batch in enumerate(it):
-            input_ids_spc, input_mask, segment_ids, label_ids, \
+            input_ids_spc, segment_ids, input_mask, label_ids, \
             valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
             input_ids_spc = input_ids_spc.to(self.opt.device)
-            input_mask = input_mask.to(self.opt.device)
             segment_ids = segment_ids.to(self.opt.device)
-            valid_ids = valid_ids.to(self.opt.device)
+            input_mask = input_mask.to(self.opt.device)
             label_ids = label_ids.to(self.opt.device)
+            valid_ids = valid_ids.to(self.opt.device)
             l_mask = l_mask.to(self.opt.device)
             lcf_cdm_vec = lcf_cdm_vec.to(self.opt.device)
             lcf_cdw_vec = lcf_cdw_vec.to(self.opt.device)

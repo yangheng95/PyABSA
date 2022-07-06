@@ -1,6 +1,11 @@
 {
+  "1.16.0": {
+    "1": "Fix a checkpoint downloading and inflation bug which prevents loading a checkpoint from huggingface spaces",
+    "2": "Fix a important bug which cause unexpected low performance when performing ATEPC inference for Chinese language (and possibly other non-latin languages)",
+    "3": "Minor modifications"
+  },
   "1.15.7": {
-    "1": "Update findfile to 1.7.9.5",
+    "1": "Update findfile dependency to 1.7.9.5",
     "2": "Default to activate use_bert_spc for ATEPC models to improve ATE and APC performance",
     "3": "Minor fixes"
   },

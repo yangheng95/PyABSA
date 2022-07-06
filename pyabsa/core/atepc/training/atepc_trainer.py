@@ -48,10 +48,6 @@ class Instructor:
 
         self.train_dataloader = None
         self.test_dataloader = None
-        # if opt.use_bert_spc:
-        #     self.logger.info('Warning: The use_bert_spc is disabled for extracting aspect,'
-        #                      ' reset use_bert_spc=False and go on... ')
-        #     opt.use_bert_spc = False
         import warnings
         warnings.filterwarnings('ignore')
         if self.opt.gradient_accumulation_steps < 1:
@@ -125,8 +121,10 @@ class Instructor:
                 all_lmask_ids = torch.tensor([f.label_mask for f in test_features], dtype=torch.long)
                 lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in test_features], dtype=torch.float32)
                 lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in test_features], dtype=torch.float32)
-                self.test_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids, all_polarities,
-                                               all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
+                self.all_tokens = [f.tokens for f in test_features]
+
+                self.test_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
+                                               all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
 
             if self.opt.cache_dataset and not os.path.exists(cache_path):
                 print('Caching dataset... please remove cached dataset if change model or dataset')
@@ -369,9 +367,10 @@ class Instructor:
         self.model.eval()
         label_map = {i: label for i, label in enumerate(self.opt.label_list, 1)}
 
-        for i, batch in enumerate(self.test_dataloader):
+        for i_batch, batch in enumerate(self.test_dataloader):
             input_ids_spc, segment_ids, input_mask, label_ids, polarity, \
             valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
+
             input_ids_spc = input_ids_spc.to(self.opt.device)
             segment_ids = segment_ids.to(self.opt.device)
             input_mask = input_mask.to(self.opt.device)
@@ -381,8 +380,8 @@ class Instructor:
             l_mask = l_mask.to(self.opt.device)
             lcf_cdm_vec = lcf_cdm_vec.to(self.opt.device)
             lcf_cdw_vec = lcf_cdw_vec.to(self.opt.device)
-            with torch.no_grad():
 
+            with torch.no_grad():
                 ate_logits, apc_logits = self.model(input_ids_spc,
                                                     token_type_ids=segment_ids,
                                                     attention_mask=input_mask,
@@ -405,12 +404,11 @@ class Instructor:
                     test_apc_logits_all = torch.cat((test_apc_logits_all, apc_logits), dim=0)
 
             if eval_ATE:
-                if not self.opt.use_bert_spc:
+                if self.opt.use_bert_spc:
                     label_ids = self.model.get_batch_token_labels_bert_base_indices(label_ids)
                 ate_logits = torch.argmax(F.log_softmax(ate_logits, dim=2), dim=2)
                 ate_logits = ate_logits.detach().cpu().numpy()
                 label_ids = label_ids.to('cpu').numpy()
-                input_mask = input_mask.to('cpu').numpy()
                 for i, label in enumerate(label_ids):
                     temp_1 = []
                     temp_2 = []
@@ -424,6 +422,8 @@ class Instructor:
                         else:
                             temp_1.append(label_map.get(label_ids[i][j], 'O'))
                             temp_2.append(label_map.get(ate_logits[i][j], 'O'))
+                    # print(self.all_tokens[i + (self.opt.batch_size * i_batch)])
+                    # print()
         if eval_APC:
             test_acc = n_test_correct / n_test_total
 
@@ -444,6 +444,10 @@ class Instructor:
                     # No enough data to calculate the report
                     pass
         if eval_ATE:
+            # for y1, y2 in zip(y_true, y_pred):
+            #     print(y1)
+            #     print(y2)
+            #     print('\n')
             report = classification_report(y_true, y_pred, digits=4)
             tmps = report.split()
             ate_result = round(float(tmps[7]) * 100, 2)
