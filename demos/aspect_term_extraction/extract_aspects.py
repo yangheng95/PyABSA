@@ -10,7 +10,7 @@ from pyabsa import ATEPCCheckpointManager
 # checkpoint_map = available_checkpoints(from_local=False)
 
 
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='english2',
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='english',
                                                                auto_device=True  # False means load model on CPU
                                                                )
 

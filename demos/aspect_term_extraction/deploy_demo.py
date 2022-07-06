@@ -1,19 +1,45 @@
-# -*- coding: utf-8 -*-
-# file: deploy_demo.py
-# time: 2021/10/10
-# author: yangheng <hy345@exeter.ac.uk>
-# github: https://github.com/yangheng95
-# Copyright (C) 2021. All Rights Reserved.
-
+import os
+import random
 import gradio as gr
 import pandas as pd
+from findfile import find_files
 
 from pyabsa import ATEPCCheckpointManager
+from pyabsa.functional.dataset.dataset_manager import download_datasets_from_github, ABSADatasetList
 
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='multilingual')
+download_datasets_from_github(os.getcwd())
 
 
-def inference(text):
+def get_example(dataset):
+    filter_key_words = ['.py', '.md', 'readme', 'log', 'result', 'zip', '.state_dict', '.model', '.png', 'acc_', 'f1_', '.origin', '.adv', '.csv']
+    dataset_file = {'train': [], 'test': [], 'valid': []}
+    search_path = './'
+    task = 'apc_datasets'
+    dataset_file['test'] += find_files(search_path, [dataset, 'test', task, '.inference'], exclude_key=['.adv', '.org', '.defense', 'train.'] + filter_key_words)
+
+    for fname in dataset_file['test']:
+        lines = []
+        if isinstance(fname, str):
+            fname = [fname]
+
+        for f in fname:
+            print('loading: {}'.format(f))
+            fin = open(f, 'r', encoding='utf-8')
+            lines.extend(fin.readlines())
+            fin.close()
+        for i in range(len(lines)):
+            lines[i] = lines[i][:lines[i].find('!sent!')].replace('[ASP]', '')
+        return sorted(set(lines), key=lines.index)
+
+
+dataset_dict = {dataset.name: get_example(dataset.name) for dataset in ABSADatasetList()}
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='english')
+
+
+def perform_inference(text, dataset):
+    if not text:
+        text = dataset_dict[dataset][random.randint(0, len(dataset_dict[dataset]))]
+
     result = aspect_extractor.extract_aspect(inference_source=[text],
                                              pred_sentiment=True)
 
@@ -23,37 +49,37 @@ def inference(text):
         'position': result[0]['position']
     })
 
-    return result
+    return result, text
 
 
-if __name__ == '__main__':
-    iface = gr.Interface(
-        fn=inference,
-        inputs=["text"],
-        examples=[
-            ['Even though it is running Snow Leopard, 2.4 GHz C2D is a bit of an antiquated CPU and thus the occasional spinning '
-             'wheel would appear when running Office Mac applications such as Word or Excel .'],
-            ['从这门课程的内容丰富程度还有老师的授课及讨论区的答疑上来说，我都是很喜欢的。但是吧，我觉得每个章的内容太多了，三个学分的量就分在了上个章节三次小测'],
-            ['このレストランのサービスはまあまあで,待ち時間は長かったが,料理はまずまずのものだった'],
-            ['Die wartezeit war recht mittelmäßig, aber das Essen war befriedigend'],
-            ['O serviço é médio, o tempo de espera é longo, mas os pratos são razoavelmente satisfatórios'],
-            ['Dịch vụ của nhà hàng này rất trung bình và thời gian chờ đợi rất dài, nhưng món ăn thì khá là thỏa mãn'],
-            ['Pelayanan di restoran biasa dan penantian yang lama, tetapi hasilnya cukup memuaskan'],
-            ['Als je geen steak liefhebber bent is er een visalternatief, eend en lam aan aanvaardbare prijzen.'],
-            ['سأوصي بالتأكيد بموقع المدينة القديمة إلا إنه عليك الحذر من الأسعار السياحية الأكثر ارتفاعاً'],
-            ['Nous avons bien aimé l\'ambiance, sur la promenade principale de Narbonne-Plage, et la qualité du service.'],
-            ['По поводу интерьера: место спокойное, шумных компаний нет (не было, по крайней мере, в момент нашего посещения), очень приятная и уютная атмосфера, все в лучших традициях.'],
-            ['la calidad del producto, el servicio, el entorno todo fue excelente'],
-            ['Yemekler iyi hos, lezzetler iyi ama heyecan verici bi taraflari yok, iyi bir baligi iyi bir sekilde izgara yapmak artik atla deve bi olay degil.'],
-        ],
-        outputs="dataframe",
-        title='Multilingual Aspect Term Extraction for Short Texts (powered by PyABSA)',
-        description='This demo is trained on the public and community shared datasets from ABSADatasets (https://github.com/yangheng95/ABSADatasets),'
-                    ' please feel free to share your data to improve this work, To fit on your data, please train our ATEPC models on your own data,'
-                    ' see the PyABSA (https://github.com/yangheng95/PyABSA/tree/release/demos/aspect_term_extraction)'
-    )
+demo = gr.Blocks()
 
-    try:
-        iface.launch(share=True)
-    except:
-        iface.launch()
+with demo:
+    gr.Markdown("# Multilingual Aspect-based Sentiment Analysis!")
+    gr.Markdown("### Repo: [PyABSA](https://github.com/yangheng95/PyABSA)")
+    gr.Markdown("""### Author: [Heng Yang](https://github.com/yangheng95) (杨恒)
+                [![Downloads](https://pepy.tech/badge/pyabsa)](https://pepy.tech/project/pyabsa) 
+                [![Downloads](https://pepy.tech/badge/pyabsa/month)](https://pepy.tech/project/pyabsa)
+                """
+                )
+    gr.Markdown("Your input text should be no more than 80 words, that's the longest text we used in training. However, you can try longer text in self-training ")
+    output_dfs = []
+    with gr.Row():
+        with gr.Column():
+            input_sentence = gr.Textbox(placeholder='Leave blank to give you a random result...', label="Example:")
+            gr.Markdown("You can find the datasets at [github.com/yangheng95/ABSADatasets](https://github.com/yangheng95/ABSADatasets/tree/v1.2/datasets/text_classification)")
+            dataset_ids = gr.Radio(choices=[dataset.name for dataset in ABSADatasetList()[:-1]], value='Laptop14', label="Datasets")
+            inference_button = gr.Button("Let's go!")
+            gr.Markdown("This demo support many other language as well, you can try and explore the results of other languages by yourself.")
+
+        with gr.Column():
+            output_df = gr.DataFrame(label="Prediction Results:")
+            output_dfs.append(output_df)
+
+        inference_button.click(fn=perform_inference,
+                               inputs=[input_sentence, dataset_ids],
+                               outputs=[output_df, input_sentence])
+
+    gr.Markdown("![visitor badge](https://visitor-badge.glitch.me/badge?page_id=https://huggingface.co/spaces/yangheng/Multilingual-Aspect-Based-Sentiment-Analysis)")
+
+demo.launch(share=True)

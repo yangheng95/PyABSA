@@ -98,9 +98,9 @@ class AspectExtractor:
 
         self.processor = ATEPCProcessor(self.tokenizer)
         self.num_labels = len(self.opt.label_list) + 1
-        random.seed(self.opt.seed)
-        np.random.seed(self.opt.seed)
-        torch.manual_seed(self.opt.seed)
+        # random.seed(self.opt.seed)
+        # np.random.seed(self.opt.seed)
+        # torch.manual_seed(self.opt.seed)
 
         print('Config used in Training:')
         print_args(self.opt, mode=1)
