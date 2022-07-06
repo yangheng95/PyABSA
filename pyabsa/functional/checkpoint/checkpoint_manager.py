@@ -30,8 +30,8 @@ def unzip_checkpoint(zip_path):
         sys.stdout.flush()
         if not os.path.exists(zip_path):
             os.makedirs(zip_path.replace('.zip', ''))
-        with zipfile.ZipFile(zip_path, 'r') as z:
-            z.extractall(zip_path.replace('.zip', ''))
+        z = zipfile.ZipFile(zip_path, 'r')
+        z.extractall(os.path.dirname(zip_path))
         print('Done.')
     except zipfile.BadZipfile:
         print('Unzip failed'.format(zip_path))
@@ -275,26 +275,34 @@ def available_checkpoints(task='', from_local=False):
         if not from_local:
             try:  # from huggingface space
                 # checkpoint_url = 'https://huggingface.co/spaces/yangheng/PyABSA-ATEPC/raw/main/checkpoint-v1.2.json'
-                checkpoint_url = 'https://huggingface.co/spaces/yangheng/Multilingual-Aspect-Based-Sentiment-Analysis/raw/main/checkpoint-v1.2.json'
+                # checkpoint_url = 'https://huggingface.co/spaces/yangheng/Multilingual-Aspect-Based-Sentiment-Analysis/raw/main/checkpoint-v1.2.json'
+                checkpoint_url = 'https://huggingface.co/spaces/yangheng/Multilingual-Aspect-Based-Sentiment-Analysis/raw/main/checkpoint-v1.16.json'
                 response = requests.get(checkpoint_url)
-                with open('./checkpoints.json', "w") as f:
+                with open('./checkpoints-v1.16.json', "w") as f:
                     json.dump(response.json(), f)
             except Exception as e:
                 try:  # from google drive
                     checkpoint_url = '1CBVGPA3xdQqdkFFwzO5T2Q4reFtzFIJZ'  # V2
-                    gdown.download(id=checkpoint_url, use_cookies=False, output='./checkpoints.json', quiet=False)
+                    gdown.download(id=checkpoint_url, use_cookies=False, output='./checkpoints-v1.16.json', quiet=False)
                 except Exception as e:
                     raise e
-        with open('./checkpoints.json', 'r', encoding='utf8') as f:
+        with open('./checkpoints-v1.16.json', 'r', encoding='utf8') as f:
             checkpoint_map = json.load(f)
 
         t_checkpoint_map = {}
-        if task:
-            t_checkpoint_map = dict(checkpoint_map)[task.upper()] if task.upper() in checkpoint_map else {}
-            parse_checkpoint_info(t_checkpoint_map, task)
-        else:
-            for task_map in checkpoint_map:
-                parse_checkpoint_info(checkpoint_map[task_map], task_map)
+        for c_version in checkpoint_map:
+            if '-' in c_version:
+                min_ver, _, max_ver = c_version.partition('-')
+            elif '+' in c_version:
+                min_ver, _, max_ver = c_version.partition('+')
+            else:
+                min_ver = c_version
+                max_ver = ''
+            max_ver = max_ver if max_ver else 'N.A.'
+            if max_ver == 'N.A.' or StrictVersion(min_ver) <= StrictVersion(__version__) <= StrictVersion(max_ver):
+                if task:
+                    t_checkpoint_map.update(checkpoint_map[c_version][task.upper()] if task.upper() in checkpoint_map[c_version] else {})
+                    parse_checkpoint_info(t_checkpoint_map, task)
 
         print(colored('There may be some checkpoints available for early versions of PyABSA, see ./checkpoints.json'.format(task, __version__), 'yellow'))
 
@@ -307,7 +315,7 @@ def available_checkpoints(task='', from_local=False):
             return available_checkpoints(task, True)
         else:
             print('\nFailed to query checkpoints (Error: {}), you can try manually download the checkpoints from: \n'.format(e) +
-                  '[1]\tHuggingface Space\t: https://huggingface.co/spaces/yangheng/PyABSA-ATEPC/tree/main/checkpoint\n'
+                  '[1]\tHuggingface Space (Newer)\t: https://huggingface.co/spaces/yangheng/PyABSA-ATEPC/tree/main/checkpoint\n'
                   '[2]\tGoogle Drive\t: https://drive.google.com/file/d/1CBVGPA3xdQqdkFFwzO5T2Q4reFtzFIJZ/view?usp=sharing\n'
                   '[2]\tBaidu NetDisk\t: https://pan.baidu.com/s/1dvGqmnGG2T7MYm0VC9jWTg (Access Code: absa)\n')
             sys.exit(-1)
