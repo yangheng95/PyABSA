@@ -98,7 +98,7 @@ class ABSADatasetList(list):
                                       'MAMS', 'Television', 'TShirt', 'Yelp', 'MOOC_En'])
 
     # Abandon rest15 dataset due to data leakage, See https://github.com/yangheng95/PyABSA/issues/53
-    SemEval = DatasetItem('SemEval', ['113.Laptop14', '114.Laptop14', '116.Restaurant16'])
+    SemEval = DatasetItem('SemEval', ['113.Laptop14', '114.Restaurant14', '116.Restaurant16'])
     Restaurant = DatasetItem('Restaurant', ['114.Restaurant14', '116.Restaurant16'])
     Multilingual = DatasetItem('Multilingual', ['113.Laptop14', '114.Restaurant14', '116.Restaurant16', '101.ACL_Twitter', '109.MAMS', '117.Television',
                                                 '118.TShirt', '119.Yelp', '107.Phone', '103.Camera', '106.Notebook', '104.Car', '105.MOOC',
