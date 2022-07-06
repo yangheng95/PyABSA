@@ -68,7 +68,7 @@ class BERT_BASE_ATEPC(nn.Module):
                 lcf_cdm_vec=None,
                 lcf_cdw_vec=None
                 ):
-        if not self.opt.use_bert_spc:
+        if self.opt.use_bert_spc:
             input_ids_spc = self.get_ids_for_local_context_extractor(input_ids_spc)
             labels = self.get_batch_token_labels_bert_base_indices(labels)
             global_context_out = self.bert4global(input_ids=input_ids_spc, attention_mask=attention_mask)['last_hidden_state']

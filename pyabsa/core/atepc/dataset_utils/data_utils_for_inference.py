@@ -61,7 +61,7 @@ def parse_example(example):
     # for token in example.split():
     for token in split_text(example):
         tokens.append(token)
-    return [(tokens, ['$NA$'] * len(tokens), SENTIMENT_PADDING)]
+    return [(tokens, ['[MASK]'] * len(tokens), SENTIMENT_PADDING)]
 
 
 def parse_examples(examples):
@@ -70,7 +70,7 @@ def parse_examples(examples):
         tokens = []
         for token in split_text(example):
             tokens.append(token)
-        data.append((tokens, ['$NA$'] * len(tokens), SENTIMENT_PADDING))
+        data.append((tokens, ['[MASK]'] * len(tokens), SENTIMENT_PADDING))
     return data
 
 
@@ -153,8 +153,10 @@ def convert_ate_examples_to_features(examples, label_list, max_seq_len, tokenize
         tokens = tokens[0:min(len(tokens), max_seq_len - 2)]
         labels = labels[0:min(len(labels), max_seq_len - 2)]
         valid = valid[0:min(len(valid), max_seq_len - 2)]
-        segment_ids = [0] * len(example.text_a[:]) + [1] * (max_seq_len - len([0] * len(example.text_a[:])))
-        segment_ids = segment_ids[:max_seq_len]
+        # segment_ids = [0] * len(example.text_a[:]) + [1] * (max_seq_len - len([0] * len(example.text_a[:])))
+        # segment_ids = segment_ids[:max_seq_len]
+
+        segment_ids = [0] * max_seq_len  # simply set segment_ids to all zeros
         label_ids = []
 
         for i, token in enumerate(tokens):
