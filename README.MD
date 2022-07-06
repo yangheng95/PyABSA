@@ -65,34 +65,6 @@ Aspect sentiment polarity classification & Aspect term extraction models
 If you are looking for the original proposal of local context focus, here are some introduction at
 [here](https://github.com/yangheng95/PyABSA/tree/release/demos/documents).
 
-### About Performance
-
-<details>
-<summary>
-Aspect-term extraction
-</summary>
-
-|             Models             | Laptop14 (APC-Acc) | Laptop14 (ATE-F1) | Restaurant14 (APC-Acc) | Restaurant14 (ATE-F1) |
-|:------------------------------:|:------------------:|:-----------------:|:----------------------:|:---------------------:|
-|     FAST-LCF-ATEPC (BERT)      |       80.72        |       85.75       |         86.40          |         89.29         |
-|    FAST-LCF-ATEPC (DeBERTa)    |       83.65        |       89.03       |         90.52          |         91.77         |
-| FAST-LCF-ATEPC (DeBERTa-Large) |       85.06        |       87.76       |         90.70          |         92.50         |
-
-</details>
-
-<details>
-<summary>
-Aspect-based sentiment analysis
-</summary>
-
-|          Models           | Laptop14 (Acc) | Restaurant14 (acc) |          Models           | Laptop14 (Acc) | Restaurant14 (acc) |
-|:-------------------------:|:--------------:|:------------------:|:-------------------------:|:--------------:|:------------------:|
-|    FAST-LSA-P(DeBERTa)    |     84.33      |       89.91        | FAST-LSA-P(DeBERTa-Large) |     86.00      |       90.33        | 
-|    FAST-LSA-T(DeBERTa)    |     84.80      |       89.91        | FAST-LSA-T(DeBERTa-Large) |     86.31      |       90.86        | 
-|    FAST-LSA-S(DeBERTa)    |     84.17      |       89.64        | FAST-LSA-S(DeBERTa-Large) |     86.21      |       89.38        | 
-
-</details>
-
 ## Package Overview
 
 <table>

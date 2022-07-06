@@ -179,13 +179,13 @@ class TADTextClassifier:
         self.infer_dataloader = None
         self.opt.eval_batch_size = kwargs.pop('eval_batch_size', 128)
 
-        if self.opt.seed is not None:
-            random.seed(self.opt.seed)
-            numpy.random.seed(self.opt.seed)
-            torch.manual_seed(self.opt.seed)
-            torch.cuda.manual_seed(self.opt.seed)
-            torch.backends.cudnn.deterministic = True
-            torch.backends.cudnn.benchmark = False
+        # if self.opt.seed is not None:
+        #     random.seed(self.opt.seed)
+        #     numpy.random.seed(self.opt.seed)
+        #     torch.manual_seed(self.opt.seed)
+        #     torch.cuda.manual_seed(self.opt.seed)
+        #     torch.backends.cudnn.deterministic = True
+        #     torch.backends.cudnn.benchmark = False
 
         self.opt.initializer = self.opt.initializer
 

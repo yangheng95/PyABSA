@@ -110,7 +110,7 @@ class ABSADatasetList(list):
             self.ACL_Twitter, self.MAMS, self.Television, self.TShirt,
             self.Phone, self.Car, self.Notebook, self.Camera,
             self.Binary_Polarity_Chinese, self.Triple_Polarity_Chinese,
-            self.Shampoo, self.MOOC,
+            self.Shampoo, self.MOOC, self.MOOC_En,
             self.English, self.SemEval,
             self.Restaurant, self.Multilingual
         ]
