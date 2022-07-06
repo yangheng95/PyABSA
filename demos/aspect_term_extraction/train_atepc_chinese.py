@@ -8,6 +8,7 @@
 ########################################################################################################################
 #                                               ATEPC training script                                                  #
 ########################################################################################################################
+import random
 
 from pyabsa.functional import ATEPCModelList
 from pyabsa.functional import Trainer, ATEPCTrainer
@@ -18,9 +19,12 @@ atepc_config_chinese = ATEPCConfigManager.get_atepc_config_chinese()
 atepc_config_chinese.model = ATEPCModelList.FAST_LCF_ATEPC
 atepc_config_chinese.evaluate_begin = 0
 atepc_config_chinese.pretrained_bert = 'bert-base-chinese'
+# atepc_config_chinese.pretrained_bert = 'microsoft/mdeberta-v3-base'
 atepc_config_chinese.log_step = -1
 atepc_config_chinese.l2reg = 1e-5
 atepc_config_chinese.num_epoch = 30
+atepc_config_chinese.seed = random.randint(1, 100)
+atepc_config_chinese.use_bert_spc = True
 atepc_config_chinese.cache_dataset = False
 
 chinese_sets = ABSADatasetList.Chinese
