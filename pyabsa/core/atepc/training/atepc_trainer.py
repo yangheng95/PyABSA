@@ -404,8 +404,10 @@ class Instructor:
                     test_apc_logits_all = torch.cat((test_apc_logits_all, apc_logits), dim=0)
 
             if eval_ATE:
+                input_ids = input_ids_spc
                 if self.opt.use_bert_spc:
                     label_ids = self.model.get_batch_token_labels_bert_base_indices(label_ids)
+                    input_ids = self.model.get_ids_for_local_context_extractor(input_ids_spc)
                 ate_logits = torch.argmax(F.log_softmax(ate_logits, dim=2), dim=2)
                 ate_logits = ate_logits.detach().cpu().numpy()
                 label_ids = label_ids.to('cpu').numpy()
@@ -415,7 +417,7 @@ class Instructor:
                     for j, m in enumerate(label):
                         if j == 0:
                             continue
-                        elif label_ids[i][j] == len(self.opt.label_list):
+                        elif len(temp_1) == torch.count_nonzero(input_ids[i]):
                             y_true.append(temp_1)
                             y_pred.append(temp_2)
                             break
