@@ -7,7 +7,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 
-__version__ = '1.16.1'
+__version__ = '1.16.2'
 
 __name__ = 'pyabsa'
 
@@ -38,6 +38,8 @@ from pyabsa.functional.config import TCConfigManager
 from pyabsa.functional.config import TADConfigManager
 from pyabsa.utils.file_utils import check_update_log, validate_datasets_version
 from pyabsa.utils.pyabsa_utils import validate_pyabsa_version
+
+from pyabsa.utils.make_dataset import make_ABSA_dataset
 
 # compatible for v1.14.3 and earlier versions
 ClassificationDatasetList = TCDatasetList

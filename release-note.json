@@ -1,4 +1,9 @@
 {
+  "1.16.2": {
+    "1": "fix a dataset detection issue",
+    "2": "Add probability distribution and confidence to the sentiment classification in ATEPC model",
+    "3": "Add a experimental feature to automatic annotate the APC amd ATEPC dataset using aspect extractor provided by PyABSA, see extract_aspect_and_make_dataset.py"
+  },
   "1.16.1": {
     "1": "fix some DatasetItem"
   },

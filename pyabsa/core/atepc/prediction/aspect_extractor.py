@@ -153,12 +153,16 @@ class AspectExtractor:
                         'sentence': item2['sentence'],
                         'aspect': [item2['aspect']],
                         'position': [item2['pos_ids']],
-                        'sentiment': [item2['sentiment']]
+                        'sentiment': [item2['sentiment']],
+                        'probs': [item2['probs']],
+                        'confidence': [item2['confidence']],
                     }
                 else:
                     merged_results[cur_example_id]['aspect'].append(item2['aspect'])
                     merged_results[cur_example_id]['position'].append(item2['pos_ids'])
                     merged_results[cur_example_id]['sentiment'].append(item2['sentiment'])
+                    merged_results[cur_example_id]['probs'].append(item2['probs'])
+                    merged_results[cur_example_id]['confidence'].append(item2['confidence'])
                 # remember example id
                 pre_example_id = item1[3]
             for i, item in enumerate(sentence_res):
@@ -171,6 +175,8 @@ class AspectExtractor:
                         'aspect': asp_res['aspect'] if asp_res else [],
                         'position': asp_res['position'] if asp_res else [],
                         'sentiment': asp_res['sentiment'] if asp_res else [],
+                        'probs': asp_res['probs'] if asp_res else [],
+                        'confidence': asp_res['confidence'] if asp_res else [],
                     }
                 )
         else:
@@ -398,9 +404,12 @@ class AspectExtractor:
                     else:
                         sent = int(torch.argmax(i_apc_logits, -1))
                     result = {}
+                    probs = [float(x) for x in F.softmax(i_apc_logits).cpu().numpy().tolist()]
                     apc_id = i_batch * self.opt.infer_batch_size + i
                     result['sentence'] = ' '.join(all_tokens[apc_id])
                     result['tokens'] = all_tokens[apc_id]
+                    result['probs'] = probs
+                    result['confidence'] = max(probs)
                     result['aspect'] = all_aspects[apc_id]
                     result['pos_ids'] = all_positions[apc_id]
                     result['sentiment'] = sent

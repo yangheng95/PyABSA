@@ -44,10 +44,12 @@ def perform_inference(text, dataset):
     result = pd.DataFrame({
         'aspect': result[0]['aspect'],
         'sentiment': result[0]['sentiment'],
+        # 'probability': result[0]['probs'],
+        'confidence': result[0]['confidence'],
         'position': result[0]['position']
     })
 
-    return result, '{}'.format(dataset, text)
+    return result, '{}'.format(text)
 
 
 demo = gr.Blocks()
