@@ -18,14 +18,15 @@ sentiment_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint=
 def inference(text):
     result = sentiment_classifier.infer(text=text,
                                         print_result=True,
+                                        ignore_error=False,
                                         clear_input_samples=True)
 
     result = pd.DataFrame({
-        'aspect': result[0]['aspect'],
-        'sentiment': result[0]['sentiment'],
-        'confidence': [round(c, 3) for c in result[0]['confidence']],
-        'ref_sentiment': ['' if ref == '-999' else ref for ref in result[0]['ref_sentiment']],
-        'is_correct': result[0]['ref_check'],
+        'aspect': result['aspect'],
+        'sentiment': result['sentiment'],
+        'confidence': [round(c, 3) for c in result['confidence']],
+        'ref_sentiment': ['' if ref == '-999' else ref for ref in result['ref_sentiment']],
+        'is_correct': result['ref_check'],
     })
 
     return result

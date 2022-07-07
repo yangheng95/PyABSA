@@ -47,7 +47,7 @@ def perform_inference(text, dataset):
         'position': result[0]['position']
     })
 
-    return result, text
+    return result, '{}'.format(dataset, text)
 
 
 demo = gr.Blocks()
@@ -72,12 +72,13 @@ with demo:
             gr.Markdown("This demo support many other language as well, you can try and explore the results of other languages by yourself.")
 
         with gr.Column():
+            output_text = gr.TextArea(label="Example:")
             output_df = gr.DataFrame(label="Prediction Results:")
             output_dfs.append(output_df)
 
         inference_button.click(fn=perform_inference,
                                inputs=[input_sentence, dataset_ids],
-                               outputs=[output_df, input_sentence])
+                               outputs=[output_df, output_text])
 
     gr.Markdown("![visitor badge](https://visitor-badge.glitch.me/badge?page_id=https://huggingface.co/spaces/yangheng/Multilingual-Aspect-Based-Sentiment-Analysis)")
 
