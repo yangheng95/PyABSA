@@ -16,6 +16,17 @@
 
 # | [Overview](../README.MD) | [HuggingfaceHub](huggingface_readme.md) | [ABDADatasets](dataset_readme.md) | [ABSA Models](model_readme.md) | [Colab Tutorials](tutorial_readme.md) |
 
+
+## To augment your datasets, please refer to [BoostTextAugmentation](https://github.com/yangheng95/BoostTextAugmentation)
+
+## Auto-annoate your datasets via PyABSA!
+There is an experimental feature which allows you to auto-build APC dataset and ATEPC datasets, see the usage here:
+```python3 
+from pyabsa import make_ABSA_dataset 
+# refer to the comments in this function for detailed usage
+make_ABSA_dataset(dataset_name_or_path='integrated_datasets/review', checkpoint='english')
+```
+
 ## Public and Community-shared ABSADatasets
 
 More datasets are available at [ABSADatasets](https://github.com/yangheng95/ABSADatasets).
