@@ -5,7 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa import ATEPCCheckpointManager, available_checkpoints
+from pyabsa import ATEPCCheckpointManager, available_checkpoints, ABSADatasetList
 
 checkpoint_map = available_checkpoints(from_local=False)
 
@@ -25,6 +25,7 @@ examples = ['But the staff was so nice to us .',
 # 从Google Drive下载提供的预训练模型
 aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='multilingual')
 
+examples = ABSADatasetList.Phone
 atepc_result = aspect_extractor.extract_aspect(inference_source=examples,  # list-support only, for current
                                                print_result=True,  # print the result
                                                pred_sentiment=True,  # Predict the sentiment of extracted aspect terms

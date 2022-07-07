@@ -54,7 +54,7 @@ class ABSADatasetList(list):
     Restaurant16 = DatasetItem('Restaurant16', '116.Restaurant16')
 
     # Twitter
-    ACL_Twitter = DatasetItem('Twitter', '101.Twitter')
+    ACL_Twitter = DatasetItem('Twitter', '101.ACL_Twitter')
 
     MAMS = DatasetItem('MAMS', '109.MAMS')
 
@@ -83,7 +83,7 @@ class ABSADatasetList(list):
     # assembled dataset
     Chinese = DatasetItem('Chinese', ['107.Phone', '103.Camera', '106.Notebook', '104.Car', '105.MOOC'])
     Binary_Polarity_Chinese = DatasetItem('Chinese', ['107.Phone', '103.Camera', '106.Notebook', '104.Car'])
-    Triple_Polarity_Chinese = DatasetItem('Chinese', ['105.MOOC'])
+    Triple_Polarity_Chinese = DatasetItem('Chinese3way', ['105.MOOC'])
 
     SemEval2016Task5 = DatasetItem('SemEval2016Task5', ['120.SemEval2016Task5'])
     Arabic_SemEval2016Task5 = DatasetItem('Arabic_SemEval2016Task5', ['122.Arabic'])
@@ -92,10 +92,10 @@ class ABSADatasetList(list):
     Turkish_SemEval2016Task5 = DatasetItem('Turkish_SemEval2016Task5', ['128.Turkish'])
     Russian_SemEval2016Task5 = DatasetItem('Russian_SemEval2016Task5', ['126.Russian'])
     French_SemEval2016Task5 = DatasetItem('French_SemEval2016Task5', ['125.French'])
-    English_SemEval2016Task5 = DatasetItem('English_SemEval2016Task5', ['125.English'])
+    English_SemEval2016Task5 = DatasetItem('English_SemEval2016Task5', ['124.English'])
 
-    English = DatasetItem('English', ['Laptop14', 'Restaurant14', 'Restaurant16', 'ACL_Twitter',
-                                      'MAMS', 'Television', 'TShirt', 'Yelp', 'MOOC_En'])
+    English = DatasetItem('English', ['113.Laptop14', '114.Restaurant14', '116.Restaurant16', '101.ACL_Twitter',
+                                      '109.MAMS', '117.Television', '118.TShirt', '119.Yelp', '121.MOOC_En'])
 
     # Abandon rest15 dataset due to data leakage, See https://github.com/yangheng95/PyABSA/issues/53
     SemEval = DatasetItem('SemEval', ['113.Laptop14', '114.Restaurant14', '116.Restaurant16'])
@@ -108,11 +108,11 @@ class ABSADatasetList(list):
         dataset_list = [
             self.Laptop14, self.Restaurant14, self.Restaurant15, self.Restaurant16,
             self.ACL_Twitter, self.MAMS, self.Television, self.TShirt,
-            self.Phone, self.Car, self.Notebook, self.Camera,
-            self.Binary_Polarity_Chinese, self.Triple_Polarity_Chinese,
-            self.Shampoo, self.MOOC, self.MOOC_En,
-            self.English, self.SemEval,
-            self.Restaurant, self.Multilingual
+            self.Phone, self.Car, self.Notebook, self.Camera, self.MOOC, self.MOOC_En,
+            self.Chinese, self.Arabic_SemEval2016Task5, self.Dutch_SemEval2016Task5,
+            self.Spanish_SemEval2016Task5, self.Turkish_SemEval2016Task5, self.Russian_SemEval2016Task5,
+            self.French_SemEval2016Task5, self.English_SemEval2016Task5,
+            self.English, self.SemEval, self.Restaurant, self.Multilingual
         ]
         super().__init__(dataset_list)
 

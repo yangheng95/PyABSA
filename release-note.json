@@ -1,4 +1,7 @@
 {
+  "1.16.1": {
+    "1": "fix some DatasetItem"
+  },
   "1.16.0": {
     "1": "Fix a checkpoint downloading and inflation bug which prevents loading a checkpoint from huggingface spaces",
     "2": "Fix a important bug which cause unexpected low performance when performing ATEPC inference for Chinese language (and possibly other non-latin languages)",

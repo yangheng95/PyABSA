@@ -101,10 +101,6 @@ class ATEPCCheckpointManager(CheckpointManager):
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
         This param is for someone wants to load a checkpoint not registered in PyABSA
-        :param sentiment_map: label to text index map (deprecated and has no effect)
-        :param auto_device: True or False, otherwise 'cuda', 'cpu' works
-        :param eval_batch_size: eval batch_size in modeling
-
         :return:
         """
         if os.path.exists(checkpoint):
