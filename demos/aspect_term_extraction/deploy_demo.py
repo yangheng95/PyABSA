@@ -45,7 +45,7 @@ def perform_inference(text, dataset):
         'aspect': result[0]['aspect'],
         'sentiment': result[0]['sentiment'],
         # 'probability': result[0]['probs'],
-        'confidence': result[0]['confidence'],
+        'confidence': [round(x, 4) for x in result[0]['confidence']],
         'position': result[0]['position']
     })
 

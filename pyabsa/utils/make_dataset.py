@@ -15,6 +15,7 @@ import findfile
 #         if ',' in line.strip() and line.split(',')[1].strip().strip('"'):
 #             fout.write(line.split(',')[1].strip().strip('"')+'\n')
 #     fout.close()
+from termcolor import colored
 
 from pyabsa import ATEPCCheckpointManager
 
@@ -49,15 +50,15 @@ def make_ABSA_dataset(dataset_name_or_path, checkpoint='english'):
 
         results = aspect_extractor.extract_aspect(open(f, mode='r', encoding='utf-8').readlines())
         for result in results:
-            for i, (token, IOB) in enumerate(zip(result['tokens'], result['IOB'])):
-                for j, pos in enumerate(result['position']):
+            for j, pos in enumerate(result['position']):
+                for i, (token, IOB) in enumerate(zip(result['tokens'], result['IOB'])):
                     if i + 1 in pos:
                         f_atepc_out.write(token + ' ' + IOB.replace('[CLS]', 'O').replace('[SEP]', 'O') + ' ' + result['sentiment'][j] + '\n')
                         result['position'][j].pop(0)
                     else:
                         f_atepc_out.write(token + ' ' + IOB.replace('[CLS]', 'O').replace('[SEP]', 'O') + ' ' + '-999' + '\n')
+                f_atepc_out.write('\n')
 
-            f_atepc_out.write('\n')
             for aspect, sentiment in zip(result['aspect'], result['sentiment']):
                 f_apc_out.write(' '.join(result['tokens']) + '\n')
                 f_apc_out.write('{}\n'.format(aspect))
@@ -66,3 +67,4 @@ def make_ABSA_dataset(dataset_name_or_path, checkpoint='english'):
         f_apc_out.close()
         f_atepc_out.close()
     print('Datasets built for {}!'.format(' '.join(fs)))
+    print(colored('You may need add ID for your dataset, and move the generated datasets to integrated_dataset/apc_datasets and integrated_dataset/atepc_datasets, respectively', 'red'))
