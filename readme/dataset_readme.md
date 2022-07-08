@@ -23,8 +23,9 @@
 There is an experimental feature which allows you to auto-build APC dataset and ATEPC datasets, see the usage here:
 ```python3 
 from pyabsa import make_ABSA_dataset 
+
 # refer to the comments in this function for detailed usage
-make_ABSA_dataset(dataset_name_or_path='integrated_datasets/review', checkpoint='english')
+make_ABSA_dataset(dataset_name_or_path='review', checkpoint='english')
 ```
 
 ## Public and Community-shared ABSADatasets

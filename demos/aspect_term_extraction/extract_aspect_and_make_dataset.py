@@ -7,4 +7,4 @@
 
 from pyabsa import make_ABSA_dataset
 
-make_ABSA_dataset(dataset_name_or_path='integrated_datasets/review', checkpoint='english')
+make_ABSA_dataset(dataset_name_or_path='review', checkpoint='english')
