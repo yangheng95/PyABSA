@@ -11,6 +11,7 @@ import re
 from hashlib import sha256
 
 from findfile import find_cwd_dir
+from termcolor import colored
 from torch import nn
 from torch.nn import ModuleList
 
@@ -68,7 +69,7 @@ class APCEnsembler(nn.Module):
             cache_path = '{}.{}.dataset.{}.cache'.format(self.opt.model_name, self.opt.dataset_name, hash_tag)
 
             if load_dataset and os.path.exists(cache_path):
-                print('Loading dataset cache:', cache_path)
+                print(colored('Loading dataset cache: {}'.format(cache_path), 'green'))
                 with open(cache_path, mode='rb') as f:
                     self.train_set, self.valid_set, self.test_set, opt = pickle.load(f)
                     # reset output dim according to dataset labels
@@ -136,7 +137,7 @@ class APCEnsembler(nn.Module):
                 self.models.append(models[i](copy.deepcopy(self.embedding_matrix) if self.opt.deep_ensemble else self.embedding_matrix, self.opt))
 
             if self.opt.cache_dataset and not os.path.exists(cache_path):
-                print('Caching dataset... please remove cached dataset if change model or dataset')
+                print(colored('Caching dataset... please remove cached dataset if any problem happens.', 'red'))
                 with open(cache_path, mode='wb') as f:
                     pickle.dump((self.train_set, self.valid_set, self.test_set, self.opt), f)
 

@@ -11,6 +11,7 @@ download_datasets_from_github(os.getcwd())
 
 dataset_items = {dataset.name: dataset for dataset in ABSADatasetList()}
 
+
 def get_example(dataset):
     task = 'apc'
     dataset_file = detect_infer_dataset(dataset_items[dataset], task)
@@ -36,7 +37,7 @@ aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='multi
 
 def perform_inference(text, dataset):
     if not text:
-        text = dataset_dict[dataset][random.randint(0, len(dataset_dict[dataset]))]
+        text = dataset_dict[dataset][random.randint(0, len(dataset_dict[dataset]) - 1)]
 
     result = aspect_extractor.extract_aspect(inference_source=[text],
                                              pred_sentiment=True)
@@ -55,18 +56,19 @@ def perform_inference(text, dataset):
 demo = gr.Blocks()
 
 with demo:
-    gr.Markdown("# Multilingual Aspect-based Sentiment Analysis!")
-    gr.Markdown("### Repo: [PyABSA](https://github.com/yangheng95/PyABSA)")
-    gr.Markdown("""### Author: [Heng Yang](https://github.com/yangheng95) (杨恒)
+    gr.Markdown("# <p align='center'>Multilingual Aspect-based Sentiment Analysis !</p>")
+    gr.Markdown("""### Repo: [PyABSA](https://github.com/yangheng95/PyABSA)
+                ### Author: [Heng Yang](https://github.com/yangheng95) (杨恒)
                 [![Downloads](https://pepy.tech/badge/pyabsa)](https://pepy.tech/project/pyabsa) 
                 [![Downloads](https://pepy.tech/badge/pyabsa/month)](https://pepy.tech/project/pyabsa)
                 """
                 )
     gr.Markdown("Your input text should be no more than 80 words, that's the longest text we used in training. However, you can try longer text in self-training ")
+    gr.Markdown("**You don't need to split each Chinese (Korean, etc.) token as the provided, just input the natural language text.**")
     output_dfs = []
     with gr.Row():
         with gr.Column():
-            input_sentence = gr.Textbox(placeholder='Leave blank to give you a random result...', label="Example:")
+            input_sentence = gr.Textbox(placeholder='Leave this box blank and choose a dataset will give you a random example...', label="Example:")
             gr.Markdown("You can find the datasets at [github.com/yangheng95/ABSADatasets](https://github.com/yangheng95/ABSADatasets/tree/v1.2/datasets/text_classification)")
             dataset_ids = gr.Radio(choices=[dataset.name for dataset in ABSADatasetList()[:-1]], value='Laptop14', label="Datasets")
             inference_button = gr.Button("Let's go!")

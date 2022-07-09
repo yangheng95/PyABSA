@@ -19,6 +19,7 @@ import torch.nn.functional as F
 import tqdm
 from seqeval.metrics import classification_report
 from sklearn.metrics import f1_score
+from termcolor import colored
 from torch import cuda
 from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler, TensorDataset)
 from transformers import AutoTokenizer, AutoModel
@@ -80,14 +81,9 @@ class Instructor:
         cache_path = '{}.{}.dataset.{}.cache'.format(self.opt.model_name, self.opt.dataset_name, hash_tag)
 
         if os.path.exists(cache_path):
-            print('Loading dataset cache:', cache_path)
+            print(colored('Loading dataset cache: {}'.format(cache_path), 'green'))
             with open(cache_path, mode='rb') as f:
-                if self.opt.dataset_file['test']:
-                    self.train_data, self.test_data, opt = pickle.load(f)
-
-                else:
-                    self.train_data, opt = pickle.load(f)
-                # reset output dim according to dataset labels
+                self.train_data, self.valid_data, self.test_data, opt = pickle.load(f)
                 self.opt.polarities_dim = opt.polarities_dim
 
         else:
@@ -108,6 +104,24 @@ class Instructor:
             self.train_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
                                             all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
 
+            if self.opt.dataset_file['valid']:
+                self.valid_examples = processor.get_valid_examples(self.opt.dataset_file['valid'], 'valid')
+                valid_features = convert_examples_to_features(self.valid_examples, self.opt.max_seq_len,
+                                                              self.tokenizer, self.opt)
+                all_spc_input_ids = torch.tensor([f.input_ids_spc for f in valid_features], dtype=torch.long)
+                all_input_mask = torch.tensor([f.input_mask for f in valid_features], dtype=torch.long)
+                all_segment_ids = torch.tensor([f.segment_ids for f in valid_features], dtype=torch.long)
+                all_label_ids = torch.tensor([f.label_id for f in valid_features], dtype=torch.long)
+                all_polarities = torch.tensor([f.polarity for f in valid_features], dtype=torch.long)
+                all_valid_ids = torch.tensor([f.valid_ids for f in valid_features], dtype=torch.long)
+                all_lmask_ids = torch.tensor([f.label_mask for f in valid_features], dtype=torch.long)
+                lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in valid_features], dtype=torch.float32)
+                lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in valid_features], dtype=torch.float32)
+                self.valid_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
+                                                all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
+            else:
+                self.valid_data = None
+
             if self.opt.dataset_file['test']:
                 self.test_examples = processor.get_test_examples(self.opt.dataset_file['test'], 'test')
                 test_features = convert_examples_to_features(self.test_examples, self.opt.max_seq_len,
@@ -121,18 +135,16 @@ class Instructor:
                 all_lmask_ids = torch.tensor([f.label_mask for f in test_features], dtype=torch.long)
                 lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in test_features], dtype=torch.float32)
                 lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in test_features], dtype=torch.float32)
-                self.all_tokens = [f.tokens for f in test_features]
 
                 self.test_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
                                                all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
+            else:
+                self.test_data = None
 
             if self.opt.cache_dataset and not os.path.exists(cache_path):
-                print('Caching dataset... please remove cached dataset if change model or dataset')
+                print(colored('Caching dataset... please remove cached dataset if any problem happens.', 'red'))
                 with open(cache_path, mode='wb') as f:
-                    if self.opt.dataset_file['test']:
-                        pickle.dump((self.train_data, self.test_data, self.opt), f)
-                    else:
-                        pickle.dump((self.train_data, self.opt), f)
+                    pickle.dump((self.train_data, self.valid_data, self.test_data, self.opt), f)
 
         # only identify the labels in training set, make sure the labels are the same type in the test set
         for key in opt.args:
@@ -148,6 +160,11 @@ class Instructor:
 
         train_sampler = RandomSampler(self.train_data)
         self.train_dataloader = DataLoader(self.train_data, sampler=train_sampler, pin_memory=True, batch_size=self.opt.batch_size)
+
+        if self.opt.dataset_file['valid']:
+            valid_sampler = SequentialSampler(self.valid_data)
+            self.valid_dataloader = DataLoader(self.valid_data, sampler=valid_sampler, pin_memory=True, batch_size=self.opt.batch_size)
+
         if self.opt.dataset_file['test']:
             test_sampler = SequentialSampler(self.test_data)
             self.test_dataloader = DataLoader(self.test_data, sampler=test_sampler, pin_memory=True, batch_size=self.opt.batch_size)
@@ -239,7 +256,8 @@ class Instructor:
                 # for multi-gpu, average loss by gpu instance number
                 if self.opt.auto_device == 'allcuda':
                     loss_ate, loss_apc = loss_ate.mean(), loss_apc.mean()
-                loss = loss_ate + loss_apc  # the optimal weight of loss may be different according to dataset
+                ate_loss_weight = self.opt.args.get('ate_loss_weight', 1.0)
+                loss = loss_ate + ate_loss_weight * loss_apc  # the optimal weight of loss may be different according to dataset
 
                 sum_loss += loss.item()
 
@@ -261,7 +279,10 @@ class Instructor:
                 global_step += 1
                 if global_step % self.opt.log_step == 0:
                     if self.opt.dataset_file['test'] and epoch >= self.opt.evaluate_begin:
-                        apc_result, ate_result = self.evaluate()
+                        if self.valid_data:
+                            apc_result, ate_result = self.evaluate(self.valid_dataloader)
+                        else:
+                            apc_result, ate_result = self.evaluate(self.test_dataloader)
                         sum_apc_test_acc += apc_result['apc_test_acc']
                         sum_apc_test_f1 += apc_result['apc_test_f1']
                         sum_ate_test_f1 += ate_result
@@ -328,9 +349,17 @@ class Instructor:
             if patience < 0:
                 break
 
-        self.opt.MV.add_metric('Max-APC-Test-Acc', self.opt.max_test_metrics['max_apc_test_acc'])
-        self.opt.MV.add_metric('Max-APC-Test-F1', self.opt.max_test_metrics['max_apc_test_f1'])
-        self.opt.MV.add_metric('Max-ATE-Test-F1', self.opt.max_test_metrics['max_ate_test_f1'])
+        apc_result, ate_result = self.evaluate(self.test_dataloader)
+
+        if self.valid_data and self.test_data:
+            self.opt.MV.add_metric('Test-APC-Acc', apc_result['apc_test_acc'])
+            self.opt.MV.add_metric('Test-APC-F1', apc_result['apc_test_f1'])
+            self.opt.MV.add_metric('Test-ATE-F1', ate_result)
+
+        else:
+            self.opt.MV.add_metric('Max-APC-Test-Acc w/o Valid Set', self.opt.max_test_metrics['max_apc_test_acc'])
+            self.opt.MV.add_metric('Max-APC-Test-F1 w/o Valid Set', self.opt.max_test_metrics['max_apc_test_f1'])
+            self.opt.MV.add_metric('Max-ATE-Test-F1 w/o Valid Set', self.opt.max_test_metrics['max_ate_test_f1'])
 
         self.opt.MV.summary(no_print=True)
         self.logger.info(self.opt.MV.summary(no_print=True))
@@ -357,7 +386,9 @@ class Instructor:
             time.sleep(3)
             return self.model, self.opt, self.tokenizer, sum_apc_test_acc, sum_apc_test_f1, sum_ate_test_f1
 
-    def evaluate(self, eval_ATE=True, eval_APC=True):
+    def evaluate(self, data_loader=None, eval_ATE=True, eval_APC=True):
+        if data_loader is None:
+            data_loader = self.test_dataloader
         apc_result = {'apc_test_acc': 0, 'apc_test_f1': 0}
         ate_result = 0
         y_true = []
@@ -367,7 +398,7 @@ class Instructor:
         self.model.eval()
         label_map = {i: label for i, label in enumerate(self.opt.label_list, 1)}
 
-        for i_batch, batch in enumerate(self.test_dataloader):
+        for i_batch, batch in enumerate(data_loader):
             input_ids_spc, segment_ids, input_mask, label_ids, polarity, \
             valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
 
@@ -424,8 +455,6 @@ class Instructor:
                         else:
                             temp_1.append(label_map.get(label_ids[i][j], 'O'))
                             temp_2.append(label_map.get(ate_logits[i][j], 'O'))
-                    # print(self.all_tokens[i + (self.opt.batch_size * i_batch)])
-                    # print()
         if eval_APC:
             test_acc = n_test_correct / n_test_total
 
