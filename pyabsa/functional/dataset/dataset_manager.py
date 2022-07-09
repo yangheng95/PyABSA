@@ -162,7 +162,7 @@ def detect_dataset(dataset_path, task='apc', load_aug=False):
             search_path = find_dir(os.getcwd(), [d, task, 'dataset'], exclude_key=['infer', 'test.'] + filter_key_words, disable_alert=False)
             if '.augment.ignore' in str(os.listdir(search_path)) and not load_aug:
                 print(colored('There are augmented datasets available at {}, use load_aug to activate them.'.format(search_path), 'green'))
-            elif '.augment' in str(os.listdir(search_path)):
+            elif load_aug and '.augment' in str(os.listdir(search_path)):
                 print(colored('Augmented datasets activated at {}'.format(search_path), 'green'))
             # Our data augmentation tool can automatically improve your dataset's performance 1-2% with additional computation budget
             # The project of data augmentation is on github: https://github.com/yangheng95/BoostAug
@@ -215,7 +215,7 @@ def detect_dataset(dataset_path, task='apc', load_aug=False):
     return dataset_file
 
 
-def detect_infer_dataset(dataset_path, task='apc', load_aug=False):
+def detect_infer_dataset(dataset_path, task='apc'):
     if not isinstance(dataset_path, DatasetItem):
         dataset_path = DatasetItem(dataset_path)
     dataset_file = []
@@ -224,19 +224,9 @@ def detect_infer_dataset(dataset_path, task='apc', load_aug=False):
             print('Loading {} dataset from:  {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
             search_path = find_dir(os.getcwd(), [d, task, 'dataset'], exclude_key=filter_key_words, disable_alert=False)
-            if '.augment.ignore' in str(os.listdir(search_path)) and not load_aug:
-                print(colored('There are augmented datasets available at {}, use load_aug to activate them.'.format(search_path), 'green'))
-            if load_aug:
-                dataset_file += find_files(search_path, ['.inference', d], exclude_key=['train.'] + filter_key_words)
-            else:
-                dataset_file += find_files(search_path, ['.inference', d], exclude_key=['train.'] + filter_key_words + ['.ignore'])
-
+            dataset_file += find_files(search_path, ['.inference', d], exclude_key=['train.'] + filter_key_words)
         else:
-            print('Try to load {} dataset from local')
-            if load_aug:
-                dataset_file += find_files(d, ['.inference', task], exclude_key=['train.'] + filter_key_words)
-            else:
-                dataset_file += find_files(d, ['.inference', task], exclude_key=['train.'] + filter_key_words + ['.ignore'])
+            dataset_file += find_files(d, ['.inference', task], exclude_key=['train.'] + filter_key_words)
 
     if len(dataset_file) == 0:
         if os.path.isdir(dataset_path.dataset_name):

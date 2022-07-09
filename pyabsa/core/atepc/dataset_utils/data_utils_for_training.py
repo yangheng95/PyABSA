@@ -73,7 +73,7 @@ def readfile(filename):
     sentence = []
     tag = []
     polarity = []
-    for line in f:
+    for line in f.readlines():
         if len(line) == 0 or line.startswith('-DOCSTART') or line[0] == "\n":
             if len(sentence) > 0:
                 data.append((sentence, tag, polarity))
@@ -183,6 +183,11 @@ class ATEPCProcessor(DataProcessor):
         self.tokenizer.eos_token = tokenizer.eos_token if tokenizer.eos_token else '[SEP]'
 
     def get_train_examples(self, data_dir, set_tag):
+        """See base class."""
+        return self._create_examples(
+            self._read_tsv(data_dir), set_tag)
+
+    def get_valid_examples(self, data_dir, set_tag):
         """See base class."""
         return self._create_examples(
             self._read_tsv(data_dir), set_tag)

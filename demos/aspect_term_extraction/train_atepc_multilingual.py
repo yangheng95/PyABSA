@@ -24,9 +24,10 @@ config.max_seq_len = 128
 config.cache_dataset = False
 config.use_bert_spc = True
 config.l2reg = 1e-5
+# config.ate_loss_weight = 2  # (0, inf)
 config.learning_rate = 1e-5
 config.model = ATEPCModelList.FAST_LCF_ATEPC
-multilingual = ABSADatasetList.English
+multilingual = ABSADatasetList.Multilingual
 config.pretrained_bert = 'microsoft/mdeberta-v3-base'
 
 aspect_extractor = Trainer(config=config,

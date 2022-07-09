@@ -45,7 +45,7 @@ apc_examples = [
 ]
 
 # # for dataset in ABSADatasetList():
-for dataset in ABSADatasetList()[:1]:
+for dataset in ABSADatasetList()[:1]+[ABSADatasetList.MAMS]:
     for model in ATEPCModelList():
         config = ATEPCConfigManager.get_atepc_config_english()
         cuda.empty_cache()
@@ -55,6 +55,7 @@ for dataset in ABSADatasetList()[:1]:
         config.evaluate_begin = 0
         config.max_seq_len = 10
         config.log_step = -1
+        config.ate_loss_weight = 5
         config.show_metric = -1
         aspect_extractor = Trainer(config=config,
                                    dataset=dataset,
