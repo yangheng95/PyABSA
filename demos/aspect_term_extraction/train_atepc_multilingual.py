@@ -20,7 +20,7 @@ config.evaluate_begin = 0
 config.log_step = -1
 config.batch_size = 16
 config.num_epoch = 30
-config.max_seq_len = 128
+config.max_seq_len = 256
 config.cache_dataset = False
 config.use_bert_spc = True
 config.l2reg = 1e-5
@@ -33,6 +33,6 @@ config.pretrained_bert = 'microsoft/mdeberta-v3-base'
 aspect_extractor = Trainer(config=config,
                            dataset=multilingual,
                            checkpoint_save_mode=1,
-                           auto_device=True,
+                           auto_device='allcuda',
                            load_aug=True
                            ).load_trained_model()
