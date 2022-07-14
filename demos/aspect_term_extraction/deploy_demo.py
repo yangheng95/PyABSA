@@ -2,7 +2,7 @@ import os
 import random
 import gradio as gr
 import pandas as pd
-from findfile import find_files
+import requests
 
 from pyabsa import ATEPCCheckpointManager
 from pyabsa.functional.dataset.dataset_manager import download_datasets_from_github, ABSADatasetList, detect_infer_dataset
@@ -11,6 +11,7 @@ download_datasets_from_github(os.getcwd())
 
 dataset_items = {dataset.name: dataset for dataset in ABSADatasetList()}
 
+URL = 'https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fhuggingface.co%2Fspaces%2Fyangheng%2Fpyabsa_inference&label=Inference%20Count&labelColor=%2337d67a&countColor=%23f47373&style=flat&labelStyle=none'
 
 def get_example(dataset):
     task = 'apc'
@@ -32,7 +33,7 @@ def get_example(dataset):
 
 
 dataset_dict = {dataset.name: get_example(dataset.name) for dataset in ABSADatasetList()}
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='multilingual')
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='fast_lcf_atepc_Multilingual_cdw_apcacc_86.68_apcf1_80.63_atef1_75.15')
 
 
 def perform_inference(text, dataset):
@@ -49,7 +50,7 @@ def perform_inference(text, dataset):
         'confidence': [round(x, 4) for x in result[0]['confidence']],
         'position': result[0]['position']
     })
-
+    requests.get(URL)
     return result, '{}'.format(text)
 
 
@@ -85,5 +86,6 @@ with demo:
                                outputs=[output_df, output_text])
 
     gr.Markdown("![visitor badge](https://visitor-badge.glitch.me/badge?page_id=https://huggingface.co/spaces/yangheng/Multilingual-Aspect-Based-Sentiment-Analysis)")
+    gr.Markdown("![Visitors]({})".format(URL))
 
 demo.launch(share=True)
