@@ -203,6 +203,9 @@ class Instructor:
                                          self.opt.model_name,
                                          self.opt.dataset_name
                                          )
+
+        losses = []
+
         self.opt.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
         self.opt.max_test_metrics = {'max_test_acc': 0, 'max_test_f1': 0}
 
@@ -228,8 +231,12 @@ class Instructor:
                 outputs = self.model(inputs)
                 targets = sample_batched['label'].to(self.opt.device)
 
-                sen_logits = outputs
-                loss = criterion(sen_logits, targets)
+                if isinstance(outputs, dict) and 'loss' in outputs:
+                    loss = outputs['loss']
+                else:
+                    loss = criterion(outputs, targets)
+
+                losses.append(loss.item())
                 if amp:
                     with amp.scale_loss(loss, self.optimizer) as scaled_loss:
                         scaled_loss.backward()
@@ -320,6 +327,7 @@ class Instructor:
 
         print('Training finished, we hope you can share your checkpoint with everybody, please see:',
               'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
+
         print_args(self.opt, self.logger)
 
         if self.val_dataloader or self.opt.save_mode:
@@ -387,8 +395,11 @@ class Instructor:
                     outputs = self.model(inputs)
                     targets = sample_batched['label'].to(self.opt.device)
 
-                    sen_logits = outputs
-                    loss = criterion(sen_logits, targets)
+                    if isinstance(outputs, dict) and 'loss' in outputs:
+                        loss = outputs['loss']
+                    else:
+                        loss = criterion(outputs, targets)
+
                     if amp:
                         with amp.scale_loss(loss, self.optimizer) as scaled_loss:
                             scaled_loss.backward()

@@ -11,6 +11,7 @@ import shutil
 import time
 
 import numpy
+import numpy as np
 import pandas
 import torch
 import torch.nn as nn
@@ -178,6 +179,8 @@ class Instructor:
         self.opt.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
         self.opt.max_test_metrics = {'max_apc_test_acc': 0, 'max_apc_test_f1': 0}
 
+        losses = []
+
         Total_params = 0
         Trainable_params = 0
         NonTrainable_params = 0
@@ -218,13 +221,15 @@ class Instructor:
                 outputs = self.model(inputs)
                 targets = sample_batched['polarity'].to(self.opt.device)
 
-                sen_logits = outputs['logits']
-                loss = criterion(sen_logits, targets)
-                if isinstance(outputs, dict) and 'loss' in outputs:
-                    loss += torch.sum(outputs['loss'])
+                if isinstance(outputs, dict) and 'loss' in outputs and outputs['loss'] != 0:
+                    loss = outputs['loss']
+                else:
+                    loss = criterion(outputs['logits'], targets)
 
                 if self.opt.auto_device == 'allcuda':
                     loss = loss.mean()
+
+                losses.append(loss.item())
 
                 if amp:
                     with amp.scale_loss(loss, self.optimizer) as scaled_loss:
@@ -318,6 +323,14 @@ class Instructor:
         print('Training finished, we hope you can share your checkpoint with community, please see:',
               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
 
+        rolling_intv = 5
+        df = pandas.DataFrame(losses)
+        losses = list(numpy.hstack(df.rolling(rolling_intv, min_periods=1).mean().values))
+        self.opt.loss = losses[-1]
+        # self.opt.loss = np.average(losses)
+
+        print_args(self.opt)
+
         if self.val_dataloader or self.opt.save_mode:
             del self.train_dataloaders
             del self.test_dataloader
@@ -346,6 +359,8 @@ class Instructor:
 
         save_path_k_fold = ''
         max_fold_acc_k_fold = 0
+
+        losses = []
 
         self.opt.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
         self.opt.max_test_metrics = {'max_apc_test_acc': 0, 'max_apc_test_f1': 0}
@@ -383,10 +398,12 @@ class Instructor:
                     outputs = self.model(inputs)
                     targets = sample_batched['polarity'].to(self.opt.device)
 
-                    sen_logits = outputs['logits']
-                    loss = criterion(sen_logits, targets)
-                    if 'loss' in outputs:
-                        loss += torch.sum(outputs['loss'])
+                    if isinstance(outputs, dict) and 'loss' in outputs and outputs['loss'] != 0:
+                        loss = outputs['loss']
+                    else:
+                        loss = criterion(outputs['logits'], targets)
+
+                    losses.append(loss.item())
 
                     if self.opt.auto_device == 'allcuda':
                         loss = loss.mean()
@@ -483,6 +500,14 @@ class Instructor:
         self.reload_model(save_path_k_fold)
         print('Training finished, we hope you can share your checkpoint with everybody, please see:',
               'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
+
+        rolling_intv = 5
+        df = pandas.DataFrame(losses)
+        losses = list(numpy.hstack(df.rolling(rolling_intv, min_periods=1).mean().values))
+        self.opt.loss = losses[-1]
+        # self.opt.loss = np.average(losses)
+
+        print_args(self.opt)
 
         if os.path.exists('./init_state_dict.bin'):
             os.remove('./init_state_dict.bin')

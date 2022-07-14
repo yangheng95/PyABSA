@@ -12,7 +12,9 @@ import re
 import time
 from hashlib import sha256
 
+import numpy
 import numpy as np
+import pandas
 import sklearn.metrics as metrics
 import torch
 import torch.nn.functional as F
@@ -202,6 +204,8 @@ class Instructor:
         print_args(self.opt, self.logger)
 
     def run(self):
+        losses = []
+
         patience = self.opt.patience + self.opt.evaluate_begin
         if self.opt.log_step < 0:
             self.opt.log_step = len(self.train_dataloader) if self.opt.log_step < 0 else self.opt.log_step
@@ -260,6 +264,8 @@ class Instructor:
                 loss = loss_ate + ate_loss_weight * loss_apc  # the optimal weight of loss may be different according to dataset
 
                 sum_loss += loss.item()
+
+                losses.append(loss.item())
 
                 if amp:
                     with amp.scale_loss(loss, self.optimizer) as scaled_loss:
@@ -366,6 +372,12 @@ class Instructor:
 
         print('Training finished, we hope you can share your checkpoint with community, please see:',
               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
+
+        rolling_intv = 5
+        df = pandas.DataFrame(losses)
+        losses = list(numpy.hstack(df.rolling(rolling_intv, min_periods=1).mean().values))
+        self.opt.loss = losses[-1]
+        # self.opt.loss = np.average(losses)
 
         print_args(self.opt, self.logger)
 
@@ -475,18 +487,17 @@ class Instructor:
                     # No enough data to calculate the report
                     pass
         if eval_ATE:
-            # for y1, y2 in zip(y_true, y_pred):
-            #     print(y1)
-            #     print(y2)
-            #     print('\n')
-            report = classification_report(y_true, y_pred, digits=4)
-            tmps = report.split()
-            ate_result = round(float(tmps[7]) * 100, 2)
-
-            if self.opt.args.get('show_metric', False):
-                print('\n---------------------------- ATE Classification Report ----------------------------\n')
-                print(report)
-                print('\n---------------------------- ATE Classification Report ----------------------------\n')
+            try:
+                report = classification_report(y_true, y_pred, digits=4)
+                tmps = report.split()
+                ate_result = round(float(tmps[7]) * 100, 2)
+                if self.opt.args.get('show_metric', False):
+                    print('\n---------------------------- ATE Classification Report ----------------------------\n')
+                    print(report)
+                    print('\n---------------------------- ATE Classification Report ----------------------------\n')
+            except:
+                # No enough data to calculate the report
+                pass
 
         return apc_result, ate_result
 

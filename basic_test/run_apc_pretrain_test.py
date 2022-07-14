@@ -53,6 +53,7 @@ for dataset in ABSADatasetList()[:1]:
         config.max_seq_len = 10
         config.evaluate_begin = 0
         config.log_step = -1
+        config.cross_validate_fold = 3
         sent_classifier = Trainer(config=config,
                                   dataset=dataset,
                                   checkpoint_save_mode=1,
