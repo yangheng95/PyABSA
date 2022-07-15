@@ -11,7 +11,8 @@ from pyabsa import ATEPCCheckpointManager
 
 
 aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='english',
-                                                               auto_device=True  # False means load model on CPU
+                                                               auto_device=True,  # False means load model on CPU
+                                                               cal_perplexity=True,
                                                                )
 
 inference_source = ABSADatasetList.SemEval

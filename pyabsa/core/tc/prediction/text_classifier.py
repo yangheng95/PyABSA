@@ -10,7 +10,7 @@ import random
 import numpy
 import torch
 import tqdm
-from findfile import find_file, find_dir
+from findfile import find_file, find_dir, find_cwd_dir
 from termcolor import colored
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, AutoModel, AutoConfig, DebertaV2ForMaskedLM, RobertaForMaskedLM, BertForMaskedLM
@@ -280,9 +280,8 @@ class TextClassifier:
 
         try:
             if print_result:
-                for result in results:
-                    text_printing = result['text']
-
+                for ex_id, result in enumerate(results):
+                    text_printing = result['text'][:]
                     if result['ref_label'] != -999:
                         if result['label'] == result['ref_label']:
                             text_info = colored(' -> <{}(ref:{} confidence:{})>'.format(result['label'], result['ref_label'], result['confidence']), 'green')
@@ -290,9 +289,10 @@ class TextClassifier:
                             text_info = colored(' -> <{}(ref:{}) confidence:{}>'.format(result['label'], result['ref_label'], result['confidence']), 'red')
                     else:
                         text_info = ' -> {}'.format(result['label'])
-
-                    text_printing += text_info + colored('<perplexity:{}>'.format(result['perplexity']), 'yellow')
-                    print(text_printing)
+                    text_printing += text_info
+                    if self.cal_perplexity:
+                        text_printing += colored(' --> <perplexity:{}>'.format(result['perplexity']), 'yellow')
+                    print('Example {}: {}'.format(ex_id, text_printing))
             if save_path:
                 with open(save_path, 'w', encoding='utf8') as fout:
                     json.dump(str(results), fout, ensure_ascii=False)

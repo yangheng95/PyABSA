@@ -13,6 +13,7 @@ import time
 from hashlib import sha256
 
 import numpy
+import pandas
 import torch
 import torch.nn as nn
 from findfile import find_file
@@ -215,6 +216,8 @@ class Instructor:
         max_adv_tr_fold_acc = 0
         max_adv_tr_fold_f1 = 0
 
+        losses = []
+
         save_path = '{0}/{1}_{2}'.format(self.opt.model_path_to_save,
                                          self.opt.model_name,
                                          self.opt.dataset_name
@@ -256,7 +259,8 @@ class Instructor:
                 sen_loss = criterion(sen_logits, label_targets)
                 adv_det_loss = criterion(adv_det_logits, adv_det_targets)
                 adv_train_loss = criterion(adv_tr_logits, adv_tr_targets)
-                loss = sen_loss + 5 * adv_det_loss + 5 * adv_train_loss
+                loss = sen_loss + self.opt.args.get('adv_det_weight', 5) * adv_det_loss + self.opt.args.get('adv_train_weight', 5) * adv_train_loss
+                losses.append(loss.item())
 
                 if amp:
                     with amp.scale_loss(loss, self.optimizer) as scaled_loss:
@@ -396,6 +400,13 @@ class Instructor:
 
         print('Training finished, we hope you can share your checkpoint with everybody, please see:',
               'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
+
+        rolling_intv = 5
+        df = pandas.DataFrame(losses)
+        losses = list(numpy.hstack(df.rolling(rolling_intv, min_periods=1).mean().values))
+        self.opt.loss = losses[-1]
+        # self.opt.loss = np.average(losses)
+
         print_args(self.opt, self.logger)
 
         if self.val_dataloader or self.opt.save_mode:

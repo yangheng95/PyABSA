@@ -15,12 +15,13 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 
 text_classifier = TextClassifierCheckpointManager.get_text_classifier(checkpoint='bert',
                                                                       auto_device=True,  # Use CUDA if available
+                                                                      # cal_perplexity=True,
                                                                       )
 
 # batch inference returns the results, save the result if necessary using save_result=True
 inference_sets = ClassificationDatasetList.SST2
 results = text_classifier.batch_infer(target_file=inference_sets,
-                                      print_result=False,
+                                      print_result=True,
                                       save_result=False,
                                       ignore_error=False,
                                       )
