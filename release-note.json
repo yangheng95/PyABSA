@@ -1,4 +1,8 @@
 {
+  "1.16.5": {
+    "1": "Modify some output printing",
+    "2": "Fix offline pretrained model loading for text classification"
+  },
   "1.16.4": {
     "1": "Add validation set support for ATEPC",
     "2": "Other improvements"

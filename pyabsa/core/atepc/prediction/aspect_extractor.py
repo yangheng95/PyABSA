@@ -224,18 +224,19 @@ class AspectExtractor:
                 with open(save_path, 'w', encoding="utf8") as f:
                     json.dump(results, f, ensure_ascii=False)
             if print_result:
-                for r in results:
-                    for aspect, sentiment in zip(r['aspect'], r['sentiment']):
+                for ex_id, r in enumerate(results):
+                    colored_text = r['sentence'][:]
+                    for aspect, sentiment, confidence in zip(r['aspect'], r['sentiment'], r['confidence']):
                         if sentiment.upper() == 'POSITIVE':
-                            colored_aspect = colored('<{}:{}>'.format(aspect, sentiment), 'green')
+                            colored_aspect = colored('<{}:{} Confidence:{}>'.format(aspect, sentiment, confidence), 'green')
                         elif sentiment.upper() == 'NEUTRAL':
-                            colored_aspect = colored('<{}:{}>'.format(aspect, sentiment), 'cyan')
+                            colored_aspect = colored('<{}:{} Confidence:{}>'.format(aspect, sentiment, confidence), 'cyan')
                         elif sentiment.upper() == 'NEGATIVE':
-                            colored_aspect = colored('<{}:{}>'.format(aspect, sentiment), 'red')
+                            colored_aspect = colored('<{}:{} Confidence:{}>'.format(aspect, sentiment, confidence), 'red')
                         else:
-                            colored_aspect = colored('<{}:{}>'.format(aspect, sentiment), 'magenta')
-                        r['sentence'] = r['sentence'].replace(aspect, colored_aspect, 1)
-                    res_format = 'Text: {}'.format(r['sentence'])
+                            colored_aspect = colored('<{}:{} Confidence:{}>'.format(aspect, sentiment, confidence), 'magenta')
+                        colored_text = colored_text.replace(' {} '.format(aspect), ' {} '.format(colored_aspect), 1)
+                    res_format = 'Example {}: {}'.format(ex_id, colored_text)
                     print(res_format)
 
             return results
