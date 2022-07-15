@@ -12,14 +12,14 @@ classification_config_english = ClassificationConfigManager.get_classification_c
 classification_config_english.model = BERTClassificationModelList.BERT
 classification_config_english.num_epoch = 10
 classification_config_english.evaluate_begin = 0
-classification_config_english.max_seq_len = 512
+classification_config_english.max_seq_len = 80
 classification_config_english.log_step = 200
 classification_config_english.dropout = 0.5
 classification_config_english.cache_dataset = False
 classification_config_english.seed = {42, 56, 1}
 classification_config_english.l2reg = 1e-5
 classification_config_english.learning_rate = 1e-5
-classification_config_english.cross_validate_fold = 5
+classification_config_english.cross_validate_fold = -1
 
 dataset = ClassificationDatasetList.SST2
 text_classifier = TextClassificationTrainer(config=classification_config_english,

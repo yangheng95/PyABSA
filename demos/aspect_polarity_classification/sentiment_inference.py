@@ -27,6 +27,7 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='multilingual',
                                                                 auto_device=True,  # Use CUDA if available
                                                                 offline=False,
+                                                                cal_perplexity=True,
                                                                 )
 
 # text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated . !sent! 1 1'
