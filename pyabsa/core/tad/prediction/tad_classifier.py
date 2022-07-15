@@ -376,8 +376,8 @@ class TADTextClassifier:
 
         try:
             if print_result:
-                for result in results:
-                    text_printing = result['text']
+                for ex_id, result in enumerate(results):
+                    text_printing = result['text'][:]
                     text_info = ''
                     if result['label'] != '-100':
                         if not result['ref_label']:
@@ -395,9 +395,10 @@ class TADTextClassifier:
                             text_info += colored(' -> <AdvDet:{}(ref:{} confidence:{})>'.format(result['is_adv_label'], result['ref_is_adv_label'], result['is_adv_confidence']), 'green')
                         else:
                             text_info += colored(' -> <AdvDet:{}(ref:{} confidence:{})>'.format(result['is_adv_label'], result['ref_is_adv_label'], result['is_adv_confidence']), 'red')
-
-                    text_printing += text_info + colored('<perplexity:{}>'.format(result['perplexity']), 'yellow')
-                    print(text_printing)
+                    text_printing += text_info
+                    if self.cal_perplexity:
+                         text_printing += colored(' --> <perplexity:{}>'.format(result['perplexity']), 'yellow')
+                    print('Example {}: {}'.format(ex_id, text_printing))
             if save_path:
                 with open(save_path, 'w', encoding='utf8') as fout:
                     json.dump(str(results), fout, ensure_ascii=False)

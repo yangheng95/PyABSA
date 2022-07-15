@@ -310,7 +310,7 @@ class SentimentClassifier:
         results = self.merge_results(results)
         try:
             if print_result:
-                for result in results:
+                for ex_id, result in enumerate(results):
                     # flag = False  # only print error cases
                     # for ref_check in result['ref_check']:
                     #     if ref_check == 'Wrong':
@@ -341,8 +341,9 @@ class SentimentClassifier:
                                                                           round(result['confidence'][i], 3)
                                                                           )
                         text_printing = text_printing.replace(result['aspect'][i], aspect_info)
-                    text_printing += colored('<perplexity:{}>'.format(result['perplexity']), 'yellow')
-                    print(text_printing)
+                    if self.cal_perplexity:
+                        text_printing += colored(' --> <perplexity:{}>'.format(result['perplexity']), 'yellow')
+                    print('Example {}: {}'.format(ex_id, text_printing))
             if save_path:
                 with open(save_path, 'w', encoding='utf8') as fout:
                     json.dump(str(results), fout, ensure_ascii=False)
