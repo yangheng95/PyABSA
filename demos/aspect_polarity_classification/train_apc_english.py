@@ -8,12 +8,14 @@
 ########################################################################################################################
 #                    train and evaluate on your own apc_datasets (need train and test apc_datasets)                    #
 ########################################################################################################################
-
+import warnings
 
 from pyabsa.functional import Trainer
 from pyabsa.functional import APCConfigManager
 from pyabsa.functional import ABSADatasetList
 from pyabsa.functional import APCModelList
+
+warnings.filterwarnings("ignore")
 
 apc_config_english = APCConfigManager.get_apc_config_english()
 apc_config_english.model = APCModelList.FAST_LSA_T_V2
@@ -24,16 +26,18 @@ apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
 apc_config_english.dropout = 0.5
 apc_config_english.seed = 2672
-apc_config_english.log_step = 50
+apc_config_english.log_step = -1
 apc_config_english.l2reg = 1e-8
+apc_config_english.cache_dataset = False
 apc_config_english.dynamic_truncate = True
 apc_config_english.srd_alignment = True
 
-Dataset = ABSADatasetList.Laptop14
+Dataset = ABSADatasetList.ARTS_Laptop14
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=Dataset,
                           checkpoint_save_mode=0,
-                          auto_device=True
+                          auto_device=True,
+                          # load_aug=True
                           ).load_trained_model()
 
 examples = [

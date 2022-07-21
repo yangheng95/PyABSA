@@ -102,7 +102,7 @@ class Trainer:
         elif isinstance(config, TCConfigManager):
             self.train_func = train4tc
             self.model_class = TextClassifier
-            self.task = 'classification'
+            self.task = 'text_classification'
 
         elif isinstance(config, TADConfigManager):
             self.train_func = train4tad
