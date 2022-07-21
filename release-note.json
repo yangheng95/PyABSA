@@ -1,4 +1,8 @@
 {
+  "1.16.6": {
+    "1": "Update findfile dependency to 1.7.9.6",
+    "2": ""
+  },
   "1.16.5": {
     "1": "Modify some output printing",
     "2": "Fix offline pretrained model loading for text classification"
@@ -13,7 +17,7 @@
   "1.16.2": {
     "1": "fix a dataset detection issue",
     "2": "Add probability distribution and confidence to the sentiment classification in ATEPC model",
-    "3": "Add a experimental feature to automatic annotate the APC amd ATEPC dataset using aspect extractor provided by PyABSA, see extract_aspect_and_make_dataset.py"
+    "3": "Add a experimental feature to automatic annotate the APC amd ATEPC dataset using aspect extractor provided by PyABSA, see demos/aspect_text_extraction/extract_aspect_and_make_dataset.py"
   },
   "1.16.1": {
     "1": "fix some DatasetItem"

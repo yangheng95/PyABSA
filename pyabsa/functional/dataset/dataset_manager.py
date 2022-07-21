@@ -157,9 +157,13 @@ def detect_dataset(dataset_path, task='apc', load_aug=False):
     d = ''
     for d in dataset_path:
         if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(TCDatasetList, d) or hasattr(AdvTCDatasetList, d):
-            print('Loading {} dataset from: {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))
+            print('Dataset is not a path, treat dataset as keywords to Load {} from: {} or Search {} locally using findfile'.format(d, d, 'https://github.com/yangheng95/ABSADatasets'))
             download_datasets_from_github(os.getcwd())
             search_path = find_dir(os.getcwd(), [d, task, 'dataset'], exclude_key=['infer', 'test.'] + filter_key_words, disable_alert=False)
+            if not search_path:
+                raise ValueError('Cannot find dataset: {}, you may need to remove existing integrated_datasets and try again. '
+                                 'Please note that if you are using keywords to let findfile search the dataset, '
+                                 'you need to '.format(d))
             if '.augment.ignore' in str(os.listdir(search_path)) and not load_aug:
                 print(colored('There are augmented datasets available at {}, use load_aug to activate them.'.format(search_path), 'green'))
             elif load_aug and '.augment' in str(os.listdir(search_path)):
