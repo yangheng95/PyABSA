@@ -50,7 +50,6 @@ class APCCheckpointManager(CheckpointManager):
         """
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from google drive
-        :param sentiment_map: label to text index map (deprecated and has no effect)
         This param is for someone wants to load a checkpoint not registered in PyABSA
         :param auto_device: True or False, otherwise 'cuda', 'cpu' works
         :param eval_batch_size: eval batch_size in modeling
@@ -81,7 +80,7 @@ class APCCheckpointManager(CheckpointManager):
         """
         aspect_sentiment_classification_checkpoint = available_checkpoints('APC')
         if checkpoint.lower() in [k.lower() for k in aspect_sentiment_classification_checkpoint.keys()]:
-            print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint), 'green'))
+            print(colored('Downloading checkpoint:{} ...'.format(checkpoint), 'green'))
         else:
             print(colored(
                 'Checkpoint:{} is not found, you can raise an issue for requesting shares of checkpoints'.format(
@@ -128,7 +127,7 @@ class ATEPCCheckpointManager(CheckpointManager):
 
         atepc_checkpoint = available_checkpoints('ATEPC')
         if checkpoint.lower() in [k.lower() for k in atepc_checkpoint.keys()]:
-            print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint), 'green'))
+            print(colored('Downloading checkpoint:{} ...'.format(checkpoint), 'green'))
         else:
             print(colored('Checkpoint:{} is not found.'.format(checkpoint), 'red'))
             sys.exit(-1)
@@ -176,7 +175,7 @@ class TCCheckpointManager(CheckpointManager):
 
         text_classification_checkpoint = available_checkpoints('TC')
         if checkpoint.lower() in [k.lower() for k in text_classification_checkpoint.keys()]:
-            print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint), 'green'))
+            print(colored('Downloading checkpoint:{} ...'.format(checkpoint), 'green'))
         else:
             print(colored('Checkpoint:{} is not found.'.format(checkpoint), 'red'))
             sys.exit(-1)
@@ -226,7 +225,7 @@ class TADCheckpointManager(CheckpointManager):
 
         tad_classification_checkpoint = available_checkpoints('TAD')
         if checkpoint.lower() in [k.lower() for k in tad_classification_checkpoint.keys()]:
-            print(colored('Downloading checkpoint:{} from Google Drive...'.format(checkpoint), 'green'))
+            print(colored('Downloading checkpoint:{} ...'.format(checkpoint), 'green'))
         else:
             print(colored('Checkpoint:{} is not found.'.format(checkpoint), 'red'))
             sys.exit(-1)
@@ -300,14 +299,14 @@ def available_checkpoints(task='', from_local=False):
                     t_checkpoint_map.update(checkpoint_map[c_version][task.upper()] if task.upper() in checkpoint_map[c_version] else {})
                     parse_checkpoint_info(t_checkpoint_map, task)
 
-        print(colored('There may be some checkpoints available for early versions of PyABSA, see ./checkpoints.json'.format(task, __version__), 'yellow'))
+        print(colored('There may be some checkpoints available for early versions of PyABSA, see {}'.format(task, __version__, checkpoint_url), 'yellow'))
 
         # os.remove('./checkpoints.json')
         return t_checkpoint_map if task else checkpoint_map
 
     except Exception as e:
         if not from_local:
-            print('Fail to query checkpoints from Google Drive, try to download checkpoint parsed from ./checkpoints.json')
+            print('Fail to query checkpoints, try to download checkpoint parsed from ./checkpoints.json')
             return available_checkpoints(task, True)
         else:
             print('\nFailed to query checkpoints (Error: {}), you can try manually download the checkpoints from: \n'.format(e) +
@@ -356,6 +355,5 @@ def download_checkpoint(task: str, language: str, checkpoint: dict):
             raise ConnectionError("Fail to download checkpoint: {}".format(e))
     unzip_checkpoint(save_path)
     os.remove(save_path)
-    print(colored('Google Drive applies a restriction on public large file downloading,'
-                  ' if you find the checkpoint downloaded is None or small, please download it via browser: {} '.format(huggingface_checkpoint_url), 'yellow'))
+    print(colored('If the auto-downloading failed, please download it via browser: {} '.format(huggingface_checkpoint_url), 'yellow'))
     return dest_path

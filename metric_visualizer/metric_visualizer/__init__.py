@@ -8,12 +8,4 @@
 __version__ = '0.4.27'
 __name__ = 'metric_visualizer'
 
-from update_checker import UpdateChecker
-
 from .metric_visualizer import MetricVisualizer
-
-checker = UpdateChecker()
-check_result = checker.check(__name__, __version__)
-
-if check_result:
-    print(check_result)
