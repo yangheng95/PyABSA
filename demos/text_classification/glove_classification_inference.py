@@ -5,22 +5,13 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-import os
+from pyabsa import TCDatasetList, TCCheckpointManager
 
-from pyabsa import ClassificationDatasetList, TextClassifierCheckpointManager
+model_path = 'lstm'  # 'lstm' is a keyword to search the checkpoint in the folder
+text_classifier = TCCheckpointManager.get_text_classifier(checkpoint=model_path)
 
-os.environ['PYTHONIOENCODING'] = 'UTF8'
-
-# Assume the text_classifier is loaded or obtained using train function
-
-
-model_path = 'lstm_acc_85.78_f1_85.77'
-text_classifier = TextClassifierCheckpointManager.get_text_classifier(checkpoint=model_path,
-                                                                      auto_device=True,  # Use CUDA if available
-                                                                      )
-
-# batch inference returns the results, save the result if necessary using save_result=True
-inference_sets = ClassificationDatasetList.SST2
+# batch inference works on the dataset files
+inference_sets = TCDatasetList.SST2
 results = text_classifier.batch_infer(target_file=inference_sets,
                                       print_result=True,
                                       save_result=True,
