@@ -12,7 +12,7 @@ import pickle
 import urllib.request
 
 import torch
-from findfile import find_files, find_cwd_file
+from findfile import find_files, find_cwd_file, find_cwd_files
 from pyabsa.core.atepc.dataset_utils.atepc_utils import split_text
 from termcolor import colored
 
@@ -133,7 +133,8 @@ def split_aspects(sentence):
 def convert_atepc(fname):
     print('coverting {} to {}.atepc'.format(fname, fname))
     dist_fname = fname.replace('apc_datasets', 'atepc_datasets')
-    if not os.path.exists(os.path.dirname(dist_fname)):
+
+    if not os.path.exists(os.path.dirname(dist_fname)) and not os.path.isfile(dist_fname):
         os.makedirs(os.path.dirname(dist_fname))
     dist_fname += '.atepc'
     lines = []
@@ -156,18 +157,21 @@ def convert_apc_set_to_atepc_set(path):
 
     if isinstance(path, DatasetItem):
         path = path.dataset_name
-    if not os.path.exists(path):
-        files = find_files(os.getcwd(), [path, 'dataset', 'apc'], exclude_key=['.inference', 'readme'])
+    if os.path.isfile(path):
+        files = [path]
+    elif not os.path.exists(path):
+        files = find_files(path, ['dataset', 'apc'], exclude_key=['.inference', 'readme'])
     else:
-        files = find_files(path, ['dataset', 'apc'], exclude_key=['infer', 'readme'])
+        files = find_cwd_files([path, 'dataset', 'apc'], exclude_key=['.inference', 'readme'])
+
 
     print('Find datasets files at {}:'.format(path))
     for target_file in files:
         if not target_file.endswith('.atepc'):
             try:
                 convert_atepc(target_file)
-            except:
-                print('failed to process"{}'.format(target_file))
+            except Exception as e:
+                print('failed to process :{}, Exception: {}'.format(target_file, e))
         else:
             print('Ignore ', target_file)
     print('finished')
