@@ -1,4 +1,4 @@
-# [PyABSA - Open Framework for Aspect-based Sentiment Analysis](https://arxiv.org/abs/2208.01368)
+# PyABSA - Open Framework for Aspect-based Sentiment Analysis
 
 ![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg)
 [![PyPI](https://img.shields.io/pypi/v/pyabsa)](https://pypi.org/project/pyabsa/)
@@ -19,7 +19,7 @@
 PyABSA is a free and open-source tool for everyone, but please do not forget to attach the (informal or formal) author
 information and project address in your works, products and publications, etc.
 
-# | [Overview](./README.MD) | [HuggingfaceHub](readme/huggingface_readme.md) | [ABDADatasets](readme/dataset_readme.md) | [ABSA Models](readme/model_readme.md) | [Colab Tutorials](readme/tutorial_readme.md) | [Troubleshooting(常见问题解决)](https://github.com/yangheng95/PyABSA/issues/189)
+# | [Overview](./README.MD) | [Paper](https://arxiv.org/abs/2208.01368) | [HuggingfaceHub](readme/huggingface_readme.md) | [ABDADatasets](readme/dataset_readme.md) | [ABSA Models](readme/model_readme.md) | [Colab Tutorials](readme/tutorial_readme.md) | [Troubleshooting(常见问题解决)](https://github.com/yangheng95/PyABSA/issues/189)
 
 ## Try our demos on Huggingface Space
 
