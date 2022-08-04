@@ -180,7 +180,8 @@ checkpoint_map = available_checkpoints()  # show available checkpoints of PyABSA
 If you can not access to Google Drive, you can download our checkpoints and load the unzipped checkpoint manually.
 
 ## Contribution
-
+This repository is developed and maintained by HENG YANG ([yangheng95@GitHub](https://github.com/yangheng95)),
+with great contribution from community researchers. 
 We expect that you can help us improve this project, and your contributions are welcome. You can make a contribution in
 many ways, including:
 
@@ -196,11 +197,22 @@ many ways, including:
   hyper-parameters)
 - Star this repository to keep it active
 
+## Citation
+
+```bibtex
+@misc{YangL2022,
+  title = {PyABSA: Open Framework for Aspect-based Sentiment Analysis},
+  author = {Yang, Heng and Li, Ke},
+  doi = {10.48550/ARXIV.2208.01368},
+  url = {https://arxiv.org/abs/2208.01368},
+  keywords = {Computation and Language (cs.CL), FOS: Computer and information sciences, FOS: Computer and information sciences},
+  publisher = {arXiv},
+  year = {2022},
+  copyright = {arXiv.org perpetual, non-exclusive license}
+}
+```
+
 ## License
 
 PyABSA is released under MIT licence, please cite this repo (or papers) or attach the author information in your work
 (repository, blog, product, etc.)
-
-This repository is developed and maintained by HENG YANG ([yangheng95@GitHub](https://github.com/yangheng95)),
-with great contribution from community researchers. You can try [donating](readme/donation.MD) to help improve PyABSA.
-Thanks very much!
