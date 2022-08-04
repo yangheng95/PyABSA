@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: generate_inference_set.py
+# file: convert_apc_set_to_atepc_set.py
 # time: 2021/5/27 0027
 # author: yangheng <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95

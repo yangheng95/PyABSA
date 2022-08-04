@@ -1,7 +1,10 @@
 {
   "1.16.6": {
-    "1": "Update findfile dependency to 1.7.9.7",
-    "2": ""
+    "1": "Remove the option to read the local checkpoints.json in checkpoint downloading",
+    "2": "Some prints modifications to the console",
+    "3": "Update findfile dependency to 1.7.9.8",
+    "4": "Update metric-visualizer dependency to >= 0.5.0",
+    "5": "Will remove Google Drive checkpoints hosting soon"
   },
   "1.16.5": {
     "1": "Modify some output printing",
