@@ -1,4 +1,7 @@
 {
+  "1.16.7": {
+    "1": "Add auto-augmentation for custom datasets (experimental feature), 1. merge dataset into integrated_datasets (locally or PR), 2. set load_aug=True in trainers, will auto-augment your custom dataset when training"
+  },
   "1.16.6.1": {
     "1": "Improve conversion of apc dataset to atepc dataset"
   },

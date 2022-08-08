@@ -7,11 +7,18 @@
 
 import os
 import shutil
+import sys
 import tempfile
 import time
 
+import autocuda
 import git
 from findfile import find_files, find_dir
+from pyabsa.core.tc.models import BERTTCModelList
+
+from pyabsa.core.apc.models import APCModelList
+
+from pyabsa.functional.config import APCConfigManager, TCConfigManager
 from termcolor import colored
 
 
@@ -148,10 +155,53 @@ filter_key_words = ['.py', '.md', 'readme', 'log', 'result', 'zip',
                     '.state_dict', '.model', '.png', 'acc_', 'f1_', '.backup', '.bak']
 
 
+def __perform_apc_augmentation(dataset, **kwargs):
+    print(colored('No augmentation datasets found, performing APC augmentation. This may take a long time...', 'yellow'))
+    from boost_aug import ABSCBoostAug
+
+    config = APCConfigManager.get_apc_config_english()
+    config.model = APCModelList.FAST_LCF_BERT
+
+    BoostingAugmenter = ABSCBoostAug(ROOT=os.getcwd(),
+                                     CLASSIFIER_TRAINING_NUM=1,
+                                     AUGMENT_NUM_PER_CASE=10,
+                                     WINNER_NUM_PER_CASE=8,
+                                     device=autocuda.auto_cuda())
+
+    # auto-training after augmentation
+    BoostingAugmenter.apc_boost_augment(config,  # BOOSTAUG
+                                        dataset,
+                                        train_after_aug=True,
+                                        rewrite_cache=True,
+                                        )
+    sys.exit(0)
+
+def __perform_tc_augmentation(dataset, **kwargs):
+    print(colored('No augmentation datasets found, performing TC augmentation. this may take a long time...', 'yellow'))
+
+    from boost_aug import TCBoostAug
+
+    tc_config = TCConfigManager.get_classification_config_english()
+    tc_config.log_step = -1
+
+    BoostingAugmenter = TCBoostAug(ROOT=os.getcwd(),
+                                   CLASSIFIER_TRAINING_NUM=1,
+                                   WINNER_NUM_PER_CASE=8,
+                                   AUGMENT_NUM_PER_CASE=16,
+                                   device=autocuda.auto_cuda())
+
+    # auto-training after augmentation
+    BoostingAugmenter.tc_boost_augment(tc_config,
+                                       dataset,
+                                       train_after_aug=True,
+                                       rewrite_cache=True,
+                                       )
+    sys.exit(0)
+
 def detect_dataset(dataset_path, task='apc', load_aug=False):
     if not isinstance(dataset_path, DatasetItem):
         dataset_path = DatasetItem(dataset_path)
-    dataset_file = {'train': [], 'test': [], 'valid': []}
+    dataset_file = {'train': [], 'train_aug': [], 'test': [], 'valid': []}
 
     search_path = ''
     d = ''
@@ -174,10 +224,19 @@ def detect_dataset(dataset_path, task='apc', load_aug=False):
 
             # For pretraining checkpoints, we use all dataset set as training set
             if load_aug:
-                dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['.inference', 'test.', 'valid.'] + filter_key_words)
+                dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['.inference', 'test.', 'valid.'] + filter_key_words+ ['.ignore'])
+                dataset_file['train_aug'] += find_files(search_path, [d, 'train', task], exclude_key=['.inference', 'test.', 'valid.'] + filter_key_words)
                 dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['.inference', 'train.', 'valid.'] + filter_key_words)
-                dataset_file['valid'] += find_files(search_path, [d, 'valid', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words)
-                dataset_file['valid'] += find_files(search_path, [d, 'dev', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words)
+                dataset_file['valid'] += find_files(search_path, [d, 'valid', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words+ ['.ignore'])
+                dataset_file['valid'] += find_files(search_path, [d, 'dev', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words+ ['.ignore'])
+                if dataset_file['train'] == dataset_file['train_aug']:
+                    if task == 'apc':
+                        __perform_apc_augmentation(dataset_path)
+                    elif task == 'tc':
+                        __perform_tc_augmentation(dataset_path)
+                    else:
+                        raise ValueError('Task {} is not supported for auto-augmentation'.format(task))
+                dataset_file['train'] = dataset_file['train_aug']
             else:
                 dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['.inference', 'test.', 'valid.'] + filter_key_words + ['.ignore'])
                 dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['.inference', 'train.', 'valid.'] + filter_key_words + ['.ignore'])

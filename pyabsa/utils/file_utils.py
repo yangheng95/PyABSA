@@ -17,7 +17,7 @@ from pyabsa.core.atepc.dataset_utils.atepc_utils import split_text
 from termcolor import colored
 
 from pyabsa.functional.dataset import DatasetItem
-from pyabsa.utils.pyabsa_utils import save_args
+from pyabsa.utils.pyabsa_utils import save_args, SENTIMENT_PADDING
 
 
 def generate_inference_set_for_apc(dataset_path):
@@ -71,7 +71,7 @@ def assemble_aspects(fname):
 
     def unify_same_samples(same_samples):
         text = same_samples[0][0].replace('$T$', same_samples[0][1])
-        polarities = [-999] * len(text.split())
+        polarities = [-SENTIMENT_PADDING] * len(text.split())
         tags = ['O'] * len(text.split())
         samples = []
         for sample in same_samples:
