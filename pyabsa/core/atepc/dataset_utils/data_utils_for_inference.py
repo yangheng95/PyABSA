@@ -107,7 +107,7 @@ class ATEPCProcessor:
                         aspect.append(s)
             else:
                 for j, (t, s, p) in enumerate(zip(tag, sentence, polarity)):
-                    if int(999) == int(p):
+                    if int(-SENTIMENT_PADDING) == int(p):
                         aspect.append(s)
             examples.append(InputExample(guid=str(i), text_a=sentence, text_b=aspect, IOB_label=tag,
                                          aspect_label=[], polarity=polarity))
@@ -216,7 +216,7 @@ def convert_apc_examples_to_features(examples, label_list, max_seq_len, tokenize
         IOB_label = example.IOB_label
         # aspect_label = example.aspect_label
         aspect_label = ['B-ASP'] * len(aspect_tokens)
-        polarity = [-999] + example.polarity + [-999]
+        polarity = [-SENTIMENT_PADDING] + example.polarity + [-SENTIMENT_PADDING]
         positions = np.where(np.array(polarity) > 0)[0].tolist()
         tokens = []
         labels = []

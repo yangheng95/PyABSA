@@ -271,21 +271,27 @@ def retry(f):
     return decorated
 
 
-def time_out(interval=5, callback=None):
+def time_out(interval, callback=None):
     def decorator(func):
+        def handler(signum, frame):
+            raise TimeoutError("Timeout Func: {} ".format(func.__name__))
+
         def wrapper(*args, **kwargs):
-            t = threading.Thread(target=func, args=args, kwargs=kwargs)
-            t.setDaemon(True)  # 设置主线程结束子线程立刻结束
-            t.start()
-            t.join(interval)  # 主线程阻塞等待interval秒
-            if t.is_alive() and callback:
-                return threading.Timer(0, callback).start()  # 立即执行回调函数
-            else:
-                return
+            try:
+                signal.signal(signal.SIGALRM, handler)
+                signal.alarm(interval)  # interval秒后向进程发送SIGALRM信号
+                result = func(*args, **kwargs)
+                signal.alarm(0)  # 函数在规定时间执行完后关闭alarm闹钟
+                return result
+            except TimeoutError as e:
+                if callback:
+                    callback(e)
+                else:
+                    raise e
 
         return wrapper
-
     return decorator
+
 
 
 def save_json(dic, save_path):
