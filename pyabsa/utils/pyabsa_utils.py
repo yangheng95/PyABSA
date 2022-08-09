@@ -173,7 +173,7 @@ def prepare_glove840_embedding(glove_path):
         else:
             zip_glove_path = os.path.join(os.path.dirname(glove_path), 'glove.840B.300d.zip')
             print(colored('No GloVe embedding found at {},'
-                  ' downloading glove.840B.300d.txt (2GB will be downloaded / 5.5GB after unzip)...'.format(glove_path), 'yellow'))
+                          ' downloading glove.840B.300d.txt (2GB will be downloaded / 5.5GB after unzip)...'.format(glove_path), 'yellow'))
             try:
                 response = requests.get('https://huggingface.co/spaces/yangheng/PyABSA-ATEPC/resolve/main/open-access/glove.840B.300d.zip', stream=True)
                 with open(zip_glove_path, "wb") as f:
@@ -290,8 +290,8 @@ def time_out(interval, callback=None):
                     raise e
 
         return wrapper
-    return decorator
 
+    return decorator
 
 
 def save_json(dic, save_path):

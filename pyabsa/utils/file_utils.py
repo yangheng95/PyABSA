@@ -159,11 +159,10 @@ def convert_apc_set_to_atepc_set(path):
         path = path.dataset_name
     if os.path.isfile(path):
         files = [path]
-    elif not os.path.exists(path):
+    elif os.path.exists(path):
         files = find_files(path, ['dataset', 'apc'], exclude_key=['.inference', 'readme'])
     else:
         files = find_cwd_files([path, 'dataset', 'apc'], exclude_key=['.inference', 'readme'])
-
 
     print('Find datasets files at {}:'.format(path))
     for target_file in files:

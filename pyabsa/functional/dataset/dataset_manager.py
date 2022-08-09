@@ -14,7 +14,6 @@ import time
 import autocuda
 import git
 from findfile import find_files, find_dir
-from pyabsa.core.tc.models import BERTTCModelList
 
 from pyabsa.core.apc.models import APCModelList
 
@@ -176,6 +175,7 @@ def __perform_apc_augmentation(dataset, **kwargs):
                                         )
     sys.exit(0)
 
+
 def __perform_tc_augmentation(dataset, **kwargs):
     print(colored('No augmentation datasets found, performing TC augmentation. this may take a long time...', 'yellow'))
 
@@ -198,10 +198,11 @@ def __perform_tc_augmentation(dataset, **kwargs):
                                        )
     sys.exit(0)
 
+
 def detect_dataset(dataset_path, task='apc', load_aug=False):
     if not isinstance(dataset_path, DatasetItem):
         dataset_path = DatasetItem(dataset_path)
-    dataset_file = {'train': [], 'train_aug': [], 'test': [], 'valid': []}
+    dataset_file = {'train': [], 'test': [], 'valid': []}
 
     search_path = ''
     d = ''
@@ -224,19 +225,20 @@ def detect_dataset(dataset_path, task='apc', load_aug=False):
 
             # For pretraining checkpoints, we use all dataset set as training set
             if load_aug:
-                dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['.inference', 'test.', 'valid.'] + filter_key_words+ ['.ignore'])
-                dataset_file['train_aug'] += find_files(search_path, [d, 'train', task], exclude_key=['.inference', 'test.', 'valid.'] + filter_key_words)
+                dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['.inference', 'test.', 'valid.'] + filter_key_words + ['.ignore'])
                 dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['.inference', 'train.', 'valid.'] + filter_key_words)
-                dataset_file['valid'] += find_files(search_path, [d, 'valid', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words+ ['.ignore'])
-                dataset_file['valid'] += find_files(search_path, [d, 'dev', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words+ ['.ignore'])
-                if dataset_file['train'] == dataset_file['train_aug']:
+                dataset_file['valid'] += find_files(search_path, [d, 'valid', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words + ['.ignore'])
+                dataset_file['valid'] += find_files(search_path, [d, 'dev', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words + ['.ignore'])
+                from pyabsa.utils.file_utils import convert_apc_set_to_atepc_set
+
+                if not any(['augment' in x for x in dataset_file['train']]):
                     if task == 'apc':
                         __perform_apc_augmentation(dataset_path)
+                        convert_apc_set_to_atepc_set(dataset_path)
                     elif task == 'tc':
                         __perform_tc_augmentation(dataset_path)
                     else:
                         raise ValueError('Task {} is not supported for auto-augmentation'.format(task))
-                dataset_file['train'] = dataset_file['train_aug']
             else:
                 dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['.inference', 'test.', 'valid.'] + filter_key_words + ['.ignore'])
                 dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['.inference', 'train.', 'valid.'] + filter_key_words + ['.ignore'])
