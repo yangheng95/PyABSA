@@ -19,6 +19,7 @@ from termcolor import colored
 
 from pyabsa import ATEPCCheckpointManager
 
+
 def make_ABSA_dataset(dataset_name_or_path, checkpoint='english'):
     """
     Make APC and ATEPC datasets for PyABSA, using aspect extractor from PyABSA to automatically build datasets. This method WILL NOT give you the best performance but is quite fast and labor-free.

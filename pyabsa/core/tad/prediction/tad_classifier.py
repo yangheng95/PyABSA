@@ -397,7 +397,7 @@ class TADTextClassifier:
                             text_info += colored(' -> <AdvDet:{}(ref:{} confidence:{})>'.format(result['is_adv_label'], result['ref_is_adv_label'], result['is_adv_confidence']), 'red')
                     text_printing += text_info
                     if self.cal_perplexity:
-                         text_printing += colored(' --> <perplexity:{}>'.format(result['perplexity']), 'yellow')
+                        text_printing += colored(' --> <perplexity:{}>'.format(result['perplexity']), 'yellow')
                     print('Example {}: {}'.format(ex_id, text_printing))
             if save_path:
                 with open(save_path, 'w', encoding='utf8') as fout:
