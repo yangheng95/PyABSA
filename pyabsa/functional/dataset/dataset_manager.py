@@ -156,6 +156,7 @@ filter_key_words = ['.py', '.md', 'readme', 'log', 'result', 'zip',
 
 def __perform_apc_augmentation(dataset, **kwargs):
     print(colored('No augmentation datasets found, performing APC augmentation. This may take a long time...', 'yellow'))
+    print(colored('The augmentation tool is available at: {}'.format('https://github.com/yangheng95/BoostTextAugmentation'), 'yellow'))
     from boost_aug import ABSCBoostAug
 
     config = APCConfigManager.get_apc_config_english()
