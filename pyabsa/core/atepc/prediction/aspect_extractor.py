@@ -412,7 +412,7 @@ class AspectExtractor:
                     result['probs'] = probs
                     result['confidence'] = max(probs)
                     result['aspect'] = all_aspects[apc_id]
-                    result['pos_ids'] = np.where(np.array(examples[apc_id].IOB_label) != 'O')[0]
+                    result['pos_ids'] = np.where(np.array(examples[apc_id].IOB_label) != 'O')[0].tolist()
                     result['sentiment'] = sent
                     result['example_id'] = example_id_map[apc_id]
                     res.append(result)
