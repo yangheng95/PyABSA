@@ -1,6 +1,10 @@
 {
+  "1.16.10": {
+    "1": "Try to fix a bug in ATEPC inference related to https://github.com/yangheng95/PyABSA/issues/217",
+    "2": "update metric-visualizer version to 0.5.3"
+  },
   "1.16.9": {
-    "1": "Try to fix a bug in ATEPC inference related to https://github.com/yangheng95/PyABSA/issues/217"
+    "1": "Deprecated"
   },
   "1.16.8": {
     "1": "Add auto-augmentation for ATEPC",
