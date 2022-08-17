@@ -216,20 +216,19 @@ def detect_dataset(dataset_path, task='apc', load_aug=False):
                 raise ValueError('Cannot find dataset: {}, you may need to remove existing integrated_datasets and try again. '
                                  'Please note that if you are using keywords to let findfile search the dataset, '
                                  'you need to '.format(d))
-            if '.augment.ignore' in str(os.listdir(search_path)) and not load_aug:
-                print(colored('There are augmented datasets available at {}, use load_aug to activate them.'.format(search_path), 'green'))
-            elif load_aug and '.augment' in str(os.listdir(search_path)):
-                print(colored('Augmented datasets activated at {}'.format(search_path), 'green'))
+            if not load_aug:
+                print(colored('You can set load_aug=True in a trainer to augment your dataset (English only yet) and improve performance.'.format(search_path), 'green'))
+                print(colored('Please use a new folder to perform new text augmentation if the former augmentation exited unexpectedly'.format(search_path), 'green'))
             # Our data augmentation tool can automatically improve your dataset's performance 1-2% with additional computation budget
             # The project of data augmentation is on github: https://github.com/yangheng95/BoostAug
             # share your dataset at https://github.com/yangheng95/ABSADatasets, all the copyrights belong to the owner according to the licence
 
             # For pretraining checkpoints, we use all dataset set as training set
             if load_aug:
-                dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['.inference', 'test.', 'valid.'] + filter_key_words + ['.ignore'])
+                dataset_file['train'] += find_files(search_path, [d, 'train', task], exclude_key=['.inference', 'test.', 'valid.'] + filter_key_words)
                 dataset_file['test'] += find_files(search_path, [d, 'test', task], exclude_key=['.inference', 'train.', 'valid.'] + filter_key_words)
-                dataset_file['valid'] += find_files(search_path, [d, 'valid', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words + ['.ignore'])
-                dataset_file['valid'] += find_files(search_path, [d, 'dev', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words + ['.ignore'])
+                dataset_file['valid'] += find_files(search_path, [d, 'valid', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words)
+                dataset_file['valid'] += find_files(search_path, [d, 'dev', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words)
                 from pyabsa.utils.file_utils import convert_apc_set_to_atepc_set
 
                 if not any(['augment' in x for x in dataset_file['train']]):
@@ -268,7 +267,7 @@ def detect_dataset(dataset_path, task='apc', load_aug=False):
         if os.path.isdir(d) or os.path.isdir(search_path):
             print('No train set found from: {}, detected files: {}'.format(dataset_path, ', '.join(os.listdir(d) + os.listdir(search_path))))
         raise RuntimeError(
-            'Fail to locate dataset: {}. If you are using your own dataset, you may need rename your dataset according to {}'.format(
+            'Fail to locate dataset: {}. you may need rename your dataset according to {}'.format(
                 dataset_path,
                 'https://github.com/yangheng95/ABSADatasets#important-rename-your-dataset-filename-before-use-it-in-pyabsa')
         )

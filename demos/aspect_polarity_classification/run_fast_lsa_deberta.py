@@ -56,7 +56,8 @@ config1.MV = MetricVisualizer(config1.model.__name__ + '-' + dataset.dataset_nam
 Trainer(config=config1,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=device  # automatic choose CUDA or CPU
+        auto_device=device,  # automatic choose CUDA or CPU
+        load_aug=True,  # load augmented data
         )
 config1.MV.avg_bar_plot()
 config1.MV.box_plot()
@@ -68,7 +69,8 @@ config1.MV = MetricVisualizer(config1.model.__name__ + '-' + dataset.dataset_nam
 Trainer(config=config1,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=device  # automatic choose CUDA or CPU
+        auto_device=device,  # automatic choose CUDA or CPU
+        load_aug=True,  # load augmented data
         )
 config1.MV.avg_bar_plot()
 config1.MV.box_plot()
@@ -81,7 +83,8 @@ config1.MV = MetricVisualizer(config1.model.__name__ + '-' + dataset.dataset_nam
 Trainer(config=config1,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=device  # automatic choose CUDA or CPU
+        auto_device=device,  # automatic choose CUDA or CPU
+        load_aug=True,  # load augmented data
         )
 config1.MV.avg_bar_plot()
 config1.MV.box_plot()
@@ -115,7 +118,8 @@ config2.MV = MetricVisualizer(config2.model.__name__ + '-' + dataset.dataset_nam
 Trainer(config=config2,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=device  # automatic choose CUDA or CPU
+        auto_device=device,  # automatic choose CUDA or CPU
+        load_aug=True,  # load augmented data
         )
 config2.MV.avg_bar_plot()
 config2.MV.box_plot()
@@ -126,7 +130,8 @@ config2.MV = MetricVisualizer(config2.model.__name__ + '-' + dataset.dataset_nam
 Trainer(config=config2,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=device  # automatic choose CUDA or CPU
+        auto_device=device,  # automatic choose CUDA or CPU
+        load_aug=True,  # load augmented data
         )
 config2.MV.avg_bar_plot()
 config2.MV.box_plot()
@@ -139,7 +144,8 @@ config2.MV = MetricVisualizer(config2.model.__name__ + '-' + dataset.dataset_nam
 Trainer(config=config2,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=device  # automatic choose CUDA or CPU
+        auto_device=device,  # automatic choose CUDA or CPU
+        load_aug=True,  # load augmented data
         )
 config2.MV.avg_bar_plot()
 config2.MV.box_plot()
@@ -173,7 +179,8 @@ config3.MV = MetricVisualizer(config3.model.__name__ + '-' + dataset.dataset_nam
 Trainer(config=config3,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=device  # automatic choose CUDA or CPU
+        auto_device=device,  # automatic choose CUDA or CPU
+        load_aug=True,  # load augmented data
         )
 config3.MV.avg_bar_plot()
 config3.MV.box_plot()
@@ -184,7 +191,8 @@ config3.MV = MetricVisualizer(config3.model.__name__ + '-' + dataset.dataset_nam
 Trainer(config=config3,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=device  # automatic choose CUDA or CPU
+        auto_device=device,  # automatic choose CUDA or CPU
+        load_aug=True,  # load augmented data
         )
 config3.MV.avg_bar_plot()
 config3.MV.box_plot()
@@ -197,7 +205,8 @@ config3.MV = MetricVisualizer(config3.model.__name__ + '-' + dataset.dataset_nam
 Trainer(config=config3,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=device  # automatic choose CUDA or CPU
+        auto_device=device,  # automatic choose CUDA or CPU
+        load_aug=True,  # load augmented data
         )
 config3.MV.avg_bar_plot()
 config3.MV.box_plot()
