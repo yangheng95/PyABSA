@@ -1,38 +1,28 @@
 [
   {
-    "referrer": "github.com",
-    "count": 457,
-    "uniques": 109
+    "referrer": "Google",
+    "count": 467,
+    "uniques": 104
   },
   {
-    "referrer": "Google",
-    "count": 455,
-    "uniques": 124
+    "referrer": "github.com",
+    "count": 389,
+    "uniques": 100
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 286,
-    "uniques": 99
+    "count": 299,
+    "uniques": 100
   },
   {
     "referrer": "youtube.com",
-    "count": 130,
-    "uniques": 31
-  },
-  {
-    "referrer": "linkedin.com",
-    "count": 67,
-    "uniques": 43
-  },
-  {
-    "referrer": "hf.space",
-    "count": 67,
-    "uniques": 19
+    "count": 116,
+    "uniques": 20
   },
   {
     "referrer": "huggingface.co",
-    "count": 57,
-    "uniques": 15
+    "count": 56,
+    "uniques": 16
   },
   {
     "referrer": "254ozkq6obj-496ff2e9c6d22116-0-colab.googleusercontent.com",
@@ -40,13 +30,23 @@
     "uniques": 2
   },
   {
-    "referrer": "link.zhihu.com",
-    "count": 53,
-    "uniques": 10
+    "referrer": "hf.space",
+    "count": 54,
+    "uniques": 13
   },
   {
-    "referrer": "com.linkedin.android",
-    "count": 51,
-    "uniques": 36
+    "referrer": "link.zhihu.com",
+    "count": 42,
+    "uniques": 12
+  },
+  {
+    "referrer": "notebooks.githubusercontent.com",
+    "count": 33,
+    "uniques": 7
+  },
+  {
+    "referrer": "linkedin.com",
+    "count": 28,
+    "uniques": 20
   }
 ]
