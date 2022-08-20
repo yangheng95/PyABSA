@@ -32,7 +32,7 @@ setup(
     license='MIT',
     install_requires=['findfile>=1.7.9.8',
                       'autocuda>=0.11',
-                      'metric-visualizer>=0.5.3',
+                      'metric-visualizer>=0.5.4',
                       'boostaug>=2.2.3',
                       'spacy',
                       'networkx',

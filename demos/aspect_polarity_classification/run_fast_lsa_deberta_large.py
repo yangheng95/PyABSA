@@ -40,8 +40,8 @@ config1.dropout = 0.
 config1.cache_dataset = False
 config1.patience = 20
 config1.optimizer = 'adamw'
-config1.pretrained_bert = 'microsoft/deberta-v3-large'
-# config1.pretrained_bert = 'yangheng/deberta-v3-large-absa'
+# config1.pretrained_bert = 'microsoft/deberta-v3-large'
+config1.pretrained_bert = 'yangheng/deberta-v3-large-absa'
 config1.num_epoch = 50
 config1.log_step = 5
 config1.SRD = 3
@@ -60,7 +60,8 @@ config1.MV = MetricVisualizer(config1.model.__name__ + '-' + dataset.dataset_nam
 Trainer(config=config1,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=device  # automatic choose CUDA or CPU
+        auto_device=device,  # automatic choose CUDA or CPU
+        # load_aug=True,  # load augmented data
         )
 config1.MV.avg_bar_plot()
 config1.MV.box_plot()
@@ -73,7 +74,8 @@ config1.MV = MetricVisualizer(config1.model.__name__ + '-' + dataset.dataset_nam
 Trainer(config=config1,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=device  # automatic choose CUDA or CPU
+        auto_device=device,  # automatic choose CUDA or CPU
+        # load_aug=True,  # load augmented data
         )
 config1.MV.avg_bar_plot()
 config1.MV.box_plot()
@@ -86,7 +88,8 @@ config1.MV = MetricVisualizer(config1.model.__name__ + '-' + dataset.dataset_nam
 Trainer(config=config1,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=device  # automatic choose CUDA or CPU
+        auto_device=device,  # automatic choose CUDA or CPU
+        # load_aug=True,  # load augmented data
         )
 config1.MV.avg_bar_plot()
 config1.MV.box_plot()
@@ -100,8 +103,8 @@ config2.dropout = 0.
 config2.cache_dataset = False
 config2.patience = 20
 config2.optimizer = 'adamw'
-config2.pretrained_bert = 'microsoft/deberta-v3-large'
-# config2.pretrained_bert = 'yangheng/deberta-v3-large-absa'
+# config2.pretrained_bert = 'microsoft/deberta-v3-large'
+config2.pretrained_bert = 'yangheng/deberta-v3-large-absa'
 config2.num_epoch = 50
 config2.log_step = 5
 config2.SRD = 3
@@ -121,7 +124,8 @@ config2.MV = MetricVisualizer(config2.model.__name__ + '-' + dataset.dataset_nam
 Trainer(config=config2,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=device  # automatic choose CUDA or CPU
+        auto_device=device,  # automatic choose CUDA or CPU
+        # load_aug=True,  # load augmented data
         )
 config2.MV.avg_bar_plot()
 config2.MV.box_plot()
@@ -132,7 +136,8 @@ config2.MV = MetricVisualizer(config2.model.__name__ + '-' + dataset.dataset_nam
 Trainer(config=config2,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=device  # automatic choose CUDA or CPU
+        auto_device=device,  # automatic choose CUDA or CPU
+        # load_aug=True,  # load augmented data
         )
 config2.MV.avg_bar_plot()
 config2.MV.box_plot()
@@ -145,7 +150,8 @@ config2.MV = MetricVisualizer(config2.model.__name__ + '-' + dataset.dataset_nam
 Trainer(config=config2,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=device  # automatic choose CUDA or CPU
+        auto_device=device,  # automatic choose CUDA or CPU
+        # load_aug=True,  # load augmented data
         )
 config2.MV.avg_bar_plot()
 config2.MV.box_plot()
@@ -159,8 +165,8 @@ config3.dropout = 0.
 config3.cache_dataset = False
 config3.patience = 20
 config3.optimizer = 'adamw'
-config3.pretrained_bert = 'microsoft/deberta-v3-large'
-# config3.pretrained_bert = 'yangheng/deberta-v3-large-absa'
+# config3.pretrained_bert = 'microsoft/deberta-v3-large'
+config3.pretrained_bert = 'yangheng/deberta-v3-large-absa'
 config3.num_epoch = 50
 config3.log_step = 5
 config3.SRD = 3
@@ -179,7 +185,8 @@ config3.MV = MetricVisualizer(config3.model.__name__ + '-' + dataset.dataset_nam
 Trainer(config=config3,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=device  # automatic choose CUDA or CPU
+        auto_device=device,  # automatic choose CUDA or CPU
+        # load_aug=True,  # load augmented data
         )
 config3.MV.avg_bar_plot()
 config3.MV.box_plot()
@@ -190,7 +197,8 @@ config3.MV = MetricVisualizer(config3.model.__name__ + '-' + dataset.dataset_nam
 Trainer(config=config3,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=device  # automatic choose CUDA or CPU
+        auto_device=device,  # automatic choose CUDA or CPU
+        # load_aug=True,  # load augmented data
         )
 config3.MV.avg_bar_plot()
 config3.MV.box_plot()
@@ -203,7 +211,8 @@ config3.MV = MetricVisualizer(config3.model.__name__ + '-' + dataset.dataset_nam
 Trainer(config=config3,
         dataset=dataset,  # train set and test set will be automatically detected
         checkpoint_save_mode=0,  # =None to avoid save model
-        auto_device=device  # automatic choose CUDA or CPU
+        auto_device=device,  # automatic choose CUDA or CPU
+        # load_aug=True,  # load augmented data
         )
 config3.MV.avg_bar_plot()
 config3.MV.box_plot()
