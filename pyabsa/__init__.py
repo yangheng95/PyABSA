@@ -7,7 +7,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 
-__version__ = '1.16.13'
+__version__ = '1.16.14'
 
 __name__ = 'pyabsa'
 
@@ -36,7 +36,7 @@ from pyabsa.functional.config import APCConfigManager
 from pyabsa.functional.config import ATEPCConfigManager
 from pyabsa.functional.config import TCConfigManager
 from pyabsa.functional.config import TADConfigManager
-from pyabsa.utils.file_utils import check_update_log, validate_datasets_version
+from pyabsa.utils.file_utils import check_update_log
 from pyabsa.utils.pyabsa_utils import validate_pyabsa_version
 
 from pyabsa.utils.make_dataset import make_ABSA_dataset
@@ -50,8 +50,6 @@ ClassificationConfigManager = TCConfigManager
 TextClassificationTrainer = TCTrainer
 
 validate_pyabsa_version()
-
-validate_datasets_version()
 
 checker = UpdateChecker()
 check_result = checker.check(__name__, __version__)

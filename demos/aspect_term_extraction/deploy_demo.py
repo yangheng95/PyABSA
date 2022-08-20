@@ -13,6 +13,7 @@ dataset_items = {dataset.name: dataset for dataset in ABSADatasetList()}
 
 URL = 'https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fhuggingface.co%2Fspaces%2Fyangheng%2Fpyabsa_inference&label=Inference%20Count&labelColor=%2337d67a&countColor=%23f47373&style=flat&labelStyle=none'
 
+
 def get_example(dataset):
     task = 'apc'
     dataset_file = detect_infer_dataset(dataset_items[dataset], task)

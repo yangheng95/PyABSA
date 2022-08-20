@@ -201,6 +201,9 @@ def __perform_tc_augmentation(dataset, **kwargs):
 
 
 def detect_dataset(dataset_path, task='apc', load_aug=False):
+    from pyabsa.utils.file_utils import validate_datasets_version
+    validate_datasets_version()
+
     if not isinstance(dataset_path, DatasetItem):
         dataset_path = DatasetItem(dataset_path)
     dataset_file = {'train': [], 'test': [], 'valid': []}

@@ -1,5 +1,14 @@
 # -*- coding: utf-8 -*-
-# file: run_glove_test.py
+# file: run_apc_pretrain_test.py
+# time: 20/08/2022 15:27
+# author: yangheng <hy345@exeter.ac.uk>
+# github: https://github.com/yangheng95
+# GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
+# ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
+# Copyright (C) 2021. All Rights Reserved.
+
+# -*- coding: utf-8 -*-
+# file: run_test.py
 # time: 2021/12/4
 # author: yangheng <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95
@@ -8,12 +17,9 @@ import shutil
 
 from torch import cuda
 
-from pyabsa import APCModelList, BERTBaselineAPCModelList, GloVeAPCModelList, \
-    ATEPCModelList, BERTClassificationModelList, GloVeClassificationModelList
-from pyabsa import ABSADatasetList, ClassificationDatasetList
+from pyabsa import APCModelList, BERTBaselineAPCModelList
+from pyabsa import ABSADatasetList
 from pyabsa import APCConfigManager
-from pyabsa import ATEPCConfigManager
-from pyabsa import ClassificationConfigManager
 from pyabsa.functional import Trainer
 
 from findfile import find_cwd_dir
@@ -46,12 +52,39 @@ apc_examples = [
 
 # # for dataset in ABSADatasetList():
 for dataset in ABSADatasetList()[:1]:
+    for model in APCModelList()[:1]:
+        cuda.empty_cache()
+        config = APCConfigManager.get_apc_config_english()
+        config.lcf = 'cdm'
+        config.model = model
+        config.cache_dataset = True
+        config.num_epoch = 1
+        config.max_seq_len = 10
+        config.evaluate_begin = 0
+        config.log_step = -1
+        config.cross_validate_fold = 3
+        sent_classifier = Trainer(config=config,
+                                  dataset=dataset,
+                                  checkpoint_save_mode=1,
+                                  auto_device='allcuda'
+                                  ).load_trained_model()
+        for ex in apc_examples:
+            result = sent_classifier.infer(ex, print_result=True, ignore_error=False)
 
-    for model in GloVeAPCModelList():
+        try:
+            checkpoint_dir = find_cwd_dir('checkpoints')
+            shutil.rmtree(checkpoint_dir)
+            del sent_classifier
+            cuda.empty_cache()
+        except Exception as e:
+            print(e)
+
+    for model in BERTBaselineAPCModelList():
         config = APCConfigManager.get_apc_config_english()
         cuda.empty_cache()
         config.model = model
         config.cache_dataset = True
+        config.max_seq_len = 10
         config.num_epoch = 1
         config.evaluate_begin = 0
         config.log_step = -1
@@ -65,27 +98,6 @@ for dataset in ABSADatasetList()[:1]:
         try:
             shutil.rmtree(find_cwd_dir('checkpoints'))
             del sent_classifier
-            cuda.empty_cache()
-        except Exception as e:
-            print(e)
-
-for dataset in ClassificationDatasetList():
-
-    for model in GloVeClassificationModelList():
-        config = ClassificationConfigManager.get_classification_config_english()
-        config.model = model
-        config.num_epoch = 1
-        config.evaluate_begin = 0
-        config.log_step = -1
-        text_classifier = Trainer(config=config,
-                                  dataset=dataset,
-                                  checkpoint_save_mode=1,
-                                  auto_device='allcuda'
-                                  ).load_trained_model()
-        text_classifier.infer('I love it very much!')
-        try:
-            shutil.rmtree(find_cwd_dir('checkpoints'))
-            del text_classifier
             cuda.empty_cache()
         except Exception as e:
             print(e)
