@@ -104,7 +104,10 @@ def load_apc_datasets(fname):
         print('loading: {}'.format(f))
         fin = open(f, 'r', encoding='utf-8')
         _lines_ = fin.readlines()
-        lines.extend(_lines_)
+        for i, line in enumerate(_lines_):
+            if not line.strip():
+                raise ValueError('empty line: #{}, previous line: {}'.format(i, _lines_[i - 1]))
+            lines.append(line.strip())
         fin.close()
     return lines
 

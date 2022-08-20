@@ -34,6 +34,9 @@ def generate_inference_set_for_apc(dataset_path):
         try:
             fin = open(file, 'r', newline='\n', encoding='utf-8')
             lines = fin.readlines()
+            for i, line in enumerate(lines):
+                if not line.strip():
+                    raise ValueError('empty line: #{}, previous line: {}'.format(i, lines[i - 1]))
             fin.close()
             path_to_save = file + '.inference'
             fout = open(path_to_save, 'w', encoding='utf-8', newline='\n', errors='ignore')
@@ -62,6 +65,9 @@ def is_similar(s1, s2):
 def assemble_aspects(fname):
     fin = open(fname, 'r', encoding='utf-8', newline='\n', errors='ignore')
     lines = fin.readlines()
+    for i, line in enumerate(lines):
+        if not line.strip():
+            raise ValueError('empty line: #{}, previous line: {}'.format(i, lines[i - 1]))
     fin.close()
     for i in range(len(lines)):
         if i % 3 == 0 or i % 3 == 1:
