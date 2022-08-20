@@ -6,6 +6,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 from pyabsa import TCTrainer, TCConfigManager, TCDatasetList
+
 config = TCConfigManager.get_tc_config_english()
 config.cross_validate_fold = 5
 

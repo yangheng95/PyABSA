@@ -11,7 +11,6 @@
 [![total clones](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_clones.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
 [![total clones per week](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_clones_per_week.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
 
-
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/back-to-reality-leveraging-pattern-driven/aspect-based-sentiment-analysis-on-semeval)](https://paperswithcode.com/sota/aspect-based-sentiment-analysis-on-semeval?p=back-to-reality-leveraging-pattern-driven)
 
 **Hi, there!** Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks.
@@ -180,8 +179,9 @@ checkpoint_map = available_checkpoints()  # show available checkpoints of PyABSA
 If you can not access to Google Drive, you can download our checkpoints and load the unzipped checkpoint manually.
 
 ## Contribution
+
 This repository is developed and maintained by HENG YANG ([yangheng95@GitHub](https://github.com/yangheng95)),
-with great contribution from community researchers. 
+with great contribution from community researchers.
 We expect that you can help us improve this project, and your contributions are welcome. You can make a contribution in
 many ways, including:
 

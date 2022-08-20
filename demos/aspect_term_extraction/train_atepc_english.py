@@ -33,7 +33,7 @@ aspect_extractor = Trainer(config=config,
                            dataset=Dataset,
                            checkpoint_save_mode=1,
                            auto_device=True,
-                           load_aug=True 
+                           load_aug=True
                            ).load_trained_model()
 
 aspect_extractor.extract_aspect(

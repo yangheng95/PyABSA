@@ -16,8 +16,9 @@ from findfile import find_files, find_cwd_file, find_cwd_files
 from pyabsa.core.atepc.dataset_utils.atepc_utils import split_text
 from termcolor import colored
 
-from pyabsa.functional.dataset import DatasetItem
 from pyabsa.utils.pyabsa_utils import save_args, SENTIMENT_PADDING
+
+from pyabsa.functional.dataset.dataset_manager import DatasetItem
 
 
 def generate_inference_set_for_apc(dataset_path):
