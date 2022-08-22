@@ -67,6 +67,8 @@ class GloVeABSADataset(Dataset):
         self.all_data = []
 
     def parse_sample(self, text):
+        if '[ASP]' not in text:
+            text = '[ASP] Global Sentiment [ASP]' + text
         _text = text
         samples = []
 

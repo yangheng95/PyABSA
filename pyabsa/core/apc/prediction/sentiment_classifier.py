@@ -206,8 +206,6 @@ class SentimentClassifier:
               print_result=True,
               ignore_error=True,
               clear_input_samples=True):
-        if text.count('[ASP]') < 2:
-            text = '[ASP] Global Sentiment [ASP]' + text
         if clear_input_samples:
             self.clear_input_samples()
         if text:
