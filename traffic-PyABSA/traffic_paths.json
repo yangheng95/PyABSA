@@ -2,61 +2,61 @@
   {
     "path": "/yangheng95/PyABSA",
     "title": "yangheng95/PyABSA: Open Framework for Aspect-based Sentiment Analysis based o...",
-    "count": 789,
-    "uniques": 333
+    "count": 781,
+    "uniques": 322
   },
   {
     "path": "/yangheng95/PyABSA/tree/release/demos",
     "title": "PyABSA/demos at release · yangheng95/PyABSA · GitHub",
-    "count": 160,
-    "uniques": 66
+    "count": 170,
+    "uniques": 62
   },
   {
     "path": "/yangheng95/PyABSA/tree/release/pyabsa",
     "title": "PyABSA/pyabsa at release · yangheng95/PyABSA · GitHub",
-    "count": 158,
+    "count": 163,
     "uniques": 65
   },
   {
     "path": "/yangheng95/PyABSA/tree/release/demos/aspect_term_extraction",
     "title": "PyABSA/demos/aspect_term_extraction at release · yangheng95/PyABSA · GitHub",
-    "count": 134,
-    "uniques": 49
+    "count": 124,
+    "uniques": 46
   },
   {
     "path": "/yangheng95/PyABSA/tree/release/demos/aspect_polarity_classification",
     "title": "PyABSA/demos/aspect_polarity_classification at release · yangheng95/PyABSA · ...",
-    "count": 109,
-    "uniques": 58
+    "count": 116,
+    "uniques": 55
   },
   {
     "path": "/yangheng95/PyABSA/issues",
     "title": "Issues · yangheng95/PyABSA · GitHub",
-    "count": 101,
-    "uniques": 26
-  },
-  {
-    "path": "/yangheng95/PyABSA/blob/release/readme/tutorial_readme.md",
-    "title": "PyABSA/tutorial_readme.md at release · yangheng95/PyABSA · GitHub",
-    "count": 74,
-    "uniques": 41
+    "count": 99,
+    "uniques": 22
   },
   {
     "path": "/yangheng95/PyABSA/blob/release/readme/dataset_readme.md",
     "title": "PyABSA/dataset_readme.md at release · yangheng95/PyABSA · GitHub",
     "count": 73,
-    "uniques": 29
+    "uniques": 30
   },
   {
     "path": "/yangheng95/pyabsa",
     "title": "yangheng95/PyABSA: Open Framework for Aspect-based Sentiment Analysis based o...",
     "count": 71,
-    "uniques": 50
+    "uniques": 52
   },
   {
     "path": "/yangheng95/PyABSA/blob/release/demos/aspect_polarity_classification/run_fast_lsa_deberta_large.py",
     "title": "PyABSA/run_fast_lsa_deberta_large.py at release · yangheng95/PyABSA · GitHub",
+    "count": 69,
+    "uniques": 54
+  },
+  {
+    "path": "/yangheng95/PyABSA/tree/release/pyabsa/functional",
+    "title": "PyABSA/pyabsa/functional at release · yangheng95/PyABSA · GitHub",
     "count": 62,
-    "uniques": 50
+    "uniques": 31
   }
 ]
