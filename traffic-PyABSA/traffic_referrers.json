@@ -1,33 +1,33 @@
 [
   {
     "referrer": "Google",
-    "count": 716,
-    "uniques": 113
+    "count": 777,
+    "uniques": 117
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 403,
-    "uniques": 102
+    "count": 409,
+    "uniques": 106
   },
   {
     "referrer": "github.com",
-    "count": 381,
-    "uniques": 96
+    "count": 408,
+    "uniques": 98
   },
   {
     "referrer": "huggingface.co",
-    "count": 238,
-    "uniques": 22
+    "count": 239,
+    "uniques": 23
   },
   {
     "referrer": "hf.space",
-    "count": 84,
-    "uniques": 20
+    "count": 99,
+    "uniques": 22
   },
   {
     "referrer": "youtube.com",
-    "count": 68,
-    "uniques": 19
+    "count": 70,
+    "uniques": 21
   },
   {
     "referrer": "notebooks.githubusercontent.com",
@@ -40,13 +40,13 @@
     "uniques": 10
   },
   {
+    "referrer": "ro3qhcnnz9d-496ff2e9c6d22116-0-colab.googleusercontent.com",
+    "count": 35,
+    "uniques": 1
+  },
+  {
     "referrer": "zzun.app",
     "count": 31,
     "uniques": 3
-  },
-  {
-    "referrer": "out.reddit.com",
-    "count": 23,
-    "uniques": 1
   }
 ]
