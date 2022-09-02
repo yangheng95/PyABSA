@@ -1,32 +1,32 @@
 [
   {
     "referrer": "Google",
-    "count": 667,
-    "uniques": 111
+    "count": 709,
+    "uniques": 114
   },
   {
     "referrer": "github.com",
-    "count": 414,
-    "uniques": 95
+    "count": 454,
+    "uniques": 99
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 406,
-    "uniques": 93
+    "count": 431,
+    "uniques": 95
   },
   {
     "referrer": "huggingface.co",
-    "count": 245,
-    "uniques": 29
+    "count": 248,
+    "uniques": 30
   },
   {
     "referrer": "youtube.com",
-    "count": 64,
+    "count": 72,
     "uniques": 21
   },
   {
     "referrer": "hf.space",
-    "count": 61,
+    "count": 60,
     "uniques": 17
   },
   {
@@ -46,7 +46,7 @@
   },
   {
     "referrer": "arxiv.org",
-    "count": 19,
-    "uniques": 9
+    "count": 20,
+    "uniques": 10
   }
 ]
