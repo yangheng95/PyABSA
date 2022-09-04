@@ -1,32 +1,32 @@
 [
   {
     "referrer": "Google",
-    "count": 725,
-    "uniques": 116
+    "count": 772,
+    "uniques": 124
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 469,
-    "uniques": 105
+    "count": 473,
+    "uniques": 110
   },
   {
     "referrer": "github.com",
-    "count": 459,
-    "uniques": 112
+    "count": 468,
+    "uniques": 118
   },
   {
     "referrer": "huggingface.co",
-    "count": 271,
+    "count": 175,
     "uniques": 32
   },
   {
     "referrer": "youtube.com",
-    "count": 71,
-    "uniques": 21
+    "count": 91,
+    "uniques": 24
   },
   {
     "referrer": "hf.space",
-    "count": 67,
+    "count": 69,
     "uniques": 19
   },
   {
