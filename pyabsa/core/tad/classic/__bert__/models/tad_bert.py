@@ -32,5 +32,10 @@ class TADBERT(nn.Module):
         sent_logits = self.dense1(self.pooler(last_hidden_state))
         advdet_logits = self.dense2(self.pooler(last_hidden_state))
         adv_tr_logits = self.dense3(self.pooler(last_hidden_state))
-
-        return sent_logits, advdet_logits, adv_tr_logits
+        outputs = {
+            'sent_logits': sent_logits,
+            'advdet_logits': advdet_logits,
+            'adv_tr_logits': adv_tr_logits,
+            'last_hidden_state': last_hidden_state,
+        }
+        return outputs

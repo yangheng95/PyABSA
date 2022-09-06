@@ -296,8 +296,8 @@ class TADTextClassifier:
                 it = self.infer_dataloader
             for _, sample in enumerate(it):
                 inputs = [sample[col].to(self.opt.device) for col in self.opt.inputs_cols]
-
-                logits, advdet_logits, adv_tr_logits = self.model(inputs)
+                outputs = self.model(inputs)
+                logits, advdet_logits, adv_tr_logits = outputs['sent_logits'], outputs['advdet_logits'], outputs['adv_tr_logits']
                 probs, advdet_probs, adv_tr_probs = torch.softmax(logits, dim=-1), torch.softmax(advdet_logits, dim=-1), torch.softmax(adv_tr_logits, dim=-1)
 
                 for i, (prob, advdet_prob, adv_tr_prob) in enumerate(zip(probs, advdet_probs, adv_tr_probs)):

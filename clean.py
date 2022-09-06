@@ -10,13 +10,13 @@ import os
 
 from findfile import rm_files, rm_dirs, rm_cwd_files, rm_cwd_dirs
 
-rm_cwd_dirs(or_key=['__pycache__'])
-rm_cwd_files(or_key=['pyabsa.egg-info'])
-rm_cwd_dirs(or_key=['pyabsa.egg-info'])
-rm_cwd_dirs(or_key=['dist'])
-
-# rm_dirs(os.getcwd(), or_key=['integrated_datasets'])
-# rm_dirs(os.getcwd(), or_key=['checkpoints'])
-rm_dirs(r'C:\Users\chuan\OneDrive - University of Exeter\Works', or_key=['integrated_datasets', 'checkpoints', 'logs'])
-rm_files(r'C:\Users\chuan\OneDrive - University of Exeter\Works', or_key=['.pyc'])
-rm_dirs(r'/home/yangheng/', or_key=['integrated_datasets', 'checkpoints', 'logs'])
+# rm_cwd_dirs(or_key=['__pycache__'])
+# rm_cwd_files(or_key=['pyabsa.egg-info'])
+# rm_cwd_dirs(or_key=['pyabsa.egg-info'])
+# rm_cwd_dirs(or_key=['dist'])
+#
+# # rm_dirs(os.getcwd(), or_key=['integrated_datasets'])
+# # rm_dirs(os.getcwd(), or_key=['checkpoints'])
+# rm_dirs(r'C:\Users\chuan\OneDrive - University of Exeter\Works', or_key=['integrated_datasets', 'checkpoints', 'logs'])
+# rm_files(r'C:\Users\chuan\OneDrive - University of Exeter\Works', or_key=['.pyc'])
+# rm_dirs(r'/home/yangheng/', or_key=['integrated_datasets', 'checkpoints', 'logs'])

@@ -1,4 +1,7 @@
 {
+  "1.16.15": {
+    "1": "Fix conversion of apc datasets to atepc datasets"
+  },
   "1.16.14": {
     "1": "Remove dataset version validation in PyABSA module init",
     "2": "Remove example validation for ATEPC inference"
