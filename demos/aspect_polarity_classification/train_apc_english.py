@@ -32,7 +32,7 @@ apc_config_english.cache_dataset = False
 apc_config_english.dynamic_truncate = True
 apc_config_english.srd_alignment = True
 
-Dataset = ABSADatasetList.ARTS_Laptop14
+Dataset = ABSADatasetList.Laptop14
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=Dataset,
                           checkpoint_save_mode=0,

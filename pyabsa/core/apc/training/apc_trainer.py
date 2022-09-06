@@ -11,7 +11,6 @@ import shutil
 import time
 
 import numpy
-import numpy as np
 import pandas
 import torch
 import torch.nn as nn
@@ -30,12 +29,10 @@ from ..models.ensembler import APCEnsembler
 import pytorch_warmup as warmup
 
 try:
-    import apex.amp as amp
-
-    # assert torch.version.__version__ < '1.11.0'
-    print('Use FP16 via Apex!')
-except Exception as e:
-    amp = None
+    scaler = torch.cuda.amp.GradScaler()
+    print('Use AMP for training!')
+except Exception:
+    scaler = None
 
 
 class Instructor:
@@ -94,9 +91,6 @@ class Instructor:
             )
         self.train_dataloaders = []
         self.val_dataloaders = []
-
-        if amp:
-            self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
 
         if os.path.exists('init_state_dict.bin'):
             os.remove('init_state_dict.bin')
@@ -218,22 +212,25 @@ class Instructor:
                 self.model.train()
                 self.optimizer.zero_grad()
                 inputs = {col: sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols}
-                outputs = self.model(inputs)
-                targets = sample_batched['polarity'].to(self.opt.device)
 
-                if isinstance(outputs, dict) and 'loss' in outputs and outputs['loss'] != 0:
-                    loss = outputs['loss']
-                else:
-                    loss = criterion(outputs['logits'], targets)
+                with torch.cuda.amp.autocast():
+                    outputs = self.model(inputs)
+                    targets = sample_batched['polarity'].to(self.opt.device)
 
-                if self.opt.auto_device == 'allcuda':
-                    loss = loss.mean()
+                    if isinstance(outputs, dict) and 'loss' in outputs and outputs['loss'] != 0:
+                        loss = outputs['loss']
+                    else:
+                        loss = criterion(outputs['logits'], targets)
+
+                    if self.opt.auto_device == 'allcuda':
+                        loss = loss.mean()
 
                 losses.append(loss.item())
 
-                if amp:
-                    with amp.scale_loss(loss, self.optimizer) as scaled_loss:
-                        scaled_loss.backward()
+                if scaler:
+                    scaler.scale(loss).backward()
+                    scaler.step(self.optimizer)
+                    scaler.update()
                 else:
                     loss.backward()
                     self.optimizer.step()
@@ -395,22 +392,24 @@ class Instructor:
                     self.model.train()
                     self.optimizer.zero_grad()
                     inputs = {col: sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols}
-                    outputs = self.model(inputs)
-                    targets = sample_batched['polarity'].to(self.opt.device)
+                    with torch.cuda.amp.autocast():
+                        outputs = self.model(inputs)
+                        targets = sample_batched['polarity'].to(self.opt.device)
 
-                    if isinstance(outputs, dict) and 'loss' in outputs and outputs['loss'] != 0:
-                        loss = outputs['loss']
-                    else:
-                        loss = criterion(outputs['logits'], targets)
+                        if isinstance(outputs, dict) and 'loss' in outputs and outputs['loss'] != 0:
+                            loss = outputs['loss']
+                        else:
+                            loss = criterion(outputs['logits'], targets)
+
+                        if self.opt.auto_device == 'allcuda':
+                            loss = loss.mean()
 
                     losses.append(loss.item())
 
-                    if self.opt.auto_device == 'allcuda':
-                        loss = loss.mean()
-
-                    if amp:
-                        with amp.scale_loss(loss, self.optimizer) as scaled_loss:
-                            scaled_loss.backward()
+                    if scaler:
+                        scaler.scale(loss).backward()
+                        scaler.step(self.optimizer)
+                        scaler.update()
                     else:
                         loss.backward()
                         self.optimizer.step()

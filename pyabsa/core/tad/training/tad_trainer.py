@@ -35,12 +35,10 @@ import pytorch_warmup as warmup
 from ..models import BERTTADModelList, GloVeTADModelList
 
 try:
-    import apex.amp as amp
-
-    # assert torch.version.__version__ < '1.10.0'
-    print('Use FP16 via Apex!')
+    scaler = torch.cuda.amp.GradScaler()
+    print('Use AMP for training!')
 except Exception:
-    amp = None
+    scaler = None
 
 
 class Instructor:
@@ -152,9 +150,6 @@ class Instructor:
         if self.opt.cross_validate_fold > 0:
             torch.save(self.model.state_dict(), './init_state_dict.bin')
 
-        if amp:
-            self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
-
         self.opt.device = torch.device(self.opt.device)
         if self.opt.device.type == 'cuda':
             self.logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.opt.device)))
@@ -250,21 +245,23 @@ class Instructor:
                 self.model.train()
                 self.optimizer.zero_grad()
                 inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
-                outputs = self.model(inputs)
-                label_targets = sample_batched['label'].to(self.opt.device)
-                adv_tr_targets = sample_batched['adv_train_label'].to(self.opt.device)
-                adv_det_targets = sample_batched['is_adv'].to(self.opt.device)
+                with torch.cuda.amp.autocast():
+                    outputs = self.model(inputs)
+                    label_targets = sample_batched['label'].to(self.opt.device)
+                    adv_tr_targets = sample_batched['adv_train_label'].to(self.opt.device)
+                    adv_det_targets = sample_batched['is_adv'].to(self.opt.device)
 
-                sen_logits, adv_det_logits, adv_tr_logits = outputs
-                sen_loss = criterion(sen_logits, label_targets)
-                adv_det_loss = criterion(adv_det_logits, adv_det_targets)
-                adv_train_loss = criterion(adv_tr_logits, adv_tr_targets)
-                loss = sen_loss + self.opt.args.get('adv_det_weight', 5) * adv_det_loss + self.opt.args.get('adv_train_weight', 5) * adv_train_loss
-                losses.append(loss.item())
+                    sen_logits, adv_det_logits, adv_tr_logits = outputs['sent_logits'], outputs['adv_det_logits'], outputs['adv_tr_logits']
+                    sen_loss = criterion(sen_logits, label_targets)
+                    adv_det_loss = criterion(adv_det_logits, adv_det_targets)
+                    adv_train_loss = criterion(adv_tr_logits, adv_tr_targets)
+                    loss = sen_loss + self.opt.args.get('adv_det_weight', 5) * adv_det_loss + self.opt.args.get('adv_train_weight', 5) * adv_train_loss
+                    losses.append(loss.item())
 
-                if amp:
-                    with amp.scale_loss(loss, self.optimizer) as scaled_loss:
-                        scaled_loss.backward()
+                if scaler:
+                    scaler.scale(loss).backward()
+                    scaler.step(self.optimizer)
+                    scaler.update()
                 else:
                     loss.backward()
                     self.optimizer.step()
@@ -445,7 +442,8 @@ class Instructor:
                 t_adv_tr_targets = t_sample_batched['adv_train_label'].to(self.opt.device)
                 t_adv_det_targets = t_sample_batched['is_adv'].to(self.opt.device)
 
-                sent_logits, advdet_logits, adv_tr_logits = self.model(t_inputs)
+                t_outputs = self.model(t_inputs)
+                sent_logits, advdet_logits, adv_tr_logits = t_outputs['sent_logits'], t_outputs['adv_det_logits'], t_outputs['adv_tr_logits']
 
                 # --------------------------------------------------------------------------------------------#
                 valid_label_targets = torch.tensor([x for x in t_label_targets.cpu() if x != -100]).to(self.opt.device)

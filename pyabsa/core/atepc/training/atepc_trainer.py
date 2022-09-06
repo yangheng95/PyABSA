@@ -33,12 +33,10 @@ from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_exam
 import pytorch_warmup as warmup
 
 try:
-    import apex.amp as amp
-
-    # assert torch.version.__version__ < '1.10.0'
-    print('Use FP16 via Apex!')
+    scaler = torch.cuda.amp.GradScaler()
+    print('Use AMP for training!')
 except Exception:
-    amp = None
+    scaler = None
 
 
 class Instructor:
@@ -193,9 +191,6 @@ class Instructor:
             self.optimizer = init_optimizer(self.opt.optimizer)(self.optimizer_grouped_parameters,
                                                                 lr=self.opt.learning_rate,
                                                                 weight_decay=self.opt.l2reg)
-        if amp:
-            self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
-
         self.opt.device = torch.device(self.opt.device)
         if self.opt.device.type == 'cuda':
             self.logger.info(
@@ -247,29 +242,32 @@ class Instructor:
                 l_mask = l_mask.to(self.opt.device)
                 lcf_cdm_vec = lcf_cdm_vec.to(self.opt.device)
                 lcf_cdw_vec = lcf_cdw_vec.to(self.opt.device)
-                loss_ate, loss_apc = self.model(input_ids_spc,
-                                                token_type_ids=segment_ids,
-                                                attention_mask=input_mask,
-                                                labels=label_ids,
-                                                polarity=polarity,
-                                                valid_ids=valid_ids,
-                                                attention_mask_label=l_mask,
-                                                lcf_cdm_vec=lcf_cdm_vec,
-                                                lcf_cdw_vec=lcf_cdw_vec
-                                                )
-                # for multi-gpu, average loss by gpu instance number
-                if self.opt.auto_device == 'allcuda':
-                    loss_ate, loss_apc = loss_ate.mean(), loss_apc.mean()
-                ate_loss_weight = self.opt.args.get('ate_loss_weight', 1.0)
-                loss = loss_ate + ate_loss_weight * loss_apc  # the optimal weight of loss may be different according to dataset
+                with torch.cuda.amp.autocast():
+                    loss_ate, loss_apc = self.model(input_ids_spc,
+                                                    token_type_ids=segment_ids,
+                                                    attention_mask=input_mask,
+                                                    labels=label_ids,
+                                                    polarity=polarity,
+                                                    valid_ids=valid_ids,
+                                                    attention_mask_label=l_mask,
+                                                    lcf_cdm_vec=lcf_cdm_vec,
+                                                    lcf_cdw_vec=lcf_cdw_vec
+                                                    )
+                    # for multi-gpu, average loss by gpu instance number
+                    if self.opt.auto_device == 'allcuda':
+                        loss_ate, loss_apc = loss_ate.mean(), loss_apc.mean()
+                    ate_loss_weight = self.opt.args.get('ate_loss_weight', 1.0)
+
+                    loss = loss_ate + ate_loss_weight * loss_apc  # the optimal weight of loss may be different according to dataset
 
                 sum_loss += loss.item()
 
                 losses.append(loss.item())
 
-                if amp:
-                    with amp.scale_loss(loss, self.optimizer) as scaled_loss:
-                        scaled_loss.backward()
+                if scaler:
+                    scaler.scale(loss).backward()
+                    scaler.step(self.optimizer)
+                    scaler.update()
                 else:
                     loss.backward()
                     self.optimizer.step()

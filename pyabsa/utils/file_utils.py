@@ -78,7 +78,7 @@ def assemble_aspects(fname):
 
     def unify_same_samples(same_samples):
         text = same_samples[0][0].replace('$T$', same_samples[0][1])
-        polarities = [-SENTIMENT_PADDING] * len(text.split())
+        polarities = [SENTIMENT_PADDING] * len(text.split())
         tags = ['O'] * len(text.split())
         samples = []
         for sample in same_samples:
