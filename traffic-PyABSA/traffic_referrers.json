@@ -1,33 +1,33 @@
 [
   {
     "referrer": "Google",
-    "count": 576,
-    "uniques": 118
+    "count": 537,
+    "uniques": 113
   },
   {
     "referrer": "github.com",
-    "count": 438,
+    "count": 467,
     "uniques": 114
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 422,
-    "uniques": 102
+    "count": 406,
+    "uniques": 99
   },
   {
     "referrer": "huggingface.co",
-    "count": 136,
-    "uniques": 28
+    "count": 119,
+    "uniques": 23
   },
   {
     "referrer": "youtube.com",
-    "count": 107,
-    "uniques": 22
+    "count": 94,
+    "uniques": 20
   },
   {
     "referrer": "hf.space",
-    "count": 60,
-    "uniques": 15
+    "count": 50,
+    "uniques": 14
   },
   {
     "referrer": "ro3qhcnnz9d-496ff2e9c6d22116-0-colab.googleusercontent.com",
@@ -40,9 +40,9 @@
     "uniques": 10
   },
   {
-    "referrer": "notebooks.githubusercontent.com",
-    "count": 24,
-    "uniques": 7
+    "referrer": "arxiv.org",
+    "count": 16,
+    "uniques": 8
   },
   {
     "referrer": "Baidu",
