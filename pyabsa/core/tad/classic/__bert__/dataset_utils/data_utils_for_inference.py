@@ -15,9 +15,11 @@ from pyabsa.core.apc.dataset_utils.apc_utils import load_apc_datasets, LABEL_PAD
 class Tokenizer4Pretraining:
     def __init__(self, max_seq_len, opt, **kwargs):
         if kwargs.pop('offline', False):
-            self.tokenizer = AutoTokenizer.from_pretrained(find_cwd_dir(opt.pretrained_bert.split('/')[-1]), do_lower_case='uncased' in opt.pretrained_bert)
+            self.tokenizer = AutoTokenizer.from_pretrained(find_cwd_dir(opt.pretrained_bert.split('/')[-1]),
+                                                           do_lower_case='uncased' in opt.pretrained_bert)
         else:
-            self.tokenizer = AutoTokenizer.from_pretrained(opt.pretrained_bert, do_lower_case='uncased' in opt.pretrained_bert)
+            self.tokenizer = AutoTokenizer.from_pretrained(opt.pretrained_bert,
+                                                           do_lower_case='uncased' in opt.pretrained_bert)
         self.max_seq_len = max_seq_len
 
     def text_to_sequence(self, text, reverse=False, padding='post', truncating='post'):
@@ -27,7 +29,8 @@ class Tokenizer4Pretraining:
         # if reverse:
         #     sequence = sequence[::-1]
         # return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
-        return self.tokenizer.encode(text, truncation=True, padding='max_length', max_length=self.max_seq_len, return_tensors='pt')
+        return self.tokenizer.encode(text, truncation=True, padding='max_length', max_length=self.max_seq_len,
+                                     return_tensors='pt')
 
 
 class BERTTADDataset(Dataset):

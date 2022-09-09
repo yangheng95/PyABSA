@@ -194,7 +194,8 @@ class TCConfigManager(ConfigManager):
             elif configType == 'glove':
                 _tc_config_glove.update(newitem)
             else:
-                raise ValueError("Wrong value of config type supplied, please use one from following type: template, base, english, chinese, multilingual, glove")
+                raise ValueError(
+                    "Wrong value of config type supplied, please use one from following type: template, base, english, chinese, multilingual, glove")
         else:
             raise TypeError("Wrong type of new config item supplied, please use dict e.g.{'NewConfig': NewValue}")
 

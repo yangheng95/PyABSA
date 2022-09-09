@@ -7,6 +7,7 @@
 import json
 import os
 import pickle
+import signal
 import threading
 import time
 import zipfile

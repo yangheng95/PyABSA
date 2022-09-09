@@ -19,7 +19,8 @@ from pyabsa.utils.pyabsa_utils import check_and_fix_labels, TransformerConnectio
 class Tokenizer4Pretraining:
     def __init__(self, max_seq_len, opt):
         try:
-            self.tokenizer = AutoTokenizer.from_pretrained(opt.pretrained_bert, do_lower_case='uncased' in opt.pretrained_bert)
+            self.tokenizer = AutoTokenizer.from_pretrained(opt.pretrained_bert,
+                                                           do_lower_case='uncased' in opt.pretrained_bert)
         except ValueError as e:
             raise TransformerConnectionError()
 
@@ -32,7 +33,8 @@ class Tokenizer4Pretraining:
         # if reverse:
         #     sequence = sequence[::-1]
         # return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
-        return self.tokenizer.encode(text, truncation=True, padding='max_length', max_length=self.max_seq_len, return_tensors='pt')
+        return self.tokenizer.encode(text, truncation=True, padding='max_length', max_length=self.max_seq_len,
+                                     return_tensors='pt')
 
 
 class BERTTCDataset(Dataset):
@@ -53,7 +55,8 @@ class BERTTCDataset(Dataset):
             text, label = line[0], line[1]
             text = text.strip()
             label = label.strip()
-            text_indices = tokenizer.text_to_sequence('{} {} {}'.format(tokenizer.tokenizer.cls_token, text, tokenizer.tokenizer.sep_token))
+            text_indices = tokenizer.text_to_sequence(
+                '{} {} {}'.format(tokenizer.tokenizer.cls_token, text, tokenizer.tokenizer.sep_token))
 
             data = {
                 'text_bert_indices': text_indices[0],

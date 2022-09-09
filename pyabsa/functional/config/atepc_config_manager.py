@@ -202,7 +202,8 @@ class ATEPCConfigManager(ConfigManager):
             elif configType == 'multilingual':
                 _atepc_config_multilingual.update(newitem)
             else:
-                raise ValueError("Wrong value of config type supplied, please use one from following type: template, base, english, chinese, multilingual")
+                raise ValueError(
+                    "Wrong value of config type supplied, please use one from following type: template, base, english, chinese, multilingual")
         else:
             raise TypeError("Wrong type of new config item supplied, please use dict e.g.{'NewConfig': NewValue}")
 

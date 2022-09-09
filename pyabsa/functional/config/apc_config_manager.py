@@ -244,7 +244,8 @@ _apc_config_bert_baseline = {'model': TNet_LF_BERT,
                              'evaluate_begin': 0,
                              'dynamic_truncate': True,
                              'similarity_threshold': 1,  # disable same text check for different examples
-                             'cross_validate_fold': -1  # split train and test datasets into 5 folds and repeat 3 training
+                             'cross_validate_fold': -1
+                             # split train and test datasets into 5 folds and repeat 3 training
                              }
 
 
@@ -309,7 +310,8 @@ class APCConfigManager(ConfigManager):
             elif configType == 'bert_baseline':
                 _apc_config_bert_baseline.update(newitem)
             else:
-                raise ValueError("Wrong value of config type supplied, please use one from following type: template, base, english, chinese, multilingual, glove, bert_baseline")
+                raise ValueError(
+                    "Wrong value of config type supplied, please use one from following type: template, base, english, chinese, multilingual, glove, bert_baseline")
         else:
             raise TypeError("Wrong type of new config item supplied, please use dict e.g.{'NewConfig': NewValue}")
 

@@ -19,7 +19,8 @@ from pyabsa.utils.pyabsa_utils import check_and_fix_labels, TransformerConnectio
 class Tokenizer4Pretraining:
     def __init__(self, max_seq_len, opt):
         try:
-            self.tokenizer = AutoTokenizer.from_pretrained(opt.pretrained_bert, do_lower_case='uncased' in opt.pretrained_bert)
+            self.tokenizer = AutoTokenizer.from_pretrained(opt.pretrained_bert,
+                                                           do_lower_case='uncased' in opt.pretrained_bert)
         except ValueError as e:
             raise TransformerConnectionError()
 
@@ -32,7 +33,8 @@ class Tokenizer4Pretraining:
         # if reverse:
         #     sequence = sequence[::-1]
         # return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
-        return self.tokenizer.encode(text, truncation=True, padding='max_length', max_length=self.max_seq_len, return_tensors='pt')
+        return self.tokenizer.encode(text, truncation=True, padding='max_length', max_length=self.max_seq_len,
+                                     return_tensors='pt')
 
 
 class BERTTADDataset(Dataset):
@@ -102,11 +104,15 @@ class BERTTADDataset(Dataset):
 def check_and_fix_adv_train_labels(label_set: set, label_name, all_data, opt):
     # update polarities_dim, init model behind execution of this function!
     if '-100' in label_set:
-        adv_train_label_to_index = {origin_label: int(idx) - 1 if origin_label != '-100' else -100 for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
-        index_to_adv_train_label = {int(idx) - 1 if origin_label != '-100' else -100: origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+        adv_train_label_to_index = {origin_label: int(idx) - 1 if origin_label != '-100' else -100 for origin_label, idx
+                                    in zip(sorted(label_set), range(len(label_set)))}
+        index_to_adv_train_label = {int(idx) - 1 if origin_label != '-100' else -100: origin_label for origin_label, idx
+                                    in zip(sorted(label_set), range(len(label_set)))}
     else:
-        adv_train_label_to_index = {origin_label: int(idx) for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
-        index_to_adv_train_label = {int(idx): origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+        adv_train_label_to_index = {origin_label: int(idx) for origin_label, idx in
+                                    zip(sorted(label_set), range(len(label_set)))}
+        index_to_adv_train_label = {int(idx): origin_label for origin_label, idx in
+                                    zip(sorted(label_set), range(len(label_set)))}
     if 'index_to_adv_train_label' not in opt.args:
         opt.index_to_adv_train_label = index_to_adv_train_label
         opt.adv_train_label_to_index = adv_train_label_to_index
@@ -131,11 +137,15 @@ def check_and_fix_adv_train_labels(label_set: set, label_name, all_data, opt):
 def check_and_fix_is_adv_labels(label_set: set, label_name, all_data, opt):
     # update polarities_dim, init model behind execution of this function!
     if '-100' in label_set:
-        is_adv_to_index = {origin_label: int(idx) - 1 if origin_label != '-100' else -100 for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
-        index_to_is_adv = {int(idx) - 1 if origin_label != '-100' else -100: origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+        is_adv_to_index = {origin_label: int(idx) - 1 if origin_label != '-100' else -100 for origin_label, idx in
+                           zip(sorted(label_set), range(len(label_set)))}
+        index_to_is_adv = {int(idx) - 1 if origin_label != '-100' else -100: origin_label for origin_label, idx in
+                           zip(sorted(label_set), range(len(label_set)))}
     else:
-        is_adv_to_index = {origin_label: int(idx) for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
-        index_to_is_adv = {int(idx): origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+        is_adv_to_index = {origin_label: int(idx) for origin_label, idx in
+                           zip(sorted(label_set), range(len(label_set)))}
+        index_to_is_adv = {int(idx): origin_label for origin_label, idx in
+                           zip(sorted(label_set), range(len(label_set)))}
     if 'index_to_is_adv' not in opt.args:
         opt.index_to_is_adv = index_to_is_adv
         opt.is_adv_to_index = is_adv_to_index

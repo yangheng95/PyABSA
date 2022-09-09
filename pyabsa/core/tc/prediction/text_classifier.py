@@ -59,7 +59,8 @@ class TextClassifier:
         else:
             try:
                 if 'fine-tuned' in model_arg:
-                    raise ValueError('Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!')
+                    raise ValueError(
+                        'Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!')
                 print('Load text classifier from', model_arg)
                 state_dict_path = find_file(model_arg, key='.state_dict', exclude_key=['__MACOSX'])
                 model_path = find_file(model_arg, key='.model', exclude_key=['__MACOSX'])
@@ -79,7 +80,8 @@ class TextClassifier:
                     if hasattr(BERTTCModelList, self.opt.model.__name__):
                         if state_dict_path:
                             if kwargs.pop('offline', False):
-                                self.bert = AutoModel.from_pretrained(find_cwd_dir(self.opt.pretrained_bert.split('/')[-1]))
+                                self.bert = AutoModel.from_pretrained(
+                                    find_cwd_dir(self.opt.pretrained_bert.split('/')[-1]))
                             else:
                                 self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
                             self.model = self.opt.model(self.bert, self.opt)
@@ -88,7 +90,8 @@ class TextClassifier:
                             self.model = torch.load(model_path, map_location='cpu')
 
                         try:
-                            self.tokenizer = Tokenizer4Pretraining(max_seq_len=self.opt.max_seq_len, opt=self.opt, **kwargs)
+                            self.tokenizer = Tokenizer4Pretraining(max_seq_len=self.opt.max_seq_len, opt=self.opt,
+                                                                   **kwargs)
                         except ValueError:
                             if tokenizer_path:
                                 with open(tokenizer_path, mode='rb') as f:
@@ -108,7 +111,9 @@ class TextClassifier:
                             embedding_matrix = build_embedding_matrix(
                                 word2idx=tokenizer.word2idx,
                                 embed_dim=self.opt.embed_dim,
-                                dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(self.opt.embed_dim), os.path.basename(self.opt.dataset_name)),
+                                dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(self.opt.embed_dim),
+                                                                                os.path.basename(
+                                                                                    self.opt.dataset_name)),
                                 opt=self.opt
                             )
                             self.model = self.opt.model(embedding_matrix, self.opt).to(self.opt.device)
@@ -123,7 +128,7 @@ class TextClassifier:
                 raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, model_arg))
 
             if not hasattr(GloVeTCModelList, self.opt.model.__name__) \
-                and not hasattr(BERTTCModelList, self.opt.model.__name__):
+                    and not hasattr(BERTTCModelList, self.opt.model.__name__):
                 raise KeyError('The checkpoint you are loading is not from classifier model.')
 
         if hasattr(BERTTCModelList, self.opt.model.__name__):
@@ -202,7 +207,8 @@ class TextClassifier:
             raise FileNotFoundError('Can not find inference datasets!')
 
         self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
-        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.opt.eval_batch_size, pin_memory=True, shuffle=False)
+        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.opt.eval_batch_size, pin_memory=True,
+                                           shuffle=False)
         return self._infer(save_path=save_path if save_result else None, print_result=print_result)
 
     def infer(self, text: str = None,
@@ -245,7 +251,9 @@ class TextClassifier:
                     if 'index_to_label' in self.opt.args and int(i_probs.argmax(axis=-1)) in self.opt.index_to_label:
                         sent = self.opt.index_to_label[int(i_probs.argmax(axis=-1))]
                         if sample['label'][i] != -999:
-                            real_sent = sample['label'][i] if isinstance(sample['label'][i], str) else self.opt.index_to_label.get(int(sample['label'][i]), 'N.A.')
+                            real_sent = sample['label'][i] if isinstance(sample['label'][i],
+                                                                         str) else self.opt.index_to_label.get(
+                                int(sample['label'][i]), 'N.A.')
                         else:
                             real_sent = 'N.A.'
                         if real_sent != -999 and real_sent != '-999':
@@ -284,9 +292,13 @@ class TextClassifier:
                     text_printing = result['text'][:]
                     if result['ref_label'] != -999:
                         if result['label'] == result['ref_label']:
-                            text_info = colored(' -> <{}(ref:{} confidence:{})>'.format(result['label'], result['ref_label'], result['confidence']), 'green')
+                            text_info = colored(
+                                ' -> <{}(ref:{} confidence:{})>'.format(result['label'], result['ref_label'],
+                                                                        result['confidence']), 'green')
                         else:
-                            text_info = colored(' -> <{}(ref:{}) confidence:{}>'.format(result['label'], result['ref_label'], result['confidence']), 'red')
+                            text_info = colored(
+                                ' -> <{}(ref:{}) confidence:{}>'.format(result['label'], result['ref_label'],
+                                                                        result['confidence']), 'red')
                     else:
                         text_info = ' -> {}'.format(result['label'])
                     text_printing += text_info

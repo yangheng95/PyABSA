@@ -28,9 +28,12 @@ def generate_inference_set_for_apc(dataset_path):
     else:
         dataset_name = dataset_path
 
-    train_datasets = find_files(os.getcwd(), ['dataset', 'train', 'apc', dataset_name], exclude_key=['.inference', 'readme'])
-    valid_datasets = find_files(os.getcwd(), ['dataset', 'valid', 'apc', dataset_name], exclude_key=['.inference', 'readme'])
-    test_datasets = find_files(os.getcwd(), ['dataset', 'test', 'apc', dataset_name], exclude_key=['.inference', 'readme'])
+    train_datasets = find_files(os.getcwd(), ['dataset', 'train', 'apc', dataset_name],
+                                exclude_key=['.inference', 'readme'])
+    valid_datasets = find_files(os.getcwd(), ['dataset', 'valid', 'apc', dataset_name],
+                                exclude_key=['.inference', 'readme'])
+    test_datasets = find_files(os.getcwd(), ['dataset', 'test', 'apc', dataset_name],
+                               exclude_key=['.inference', 'readme'])
     for file in train_datasets + valid_datasets + test_datasets:
         try:
             fin = open(file, 'r', newline='\n', encoding='utf-8')
@@ -240,7 +243,7 @@ def detect_error_in_dataset(dataset):
         # print(lines[i].replace('$T$', lines[i + 1].replace('\n', '')))
         if i + 3 < len(lines):
             if is_similar(lines[i], lines[i + 3]) and len((lines[i] + " " + lines[i + 1]).split()) != len(
-                (lines[i + 3] + " " + lines[i + 4]).split()):
+                    (lines[i + 3] + " " + lines[i + 4]).split()):
                 print(lines[i].replace('$T$', lines[i + 1].replace('\n', '')))
                 print(lines[i + 3].replace('$T$', lines[i + 4].replace('\n', '')))
 
@@ -336,10 +339,16 @@ def validate_datasets_version():  # retry_count is for unstable conn to GitHub
         remote_version = query_remote_version()
         print('Remote ABSADataset version: {} Local ABSADatasets version: {}'.format(remote_version, local_version))
         if not remote_version:
-            print('Unknown remote version for ABSADatasets, please check the latest version of ABSADatasets at https://github.com/yangheng95/ABSADatasets')
+            print(
+                'Unknown remote version for ABSADatasets, please check the latest version of ABSADatasets at https://github.com/yangheng95/ABSADatasets')
         if not local_version:
-            print('Unknown local version for ABSADatasets, please check the latest version of ABSADatasets at https://github.com/yangheng95/ABSADatasets')
+            print(
+                'Unknown local version for ABSADatasets, please check the latest version of ABSADatasets at https://github.com/yangheng95/ABSADatasets')
         if remote_version and local_version and remote_version > local_version:
-            print(colored('There is a new version of ABSADatasets({}), please remove the downloaded datasets to automatically download the new version.'.format(remote_version), 'green'))
+            print(colored(
+                'There is a new version of ABSADatasets({}), please remove the downloaded datasets to automatically download the new version.'.format(
+                    remote_version), 'green'))
     except Exception as e:
-        print(colored('ABSADatasets version check failed: {}, please check the latest datasets at https://github.com/yangheng95/ABSADatasets manually.'.format(e), 'red'))
+        print(colored(
+            'ABSADatasets version check failed: {}, please check the latest datasets at https://github.com/yangheng95/ABSADatasets manually.'.format(
+                e), 'red'))
