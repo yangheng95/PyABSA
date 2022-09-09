@@ -8,7 +8,7 @@
 
 from pyabsa import ABSADatasetList, APCCheckpointManager, available_checkpoints
 
-checkpoint_map = available_checkpoints(from_local=False)
+checkpoint_map = available_checkpoints()
 
 sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='Multilingual')
 

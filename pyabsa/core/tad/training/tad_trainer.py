@@ -34,15 +34,17 @@ import pytorch_warmup as warmup
 
 from ..models import BERTTADModelList, GloVeTADModelList
 
-try:
-    scaler = torch.cuda.amp.GradScaler()
-    print('Use AMP for training!')
-except Exception:
-    scaler = None
-
-
 class Instructor:
     def __init__(self, opt, logger):
+        if opt.use_amp:
+            try:
+                self.scaler = torch.cuda.amp.GradScaler()
+                print('Use AMP for training!')
+            except Exception:
+                self.scaler = None
+        else:
+            self.scaler = None
+
         self.val_dataloader = None
         self.test_dataloader = None
         self.logger = logger
@@ -258,10 +260,10 @@ class Instructor:
                     loss = sen_loss + self.opt.args.get('adv_det_weight', 5) * adv_det_loss + self.opt.args.get('adv_train_weight', 5) * adv_train_loss
                     losses.append(loss.item())
 
-                if scaler:
-                    scaler.scale(loss).backward()
-                    scaler.step(self.optimizer)
-                    scaler.update()
+                if self.scaler:
+                    self.scaler.scale(loss).backward()
+                    self.scaler.step(self.optimizer)
+                    self.scaler.update()
                 else:
                     loss.backward()
                     self.optimizer.step()

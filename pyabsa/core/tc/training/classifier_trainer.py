@@ -33,15 +33,17 @@ from pyabsa.utils.pyabsa_utils import print_args, resume_from_checkpoint, retry,
 
 import pytorch_warmup as warmup
 
-try:
-    scaler = torch.cuda.amp.GradScaler()
-    print('Use AMP for training!')
-except Exception:
-    scaler = None
-
-
 class Instructor:
     def __init__(self, opt, logger):
+        if opt.use_amp:
+            try:
+                self.scaler = torch.cuda.amp.GradScaler()
+                print('Use AMP for training!')
+            except Exception:
+                self.scaler = None
+        else:
+            self.scaler = None
+
         self.test_dataloader = None
         self.logger = logger
         self.opt = opt
@@ -232,10 +234,10 @@ class Instructor:
                     loss = criterion(outputs, targets)
 
                 losses.append(loss.item())
-                if scaler:
-                    scaler.scale(loss).backward()
-                    scaler.step(self.optimizer)
-                    scaler.update()
+                if self.scaler:
+                    self.scaler.scale(loss).backward()
+                    self.scaler.step(self.optimizer)
+                    self.scaler.update()
                 else:
                     loss.backward()
                     self.optimizer.step()
@@ -397,10 +399,10 @@ class Instructor:
                         else:
                             loss = criterion(outputs, targets)
 
-                    if scaler:
-                        scaler.scale(loss).backward()
-                        scaler.step(self.optimizer)
-                        scaler.update()
+                    if self.scaler:
+                        self.scaler.scale(loss).backward()
+                        self.scaler.step(self.optimizer)
+                        self.scaler.update()
                     else:
                         loss.backward()
                         self.optimizer.step()
