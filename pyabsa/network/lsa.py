@@ -43,7 +43,8 @@ class LSA(nn.Module):
                 torch.nn.init.uniform_(self.eta2)
                 print('reset eta2 to: {}'.format(self.eta2.item()))
             if self.opt.eta >= 0:
-                cat_features = torch.cat((lcf_features, self.eta1 * left_lcf_features, self.eta2 * right_lcf_features), -1)
+                cat_features = torch.cat((lcf_features, self.eta1 * left_lcf_features, self.eta2 * right_lcf_features),
+                                         -1)
             else:
                 cat_features = torch.cat((lcf_features, left_lcf_features, right_lcf_features), -1)
             sent_out = self.linear_window_3h(cat_features)

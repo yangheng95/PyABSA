@@ -284,9 +284,13 @@ def detect_dataset(dataset_path, task='apc', load_aug=False):
 
 
 def detect_infer_dataset(dataset_path, task='apc'):
+    dataset_file = []
+    if isinstance(dataset_path, str) and os.path.isfile(dataset_path):
+        dataset_file.append(dataset_path)
+        return dataset_file
+
     if not isinstance(dataset_path, DatasetItem):
         dataset_path = DatasetItem(dataset_path)
-    dataset_file = []
     for d in dataset_path:
         if not os.path.exists(d) or hasattr(ABSADatasetList, d) or hasattr(TCDatasetList, d):
             print('Loading {} dataset from:  {}'.format(d, 'https://github.com/yangheng95/ABSADatasets'))

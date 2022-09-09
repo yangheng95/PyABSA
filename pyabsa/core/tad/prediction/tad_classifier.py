@@ -31,7 +31,8 @@ from ....utils.pyabsa_utils import print_args, TransformerConnectionError, get_d
 def init_attacker(tad_classifier, defense):
     try:
         from textattack import Attacker
-        from textattack.attack_recipes import BAEGarg2019, PWWSRen2019, TextFoolerJin2019, PSOZang2020, IGAWang2019, GeneticAlgorithmAlzantot2018, DeepWordBugGao2018
+        from textattack.attack_recipes import BAEGarg2019, PWWSRen2019, TextFoolerJin2019, PSOZang2020, IGAWang2019, \
+            GeneticAlgorithmAlzantot2018, DeepWordBugGao2018
         from textattack.datasets import Dataset
         from textattack.models.wrappers import HuggingFaceModelWrapper
 
@@ -109,7 +110,8 @@ class TADTextClassifier:
         else:
             try:
                 if 'fine-tuned' in model_arg:
-                    raise ValueError('Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!')
+                    raise ValueError(
+                        'Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!')
                 print('Load text classifier from', model_arg)
                 state_dict_path = find_file(model_arg, key='.state_dict', exclude_key=['__MACOSX'])
                 model_path = find_file(model_arg, key='.model', exclude_key=['__MACOSX'])
@@ -129,7 +131,8 @@ class TADTextClassifier:
                     if hasattr(BERTTADModelList, self.opt.model.__name__):
                         if state_dict_path:
                             if kwargs.pop('offline', False):
-                                self.bert = AutoModel.from_pretrained(find_cwd_dir(self.opt.pretrained_bert.split('/')[-1]))
+                                self.bert = AutoModel.from_pretrained(
+                                    find_cwd_dir(self.opt.pretrained_bert.split('/')[-1]))
                             else:
                                 self.bert = AutoModel.from_pretrained(self.opt.pretrained_bert)
                             self.model = self.opt.model(self.bert, self.opt)
@@ -138,7 +141,8 @@ class TADTextClassifier:
                             self.model = torch.load(model_path, map_location='cpu')
 
                         try:
-                            self.tokenizer = Tokenizer4Pretraining(max_seq_len=self.opt.max_seq_len, opt=self.opt, **kwargs)
+                            self.tokenizer = Tokenizer4Pretraining(max_seq_len=self.opt.max_seq_len, opt=self.opt,
+                                                                   **kwargs)
                         except ValueError:
                             if tokenizer_path:
                                 with open(tokenizer_path, mode='rb') as f:
@@ -158,7 +162,9 @@ class TADTextClassifier:
                             embedding_matrix = build_embedding_matrix(
                                 word2idx=tokenizer.word2idx,
                                 embed_dim=self.opt.embed_dim,
-                                dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(self.opt.embed_dim), os.path.basename(self.opt.dataset_name)),
+                                dat_fname='{0}_{1}_embedding_matrix.dat'.format(str(self.opt.embed_dim),
+                                                                                os.path.basename(
+                                                                                    self.opt.dataset_name)),
                                 opt=self.opt
                             )
                             self.model = self.opt.model(embedding_matrix, self.opt).to(self.opt.device)
@@ -173,7 +179,7 @@ class TADTextClassifier:
                 raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, model_arg))
 
             if not hasattr(GloVeTADModelList, self.opt.model.__name__) \
-                and not hasattr(BERTTADModelList, self.opt.model.__name__):
+                    and not hasattr(BERTTADModelList, self.opt.model.__name__):
                 raise KeyError('The checkpoint you are loading is not from classifier model.')
 
         self.infer_dataloader = None
@@ -253,7 +259,8 @@ class TADTextClassifier:
             dataset = GloVeTADDataset(tokenizer=self.tokenizer, opt=self.opt)
 
         dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
-        self.infer_dataloader = DataLoader(dataset=dataset, batch_size=self.opt.eval_batch_size, pin_memory=True, shuffle=False)
+        self.infer_dataloader = DataLoader(dataset=dataset, batch_size=self.opt.eval_batch_size, pin_memory=True,
+                                           shuffle=False)
         return self._infer(save_path=save_path if save_result else None, print_result=print_result, defense=defense)
 
     def infer(self,
@@ -297,8 +304,11 @@ class TADTextClassifier:
             for _, sample in enumerate(it):
                 inputs = [sample[col].to(self.opt.device) for col in self.opt.inputs_cols]
                 outputs = self.model(inputs)
-                logits, advdet_logits, adv_tr_logits = outputs['sent_logits'], outputs['advdet_logits'], outputs['adv_tr_logits']
-                probs, advdet_probs, adv_tr_probs = torch.softmax(logits, dim=-1), torch.softmax(advdet_logits, dim=-1), torch.softmax(adv_tr_logits, dim=-1)
+                logits, advdet_logits, adv_tr_logits = outputs['sent_logits'], outputs['advdet_logits'], outputs[
+                    'adv_tr_logits']
+                probs, advdet_probs, adv_tr_probs = torch.softmax(logits, dim=-1), torch.softmax(advdet_logits,
+                                                                                                 dim=-1), torch.softmax(
+                    adv_tr_logits, dim=-1)
 
                 for i, (prob, advdet_prob, adv_tr_prob) in enumerate(zip(probs, advdet_probs, adv_tr_probs)):
                     text_raw = sample['text_raw'][i]
@@ -307,8 +317,10 @@ class TADTextClassifier:
                     pred_is_adv_label = int(advdet_prob.argmax(axis=-1))
                     pred_adv_tr_label = int(adv_tr_prob.argmax(axis=-1))
                     ref_label = int(sample['label'][i]) if int(sample['label'][i]) in self.opt.index_to_label else ''
-                    ref_is_adv_label = int(sample['is_adv'][i]) if int(sample['is_adv'][i]) in self.opt.index_to_is_adv else ''
-                    ref_adv_tr_label = int(sample['adv_train_label'][i]) if int(sample['adv_train_label'][i]) in self.opt.index_to_adv_train_label else ''
+                    ref_is_adv_label = int(sample['is_adv'][i]) if int(
+                        sample['is_adv'][i]) in self.opt.index_to_is_adv else ''
+                    ref_adv_tr_label = int(sample['adv_train_label'][i]) if int(
+                        sample['adv_train_label'][i]) in self.opt.index_to_adv_train_label else ''
 
                     if self.cal_perplexity:
                         ids = self.MLM_tokenizer(text_raw, return_tensors="pt")
@@ -332,10 +344,11 @@ class TADTextClassifier:
                         'is_adv_label': self.opt.index_to_is_adv[pred_is_adv_label],
                         'is_adv_probs': advdet_prob.cpu().numpy(),
                         'is_adv_confidence': float(max(advdet_prob)),
-                        'pred_adv_tr_label': pred_adv_tr_label,
-                        'ref_adv_tr_label': ref_adv_tr_label,
                         'ref_is_adv_label': self.opt.index_to_is_adv[ref_is_adv_label] if isinstance(ref_is_adv_label, int) else ref_is_adv_label,
                         'ref_is_adv_check': correct[pred_is_adv_label == ref_is_adv_label] if ref_is_adv_label != -100 and isinstance(ref_is_adv_label, int) else '',
+
+                        'pred_adv_tr_label': self.opt.index_to_label[pred_adv_tr_label],
+                        'ref_adv_tr_label': self.opt.index_to_label[ref_adv_tr_label],
 
                         'perplexity': perplexity,
                     }
@@ -381,20 +394,38 @@ class TADTextClassifier:
                     text_info = ''
                     if result['label'] != '-100':
                         if not result['ref_label']:
-                            text_info += ' -> <CLS:{}(ref:{} confidence:{})>'.format(result['label'], result['ref_label'], result['confidence'])
+                            text_info += ' -> <CLS:{}(ref:{} confidence:{})>'.format(result['label'],
+                                                                                     result['ref_label'],
+                                                                                     result['confidence'])
                         elif result['label'] == result['ref_label']:
-                            text_info += colored(' -> <CLS:{}(ref:{} confidence:{})>'.format(result['label'], result['ref_label'], result['confidence']), 'green')
+                            text_info += colored(
+                                ' -> <CLS:{}(ref:{} confidence:{})>'.format(result['label'], result['ref_label'],
+                                                                            result['confidence']), 'green')
                         else:
-                            text_info += colored(' -> <CLS:{}(ref:{} confidence:{})>'.format(result['label'], result['ref_label'], result['confidence']), 'red')
+                            text_info += colored(
+                                ' -> <CLS:{}(ref:{} confidence:{})>'.format(result['label'], result['ref_label'],
+                                                                            result['confidence']), 'red')
 
                     # AdvDet
                     if result['is_adv_label'] != '-100':
                         if not result['ref_is_adv_label']:
-                            text_info += ' -> <AdvDet:{}(ref:{} confidence:{})>'.format(result['is_adv_label'], result['ref_is_adv_check'], result['is_adv_confidence'])
+                            text_info += ' -> <AdvDet:{}(ref:{} confidence:{})>'.format(result['is_adv_label'],
+                                                                                        result['ref_is_adv_check'],
+                                                                                        result['is_adv_confidence'])
                         elif result['is_adv_label'] == result['ref_is_adv_label']:
-                            text_info += colored(' -> <AdvDet:{}(ref:{} confidence:{})>'.format(result['is_adv_label'], result['ref_is_adv_label'], result['is_adv_confidence']), 'green')
+                            text_info += colored(' -> <AdvDet:{}(ref:{} confidence:{})>'.format(result['is_adv_label'],
+                                                                                                result[
+                                                                                                    'ref_is_adv_label'],
+                                                                                                result[
+                                                                                                    'is_adv_confidence']),
+                                                 'green')
                         else:
-                            text_info += colored(' -> <AdvDet:{}(ref:{} confidence:{})>'.format(result['is_adv_label'], result['ref_is_adv_label'], result['is_adv_confidence']), 'red')
+                            text_info += colored(' -> <AdvDet:{}(ref:{} confidence:{})>'.format(result['is_adv_label'],
+                                                                                                result[
+                                                                                                    'ref_is_adv_label'],
+                                                                                                result[
+                                                                                                    'is_adv_confidence']),
+                                                 'red')
                     text_printing += text_info
                     if self.cal_perplexity:
                         text_printing += colored(' --> <perplexity:{}>'.format(result['perplexity']), 'yellow')

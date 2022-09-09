@@ -1,4 +1,7 @@
 {
+  "1.16.16": {
+    "1": "Modify the inference file location strategy"
+  },
   "1.16.15": {
     "1": "Fix conversion of apc datasets to atepc datasets"
   },
