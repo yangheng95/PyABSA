@@ -31,7 +31,8 @@ _tc_config_template = {'model': BERT,
                        'polarities_dim': 3,
                        'log_step': 10,
                        'evaluate_begin': 0,
-                       'cross_validate_fold': -1
+                       'cross_validate_fold': -1,
+                       'use_amp': False,
                        # split train and test datasets into 5 folds and repeat 3 training
                        }
 
@@ -274,24 +275,30 @@ class TCConfigManager(ConfigManager):
 
     @staticmethod
     def get_classification_config_template() -> ConfigManager:
+        _tc_config_template.update(_tc_config_template)
         return TCConfigManager(copy.deepcopy(_tc_config_template))
 
     @staticmethod
     def get_classification_config_base() -> ConfigManager:
+        _tc_config_base.update(_tc_config_template)
         return TCConfigManager(copy.deepcopy(_tc_config_base))
 
     @staticmethod
     def get_classification_config_english() -> ConfigManager:
+        _tc_config_english.update(_tc_config_template)
         return TCConfigManager(copy.deepcopy(_tc_config_english))
 
     @staticmethod
     def get_classification_config_chinese() -> ConfigManager:
+        _tc_config_chinese.update(_tc_config_template)
         return TCConfigManager(copy.deepcopy(_tc_config_chinese))
 
     @staticmethod
     def get_classification_config_multilingual() -> ConfigManager:
+        _tc_config_multilingual.update(_tc_config_template)
         return TCConfigManager(copy.deepcopy(_tc_config_multilingual))
 
     @staticmethod
     def get_classification_config_glove() -> ConfigManager:
+        _tc_config_glove.update(_tc_config_template)
         return TCConfigManager(copy.deepcopy(_tc_config_glove))

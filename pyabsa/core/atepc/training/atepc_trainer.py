@@ -32,16 +32,18 @@ from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_exam
 
 import pytorch_warmup as warmup
 
-try:
-    scaler = torch.cuda.amp.GradScaler()
-    print('Use AMP for training!')
-except Exception:
-    scaler = None
-
-
 class Instructor:
 
     def __init__(self, opt, logger):
+        if opt.use_amp:
+            try:
+                self.scaler = torch.cuda.amp.GradScaler()
+                print('Use AMP for training!')
+            except Exception:
+                self.scaler = None
+        else:
+            self.scaler = None
+
         self.warmup_scheduler = None
         self.lr_scheduler = None
         self.opt = opt
@@ -264,10 +266,10 @@ class Instructor:
 
                 losses.append(loss.item())
 
-                if scaler:
-                    scaler.scale(loss).backward()
-                    scaler.step(self.optimizer)
-                    scaler.update()
+                if self.scaler:
+                    self.scaler.scale(loss).backward()
+                    self.scaler.step(self.optimizer)
+                    self.scaler.update()
                 else:
                     loss.backward()
                     self.optimizer.step()

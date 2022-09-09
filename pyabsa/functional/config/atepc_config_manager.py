@@ -37,7 +37,8 @@ _atepc_config_template = {'model': LCF_ATEPC,
                           'gradient_accumulation_steps': 1,
                           'dynamic_truncate': True,
                           'srd_alignment': True,  # for srd_alignment
-                          'evaluate_begin': 0
+                          'evaluate_begin': 0,
+                          'use_amp': False,
                           }
 
 _atepc_config_base = {'model': LCF_ATEPC,
@@ -229,20 +230,25 @@ class ATEPCConfigManager(ConfigManager):
 
     @staticmethod
     def get_atepc_config_template() -> ConfigManager:
+        _atepc_config_template.update(_atepc_config_template)
         return ATEPCConfigManager(copy.deepcopy(_atepc_config_template))
 
     @staticmethod
     def get_atepc_config_base() -> ConfigManager:
-        return ATEPCConfigManager(copy.deepcopy(_atepc_config_base))
+        _atepc_config_template.update(_atepc_config_base)
+        return ATEPCConfigManager(copy.deepcopy(_atepc_config_template))
 
     @staticmethod
     def get_atepc_config_english() -> ConfigManager:
-        return ATEPCConfigManager(copy.deepcopy(_atepc_config_english))
+        _atepc_config_template.update(_atepc_config_english)
+        return ATEPCConfigManager(copy.deepcopy(_atepc_config_template))
 
     @staticmethod
     def get_atepc_config_chinese() -> ConfigManager:
-        return ATEPCConfigManager(copy.deepcopy(_atepc_config_chinese))
+        _atepc_config_template.update(_atepc_config_chinese)
+        return ATEPCConfigManager(copy.deepcopy(_atepc_config_template))
 
     @staticmethod
     def get_atepc_config_multilingual() -> ConfigManager:
-        return ATEPCConfigManager(copy.deepcopy(_atepc_config_multilingual))
+        _atepc_config_template.update(_atepc_config_multilingual)
+        return ATEPCConfigManager(copy.deepcopy(_atepc_config_template))

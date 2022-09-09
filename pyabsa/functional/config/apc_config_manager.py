@@ -48,7 +48,8 @@ _apc_config_template = {'model': APCModelList.BERT_SPC,
                         'srd_alignment': True,  # for srd_alignment
                         'evaluate_begin': 0,
                         'similarity_threshold': 1,  # disable same text check for different examples
-                        'cross_validate_fold': -1
+                        'cross_validate_fold': -1,
+                        'use_amp': False,
                         # split train and test datasets into 5 folds and repeat 3 training
                         }
 
@@ -345,28 +346,35 @@ class APCConfigManager(ConfigManager):
 
     @staticmethod
     def get_apc_config_template() -> ConfigManager:
+        _apc_config_template.update(_apc_config_template)
         return APCConfigManager(copy.deepcopy(_apc_config_template))
 
     @staticmethod
     def get_apc_config_base() -> ConfigManager:
-        return APCConfigManager(copy.deepcopy(_apc_config_base))
+        _apc_config_template.update(_apc_config_base)
+        return APCConfigManager(copy.deepcopy(_apc_config_template))
 
     @staticmethod
     def get_apc_config_english() -> ConfigManager:
-        return APCConfigManager(copy.deepcopy(_apc_config_english))
+        _apc_config_template.update(_apc_config_english)
+        return APCConfigManager(copy.deepcopy(_apc_config_template))
 
     @staticmethod
     def get_apc_config_chinese() -> ConfigManager:
-        return APCConfigManager(copy.deepcopy(_apc_config_chinese))
+        _apc_config_template.update(_apc_config_chinese)
+        return APCConfigManager(copy.deepcopy(_apc_config_template))
 
     @staticmethod
     def get_apc_config_multilingual() -> ConfigManager:
-        return APCConfigManager(copy.deepcopy(_apc_config_multilingual))
+        _apc_config_template.update(_apc_config_multilingual)
+        return APCConfigManager(copy.deepcopy(_apc_config_template))
 
     @staticmethod
     def get_apc_config_glove() -> ConfigManager:
-        return APCConfigManager(copy.deepcopy(_apc_config_glove))
+        _apc_config_template.update(_apc_config_glove)
+        return APCConfigManager(copy.deepcopy(_apc_config_template))
 
     @staticmethod
     def get_apc_config_bert_baseline() -> ConfigManager:
-        return APCConfigManager(copy.deepcopy(_apc_config_bert_baseline))
+        _apc_config_template.update(_apc_config_bert_baseline)
+        return APCConfigManager(copy.deepcopy(_apc_config_template))
