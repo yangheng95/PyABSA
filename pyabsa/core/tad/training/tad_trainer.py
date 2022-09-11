@@ -253,9 +253,9 @@ class Instructor:
                     adv_tr_targets = sample_batched['adv_train_label'].to(self.opt.device)
                     adv_det_targets = sample_batched['is_adv'].to(self.opt.device)
 
-                    sen_logits, adv_det_logits, adv_tr_logits = outputs['sent_logits'], outputs['adv_det_logits'], outputs['adv_tr_logits']
+                    sen_logits, advdet_logits, adv_tr_logits = outputs['sent_logits'], outputs['advdet_logits'], outputs['adv_tr_logits']
                     sen_loss = criterion(sen_logits, label_targets)
-                    adv_det_loss = criterion(adv_det_logits, adv_det_targets)
+                    adv_det_loss = criterion(advdet_logits, adv_det_targets)
                     adv_train_loss = criterion(adv_tr_logits, adv_tr_targets)
                     loss = sen_loss + self.opt.args.get('adv_det_weight', 5) * adv_det_loss + self.opt.args.get('adv_train_weight', 5) * adv_train_loss
                     losses.append(loss.item())
@@ -445,7 +445,7 @@ class Instructor:
                 t_adv_det_targets = t_sample_batched['is_adv'].to(self.opt.device)
 
                 t_outputs = self.model(t_inputs)
-                sent_logits, advdet_logits, adv_tr_logits = t_outputs['sent_logits'], t_outputs['adv_det_logits'], t_outputs['adv_tr_logits']
+                sent_logits, advdet_logits, adv_tr_logits = t_outputs['sent_logits'], t_outputs['advdet_logits'], t_outputs['adv_tr_logits']
 
                 # --------------------------------------------------------------------------------------------#
                 valid_label_targets = torch.tensor([x for x in t_label_targets.cpu() if x != -100]).to(self.opt.device)
