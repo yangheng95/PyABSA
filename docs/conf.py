@@ -13,7 +13,7 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
@@ -46,7 +46,7 @@ extensions = [
     'autoapi.extension'
 ]
 autoapi_type = 'python'
-autoapi_dirs = ['../../pyabsa']
+autoapi_dirs = ['../pyabsa']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = []
