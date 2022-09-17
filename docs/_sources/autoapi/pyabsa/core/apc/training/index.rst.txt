@@ -1,0 +1,15 @@
+:py:mod:`pyabsa.core.apc.training`
+==================================
+
+.. py:module:: pyabsa.core.apc.training
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   apc_trainer/index.rst
+
+

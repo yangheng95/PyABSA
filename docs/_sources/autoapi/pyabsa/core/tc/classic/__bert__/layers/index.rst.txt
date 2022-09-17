@@ -1,0 +1,18 @@
+:py:mod:`pyabsa.core.tc.classic.__bert__.layers`
+================================================
+
+.. py:module:: pyabsa.core.tc.classic.__bert__.layers
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   attention/index.rst
+   dynamic_rnn/index.rst
+   point_wise_feed_forward/index.rst
+   squeeze_embedding/index.rst
+
+

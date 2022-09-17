@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyabsa.network.sa_encoder &mdash; PyABSA 1.16.16 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PyABSA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../autoapi/pyabsa/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyabsa/index.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyabsa/core/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.core</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyabsa/functional/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyabsa/network/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.network</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyabsa/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyabsa/index.html#package-contents">Package Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyabsa/index.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyabsa/index.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyabsa/index.html#attributes">Attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyABSA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../pyabsa.html">pyabsa</a> &raquo;</li>
+      <li>pyabsa.network.sa_encoder</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyabsa.network.sa_encoder</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># file: sa_encoder.py</span>
+<span class="c1"># time: 2021/6/6 0006</span>
+<span class="c1"># author: yangheng &lt;hy345@exeter.ac.uk&gt;</span>
+<span class="c1"># github: https://github.com/yangheng95</span>
+<span class="c1"># Copyright (C) 2021. All Rights Reserved.</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+
+
+<div class="viewcode-block" id="BertSelfAttention"><a class="viewcode-back" href="../../../autoapi/pyabsa/network/sa_encoder/index.html#pyabsa.network.sa_encoder.BertSelfAttention">[docs]</a><span class="k">class</span> <span class="nc">BertSelfAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">%</span> <span class="n">config</span><span class="o">.</span><span class="n">num_attention_heads</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s2">&quot;embedding_size&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The hidden size (</span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">hidden_size</span><span class="si">}</span><span class="s2">) is not a multiple of the number of attention &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;heads (</span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">num_attention_heads</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_attention_heads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">num_attention_heads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attention_head_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">/</span> <span class="n">config</span><span class="o">.</span><span class="n">num_attention_heads</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_head_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_attention_heads</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">attention_head_size</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_head_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_head_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_head_size</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">attention_probs_dropout_prob</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;attention_probs_dropout_prob&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position_embedding_type</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s2">&quot;position_embedding_type&quot;</span><span class="p">,</span> <span class="s2">&quot;absolute&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_embedding_type</span> <span class="o">==</span> <span class="s2">&quot;relative_key&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_embedding_type</span> <span class="o">==</span> <span class="s2">&quot;relative_key_query&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_position_embeddings</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">max_position_embeddings</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distance_embedding</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">max_position_embeddings</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">attention_head_size</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_decoder</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">is_decoder</span>
+
+<div class="viewcode-block" id="BertSelfAttention.transpose_for_scores"><a class="viewcode-back" href="../../../autoapi/pyabsa/network/sa_encoder/index.html#pyabsa.network.sa_encoder.BertSelfAttention.transpose_for_scores">[docs]</a>    <span class="k">def</span> <span class="nf">transpose_for_scores</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">new_x_shape</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">()[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_attention_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">attention_head_size</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">*</span><span class="n">new_x_shape</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BertSelfAttention.forward"><a class="viewcode-back" href="../../../autoapi/pyabsa/network/sa_encoder/index.html#pyabsa.network.sa_encoder.BertSelfAttention.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">hidden_states</span><span class="p">,</span>
+            <span class="n">attention_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">head_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">encoder_hidden_states</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">encoder_attention_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">past_key_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">output_attentions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">mixed_query_layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">hidden_states</span><span class="p">)</span>
+
+        <span class="c1"># If this is instantiated as a cross-attention module, the keys</span>
+        <span class="c1"># and values come from an encoder; the attention mask needs to be</span>
+        <span class="c1"># such that the encoder&#39;s padding tokens are not attended to.</span>
+        <span class="n">is_cross_attention</span> <span class="o">=</span> <span class="n">encoder_hidden_states</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">is_cross_attention</span> <span class="ow">and</span> <span class="n">past_key_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># reuse k,v, cross_attentions</span>
+            <span class="n">key_layer</span> <span class="o">=</span> <span class="n">past_key_value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">value_layer</span> <span class="o">=</span> <span class="n">past_key_value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">attention_mask</span> <span class="o">=</span> <span class="n">encoder_attention_mask</span>
+        <span class="k">elif</span> <span class="n">is_cross_attention</span><span class="p">:</span>
+            <span class="n">key_layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transpose_for_scores</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">(</span><span class="n">encoder_hidden_states</span><span class="p">))</span>
+            <span class="n">value_layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transpose_for_scores</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">encoder_hidden_states</span><span class="p">))</span>
+            <span class="n">attention_mask</span> <span class="o">=</span> <span class="n">encoder_attention_mask</span>
+        <span class="k">elif</span> <span class="n">past_key_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">key_layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transpose_for_scores</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">(</span><span class="n">hidden_states</span><span class="p">))</span>
+            <span class="n">value_layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transpose_for_scores</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">hidden_states</span><span class="p">))</span>
+            <span class="n">key_layer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">past_key_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key_layer</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">value_layer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">past_key_value</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">value_layer</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">key_layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transpose_for_scores</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">(</span><span class="n">hidden_states</span><span class="p">))</span>
+            <span class="n">value_layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transpose_for_scores</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">hidden_states</span><span class="p">))</span>
+
+        <span class="n">query_layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transpose_for_scores</span><span class="p">(</span><span class="n">mixed_query_layer</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_decoder</span><span class="p">:</span>
+            <span class="c1"># if cross_attention save Tuple(torch.Tensor, torch.Tensor) of all cross attention key/value_states.</span>
+            <span class="c1"># Further calls to cross_attention layer can then reuse all cross-attention</span>
+            <span class="c1"># key/value_states (first &quot;if&quot; case)</span>
+            <span class="c1"># if uni-directional self-attention (decoder) save Tuple(torch.Tensor, torch.Tensor) of</span>
+            <span class="c1"># all previous decoder key/value_states. Further calls to uni-directional self-attention</span>
+            <span class="c1"># can concat previous decoder key/value_states to current projected key/value_states (third &quot;elif&quot; case)</span>
+            <span class="c1"># if encoder bi-directional self-attention `past_key_value` is always `None`</span>
+            <span class="n">past_key_value</span> <span class="o">=</span> <span class="p">(</span><span class="n">key_layer</span><span class="p">,</span> <span class="n">value_layer</span><span class="p">)</span>
+
+        <span class="c1"># Take the dot product between &quot;query&quot; and &quot;key&quot; to get the raw attention scores.</span>
+        <span class="n">attention_scores</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">query_layer</span><span class="p">,</span> <span class="n">key_layer</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_embedding_type</span> <span class="o">==</span> <span class="s2">&quot;relative_key&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_embedding_type</span> <span class="o">==</span> <span class="s2">&quot;relative_key_query&quot;</span><span class="p">:</span>
+            <span class="n">seq_length</span> <span class="o">=</span> <span class="n">hidden_states</span><span class="o">.</span><span class="n">size</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">position_ids_l</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">seq_length</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">hidden_states</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">position_ids_r</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">seq_length</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">hidden_states</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">distance</span> <span class="o">=</span> <span class="n">position_ids_l</span> <span class="o">-</span> <span class="n">position_ids_r</span>
+            <span class="n">positional_embedding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_embedding</span><span class="p">(</span><span class="n">distance</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_position_embeddings</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">positional_embedding</span> <span class="o">=</span> <span class="n">positional_embedding</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">query_layer</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>  <span class="c1"># fp16 compatibility</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_embedding_type</span> <span class="o">==</span> <span class="s2">&quot;relative_key&quot;</span><span class="p">:</span>
+                <span class="n">relative_position_scores</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;bhld,lrd-&gt;bhlr&quot;</span><span class="p">,</span> <span class="n">query_layer</span><span class="p">,</span> <span class="n">positional_embedding</span><span class="p">)</span>
+                <span class="n">attention_scores</span> <span class="o">=</span> <span class="n">attention_scores</span> <span class="o">+</span> <span class="n">relative_position_scores</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_embedding_type</span> <span class="o">==</span> <span class="s2">&quot;relative_key_query&quot;</span><span class="p">:</span>
+                <span class="n">relative_position_scores_query</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;bhld,lrd-&gt;bhlr&quot;</span><span class="p">,</span> <span class="n">query_layer</span><span class="p">,</span> <span class="n">positional_embedding</span><span class="p">)</span>
+                <span class="n">relative_position_scores_key</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;bhrd,lrd-&gt;bhlr&quot;</span><span class="p">,</span> <span class="n">key_layer</span><span class="p">,</span> <span class="n">positional_embedding</span><span class="p">)</span>
+                <span class="n">attention_scores</span> <span class="o">=</span> <span class="n">attention_scores</span> <span class="o">+</span> <span class="n">relative_position_scores_query</span> <span class="o">+</span> <span class="n">relative_position_scores_key</span>
+
+        <span class="n">attention_scores</span> <span class="o">=</span> <span class="n">attention_scores</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">attention_head_size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attention_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Apply the attention mask is (precomputed for all layers in BertModel forward() function)</span>
+            <span class="n">attention_scores</span> <span class="o">=</span> <span class="n">attention_scores</span> <span class="o">+</span> <span class="n">attention_mask</span>
+
+        <span class="c1"># Normalize the attention scores to probabilities.</span>
+        <span class="n">attention_probs</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Softmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)(</span><span class="n">attention_scores</span><span class="p">)</span>
+
+        <span class="c1"># This is actually dropping out entire tokens to attend to, which might</span>
+        <span class="c1"># seem a bit unusual, but is taken from the original Transformer paper.</span>
+        <span class="n">attention_probs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">attention_probs</span><span class="p">)</span>
+
+        <span class="c1"># Mask heads if we want to</span>
+        <span class="k">if</span> <span class="n">head_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">attention_probs</span> <span class="o">=</span> <span class="n">attention_probs</span> <span class="o">*</span> <span class="n">head_mask</span>
+
+        <span class="n">context_layer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">attention_probs</span><span class="p">,</span> <span class="n">value_layer</span><span class="p">)</span>
+
+        <span class="n">context_layer</span> <span class="o">=</span> <span class="n">context_layer</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>
+        <span class="n">new_context_layer_shape</span> <span class="o">=</span> <span class="n">context_layer</span><span class="o">.</span><span class="n">size</span><span class="p">()[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_head_size</span><span class="p">,)</span>
+        <span class="n">context_layer</span> <span class="o">=</span> <span class="n">context_layer</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">*</span><span class="n">new_context_layer_shape</span><span class="p">)</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">(</span><span class="n">context_layer</span><span class="p">,</span> <span class="n">attention_probs</span><span class="p">)</span> <span class="k">if</span> <span class="n">output_attentions</span> <span class="k">else</span> <span class="p">(</span><span class="n">context_layer</span><span class="p">,)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_decoder</span><span class="p">:</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="n">outputs</span> <span class="o">+</span> <span class="p">(</span><span class="n">past_key_value</span><span class="p">,)</span>
+        <span class="k">return</span> <span class="n">outputs</span></div></div>
+
+
+<div class="viewcode-block" id="Encoder"><a class="viewcode-back" href="../../../autoapi/pyabsa/network/sa_encoder/index.html#pyabsa.network.sa_encoder.Encoder">[docs]</a><span class="k">class</span> <span class="nc">Encoder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">layer_num</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Encoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt</span> <span class="o">=</span> <span class="n">opt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="n">SelfAttention</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">layer_num</span><span class="p">)])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tanh</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Encoder.forward"><a class="viewcode-back" href="../../../autoapi/pyabsa/network/sa_encoder/index.html#pyabsa.network.sa_encoder.Encoder.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">enc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">enc</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">x</span></div></div>
+
+
+<div class="viewcode-block" id="SelfAttention"><a class="viewcode-back" href="../../../autoapi/pyabsa/network/sa_encoder/index.html#pyabsa.network.sa_encoder.SelfAttention">[docs]</a><span class="k">class</span> <span class="nc">SelfAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">opt</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SelfAttention</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt</span> <span class="o">=</span> <span class="n">opt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SA</span> <span class="o">=</span> <span class="n">BertSelfAttention</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SelfAttention.forward"><a class="viewcode-back" href="../../../autoapi/pyabsa/network/sa_encoder/index.html#pyabsa.network.sa_encoder.SelfAttention.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="n">zero_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">inputs</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">))</span>
+        <span class="n">zero_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">zero_vec</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">SA_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SA</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">zero_tensor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SA_out</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Heng Yang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

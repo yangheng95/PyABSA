@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyabsa.functional.checkpoint.checkpoint_manager &mdash; PyABSA 1.16.16 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/clipboard.min.js"></script>
+        <script src="../../../../../_static/copybutton.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> PyABSA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../../core/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.core</span></code></a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../network/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.network</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#package-contents">Package Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../index.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../index.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../index.html#attributes">Attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">PyABSA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional.checkpoint.checkpoint_manager</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/autoapi/pyabsa/functional/checkpoint/checkpoint_manager/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="module-pyabsa.functional.checkpoint.checkpoint_manager">
+<span id="pyabsa-functional-checkpoint-checkpoint-manager"></span><h1><a class="reference internal" href="#module-pyabsa.functional.checkpoint.checkpoint_manager" title="pyabsa.functional.checkpoint.checkpoint_manager"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional.checkpoint.checkpoint_manager</span></code></a><a class="headerlink" href="#module-pyabsa.functional.checkpoint.checkpoint_manager" title="Permalink to this headline"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline"></a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.functional.checkpoint.checkpoint_manager.CheckpointManager" title="pyabsa.functional.checkpoint.checkpoint_manager.CheckpointManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CheckpointManager</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyabsa.functional.checkpoint.checkpoint_manager.APCCheckpointManager" title="pyabsa.functional.checkpoint.checkpoint_manager.APCCheckpointManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">APCCheckpointManager</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.functional.checkpoint.checkpoint_manager.ATEPCCheckpointManager" title="pyabsa.functional.checkpoint.checkpoint_manager.ATEPCCheckpointManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ATEPCCheckpointManager</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyabsa.functional.checkpoint.checkpoint_manager.TCCheckpointManager" title="pyabsa.functional.checkpoint.checkpoint_manager.TCCheckpointManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TCCheckpointManager</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.functional.checkpoint.checkpoint_manager.TADCheckpointManager" title="pyabsa.functional.checkpoint.checkpoint_manager.TADCheckpointManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TADCheckpointManager</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.functional.checkpoint.checkpoint_manager.unzip_checkpoint" title="pyabsa.functional.checkpoint.checkpoint_manager.unzip_checkpoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unzip_checkpoint</span></code></a>(zip_path)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyabsa.functional.checkpoint.checkpoint_manager.parse_checkpoint_info" title="pyabsa.functional.checkpoint.checkpoint_manager.parse_checkpoint_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_checkpoint_info</span></code></a>(t_checkpoint_map[, task])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.functional.checkpoint.checkpoint_manager.available_checkpoints" title="pyabsa.functional.checkpoint.checkpoint_manager.available_checkpoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">available_checkpoints</span></code></a>([task])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyabsa.functional.checkpoint.checkpoint_manager.download_checkpoint" title="pyabsa.functional.checkpoint.checkpoint_manager.download_checkpoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download_checkpoint</span></code></a>(task, language, checkpoint)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.functional.checkpoint.checkpoint_manager.unzip_checkpoint">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.functional.checkpoint.checkpoint_manager.</span></span><span class="sig-name descname"><span class="pre">unzip_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zip_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/pyabsa/functional/checkpoint/checkpoint_manager.html#unzip_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.checkpoint.checkpoint_manager.unzip_checkpoint" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyabsa.functional.checkpoint.checkpoint_manager.CheckpointManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyabsa.functional.checkpoint.checkpoint_manager.</span></span><span class="sig-name descname"><span class="pre">CheckpointManager</span></span><a class="reference internal" href="../../../../../_modules/pyabsa/functional/checkpoint/checkpoint_manager.html#CheckpointManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.checkpoint.checkpoint_manager.CheckpointManager" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyabsa.functional.checkpoint.checkpoint_manager.APCCheckpointManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyabsa.functional.checkpoint.checkpoint_manager.</span></span><span class="sig-name descname"><span class="pre">APCCheckpointManager</span></span><a class="reference internal" href="../../../../../_modules/pyabsa/functional/checkpoint/checkpoint_manager.html#APCCheckpointManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.checkpoint.checkpoint_manager.APCCheckpointManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyabsa.functional.checkpoint.checkpoint_manager.CheckpointManager" title="pyabsa.functional.checkpoint.checkpoint_manager.CheckpointManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CheckpointManager</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.checkpoint.checkpoint_manager.APCCheckpointManager.get_sentiment_classifier">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_sentiment_classifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/pyabsa/functional/checkpoint/checkpoint_manager.html#APCCheckpointManager.get_sentiment_classifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.checkpoint.checkpoint_manager.APCCheckpointManager.get_sentiment_classifier" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>checkpoint</strong> – zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive</p>
+</dd>
+</dl>
+<p>This param is for someone wants to load a checkpoint not registered in PyABSA
+:param auto_device: True or False, otherwise ‘cuda’, ‘cpu’ works
+:param eval_batch_size: eval batch_size in modeling</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.checkpoint.checkpoint_manager.APCCheckpointManager.get_checkpoint">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Chinese'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/pyabsa/functional/checkpoint/checkpoint_manager.html#APCCheckpointManager.get_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.checkpoint.checkpoint_manager.APCCheckpointManager.get_checkpoint" title="Permalink to this definition"></a></dt>
+<dd><p>download the checkpoint and return the path of the downloaded checkpoint
+:param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+This param is for someone wants to load a checkpoint not registered in PyABSA
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyabsa.functional.checkpoint.checkpoint_manager.ATEPCCheckpointManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyabsa.functional.checkpoint.checkpoint_manager.</span></span><span class="sig-name descname"><span class="pre">ATEPCCheckpointManager</span></span><a class="reference internal" href="../../../../../_modules/pyabsa/functional/checkpoint/checkpoint_manager.html#ATEPCCheckpointManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.checkpoint.checkpoint_manager.ATEPCCheckpointManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyabsa.functional.checkpoint.checkpoint_manager.CheckpointManager" title="pyabsa.functional.checkpoint.checkpoint_manager.CheckpointManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CheckpointManager</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.checkpoint.checkpoint_manager.ATEPCCheckpointManager.get_aspect_extractor">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_aspect_extractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/pyabsa/functional/checkpoint/checkpoint_manager.html#ATEPCCheckpointManager.get_aspect_extractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.checkpoint.checkpoint_manager.ATEPCCheckpointManager.get_aspect_extractor" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>checkpoint</strong> – zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive</p>
+</dd>
+</dl>
+<p>This param is for someone wants to load a checkpoint not registered in PyABSA
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.checkpoint.checkpoint_manager.ATEPCCheckpointManager.get_checkpoint">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Chinese'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/pyabsa/functional/checkpoint/checkpoint_manager.html#ATEPCCheckpointManager.get_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.checkpoint.checkpoint_manager.ATEPCCheckpointManager.get_checkpoint" title="Permalink to this definition"></a></dt>
+<dd><p>download the checkpoint and return the path of the downloaded checkpoint
+:param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+This param is for someone wants to load a checkpoint not registered in PyABSA
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyabsa.functional.checkpoint.checkpoint_manager.TCCheckpointManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyabsa.functional.checkpoint.checkpoint_manager.</span></span><span class="sig-name descname"><span class="pre">TCCheckpointManager</span></span><a class="reference internal" href="../../../../../_modules/pyabsa/functional/checkpoint/checkpoint_manager.html#TCCheckpointManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.checkpoint.checkpoint_manager.TCCheckpointManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyabsa.functional.checkpoint.checkpoint_manager.CheckpointManager" title="pyabsa.functional.checkpoint.checkpoint_manager.CheckpointManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CheckpointManager</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.checkpoint.checkpoint_manager.TCCheckpointManager.get_text_classifier">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_text_classifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/pyabsa/functional/checkpoint/checkpoint_manager.html#TCCheckpointManager.get_text_classifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.checkpoint.checkpoint_manager.TCCheckpointManager.get_text_classifier" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>checkpoint</strong> – zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive</p>
+</dd>
+</dl>
+<p>This param is for someone wants to load a checkpoint not registered in PyABSA
+:param auto_device: True or False, otherwise ‘cuda’, ‘cpu’ works
+:param eval_batch_size: eval batch_size in modeling</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.checkpoint.checkpoint_manager.TCCheckpointManager.get_checkpoint">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Chinese'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/pyabsa/functional/checkpoint/checkpoint_manager.html#TCCheckpointManager.get_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.checkpoint.checkpoint_manager.TCCheckpointManager.get_checkpoint" title="Permalink to this definition"></a></dt>
+<dd><p>download the checkpoint and return the path of the downloaded checkpoint
+:param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+This param is for someone wants to load a checkpoint not registered in PyABSA
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyabsa.functional.checkpoint.checkpoint_manager.TADCheckpointManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyabsa.functional.checkpoint.checkpoint_manager.</span></span><span class="sig-name descname"><span class="pre">TADCheckpointManager</span></span><a class="reference internal" href="../../../../../_modules/pyabsa/functional/checkpoint/checkpoint_manager.html#TADCheckpointManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.checkpoint.checkpoint_manager.TADCheckpointManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyabsa.functional.checkpoint.checkpoint_manager.CheckpointManager" title="pyabsa.functional.checkpoint.checkpoint_manager.CheckpointManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CheckpointManager</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.checkpoint.checkpoint_manager.TADCheckpointManager.get_tad_text_classifier">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_tad_text_classifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/pyabsa/functional/checkpoint/checkpoint_manager.html#TADCheckpointManager.get_tad_text_classifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.checkpoint.checkpoint_manager.TADCheckpointManager.get_tad_text_classifier" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>checkpoint</strong> – zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive</p>
+</dd>
+</dl>
+<p>This param is for someone wants to load a checkpoint not registered in PyABSA
+:param auto_device: True or False, otherwise ‘cuda’, ‘cpu’ works
+:param eval_batch_size: eval batch_size in modeling</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.checkpoint.checkpoint_manager.TADCheckpointManager.get_checkpoint">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Chinese'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/pyabsa/functional/checkpoint/checkpoint_manager.html#TADCheckpointManager.get_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.checkpoint.checkpoint_manager.TADCheckpointManager.get_checkpoint" title="Permalink to this definition"></a></dt>
+<dd><p>download the checkpoint and return the path of the downloaded checkpoint
+:param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+This param is for someone wants to load a checkpoint not registered in PyABSA
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.functional.checkpoint.checkpoint_manager.parse_checkpoint_info">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.functional.checkpoint.checkpoint_manager.</span></span><span class="sig-name descname"><span class="pre">parse_checkpoint_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_checkpoint_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'APC'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/pyabsa/functional/checkpoint/checkpoint_manager.html#parse_checkpoint_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.checkpoint.checkpoint_manager.parse_checkpoint_info" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.functional.checkpoint.checkpoint_manager.available_checkpoints">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.functional.checkpoint.checkpoint_manager.</span></span><span class="sig-name descname"><span class="pre">available_checkpoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/pyabsa/functional/checkpoint/checkpoint_manager.html#available_checkpoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.checkpoint.checkpoint_manager.available_checkpoints" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.functional.checkpoint.checkpoint_manager.download_checkpoint">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.functional.checkpoint.checkpoint_manager.</span></span><span class="sig-name descname"><span class="pre">download_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/pyabsa/functional/checkpoint/checkpoint_manager.html#download_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.checkpoint.checkpoint_manager.download_checkpoint" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Heng Yang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

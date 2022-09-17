@@ -1,0 +1,133 @@
+:py:mod:`pyabsa.core.atepc.dataset_utils.data_utils_for_training`
+=================================================================
+
+.. py:module:: pyabsa.core.atepc.dataset_utils.data_utils_for_training
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.core.atepc.dataset_utils.data_utils_for_training.InputExample
+   pyabsa.core.atepc.dataset_utils.data_utils_for_training.InputFeatures
+   pyabsa.core.atepc.dataset_utils.data_utils_for_training.DataProcessor
+   pyabsa.core.atepc.dataset_utils.data_utils_for_training.ATEPCProcessor
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.core.atepc.dataset_utils.data_utils_for_training.readfile
+   pyabsa.core.atepc.dataset_utils.data_utils_for_training.split_aspect
+   pyabsa.core.atepc.dataset_utils.data_utils_for_training.convert_examples_to_features
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.core.atepc.dataset_utils.data_utils_for_training.Labels
+
+
+.. py:data:: Labels
+   
+
+   
+
+.. py:class:: InputExample(guid, text_a, text_b=None, IOB_label=None, aspect_label=None, polarity=None)
+
+   Bases: :py:obj:`object`
+
+   A single training_tutorials/test example for simple sequence classification.
+
+
+.. py:class:: InputFeatures(input_ids_spc, input_mask, segment_ids, label_id, polarity=None, valid_ids=None, label_mask=None, tokens=None, lcf_cdm_vec=None, lcf_cdw_vec=None)
+
+   Bases: :py:obj:`object`
+
+   A single set of features of data.
+
+
+.. py:function:: readfile(filename)
+
+   read file
+
+
+.. py:function:: split_aspect(tag1, tag2=None)
+
+
+.. py:class:: DataProcessor
+
+   Bases: :py:obj:`object`
+
+   Base class for data converters for sequence classification data sets.
+
+   .. py:method:: get_train_examples(data_dir)
+      :abstractmethod:
+
+      Gets a collection of `InputExample`s for the train set.
+
+
+   .. py:method:: get_dev_examples(data_dir)
+      :abstractmethod:
+
+      Gets a collection of `InputExample`s for the dev set.
+
+
+   .. py:method:: get_labels()
+      :abstractmethod:
+
+      Gets the list of labels for this data set.
+
+
+   .. py:method:: _read_tsv(input_file, quotechar=None)
+      :classmethod:
+
+      Reads a tab separated value file.
+
+
+
+.. py:class:: ATEPCProcessor(tokenizer)
+
+   Bases: :py:obj:`DataProcessor`
+
+   Processor for the CoNLL-2003 data set.
+
+   .. py:method:: get_train_examples(data_dir, set_tag)
+
+      See base class.
+
+
+   .. py:method:: get_valid_examples(data_dir, set_tag)
+
+      See base class.
+
+
+   .. py:method:: get_test_examples(data_dir, set_tag)
+
+      See base class.
+
+
+   .. py:method:: get_labels()
+
+      Gets the list of labels for this data set.
+
+
+   .. py:method:: _create_examples(lines, set_type)
+
+
+
+.. py:function:: convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None)
+
+   Loads a data file into a list of `InputBatch`s.
+
+

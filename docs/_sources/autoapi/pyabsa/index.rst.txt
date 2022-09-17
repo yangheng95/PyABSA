@@ -1,0 +1,1184 @@
+:py:mod:`pyabsa`
+================
+
+.. py:module:: pyabsa
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   core/index.rst
+   functional/index.rst
+   network/index.rst
+   utils/index.rst
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.APCTrainer
+   pyabsa.ATEPCTrainer
+   pyabsa.TCTrainer
+   pyabsa.TADTrainer
+   pyabsa.APCModelList
+   pyabsa.BERTBaselineAPCModelList
+   pyabsa.GloVeAPCModelList
+   pyabsa.GloVeTCModelList
+   pyabsa.BERTTCModelList
+   pyabsa.GloVeTADModelList
+   pyabsa.BERTTADModelList
+   pyabsa.ATEPCModelList
+   pyabsa.TCCheckpointManager
+   pyabsa.TADCheckpointManager
+   pyabsa.APCCheckpointManager
+   pyabsa.ATEPCCheckpointManager
+   pyabsa.ABSADatasetList
+   pyabsa.TCDatasetList
+   pyabsa.AdvTCDatasetList
+   pyabsa.APCConfigManager
+   pyabsa.ATEPCConfigManager
+   pyabsa.TCConfigManager
+   pyabsa.TADConfigManager
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.available_checkpoints
+   pyabsa.check_update_log
+   pyabsa.validate_pyabsa_version
+   pyabsa.make_ABSA_dataset
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.__version__
+   pyabsa.__name__
+   pyabsa.ClassificationDatasetList
+   pyabsa.TextClassifierCheckpointManager
+   pyabsa.GloVeClassificationModelList
+   pyabsa.BERTClassificationModelList
+   pyabsa.ClassificationConfigManager
+   pyabsa.TextClassificationTrainer
+   pyabsa.checker
+   pyabsa.check_result
+
+
+.. py:data:: __version__
+   :annotation: = 1.16.16
+
+   
+
+.. py:data:: __name__
+   :annotation: = pyabsa
+
+   
+
+.. py:class:: APCTrainer(config: pyabsa.functional.config.config_manager.ConfigManager = None, dataset=None, from_checkpoint: str = None, checkpoint_save_mode: int = 0, auto_device=True, path_to_save=None, load_aug=False)
+
+   Bases: :py:obj:`Trainer`
+
+
+.. py:class:: ATEPCTrainer(config: pyabsa.functional.config.config_manager.ConfigManager = None, dataset=None, from_checkpoint: str = None, checkpoint_save_mode: int = 0, auto_device=True, path_to_save=None, load_aug=False)
+
+   Bases: :py:obj:`Trainer`
+
+
+.. py:class:: TCTrainer(config: pyabsa.functional.config.config_manager.ConfigManager = None, dataset=None, from_checkpoint: str = None, checkpoint_save_mode: int = 0, auto_device=True, path_to_save=None, load_aug=False)
+
+   Bases: :py:obj:`Trainer`
+
+
+.. py:class:: TADTrainer(config: pyabsa.functional.config.config_manager.ConfigManager = None, dataset=None, from_checkpoint: str = None, checkpoint_save_mode: int = 0, auto_device=True, path_to_save=None, load_aug=False)
+
+   Bases: :py:obj:`Trainer`
+
+
+.. py:class:: APCModelList
+
+   Bases: :py:obj:`list`
+
+   Built-in mutable sequence.
+
+   If no argument is given, the constructor creates a new empty list.
+   The argument must be an iterable if specified.
+
+   .. py:attribute:: SLIDE_LCF_BERT
+      
+
+      
+
+   .. py:attribute:: SLIDE_LCFS_BERT
+      
+
+      
+
+   .. py:attribute:: LSA_T
+      
+
+      
+
+   .. py:attribute:: LSA_S
+      
+
+      
+
+   .. py:attribute:: FAST_LSA_T
+      
+
+      
+
+   .. py:attribute:: FAST_LSA_S
+      
+
+      
+
+   .. py:attribute:: FAST_LSA_T_V2
+      
+
+      
+
+   .. py:attribute:: FAST_LSA_S_V2
+      
+
+      
+
+   .. py:attribute:: DLCF_DCA_BERT
+      
+
+      
+
+   .. py:attribute:: DLCFS_DCA_BERT
+      
+
+      
+
+   .. py:attribute:: LCF_BERT
+      
+
+      
+
+   .. py:attribute:: FAST_LCF_BERT
+      
+
+      
+
+   .. py:attribute:: LCF_DUAL_BERT
+      
+
+      
+
+   .. py:attribute:: LCFS_BERT
+      
+
+      
+
+   .. py:attribute:: FAST_LCFS_BERT
+      
+
+      
+
+   .. py:attribute:: LCFS_DUAL_BERT
+      
+
+      
+
+   .. py:attribute:: LCA_BERT
+      
+
+      
+
+   .. py:attribute:: BERT_BASE
+      
+
+      
+
+   .. py:attribute:: BERT_SPC
+      
+
+      
+
+   .. py:attribute:: BERT_SPC_V2
+      
+
+      
+
+   .. py:attribute:: FAST_LCF_BERT_ATT
+      
+
+      
+
+   .. py:attribute:: LCF_TEMPLATE_BERT
+      
+
+      
+
+
+.. py:class:: BERTBaselineAPCModelList
+
+   Bases: :py:obj:`list`
+
+   Built-in mutable sequence.
+
+   If no argument is given, the constructor creates a new empty list.
+   The argument must be an iterable if specified.
+
+   .. py:attribute:: LSTM_BERT
+      
+
+      
+
+   .. py:attribute:: IAN_BERT
+      
+
+      
+
+   .. py:attribute:: MemNet_BERT
+      
+
+      
+
+   .. py:attribute:: RAM_BERT
+      
+
+      
+
+   .. py:attribute:: TD_LSTM_BERT
+      
+
+      
+
+   .. py:attribute:: TC_LSTM_BERT
+      
+
+      
+
+   .. py:attribute:: Cabasc_BERT
+      
+
+      
+
+   .. py:attribute:: ATAE_LSTM_BERT
+      
+
+      
+
+   .. py:attribute:: TNet_LF_BERT
+      
+
+      
+
+   .. py:attribute:: AOA_BERT
+      
+
+      
+
+   .. py:attribute:: MGAN_BERT
+      
+
+      
+
+   .. py:attribute:: ASGCN_BERT
+      
+
+      
+
+
+.. py:class:: GloVeAPCModelList
+
+   Bases: :py:obj:`list`
+
+   Built-in mutable sequence.
+
+   If no argument is given, the constructor creates a new empty list.
+   The argument must be an iterable if specified.
+
+   .. py:attribute:: LSTM
+      
+
+      
+
+   .. py:attribute:: IAN
+      
+
+      
+
+   .. py:attribute:: MemNet
+      
+
+      
+
+   .. py:attribute:: RAM
+      
+
+      
+
+   .. py:attribute:: TD_LSTM
+      
+
+      
+
+   .. py:attribute:: TC_LSTM
+      
+
+      
+
+   .. py:attribute:: Cabasc
+      
+
+      
+
+   .. py:attribute:: ATAE_LSTM
+      
+
+      
+
+   .. py:attribute:: TNet_LF
+      
+
+      
+
+   .. py:attribute:: AOA
+      
+
+      
+
+   .. py:attribute:: MGAN
+      
+
+      
+
+   .. py:attribute:: ASGCN
+      
+
+      
+
+
+.. py:class:: GloVeTCModelList
+
+   Bases: :py:obj:`list`
+
+   Built-in mutable sequence.
+
+   If no argument is given, the constructor creates a new empty list.
+   The argument must be an iterable if specified.
+
+   .. py:attribute:: LSTM
+      
+
+      
+
+
+.. py:class:: BERTTCModelList
+
+   Bases: :py:obj:`list`
+
+   Built-in mutable sequence.
+
+   If no argument is given, the constructor creates a new empty list.
+   The argument must be an iterable if specified.
+
+   .. py:attribute:: BERT
+      
+
+      
+
+
+.. py:class:: GloVeTADModelList
+
+   Bases: :py:obj:`list`
+
+   Built-in mutable sequence.
+
+   If no argument is given, the constructor creates a new empty list.
+   The argument must be an iterable if specified.
+
+   .. py:attribute:: TADLSTM
+      
+
+      
+
+
+.. py:class:: BERTTADModelList
+
+   Bases: :py:obj:`list`
+
+   Built-in mutable sequence.
+
+   If no argument is given, the constructor creates a new empty list.
+   The argument must be an iterable if specified.
+
+   .. py:attribute:: TADBERT
+      
+
+      
+
+
+.. py:class:: ATEPCModelList
+
+   Bases: :py:obj:`list`
+
+   Built-in mutable sequence.
+
+   If no argument is given, the constructor creates a new empty list.
+   The argument must be an iterable if specified.
+
+   .. py:attribute:: BERT_BASE_ATEPC
+      
+
+      
+
+   .. py:attribute:: FAST_LCF_ATEPC
+      
+
+      
+
+   .. py:attribute:: FAST_LCFS_ATEPC
+      
+
+      
+
+   .. py:attribute:: LCF_ATEPC
+      
+
+      
+
+   .. py:attribute:: LCF_ATEPC_LARGE
+      
+
+      
+
+   .. py:attribute:: LCFS_ATEPC
+      
+
+      
+
+   .. py:attribute:: LCFS_ATEPC_LARGE
+      
+
+      
+
+   .. py:attribute:: LCF_TEMPLATE_ATEPC
+      
+
+      
+
+
+.. py:class:: TCCheckpointManager
+
+   Bases: :py:obj:`CheckpointManager`
+
+   .. py:method:: get_text_classifier(checkpoint: str = None, **kwargs)
+      :staticmethod:
+
+      :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+      This param is for someone wants to load a checkpoint not registered in PyABSA
+      :param auto_device: True or False, otherwise 'cuda', 'cpu' works
+      :param eval_batch_size: eval batch_size in modeling
+
+      :return:
+
+
+   .. py:method:: get_checkpoint(checkpoint: str = 'Chinese')
+      :staticmethod:
+
+      download the checkpoint and return the path of the downloaded checkpoint
+      :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+      This param is for someone wants to load a checkpoint not registered in PyABSA
+      :return:
+
+
+
+.. py:class:: TADCheckpointManager
+
+   Bases: :py:obj:`CheckpointManager`
+
+   .. py:method:: get_tad_text_classifier(checkpoint: str = None, eval_batch_size=128, **kwargs)
+      :staticmethod:
+
+      :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+      This param is for someone wants to load a checkpoint not registered in PyABSA
+      :param auto_device: True or False, otherwise 'cuda', 'cpu' works
+      :param eval_batch_size: eval batch_size in modeling
+
+      :return:
+
+
+   .. py:method:: get_checkpoint(checkpoint: str = 'Chinese')
+      :staticmethod:
+
+      download the checkpoint and return the path of the downloaded checkpoint
+      :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+      This param is for someone wants to load a checkpoint not registered in PyABSA
+      :return:
+
+
+
+.. py:class:: APCCheckpointManager
+
+   Bases: :py:obj:`CheckpointManager`
+
+   .. py:method:: get_sentiment_classifier(checkpoint: str = None, **kwargs)
+      :staticmethod:
+
+      :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+      This param is for someone wants to load a checkpoint not registered in PyABSA
+      :param auto_device: True or False, otherwise 'cuda', 'cpu' works
+      :param eval_batch_size: eval batch_size in modeling
+
+      :return:
+
+
+   .. py:method:: get_checkpoint(checkpoint: str = 'Chinese')
+      :staticmethod:
+
+      download the checkpoint and return the path of the downloaded checkpoint
+      :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+      This param is for someone wants to load a checkpoint not registered in PyABSA
+      :return:
+
+
+
+.. py:class:: ATEPCCheckpointManager
+
+   Bases: :py:obj:`CheckpointManager`
+
+   .. py:method:: get_aspect_extractor(checkpoint: str = None, **kwargs)
+      :staticmethod:
+
+      :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+      This param is for someone wants to load a checkpoint not registered in PyABSA
+      :return:
+
+
+   .. py:method:: get_checkpoint(checkpoint: str = 'Chinese')
+      :staticmethod:
+
+      download the checkpoint and return the path of the downloaded checkpoint
+      :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+      This param is for someone wants to load a checkpoint not registered in PyABSA
+      :return:
+
+
+
+.. py:function:: available_checkpoints(task='')
+
+
+.. py:class:: ABSADatasetList
+
+   Bases: :py:obj:`list`
+
+   Built-in mutable sequence.
+
+   If no argument is given, the constructor creates a new empty list.
+   The argument must be an iterable if specified.
+
+   .. py:attribute:: Laptop14
+      
+
+      
+
+   .. py:attribute:: Restaurant14
+      
+
+      
+
+   .. py:attribute:: ARTS_Laptop14
+      
+
+      
+
+   .. py:attribute:: ARTS_Restaurant14
+      
+
+      
+
+   .. py:attribute:: Restaurant15
+      
+
+      
+
+   .. py:attribute:: Restaurant16
+      
+
+      
+
+   .. py:attribute:: ACL_Twitter
+      
+
+      
+
+   .. py:attribute:: MAMS
+      
+
+      
+
+   .. py:attribute:: Television
+      
+
+      
+
+   .. py:attribute:: TShirt
+      
+
+      
+
+   .. py:attribute:: Yelp
+      
+
+      
+
+   .. py:attribute:: Phone
+      
+
+      
+
+   .. py:attribute:: Car
+      
+
+      
+
+   .. py:attribute:: Notebook
+      
+
+      
+
+   .. py:attribute:: Camera
+      
+
+      
+
+   .. py:attribute:: Shampoo
+      
+
+      
+
+   .. py:attribute:: MOOC
+      
+
+      
+
+   .. py:attribute:: MOOC_En
+      
+
+      
+
+   .. py:attribute:: Chinese
+      
+
+      
+
+   .. py:attribute:: Binary_Polarity_Chinese
+      
+
+      
+
+   .. py:attribute:: Triple_Polarity_Chinese
+      
+
+      
+
+   .. py:attribute:: SemEval2016Task5
+      
+
+      
+
+   .. py:attribute:: Arabic_SemEval2016Task5
+      
+
+      
+
+   .. py:attribute:: Dutch_SemEval2016Task5
+      
+
+      
+
+   .. py:attribute:: Spanish_SemEval2016Task5
+      
+
+      
+
+   .. py:attribute:: Turkish_SemEval2016Task5
+      
+
+      
+
+   .. py:attribute:: Russian_SemEval2016Task5
+      
+
+      
+
+   .. py:attribute:: French_SemEval2016Task5
+      
+
+      
+
+   .. py:attribute:: English_SemEval2016Task5
+      
+
+      
+
+   .. py:attribute:: English
+      
+
+      
+
+   .. py:attribute:: SemEval
+      
+
+      
+
+   .. py:attribute:: Restaurant
+      
+
+      
+
+   .. py:attribute:: Multilingual
+      
+
+      
+
+
+.. py:class:: TCDatasetList
+
+   Bases: :py:obj:`list`
+
+   Built-in mutable sequence.
+
+   If no argument is given, the constructor creates a new empty list.
+   The argument must be an iterable if specified.
+
+   .. py:attribute:: SST1
+      
+
+      
+
+   .. py:attribute:: SST5
+      
+
+      
+
+   .. py:attribute:: SST2
+      
+
+      
+
+   .. py:attribute:: AGNews10K
+      
+
+      
+
+   .. py:attribute:: IMDB10K
+      
+
+      
+
+   .. py:attribute:: AGNews120K
+      
+
+      
+
+   .. py:attribute:: IMDB50K
+      
+
+      
+
+   .. py:attribute:: Yelp10K
+      
+
+      
+
+   .. py:attribute:: Yelp700K
+      
+
+      
+
+   .. py:attribute:: SST
+      
+
+      
+
+
+.. py:class:: AdvTCDatasetList
+
+   Bases: :py:obj:`TCDatasetList`
+
+   Built-in mutable sequence.
+
+   If no argument is given, the constructor creates a new empty list.
+   The argument must be an iterable if specified.
+
+
+.. py:class:: APCConfigManager(args, **kwargs)
+
+   Bases: :py:obj:`pyabsa.functional.config.config_manager.ConfigManager`
+
+   Simple object for storing attributes.
+
+   Implements equality by attribute names and values, and provides a simple
+   string representation.
+
+   .. py:method:: set_apc_config(configType: str, newitem: dict)
+      :staticmethod:
+
+
+   .. py:method:: set_apc_config_template(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_apc_config_base(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_apc_config_english(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_apc_config_chinese(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_apc_config_multilingual(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_apc_config_glove(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_apc_config_bert_baseline(newitem)
+      :staticmethod:
+
+
+   .. py:method:: get_apc_config_template() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_apc_config_base() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_apc_config_english() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_apc_config_chinese() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_apc_config_multilingual() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_apc_config_glove() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_apc_config_bert_baseline() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+
+.. py:class:: ATEPCConfigManager(args, **kwargs)
+
+   Bases: :py:obj:`pyabsa.functional.config.config_manager.ConfigManager`
+
+   Simple object for storing attributes.
+
+   Implements equality by attribute names and values, and provides a simple
+   string representation.
+
+   .. py:method:: set_atepc_config(configType: str, newitem: dict)
+      :staticmethod:
+
+
+   .. py:method:: set_atepc_config_template(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_atepc_config_base(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_atepc_config_english(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_atepc_config_chinese(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_atepc_config_multilingual(newitem)
+      :staticmethod:
+
+
+   .. py:method:: get_atepc_config_template() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_atepc_config_base() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_atepc_config_english() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_atepc_config_chinese() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_atepc_config_multilingual() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+
+.. py:class:: TCConfigManager(args, **kwargs)
+
+   Bases: :py:obj:`pyabsa.functional.config.config_manager.ConfigManager`
+
+   Simple object for storing attributes.
+
+   Implements equality by attribute names and values, and provides a simple
+   string representation.
+
+   .. py:method:: set_tc_config(configType: str, newitem: dict)
+      :staticmethod:
+
+
+   .. py:method:: set_tc_config_template(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_tc_config_base(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_tc_config_english(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_tc_config_chinese(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_tc_config_multilingual(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_tc_config_glove(newitem)
+      :staticmethod:
+
+
+   .. py:method:: get_tc_config_template() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_tc_config_base() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_tc_config_english() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_tc_config_chinese() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_tc_config_multilingual() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_tc_config_glove() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: set_classification_config_template(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_classification_config_base(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_classification_config_english(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_classification_config_chinese(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_classification_config_multilingual(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_classification_config_glove(newitem)
+      :staticmethod:
+
+
+   .. py:method:: get_classification_config_template() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_classification_config_base() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_classification_config_english() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_classification_config_chinese() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_classification_config_multilingual() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_classification_config_glove() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+
+.. py:class:: TADConfigManager(args, **kwargs)
+
+   Bases: :py:obj:`pyabsa.functional.config.config_manager.ConfigManager`
+
+   Simple object for storing attributes.
+
+   Implements equality by attribute names and values, and provides a simple
+   string representation.
+
+   .. py:method:: set_tad_config(configType: str, newitem: dict)
+      :staticmethod:
+
+
+   .. py:method:: set_tad_config_template(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_tad_config_base(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_tad_config_english(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_tad_config_chinese(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_tad_config_multilingual(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_tad_config_glove(newitem)
+      :staticmethod:
+
+
+   .. py:method:: get_tad_config_template() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_tad_config_base() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_tad_config_english() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_tad_config_chinese() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_tad_config_multilingual() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_tad_config_glove() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+
+.. py:function:: check_update_log()
+
+
+.. py:function:: validate_pyabsa_version()
+
+
+.. py:function:: make_ABSA_dataset(dataset_name_or_path, checkpoint='english')
+
+   Make APC and ATEPC datasets for PyABSA, using aspect extractor from PyABSA to automatically build datasets. This method WILL NOT give you the best performance but is quite fast and labor-free.
+   The names of dataset files to be processed should end with '.raw.ignore'. The files will be processed and saved to the same directory. The files will be overwritten if they already exist.
+   The data in the dataset files will be plain text row by row.
+
+   For obtaining the best performance, you should use DPT tool in ABSADatasets to manually annotate the dataset files,
+   which can be found in the following link:  https://github.com/yangheng95/ABSADatasets/tree/v1.2/DPT . This tool should be downloaded and run on a browser.
+
+   is much more time-consuming.
+   :param dataset_name_or_path: The name of the dataset to be processed. If the name is a directory, all files in the directory will be processed. If it is a file, only the file will be processed.
+   If it is a directory name, I use the findfile to find all files in the directory.
+   :param checkpoint: Which checkpoint to use. Basically, You can select from {'multilingual', 'english', 'chinese'}, Default is 'english'.
+   :return:
+
+
+.. py:data:: ClassificationDatasetList
+   
+
+   
+
+.. py:data:: TextClassifierCheckpointManager
+   
+
+   
+
+.. py:data:: GloVeClassificationModelList
+   
+
+   
+
+.. py:data:: BERTClassificationModelList
+   
+
+   
+
+.. py:data:: ClassificationConfigManager
+   
+
+   
+
+.. py:data:: TextClassificationTrainer
+   
+
+   
+
+.. py:data:: checker
+   
+
+   
+
+.. py:data:: check_result
+   
+
+   
+

@@ -1,0 +1,18 @@
+:py:mod:`pyabsa.core.tc`
+========================
+
+.. py:module:: pyabsa.core.tc
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   classic/index.rst
+   models/index.rst
+   prediction/index.rst
+   training/index.rst
+
+

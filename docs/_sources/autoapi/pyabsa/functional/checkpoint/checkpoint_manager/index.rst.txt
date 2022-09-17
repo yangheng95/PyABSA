@@ -1,0 +1,146 @@
+:py:mod:`pyabsa.functional.checkpoint.checkpoint_manager`
+=========================================================
+
+.. py:module:: pyabsa.functional.checkpoint.checkpoint_manager
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.functional.checkpoint.checkpoint_manager.CheckpointManager
+   pyabsa.functional.checkpoint.checkpoint_manager.APCCheckpointManager
+   pyabsa.functional.checkpoint.checkpoint_manager.ATEPCCheckpointManager
+   pyabsa.functional.checkpoint.checkpoint_manager.TCCheckpointManager
+   pyabsa.functional.checkpoint.checkpoint_manager.TADCheckpointManager
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.functional.checkpoint.checkpoint_manager.unzip_checkpoint
+   pyabsa.functional.checkpoint.checkpoint_manager.parse_checkpoint_info
+   pyabsa.functional.checkpoint.checkpoint_manager.available_checkpoints
+   pyabsa.functional.checkpoint.checkpoint_manager.download_checkpoint
+
+
+
+.. py:function:: unzip_checkpoint(zip_path)
+
+
+.. py:class:: CheckpointManager
+
+
+.. py:class:: APCCheckpointManager
+
+   Bases: :py:obj:`CheckpointManager`
+
+   .. py:method:: get_sentiment_classifier(checkpoint: str = None, **kwargs)
+      :staticmethod:
+
+      :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+      This param is for someone wants to load a checkpoint not registered in PyABSA
+      :param auto_device: True or False, otherwise 'cuda', 'cpu' works
+      :param eval_batch_size: eval batch_size in modeling
+
+      :return:
+
+
+   .. py:method:: get_checkpoint(checkpoint: str = 'Chinese')
+      :staticmethod:
+
+      download the checkpoint and return the path of the downloaded checkpoint
+      :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+      This param is for someone wants to load a checkpoint not registered in PyABSA
+      :return:
+
+
+
+.. py:class:: ATEPCCheckpointManager
+
+   Bases: :py:obj:`CheckpointManager`
+
+   .. py:method:: get_aspect_extractor(checkpoint: str = None, **kwargs)
+      :staticmethod:
+
+      :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+      This param is for someone wants to load a checkpoint not registered in PyABSA
+      :return:
+
+
+   .. py:method:: get_checkpoint(checkpoint: str = 'Chinese')
+      :staticmethod:
+
+      download the checkpoint and return the path of the downloaded checkpoint
+      :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+      This param is for someone wants to load a checkpoint not registered in PyABSA
+      :return:
+
+
+
+.. py:class:: TCCheckpointManager
+
+   Bases: :py:obj:`CheckpointManager`
+
+   .. py:method:: get_text_classifier(checkpoint: str = None, **kwargs)
+      :staticmethod:
+
+      :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+      This param is for someone wants to load a checkpoint not registered in PyABSA
+      :param auto_device: True or False, otherwise 'cuda', 'cpu' works
+      :param eval_batch_size: eval batch_size in modeling
+
+      :return:
+
+
+   .. py:method:: get_checkpoint(checkpoint: str = 'Chinese')
+      :staticmethod:
+
+      download the checkpoint and return the path of the downloaded checkpoint
+      :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+      This param is for someone wants to load a checkpoint not registered in PyABSA
+      :return:
+
+
+
+.. py:class:: TADCheckpointManager
+
+   Bases: :py:obj:`CheckpointManager`
+
+   .. py:method:: get_tad_text_classifier(checkpoint: str = None, eval_batch_size=128, **kwargs)
+      :staticmethod:
+
+      :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+      This param is for someone wants to load a checkpoint not registered in PyABSA
+      :param auto_device: True or False, otherwise 'cuda', 'cpu' works
+      :param eval_batch_size: eval batch_size in modeling
+
+      :return:
+
+
+   .. py:method:: get_checkpoint(checkpoint: str = 'Chinese')
+      :staticmethod:
+
+      download the checkpoint and return the path of the downloaded checkpoint
+      :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
+      This param is for someone wants to load a checkpoint not registered in PyABSA
+      :return:
+
+
+
+.. py:function:: parse_checkpoint_info(t_checkpoint_map, task='APC')
+
+
+.. py:function:: available_checkpoints(task='')
+
+
+.. py:function:: download_checkpoint(task: str, language: str, checkpoint: dict)
+
+

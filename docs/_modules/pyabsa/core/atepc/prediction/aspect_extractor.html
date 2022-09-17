@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyabsa.core.atepc.prediction.aspect_extractor &mdash; PyABSA 1.16.16 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/clipboard.min.js"></script>
+        <script src="../../../../../_static/copybutton.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> PyABSA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../autoapi/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../autoapi/pyabsa/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../autoapi/pyabsa/index.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/core/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.core</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/functional/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/network/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.network</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../autoapi/pyabsa/index.html#package-contents">Package Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/index.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/index.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/index.html#attributes">Attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">PyABSA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../../../pyabsa.html">pyabsa</a> &raquo;</li>
+          <li><a href="../../atepc.html">pyabsa.core.atepc</a> &raquo;</li>
+      <li>pyabsa.core.atepc.prediction.aspect_extractor</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyabsa.core.atepc.prediction.aspect_extractor</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># file: aspect_extractor.py</span>
+<span class="c1"># time: 2021/5/26 0026</span>
+<span class="c1"># author: yangheng &lt;hy345@exeter.ac.uk&gt;</span>
+<span class="c1"># github: https://github.com/yangheng95</span>
+<span class="c1"># Copyright (C) 2021. All Rights Reserved.</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">import</span> <span class="nn">tqdm</span>
+<span class="kn">from</span> <span class="nn">findfile</span> <span class="kn">import</span> <span class="n">find_file</span><span class="p">,</span> <span class="n">find_cwd_dir</span>
+<span class="kn">from</span> <span class="nn">termcolor</span> <span class="kn">import</span> <span class="n">colored</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="p">(</span><span class="n">DataLoader</span><span class="p">,</span> <span class="n">SequentialSampler</span><span class="p">,</span> <span class="n">TensorDataset</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">AutoModel</span>
+
+<span class="kn">from</span> <span class="nn">pyabsa.functional.dataset</span> <span class="kn">import</span> <span class="n">detect_infer_dataset</span><span class="p">,</span> <span class="n">DatasetItem</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.atepc.models</span> <span class="kn">import</span> <span class="n">ATEPCModelList</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.atepc.dataset_utils.atepc_utils</span> <span class="kn">import</span> <span class="n">load_atepc_inference_datasets</span><span class="p">,</span> <span class="n">process_iob_tags</span>
+<span class="kn">from</span> <span class="nn">pyabsa.utils.pyabsa_utils</span> <span class="kn">import</span> <span class="n">print_args</span><span class="p">,</span> <span class="n">TransformerConnectionError</span><span class="p">,</span> <span class="n">get_device</span>
+<span class="kn">from</span> <span class="nn">..dataset_utils.data_utils_for_inference</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ATEPCProcessor</span><span class="p">,</span>
+                                                      <span class="n">convert_ate_examples_to_features</span><span class="p">,</span>
+                                                      <span class="n">convert_apc_examples_to_features</span><span class="p">,</span>
+                                                      <span class="n">SENTIMENT_PADDING</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..dataset_utils.data_utils_for_training</span> <span class="kn">import</span> <span class="n">split_aspect</span>
+
+
+<div class="viewcode-block" id="AspectExtractor"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/atepc/prediction/aspect_extractor/index.html#pyabsa.core.atepc.prediction.aspect_extractor.AspectExtractor">[docs]</a><span class="k">class</span> <span class="nc">AspectExtractor</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_arg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="c1"># load from a training</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model_arg</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Load aspect extractor from training&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model_arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">opt</span> <span class="o">=</span> <span class="n">model_arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">model_arg</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;fine-tuned&#39;</span> <span class="ow">in</span> <span class="n">model_arg</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Load aspect extractor from&#39;</span><span class="p">,</span> <span class="n">model_arg</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">state_dict_path</span> <span class="o">=</span> <span class="n">find_file</span><span class="p">(</span><span class="n">model_arg</span><span class="p">,</span> <span class="s1">&#39;.state_dict&#39;</span><span class="p">,</span> <span class="n">exclude_key</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;__MACOSX&#39;</span><span class="p">])</span>
+                <span class="n">model_path</span> <span class="o">=</span> <span class="n">find_file</span><span class="p">(</span><span class="n">model_arg</span><span class="p">,</span> <span class="s1">&#39;.model&#39;</span><span class="p">,</span> <span class="n">exclude_key</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;__MACOSX&#39;</span><span class="p">])</span>
+                <span class="n">tokenizer_path</span> <span class="o">=</span> <span class="n">find_file</span><span class="p">(</span><span class="n">model_arg</span><span class="p">,</span> <span class="s1">&#39;.tokenizer&#39;</span><span class="p">,</span> <span class="n">exclude_key</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;__MACOSX&#39;</span><span class="p">])</span>
+                <span class="n">config_path</span> <span class="o">=</span> <span class="n">find_file</span><span class="p">(</span><span class="n">model_arg</span><span class="p">,</span> <span class="s1">&#39;.config&#39;</span><span class="p">,</span> <span class="n">exclude_key</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;__MACOSX&#39;</span><span class="p">])</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;config: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config_path</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;state_dict: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state_dict_path</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;model: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_path</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;tokenizer: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tokenizer_path</span><span class="p">))</span>
+
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">opt</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">get_device</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;auto_device&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">state_dict_path</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;offline&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                            <span class="n">bert_base_model</span> <span class="o">=</span> <span class="n">AutoModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">find_cwd_dir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">pretrained_bert</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">bert_base_model</span> <span class="o">=</span> <span class="n">AutoModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">pretrained_bert</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">TransformerConnectionError</span><span class="p">()</span>
+
+                    <span class="n">bert_base_model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">num_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">num_labels</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">bert_base_model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">state_dict_path</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">model_path</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">opt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;offline&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">find_cwd_dir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">pretrained_bert</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">pretrained_bert</span><span class="p">,</span> <span class="n">do_lower_case</span><span class="o">=</span><span class="s1">&#39;uncased&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">pretrained_bert</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">tokenizer_path</span><span class="p">:</span>
+                        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tokenizer_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">TransformerConnectionError</span><span class="p">()</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">bos_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">bos_token</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">bos_token</span> <span class="k">else</span> <span class="s1">&#39;[CLS]&#39;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">eos_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">eos_token</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">eos_token</span> <span class="k">else</span> <span class="s1">&#39;[SEP]&#39;</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Exception: </span><span class="si">{}</span><span class="s1"> Fail to load the model from </span><span class="si">{}</span><span class="s1">! &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">model_arg</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ATEPCModelList</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;The checkpoint you are loading is not from any ATEPC model.&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">processor</span> <span class="o">=</span> <span class="n">ATEPCProcessor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_labels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">label_list</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="c1"># random.seed(self.opt.seed)</span>
+        <span class="c1"># np.random.seed(self.opt.seed)</span>
+        <span class="c1"># torch.manual_seed(self.opt.seed)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Config used in Training:&#39;</span><span class="p">)</span>
+        <span class="n">print_args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">gradient_accumulation_steps</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid gradient_accumulation_steps parameter: </span><span class="si">{}</span><span class="s2">, should be &gt;= 1&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">gradient_accumulation_steps</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval_dataloader</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">eval_batch_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;eval_batch_size&#39;</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AspectExtractor.to"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/atepc/prediction/aspect_extractor/index.html#pyabsa.core.atepc.prediction.aspect_extractor.AspectExtractor.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;MLM&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MLM</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AspectExtractor.cpu"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/atepc/prediction/aspect_extractor/index.html#pyabsa.core.atepc.prediction.aspect_extractor.AspectExtractor.cpu">[docs]</a>    <span class="k">def</span> <span class="nf">cpu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;cpu&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;MLM&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MLM</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AspectExtractor.cuda"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/atepc/prediction/aspect_extractor/index.html#pyabsa.core.atepc.prediction.aspect_extractor.AspectExtractor.cuda">[docs]</a>    <span class="k">def</span> <span class="nf">cuda</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda:0&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;MLM&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MLM</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AspectExtractor.merge_result"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/atepc/prediction/aspect_extractor/index.html#pyabsa.core.atepc.prediction.aspect_extractor.AspectExtractor.merge_result">[docs]</a>    <span class="k">def</span> <span class="nf">merge_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence_res</span><span class="p">,</span> <span class="n">results</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; merge ate sentence result and apc results, and restore to original sentence order</span>
+<span class="sd">        Args:</span>
+<span class="sd">            sentence_res ([tuple]): list of ate sentence results, which has (tokens, iobs)</span>
+<span class="sd">            results ([dict]): list of apc results</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            [dict]: merged extraction/polarity results for each input example</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">final_res</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;polarity_res&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">merged_results</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+            <span class="n">pre_example_id</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="c1"># merge ate and apc results, assume they are same ordered</span>
+            <span class="k">for</span> <span class="n">item1</span><span class="p">,</span> <span class="n">item2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;extraction_res&#39;</span><span class="p">],</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;polarity_res&#39;</span><span class="p">]):</span>
+                <span class="n">cur_example_id</span> <span class="o">=</span> <span class="n">item1</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+                <span class="k">assert</span> <span class="n">cur_example_id</span> <span class="o">==</span> <span class="n">item2</span><span class="p">[</span><span class="s1">&#39;example_id&#39;</span><span class="p">],</span> <span class="s2">&quot;ate and apc results should be same ordered&quot;</span>
+                <span class="k">if</span> <span class="n">pre_example_id</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">cur_example_id</span> <span class="o">!=</span> <span class="n">pre_example_id</span><span class="p">:</span>
+                    <span class="n">merged_results</span><span class="p">[</span><span class="n">cur_example_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="s1">&#39;sentence&#39;</span><span class="p">:</span> <span class="n">item2</span><span class="p">[</span><span class="s1">&#39;sentence&#39;</span><span class="p">],</span>
+                        <span class="s1">&#39;aspect&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">item2</span><span class="p">[</span><span class="s1">&#39;aspect&#39;</span><span class="p">]],</span>
+                        <span class="s1">&#39;position&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">item2</span><span class="p">[</span><span class="s1">&#39;pos_ids&#39;</span><span class="p">]],</span>
+                        <span class="s1">&#39;sentiment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">item2</span><span class="p">[</span><span class="s1">&#39;sentiment&#39;</span><span class="p">]],</span>
+                        <span class="s1">&#39;probs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">item2</span><span class="p">[</span><span class="s1">&#39;probs&#39;</span><span class="p">]],</span>
+                        <span class="s1">&#39;confidence&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">item2</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">]],</span>
+                    <span class="p">}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">merged_results</span><span class="p">[</span><span class="n">cur_example_id</span><span class="p">][</span><span class="s1">&#39;aspect&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item2</span><span class="p">[</span><span class="s1">&#39;aspect&#39;</span><span class="p">])</span>
+                    <span class="n">merged_results</span><span class="p">[</span><span class="n">cur_example_id</span><span class="p">][</span><span class="s1">&#39;position&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item2</span><span class="p">[</span><span class="s1">&#39;pos_ids&#39;</span><span class="p">])</span>
+                    <span class="n">merged_results</span><span class="p">[</span><span class="n">cur_example_id</span><span class="p">][</span><span class="s1">&#39;sentiment&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item2</span><span class="p">[</span><span class="s1">&#39;sentiment&#39;</span><span class="p">])</span>
+                    <span class="n">merged_results</span><span class="p">[</span><span class="n">cur_example_id</span><span class="p">][</span><span class="s1">&#39;probs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item2</span><span class="p">[</span><span class="s1">&#39;probs&#39;</span><span class="p">])</span>
+                    <span class="n">merged_results</span><span class="p">[</span><span class="n">cur_example_id</span><span class="p">][</span><span class="s1">&#39;confidence&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item2</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">])</span>
+                <span class="c1"># remember example id</span>
+                <span class="n">pre_example_id</span> <span class="o">=</span> <span class="n">item1</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sentence_res</span><span class="p">):</span>
+                <span class="n">asp_res</span> <span class="o">=</span> <span class="n">merged_results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">final_res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s1">&#39;sentence&#39;</span><span class="p">:</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                        <span class="s1">&#39;IOB&#39;</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                        <span class="s1">&#39;tokens&#39;</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="s1">&#39;aspect&#39;</span><span class="p">:</span> <span class="n">asp_res</span><span class="p">[</span><span class="s1">&#39;aspect&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">asp_res</span> <span class="k">else</span> <span class="p">[],</span>
+                        <span class="s1">&#39;position&#39;</span><span class="p">:</span> <span class="n">asp_res</span><span class="p">[</span><span class="s1">&#39;position&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">asp_res</span> <span class="k">else</span> <span class="p">[],</span>
+                        <span class="s1">&#39;sentiment&#39;</span><span class="p">:</span> <span class="n">asp_res</span><span class="p">[</span><span class="s1">&#39;sentiment&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">asp_res</span> <span class="k">else</span> <span class="p">[],</span>
+                        <span class="s1">&#39;probs&#39;</span><span class="p">:</span> <span class="n">asp_res</span><span class="p">[</span><span class="s1">&#39;probs&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">asp_res</span> <span class="k">else</span> <span class="p">[],</span>
+                        <span class="s1">&#39;confidence&#39;</span><span class="p">:</span> <span class="n">asp_res</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">asp_res</span> <span class="k">else</span> <span class="p">[],</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sentence_res</span><span class="p">:</span>
+                <span class="n">final_res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s1">&#39;sentence&#39;</span><span class="p">:</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                        <span class="s1">&#39;IOB&#39;</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                        <span class="s1">&#39;tokens&#39;</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">final_res</span></div>
+
+<div class="viewcode-block" id="AspectExtractor.extract_aspect"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/atepc/prediction/aspect_extractor/index.html#pyabsa.core.atepc.prediction.aspect_extractor.AspectExtractor.extract_aspect">[docs]</a>    <span class="k">def</span> <span class="nf">extract_aspect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inference_source</span><span class="p">,</span> <span class="n">save_result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">print_result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pred_sentiment</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;extraction_res&#39;</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">(),</span> <span class="s1">&#39;polarity_res&#39;</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">()}</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inference_source</span><span class="p">,</span> <span class="n">DatasetItem</span><span class="p">):</span>
+            <span class="c1"># using integrated inference dataset</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">inference_source</span><span class="p">:</span>
+                <span class="n">inference_set</span> <span class="o">=</span> <span class="n">detect_infer_dataset</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s1">&#39;apc&#39;</span><span class="p">)</span>
+                <span class="n">inference_source</span> <span class="o">=</span> <span class="n">load_atepc_inference_datasets</span><span class="p">(</span><span class="n">inference_set</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inference_source</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>  <span class="c1"># for dataset path</span>
+            <span class="n">inference_source</span> <span class="o">=</span> <span class="n">DatasetItem</span><span class="p">(</span><span class="n">inference_source</span><span class="p">)</span>
+            <span class="c1"># using custom inference dataset</span>
+            <span class="n">inference_set</span> <span class="o">=</span> <span class="n">detect_infer_dataset</span><span class="p">(</span><span class="n">inference_source</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s1">&#39;apc&#39;</span><span class="p">)</span>
+            <span class="n">inference_source</span> <span class="o">=</span> <span class="n">load_atepc_inference_datasets</span><span class="p">(</span><span class="n">inference_set</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inference_source</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Please run inference using examples list or inference dataset path (list)!&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">inference_source</span><span class="p">:</span>
+            <span class="n">extraction_res</span><span class="p">,</span> <span class="n">sentence_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract</span><span class="p">(</span><span class="n">inference_source</span><span class="p">)</span>
+            <span class="n">results</span><span class="p">[</span><span class="s1">&#39;extraction_res&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">extraction_res</span>
+            <span class="k">if</span> <span class="n">pred_sentiment</span><span class="p">:</span>
+                <span class="n">results</span><span class="p">[</span><span class="s1">&#39;polarity_res&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_infer</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;extraction_res&#39;</span><span class="p">])</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_result</span><span class="p">(</span><span class="n">sentence_res</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">save_result</span><span class="p">:</span>
+                <span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;atepc_inference.result.json&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The results of aspect term extraction have been saved in </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">save_path</span><span class="p">))</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">print_result</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">ex_id</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+                    <span class="n">colored_text</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;sentence&#39;</span><span class="p">][:]</span>
+                    <span class="k">for</span> <span class="n">aspect</span><span class="p">,</span> <span class="n">sentiment</span><span class="p">,</span> <span class="n">confidence</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;aspect&#39;</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;sentiment&#39;</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">]):</span>
+                        <span class="k">if</span> <span class="n">sentiment</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;POSITIVE&#39;</span><span class="p">:</span>
+                            <span class="n">colored_aspect</span> <span class="o">=</span> <span class="n">colored</span><span class="p">(</span><span class="s1">&#39;&lt;</span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1"> Confidence:</span><span class="si">{}</span><span class="s1">&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">aspect</span><span class="p">,</span> <span class="n">sentiment</span><span class="p">,</span> <span class="n">confidence</span><span class="p">),</span> <span class="s1">&#39;green&#39;</span><span class="p">)</span>
+                        <span class="k">elif</span> <span class="n">sentiment</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;NEUTRAL&#39;</span><span class="p">:</span>
+                            <span class="n">colored_aspect</span> <span class="o">=</span> <span class="n">colored</span><span class="p">(</span><span class="s1">&#39;&lt;</span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1"> Confidence:</span><span class="si">{}</span><span class="s1">&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">aspect</span><span class="p">,</span> <span class="n">sentiment</span><span class="p">,</span> <span class="n">confidence</span><span class="p">),</span> <span class="s1">&#39;cyan&#39;</span><span class="p">)</span>
+                        <span class="k">elif</span> <span class="n">sentiment</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;NEGATIVE&#39;</span><span class="p">:</span>
+                            <span class="n">colored_aspect</span> <span class="o">=</span> <span class="n">colored</span><span class="p">(</span><span class="s1">&#39;&lt;</span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1"> Confidence:</span><span class="si">{}</span><span class="s1">&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">aspect</span><span class="p">,</span> <span class="n">sentiment</span><span class="p">,</span> <span class="n">confidence</span><span class="p">),</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">colored_aspect</span> <span class="o">=</span> <span class="n">colored</span><span class="p">(</span><span class="s1">&#39;&lt;</span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1"> Confidence:</span><span class="si">{}</span><span class="s1">&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">aspect</span><span class="p">,</span> <span class="n">sentiment</span><span class="p">,</span> <span class="n">confidence</span><span class="p">),</span> <span class="s1">&#39;magenta&#39;</span><span class="p">)</span>
+                        <span class="n">colored_text</span> <span class="o">=</span> <span class="n">colored_text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; </span><span class="si">{}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">aspect</span><span class="p">),</span> <span class="s1">&#39; </span><span class="si">{}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">colored_aspect</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">res_format</span> <span class="o">=</span> <span class="s1">&#39;Example </span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ex_id</span><span class="p">,</span> <span class="n">colored_text</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">res_format</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">results</span></div>
+
+    <span class="c1"># Temporal code, pending optimization</span>
+<div class="viewcode-block" id="AspectExtractor._extract"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/atepc/prediction/aspect_extractor/index.html#pyabsa.core.atepc.prediction.aspect_extractor.AspectExtractor._extract">[docs]</a>    <span class="k">def</span> <span class="nf">_extract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">examples</span><span class="p">,</span> <span class="n">infer_batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">):</span>
+        <span class="n">sentence_res</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># extraction result by sentence</span>
+        <span class="n">extraction_res</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># extraction result flatten by aspect</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">infer_dataloader</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">examples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">get_examples_for_aspect_extraction</span><span class="p">(</span><span class="n">examples</span><span class="p">)</span>
+        <span class="n">infer_features</span> <span class="o">=</span> <span class="n">convert_ate_examples_to_features</span><span class="p">(</span><span class="n">examples</span><span class="p">,</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">label_list</span><span class="p">,</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">,</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">)</span>
+        <span class="n">all_spc_input_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">input_ids_spc</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+        <span class="n">all_segment_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">segment_ids</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+        <span class="n">all_input_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">input_mask</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+        <span class="n">all_label_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">label_id</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+        <span class="n">all_polarities</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">polarity</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+        <span class="n">all_valid_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">valid_ids</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+        <span class="n">all_lmask_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">label_mask</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+
+        <span class="n">all_tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">tokens</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">]</span>
+        <span class="n">infer_data</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="n">all_spc_input_ids</span><span class="p">,</span> <span class="n">all_segment_ids</span><span class="p">,</span> <span class="n">all_input_mask</span><span class="p">,</span> <span class="n">all_label_ids</span><span class="p">,</span>
+                                   <span class="n">all_polarities</span><span class="p">,</span> <span class="n">all_valid_ids</span><span class="p">,</span> <span class="n">all_lmask_ids</span><span class="p">)</span>
+        <span class="c1"># Run prediction for full data</span>
+        <span class="n">infer_sampler</span> <span class="o">=</span> <span class="n">SequentialSampler</span><span class="p">(</span><span class="n">infer_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">infer_batch_size</span> <span class="o">=</span> <span class="n">infer_batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">infer_dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">infer_data</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">infer_sampler</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">infer_batch_size</span><span class="p">)</span>
+
+        <span class="c1"># extract_aspects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;index_to_IOB_label&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+            <span class="n">label_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">label</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">label_list</span><span class="p">,</span> <span class="mi">1</span><span class="p">)}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">label_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">index_to_IOB_label</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">infer_data</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">it</span> <span class="o">=</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infer_dataloader</span><span class="p">,</span> <span class="n">postfix</span><span class="o">=</span><span class="s1">&#39;extracting aspect terms...&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">it</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">infer_dataloader</span>
+        <span class="k">for</span> <span class="n">i_batch</span><span class="p">,</span> <span class="p">(</span><span class="n">input_ids_spc</span><span class="p">,</span> <span class="n">segment_ids</span><span class="p">,</span> <span class="n">input_mask</span><span class="p">,</span> <span class="n">label_ids</span><span class="p">,</span> <span class="n">polarity</span><span class="p">,</span> <span class="n">valid_ids</span><span class="p">,</span> <span class="n">l_mask</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">it</span><span class="p">):</span>
+            <span class="n">input_ids_spc</span> <span class="o">=</span> <span class="n">input_ids_spc</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">segment_ids</span> <span class="o">=</span> <span class="n">segment_ids</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">input_mask</span> <span class="o">=</span> <span class="n">input_mask</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">label_ids</span> <span class="o">=</span> <span class="n">label_ids</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">polarity</span> <span class="o">=</span> <span class="n">polarity</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">valid_ids</span> <span class="o">=</span> <span class="n">valid_ids</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">l_mask</span> <span class="o">=</span> <span class="n">l_mask</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                <span class="n">ate_logits</span><span class="p">,</span> <span class="n">apc_logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">input_ids_spc</span><span class="p">,</span>
+                                                    <span class="n">token_type_ids</span><span class="o">=</span><span class="n">segment_ids</span><span class="p">,</span>
+                                                    <span class="n">attention_mask</span><span class="o">=</span><span class="n">input_mask</span><span class="p">,</span>
+                                                    <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                                    <span class="n">polarity</span><span class="o">=</span><span class="n">polarity</span><span class="p">,</span>
+                                                    <span class="n">valid_ids</span><span class="o">=</span><span class="n">valid_ids</span><span class="p">,</span>
+                                                    <span class="n">attention_mask_label</span><span class="o">=</span><span class="n">l_mask</span><span class="p">,</span>
+                                                    <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">use_bert_spc</span><span class="p">:</span>
+                <span class="n">label_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_batch_token_labels_bert_base_indices</span><span class="p">(</span><span class="n">label_ids</span><span class="p">)</span>
+            <span class="n">ate_logits</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">ate_logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">ate_logits</span> <span class="o">=</span> <span class="n">ate_logits</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+            <span class="n">label_ids</span> <span class="o">=</span> <span class="n">label_ids</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">i_ate_logits</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ate_logits</span><span class="p">):</span>
+                <span class="n">pred_iobs</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">sentence_res</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">all_tokens</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">infer_batch_size</span> <span class="o">*</span> <span class="n">i_batch</span><span class="p">)],</span> <span class="n">pred_iobs</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">label_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+                    <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">pred_iobs</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_tokens</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">infer_batch_size</span> <span class="o">*</span> <span class="n">i_batch</span><span class="p">)]):</span>
+                        <span class="k">break</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">pred_iobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_ate_logits</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="s1">&#39;O&#39;</span><span class="p">))</span>
+
+                <span class="n">ate_result</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">polarity</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">all_tokens</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">infer_batch_size</span> <span class="o">*</span> <span class="n">i_batch</span><span class="p">)],</span> <span class="n">pred_iobs</span><span class="p">):</span>
+                    <span class="n">ate_result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">(</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="s1">&#39;ASP&#39;</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+                        <span class="n">polarity</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="n">SENTIMENT_PADDING</span><span class="p">)</span>  <span class="c1"># 1 tags the valid position aspect terms</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">polarity</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SENTIMENT_PADDING</span><span class="p">)</span>
+
+                <span class="n">POLARITY_PADDING</span> <span class="o">=</span> <span class="p">[</span><span class="n">SENTIMENT_PADDING</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">polarity</span><span class="p">)</span>
+                <span class="n">example_id</span> <span class="o">=</span> <span class="n">i_batch</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">infer_batch_size</span> <span class="o">+</span> <span class="n">i</span>
+                <span class="n">pred_iobs</span> <span class="o">=</span> <span class="n">process_iob_tags</span><span class="p">(</span><span class="n">pred_iobs</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">polarity</span><span class="p">)):</span>
+
+                    <span class="k">if</span> <span class="n">polarity</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">(</span><span class="n">SENTIMENT_PADDING</span><span class="p">)</span> <span class="ow">and</span> <span class="n">split_aspect</span><span class="p">(</span><span class="n">pred_iobs</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pred_iobs</span><span class="p">[</span><span class="n">idx</span><span class="p">]):</span>
+                        <span class="n">_polarity</span> <span class="o">=</span> <span class="n">polarity</span><span class="p">[:</span><span class="n">idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">POLARITY_PADDING</span><span class="p">[</span><span class="n">idx</span><span class="p">:]</span>
+                        <span class="n">polarity</span> <span class="o">=</span> <span class="n">POLARITY_PADDING</span><span class="p">[:</span><span class="n">idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">polarity</span><span class="p">[</span><span class="n">idx</span><span class="p">:]</span>
+                        <span class="n">extraction_res</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">all_tokens</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">infer_batch_size</span> <span class="o">*</span> <span class="n">i_batch</span><span class="p">)],</span> <span class="n">pred_iobs</span><span class="p">,</span> <span class="n">_polarity</span><span class="p">,</span> <span class="n">example_id</span><span class="p">))</span>
+
+                    <span class="k">if</span> <span class="n">polarity</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">(</span><span class="n">SENTIMENT_PADDING</span><span class="p">)</span> <span class="ow">and</span> <span class="n">idx</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">polarity</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">split_aspect</span><span class="p">(</span><span class="n">pred_iobs</span><span class="p">[</span><span class="n">idx</span><span class="p">]):</span>
+                        <span class="n">_polarity</span> <span class="o">=</span> <span class="n">polarity</span><span class="p">[:</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">POLARITY_PADDING</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
+                        <span class="n">polarity</span> <span class="o">=</span> <span class="n">POLARITY_PADDING</span><span class="p">[:</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">polarity</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
+                        <span class="n">extraction_res</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">all_tokens</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">infer_batch_size</span> <span class="o">*</span> <span class="n">i_batch</span><span class="p">)],</span> <span class="n">pred_iobs</span><span class="p">,</span> <span class="n">_polarity</span><span class="p">,</span> <span class="n">example_id</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">extraction_res</span><span class="p">,</span> <span class="n">sentence_res</span></div>
+
+<div class="viewcode-block" id="AspectExtractor._infer"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/atepc/prediction/aspect_extractor/index.html#pyabsa.core.atepc.prediction.aspect_extractor.AspectExtractor._infer">[docs]</a>    <span class="k">def</span> <span class="nf">_infer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">examples</span><span class="p">):</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># sentiment classification result</span>
+        <span class="c1"># ate example id map to apc example id</span>
+        <span class="n">example_id_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">apc_id</span><span class="p">,</span> <span class="n">ex</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="k">for</span> <span class="n">apc_id</span><span class="p">,</span> <span class="n">ex</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">examples</span><span class="p">)])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">infer_dataloader</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">examples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">get_examples_for_sentiment_classification</span><span class="p">(</span><span class="n">examples</span><span class="p">)</span>
+        <span class="n">infer_features</span> <span class="o">=</span> <span class="n">convert_apc_examples_to_features</span><span class="p">(</span><span class="n">examples</span><span class="p">,</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">label_list</span><span class="p">,</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">,</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">)</span>
+        <span class="n">all_spc_input_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">input_ids_spc</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+        <span class="n">all_segment_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">segment_ids</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+        <span class="n">all_input_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">input_mask</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+        <span class="n">all_label_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">label_id</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+        <span class="n">all_valid_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">valid_ids</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+        <span class="n">all_lmask_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">label_mask</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+        <span class="n">lcf_cdm_vec</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">lcf_cdm_vec</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">lcf_cdw_vec</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">lcf_cdw_vec</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">all_tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">tokens</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">]</span>
+        <span class="n">all_aspects</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">aspect</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">]</span>
+        <span class="n">all_positions</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">positions</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">infer_features</span><span class="p">]</span>
+        <span class="n">infer_data</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="n">all_spc_input_ids</span><span class="p">,</span> <span class="n">all_segment_ids</span><span class="p">,</span> <span class="n">all_input_mask</span><span class="p">,</span> <span class="n">all_label_ids</span><span class="p">,</span>
+                                   <span class="n">all_valid_ids</span><span class="p">,</span> <span class="n">all_lmask_ids</span><span class="p">,</span> <span class="n">lcf_cdm_vec</span><span class="p">,</span> <span class="n">lcf_cdw_vec</span><span class="p">)</span>
+        <span class="c1"># Run prediction for full data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">infer_batch_size</span> <span class="o">=</span> <span class="mi">128</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">use_bert_spc</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">infer_sampler</span> <span class="o">=</span> <span class="n">SequentialSampler</span><span class="p">(</span><span class="n">infer_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">infer_dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">infer_data</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">infer_sampler</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">infer_batch_size</span><span class="p">)</span>
+
+        <span class="c1"># extract_aspects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+        <span class="c1"># Correct = {True: &#39;Correct&#39;, False: &#39;Wrong&#39;}</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">infer_data</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">it</span> <span class="o">=</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infer_dataloader</span><span class="p">,</span> <span class="n">postfix</span><span class="o">=</span><span class="s1">&#39;classifying aspect sentiments...&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">it</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">infer_dataloader</span>
+        <span class="k">for</span> <span class="n">i_batch</span><span class="p">,</span> <span class="n">batch</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">it</span><span class="p">):</span>
+            <span class="n">input_ids_spc</span><span class="p">,</span> <span class="n">segment_ids</span><span class="p">,</span> <span class="n">input_mask</span><span class="p">,</span> <span class="n">label_ids</span><span class="p">,</span> \
+            <span class="n">valid_ids</span><span class="p">,</span> <span class="n">l_mask</span><span class="p">,</span> <span class="n">lcf_cdm_vec</span><span class="p">,</span> <span class="n">lcf_cdw_vec</span> <span class="o">=</span> <span class="n">batch</span>
+            <span class="n">input_ids_spc</span> <span class="o">=</span> <span class="n">input_ids_spc</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">segment_ids</span> <span class="o">=</span> <span class="n">segment_ids</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">input_mask</span> <span class="o">=</span> <span class="n">input_mask</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">label_ids</span> <span class="o">=</span> <span class="n">label_ids</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">valid_ids</span> <span class="o">=</span> <span class="n">valid_ids</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">l_mask</span> <span class="o">=</span> <span class="n">l_mask</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">lcf_cdm_vec</span> <span class="o">=</span> <span class="n">lcf_cdm_vec</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">lcf_cdw_vec</span> <span class="o">=</span> <span class="n">lcf_cdw_vec</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                <span class="n">ate_logits</span><span class="p">,</span> <span class="n">apc_logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">input_ids_spc</span><span class="p">,</span>
+                                                    <span class="n">token_type_ids</span><span class="o">=</span><span class="n">segment_ids</span><span class="p">,</span>
+                                                    <span class="n">attention_mask</span><span class="o">=</span><span class="n">input_mask</span><span class="p">,</span>
+                                                    <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                                    <span class="n">valid_ids</span><span class="o">=</span><span class="n">valid_ids</span><span class="p">,</span>
+                                                    <span class="n">attention_mask_label</span><span class="o">=</span><span class="n">l_mask</span><span class="p">,</span>
+                                                    <span class="n">lcf_cdm_vec</span><span class="o">=</span><span class="n">lcf_cdm_vec</span><span class="p">,</span>
+                                                    <span class="n">lcf_cdw_vec</span><span class="o">=</span><span class="n">lcf_cdw_vec</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">i_apc_logits</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">apc_logits</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="s1">&#39;index_to_label&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">args</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">i_apc_logits</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">index_to_label</span><span class="p">:</span>
+                        <span class="n">sent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">index_to_label</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">i_apc_logits</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">sent</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">i_apc_logits</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="n">probs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">i_apc_logits</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
+                    <span class="n">apc_id</span> <span class="o">=</span> <span class="n">i_batch</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">infer_batch_size</span> <span class="o">+</span> <span class="n">i</span>
+                    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;sentence&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">all_tokens</span><span class="p">[</span><span class="n">apc_id</span><span class="p">])</span>
+                    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;tokens&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_tokens</span><span class="p">[</span><span class="n">apc_id</span><span class="p">]</span>
+                    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;probs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">probs</span>
+                    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">probs</span><span class="p">)</span>
+                    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;aspect&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_aspects</span><span class="p">[</span><span class="n">apc_id</span><span class="p">]</span>
+                    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;pos_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">examples</span><span class="p">[</span><span class="n">apc_id</span><span class="p">]</span><span class="o">.</span><span class="n">IOB_label</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;O&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;sentiment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sent</span>
+                    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;example_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">example_id_map</span><span class="p">[</span><span class="n">apc_id</span><span class="p">]</span>
+                    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">res</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Heng Yang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

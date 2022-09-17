@@ -1,0 +1,63 @@
+:py:mod:`pyabsa.functional.config.config_manager`
+=================================================
+
+.. py:module:: pyabsa.functional.config.config_manager
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.functional.config.config_manager.ConfigManager
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.functional.config.config_manager.config_check
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.functional.config.config_manager.one_shot_messages
+
+
+.. py:data:: one_shot_messages
+   
+
+   
+
+.. py:function:: config_check(args)
+
+
+.. py:class:: ConfigManager(args=None, **kwargs)
+
+   Bases: :py:obj:`argparse.Namespace`
+
+   Simple object for storing attributes.
+
+   Implements equality by attribute names and values, and provides a simple
+   string representation.
+
+   .. py:method:: __getattribute__(arg_name)
+
+      Return getattr(self, name).
+
+
+   .. py:method:: __setattr__(arg_name, value)
+
+      Implement setattr(self, name, value).
+
+
+

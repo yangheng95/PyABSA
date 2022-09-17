@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyabsa.functional.checkpoint.checkpoint_manager &mdash; PyABSA 1.16.16 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/clipboard.min.js"></script>
+        <script src="../../../../_static/copybutton.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> PyABSA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../autoapi/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../autoapi/pyabsa/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/pyabsa/index.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/pyabsa/core/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.core</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/pyabsa/functional/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/pyabsa/network/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.network</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/pyabsa/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/pyabsa/index.html#package-contents">Package Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/pyabsa/index.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/pyabsa/index.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/pyabsa/index.html#attributes">Attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">PyABSA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../../pyabsa.html">pyabsa</a> &raquo;</li>
+          <li><a href="../../functional.html">pyabsa.functional</a> &raquo;</li>
+      <li>pyabsa.functional.checkpoint.checkpoint_manager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyabsa.functional.checkpoint.checkpoint_manager</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># file: checkpoint_manager.py</span>
+<span class="c1"># time: 2021/6/11 0011</span>
+<span class="c1"># author: yangheng &lt;hy345@exeter.ac.uk&gt;</span>
+<span class="c1"># github: https://github.com/yangheng95</span>
+<span class="c1"># Copyright (C) 2021. All Rights Reserved.</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">zipfile</span>
+<span class="kn">from</span> <span class="nn">distutils.version</span> <span class="kn">import</span> <span class="n">StrictVersion</span>
+
+<span class="kn">import</span> <span class="nn">gdown</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">tqdm</span>
+<span class="kn">from</span> <span class="nn">findfile</span> <span class="kn">import</span> <span class="n">find_files</span><span class="p">,</span> <span class="n">find_file</span><span class="p">,</span> <span class="n">find_cwd_files</span>
+<span class="kn">from</span> <span class="nn">termcolor</span> <span class="kn">import</span> <span class="n">colored</span>
+
+<span class="kn">from</span> <span class="nn">pyabsa</span> <span class="kn">import</span> <span class="n">__version__</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.apc.prediction.sentiment_classifier</span> <span class="kn">import</span> <span class="n">SentimentClassifier</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.atepc.prediction.aspect_extractor</span> <span class="kn">import</span> <span class="n">AspectExtractor</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.tad.prediction.tad_classifier</span> <span class="kn">import</span> <span class="n">TADTextClassifier</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.tc.prediction.text_classifier</span> <span class="kn">import</span> <span class="n">TextClassifier</span>
+<span class="kn">from</span> <span class="nn">pyabsa.utils.pyabsa_utils</span> <span class="kn">import</span> <span class="n">retry</span>
+
+
+<div class="viewcode-block" id="unzip_checkpoint"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/checkpoint/checkpoint_manager/index.html#pyabsa.functional.checkpoint.checkpoint_manager.unzip_checkpoint">[docs]</a><span class="k">def</span> <span class="nf">unzip_checkpoint</span><span class="p">(</span><span class="n">zip_path</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Find zipped checkpoint: </span><span class="si">{}</span><span class="s1">, unzipping...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zip_path</span><span class="p">))</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">zip_path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">zip_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.zip&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">zip_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">z</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">zip_path</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done.&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">BadZipfile</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Unzip failed&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zip_path</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">zip_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.zip&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CheckpointManager"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/checkpoint/checkpoint_manager/index.html#pyabsa.functional.checkpoint.checkpoint_manager.CheckpointManager">[docs]</a><span class="k">class</span> <span class="nc">CheckpointManager</span><span class="p">:</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="APCCheckpointManager"><a class="viewcode-back" href="../../../../autoapi/pyabsa/index.html#pyabsa.functional.checkpoint.checkpoint_manager.APCCheckpointManager">[docs]</a><span class="k">class</span> <span class="nc">APCCheckpointManager</span><span class="p">(</span><span class="n">CheckpointManager</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="nd">@retry</span>
+<div class="viewcode-block" id="APCCheckpointManager.get_sentiment_classifier"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/checkpoint/checkpoint_manager/index.html#pyabsa.functional.checkpoint.checkpoint_manager.APCCheckpointManager.get_sentiment_classifier">[docs]</a>    <span class="k">def</span> <span class="nf">get_sentiment_classifier</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive</span>
+<span class="sd">        This param is for someone wants to load a checkpoint not registered in PyABSA</span>
+<span class="sd">        :param auto_device: True or False, otherwise &#39;cuda&#39;, &#39;cpu&#39; works</span>
+<span class="sd">        :param eval_batch_size: eval batch_size in modeling</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">):</span>
+            <span class="n">checkpoint_config</span> <span class="o">=</span> <span class="n">find_file</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;.config&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">checkpoint_config</span> <span class="o">=</span> <span class="n">find_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="p">[</span><span class="n">checkpoint</span><span class="p">,</span> <span class="s1">&#39;.config&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">checkpoint_config</span><span class="p">:</span>
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">checkpoint_config</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">checkpoint</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.zip&#39;</span><span class="p">):</span>
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">unzip_checkpoint</span><span class="p">(</span>
+                <span class="n">checkpoint</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">)</span> <span class="k">else</span> <span class="n">find_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">checkpoint</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">APCCheckpointManager</span><span class="o">.</span><span class="n">get_checkpoint</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">)</span>
+
+        <span class="n">sent_classifier</span> <span class="o">=</span> <span class="n">SentimentClassifier</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sent_classifier</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="APCCheckpointManager.get_checkpoint"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/checkpoint/checkpoint_manager/index.html#pyabsa.functional.checkpoint.checkpoint_manager.APCCheckpointManager.get_checkpoint">[docs]</a>    <span class="k">def</span> <span class="nf">get_checkpoint</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;Chinese&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        download the checkpoint and return the path of the downloaded checkpoint</span>
+<span class="sd">        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive</span>
+<span class="sd">        This param is for someone wants to load a checkpoint not registered in PyABSA</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aspect_sentiment_classification_checkpoint</span> <span class="o">=</span> <span class="n">available_checkpoints</span><span class="p">(</span><span class="s1">&#39;APC&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">checkpoint</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">aspect_sentiment_classification_checkpoint</span><span class="o">.</span><span class="n">keys</span><span class="p">()]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">colored</span><span class="p">(</span><span class="s1">&#39;Downloading checkpoint:</span><span class="si">{}</span><span class="s1"> ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">),</span> <span class="s1">&#39;green&#39;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">colored</span><span class="p">(</span>
+                <span class="s1">&#39;Checkpoint:</span><span class="si">{}</span><span class="s1"> is not found, you can raise an issue for requesting shares of checkpoints&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">checkpoint</span><span class="p">),</span> <span class="s1">&#39;red&#39;</span><span class="p">))</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">download_checkpoint</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="s1">&#39;apc&#39;</span><span class="p">,</span>
+                                   <span class="n">language</span><span class="o">=</span><span class="n">checkpoint</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+                                   <span class="n">checkpoint</span><span class="o">=</span><span class="n">aspect_sentiment_classification_checkpoint</span><span class="p">[</span><span class="n">checkpoint</span><span class="o">.</span><span class="n">lower</span><span class="p">()])</span></div></div>
+
+
+<div class="viewcode-block" id="ATEPCCheckpointManager"><a class="viewcode-back" href="../../../../autoapi/pyabsa/index.html#pyabsa.functional.checkpoint.checkpoint_manager.ATEPCCheckpointManager">[docs]</a><span class="k">class</span> <span class="nc">ATEPCCheckpointManager</span><span class="p">(</span><span class="n">CheckpointManager</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="nd">@retry</span>
+<div class="viewcode-block" id="ATEPCCheckpointManager.get_aspect_extractor"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/checkpoint/checkpoint_manager/index.html#pyabsa.functional.checkpoint.checkpoint_manager.ATEPCCheckpointManager.get_aspect_extractor">[docs]</a>    <span class="k">def</span> <span class="nf">get_aspect_extractor</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                             <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive</span>
+<span class="sd">        This param is for someone wants to load a checkpoint not registered in PyABSA</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">):</span>
+            <span class="n">checkpoint_config</span> <span class="o">=</span> <span class="n">find_file</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;.config&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">checkpoint_config</span> <span class="o">=</span> <span class="n">find_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="p">[</span><span class="n">checkpoint</span><span class="p">,</span> <span class="s1">&#39;.config&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">checkpoint_config</span><span class="p">:</span>
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">checkpoint_config</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">checkpoint</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.zip&#39;</span><span class="p">):</span>
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">unzip_checkpoint</span><span class="p">(</span>
+                <span class="n">checkpoint</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">)</span> <span class="k">else</span> <span class="n">find_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">checkpoint</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">ATEPCCheckpointManager</span><span class="o">.</span><span class="n">get_checkpoint</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">)</span>
+
+        <span class="n">aspect_extractor</span> <span class="o">=</span> <span class="n">AspectExtractor</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">aspect_extractor</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="ATEPCCheckpointManager.get_checkpoint"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/checkpoint/checkpoint_manager/index.html#pyabsa.functional.checkpoint.checkpoint_manager.ATEPCCheckpointManager.get_checkpoint">[docs]</a>    <span class="k">def</span> <span class="nf">get_checkpoint</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;Chinese&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        download the checkpoint and return the path of the downloaded checkpoint</span>
+<span class="sd">        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive</span>
+<span class="sd">        This param is for someone wants to load a checkpoint not registered in PyABSA</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">atepc_checkpoint</span> <span class="o">=</span> <span class="n">available_checkpoints</span><span class="p">(</span><span class="s1">&#39;ATEPC&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">checkpoint</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">atepc_checkpoint</span><span class="o">.</span><span class="n">keys</span><span class="p">()]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">colored</span><span class="p">(</span><span class="s1">&#39;Downloading checkpoint:</span><span class="si">{}</span><span class="s1"> ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">),</span> <span class="s1">&#39;green&#39;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">colored</span><span class="p">(</span><span class="s1">&#39;Checkpoint:</span><span class="si">{}</span><span class="s1"> is not found.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">),</span> <span class="s1">&#39;red&#39;</span><span class="p">))</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">download_checkpoint</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="s1">&#39;atepc&#39;</span><span class="p">,</span>
+                                   <span class="n">language</span><span class="o">=</span><span class="n">checkpoint</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+                                   <span class="n">checkpoint</span><span class="o">=</span><span class="n">atepc_checkpoint</span><span class="p">[</span><span class="n">checkpoint</span><span class="p">])</span></div></div>
+
+
+<div class="viewcode-block" id="TCCheckpointManager"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/index.html#pyabsa.functional.checkpoint.checkpoint_manager.TCCheckpointManager">[docs]</a><span class="k">class</span> <span class="nc">TCCheckpointManager</span><span class="p">(</span><span class="n">CheckpointManager</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="nd">@retry</span>
+<div class="viewcode-block" id="TCCheckpointManager.get_text_classifier"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/checkpoint/checkpoint_manager/index.html#pyabsa.functional.checkpoint.checkpoint_manager.TCCheckpointManager.get_text_classifier">[docs]</a>    <span class="k">def</span> <span class="nf">get_text_classifier</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive</span>
+<span class="sd">        This param is for someone wants to load a checkpoint not registered in PyABSA</span>
+<span class="sd">        :param auto_device: True or False, otherwise &#39;cuda&#39;, &#39;cpu&#39; works</span>
+<span class="sd">        :param eval_batch_size: eval batch_size in modeling</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">):</span>
+            <span class="n">checkpoint_config</span> <span class="o">=</span> <span class="n">find_file</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;.config&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">checkpoint_config</span> <span class="o">=</span> <span class="n">find_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="p">[</span><span class="n">checkpoint</span><span class="p">,</span> <span class="s1">&#39;.config&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">checkpoint_config</span><span class="p">:</span>
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">checkpoint_config</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">checkpoint</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.zip&#39;</span><span class="p">):</span>
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">unzip_checkpoint</span><span class="p">(</span>
+                <span class="n">checkpoint</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">)</span> <span class="k">else</span> <span class="n">find_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">checkpoint</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">TCCheckpointManager</span><span class="o">.</span><span class="n">get_checkpoint</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">)</span>
+
+        <span class="n">text_classifier</span> <span class="o">=</span> <span class="n">TextClassifier</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">text_classifier</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="TCCheckpointManager.get_checkpoint"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/checkpoint/checkpoint_manager/index.html#pyabsa.functional.checkpoint.checkpoint_manager.TCCheckpointManager.get_checkpoint">[docs]</a>    <span class="k">def</span> <span class="nf">get_checkpoint</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;Chinese&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        download the checkpoint and return the path of the downloaded checkpoint</span>
+<span class="sd">        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive</span>
+<span class="sd">        This param is for someone wants to load a checkpoint not registered in PyABSA</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">text_classification_checkpoint</span> <span class="o">=</span> <span class="n">available_checkpoints</span><span class="p">(</span><span class="s1">&#39;TC&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">checkpoint</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">text_classification_checkpoint</span><span class="o">.</span><span class="n">keys</span><span class="p">()]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">colored</span><span class="p">(</span><span class="s1">&#39;Downloading checkpoint:</span><span class="si">{}</span><span class="s1"> ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">),</span> <span class="s1">&#39;green&#39;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">colored</span><span class="p">(</span><span class="s1">&#39;Checkpoint:</span><span class="si">{}</span><span class="s1"> is not found.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">),</span> <span class="s1">&#39;red&#39;</span><span class="p">))</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">download_checkpoint</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="s1">&#39;TC&#39;</span><span class="p">,</span>
+                                   <span class="n">language</span><span class="o">=</span><span class="n">checkpoint</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+                                   <span class="n">checkpoint</span><span class="o">=</span><span class="n">text_classification_checkpoint</span><span class="p">[</span><span class="n">checkpoint</span><span class="o">.</span><span class="n">lower</span><span class="p">()])</span></div></div>
+
+
+<div class="viewcode-block" id="TADCheckpointManager"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/index.html#pyabsa.functional.checkpoint.checkpoint_manager.TADCheckpointManager">[docs]</a><span class="k">class</span> <span class="nc">TADCheckpointManager</span><span class="p">(</span><span class="n">CheckpointManager</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="nd">@retry</span>
+<div class="viewcode-block" id="TADCheckpointManager.get_tad_text_classifier"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/checkpoint/checkpoint_manager/index.html#pyabsa.functional.checkpoint.checkpoint_manager.TADCheckpointManager.get_tad_text_classifier">[docs]</a>    <span class="k">def</span> <span class="nf">get_tad_text_classifier</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                <span class="n">eval_batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+                                <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive</span>
+<span class="sd">        This param is for someone wants to load a checkpoint not registered in PyABSA</span>
+<span class="sd">        :param auto_device: True or False, otherwise &#39;cuda&#39;, &#39;cpu&#39; works</span>
+<span class="sd">        :param eval_batch_size: eval batch_size in modeling</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">):</span>
+            <span class="n">checkpoint_config</span> <span class="o">=</span> <span class="n">find_file</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;.config&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">checkpoint_config</span> <span class="o">=</span> <span class="n">find_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="p">[</span><span class="n">checkpoint</span><span class="p">,</span> <span class="s1">&#39;.config&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">checkpoint_config</span><span class="p">:</span>
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">checkpoint_config</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">checkpoint</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.zip&#39;</span><span class="p">):</span>
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">unzip_checkpoint</span><span class="p">(</span>
+                <span class="n">checkpoint</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">)</span> <span class="k">else</span> <span class="n">find_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">checkpoint</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">TADCheckpointManager</span><span class="o">.</span><span class="n">get_checkpoint</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">)</span>
+
+        <span class="n">tad_text_classifier</span> <span class="o">=</span> <span class="n">TADTextClassifier</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">,</span> <span class="n">eval_batch_size</span><span class="o">=</span><span class="n">eval_batch_size</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tad_text_classifier</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="TADCheckpointManager.get_checkpoint"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/checkpoint/checkpoint_manager/index.html#pyabsa.functional.checkpoint.checkpoint_manager.TADCheckpointManager.get_checkpoint">[docs]</a>    <span class="k">def</span> <span class="nf">get_checkpoint</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;Chinese&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        download the checkpoint and return the path of the downloaded checkpoint</span>
+<span class="sd">        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive</span>
+<span class="sd">        This param is for someone wants to load a checkpoint not registered in PyABSA</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">tad_classification_checkpoint</span> <span class="o">=</span> <span class="n">available_checkpoints</span><span class="p">(</span><span class="s1">&#39;TAD&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">checkpoint</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">tad_classification_checkpoint</span><span class="o">.</span><span class="n">keys</span><span class="p">()]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">colored</span><span class="p">(</span><span class="s1">&#39;Downloading checkpoint:</span><span class="si">{}</span><span class="s1"> ...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">),</span> <span class="s1">&#39;green&#39;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">colored</span><span class="p">(</span><span class="s1">&#39;Checkpoint:</span><span class="si">{}</span><span class="s1"> is not found.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">),</span> <span class="s1">&#39;red&#39;</span><span class="p">))</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">download_checkpoint</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="s1">&#39;TAD&#39;</span><span class="p">,</span>
+                                   <span class="n">language</span><span class="o">=</span><span class="n">checkpoint</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+                                   <span class="n">checkpoint</span><span class="o">=</span><span class="n">tad_classification_checkpoint</span><span class="p">[</span><span class="n">checkpoint</span><span class="o">.</span><span class="n">lower</span><span class="p">()])</span></div></div>
+
+
+<div class="viewcode-block" id="parse_checkpoint_info"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/checkpoint/checkpoint_manager/index.html#pyabsa.functional.checkpoint.checkpoint_manager.parse_checkpoint_info">[docs]</a><span class="k">def</span> <span class="nf">parse_checkpoint_info</span><span class="p">(</span><span class="n">t_checkpoint_map</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s1">&#39;APC&#39;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span>
+          <span class="n">colored</span><span class="p">(</span><span class="s1">&#39;Available </span><span class="si">{}</span><span class="s1"> model checkpoints for Version:</span><span class="si">{}</span><span class="s1"> (this version)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">__version__</span><span class="p">),</span> <span class="s1">&#39;green&#39;</span><span class="p">),</span>
+          <span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">checkpoint_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">t_checkpoint_map</span><span class="p">):</span>
+        <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">t_checkpoint_map</span><span class="p">[</span><span class="n">checkpoint_name</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">c_version</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;Available Version&#39;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="s1">&#39;-&#39;</span> <span class="ow">in</span> <span class="n">c_version</span><span class="p">:</span>
+            <span class="n">min_ver</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">max_ver</span> <span class="o">=</span> <span class="n">c_version</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s1">&#39;+&#39;</span> <span class="ow">in</span> <span class="n">c_version</span><span class="p">:</span>
+            <span class="n">min_ver</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">max_ver</span> <span class="o">=</span> <span class="n">c_version</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">min_ver</span> <span class="o">=</span> <span class="n">c_version</span>
+            <span class="n">max_ver</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">max_ver</span> <span class="o">=</span> <span class="n">max_ver</span> <span class="k">if</span> <span class="n">max_ver</span> <span class="k">else</span> <span class="s1">&#39;N.A.&#39;</span>
+        <span class="k">if</span> <span class="n">max_ver</span> <span class="o">==</span> <span class="s1">&#39;N.A.&#39;</span> <span class="ow">or</span> <span class="n">StrictVersion</span><span class="p">(</span><span class="n">min_ver</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">StrictVersion</span><span class="p">(</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">StrictVersion</span><span class="p">(</span><span class="n">max_ver</span><span class="p">):</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Checkpoint Name: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">checkpoint_name</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">checkpoint</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">checkpoint</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">t_checkpoint_map</span></div>
+
+
+<div class="viewcode-block" id="available_checkpoints"><a class="viewcode-back" href="../../../../autoapi/pyabsa/index.html#pyabsa.functional.checkpoint.checkpoint_manager.available_checkpoints">[docs]</a><span class="k">def</span> <span class="nf">available_checkpoints</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+
+        <span class="k">try</span><span class="p">:</span>  <span class="c1"># from huggingface space</span>
+            <span class="c1"># checkpoint_url = &#39;https://huggingface.co/spaces/yangheng/PyABSA-ATEPC/raw/main/checkpoint-v1.2.json&#39;</span>
+            <span class="c1"># checkpoint_url = &#39;https://huggingface.co/spaces/yangheng/Multilingual-Aspect-Based-Sentiment-Analysis/raw/main/checkpoint-v1.2.json&#39;</span>
+            <span class="n">checkpoint_url</span> <span class="o">=</span> <span class="s1">&#39;https://huggingface.co/spaces/yangheng/Multilingual-Aspect-Based-Sentiment-Analysis/raw/main/checkpoint-v1.16.json&#39;</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">checkpoint_url</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./checkpoints-v1.16.json&#39;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">(),</span> <span class="n">f</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>  <span class="c1"># from Google Drive</span>
+                <span class="n">checkpoint_url</span> <span class="o">=</span> <span class="s1">&#39;1CBVGPA3xdQqdkFFwzO5T2Q4reFtzFIJZ&#39;</span>  <span class="c1"># V2</span>
+                <span class="n">gdown</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">checkpoint_url</span><span class="p">,</span> <span class="n">use_cookies</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;./checkpoints-v1.16.json&#39;</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">e</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./checkpoints-v1.16.json&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">checkpoint_map</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="n">t_checkpoint_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">c_version</span> <span class="ow">in</span> <span class="n">checkpoint_map</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;-&#39;</span> <span class="ow">in</span> <span class="n">c_version</span><span class="p">:</span>
+                <span class="n">min_ver</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">max_ver</span> <span class="o">=</span> <span class="n">c_version</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;+&#39;</span> <span class="ow">in</span> <span class="n">c_version</span><span class="p">:</span>
+                <span class="n">min_ver</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">max_ver</span> <span class="o">=</span> <span class="n">c_version</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">min_ver</span> <span class="o">=</span> <span class="n">c_version</span>
+                <span class="n">max_ver</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">max_ver</span> <span class="o">=</span> <span class="n">max_ver</span> <span class="k">if</span> <span class="n">max_ver</span> <span class="k">else</span> <span class="s1">&#39;N.A.&#39;</span>
+            <span class="k">if</span> <span class="n">max_ver</span> <span class="o">==</span> <span class="s1">&#39;N.A.&#39;</span> <span class="ow">or</span> <span class="n">StrictVersion</span><span class="p">(</span><span class="n">min_ver</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">StrictVersion</span><span class="p">(</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">StrictVersion</span><span class="p">(</span><span class="n">max_ver</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">task</span><span class="p">:</span>
+                    <span class="n">t_checkpoint_map</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                        <span class="n">checkpoint_map</span><span class="p">[</span><span class="n">c_version</span><span class="p">][</span><span class="n">task</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span> <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="n">checkpoint_map</span><span class="p">[</span><span class="n">c_version</span><span class="p">]</span> <span class="k">else</span> <span class="p">{})</span>
+                    <span class="n">parse_checkpoint_info</span><span class="p">(</span><span class="n">t_checkpoint_map</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">colored</span><span class="p">(</span>
+            <span class="s1">&#39;There may be some checkpoints available for early versions of PyABSA, see </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">__version__</span><span class="p">,</span>
+                                                                                                  <span class="n">checkpoint_url</span><span class="p">),</span>
+            <span class="s1">&#39;yellow&#39;</span><span class="p">))</span>
+
+        <span class="c1"># os.remove(&#39;./checkpoints.json&#39;)</span>
+        <span class="k">return</span> <span class="n">t_checkpoint_map</span> <span class="k">if</span> <span class="n">task</span> <span class="k">else</span> <span class="n">checkpoint_map</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Failed to query checkpoints (Error: </span><span class="si">{}</span><span class="s1">), you can try manually download the checkpoints from: </span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">e</span><span class="p">)</span> <span class="o">+</span>
+            <span class="s1">&#39;[1]</span><span class="se">\t</span><span class="s1">Huggingface Space (Newer)</span><span class="se">\t</span><span class="s1">: https://huggingface.co/spaces/yangheng/PyABSA-ATEPC/tree/main/checkpoint</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="s1">&#39;[2]</span><span class="se">\t</span><span class="s1">Google Drive</span><span class="se">\t</span><span class="s1">: https://drive.google.com/file/d/1CBVGPA3xdQqdkFFwzO5T2Q4reFtzFIJZ/view?usp=sharing</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="s1">&#39;[2]</span><span class="se">\t</span><span class="s1">Baidu NetDisk</span><span class="se">\t</span><span class="s1">: https://pan.baidu.com/s/1dvGqmnGG2T7MYm0VC9jWTg (Access Code: absa)</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="download_checkpoint"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/checkpoint/checkpoint_manager/index.html#pyabsa.functional.checkpoint.checkpoint_manager.download_checkpoint">[docs]</a><span class="k">def</span> <span class="nf">download_checkpoint</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">language</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">checkpoint</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">colored</span><span class="p">(</span><span class="s1">&#39;Notice: The pretrained model are used for testing, &#39;</span>
+                  <span class="s1">&#39;it is recommended to train the model on your own custom datasets&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+          <span class="p">)</span>
+    <span class="n">huggingface_checkpoint_url</span> <span class="o">=</span> <span class="s1">&#39;https://huggingface.co/spaces/yangheng/PyABSA-ATEPC/resolve/main/checkpoint/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;Language&#39;</span><span class="p">],</span> <span class="n">task</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;Checkpoint File&#39;</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">tmp_dir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_CHECKPOINT&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">language</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+    <span class="n">dest_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;./checkpoints&#39;</span><span class="p">,</span> <span class="n">tmp_dir</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dest_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dest_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">find_files</span><span class="p">(</span><span class="n">dest_path</span><span class="p">,</span> <span class="s1">&#39;.model&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">find_files</span><span class="p">(</span><span class="n">dest_path</span><span class="p">,</span> <span class="s1">&#39;.state_dict&#39;</span><span class="p">))</span> <span class="ow">and</span> <span class="n">find_files</span><span class="p">(</span><span class="n">dest_path</span><span class="p">,</span> <span class="s1">&#39;.config&#39;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Checkpoint already downloaded, skip...&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dest_path</span>
+
+    <span class="k">if</span> <span class="n">find_cwd_files</span><span class="p">([</span><span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;Training Model&#39;</span><span class="p">],</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;Checkpoint File&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;.zip&#39;</span><span class="p">),</span> <span class="s1">&#39;.config&#39;</span><span class="p">]):</span>
+        <span class="k">return</span>
+    <span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dest_path</span><span class="p">,</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;Checkpoint File&#39;</span><span class="p">])</span>
+
+    <span class="k">try</span><span class="p">:</span>  <span class="c1"># from Huggingface Space</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">huggingface_checkpoint_url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">),</span>
+                                   <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;MB&#39;</span><span class="p">,</span>
+                                   <span class="n">total</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;content-length&#39;</span><span class="p">])</span> <span class="o">//</span> <span class="mi">1024</span> <span class="o">//</span> <span class="mi">1024</span><span class="p">,</span>
+                                   <span class="n">postfix</span><span class="o">=</span><span class="s1">&#39;Downloading checkpoint...&#39;</span><span class="p">):</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>  <span class="c1"># from Google Drive</span>
+            <span class="n">gdown</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">output</span><span class="o">=</span><span class="n">save_path</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="s2">&quot;Fail to download checkpoint: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+    <span class="n">unzip_checkpoint</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">colored</span><span class="p">(</span>
+        <span class="s1">&#39;If the auto-downloading failed, please download it via browser: </span><span class="si">{}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">huggingface_checkpoint_url</span><span class="p">),</span>
+        <span class="s1">&#39;yellow&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">dest_path</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Heng Yang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

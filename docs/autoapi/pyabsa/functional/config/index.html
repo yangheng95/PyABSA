@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyabsa.functional.config &mdash; PyABSA 1.16.16 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/clipboard.min.js"></script>
+        <script src="../../../../_static/copybutton.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> PyABSA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../core/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.core</span></code></a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../network/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.network</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#package-contents">Package Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../index.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../index.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../index.html#attributes">Attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">PyABSA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional.config</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/pyabsa/functional/config/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="module-pyabsa.functional.config">
+<span id="pyabsa-functional-config"></span><h1><a class="reference internal" href="#module-pyabsa.functional.config" title="pyabsa.functional.config"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional.config</span></code></a><a class="headerlink" href="#module-pyabsa.functional.config" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="apc_config_manager/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional.config.apc_config_manager</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="atepc_config_manager/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional.config.atepc_config_manager</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="config_manager/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional.config.config_manager</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tad_config_manager/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional.config.tad_config_manager</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tc_config_manager/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional.config.tc_config_manager</span></code></a></li>
+</ul>
+</div>
+</section>
+<section id="package-contents">
+<h2>Package Contents<a class="headerlink" href="#package-contents" title="Permalink to this headline"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline"></a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.functional.config.APCConfigManager" title="pyabsa.functional.config.APCConfigManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">APCConfigManager</span></code></a></p></td>
+<td><p>Simple object for storing attributes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyabsa.functional.config.ATEPCConfigManager" title="pyabsa.functional.config.ATEPCConfigManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ATEPCConfigManager</span></code></a></p></td>
+<td><p>Simple object for storing attributes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.functional.config.TCConfigManager" title="pyabsa.functional.config.TCConfigManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TCConfigManager</span></code></a></p></td>
+<td><p>Simple object for storing attributes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyabsa.functional.config.TADConfigManager" title="pyabsa.functional.config.TADConfigManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TADConfigManager</span></code></a></p></td>
+<td><p>Simple object for storing attributes.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyabsa.functional.config.APCConfigManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyabsa.functional.config.</span></span><span class="sig-name descname"><span class="pre">APCConfigManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/functional/config/apc_config_manager.html#APCConfigManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.config.APCConfigManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></code></a></p>
+<p>Simple object for storing attributes.</p>
+<p>Implements equality by attribute names and values, and provides a simple
+string representation.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.APCConfigManager.set_apc_config">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_apc_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configType</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newitem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.APCConfigManager.set_apc_config" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.APCConfigManager.set_apc_config_template">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_apc_config_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.APCConfigManager.set_apc_config_template" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.APCConfigManager.set_apc_config_base">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_apc_config_base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.APCConfigManager.set_apc_config_base" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.APCConfigManager.set_apc_config_english">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_apc_config_english</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.APCConfigManager.set_apc_config_english" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.APCConfigManager.set_apc_config_chinese">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_apc_config_chinese</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.APCConfigManager.set_apc_config_chinese" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.APCConfigManager.set_apc_config_multilingual">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_apc_config_multilingual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.APCConfigManager.set_apc_config_multilingual" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.APCConfigManager.set_apc_config_glove">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_apc_config_glove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.APCConfigManager.set_apc_config_glove" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.APCConfigManager.set_apc_config_bert_baseline">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_apc_config_bert_baseline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.APCConfigManager.set_apc_config_bert_baseline" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.APCConfigManager.get_apc_config_template">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_apc_config_template</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.APCConfigManager.get_apc_config_template" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.APCConfigManager.get_apc_config_base">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_apc_config_base</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.APCConfigManager.get_apc_config_base" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.APCConfigManager.get_apc_config_english">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_apc_config_english</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.APCConfigManager.get_apc_config_english" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.APCConfigManager.get_apc_config_chinese">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_apc_config_chinese</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.APCConfigManager.get_apc_config_chinese" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.APCConfigManager.get_apc_config_multilingual">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_apc_config_multilingual</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.APCConfigManager.get_apc_config_multilingual" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.APCConfigManager.get_apc_config_glove">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_apc_config_glove</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.APCConfigManager.get_apc_config_glove" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.APCConfigManager.get_apc_config_bert_baseline">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_apc_config_bert_baseline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.APCConfigManager.get_apc_config_bert_baseline" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyabsa.functional.config.ATEPCConfigManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyabsa.functional.config.</span></span><span class="sig-name descname"><span class="pre">ATEPCConfigManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/functional/config/atepc_config_manager.html#ATEPCConfigManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.config.ATEPCConfigManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></code></a></p>
+<p>Simple object for storing attributes.</p>
+<p>Implements equality by attribute names and values, and provides a simple
+string representation.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.ATEPCConfigManager.set_atepc_config">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_atepc_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configType</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newitem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.ATEPCConfigManager.set_atepc_config" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.ATEPCConfigManager.set_atepc_config_template">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_atepc_config_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.ATEPCConfigManager.set_atepc_config_template" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.ATEPCConfigManager.set_atepc_config_base">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_atepc_config_base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.ATEPCConfigManager.set_atepc_config_base" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.ATEPCConfigManager.set_atepc_config_english">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_atepc_config_english</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.ATEPCConfigManager.set_atepc_config_english" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.ATEPCConfigManager.set_atepc_config_chinese">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_atepc_config_chinese</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.ATEPCConfigManager.set_atepc_config_chinese" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.ATEPCConfigManager.set_atepc_config_multilingual">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_atepc_config_multilingual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.ATEPCConfigManager.set_atepc_config_multilingual" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.ATEPCConfigManager.get_atepc_config_template">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_atepc_config_template</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.ATEPCConfigManager.get_atepc_config_template" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.ATEPCConfigManager.get_atepc_config_base">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_atepc_config_base</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.ATEPCConfigManager.get_atepc_config_base" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.ATEPCConfigManager.get_atepc_config_english">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_atepc_config_english</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.ATEPCConfigManager.get_atepc_config_english" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.ATEPCConfigManager.get_atepc_config_chinese">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_atepc_config_chinese</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.ATEPCConfigManager.get_atepc_config_chinese" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.ATEPCConfigManager.get_atepc_config_multilingual">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_atepc_config_multilingual</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.ATEPCConfigManager.get_atepc_config_multilingual" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyabsa.functional.config.</span></span><span class="sig-name descname"><span class="pre">TCConfigManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/functional/config/tc_config_manager.html#TCConfigManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></code></a></p>
+<p>Simple object for storing attributes.</p>
+<p>Implements equality by attribute names and values, and provides a simple
+string representation.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.set_tc_config">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_tc_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configType</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newitem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.set_tc_config" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.set_tc_config_template">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_tc_config_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.set_tc_config_template" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.set_tc_config_base">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_tc_config_base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.set_tc_config_base" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.set_tc_config_english">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_tc_config_english</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.set_tc_config_english" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.set_tc_config_chinese">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_tc_config_chinese</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.set_tc_config_chinese" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.set_tc_config_multilingual">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_tc_config_multilingual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.set_tc_config_multilingual" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.set_tc_config_glove">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_tc_config_glove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.set_tc_config_glove" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.get_tc_config_template">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_tc_config_template</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.get_tc_config_template" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.get_tc_config_base">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_tc_config_base</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.get_tc_config_base" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.get_tc_config_english">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_tc_config_english</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.get_tc_config_english" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.get_tc_config_chinese">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_tc_config_chinese</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.get_tc_config_chinese" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.get_tc_config_multilingual">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_tc_config_multilingual</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.get_tc_config_multilingual" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.get_tc_config_glove">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_tc_config_glove</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.get_tc_config_glove" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.set_classification_config_template">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_classification_config_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.set_classification_config_template" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.set_classification_config_base">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_classification_config_base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.set_classification_config_base" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.set_classification_config_english">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_classification_config_english</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.set_classification_config_english" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.set_classification_config_chinese">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_classification_config_chinese</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.set_classification_config_chinese" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.set_classification_config_multilingual">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_classification_config_multilingual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.set_classification_config_multilingual" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.set_classification_config_glove">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_classification_config_glove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.set_classification_config_glove" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.get_classification_config_template">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_classification_config_template</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.get_classification_config_template" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.get_classification_config_base">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_classification_config_base</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.get_classification_config_base" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.get_classification_config_english">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_classification_config_english</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.get_classification_config_english" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.get_classification_config_chinese">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_classification_config_chinese</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.get_classification_config_chinese" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.get_classification_config_multilingual">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_classification_config_multilingual</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.get_classification_config_multilingual" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TCConfigManager.get_classification_config_glove">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_classification_config_glove</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.TCConfigManager.get_classification_config_glove" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TADConfigManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyabsa.functional.config.</span></span><span class="sig-name descname"><span class="pre">TADConfigManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/functional/config/tad_config_manager.html#TADConfigManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.functional.config.TADConfigManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></code></a></p>
+<p>Simple object for storing attributes.</p>
+<p>Implements equality by attribute names and values, and provides a simple
+string representation.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TADConfigManager.set_tad_config">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_tad_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configType</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newitem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TADConfigManager.set_tad_config" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TADConfigManager.set_tad_config_template">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_tad_config_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TADConfigManager.set_tad_config_template" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TADConfigManager.set_tad_config_base">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_tad_config_base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TADConfigManager.set_tad_config_base" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TADConfigManager.set_tad_config_english">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_tad_config_english</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TADConfigManager.set_tad_config_english" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TADConfigManager.set_tad_config_chinese">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_tad_config_chinese</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TADConfigManager.set_tad_config_chinese" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TADConfigManager.set_tad_config_multilingual">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_tad_config_multilingual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TADConfigManager.set_tad_config_multilingual" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TADConfigManager.set_tad_config_glove">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_tad_config_glove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newitem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyabsa.functional.config.TADConfigManager.set_tad_config_glove" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TADConfigManager.get_tad_config_template">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_tad_config_template</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.TADConfigManager.get_tad_config_template" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TADConfigManager.get_tad_config_base">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_tad_config_base</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.TADConfigManager.get_tad_config_base" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TADConfigManager.get_tad_config_english">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_tad_config_english</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.TADConfigManager.get_tad_config_english" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TADConfigManager.get_tad_config_chinese">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_tad_config_chinese</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.TADConfigManager.get_tad_config_chinese" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TADConfigManager.get_tad_config_multilingual">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_tad_config_multilingual</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.TADConfigManager.get_tad_config_multilingual" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.functional.config.TADConfigManager.get_tad_config_glove">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_tad_config_glove</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config_manager/index.html#pyabsa.functional.config.config_manager.ConfigManager" title="pyabsa.functional.config.config_manager.ConfigManager"><span class="pre">pyabsa.functional.config.config_manager.ConfigManager</span></a></span></span><a class="headerlink" href="#pyabsa.functional.config.TADConfigManager.get_tad_config_glove" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Heng Yang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

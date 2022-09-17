@@ -1,0 +1,125 @@
+:py:mod:`pyabsa.core.apc.classic.__glove__.models.asgcn`
+========================================================
+
+.. py:module:: pyabsa.core.apc.classic.__glove__.models.asgcn
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.core.apc.classic.__glove__.models.asgcn.GraphConvolution
+   pyabsa.core.apc.classic.__glove__.models.asgcn.ASGCN_Unit
+   pyabsa.core.apc.classic.__glove__.models.asgcn.ASGCN
+
+
+
+
+.. py:class:: GraphConvolution(in_features, out_features, bias=True)
+
+   Bases: :py:obj:`torch.nn.Module`
+
+   Simple GCN layer, similar to https://arxiv.org/abs/1609.02907
+
+   .. py:method:: forward(text, adj)
+
+
+
+.. py:class:: ASGCN_Unit(embedding_matrix, opt)
+
+   Bases: :py:obj:`torch.nn.Module`
+
+   Base class for all neural network modules.
+
+   Your models should also subclass this class.
+
+   Modules can also contain other Modules, allowing to nest them in
+   a tree structure. You can assign the submodules as regular attributes::
+
+       import torch.nn as nn
+       import torch.nn.functional as F
+
+       class Model(nn.Module):
+           def __init__(self):
+               super().__init__()
+               self.conv1 = nn.Conv2d(1, 20, 5)
+               self.conv2 = nn.Conv2d(20, 20, 5)
+
+           def forward(self, x):
+               x = F.relu(self.conv1(x))
+               return F.relu(self.conv2(x))
+
+   Submodules assigned in this way will be registered, and will have their
+   parameters converted too when you call :meth:`to`, etc.
+
+   .. note::
+       As per the example above, an ``__init__()`` call to the parent class
+       must be made before assignment on the child.
+
+   :ivar training: Boolean represents whether this module is in training or
+                   evaluation mode.
+   :vartype training: bool
+
+   .. py:attribute:: inputs
+      :annotation: = ['text_indices', 'aspect_indices', 'left_indices', 'dependency_graph']
+
+      
+
+   .. py:method:: position_weight(x, aspect_double_idx, text_len, aspect_len)
+
+
+   .. py:method:: mask(x, aspect_double_idx)
+
+
+   .. py:method:: forward(inputs)
+
+
+
+.. py:class:: ASGCN(bert, opt)
+
+   Bases: :py:obj:`torch.nn.Module`
+
+   Base class for all neural network modules.
+
+   Your models should also subclass this class.
+
+   Modules can also contain other Modules, allowing to nest them in
+   a tree structure. You can assign the submodules as regular attributes::
+
+       import torch.nn as nn
+       import torch.nn.functional as F
+
+       class Model(nn.Module):
+           def __init__(self):
+               super().__init__()
+               self.conv1 = nn.Conv2d(1, 20, 5)
+               self.conv2 = nn.Conv2d(20, 20, 5)
+
+           def forward(self, x):
+               x = F.relu(self.conv1(x))
+               return F.relu(self.conv2(x))
+
+   Submodules assigned in this way will be registered, and will have their
+   parameters converted too when you call :meth:`to`, etc.
+
+   .. note::
+       As per the example above, an ``__init__()`` call to the parent class
+       must be made before assignment on the child.
+
+   :ivar training: Boolean represents whether this module is in training or
+                   evaluation mode.
+   :vartype training: bool
+
+   .. py:attribute:: inputs
+      :annotation: = ['text_indices', 'aspect_indices', 'left_indices', 'dependency_graph', 'left_aspect_indices',...
+
+      
+
+   .. py:method:: forward(inputs)
+
+
+

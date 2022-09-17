@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyabsa.utils.file_utils &mdash; PyABSA 1.16.16 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PyABSA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../autoapi/pyabsa/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyabsa/index.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyabsa/core/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.core</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyabsa/functional/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyabsa/network/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.network</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyabsa/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/pyabsa/index.html#package-contents">Package Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyabsa/index.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyabsa/index.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/pyabsa/index.html#attributes">Attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyABSA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../pyabsa.html">pyabsa</a> &raquo;</li>
+      <li>pyabsa.utils.file_utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyabsa.utils.file_utils</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># file: file_utils.py</span>
+<span class="c1"># time: 2021/7/13 0020</span>
+<span class="c1"># author: yangheng &lt;hy345@exeter.ac.uk&gt;</span>
+<span class="c1"># github: https://github.com/yangheng95</span>
+<span class="c1"># Copyright (C) 2021. All Rights Reserved.</span>
+
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">findfile</span> <span class="kn">import</span> <span class="n">find_files</span><span class="p">,</span> <span class="n">find_cwd_file</span><span class="p">,</span> <span class="n">find_cwd_files</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.atepc.dataset_utils.atepc_utils</span> <span class="kn">import</span> <span class="n">split_text</span>
+<span class="kn">from</span> <span class="nn">termcolor</span> <span class="kn">import</span> <span class="n">colored</span>
+
+<span class="kn">from</span> <span class="nn">pyabsa.utils.pyabsa_utils</span> <span class="kn">import</span> <span class="n">save_args</span><span class="p">,</span> <span class="n">SENTIMENT_PADDING</span>
+
+<span class="kn">from</span> <span class="nn">pyabsa.functional.dataset.dataset_manager</span> <span class="kn">import</span> <span class="n">DatasetItem</span>
+
+
+<div class="viewcode-block" id="generate_inference_set_for_apc"><a class="viewcode-back" href="../../../autoapi/pyabsa/utils/file_utils/index.html#pyabsa.functional.generate_inference_set_for_apc">[docs]</a><span class="k">def</span> <span class="nf">generate_inference_set_for_apc</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;To ensure your generation is successful, make sure the dataset name contain &quot;apc&quot; and &quot;dataset&quot; string &#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="n">DatasetItem</span><span class="p">):</span>
+        <span class="n">dataset_name</span> <span class="o">=</span> <span class="n">dataset_path</span><span class="o">.</span><span class="n">dataset_name</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dataset_name</span> <span class="o">=</span> <span class="n">dataset_path</span>
+
+    <span class="n">train_datasets</span> <span class="o">=</span> <span class="n">find_files</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="p">[</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="s1">&#39;apc&#39;</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">],</span>
+                                <span class="n">exclude_key</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;.inference&#39;</span><span class="p">,</span> <span class="s1">&#39;readme&#39;</span><span class="p">])</span>
+    <span class="n">valid_datasets</span> <span class="o">=</span> <span class="n">find_files</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="p">[</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="s1">&#39;valid&#39;</span><span class="p">,</span> <span class="s1">&#39;apc&#39;</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">],</span>
+                                <span class="n">exclude_key</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;.inference&#39;</span><span class="p">,</span> <span class="s1">&#39;readme&#39;</span><span class="p">])</span>
+    <span class="n">test_datasets</span> <span class="o">=</span> <span class="n">find_files</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="p">[</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="s1">&#39;apc&#39;</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">],</span>
+                               <span class="n">exclude_key</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;.inference&#39;</span><span class="p">,</span> <span class="s1">&#39;readme&#39;</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">train_datasets</span> <span class="o">+</span> <span class="n">valid_datasets</span> <span class="o">+</span> <span class="n">test_datasets</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;empty line: #</span><span class="si">{}</span><span class="s1">, previous line: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]))</span>
+            <span class="n">fin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">path_to_save</span> <span class="o">=</span> <span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.inference&#39;</span>
+            <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_to_save</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span> <span class="mi">3</span><span class="p">):</span>
+                <span class="n">sample</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$T$&#39;</span><span class="p">,</span> <span class="s1">&#39;[ASP]</span><span class="si">{}</span><span class="s1">[ASP]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
+                <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sample</span> <span class="o">+</span> <span class="s1">&#39; !sent! &#39;</span> <span class="o">+</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;save in: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path_to_save</span><span class="p">))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Unprocessed file:&#39;</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Inference set generation finished&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_similar"><a class="viewcode-back" href="../../../autoapi/pyabsa/utils/file_utils/index.html#pyabsa.functional.is_similar">[docs]</a><span class="k">def</span> <span class="nf">is_similar</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">):</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">s1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">s2</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">count</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="mf">0.8</span> <span class="ow">and</span> <span class="n">count</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">s2</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="mf">0.8</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="assemble_aspects"><a class="viewcode-back" href="../../../autoapi/pyabsa/utils/file_utils/index.html#pyabsa.functional.assemble_aspects">[docs]</a><span class="k">def</span> <span class="nf">assemble_aspects</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;empty line: #</span><span class="si">{}</span><span class="s1">, previous line: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]))</span>
+    <span class="n">fin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">split_text</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$ t $&#39;</span><span class="p">,</span> <span class="s1">&#39;$T$&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$ T $&#39;</span><span class="p">,</span> <span class="s1">&#39;$T$&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">unify_same_samples</span><span class="p">(</span><span class="n">same_samples</span><span class="p">):</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">same_samples</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$T$&#39;</span><span class="p">,</span> <span class="n">same_samples</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">polarities</span> <span class="o">=</span> <span class="p">[</span><span class="n">SENTIMENT_PADDING</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;O&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">same_samples</span><span class="p">:</span>
+            <span class="c1"># print(sample)</span>
+            <span class="n">polarities_tmp</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">polarities</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">asp_begin</span> <span class="o">=</span> <span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;$T$&#39;</span><span class="p">))</span>
+                <span class="n">asp_end</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;$T$&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">asp_begin</span><span class="p">,</span> <span class="n">asp_end</span><span class="p">):</span>
+                    <span class="n">polarities_tmp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">-</span> <span class="n">sample</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;$T$&#39;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">tags</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;B-ASP&#39;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">tags</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;I-ASP&#39;</span>
+                <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">text</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">polarities_tmp</span><span class="p">])</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Ignore Error:&#39;</span><span class="p">,</span> <span class="n">sample</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">samples</span>
+
+    <span class="n">samples</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">aspects_in_one_sentence</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span> <span class="mi">3</span><span class="p">):</span>
+
+        <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$T$&#39;</span><span class="p">,</span> <span class="s1">&#39; $T$ &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;  &#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">aspects_in_one_sentence</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">aspects_in_one_sentence</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]])</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">is_similar</span><span class="p">(</span><span class="n">aspects_in_one_sentence</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+            <span class="n">aspects_in_one_sentence</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">samples</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">unify_same_samples</span><span class="p">(</span><span class="n">aspects_in_one_sentence</span><span class="p">))</span>
+            <span class="n">aspects_in_one_sentence</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">aspects_in_one_sentence</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]])</span>
+    <span class="n">samples</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">unify_same_samples</span><span class="p">(</span><span class="n">aspects_in_one_sentence</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">samples</span></div>
+
+
+<div class="viewcode-block" id="split_aspects"><a class="viewcode-back" href="../../../autoapi/pyabsa/utils/file_utils/index.html#pyabsa.functional.split_aspects">[docs]</a><span class="k">def</span> <span class="nf">split_aspects</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+    <span class="n">single_aspect_with_contex</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">aspect_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentence</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">))</span>
+    <span class="n">aspects</span> <span class="o">=</span> <span class="n">sentence</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)</span>
+    <span class="n">polarity</span> <span class="o">=</span> <span class="n">sentence</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)</span>
+    <span class="n">pre_position</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">aspect_context</span> <span class="o">=</span> <span class="n">sentence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">aspect_num</span><span class="p">):</span>
+        <span class="n">aspect_context</span> <span class="o">=</span> <span class="n">aspect_context</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;$A$&quot;</span><span class="p">,</span> <span class="n">aspects</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">single_aspect_with_contex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">aspect_context</span><span class="p">[</span><span class="n">pre_position</span><span class="p">:</span><span class="n">aspect_context</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;$A$&quot;</span><span class="p">)],</span> <span class="n">aspects</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">polarity</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="n">pre_position</span> <span class="o">=</span> <span class="n">aspect_context</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">aspects</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">aspects</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">single_aspect_with_contex</span></div>
+
+
+<div class="viewcode-block" id="convert_atepc"><a class="viewcode-back" href="../../../autoapi/pyabsa/utils/file_utils/index.html#pyabsa.functional.convert_atepc">[docs]</a><span class="k">def</span> <span class="nf">convert_atepc</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;coverting </span><span class="si">{}</span><span class="s1"> to </span><span class="si">{}</span><span class="s1">.atepc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
+    <span class="n">dist_fname</span> <span class="o">=</span> <span class="n">fname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;apc_datasets&#39;</span><span class="p">,</span> <span class="s1">&#39;atepc_datasets&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dist_fname</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">dist_fname</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dist_fname</span><span class="p">))</span>
+    <span class="n">dist_fname</span> <span class="o">+=</span> <span class="s1">&#39;.atepc&#39;</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">assemble_aspects</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">token_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="mi">1</span><span class="p">])):</span>
+            <span class="n">token</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">polarity</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="n">token_index</span><span class="p">],</span> <span class="n">sample</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">token_index</span><span class="p">],</span> <span class="n">sample</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">token_index</span><span class="p">]</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">label</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">polarity</span><span class="p">))</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">dist_fname</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">writelines</span><span class="p">((</span><span class="n">line</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">))</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="convert_apc_set_to_atepc_set"><a class="viewcode-back" href="../../../autoapi/pyabsa/utils/file_utils/index.html#pyabsa.functional.convert_apc_set_to_atepc_set">[docs]</a><span class="k">def</span> <span class="nf">convert_apc_set_to_atepc_set</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;To ensure your conversion is successful, make sure the dataset name contain &quot;apc&quot; and &quot;dataset&quot; string &#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">DatasetItem</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">dataset_name</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="n">find_files</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="s1">&#39;apc&#39;</span><span class="p">],</span> <span class="n">exclude_key</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;.inference&#39;</span><span class="p">,</span> <span class="s1">&#39;readme&#39;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="n">find_cwd_files</span><span class="p">([</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="s1">&#39;apc&#39;</span><span class="p">],</span> <span class="n">exclude_key</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;.inference&#39;</span><span class="p">,</span> <span class="s1">&#39;readme&#39;</span><span class="p">])</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Find datasets files at </span><span class="si">{}</span><span class="s1">:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">target_file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">target_file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.atepc&#39;</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">convert_atepc</span><span class="p">(</span><span class="n">target_file</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;failed to process :</span><span class="si">{}</span><span class="s1">, Exception: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_file</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Ignore &#39;</span><span class="p">,</span> <span class="n">target_file</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;finished&#39;</span><span class="p">)</span></div>
+
+
+<span class="c1"># 将数据集中的aspect切割出来</span>
+<div class="viewcode-block" id="refactor_chinese_dataset"><a class="viewcode-back" href="../../../autoapi/pyabsa/utils/file_utils/index.html#pyabsa.functional.refactor_chinese_dataset">[docs]</a><span class="k">def</span> <span class="nf">refactor_chinese_dataset</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">train_fname</span><span class="p">,</span> <span class="n">test_fname</span><span class="p">):</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">assemble_aspects</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+    <span class="n">positive</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">negative</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># refactor testset</span>
+    <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">[:</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">/</span> <span class="mi">5</span><span class="p">)]:</span>
+        <span class="k">for</span> <span class="n">token_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="mi">1</span><span class="p">])):</span>
+            <span class="n">token</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">polarty</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="n">token_index</span><span class="p">],</span> <span class="n">sample</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">token_index</span><span class="p">],</span> <span class="n">sample</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">token_index</span><span class="p">]</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">label</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">polarty</span><span class="p">))</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="mi">1</span> <span class="ow">in</span> <span class="n">sample</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="n">positive</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">negative</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="nb">sum</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">train_fname</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;sum=</span><span class="si">{</span><span class="nb">sum</span><span class="si">}</span><span class="s2"> positive=</span><span class="si">{</span><span class="n">positive</span><span class="si">}</span><span class="s2"> negative=</span><span class="si">{</span><span class="n">negative</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">test_fname</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">test_fname</span><span class="p">)</span>
+    <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">test_fname</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">writelines</span><span class="p">((</span><span class="n">line</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">))</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">positive</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">negative</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># refactor trainset</span>
+    <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">/</span> <span class="mi">5</span><span class="p">):]:</span>
+        <span class="k">for</span> <span class="n">token_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="mi">1</span><span class="p">])):</span>
+            <span class="n">tokens</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">token</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">polarty</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="n">token_index</span><span class="p">],</span> <span class="n">sample</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">token_index</span><span class="p">],</span> <span class="n">sample</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">token_index</span><span class="p">]</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">label</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">polarty</span><span class="p">))</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="mi">1</span> <span class="ow">in</span> <span class="n">sample</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="n">positive</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">negative</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="nb">sum</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">train_fname</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;sum=</span><span class="si">{</span><span class="nb">sum</span><span class="si">}</span><span class="s2"> positive=</span><span class="si">{</span><span class="n">positive</span><span class="si">}</span><span class="s2"> negative=</span><span class="si">{</span><span class="n">negative</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">train_fname</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">train_fname</span><span class="p">)</span>
+    <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">train_fname</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">writelines</span><span class="p">((</span><span class="n">line</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">))</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="detect_error_in_dataset"><a class="viewcode-back" href="../../../autoapi/pyabsa/utils/file_utils/index.html#pyabsa.functional.detect_error_in_dataset">[docs]</a><span class="k">def</span> <span class="nf">detect_error_in_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span> <span class="mi">3</span><span class="p">):</span>
+        <span class="c1"># print(lines[i].replace(&#39;$T$&#39;, lines[i + 1].replace(&#39;\n&#39;, &#39;&#39;)))</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">is_similar</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">])</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">((</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">4</span><span class="p">])</span><span class="o">.</span><span class="n">split</span><span class="p">()):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$T$&#39;</span><span class="p">,</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$T$&#39;</span><span class="p">,</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="save_model"><a class="viewcode-back" href="../../../autoapi/pyabsa/utils/file_utils/index.html#pyabsa.functional.save_model">[docs]</a><span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">save_path</span><span class="p">):</span>
+    <span class="c1"># Save a trained model, configuration and tokenizer</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s1">&#39;module&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s1">&#39;core&#39;</span><span class="p">):</span>
+        <span class="c1"># print(&quot;save model from data-parallel!&quot;)</span>
+        <span class="n">model_to_save</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">module</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># print(&quot;save a single cuda model!&quot;)</span>
+        <span class="n">model_to_save</span> <span class="o">=</span> <span class="n">model</span>
+    <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">save_mode</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">opt</span><span class="o">.</span><span class="n">save_mode</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
+        <span class="n">f_config</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">save_path</span> <span class="o">+</span> <span class="n">opt</span><span class="o">.</span><span class="n">model_name</span> <span class="o">+</span> <span class="s1">&#39;.config&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+        <span class="n">f_tokenizer</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">save_path</span> <span class="o">+</span> <span class="n">opt</span><span class="o">.</span><span class="n">model_name</span> <span class="o">+</span> <span class="s1">&#39;.tokenizer&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">f_config</span><span class="p">)</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">f_tokenizer</span><span class="p">)</span>
+        <span class="n">f_config</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">f_tokenizer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">save_args</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">save_path</span> <span class="o">+</span> <span class="n">opt</span><span class="o">.</span><span class="n">model_name</span> <span class="o">+</span> <span class="s1">&#39;.args.txt&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">save_mode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model_to_save</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">save_path</span> <span class="o">+</span> <span class="n">opt</span><span class="o">.</span><span class="n">model_name</span> <span class="o">+</span> <span class="s1">&#39;.state_dict&#39;</span><span class="p">)</span>  <span class="c1"># save the state dict</span>
+        <span class="k">elif</span> <span class="n">opt</span><span class="o">.</span><span class="n">save_mode</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="n">save_path</span> <span class="o">+</span> <span class="n">opt</span><span class="o">.</span><span class="n">model_name</span> <span class="o">+</span> <span class="s1">&#39;.model&#39;</span><span class="p">)</span>  <span class="c1"># save the state dict</span>
+
+    <span class="k">elif</span> <span class="n">opt</span><span class="o">.</span><span class="n">save_mode</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="c1"># save the fine-tuned bert model</span>
+        <span class="n">model_output_dir</span> <span class="o">=</span> <span class="n">save_path</span> <span class="o">+</span> <span class="s1">&#39;fine-tuned-pretrained-model&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">model_output_dir</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">model_output_dir</span><span class="p">)</span>
+        <span class="n">output_model_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_output_dir</span><span class="p">,</span> <span class="s1">&#39;pytorch_model.bin&#39;</span><span class="p">)</span>
+        <span class="n">output_config_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_output_dir</span><span class="p">,</span> <span class="s1">&#39;config.json&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model_to_save</span><span class="p">,</span> <span class="s1">&#39;bert4global&#39;</span><span class="p">):</span>
+            <span class="n">model_to_save</span> <span class="o">=</span> <span class="n">model_to_save</span><span class="o">.</span><span class="n">bert4global</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model_to_save</span><span class="p">,</span> <span class="s1">&#39;bert&#39;</span><span class="p">):</span>
+            <span class="n">model_to_save</span> <span class="o">=</span> <span class="n">model_to_save</span><span class="o">.</span><span class="n">bert</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">model_to_save</span> <span class="o">=</span> <span class="n">model_to_save</span>
+            <span class="c1"># raise RuntimeError(&#39;No pretrained model found to save&#39;)</span>
+
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model_to_save</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">output_model_file</span><span class="p">)</span>
+        <span class="n">model_to_save</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">to_json_file</span><span class="p">(</span><span class="n">output_config_file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s1">&#39;tokenizer&#39;</span><span class="p">):</span>
+            <span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">save_pretrained</span><span class="p">(</span><span class="n">model_output_dir</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tokenizer</span><span class="o">.</span><span class="n">save_pretrained</span><span class="p">(</span><span class="n">model_output_dir</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid save_mode: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">save_mode</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="check_update_log"><a class="viewcode-back" href="../../../autoapi/pyabsa/utils/file_utils/index.html#pyabsa.functional.check_update_log">[docs]</a><span class="k">def</span> <span class="nf">check_update_log</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">colored</span><span class="p">(</span><span class="s1">&#39;check release notes at https://github.com/yangheng95/PyABSA/blob/release/release-note.json&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">))</span></div>
+
+
+<span class="c1"># @time_out(30)</span>
+<div class="viewcode-block" id="query_remote_version"><a class="viewcode-back" href="../../../autoapi/pyabsa/utils/file_utils/index.html#pyabsa.functional.query_remote_version">[docs]</a><span class="k">def</span> <span class="nf">query_remote_version</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">dataset_url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/yangheng95/ABSADatasets/v1.2/datasets/__init__.py&#39;</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">dataset_url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">dataset_url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/yangheng95/ABSADatasets/v1.2/datasets/__init__.py&#39;</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">dataset_url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">version</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">colored</span><span class="p">(</span><span class="s1">&#39;failed to query remote version&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">version</span></div>
+
+
+<span class="c1"># @time_out(30)</span>
+<div class="viewcode-block" id="query_local_version"><a class="viewcode-back" href="../../../autoapi/pyabsa/utils/file_utils/index.html#pyabsa.functional.query_local_version">[docs]</a><span class="k">def</span> <span class="nf">query_local_version</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">find_cwd_file</span><span class="p">([</span><span class="s1">&#39;__init__.py&#39;</span><span class="p">,</span> <span class="s1">&#39;integrated_datasets&#39;</span><span class="p">]))</span>
+        <span class="n">local_version</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">fin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">local_version</span></div>
+
+
+<div class="viewcode-block" id="validate_datasets_version"><a class="viewcode-back" href="../../../autoapi/pyabsa/utils/file_utils/index.html#pyabsa.functional.validate_datasets_version">[docs]</a><span class="k">def</span> <span class="nf">validate_datasets_version</span><span class="p">():</span>  <span class="c1"># retry_count is for unstable conn to GitHub</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">local_version</span> <span class="o">=</span> <span class="n">query_local_version</span><span class="p">()</span>
+        <span class="n">remote_version</span> <span class="o">=</span> <span class="n">query_remote_version</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Remote ABSADataset version: </span><span class="si">{}</span><span class="s1"> Local ABSADatasets version: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remote_version</span><span class="p">,</span> <span class="n">local_version</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">remote_version</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s1">&#39;Unknown remote version for ABSADatasets, please check the latest version of ABSADatasets at https://github.com/yangheng95/ABSADatasets&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">local_version</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s1">&#39;Unknown local version for ABSADatasets, please check the latest version of ABSADatasets at https://github.com/yangheng95/ABSADatasets&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">remote_version</span> <span class="ow">and</span> <span class="n">local_version</span> <span class="ow">and</span> <span class="n">remote_version</span> <span class="o">&gt;</span> <span class="n">local_version</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">colored</span><span class="p">(</span>
+                <span class="s1">&#39;There is a new version of ABSADatasets(</span><span class="si">{}</span><span class="s1">), please remove the downloaded datasets to automatically download the new version.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">remote_version</span><span class="p">),</span> <span class="s1">&#39;green&#39;</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">colored</span><span class="p">(</span>
+            <span class="s1">&#39;ABSADatasets version check failed: </span><span class="si">{}</span><span class="s1">, please check the latest datasets at https://github.com/yangheng95/ABSADatasets manually.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">e</span><span class="p">),</span> <span class="s1">&#39;red&#39;</span><span class="p">))</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Heng Yang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

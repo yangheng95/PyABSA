@@ -1,0 +1,16 @@
+:py:mod:`pyabsa.core.tad.classic.__glove__.dataset_utils`
+=========================================================
+
+.. py:module:: pyabsa.core.tad.classic.__glove__.dataset_utils
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   data_utils_for_inference/index.rst
+   data_utils_for_training/index.rst
+
+

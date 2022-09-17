@@ -1,0 +1,68 @@
+:py:mod:`pyabsa.functional.trainer.trainer`
+===========================================
+
+.. py:module:: pyabsa.functional.trainer.trainer
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.functional.trainer.trainer.Trainer
+   pyabsa.functional.trainer.trainer.APCTrainer
+   pyabsa.functional.trainer.trainer.ATEPCTrainer
+   pyabsa.functional.trainer.trainer.TCTrainer
+   pyabsa.functional.trainer.trainer.TADTrainer
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.functional.trainer.trainer.init_config
+
+
+
+.. py:function:: init_config(config, auto_device)
+
+
+.. py:class:: Trainer(config: pyabsa.functional.config.config_manager.ConfigManager = None, dataset=None, from_checkpoint: str = None, checkpoint_save_mode: int = 0, auto_device=True, path_to_save=None, load_aug=False)
+
+   .. py:method:: _run()
+
+      just return the trained model for inference (e.g., polarity classification, aspect-term extraction)
+
+
+   .. py:method:: load_trained_model()
+
+
+   .. py:method:: destroy()
+
+
+
+.. py:class:: APCTrainer(config: pyabsa.functional.config.config_manager.ConfigManager = None, dataset=None, from_checkpoint: str = None, checkpoint_save_mode: int = 0, auto_device=True, path_to_save=None, load_aug=False)
+
+   Bases: :py:obj:`Trainer`
+
+
+.. py:class:: ATEPCTrainer(config: pyabsa.functional.config.config_manager.ConfigManager = None, dataset=None, from_checkpoint: str = None, checkpoint_save_mode: int = 0, auto_device=True, path_to_save=None, load_aug=False)
+
+   Bases: :py:obj:`Trainer`
+
+
+.. py:class:: TCTrainer(config: pyabsa.functional.config.config_manager.ConfigManager = None, dataset=None, from_checkpoint: str = None, checkpoint_save_mode: int = 0, auto_device=True, path_to_save=None, load_aug=False)
+
+   Bases: :py:obj:`Trainer`
+
+
+.. py:class:: TADTrainer(config: pyabsa.functional.config.config_manager.ConfigManager = None, dataset=None, from_checkpoint: str = None, checkpoint_save_mode: int = 0, auto_device=True, path_to_save=None, load_aug=False)
+
+   Bases: :py:obj:`Trainer`
+
+

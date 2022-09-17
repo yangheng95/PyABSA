@@ -1,0 +1,19 @@
+:py:mod:`pyabsa.core`
+=====================
+
+.. py:module:: pyabsa.core
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   apc/index.rst
+   ate/index.rst
+   atepc/index.rst
+   tad/index.rst
+   tc/index.rst
+
+

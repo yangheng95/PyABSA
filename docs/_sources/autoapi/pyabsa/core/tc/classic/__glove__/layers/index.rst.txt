@@ -1,0 +1,15 @@
+:py:mod:`pyabsa.core.tc.classic.__glove__.layers`
+=================================================
+
+.. py:module:: pyabsa.core.tc.classic.__glove__.layers
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   dynamic_rnn/index.rst
+
+

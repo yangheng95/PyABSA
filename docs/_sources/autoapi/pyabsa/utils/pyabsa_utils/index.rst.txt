@@ -1,0 +1,106 @@
+:py:mod:`pyabsa.utils.pyabsa_utils`
+===================================
+
+.. py:module:: pyabsa.utils.pyabsa_utils
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.utils.pyabsa_utils.save_args
+   pyabsa.utils.pyabsa_utils.print_args
+   pyabsa.utils.pyabsa_utils.validate_example
+   pyabsa.utils.pyabsa_utils.check_and_fix_labels
+   pyabsa.utils.pyabsa_utils.check_and_fix_IOB_labels
+   pyabsa.utils.pyabsa_utils.get_device
+   pyabsa.utils.pyabsa_utils.resume_from_checkpoint
+   pyabsa.utils.pyabsa_utils.prepare_glove840_embedding
+   pyabsa.utils.pyabsa_utils._load_word_vec
+   pyabsa.utils.pyabsa_utils.build_embedding_matrix
+   pyabsa.utils.pyabsa_utils.pad_and_truncate
+   pyabsa.utils.pyabsa_utils.retry
+   pyabsa.utils.pyabsa_utils.time_out
+   pyabsa.utils.pyabsa_utils.save_json
+   pyabsa.utils.pyabsa_utils.load_json
+   pyabsa.utils.pyabsa_utils.validate_pyabsa_version
+   pyabsa.utils.pyabsa_utils.init_optimizer
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.utils.pyabsa_utils.SENTIMENT_PADDING
+
+
+.. py:data:: SENTIMENT_PADDING
+   
+
+   
+
+.. py:function:: save_args(config, save_path)
+
+
+.. py:function:: print_args(config, logger=None, mode=0)
+
+
+.. py:function:: validate_example(text: str, aspect: str, polarity: str)
+
+
+.. py:function:: check_and_fix_labels(label_set: set, label_name, all_data, opt)
+
+
+.. py:function:: check_and_fix_IOB_labels(label_map, opt)
+
+
+.. py:function:: get_device(auto_device)
+
+
+.. py:function:: resume_from_checkpoint(trainer, from_checkpoint_path)
+
+
+.. py:function:: prepare_glove840_embedding(glove_path)
+
+
+.. py:function:: _load_word_vec(path, word2idx=None, embed_dim=300)
+
+
+.. py:function:: build_embedding_matrix(word2idx, embed_dim, dat_fname, opt)
+
+
+.. py:function:: pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating='post', value=0)
+
+
+.. py:exception:: TransformerConnectionError
+
+   Bases: :py:obj:`ValueError`
+
+   Inappropriate argument value (of correct type).
+
+
+.. py:function:: retry(f)
+
+
+.. py:function:: time_out(interval, callback=None)
+
+
+.. py:function:: save_json(dic, save_path)
+
+
+.. py:function:: load_json(save_path)
+
+
+.. py:function:: validate_pyabsa_version()
+
+
+.. py:function:: init_optimizer(optimizer)
+
+

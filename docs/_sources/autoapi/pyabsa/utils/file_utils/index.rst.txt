@@ -1,0 +1,70 @@
+:py:mod:`pyabsa.utils.file_utils`
+=================================
+
+.. py:module:: pyabsa.utils.file_utils
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.utils.file_utils.generate_inference_set_for_apc
+   pyabsa.utils.file_utils.is_similar
+   pyabsa.utils.file_utils.assemble_aspects
+   pyabsa.utils.file_utils.split_aspects
+   pyabsa.utils.file_utils.convert_atepc
+   pyabsa.utils.file_utils.convert_apc_set_to_atepc_set
+   pyabsa.utils.file_utils.refactor_chinese_dataset
+   pyabsa.utils.file_utils.detect_error_in_dataset
+   pyabsa.utils.file_utils.save_model
+   pyabsa.utils.file_utils.check_update_log
+   pyabsa.utils.file_utils.query_remote_version
+   pyabsa.utils.file_utils.query_local_version
+   pyabsa.utils.file_utils.validate_datasets_version
+
+
+
+.. py:function:: generate_inference_set_for_apc(dataset_path)
+
+
+.. py:function:: is_similar(s1, s2)
+
+
+.. py:function:: assemble_aspects(fname)
+
+
+.. py:function:: split_aspects(sentence)
+
+
+.. py:function:: convert_atepc(fname)
+
+
+.. py:function:: convert_apc_set_to_atepc_set(path)
+
+
+.. py:function:: refactor_chinese_dataset(fname, train_fname, test_fname)
+
+
+.. py:function:: detect_error_in_dataset(dataset)
+
+
+.. py:function:: save_model(opt, model, tokenizer, save_path)
+
+
+.. py:function:: check_update_log()
+
+
+.. py:function:: query_remote_version()
+
+
+.. py:function:: query_local_version()
+
+
+.. py:function:: validate_datasets_version()
+
+

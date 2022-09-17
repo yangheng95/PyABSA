@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyabsa.core.tad.prediction.tad_classifier &mdash; PyABSA 1.16.16 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/clipboard.min.js"></script>
+        <script src="../../../../../_static/copybutton.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> PyABSA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../autoapi/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../autoapi/pyabsa/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../autoapi/pyabsa/index.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/core/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.core</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/functional/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/network/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.network</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../autoapi/pyabsa/index.html#package-contents">Package Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/index.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/index.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/index.html#attributes">Attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">PyABSA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../../../pyabsa.html">pyabsa</a> &raquo;</li>
+      <li>pyabsa.core.tad.prediction.tad_classifier</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyabsa.core.tad.prediction.tad_classifier</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># file: text_classifier.py</span>
+<span class="c1"># author: yangheng &lt;hy345@exeter.ac.uk&gt;</span>
+<span class="c1"># Copyright (C) 2020. All Rights Reserved.</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">tqdm</span>
+<span class="kn">from</span> <span class="nn">findfile</span> <span class="kn">import</span> <span class="n">find_file</span><span class="p">,</span> <span class="n">find_cwd_dir</span>
+<span class="kn">from</span> <span class="nn">termcolor</span> <span class="kn">import</span> <span class="n">colored</span>
+
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">AutoModel</span><span class="p">,</span> <span class="n">AutoConfig</span><span class="p">,</span> <span class="n">DebertaV2ForMaskedLM</span><span class="p">,</span> <span class="n">RobertaForMaskedLM</span><span class="p">,</span> <span class="n">BertForMaskedLM</span>
+
+<span class="kn">from</span> <span class="nn">....functional.dataset</span> <span class="kn">import</span> <span class="n">detect_infer_dataset</span>
+
+<span class="kn">from</span> <span class="nn">..models</span> <span class="kn">import</span> <span class="n">GloVeTADModelList</span><span class="p">,</span> <span class="n">BERTTADModelList</span>
+<span class="kn">from</span> <span class="nn">..classic.__glove__.dataset_utils.data_utils_for_inference</span> <span class="kn">import</span> <span class="n">GloVeTADDataset</span>
+<span class="kn">from</span> <span class="nn">..classic.__bert__.dataset_utils.data_utils_for_inference</span> <span class="kn">import</span> <span class="n">BERTTADDataset</span><span class="p">,</span> <span class="n">Tokenizer4Pretraining</span>
+
+<span class="kn">from</span> <span class="nn">..classic.__glove__.dataset_utils.data_utils_for_training</span> <span class="kn">import</span> <span class="n">build_tokenizer</span>
+
+<span class="kn">from</span> <span class="nn">....utils.pyabsa_utils</span> <span class="kn">import</span> <span class="n">print_args</span><span class="p">,</span> <span class="n">TransformerConnectionError</span><span class="p">,</span> <span class="n">get_device</span><span class="p">,</span> <span class="n">build_embedding_matrix</span>
+
+
+<div class="viewcode-block" id="init_attacker"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/tad/prediction/tad_classifier/index.html#pyabsa.core.tad.prediction.tad_classifier.init_attacker">[docs]</a><span class="k">def</span> <span class="nf">init_attacker</span><span class="p">(</span><span class="n">tad_classifier</span><span class="p">,</span> <span class="n">defense</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">textattack</span> <span class="kn">import</span> <span class="n">Attacker</span>
+        <span class="kn">from</span> <span class="nn">textattack.attack_recipes</span> <span class="kn">import</span> <span class="n">BAEGarg2019</span><span class="p">,</span> <span class="n">PWWSRen2019</span><span class="p">,</span> <span class="n">TextFoolerJin2019</span><span class="p">,</span> <span class="n">PSOZang2020</span><span class="p">,</span> <span class="n">IGAWang2019</span><span class="p">,</span> \
+            <span class="n">GeneticAlgorithmAlzantot2018</span><span class="p">,</span> <span class="n">DeepWordBugGao2018</span>
+        <span class="kn">from</span> <span class="nn">textattack.datasets</span> <span class="kn">import</span> <span class="n">Dataset</span>
+        <span class="kn">from</span> <span class="nn">textattack.models.wrappers</span> <span class="kn">import</span> <span class="n">HuggingFaceModelWrapper</span>
+
+        <span class="k">class</span> <span class="nc">PyABSAModelWrapper</span><span class="p">(</span><span class="n">HuggingFaceModelWrapper</span><span class="p">):</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>  <span class="c1"># pipeline = pipeline</span>
+
+            <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text_inputs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">text_input</span> <span class="ow">in</span> <span class="n">text_inputs</span><span class="p">:</span>
+                    <span class="n">raw_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">infer</span><span class="p">(</span><span class="n">text_input</span><span class="p">,</span> <span class="n">print_result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                    <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">raw_outputs</span><span class="p">[</span><span class="s1">&#39;probs&#39;</span><span class="p">])</span>
+                <span class="k">return</span> <span class="n">outputs</span>
+
+        <span class="k">class</span> <span class="nc">SentAttacker</span><span class="p">:</span>
+
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">recipe_class</span><span class="o">=</span><span class="n">BAEGarg2019</span><span class="p">):</span>
+                <span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+                <span class="n">model_wrapper</span> <span class="o">=</span> <span class="n">PyABSAModelWrapper</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+                <span class="n">recipe</span> <span class="o">=</span> <span class="n">recipe_class</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">model_wrapper</span><span class="p">)</span>
+
+                <span class="n">_dataset</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
+                <span class="n">_dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">_dataset</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">attacker</span> <span class="o">=</span> <span class="n">Attacker</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="n">_dataset</span><span class="p">)</span>
+
+        <span class="n">attackers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;bae&#39;</span><span class="p">:</span> <span class="n">BAEGarg2019</span><span class="p">,</span>
+            <span class="s1">&#39;pwws&#39;</span><span class="p">:</span> <span class="n">PWWSRen2019</span><span class="p">,</span>
+            <span class="s1">&#39;textfooler&#39;</span><span class="p">:</span> <span class="n">TextFoolerJin2019</span><span class="p">,</span>
+            <span class="s1">&#39;pso&#39;</span><span class="p">:</span> <span class="n">PSOZang2020</span><span class="p">,</span>
+            <span class="s1">&#39;iga&#39;</span><span class="p">:</span> <span class="n">IGAWang2019</span><span class="p">,</span>
+            <span class="s1">&#39;ga&#39;</span><span class="p">:</span> <span class="n">GeneticAlgorithmAlzantot2018</span><span class="p">,</span>
+            <span class="s1">&#39;wordbugger&#39;</span><span class="p">:</span> <span class="n">DeepWordBugGao2018</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">SentAttacker</span><span class="p">(</span><span class="n">tad_classifier</span><span class="p">,</span> <span class="n">attackers</span><span class="p">[</span><span class="n">defense</span><span class="p">])</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;If you need to evaluate text adversarial attack, please make sure you have installed:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+              <span class="n">colored</span><span class="p">(</span><span class="s1">&#39;[1] pip install git+https://github.com/yangheng95/TextAttack</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">),</span> <span class="s1">&#39;and </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+              <span class="n">colored</span><span class="p">(</span><span class="s1">&#39;[2] pip install tensorflow_text </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Original error:&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_mlm_and_tokenizer"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/tad/prediction/tad_classifier/index.html#pyabsa.core.tad.prediction.tad_classifier.get_mlm_and_tokenizer">[docs]</a><span class="k">def</span> <span class="nf">get_mlm_and_tokenizer</span><span class="p">(</span><span class="n">text_classifier</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text_classifier</span><span class="p">,</span> <span class="n">TADTextClassifier</span><span class="p">):</span>
+        <span class="n">base_model</span> <span class="o">=</span> <span class="n">text_classifier</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">bert</span><span class="o">.</span><span class="n">base_model</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">base_model</span> <span class="o">=</span> <span class="n">text_classifier</span><span class="o">.</span><span class="n">bert</span><span class="o">.</span><span class="n">base_model</span>
+    <span class="n">pretrained_config</span> <span class="o">=</span> <span class="n">AutoConfig</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">pretrained_bert</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;deberta-v3&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">pretrained_bert</span><span class="p">:</span>
+        <span class="n">MLM</span> <span class="o">=</span> <span class="n">DebertaV2ForMaskedLM</span><span class="p">(</span><span class="n">pretrained_config</span><span class="p">)</span>
+        <span class="n">MLM</span><span class="o">.</span><span class="n">deberta</span> <span class="o">=</span> <span class="n">base_model</span>
+    <span class="k">elif</span> <span class="s1">&#39;roberta&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">pretrained_bert</span><span class="p">:</span>
+        <span class="n">MLM</span> <span class="o">=</span> <span class="n">RobertaForMaskedLM</span><span class="p">(</span><span class="n">pretrained_config</span><span class="p">)</span>
+        <span class="n">MLM</span><span class="o">.</span><span class="n">roberta</span> <span class="o">=</span> <span class="n">base_model</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">MLM</span> <span class="o">=</span> <span class="n">BertForMaskedLM</span><span class="p">(</span><span class="n">pretrained_config</span><span class="p">)</span>
+        <span class="n">MLM</span><span class="o">.</span><span class="n">bert</span> <span class="o">=</span> <span class="n">base_model</span>
+    <span class="k">return</span> <span class="n">MLM</span><span class="p">,</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">pretrained_bert</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TADTextClassifier"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/tad/prediction/tad_classifier/index.html#pyabsa.core.tad.prediction.tad_classifier.TADTextClassifier">[docs]</a><span class="k">class</span> <span class="nc">TADTextClassifier</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_arg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cal_perplexity</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            from_train_model: load inference model from trained model</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cal_perplexity</span> <span class="o">=</span> <span class="n">cal_perplexity</span>
+        <span class="c1"># load from a training</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model_arg</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Load text classifier from training&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model_arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">opt</span> <span class="o">=</span> <span class="n">model_arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">model_arg</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">&#39;fine-tuned&#39;</span> <span class="ow">in</span> <span class="n">model_arg</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s1">&#39;Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Load text classifier from&#39;</span><span class="p">,</span> <span class="n">model_arg</span><span class="p">)</span>
+                <span class="n">state_dict_path</span> <span class="o">=</span> <span class="n">find_file</span><span class="p">(</span><span class="n">model_arg</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;.state_dict&#39;</span><span class="p">,</span> <span class="n">exclude_key</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;__MACOSX&#39;</span><span class="p">])</span>
+                <span class="n">model_path</span> <span class="o">=</span> <span class="n">find_file</span><span class="p">(</span><span class="n">model_arg</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;.model&#39;</span><span class="p">,</span> <span class="n">exclude_key</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;__MACOSX&#39;</span><span class="p">])</span>
+                <span class="n">tokenizer_path</span> <span class="o">=</span> <span class="n">find_file</span><span class="p">(</span><span class="n">model_arg</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;.tokenizer&#39;</span><span class="p">,</span> <span class="n">exclude_key</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;__MACOSX&#39;</span><span class="p">])</span>
+                <span class="n">config_path</span> <span class="o">=</span> <span class="n">find_file</span><span class="p">(</span><span class="n">model_arg</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;.config&#39;</span><span class="p">,</span> <span class="n">exclude_key</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;__MACOSX&#39;</span><span class="p">])</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;config: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config_path</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;state_dict: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state_dict_path</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;model: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_path</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;tokenizer: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tokenizer_path</span><span class="p">))</span>
+
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">opt</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">get_device</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;auto_device&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="n">state_dict_path</span> <span class="ow">or</span> <span class="n">model_path</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">BERTTADModelList</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="vm">__name__</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">state_dict_path</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;offline&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">bert</span> <span class="o">=</span> <span class="n">AutoModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+                                    <span class="n">find_cwd_dir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">pretrained_bert</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">bert</span> <span class="o">=</span> <span class="n">AutoModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">pretrained_bert</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bert</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">state_dict_path</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">))</span>
+                        <span class="k">elif</span> <span class="n">model_path</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">Tokenizer4Pretraining</span><span class="p">(</span><span class="n">max_seq_len</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">,</span> <span class="n">opt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">,</span>
+                                                                   <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">tokenizer_path</span><span class="p">:</span>
+                                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tokenizer_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="k">raise</span> <span class="n">TransformerConnectionError</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">build_tokenizer</span><span class="p">(</span>
+                            <span class="n">dataset_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">dataset_file</span><span class="p">,</span>
+                            <span class="n">max_seq_len</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">,</span>
+                            <span class="n">dat_fname</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_tokenizer.dat&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">dataset_name</span><span class="p">)),</span>
+                            <span class="n">opt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span>
+                        <span class="p">)</span>
+                        <span class="k">if</span> <span class="n">model_path</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">embedding_matrix</span> <span class="o">=</span> <span class="n">build_embedding_matrix</span><span class="p">(</span>
+                                <span class="n">word2idx</span><span class="o">=</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">word2idx</span><span class="p">,</span>
+                                <span class="n">embed_dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">embed_dim</span><span class="p">,</span>
+                                <span class="n">dat_fname</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_</span><span class="si">{1}</span><span class="s1">_embedding_matrix.dat&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">embed_dim</span><span class="p">),</span>
+                                                                                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span>
+                                                                                    <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">dataset_name</span><span class="p">)),</span>
+                                <span class="n">opt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span>
+                            <span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">embedding_matrix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">state_dict_path</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">))</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tokenizer</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Config used in Training:&#39;</span><span class="p">)</span>
+                <span class="n">print_args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Exception: </span><span class="si">{}</span><span class="s1"> Fail to load the model from </span><span class="si">{}</span><span class="s1">! &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">model_arg</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">GloVeTADModelList</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> \
+                    <span class="ow">and</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">BERTTADModelList</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="vm">__name__</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;The checkpoint you are loading is not from classifier model.&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">infer_dataloader</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">eval_batch_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;eval_batch_size&#39;</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+
+        <span class="c1"># if self.opt.seed is not None:</span>
+        <span class="c1">#     random.seed(self.opt.seed)</span>
+        <span class="c1">#     numpy.random.seed(self.opt.seed)</span>
+        <span class="c1">#     torch.manual_seed(self.opt.seed)</span>
+        <span class="c1">#     torch.cuda.manual_seed(self.opt.seed)</span>
+        <span class="c1">#     torch.backends.cudnn.deterministic = True</span>
+        <span class="c1">#     torch.backends.cudnn.benchmark = False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">initializer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">initializer</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cal_perplexity</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">MLM</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">MLM_tokenizer</span> <span class="o">=</span> <span class="n">get_mlm_and_tokenizer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">MLM</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">MLM_tokenizer</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TADTextClassifier.to"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/tad/prediction/tad_classifier/index.html#pyabsa.core.tad.prediction.tad_classifier.TADTextClassifier.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;MLM&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MLM</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TADTextClassifier.cpu"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/tad/prediction/tad_classifier/index.html#pyabsa.core.tad.prediction.tad_classifier.TADTextClassifier.cpu">[docs]</a>    <span class="k">def</span> <span class="nf">cpu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;cpu&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;MLM&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MLM</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TADTextClassifier.cuda"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/tad/prediction/tad_classifier/index.html#pyabsa.core.tad.prediction.tad_classifier.TADTextClassifier.cuda">[docs]</a>    <span class="k">def</span> <span class="nf">cuda</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda:0&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;MLM&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MLM</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TADTextClassifier._log_write_args"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/tad/prediction/tad_classifier/index.html#pyabsa.core.tad.prediction.tad_classifier.TADTextClassifier._log_write_args">[docs]</a>    <span class="k">def</span> <span class="nf">_log_write_args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">n_trainable_params</span><span class="p">,</span> <span class="n">n_nontrainable_params</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="n">n_params</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">:</span>
+                <span class="n">n_trainable_params</span> <span class="o">+=</span> <span class="n">n_params</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">n_nontrainable_params</span> <span class="o">+=</span> <span class="n">n_params</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s1">&#39;n_trainable_params: </span><span class="si">{0}</span><span class="s1">, n_nontrainable_params: </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n_trainable_params</span><span class="p">,</span> <span class="n">n_nontrainable_params</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt;&gt;&gt; </span><span class="si">{0}</span><span class="s1">: </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">,</span> <span class="n">arg</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="TADTextClassifier.batch_infer"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/tad/prediction/tad_classifier/index.html#pyabsa.core.tad.prediction.tad_classifier.TADTextClassifier.batch_infer">[docs]</a>    <span class="k">def</span> <span class="nf">batch_infer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                    <span class="n">target_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">print_result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">save_result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">ignore_error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">defense</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="p">):</span>
+
+        <span class="c1"># if clear_input_samples:</span>
+        <span class="c1">#     self.clear_input_samples()</span>
+
+        <span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;tad_text_classification.result.json&#39;</span><span class="p">)</span>
+
+        <span class="n">target_file</span> <span class="o">=</span> <span class="n">detect_infer_dataset</span><span class="p">(</span><span class="n">target_file</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s1">&#39;text_defense&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">target_file</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">&#39;Can not find inference datasets!&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">BERTTADModelList</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="vm">__name__</span><span class="p">):</span>
+            <span class="n">dataset</span> <span class="o">=</span> <span class="n">BERTTADDataset</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">opt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dataset</span> <span class="o">=</span> <span class="n">GloVeTADDataset</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">opt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">)</span>
+
+        <span class="n">dataset</span><span class="o">.</span><span class="n">prepare_infer_dataset</span><span class="p">(</span><span class="n">target_file</span><span class="p">,</span> <span class="n">ignore_error</span><span class="o">=</span><span class="n">ignore_error</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">infer_dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">eval_batch_size</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                           <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_infer</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span> <span class="k">if</span> <span class="n">save_result</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span> <span class="n">print_result</span><span class="o">=</span><span class="n">print_result</span><span class="p">,</span> <span class="n">defense</span><span class="o">=</span><span class="n">defense</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TADTextClassifier.infer"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/tad/prediction/tad_classifier/index.html#pyabsa.core.tad.prediction.tad_classifier.TADTextClassifier.infer">[docs]</a>    <span class="k">def</span> <span class="nf">infer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+              <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">print_result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">ignore_error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">defense</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+              <span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">BERTTADModelList</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="vm">__name__</span><span class="p">):</span>
+            <span class="n">dataset</span> <span class="o">=</span> <span class="n">BERTTADDataset</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">opt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dataset</span> <span class="o">=</span> <span class="n">GloVeTADDataset</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">opt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">text</span><span class="p">:</span>
+            <span class="n">dataset</span><span class="o">.</span><span class="n">prepare_infer_sample</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">ignore_error</span><span class="o">=</span><span class="n">ignore_error</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Please specify your datasets path!&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">infer_dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">eval_batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_infer</span><span class="p">(</span><span class="n">print_result</span><span class="o">=</span><span class="n">print_result</span><span class="p">,</span> <span class="n">defense</span><span class="o">=</span><span class="n">defense</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="TADTextClassifier._infer"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/tad/prediction/tad_classifier/index.html#pyabsa.core.tad.prediction.tad_classifier.TADTextClassifier._infer">[docs]</a>    <span class="k">def</span> <span class="nf">_infer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">print_result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">defense</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="n">_params</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+
+        <span class="n">correct</span> <span class="o">=</span> <span class="p">{</span><span class="kc">True</span><span class="p">:</span> <span class="s1">&#39;Correct&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">:</span> <span class="s1">&#39;Wrong&#39;</span><span class="p">}</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+            <span class="n">n_correct</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">n_labeled</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="n">n_advdet_correct</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">n_advdet_labeled</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infer_dataloader</span><span class="o">.</span><span class="n">dataset</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="n">it</span> <span class="o">=</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infer_dataloader</span><span class="p">,</span> <span class="n">postfix</span><span class="o">=</span><span class="s1">&#39;inferring...&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">it</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">infer_dataloader</span>
+            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">sample</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">it</span><span class="p">):</span>
+                <span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">sample</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">inputs_cols</span><span class="p">]</span>
+                <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+                <span class="n">logits</span><span class="p">,</span> <span class="n">advdet_logits</span><span class="p">,</span> <span class="n">adv_tr_logits</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;sent_logits&#39;</span><span class="p">],</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;advdet_logits&#39;</span><span class="p">],</span> <span class="n">outputs</span><span class="p">[</span>
+                    <span class="s1">&#39;adv_tr_logits&#39;</span><span class="p">]</span>
+                <span class="n">probs</span><span class="p">,</span> <span class="n">advdet_probs</span><span class="p">,</span> <span class="n">adv_tr_probs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">advdet_logits</span><span class="p">,</span>
+                                                                                                 <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span>
+                    <span class="n">adv_tr_logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">prob</span><span class="p">,</span> <span class="n">advdet_prob</span><span class="p">,</span> <span class="n">adv_tr_prob</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="n">advdet_probs</span><span class="p">,</span> <span class="n">adv_tr_probs</span><span class="p">)):</span>
+                    <span class="n">text_raw</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;text_raw&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+
+                    <span class="n">pred_label</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">prob</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+                    <span class="n">pred_is_adv_label</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">advdet_prob</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+                    <span class="n">pred_adv_tr_label</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">adv_tr_prob</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+                    <span class="n">ref_label</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">index_to_label</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+                    <span class="n">ref_is_adv_label</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="s1">&#39;is_adv&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="nb">int</span><span class="p">(</span>
+                        <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;is_adv&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">index_to_is_adv</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+                    <span class="n">ref_adv_tr_label</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="s1">&#39;adv_train_label&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="nb">int</span><span class="p">(</span>
+                        <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;adv_train_label&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">index_to_adv_train_label</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cal_perplexity</span><span class="p">:</span>
+                        <span class="n">ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MLM_tokenizer</span><span class="p">(</span><span class="n">text_raw</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s2">&quot;pt&quot;</span><span class="p">)</span>
+                        <span class="n">ids</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ids</span><span class="p">[</span><span class="s1">&#39;input_ids&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+                        <span class="n">ids</span> <span class="o">=</span> <span class="n">ids</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+                        <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MLM</span><span class="p">(</span><span class="o">**</span><span class="n">ids</span><span class="p">)[</span><span class="s1">&#39;loss&#39;</span><span class="p">]</span>
+                        <span class="n">perplexity</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">loss</span> <span class="o">/</span> <span class="n">ids</span><span class="p">[</span><span class="s1">&#39;input_ids&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">perplexity</span> <span class="o">=</span> <span class="s1">&#39;N.A.&#39;</span>
+
+                    <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">text_raw</span><span class="p">,</span>
+
+                        <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">index_to_label</span><span class="p">[</span><span class="n">pred_label</span><span class="p">],</span>
+                        <span class="s1">&#39;probs&#39;</span><span class="p">:</span> <span class="n">prob</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span>
+                        <span class="s1">&#39;confidence&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">prob</span><span class="p">)),</span>
+                        <span class="s1">&#39;ref_label&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">index_to_label</span><span class="p">[</span><span class="n">ref_label</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ref_label</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">else</span> <span class="n">ref_label</span><span class="p">,</span>
+                        <span class="s1">&#39;ref_label_check&#39;</span><span class="p">:</span> <span class="n">correct</span><span class="p">[</span><span class="n">pred_label</span> <span class="o">==</span> <span class="n">ref_label</span><span class="p">]</span> <span class="k">if</span> <span class="n">ref_label</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">100</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;is_fixed&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+
+                        <span class="s1">&#39;is_adv_label&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">index_to_is_adv</span><span class="p">[</span><span class="n">pred_is_adv_label</span><span class="p">],</span>
+                        <span class="s1">&#39;is_adv_probs&#39;</span><span class="p">:</span> <span class="n">advdet_prob</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span>
+                        <span class="s1">&#39;is_adv_confidence&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">advdet_prob</span><span class="p">)),</span>
+                        <span class="s1">&#39;ref_is_adv_label&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">index_to_is_adv</span><span class="p">[</span><span class="n">ref_is_adv_label</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ref_is_adv_label</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">else</span> <span class="n">ref_is_adv_label</span><span class="p">,</span>
+                        <span class="s1">&#39;ref_is_adv_check&#39;</span><span class="p">:</span> <span class="n">correct</span><span class="p">[</span><span class="n">pred_is_adv_label</span> <span class="o">==</span> <span class="n">ref_is_adv_label</span><span class="p">]</span> <span class="k">if</span> <span class="n">ref_is_adv_label</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">100</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ref_is_adv_label</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+
+                        <span class="s1">&#39;pred_adv_tr_label&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">index_to_label</span><span class="p">[</span><span class="n">pred_adv_tr_label</span><span class="p">],</span>
+                        <span class="s1">&#39;ref_adv_tr_label&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">index_to_label</span><span class="p">[</span><span class="n">ref_adv_tr_label</span><span class="p">],</span>
+
+                        <span class="s1">&#39;perplexity&#39;</span><span class="p">:</span> <span class="n">perplexity</span><span class="p">,</span>
+                    <span class="p">}</span>
+                    <span class="k">if</span> <span class="n">defense</span><span class="p">:</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;sent_attacker&#39;</span><span class="p">):</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">sent_attacker</span> <span class="o">=</span> <span class="n">init_attacker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">defense</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+                            <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;is_adv_label&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+                                <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sent_attacker</span><span class="o">.</span><span class="n">attacker</span><span class="o">.</span><span class="n">simple_attack</span><span class="p">(</span><span class="n">text_raw</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]))</span>
+                                <span class="n">new_infer_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">infer</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">perturbed_result</span><span class="o">.</span><span class="n">attacked_text</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">print_result</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                                <span class="n">result</span><span class="p">[</span><span class="s1">&#39;perturbed_label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span>
+                                <span class="n">result</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_infer_res</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span>
+                                <span class="n">result</span><span class="p">[</span><span class="s1">&#39;probs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_infer_res</span><span class="p">[</span><span class="s1">&#39;probs&#39;</span><span class="p">]</span>
+                                <span class="n">result</span><span class="p">[</span><span class="s1">&#39;ref_label_check&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">correct</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="n">ref_label</span><span class="p">]</span> <span class="k">if</span> <span class="n">ref_label</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">100</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+                                <span class="n">result</span><span class="p">[</span><span class="s1">&#39;restored_text&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">perturbed_result</span><span class="o">.</span><span class="n">attacked_text</span><span class="o">.</span><span class="n">text</span>
+                                <span class="n">result</span><span class="p">[</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">result</span><span class="p">[</span><span class="s1">&#39;restored_text&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                                <span class="n">result</span><span class="p">[</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+                        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error:</span><span class="si">{}</span><span class="s1">, try install TextAttack and tensorflow_text after 10 seconds...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+                            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Installation done, please run again...&#39;</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">ref_label</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">100</span><span class="p">:</span>
+                        <span class="n">n_labeled</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                        <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;ref_label&#39;</span><span class="p">]:</span>
+                            <span class="n">n_correct</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                    <span class="k">if</span> <span class="n">ref_is_adv_label</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">100</span><span class="p">:</span>
+                        <span class="n">n_advdet_labeled</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="k">if</span> <span class="n">ref_is_adv_label</span> <span class="o">==</span> <span class="n">pred_is_adv_label</span><span class="p">:</span>
+                            <span class="n">n_advdet_correct</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">print_result</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">ex_id</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+                    <span class="n">text_printing</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">][:]</span>
+                    <span class="n">text_info</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                    <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;-100&#39;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;ref_label&#39;</span><span class="p">]:</span>
+                            <span class="n">text_info</span> <span class="o">+=</span> <span class="s1">&#39; -&gt; &lt;CLS:</span><span class="si">{}</span><span class="s1">(ref:</span><span class="si">{}</span><span class="s1"> confidence:</span><span class="si">{}</span><span class="s1">)&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">],</span>
+                                                                                     <span class="n">result</span><span class="p">[</span><span class="s1">&#39;ref_label&#39;</span><span class="p">],</span>
+                                                                                     <span class="n">result</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">])</span>
+                        <span class="k">elif</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;ref_label&#39;</span><span class="p">]:</span>
+                            <span class="n">text_info</span> <span class="o">+=</span> <span class="n">colored</span><span class="p">(</span>
+                                <span class="s1">&#39; -&gt; &lt;CLS:</span><span class="si">{}</span><span class="s1">(ref:</span><span class="si">{}</span><span class="s1"> confidence:</span><span class="si">{}</span><span class="s1">)&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;ref_label&#39;</span><span class="p">],</span>
+                                                                            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">]),</span> <span class="s1">&#39;green&#39;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">text_info</span> <span class="o">+=</span> <span class="n">colored</span><span class="p">(</span>
+                                <span class="s1">&#39; -&gt; &lt;CLS:</span><span class="si">{}</span><span class="s1">(ref:</span><span class="si">{}</span><span class="s1"> confidence:</span><span class="si">{}</span><span class="s1">)&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;ref_label&#39;</span><span class="p">],</span>
+                                                                            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">]),</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+
+                    <span class="c1"># AdvDet</span>
+                    <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;is_adv_label&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;-100&#39;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;ref_is_adv_label&#39;</span><span class="p">]:</span>
+                            <span class="n">text_info</span> <span class="o">+=</span> <span class="s1">&#39; -&gt; &lt;AdvDet:</span><span class="si">{}</span><span class="s1">(ref:</span><span class="si">{}</span><span class="s1"> confidence:</span><span class="si">{}</span><span class="s1">)&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;is_adv_label&#39;</span><span class="p">],</span>
+                                                                                        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;ref_is_adv_check&#39;</span><span class="p">],</span>
+                                                                                        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;is_adv_confidence&#39;</span><span class="p">])</span>
+                        <span class="k">elif</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;is_adv_label&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;ref_is_adv_label&#39;</span><span class="p">]:</span>
+                            <span class="n">text_info</span> <span class="o">+=</span> <span class="n">colored</span><span class="p">(</span><span class="s1">&#39; -&gt; &lt;AdvDet:</span><span class="si">{}</span><span class="s1">(ref:</span><span class="si">{}</span><span class="s1"> confidence:</span><span class="si">{}</span><span class="s1">)&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;is_adv_label&#39;</span><span class="p">],</span>
+                                                                                                <span class="n">result</span><span class="p">[</span>
+                                                                                                    <span class="s1">&#39;ref_is_adv_label&#39;</span><span class="p">],</span>
+                                                                                                <span class="n">result</span><span class="p">[</span>
+                                                                                                    <span class="s1">&#39;is_adv_confidence&#39;</span><span class="p">]),</span>
+                                                 <span class="s1">&#39;green&#39;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">text_info</span> <span class="o">+=</span> <span class="n">colored</span><span class="p">(</span><span class="s1">&#39; -&gt; &lt;AdvDet:</span><span class="si">{}</span><span class="s1">(ref:</span><span class="si">{}</span><span class="s1"> confidence:</span><span class="si">{}</span><span class="s1">)&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;is_adv_label&#39;</span><span class="p">],</span>
+                                                                                                <span class="n">result</span><span class="p">[</span>
+                                                                                                    <span class="s1">&#39;ref_is_adv_label&#39;</span><span class="p">],</span>
+                                                                                                <span class="n">result</span><span class="p">[</span>
+                                                                                                    <span class="s1">&#39;is_adv_confidence&#39;</span><span class="p">]),</span>
+                                                 <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+                    <span class="n">text_printing</span> <span class="o">+=</span> <span class="n">text_info</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cal_perplexity</span><span class="p">:</span>
+                        <span class="n">text_printing</span> <span class="o">+=</span> <span class="n">colored</span><span class="p">(</span><span class="s1">&#39; --&gt; &lt;perplexity:</span><span class="si">{}</span><span class="s1">&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;perplexity&#39;</span><span class="p">]),</span> <span class="s1">&#39;yellow&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Example </span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ex_id</span><span class="p">,</span> <span class="n">text_printing</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">save_path</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+                    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">results</span><span class="p">),</span> <span class="n">fout</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;inference result saved in: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">save_path</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Can not save result: </span><span class="si">{}</span><span class="s1">, Exception: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text_raw</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;CLS Acc:</span><span class="si">{}</span><span class="s1">%&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">n_correct</span> <span class="o">/</span> <span class="n">n_labeled</span> <span class="k">if</span> <span class="n">n_labeled</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;AdvDet Acc:</span><span class="si">{}</span><span class="s1">%&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">n_advdet_correct</span> <span class="o">/</span> <span class="n">n_advdet_labeled</span> <span class="k">if</span> <span class="n">n_advdet_labeled</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">results</span></div>
+
+<div class="viewcode-block" id="TADTextClassifier.clear_input_samples"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/tad/prediction/tad_classifier/index.html#pyabsa.core.tad.prediction.tad_classifier.TADTextClassifier.clear_input_samples">[docs]</a>    <span class="k">def</span> <span class="nf">clear_input_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">all_data</span> <span class="o">=</span> <span class="p">[]</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Heng Yang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

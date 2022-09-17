@@ -1,0 +1,39 @@
+:py:mod:`pyabsa.core.atepc.training.atepc_trainer`
+==================================================
+
+.. py:module:: pyabsa.core.atepc.training.atepc_trainer
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.core.atepc.training.atepc_trainer.Instructor
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.core.atepc.training.atepc_trainer.train4atepc
+
+
+
+.. py:class:: Instructor(opt, logger)
+
+   .. py:method:: run()
+
+
+   .. py:method:: evaluate(data_loader=None, eval_ATE=True, eval_APC=True)
+
+
+
+.. py:function:: train4atepc(opt, from_checkpoint_path, logger)
+
+
