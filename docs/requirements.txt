@@ -10,6 +10,7 @@ sphinxcontrib-htmlhelp
 sphinxcontrib-jsmath
 sphinxcontrib-qthelp
 sphinxcontrib-serializinghtml
+Sphinx-autoapi
 nbclient
 nbconvert
 nbsphinx
