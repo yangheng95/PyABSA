@@ -14,6 +14,9 @@ This docs is pending for elaboration.
    :caption: Contents:
 
 
+This documentation is for PyABSA, a Python library for Aspect-Based Sentiment Analysis.
+This library is developed by Heng Yang, a PhD student at the University of Exeter, UK.
+This docs is pending for elaboration.
 
 Indices and tables
 ==================
