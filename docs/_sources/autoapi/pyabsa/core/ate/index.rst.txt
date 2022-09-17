@@ -1,6 +1,0 @@
-:py:mod:`pyabsa.core.ate`
-=========================
-
-.. py:module:: pyabsa.core.ate
-
-
