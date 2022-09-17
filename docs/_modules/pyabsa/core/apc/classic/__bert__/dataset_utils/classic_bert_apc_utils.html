@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils &mdash; PyABSA 1.16.16 documentation</title>
+      <link rel="stylesheet" href="../../../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../../../" id="documentation_options" src="../../../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../../../_static/jquery.js"></script>
+        <script src="../../../../../../../_static/underscore.js"></script>
+        <script src="../../../../../../../_static/doctools.js"></script>
+        <script src="../../../../../../../_static/clipboard.min.js"></script>
+        <script src="../../../../../../../_static/copybutton.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../../../index.html" class="icon icon-home"> PyABSA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../autoapi/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../autoapi/pyabsa/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../autoapi/pyabsa/index.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../autoapi/pyabsa/core/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.core</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../autoapi/pyabsa/functional/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../autoapi/pyabsa/network/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.network</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../autoapi/pyabsa/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../autoapi/pyabsa/index.html#package-contents">Package Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../autoapi/pyabsa/index.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../autoapi/pyabsa/index.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../autoapi/pyabsa/index.html#attributes">Attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../index.html">PyABSA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../../../../../pyabsa.html">pyabsa</a> &raquo;</li>
+      <li>pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># file: apc_utils.py</span>
+<span class="c1"># time: 2021/5/23 0023</span>
+<span class="c1"># author: yangheng &lt;hy345@exeter.ac.uk&gt;</span>
+<span class="c1"># github: https://github.com/yangheng95</span>
+<span class="c1"># Copyright (C) 2021. All Rights Reserved.</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">spacy</span>
+<span class="kn">import</span> <span class="nn">termcolor</span>
+
+<div class="viewcode-block" id="LABEL_PADDING"><a class="viewcode-back" href="../../../../../../../autoapi/pyabsa/core/apc/classic/__bert__/dataset_utils/classic_bert_apc_utils/index.html#pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.LABEL_PADDING">[docs]</a><span class="n">LABEL_PADDING</span> <span class="o">=</span> <span class="o">-</span><span class="mi">999</span></div>
+
+
+<div class="viewcode-block" id="pad_and_truncate"><a class="viewcode-back" href="../../../../../../../autoapi/pyabsa/core/apc/classic/__bert__/dataset_utils/classic_bert_apc_utils/index.html#pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.pad_and_truncate">[docs]</a><span class="k">def</span> <span class="nf">pad_and_truncate</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">maxlen</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int64&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">truncating</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">maxlen</span><span class="p">)</span> <span class="o">*</span> <span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">truncating</span> <span class="o">==</span> <span class="s1">&#39;pre&#39;</span><span class="p">:</span>
+        <span class="n">trunc</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="o">-</span><span class="n">maxlen</span><span class="p">:]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">trunc</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[:</span><span class="n">maxlen</span><span class="p">]</span>
+    <span class="n">trunc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">trunc</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">padding</span> <span class="o">==</span> <span class="s1">&#39;post&#39;</span><span class="p">:</span>
+        <span class="n">x</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">trunc</span><span class="p">)]</span> <span class="o">=</span> <span class="n">trunc</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">trunc</span><span class="p">):]</span> <span class="o">=</span> <span class="n">trunc</span>
+    <span class="k">return</span> <span class="n">x</span></div>
+
+
+<div class="viewcode-block" id="syntax_distance_alignment"><a class="viewcode-back" href="../../../../../../../autoapi/pyabsa/core/apc/classic/__bert__/dataset_utils/classic_bert_apc_utils/index.html#pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.syntax_distance_alignment">[docs]</a><span class="k">def</span> <span class="nf">syntax_distance_alignment</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">max_seq_len</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[:]</span>
+    <span class="n">dep_dist</span> <span class="o">=</span> <span class="n">dist</span><span class="p">[:]</span>
+    <span class="n">bert_tokens</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+    <span class="n">_bert_tokens</span> <span class="o">=</span> <span class="n">bert_tokens</span><span class="p">[:]</span>
+    <span class="n">align_dist</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">bert_tokens</span> <span class="o">!=</span> <span class="n">text</span><span class="p">:</span>
+        <span class="k">while</span> <span class="n">text</span> <span class="ow">or</span> <span class="n">bert_tokens</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39; &#39;</span> <span class="ow">or</span> <span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\xa0</span><span class="s1">&#39;</span><span class="p">:</span>  <span class="c1"># bad case handle</span>
+                    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                    <span class="n">dep_dist</span> <span class="o">=</span> <span class="n">dep_dist</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="k">elif</span> <span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">bert_tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                    <span class="n">bert_tokens</span> <span class="o">=</span> <span class="n">bert_tokens</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                    <span class="n">align_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dep_dist</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">dep_dist</span> <span class="o">=</span> <span class="n">dep_dist</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">bert_tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                    <span class="n">tmp_str</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_str</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">bert_tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                        <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                        <span class="n">tmp_str</span> <span class="o">+=</span> <span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">dep_dist</span> <span class="o">=</span> <span class="n">dep_dist</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                    <span class="n">align_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dep_dist</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">dep_dist</span> <span class="o">=</span> <span class="n">dep_dist</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                    <span class="n">bert_tokens</span> <span class="o">=</span> <span class="n">bert_tokens</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">bert_tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                    <span class="n">tmp_tokens</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="k">for</span> <span class="n">jx</span><span class="p">,</span> <span class="n">tmp_token</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tmp_tokens</span><span class="p">):</span>
+                        <span class="n">align_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dep_dist</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                    <span class="n">dep_dist</span> <span class="o">=</span> <span class="n">dep_dist</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                    <span class="n">bert_tokens</span> <span class="o">=</span> <span class="n">bert_tokens</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">tmp_tokens</span><span class="p">):]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                    <span class="n">bert_tokens</span> <span class="o">=</span> <span class="n">bert_tokens</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                    <span class="n">align_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dep_dist</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">dep_dist</span> <span class="o">=</span> <span class="n">dep_dist</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">align_dist</span> <span class="o">=</span> <span class="n">pad_and_truncate</span><span class="p">(</span><span class="n">align_dist</span><span class="p">,</span> <span class="n">max_seq_len</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">max_seq_len</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">align_dist</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">align_dist</span> <span class="o">=</span> <span class="n">dep_dist</span>
+
+    <span class="n">align_dist</span> <span class="o">=</span> <span class="n">pad_and_truncate</span><span class="p">(</span><span class="n">align_dist</span><span class="p">,</span> <span class="n">max_seq_len</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">max_seq_len</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">align_dist</span></div>
+
+
+<span class="c1"># Group distance to aspect of an original word to its corresponding subword token</span>
+<div class="viewcode-block" id="pad_syntax_based_srd"><a class="viewcode-back" href="../../../../../../../autoapi/pyabsa/core/apc/classic/__bert__/dataset_utils/classic_bert_apc_utils/index.html#pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.pad_syntax_based_srd">[docs]</a><span class="k">def</span> <span class="nf">pad_syntax_based_srd</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">dep_dist</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">opt</span><span class="p">):</span>
+    <span class="n">sequence</span><span class="p">,</span> <span class="n">distances</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">dist</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">dep_dist</span><span class="p">):</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">jx</span><span class="p">,</span> <span class="n">token</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
+            <span class="n">sequence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+            <span class="n">distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+    <span class="n">sequence</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">convert_tokens_to_ids</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+    <span class="n">sequence</span> <span class="o">=</span> <span class="n">pad_and_truncate</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)</span>
+    <span class="n">dep_dist</span> <span class="o">=</span> <span class="n">pad_and_truncate</span><span class="p">(</span><span class="n">dep_dist</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">dep_dist</span></div>
+
+
+<div class="viewcode-block" id="load_apc_datasets"><a class="viewcode-back" href="../../../../../../../autoapi/pyabsa/core/apc/classic/__bert__/dataset_utils/classic_bert_apc_utils/index.html#pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.load_apc_datasets">[docs]</a><span class="k">def</span> <span class="nf">load_apc_datasets</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="p">[</span><span class="n">fname</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fname</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;loading: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+        <span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="n">_lines_</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">_lines_</span><span class="p">)</span>
+        <span class="n">fin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">lines</span></div>
+
+
+<div class="viewcode-block" id="prepare_input_for_apc"><a class="viewcode-back" href="../../../../../../../autoapi/pyabsa/core/apc/classic/__bert__/dataset_utils/classic_bert_apc_utils/index.html#pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.prepare_input_for_apc">[docs]</a><span class="k">def</span> <span class="nf">prepare_input_for_apc</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">text_left</span><span class="p">,</span> <span class="n">text_right</span><span class="p">,</span> <span class="n">aspect</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="s1">&#39;dynamic_truncate&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">opt</span><span class="o">.</span><span class="n">dynamic_truncate</span><span class="p">:</span>
+        <span class="n">_max_seq_len</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">aspect</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span>
+        <span class="n">text_left</span> <span class="o">=</span> <span class="n">text_left</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="n">text_right</span> <span class="o">=</span> <span class="n">text_right</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">_max_seq_len</span> <span class="o">&lt;</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">text_left</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">text_right</span><span class="p">)):</span>
+            <span class="n">cut_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">text_left</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">text_right</span><span class="p">)</span> <span class="o">-</span> <span class="n">_max_seq_len</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text_left</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">text_right</span><span class="p">):</span>
+                <span class="n">text_left</span> <span class="o">=</span> <span class="n">text_left</span><span class="p">[</span><span class="n">cut_len</span><span class="p">:]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">text_right</span> <span class="o">=</span> <span class="n">text_right</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">text_right</span><span class="p">)</span> <span class="o">-</span> <span class="n">cut_len</span><span class="p">]</span>
+        <span class="n">text_left</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text_left</span><span class="p">)</span>
+        <span class="n">text_right</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text_right</span><span class="p">)</span>
+
+    <span class="c1"># tokenizer.bos_token = tokenizer.bos_token if tokenizer.bos_token else &#39;[CLS]&#39;</span>
+    <span class="c1"># tokenizer.eos_token = tokenizer.eos_token if tokenizer.eos_token else &#39;[SEP]&#39;</span>
+    <span class="c1"># bos_token = tokenizer.bos_token</span>
+    <span class="c1"># eos_token = tokenizer.eos_token</span>
+    <span class="n">bos_token</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">eos_token</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="n">text_raw</span> <span class="o">=</span> <span class="n">text_left</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">aspect</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">text_right</span>
+    <span class="n">text_spc</span> <span class="o">=</span> <span class="n">bos_token</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">text_raw</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">eos_token</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">aspect</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">eos_token</span>
+    <span class="n">text_bert_indices</span> <span class="o">=</span> <span class="n">text_to_sequence</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">text_spc</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)</span>
+    <span class="n">text_raw_bert_indices</span> <span class="o">=</span> <span class="n">text_to_sequence</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">bos_token</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">text_raw</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">eos_token</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)</span>
+    <span class="n">aspect_bert_indices</span> <span class="o">=</span> <span class="n">text_to_sequence</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">aspect</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)</span>
+
+    <span class="n">aspect_begin</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">bos_token</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">text_left</span><span class="p">))</span>
+    <span class="n">aspect_position</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">aspect_begin</span><span class="p">,</span> <span class="n">aspect_begin</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">aspect_bert_indices</span><span class="p">)))</span>
+
+    <span class="c1"># if &#39;lcfs&#39; in opt.model_name or &#39;ssw_s&#39; in opt.model_name or opt.use_syntax_based_SRD:</span>
+    <span class="c1">#     syntactical_dist, _ = get_syntax_distance(text_raw, aspect, tokenizer, opt)</span>
+    <span class="c1"># else:</span>
+    <span class="c1">#     syntactical_dist = None</span>
+
+    <span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;text_raw&#39;</span><span class="p">:</span> <span class="n">text_raw</span><span class="p">,</span>
+        <span class="s1">&#39;text_spc&#39;</span><span class="p">:</span> <span class="n">text_spc</span><span class="p">,</span>
+        <span class="s1">&#39;aspect&#39;</span><span class="p">:</span> <span class="n">aspect</span><span class="p">,</span>
+        <span class="s1">&#39;aspect_position&#39;</span><span class="p">:</span> <span class="n">aspect_position</span><span class="p">,</span>
+        <span class="s1">&#39;text_bert_indices&#39;</span><span class="p">:</span> <span class="n">text_bert_indices</span><span class="p">,</span>
+        <span class="s1">&#39;text_raw_bert_indices&#39;</span><span class="p">:</span> <span class="n">text_raw_bert_indices</span><span class="p">,</span>
+        <span class="s1">&#39;aspect_bert_indices&#39;</span><span class="p">:</span> <span class="n">aspect_bert_indices</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">inputs</span></div>
+
+
+<div class="viewcode-block" id="text_to_sequence"><a class="viewcode-back" href="../../../../../../../autoapi/pyabsa/core/apc/classic/__bert__/dataset_utils/classic_bert_apc_utils/index.html#pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.text_to_sequence">[docs]</a><span class="k">def</span> <span class="nf">text_to_sequence</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">max_seq_len</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">pad_and_truncate</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">convert_tokens_to_ids</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">)),</span> <span class="n">max_seq_len</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_syntax_distance"><a class="viewcode-back" href="../../../../../../../autoapi/pyabsa/core/apc/classic/__bert__/dataset_utils/classic_bert_apc_utils/index.html#pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.get_syntax_distance">[docs]</a><span class="k">def</span> <span class="nf">get_syntax_distance</span><span class="p">(</span><span class="n">text_raw</span><span class="p">,</span> <span class="n">aspect</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">opt</span><span class="p">):</span>
+    <span class="c1"># Find distance in dependency parsing tree</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text_raw</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">text_raw</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text_raw</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">aspect</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">aspect</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">aspect</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">raw_tokens</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">max_dist</span> <span class="o">=</span> <span class="n">calculate_dep_dist</span><span class="p">(</span><span class="n">text_raw</span><span class="p">,</span> <span class="n">aspect</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Text: </span><span class="si">{}</span><span class="s1"> Aspect: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text_raw</span><span class="p">,</span> <span class="n">aspect</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Ignore failure in calculate the syntax based SRD: </span><span class="si">{}</span><span class="s1">, maybe the aspect is None&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">model_name</span> <span class="o">==</span> <span class="s1">&#39;dlcf_dca_bert&#39;</span><span class="p">:</span>
+        <span class="n">dist</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dist</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">dist</span><span class="p">))</span>
+        <span class="n">dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">dist</span><span class="p">))</span>
+    <span class="n">raw_tokens</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">bos_token</span><span class="p">)</span>
+    <span class="n">raw_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">eos_token</span><span class="p">)</span>
+
+    <span class="c1"># the following two functions are both designed to calculate syntax-based distances</span>
+    <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">srd_alignment</span><span class="p">:</span>
+        <span class="n">syntactical_dist</span> <span class="o">=</span> <span class="n">syntax_distance_alignment</span><span class="p">(</span><span class="n">raw_tokens</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">syntactical_dist</span> <span class="o">=</span> <span class="n">pad_syntax_based_srd</span><span class="p">(</span><span class="n">raw_tokens</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">opt</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">syntactical_dist</span><span class="p">,</span> <span class="n">max_dist</span></div>
+
+
+<div class="viewcode-block" id="get_lca_ids_and_cdm_vec"><a class="viewcode-back" href="../../../../../../../autoapi/pyabsa/core/apc/classic/__bert__/dataset_utils/classic_bert_apc_utils/index.html#pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.get_lca_ids_and_cdm_vec">[docs]</a><span class="k">def</span> <span class="nf">get_lca_ids_and_cdm_vec</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">bert_spc_indices</span><span class="p">,</span> <span class="n">aspect_indices</span><span class="p">,</span> <span class="n">aspect_begin</span><span class="p">,</span> <span class="n">syntactical_dist</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">SRD</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">SRD</span>
+    <span class="n">cdm_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+    <span class="n">aspect_len</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">aspect_indices</span><span class="p">)</span>
+    <span class="n">text_len</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">bert_spc_indices</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">aspect_indices</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">syntactical_dist</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">text_len</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">syntactical_dist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">SRD</span><span class="p">:</span>
+                <span class="n">cdm_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">local_context_begin</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">aspect_begin</span> <span class="o">-</span> <span class="n">SRD</span><span class="p">)</span>
+        <span class="n">local_context_end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">aspect_begin</span> <span class="o">+</span> <span class="n">aspect_len</span> <span class="o">+</span> <span class="n">SRD</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">text_len</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">local_context_begin</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">local_context_end</span><span class="p">:</span>
+                <span class="n">cdm_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">cdm_vec</span></div>
+
+
+<div class="viewcode-block" id="get_cdw_vec"><a class="viewcode-back" href="../../../../../../../autoapi/pyabsa/core/apc/classic/__bert__/dataset_utils/classic_bert_apc_utils/index.html#pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.get_cdw_vec">[docs]</a><span class="k">def</span> <span class="nf">get_cdw_vec</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">bert_spc_indices</span><span class="p">,</span> <span class="n">aspect_indices</span><span class="p">,</span> <span class="n">aspect_begin</span><span class="p">,</span> <span class="n">syntactical_dist</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">SRD</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">SRD</span>
+    <span class="n">cdw_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">aspect_len</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">aspect_indices</span><span class="p">)</span>
+    <span class="n">text_len</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">bert_spc_indices</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">aspect_indices</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">syntactical_dist</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">text_len</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">syntactical_dist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">SRD</span><span class="p">:</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">syntactical_dist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">text_len</span>
+                <span class="n">cdw_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cdw_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">local_context_begin</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">aspect_begin</span> <span class="o">-</span> <span class="n">SRD</span><span class="p">)</span>
+        <span class="n">local_context_end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">aspect_begin</span> <span class="o">+</span> <span class="n">aspect_len</span> <span class="o">+</span> <span class="n">SRD</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">text_len</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">local_context_begin</span><span class="p">:</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">local_context_begin</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="n">text_len</span>
+            <span class="k">elif</span> <span class="n">local_context_begin</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">local_context_end</span><span class="p">:</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">local_context_end</span><span class="p">)</span> <span class="o">/</span> <span class="n">text_len</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">w</span> <span class="o">&lt;=</span> <span class="mi">1</span>  <span class="c1"># exception</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="c1"># print(&#39;Warning! invalid CDW weight:&#39;, w)</span>
+            <span class="n">cdw_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span>
+    <span class="k">return</span> <span class="n">cdw_vec</span></div>
+
+
+<div class="viewcode-block" id="build_spc_mask_vec"><a class="viewcode-back" href="../../../../../../../autoapi/pyabsa/core/apc/classic/__bert__/dataset_utils/classic_bert_apc_utils/index.html#pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.build_spc_mask_vec">[docs]</a><span class="k">def</span> <span class="nf">build_spc_mask_vec</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">text_ids</span><span class="p">):</span>
+    <span class="n">spc_mask_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">text_ids</span><span class="p">)):</span>
+        <span class="n">spc_mask_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">opt</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">spc_mask_vec</span></div>
+
+
+<div class="viewcode-block" id="build_sentiment_window"><a class="viewcode-back" href="../../../../../../../autoapi/pyabsa/core/apc/classic/__bert__/dataset_utils/classic_bert_apc_utils/index.html#pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.build_sentiment_window">[docs]</a><span class="k">def</span> <span class="nf">build_sentiment_window</span><span class="p">(</span><span class="n">examples</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">similarity_threshold</span><span class="p">,</span> <span class="n">input_demands</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">copy_side_aspect</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">examples</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">examples</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">examples</span><span class="p">,</span> <span class="n">input_demands</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">examples</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">is_similar</span><span class="p">(</span><span class="n">examples</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;text_bert_indices&#39;</span><span class="p">],</span>
+                      <span class="n">examples</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s1">&#39;text_bert_indices&#39;</span><span class="p">],</span>
+                      <span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span>
+                      <span class="n">similarity_threshold</span><span class="o">=</span><span class="n">similarity_threshold</span><span class="p">):</span>
+            <span class="n">copy_side_aspect</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">examples</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">examples</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">examples</span><span class="p">,</span> <span class="n">input_demands</span><span class="p">)</span>
+            <span class="n">copy_side_aspect</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">examples</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">examples</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">examples</span><span class="p">,</span> <span class="n">input_demands</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">copy_side_aspect</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">examples</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">examples</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">examples</span><span class="p">,</span> <span class="n">input_demands</span><span class="p">)</span>
+            <span class="n">copy_side_aspect</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">examples</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">examples</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">examples</span><span class="p">,</span> <span class="n">input_demands</span><span class="p">)</span>
+    <span class="n">copy_side_aspect</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">examples</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">examples</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">examples</span><span class="p">,</span> <span class="n">input_demands</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">examples</span></div>
+
+
+<div class="viewcode-block" id="copy_side_aspect"><a class="viewcode-back" href="../../../../../../../autoapi/pyabsa/core/apc/classic/__bert__/dataset_utils/classic_bert_apc_utils/index.html#pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.copy_side_aspect">[docs]</a><span class="k">def</span> <span class="nf">copy_side_aspect</span><span class="p">(</span><span class="n">direct</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">examples</span><span class="p">,</span> <span class="n">input_demands</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s1">&#39;cluster_ids&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">target</span><span class="p">[</span><span class="s1">&#39;cluster_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="s1">&#39;aspect_position&#39;</span><span class="p">])</span>
+        <span class="n">target</span><span class="p">[</span><span class="s1">&#39;side_ex_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">target</span><span class="p">[</span><span class="s1">&#39;ex_id&#39;</span><span class="p">]]))</span>
+    <span class="k">if</span> <span class="s1">&#39;cluster_ids&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">source</span><span class="p">:</span>
+        <span class="n">source</span><span class="p">[</span><span class="s1">&#39;cluster_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">source</span><span class="p">[</span><span class="s1">&#39;aspect_position&#39;</span><span class="p">])</span>
+        <span class="n">source</span><span class="p">[</span><span class="s1">&#39;side_ex_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">source</span><span class="p">[</span><span class="s1">&#39;ex_id&#39;</span><span class="p">]]))</span>
+
+    <span class="k">if</span> <span class="n">target</span><span class="p">[</span><span class="s1">&#39;polarity&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">source</span><span class="p">[</span><span class="s1">&#39;polarity&#39;</span><span class="p">]:</span>
+
+        <span class="n">target</span><span class="p">[</span><span class="s1">&#39;side_ex_ids&#39;</span><span class="p">]</span> <span class="o">|=</span> <span class="n">source</span><span class="p">[</span><span class="s1">&#39;side_ex_ids&#39;</span><span class="p">]</span>
+        <span class="n">source</span><span class="p">[</span><span class="s1">&#39;side_ex_ids&#39;</span><span class="p">]</span> <span class="o">|=</span> <span class="n">target</span><span class="p">[</span><span class="s1">&#39;side_ex_ids&#39;</span><span class="p">]</span>
+        <span class="n">target</span><span class="p">[</span><span class="s1">&#39;cluster_ids&#39;</span><span class="p">]</span> <span class="o">|=</span> <span class="n">source</span><span class="p">[</span><span class="s1">&#39;cluster_ids&#39;</span><span class="p">]</span>
+        <span class="n">source</span><span class="p">[</span><span class="s1">&#39;cluster_ids&#39;</span><span class="p">]</span> <span class="o">|=</span> <span class="n">target</span><span class="p">[</span><span class="s1">&#39;cluster_ids&#39;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">ex_id</span> <span class="ow">in</span> <span class="n">target</span><span class="p">[</span><span class="s1">&#39;side_ex_ids&#39;</span><span class="p">]:</span>
+            <span class="n">examples</span><span class="p">[</span><span class="n">ex_id</span><span class="p">][</span><span class="s1">&#39;cluster_ids&#39;</span><span class="p">]</span> <span class="o">|=</span> <span class="n">source</span><span class="p">[</span><span class="s1">&#39;cluster_ids&#39;</span><span class="p">]</span>
+            <span class="n">examples</span><span class="p">[</span><span class="n">ex_id</span><span class="p">][</span><span class="s1">&#39;side_ex_ids&#39;</span><span class="p">]</span> <span class="o">|=</span> <span class="n">target</span><span class="p">[</span><span class="s1">&#39;side_ex_ids&#39;</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">data_item</span> <span class="ow">in</span> <span class="n">input_demands</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;right_right_&#39;</span> <span class="ow">in</span> <span class="n">data_item</span> <span class="ow">or</span> <span class="s1">&#39;left_left_&#39;</span> <span class="ow">in</span> <span class="n">data_item</span><span class="p">:</span>
+            <span class="n">data_item</span> <span class="o">=</span> <span class="n">data_item</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;right_right_&#39;</span><span class="p">,</span> <span class="s1">&#39;right_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;left_left_&#39;</span><span class="p">,</span> <span class="s1">&#39;left_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">data_item</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;right_&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_item</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;left_&#39;</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="n">target</span><span class="p">[</span><span class="n">direct</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">data_item</span><span class="p">]</span> <span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="n">data_item</span><span class="p">]</span>
+    <span class="n">target</span><span class="p">[</span><span class="n">direct</span> <span class="o">+</span> <span class="s1">&#39;_dist&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">source</span><span class="p">[</span><span class="s1">&#39;aspect_position&#39;</span><span class="p">]))</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="s1">&#39;aspect_position&#39;</span><span class="p">]))))</span></div>
+    <span class="c1"># target[direct + &#39;_dist&#39;] = 0 if id(source[&#39;lcf_vec&#39;]) == id(target[&#39;lcf_vec&#39;]) else 1</span>
+
+
+<div class="viewcode-block" id="is_similar"><a class="viewcode-back" href="../../../../../../../autoapi/pyabsa/core/apc/classic/__bert__/dataset_utils/classic_bert_apc_utils/index.html#pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.is_similar">[docs]</a><span class="k">def</span> <span class="nf">is_similar</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">similarity_threshold</span><span class="p">):</span>
+    <span class="c1"># some reviews in the datasets are broken and can not use s1 == s2 to distinguish</span>
+    <span class="c1"># the same text which contains multiple aspects, so the similarity check is used</span>
+    <span class="c1"># similarity check is based on the observation and analysis of datasets</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s2</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">s2</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span>
+    <span class="n">s2</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">s1</span><span class="p">[:</span><span class="n">s1</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">)</span> <span class="k">if</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">eos_token_id</span> <span class="ow">in</span> <span class="n">s1</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="p">)]</span>
+    <span class="n">s2</span> <span class="o">=</span> <span class="n">s2</span><span class="p">[:</span><span class="n">s2</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">)</span> <span class="k">if</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">eos_token_id</span> <span class="ow">in</span> <span class="n">s2</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">s2</span><span class="p">)]</span>
+    <span class="n">len1</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span>
+    <span class="n">len2</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">s1</span> <span class="ow">and</span> <span class="n">s2</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">s1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">s2</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">s2</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">s1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">s1</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">s1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">count</span> <span class="o">/</span> <span class="n">len1</span> <span class="o">&gt;=</span> <span class="n">similarity_threshold</span> <span class="ow">and</span> <span class="n">count</span> <span class="o">/</span> <span class="n">len2</span> <span class="o">&gt;=</span> <span class="n">similarity_threshold</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="configure_spacy_model"><a class="viewcode-back" href="../../../../../../../autoapi/pyabsa/core/apc/classic/__bert__/dataset_utils/classic_bert_apc_utils/index.html#pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.configure_spacy_model">[docs]</a><span class="k">def</span> <span class="nf">configure_spacy_model</span><span class="p">(</span><span class="n">opt</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="s1">&#39;spacy_model&#39;</span><span class="p">):</span>
+        <span class="n">opt</span><span class="o">.</span><span class="n">spacy_model</span> <span class="o">=</span> <span class="s1">&#39;en_core_web_sm&#39;</span>
+    <span class="k">global</span> <span class="n">nlp</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">spacy_model</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Can not load </span><span class="si">{}</span><span class="s1"> from spacy, try to download it in order to parse syntax tree:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">spacy_model</span><span class="p">),</span>
+              <span class="n">termcolor</span><span class="o">.</span><span class="n">colored</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">python -m spacy download </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">spacy_model</span><span class="p">),</span> <span class="s1">&#39;green&#39;</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;python -m spacy download </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">spacy_model</span><span class="p">))</span>
+            <span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">spacy_model</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Download failed, you can download </span><span class="si">{}</span><span class="s1"> manually.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">spacy_model</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">nlp</span></div>
+
+
+<div class="viewcode-block" id="calculate_dep_dist"><a class="viewcode-back" href="../../../../../../../autoapi/pyabsa/core/apc/classic/__bert__/dataset_utils/classic_bert_apc_utils/index.html#pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.calculate_dep_dist">[docs]</a><span class="k">def</span> <span class="nf">calculate_dep_dist</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">aspect</span><span class="p">):</span>
+    <span class="n">terms</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">aspect</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">NameError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Fail to load nlp model, maybe you forget to download en_core_web_sm&#39;</span><span class="p">)</span>
+    <span class="c1"># Load spacy&#39;s dependency tree into a networkx graph</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">term_ids</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
+        <span class="c1"># Record the position of aspect terms</span>
+        <span class="k">if</span> <span class="n">cnt</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span> <span class="ow">and</span> <span class="n">token</span><span class="o">.</span><span class="n">lower_</span> <span class="o">==</span> <span class="n">terms</span><span class="p">[</span><span class="n">cnt</span><span class="p">]:</span>
+            <span class="n">term_ids</span><span class="p">[</span><span class="n">cnt</span><span class="p">]</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">i</span>
+            <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">lower_</span><span class="p">,</span> <span class="n">token</span><span class="o">.</span><span class="n">i</span><span class="p">),</span>
+                          <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">lower_</span><span class="p">,</span> <span class="n">child</span><span class="o">.</span><span class="n">i</span><span class="p">)))</span>
+
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+
+    <span class="n">dist</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
+    <span class="n">max_dist_temp</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">word</span><span class="o">.</span><span class="n">lower_</span><span class="p">,</span> <span class="n">word</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
+        <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">max_dist</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">term_id</span><span class="p">,</span> <span class="n">term</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">term_ids</span><span class="p">,</span> <span class="n">terms</span><span class="p">):</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">term_id</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">sum</span> <span class="o">+=</span> <span class="n">nx</span><span class="o">.</span><span class="n">shortest_path_length</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="nb">sum</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>  <span class="c1"># No connection between source and target</span>
+                <span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+        <span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="n">text</span>
+        <span class="k">if</span> <span class="n">flag</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">max_dist_temp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">sum</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">terms</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_dist</span><span class="p">:</span>
+            <span class="n">max_dist</span> <span class="o">=</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">text</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">max_dist</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Heng Yang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+:py:mod:`pyabsa.core.tad.prediction.tad_classifier`
+===================================================
+
+.. py:module:: pyabsa.core.tad.prediction.tad_classifier
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.core.tad.prediction.tad_classifier.TADTextClassifier
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.core.tad.prediction.tad_classifier.init_attacker
+   pyabsa.core.tad.prediction.tad_classifier.get_mlm_and_tokenizer
+
+
+
+.. py:function:: init_attacker(tad_classifier, defense)
+
+
+.. py:function:: get_mlm_and_tokenizer(text_classifier, config)
+
+
+.. py:class:: TADTextClassifier(model_arg=None, cal_perplexity=False, **kwargs)
+
+   .. py:method:: to(device=None)
+
+
+   .. py:method:: cpu()
+
+
+   .. py:method:: cuda(device='cuda:0')
+
+
+   .. py:method:: _log_write_args()
+
+
+   .. py:method:: batch_infer(target_file=None, print_result=True, save_result=False, ignore_error=True, defense: str = None)
+
+
+   .. py:method:: infer(text: str = None, print_result=True, ignore_error=True, defense: str = None)
+
+
+   .. py:method:: _infer(save_path=None, print_result=True, defense=None)
+
+
+   .. py:method:: clear_input_samples()
+
+
+

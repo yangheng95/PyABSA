@@ -1,0 +1,35 @@
+:py:mod:`pyabsa.utils.make_dataset`
+===================================
+
+.. py:module:: pyabsa.utils.make_dataset
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.utils.make_dataset.make_ABSA_dataset
+
+
+
+.. py:function:: make_ABSA_dataset(dataset_name_or_path, checkpoint='english')
+
+   Make APC and ATEPC datasets for PyABSA, using aspect extractor from PyABSA to automatically build datasets. This method WILL NOT give you the best performance but is quite fast and labor-free.
+   The names of dataset files to be processed should end with '.raw.ignore'. The files will be processed and saved to the same directory. The files will be overwritten if they already exist.
+   The data in the dataset files will be plain text row by row.
+
+   For obtaining the best performance, you should use DPT tool in ABSADatasets to manually annotate the dataset files,
+   which can be found in the following link:  https://github.com/yangheng95/ABSADatasets/tree/v1.2/DPT . This tool should be downloaded and run on a browser.
+
+   is much more time-consuming.
+   :param dataset_name_or_path: The name of the dataset to be processed. If the name is a directory, all files in the directory will be processed. If it is a file, only the file will be processed.
+   If it is a directory name, I use the findfile to find all files in the directory.
+   :param checkpoint: Which checkpoint to use. Basically, You can select from {'multilingual', 'english', 'chinese'}, Default is 'english'.
+   :return:
+
+

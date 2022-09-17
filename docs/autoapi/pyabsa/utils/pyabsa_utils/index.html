@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyabsa.utils.pyabsa_utils &mdash; PyABSA 1.16.16 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/clipboard.min.js"></script>
+        <script src="../../../../_static/copybutton.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> PyABSA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../core/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.core</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../functional/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../network/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.network</span></code></a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#package-contents">Package Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../index.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../index.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../index.html#attributes">Attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">PyABSA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.utils.pyabsa_utils</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/pyabsa/utils/pyabsa_utils/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="module-pyabsa.utils.pyabsa_utils">
+<span id="pyabsa-utils-pyabsa-utils"></span><h1><a class="reference internal" href="#module-pyabsa.utils.pyabsa_utils" title="pyabsa.utils.pyabsa_utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.utils.pyabsa_utils</span></code></a><a class="headerlink" href="#module-pyabsa.utils.pyabsa_utils" title="Permalink to this headline"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.utils.pyabsa_utils.save_args" title="pyabsa.utils.pyabsa_utils.save_args"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_args</span></code></a>(config, save_path)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyabsa.utils.pyabsa_utils.print_args" title="pyabsa.utils.pyabsa_utils.print_args"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_args</span></code></a>(config[, logger, mode])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.utils.pyabsa_utils.validate_example" title="pyabsa.utils.pyabsa_utils.validate_example"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_example</span></code></a>(text, aspect, polarity)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyabsa.utils.pyabsa_utils.check_and_fix_labels" title="pyabsa.utils.pyabsa_utils.check_and_fix_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_and_fix_labels</span></code></a>(label_set, label_name, all_data, opt)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.utils.pyabsa_utils.check_and_fix_IOB_labels" title="pyabsa.utils.pyabsa_utils.check_and_fix_IOB_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_and_fix_IOB_labels</span></code></a>(label_map, opt)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyabsa.utils.pyabsa_utils.get_device" title="pyabsa.utils.pyabsa_utils.get_device"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_device</span></code></a>(auto_device)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.utils.pyabsa_utils.resume_from_checkpoint" title="pyabsa.utils.pyabsa_utils.resume_from_checkpoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resume_from_checkpoint</span></code></a>(trainer, from_checkpoint_path)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyabsa.utils.pyabsa_utils.prepare_glove840_embedding" title="pyabsa.utils.pyabsa_utils.prepare_glove840_embedding"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepare_glove840_embedding</span></code></a>(glove_path)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.utils.pyabsa_utils._load_word_vec" title="pyabsa.utils.pyabsa_utils._load_word_vec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_load_word_vec</span></code></a>(path[, word2idx, embed_dim])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyabsa.utils.pyabsa_utils.build_embedding_matrix" title="pyabsa.utils.pyabsa_utils.build_embedding_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_embedding_matrix</span></code></a>(word2idx, embed_dim, dat_fname, opt)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.utils.pyabsa_utils.pad_and_truncate" title="pyabsa.utils.pyabsa_utils.pad_and_truncate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pad_and_truncate</span></code></a>(sequence, maxlen[, dtype, padding, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyabsa.utils.pyabsa_utils.retry" title="pyabsa.utils.pyabsa_utils.retry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">retry</span></code></a>(f)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.utils.pyabsa_utils.time_out" title="pyabsa.utils.pyabsa_utils.time_out"><code class="xref py py-obj docutils literal notranslate"><span class="pre">time_out</span></code></a>(interval[, callback])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyabsa.utils.pyabsa_utils.save_json" title="pyabsa.utils.pyabsa_utils.save_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_json</span></code></a>(dic, save_path)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.utils.pyabsa_utils.load_json" title="pyabsa.utils.pyabsa_utils.load_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_json</span></code></a>(save_path)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyabsa.utils.pyabsa_utils.validate_pyabsa_version" title="pyabsa.utils.pyabsa_utils.validate_pyabsa_version"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_pyabsa_version</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.utils.pyabsa_utils.init_optimizer" title="pyabsa.utils.pyabsa_utils.init_optimizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_optimizer</span></code></a>(optimizer)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline"></a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.utils.pyabsa_utils.SENTIMENT_PADDING" title="pyabsa.utils.pyabsa_utils.SENTIMENT_PADDING"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SENTIMENT_PADDING</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py data">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils.SENTIMENT_PADDING">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">SENTIMENT_PADDING</span></span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#SENTIMENT_PADDING"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils.SENTIMENT_PADDING" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils.save_args">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">save_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#save_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils.save_args" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils.print_args">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">print_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#print_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils.print_args" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils.validate_example">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">validate_example</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#validate_example"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils.validate_example" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils.check_and_fix_labels">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">check_and_fix_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label_set</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#check_and_fix_labels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils.check_and_fix_labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils.check_and_fix_IOB_labels">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">check_and_fix_IOB_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#check_and_fix_IOB_labels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils.check_and_fix_IOB_labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils.get_device">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">get_device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">auto_device</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#get_device"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils.get_device" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils.resume_from_checkpoint">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">resume_from_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_checkpoint_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#resume_from_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils.resume_from_checkpoint" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils.prepare_glove840_embedding">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">prepare_glove840_embedding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">glove_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#prepare_glove840_embedding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils.prepare_glove840_embedding" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils._load_word_vec">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">_load_word_vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">word2idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embed_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#_load_word_vec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils._load_word_vec" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils.build_embedding_matrix">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">build_embedding_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word2idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embed_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dat_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#build_embedding_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils.build_embedding_matrix" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils.pad_and_truncate">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">pad_and_truncate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'int64'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'post'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truncating</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'post'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#pad_and_truncate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils.pad_and_truncate" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils.TransformerConnectionError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">TransformerConnectionError</span></span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#TransformerConnectionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils.TransformerConnectionError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+<p>Inappropriate argument value (of correct type).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils.retry">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">retry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#retry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils.retry" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils.time_out">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">time_out</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interval</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#time_out"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils.time_out" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils.save_json">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">save_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#save_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils.save_json" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils.load_json">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">load_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#load_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils.load_json" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils.validate_pyabsa_version">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">validate_pyabsa_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#validate_pyabsa_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils.validate_pyabsa_version" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.utils.pyabsa_utils.init_optimizer">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.utils.pyabsa_utils.</span></span><span class="sig-name descname"><span class="pre">init_optimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyabsa/utils/pyabsa_utils.html#init_optimizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.utils.pyabsa_utils.init_optimizer" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Heng Yang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

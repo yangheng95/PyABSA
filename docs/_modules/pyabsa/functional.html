@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyabsa.functional &mdash; PyABSA 1.16.16 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> PyABSA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../autoapi/pyabsa/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/pyabsa/index.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/pyabsa/core/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.core</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/pyabsa/functional/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/pyabsa/network/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.network</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/pyabsa/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/pyabsa/index.html#package-contents">Package Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/pyabsa/index.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/pyabsa/index.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/pyabsa/index.html#attributes">Attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PyABSA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+          <li><a href="../pyabsa.html">pyabsa</a> &raquo;</li>
+      <li>pyabsa.functional</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyabsa.functional</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># file: __init__.py.py</span>
+<span class="c1"># time: 2021/8/9</span>
+<span class="c1"># author: yangheng &lt;hy345@exeter.ac.uk&gt;</span>
+<span class="c1"># github: https://github.com/yangheng95</span>
+<span class="c1"># Copyright (C) 2021. All Rights Reserved.</span>
+
+
+<span class="kn">from</span> <span class="nn">pyabsa.functional.trainer</span> <span class="kn">import</span> <span class="n">APCTrainer</span><span class="p">,</span> <span class="n">ATEPCTrainer</span><span class="p">,</span> <span class="n">TCTrainer</span><span class="p">,</span> <span class="n">TADTrainer</span><span class="p">,</span> <span class="n">Trainer</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.apc.models</span> <span class="kn">import</span> <span class="p">(</span><span class="n">APCModelList</span><span class="p">,</span>
+                                    <span class="n">BERTBaselineAPCModelList</span><span class="p">,</span>
+                                    <span class="n">GloVeAPCModelList</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.tc.models</span> <span class="kn">import</span> <span class="p">(</span><span class="n">GloVeTCModelList</span><span class="p">,</span>
+                                   <span class="n">BERTTCModelList</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.tad.models</span> <span class="kn">import</span> <span class="p">(</span><span class="n">GloVeTADModelList</span><span class="p">,</span>
+                                    <span class="n">BERTTADModelList</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.atepc.models</span> <span class="kn">import</span> <span class="n">ATEPCModelList</span>
+
+<span class="kn">from</span> <span class="nn">pyabsa.functional.checkpoint.checkpoint_manager</span> <span class="kn">import</span> <span class="p">(</span><span class="n">APCCheckpointManager</span><span class="p">,</span>
+                                                             <span class="n">ATEPCCheckpointManager</span><span class="p">,</span>
+                                                             <span class="n">TCCheckpointManager</span><span class="p">,</span>
+                                                             <span class="n">TADCheckpointManager</span><span class="p">,</span>
+                                                             <span class="n">available_checkpoints</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pyabsa.functional.dataset</span> <span class="kn">import</span> <span class="n">ABSADatasetList</span><span class="p">,</span> <span class="n">TCDatasetList</span><span class="p">,</span> <span class="n">AdvTCDatasetList</span>
+<span class="kn">from</span> <span class="nn">pyabsa.functional.config</span> <span class="kn">import</span> <span class="n">APCConfigManager</span>
+<span class="kn">from</span> <span class="nn">pyabsa.functional.config</span> <span class="kn">import</span> <span class="n">ATEPCConfigManager</span>
+<span class="kn">from</span> <span class="nn">pyabsa.functional.config</span> <span class="kn">import</span> <span class="n">TCConfigManager</span>
+<span class="kn">from</span> <span class="nn">pyabsa.functional.config</span> <span class="kn">import</span> <span class="n">TADConfigManager</span>
+<span class="kn">from</span> <span class="nn">pyabsa.utils.file_utils</span> <span class="kn">import</span> <span class="n">check_update_log</span><span class="p">,</span> <span class="n">validate_datasets_version</span>
+<span class="kn">from</span> <span class="nn">pyabsa.utils.pyabsa_utils</span> <span class="kn">import</span> <span class="n">validate_pyabsa_version</span>
+
+<span class="c1"># compatible for v1.14.3 and earlier versions</span>
+<div class="viewcode-block" id="ClassificationDatasetList"><a class="viewcode-back" href="../../autoapi/pyabsa/functional/index.html#pyabsa.functional.ClassificationDatasetList">[docs]</a><span class="n">ClassificationDatasetList</span> <span class="o">=</span> <span class="n">TCDatasetList</span></div>
+<div class="viewcode-block" id="TextClassifierCheckpointManager"><a class="viewcode-back" href="../../autoapi/pyabsa/functional/index.html#pyabsa.functional.TextClassifierCheckpointManager">[docs]</a><span class="n">TextClassifierCheckpointManager</span> <span class="o">=</span> <span class="n">TCCheckpointManager</span></div>
+<div class="viewcode-block" id="GloVeClassificationModelList"><a class="viewcode-back" href="../../autoapi/pyabsa/functional/index.html#pyabsa.functional.GloVeClassificationModelList">[docs]</a><span class="n">GloVeClassificationModelList</span> <span class="o">=</span> <span class="n">GloVeTCModelList</span></div>
+<div class="viewcode-block" id="BERTClassificationModelList"><a class="viewcode-back" href="../../autoapi/pyabsa/functional/index.html#pyabsa.functional.BERTClassificationModelList">[docs]</a><span class="n">BERTClassificationModelList</span> <span class="o">=</span> <span class="n">BERTTCModelList</span></div>
+<div class="viewcode-block" id="ClassificationConfigManager"><a class="viewcode-back" href="../../autoapi/pyabsa/functional/index.html#pyabsa.functional.ClassificationConfigManager">[docs]</a><span class="n">ClassificationConfigManager</span> <span class="o">=</span> <span class="n">TCConfigManager</span></div>
+<div class="viewcode-block" id="TextClassificationTrainer"><a class="viewcode-back" href="../../autoapi/pyabsa/functional/index.html#pyabsa.functional.TextClassificationTrainer">[docs]</a><span class="n">TextClassificationTrainer</span> <span class="o">=</span> <span class="n">TCTrainer</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Heng Yang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

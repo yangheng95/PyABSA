@@ -1,0 +1,16 @@
+:py:mod:`pyabsa.core.tc.classic`
+================================
+
+.. py:module:: pyabsa.core.tc.classic
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   __bert__/index.rst
+   __glove__/index.rst
+
+

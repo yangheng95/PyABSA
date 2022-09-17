@@ -1,0 +1,91 @@
+:py:mod:`pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils`
+===============================================================================
+
+.. py:module:: pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.pad_and_truncate
+   pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.syntax_distance_alignment
+   pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.pad_syntax_based_srd
+   pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.load_apc_datasets
+   pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.prepare_input_for_apc
+   pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.text_to_sequence
+   pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.get_syntax_distance
+   pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.get_lca_ids_and_cdm_vec
+   pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.get_cdw_vec
+   pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.build_spc_mask_vec
+   pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.build_sentiment_window
+   pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.copy_side_aspect
+   pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.is_similar
+   pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.configure_spacy_model
+   pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.calculate_dep_dist
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.core.apc.classic.__bert__.dataset_utils.classic_bert_apc_utils.LABEL_PADDING
+
+
+.. py:data:: LABEL_PADDING
+   
+
+   
+
+.. py:function:: pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating='post', value=0)
+
+
+.. py:function:: syntax_distance_alignment(tokens, dist, max_seq_len, tokenizer)
+
+
+.. py:function:: pad_syntax_based_srd(text, dep_dist, tokenizer, opt)
+
+
+.. py:function:: load_apc_datasets(fname)
+
+
+.. py:function:: prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect)
+
+
+.. py:function:: text_to_sequence(tokenizer, text, max_seq_len)
+
+
+.. py:function:: get_syntax_distance(text_raw, aspect, tokenizer, opt)
+
+
+.. py:function:: get_lca_ids_and_cdm_vec(opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None)
+
+
+.. py:function:: get_cdw_vec(opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None)
+
+
+.. py:function:: build_spc_mask_vec(opt, text_ids)
+
+
+.. py:function:: build_sentiment_window(examples, tokenizer, similarity_threshold, input_demands=None)
+
+
+.. py:function:: copy_side_aspect(direct, target, source, examples, input_demands)
+
+
+.. py:function:: is_similar(s1, s2, tokenizer, similarity_threshold)
+
+
+.. py:function:: configure_spacy_model(opt)
+
+
+.. py:function:: calculate_dep_dist(sentence, aspect)
+
+

@@ -1,0 +1,18 @@
+:py:mod:`pyabsa.core.apc.classic.__bert__.dataset_utils`
+========================================================
+
+.. py:module:: pyabsa.core.apc.classic.__bert__.dataset_utils
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   classic_bert_apc_utils/index.rst
+   data_utils_for_inference/index.rst
+   data_utils_for_training/index.rst
+   dependency_graph/index.rst
+
+

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyabsa.functional.trainer.trainer &mdash; PyABSA 1.16.16 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/clipboard.min.js"></script>
+        <script src="../../../../_static/copybutton.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> PyABSA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../autoapi/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../autoapi/pyabsa/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/pyabsa/index.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/pyabsa/core/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.core</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/pyabsa/functional/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/pyabsa/network/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.network</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/pyabsa/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/pyabsa/index.html#package-contents">Package Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/pyabsa/index.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/pyabsa/index.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/pyabsa/index.html#attributes">Attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">PyABSA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../../pyabsa.html">pyabsa</a> &raquo;</li>
+          <li><a href="../../functional.html">pyabsa.functional</a> &raquo;</li>
+      <li>pyabsa.functional.trainer.trainer</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyabsa.functional.trainer.trainer</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># file: trainer.py</span>
+<span class="c1"># time: 2021/4/22 0022</span>
+<span class="c1"># author: yangheng &lt;hy345@exeter.ac.uk&gt;</span>
+<span class="c1"># github: https://github.com/yangheng95</span>
+<span class="c1"># Copyright (C) 2021. All Rights Reserved.</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">findfile</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">transformers</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">cuda</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoConfig</span>
+
+<span class="kn">from</span> <span class="nn">pyabsa</span> <span class="kn">import</span> <span class="n">__version__</span>
+
+<span class="kn">from</span> <span class="nn">pyabsa.functional.dataset</span> <span class="kn">import</span> <span class="n">DatasetItem</span>
+<span class="kn">from</span> <span class="nn">pyabsa.functional.config.config_manager</span> <span class="kn">import</span> <span class="n">ConfigManager</span>
+<span class="kn">from</span> <span class="nn">pyabsa.functional.dataset</span> <span class="kn">import</span> <span class="n">detect_dataset</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.apc.prediction.sentiment_classifier</span> <span class="kn">import</span> <span class="n">SentimentClassifier</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.apc.training.apc_trainer</span> <span class="kn">import</span> <span class="n">train4apc</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.atepc.prediction.aspect_extractor</span> <span class="kn">import</span> <span class="n">AspectExtractor</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.atepc.training.atepc_trainer</span> <span class="kn">import</span> <span class="n">train4atepc</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.tc.prediction.text_classifier</span> <span class="kn">import</span> <span class="n">TextClassifier</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.tc.training.classifier_trainer</span> <span class="kn">import</span> <span class="n">train4tc</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.tad.prediction.tad_classifier</span> <span class="kn">import</span> <span class="n">TADTextClassifier</span>
+<span class="kn">from</span> <span class="nn">pyabsa.core.tad.training.tad_trainer</span> <span class="kn">import</span> <span class="n">train4tad</span>
+
+<span class="kn">from</span> <span class="nn">pyabsa.functional.config.apc_config_manager</span> <span class="kn">import</span> <span class="n">APCConfigManager</span>
+<span class="kn">from</span> <span class="nn">pyabsa.functional.config.atepc_config_manager</span> <span class="kn">import</span> <span class="n">ATEPCConfigManager</span>
+<span class="kn">from</span> <span class="nn">pyabsa.functional.config.tc_config_manager</span> <span class="kn">import</span> <span class="n">TCConfigManager</span>
+<span class="kn">from</span> <span class="nn">pyabsa.functional.config.tad_config_manager</span> <span class="kn">import</span> <span class="n">TADConfigManager</span>
+<span class="kn">from</span> <span class="nn">pyabsa.utils.file_utils</span> <span class="kn">import</span> <span class="n">query_local_version</span>
+
+<span class="kn">from</span> <span class="nn">pyabsa.utils.logger</span> <span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span> <span class="nn">metric_visualizer</span> <span class="kn">import</span> <span class="n">MetricVisualizer</span>
+
+<span class="kn">from</span> <span class="nn">pyabsa.utils.pyabsa_utils</span> <span class="kn">import</span> <span class="n">get_device</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;once&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="init_config"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/trainer/trainer/index.html#pyabsa.functional.trainer.init_config">[docs]</a><span class="k">def</span> <span class="nf">init_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">auto_device</span><span class="p">):</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">device_name</span> <span class="o">=</span> <span class="n">get_device</span><span class="p">(</span><span class="n">auto_device</span><span class="p">)</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">auto_device</span> <span class="o">=</span> <span class="n">auto_device</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;cuda&#39;</span> <span class="k">if</span> <span class="n">auto_device</span> <span class="o">==</span> <span class="s1">&#39;allcuda&#39;</span> <span class="k">else</span> <span class="n">config</span><span class="o">.</span><span class="n">device</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;ensemble&#39;</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">PyABSAVersion</span> <span class="o">=</span> <span class="n">__version__</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">TransformersVersion</span> <span class="o">=</span> <span class="n">transformers</span><span class="o">.</span><span class="n">__version__</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">TorchVersion</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">+cuda</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">cuda</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">config</span></div>
+
+
+<div class="viewcode-block" id="Trainer"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/trainer/trainer/index.html#pyabsa.functional.trainer.Trainer">[docs]</a><span class="k">class</span> <span class="nc">Trainer</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">config</span><span class="p">:</span> <span class="n">ConfigManager</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">from_checkpoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">checkpoint_save_mode</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                 <span class="n">auto_device</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">path_to_save</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">load_aug</span><span class="o">=</span><span class="kc">False</span>
+                 <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Init a trainer for training a APC, ATEPC, TC or TAD model, after training,</span>
+<span class="sd">        you need to call load_trained_model() to get the trained model for inference.</span>
+
+<span class="sd">        :param config: PyABSA.config.ConfigManager</span>
+<span class="sd">        :param dataset: Dataset name, or a dataset_manager path, or a list of dataset_manager paths</span>
+<span class="sd">        :param from_checkpoint: A checkpoint path to train based on</span>
+<span class="sd">        :param checkpoint_save_mode: Save trained model to checkpoint,</span>
+<span class="sd">                                     &quot;checkpoint_save_mode=1&quot; to save the state_dict,</span>
+<span class="sd">                                     &quot;checkpoint_save_mode=2&quot; to save the whole model,</span>
+<span class="sd">                                     &quot;checkpoint_save_mode=3&quot; to save the fine-tuned BERT,</span>
+<span class="sd">                                     otherwise avoid saving checkpoint but return the trained model after training</span>
+<span class="sd">        :param auto_device: True or False, otherwise &#39;allcuda&#39;, &#39;cuda:1&#39;, &#39;cpu&#39; works</span>
+<span class="sd">        :param path_to_save=None: Specify path to save checkpoints</span>
+<span class="sd">        :param load_aug=False: Load the available augmentation dataset if any</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">device_count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">auto_device</span> <span class="o">==</span> <span class="s1">&#39;allcuda&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Cuda count &lt;= 1, reset auto_device=True&#39;</span><span class="p">)</span>
+            <span class="n">auto_device</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="s1">&#39;hidden_dim&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">args</span> <span class="ow">or</span> <span class="s1">&#39;embed_dim&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+            <span class="n">pretrain_config</span> <span class="o">=</span> <span class="n">AutoConfig</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">pretrained_bert</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">hidden_dim</span> <span class="o">=</span> <span class="n">pretrain_config</span><span class="o">.</span><span class="n">hidden_size</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">embed_dim</span> <span class="o">=</span> <span class="n">pretrain_config</span><span class="o">.</span><span class="n">hidden_size</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">ABSADatasetsVersion</span> <span class="o">=</span> <span class="n">query_local_version</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">APCConfigManager</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train_func</span> <span class="o">=</span> <span class="n">train4apc</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model_class</span> <span class="o">=</span> <span class="n">SentimentClassifier</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="s1">&#39;apc&#39;</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ATEPCConfigManager</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train_func</span> <span class="o">=</span> <span class="n">train4atepc</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model_class</span> <span class="o">=</span> <span class="n">AspectExtractor</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="s1">&#39;atepc&#39;</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">TCConfigManager</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train_func</span> <span class="o">=</span> <span class="n">train4tc</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model_class</span> <span class="o">=</span> <span class="n">TextClassifier</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="s1">&#39;text_classification&#39;</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">TADConfigManager</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train_func</span> <span class="o">=</span> <span class="n">train4tad</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model_class</span> <span class="o">=</span> <span class="n">TADTextClassifier</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="s1">&#39;text_defense&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">DatasetItem</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dataset_name</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">dataset_name</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dataset</span> <span class="o">=</span> <span class="n">DatasetItem</span><span class="p">(</span><span class="s1">&#39;custom_dataset&#39;</span><span class="p">,</span> <span class="n">dataset</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dataset_name</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">dataset_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset_file</span> <span class="o">=</span> <span class="n">detect_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="n">load_aug</span><span class="o">=</span><span class="n">load_aug</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dataset_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_file</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">init_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">auto_device</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;MV&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">MV</span> <span class="o">=</span> <span class="n">MetricVisualizer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dataset_name</span><span class="p">,</span>
+                                              <span class="n">trial_tag</span><span class="o">=</span><span class="s1">&#39;Model &amp; Dataset&#39;</span><span class="p">,</span>
+                                              <span class="n">trial_tag_list</span><span class="o">=</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dataset_name</span><span class="p">])</span>
+
+        <span class="c1"># self.config.ETA_MV = MetricVisualizer(&#39;eta-&#39; + self.config.model.__name__ + &#39;-&#39; + self.config.dataset_name, trial_tag=&#39;Model &amp; Dataset&#39;)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">from_checkpoint</span> <span class="o">=</span> <span class="n">findfile</span><span class="o">.</span><span class="n">find_dir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">from_checkpoint</span><span class="p">)</span> <span class="k">if</span> <span class="n">from_checkpoint</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_save_mode</span> <span class="o">=</span> <span class="n">checkpoint_save_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">save_mode</span> <span class="o">=</span> <span class="n">checkpoint_save_mode</span>
+        <span class="n">log_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">log_name</span><span class="o">=</span><span class="n">log_name</span><span class="p">,</span> <span class="n">log_type</span><span class="o">=</span><span class="s1">&#39;training&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">checkpoint_save_mode</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_file</span><span class="p">[</span><span class="s1">&#39;valid&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">path_to_save</span><span class="p">:</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">model_path_to_save</span> <span class="o">=</span> <span class="n">path_to_save</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_file</span><span class="p">[</span><span class="s1">&#39;valid&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">checkpoint_save_mode</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Using Validation set needs to save checkpoint, turn on checkpoint-saving ...&#39;</span><span class="p">)</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">model_path_to_save</span> <span class="o">=</span> <span class="s1">&#39;checkpoints&#39;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">save_mode</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">model_path_to_save</span> <span class="o">=</span> <span class="s1">&#39;checkpoints&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">model_path_to_save</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">inference_model</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Trainer._run"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/trainer/trainer/index.html#pyabsa.functional.trainer.Trainer._run">[docs]</a>    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        just return the trained model for inference (e.g., polarity classification, aspect-term extraction)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">seed</span><span class="p">]</span>
+        <span class="n">model_path</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">seeds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">seed</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">seeds</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">s</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_save_mode</span><span class="p">:</span>
+                <span class="n">model_path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_checkpoint</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># always return the last trained model if dont save trained model</span>
+                <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_class</span><span class="p">(</span><span class="n">model_arg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_checkpoint</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seeds</span>
+
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">removeHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_save_mode</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">model_path</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">inference_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_class</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">model_path</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inference_model</span> <span class="o">=</span> <span class="n">model</span></div>
+
+<div class="viewcode-block" id="Trainer.load_trained_model"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/trainer/trainer/index.html#pyabsa.functional.trainer.Trainer.load_trained_model">[docs]</a>    <span class="k">def</span> <span class="nf">load_trained_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">inference_model</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No trained model found, this could happen while training only using training set.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inference_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">inference_model</span></div>
+
+<div class="viewcode-block" id="Trainer.destroy"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/trainer/trainer/index.html#pyabsa.functional.trainer.Trainer.destroy">[docs]</a>    <span class="k">def</span> <span class="nf">destroy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">inference_model</span>
+        <span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="APCTrainer"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/trainer/trainer/index.html#pyabsa.functional.trainer.APCTrainer">[docs]</a><span class="k">class</span> <span class="nc">APCTrainer</span><span class="p">(</span><span class="n">Trainer</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="ATEPCTrainer"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/trainer/trainer/index.html#pyabsa.functional.trainer.ATEPCTrainer">[docs]</a><span class="k">class</span> <span class="nc">ATEPCTrainer</span><span class="p">(</span><span class="n">Trainer</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="TCTrainer"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/trainer/trainer/index.html#pyabsa.functional.trainer.TCTrainer">[docs]</a><span class="k">class</span> <span class="nc">TCTrainer</span><span class="p">(</span><span class="n">Trainer</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="TADTrainer"><a class="viewcode-back" href="../../../../autoapi/pyabsa/functional/trainer/trainer/index.html#pyabsa.functional.trainer.TADTrainer">[docs]</a><span class="k">class</span> <span class="nc">TADTrainer</span><span class="p">(</span><span class="n">Trainer</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Heng Yang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+:py:mod:`pyabsa.core.apc.prediction.sentiment_classifier`
+=========================================================
+
+.. py:module:: pyabsa.core.apc.prediction.sentiment_classifier
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.core.apc.prediction.sentiment_classifier.SentimentClassifier
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.core.apc.prediction.sentiment_classifier.get_mlm_and_tokenizer
+
+
+
+.. py:function:: get_mlm_and_tokenizer(text_classifier, config)
+
+
+.. py:class:: SentimentClassifier(model_arg=None, cal_perplexity=False, **kwargs)
+
+   .. py:method:: to(device=None)
+
+
+   .. py:method:: cpu()
+
+
+   .. py:method:: cuda(device='cuda:0')
+
+
+   .. py:method:: batch_infer(target_file=None, print_result=True, save_result=False, ignore_error=True, clear_input_samples=True)
+
+
+   .. py:method:: infer(text: str = None, print_result=True, ignore_error=True, clear_input_samples=True)
+
+
+   .. py:method:: merge_results(results)
+
+      merge APC results have the same input text
+
+
+
+   .. py:method:: _infer(save_path=None, print_result=True)
+
+
+   .. py:method:: clear_input_samples()
+
+
+

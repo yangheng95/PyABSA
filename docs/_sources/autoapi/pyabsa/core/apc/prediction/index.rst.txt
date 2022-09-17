@@ -1,0 +1,15 @@
+:py:mod:`pyabsa.core.apc.prediction`
+====================================
+
+.. py:module:: pyabsa.core.apc.prediction
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   sentiment_classifier/index.rst
+
+

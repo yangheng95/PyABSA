@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyabsa.core.atepc.dataset_utils.data_utils_for_inference &mdash; PyABSA 1.16.16 documentation</title>
+      <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../../" id="documentation_options" src="../../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../../_static/jquery.js"></script>
+        <script src="../../../../../../_static/underscore.js"></script>
+        <script src="../../../../../../_static/doctools.js"></script>
+        <script src="../../../../../../_static/clipboard.min.js"></script>
+        <script src="../../../../../../_static/copybutton.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../../index.html" class="icon icon-home"> PyABSA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.core</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../functional/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../network/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.network</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../index.html#package-contents">Package Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../index.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../index.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../index.html#attributes">Attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">PyABSA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.core.atepc.dataset_utils.data_utils_for_inference</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/autoapi/pyabsa/core/atepc/dataset_utils/data_utils_for_inference/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="module-pyabsa.core.atepc.dataset_utils.data_utils_for_inference">
+<span id="pyabsa-core-atepc-dataset-utils-data-utils-for-inference"></span><h1><a class="reference internal" href="#module-pyabsa.core.atepc.dataset_utils.data_utils_for_inference" title="pyabsa.core.atepc.dataset_utils.data_utils_for_inference"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.core.atepc.dataset_utils.data_utils_for_inference</span></code></a><a class="headerlink" href="#module-pyabsa.core.atepc.dataset_utils.data_utils_for_inference" title="Permalink to this headline"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline"></a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.InputExample" title="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.InputExample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InputExample</span></code></a></p></td>
+<td><p>A single training_tutorials/test example for simple sequence classification.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.InputFeatures" title="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.InputFeatures"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InputFeatures</span></code></a></p></td>
+<td><p>A single set of features of data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.ATEPCProcessor" title="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.ATEPCProcessor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ATEPCProcessor</span></code></a></p></td>
+<td><p>Processor for the CoNLL-2003 data set.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.parse_example" title="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.parse_example"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_example</span></code></a>(example)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.parse_examples" title="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.parse_examples"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_examples</span></code></a>(examples)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.convert_ate_examples_to_features" title="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.convert_ate_examples_to_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_ate_examples_to_features</span></code></a>(examples, label_list, ...)</p></td>
+<td><p>Loads a data file into a list of <a href="#id1"><span class="problematic" id="id2">`</span></a>InputBatch`s.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.convert_apc_examples_to_features" title="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.convert_apc_examples_to_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_apc_examples_to_features</span></code></a>(examples, label_list, ...)</p></td>
+<td><p>Loads a data file into a list of <a href="#id3"><span class="problematic" id="id4">`</span></a>InputBatch`s.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline"></a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.SENTIMENT_PADDING" title="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.SENTIMENT_PADDING"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SENTIMENT_PADDING</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py data">
+<dt class="sig sig-object py" id="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.SENTIMENT_PADDING">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.core.atepc.dataset_utils.data_utils_for_inference.</span></span><span class="sig-name descname"><span class="pre">SENTIMENT_PADDING</span></span><a class="reference internal" href="../../../../../../_modules/pyabsa/core/atepc/dataset_utils/data_utils_for_inference.html#SENTIMENT_PADDING"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.SENTIMENT_PADDING" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.InputExample">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyabsa.core.atepc.dataset_utils.data_utils_for_inference.</span></span><span class="sig-name descname"><span class="pre">InputExample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">IOB_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/pyabsa/core/atepc/dataset_utils/data_utils_for_inference.html#InputExample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.InputExample" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A single training_tutorials/test example for simple sequence classification.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.InputFeatures">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyabsa.core.atepc.dataset_utils.data_utils_for_inference.</span></span><span class="sig-name descname"><span class="pre">InputFeatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_ids_spc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokens</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lcf_cdm_vec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lcf_cdw_vec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/pyabsa/core/atepc/dataset_utils/data_utils_for_inference.html#InputFeatures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.InputFeatures" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A single set of features of data.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.parse_example">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.core.atepc.dataset_utils.data_utils_for_inference.</span></span><span class="sig-name descname"><span class="pre">parse_example</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">example</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/pyabsa/core/atepc/dataset_utils/data_utils_for_inference.html#parse_example"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.parse_example" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.parse_examples">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.core.atepc.dataset_utils.data_utils_for_inference.</span></span><span class="sig-name descname"><span class="pre">parse_examples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">examples</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/pyabsa/core/atepc/dataset_utils/data_utils_for_inference.html#parse_examples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.parse_examples" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.ATEPCProcessor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyabsa.core.atepc.dataset_utils.data_utils_for_inference.</span></span><span class="sig-name descname"><span class="pre">ATEPCProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/pyabsa/core/atepc/dataset_utils/data_utils_for_inference.html#ATEPCProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.ATEPCProcessor" title="Permalink to this definition"></a></dt>
+<dd><p>Processor for the CoNLL-2003 data set.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.ATEPCProcessor.get_examples_for_aspect_extraction">
+<span class="sig-name descname"><span class="pre">get_examples_for_aspect_extraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">examples</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/pyabsa/core/atepc/dataset_utils/data_utils_for_inference.html#ATEPCProcessor.get_examples_for_aspect_extraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.ATEPCProcessor.get_examples_for_aspect_extraction" title="Permalink to this definition"></a></dt>
+<dd><p>See base class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.ATEPCProcessor.get_examples_for_sentiment_classification">
+<span class="sig-name descname"><span class="pre">get_examples_for_sentiment_classification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extraction_result</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/pyabsa/core/atepc/dataset_utils/data_utils_for_inference.html#ATEPCProcessor.get_examples_for_sentiment_classification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.ATEPCProcessor.get_examples_for_sentiment_classification" title="Permalink to this definition"></a></dt>
+<dd><p>See base class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.ATEPCProcessor.get_labels">
+<span class="sig-name descname"><span class="pre">get_labels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/pyabsa/core/atepc/dataset_utils/data_utils_for_inference.html#ATEPCProcessor.get_labels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.ATEPCProcessor.get_labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.ATEPCProcessor._create_examples">
+<span class="sig-name descname"><span class="pre">_create_examples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lines</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/pyabsa/core/atepc/dataset_utils/data_utils_for_inference.html#ATEPCProcessor._create_examples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.ATEPCProcessor._create_examples" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.convert_ate_examples_to_features">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.core.atepc.dataset_utils.data_utils_for_inference.</span></span><span class="sig-name descname"><span class="pre">convert_ate_examples_to_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">examples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_seq_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/pyabsa/core/atepc/dataset_utils/data_utils_for_inference.html#convert_ate_examples_to_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.convert_ate_examples_to_features" title="Permalink to this definition"></a></dt>
+<dd><p>Loads a data file into a list of <a href="#id5"><span class="problematic" id="id6">`</span></a>InputBatch`s.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyabsa.core.atepc.dataset_utils.data_utils_for_inference.convert_apc_examples_to_features">
+<span class="sig-prename descclassname"><span class="pre">pyabsa.core.atepc.dataset_utils.data_utils_for_inference.</span></span><span class="sig-name descname"><span class="pre">convert_apc_examples_to_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">examples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_seq_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/pyabsa/core/atepc/dataset_utils/data_utils_for_inference.html#convert_apc_examples_to_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyabsa.core.atepc.dataset_utils.data_utils_for_inference.convert_apc_examples_to_features" title="Permalink to this definition"></a></dt>
+<dd><p>Loads a data file into a list of <a href="#id7"><span class="problematic" id="id8">`</span></a>InputBatch`s.</p>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Heng Yang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

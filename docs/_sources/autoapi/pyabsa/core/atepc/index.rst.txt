@@ -1,0 +1,75 @@
+:py:mod:`pyabsa.core.atepc`
+===========================
+
+.. py:module:: pyabsa.core.atepc
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   classic/index.rst
+   dataset_utils/index.rst
+   models/index.rst
+   prediction/index.rst
+   training/index.rst
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.core.atepc.ATEPCModelList
+
+
+
+
+.. py:class:: ATEPCModelList
+
+   .. py:attribute:: BERT_BASE_ATEPC
+      
+
+      
+
+   .. py:attribute:: LCF_ATEPC
+      
+
+      
+
+   .. py:attribute:: LCF_ATEPC_LARGE
+      
+
+      
+
+   .. py:attribute:: FAST_LCF_ATEPC
+      
+
+      
+
+   .. py:attribute:: LCFS_ATEPC
+      
+
+      
+
+   .. py:attribute:: LCFS_ATEPC_LARGE
+      
+
+      
+
+   .. py:attribute:: FAST_LCFS_ATEPC
+      
+
+      
+
+   .. py:attribute:: LCF_TEMPLATE_ATEPC
+      
+
+      
+
+

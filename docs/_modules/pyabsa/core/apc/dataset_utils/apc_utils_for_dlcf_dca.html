@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyabsa.core.apc.dataset_utils.apc_utils_for_dlcf_dca &mdash; PyABSA 1.16.16 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/clipboard.min.js"></script>
+        <script src="../../../../../_static/copybutton.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> PyABSA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../autoapi/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../autoapi/pyabsa/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../autoapi/pyabsa/index.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/core/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.core</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/functional/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.functional</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/network/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.network</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyabsa.utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../autoapi/pyabsa/index.html#package-contents">Package Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/index.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/index.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../autoapi/pyabsa/index.html#attributes">Attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">PyABSA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../../../pyabsa.html">pyabsa</a> &raquo;</li>
+      <li>pyabsa.core.apc.dataset_utils.apc_utils_for_dlcf_dca</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyabsa.core.apc.dataset_utils.apc_utils_for_dlcf_dca</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># file: apc_utils_for_dlcf_dca.py</span>
+<span class="c1"># time: 2021/5/23 0023</span>
+<span class="c1"># author: xumayi &lt;xumayi@m.scnu.edu.cn&gt;</span>
+<span class="c1"># github: https://github.com/XuMayi</span>
+<span class="c1"># Copyright (C) 2021. All Rights Reserved.</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">spacy</span>
+<span class="kn">import</span> <span class="nn">termcolor</span>
+
+<span class="kn">from</span> <span class="nn">.apc_utils</span> <span class="kn">import</span> <span class="n">pad_and_truncate</span><span class="p">,</span> <span class="n">text_to_sequence</span><span class="p">,</span> <span class="n">get_syntax_distance</span>
+
+
+<div class="viewcode-block" id="prepare_input_for_dlcf_dca"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/apc/dataset_utils/apc_utils_for_dlcf_dca/index.html#pyabsa.core.apc.dataset_utils.apc_utils_for_dlcf_dca.prepare_input_for_dlcf_dca">[docs]</a><span class="k">def</span> <span class="nf">prepare_input_for_dlcf_dca</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">text_left</span><span class="p">,</span> <span class="n">text_right</span><span class="p">,</span> <span class="n">aspect</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="s1">&#39;dynamic_truncate&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">opt</span><span class="o">.</span><span class="n">dynamic_truncate</span><span class="p">:</span>
+        <span class="n">_max_seq_len</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">aspect</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span>
+        <span class="n">text_left</span> <span class="o">=</span> <span class="n">text_left</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="n">text_right</span> <span class="o">=</span> <span class="n">text_right</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">_max_seq_len</span> <span class="o">&lt;</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">text_left</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">text_right</span><span class="p">)):</span>
+            <span class="n">cut_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">text_left</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">text_right</span><span class="p">)</span> <span class="o">-</span> <span class="n">_max_seq_len</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text_left</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">text_right</span><span class="p">):</span>
+                <span class="n">text_left</span> <span class="o">=</span> <span class="n">text_left</span><span class="p">[</span><span class="n">cut_len</span><span class="p">:]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">text_right</span> <span class="o">=</span> <span class="n">text_right</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">text_right</span><span class="p">)</span> <span class="o">-</span> <span class="n">cut_len</span><span class="p">]</span>
+        <span class="n">text_left</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text_left</span><span class="p">)</span>
+        <span class="n">text_right</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text_right</span><span class="p">)</span>
+
+        <span class="c1"># test code</span>
+        <span class="n">text_left</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text_left</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">aspect</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:])</span>
+        <span class="n">text_right</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text_right</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[:</span><span class="nb">int</span><span class="p">((</span><span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">aspect</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">bos_token</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">bos_token</span> <span class="k">if</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">bos_token</span> <span class="k">else</span> <span class="s1">&#39;[CLS]&#39;</span>
+        <span class="n">eos_token</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">eos_token</span> <span class="k">if</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">eos_token</span> <span class="k">else</span> <span class="s1">&#39;[SEP]&#39;</span>
+
+        <span class="n">text_raw</span> <span class="o">=</span> <span class="n">text_left</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">aspect</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">text_right</span>
+        <span class="n">text_spc</span> <span class="o">=</span> <span class="n">bos_token</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">text_raw</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">eos_token</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">aspect</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">eos_token</span>
+        <span class="n">text_bert_indices</span> <span class="o">=</span> <span class="n">text_to_sequence</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">text_spc</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)</span>
+        <span class="n">aspect_bert_indices</span> <span class="o">=</span> <span class="n">text_to_sequence</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">aspect</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)</span>
+
+        <span class="n">aspect_begin</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">bos_token</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">text_left</span><span class="p">))</span>
+
+        <span class="c1"># if &#39;dlcf&#39; in opt.model_name or opt.use_syntax_based_SRD:</span>
+        <span class="c1">#     syntactical_dist, max_dist = get_syntax_distance(text_raw, aspect, tokenizer, opt)</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     syntactical_dist = None</span>
+
+        <span class="n">syntactical_dist</span><span class="p">,</span> <span class="n">max_dist</span> <span class="o">=</span> <span class="n">get_syntax_distance</span><span class="p">(</span><span class="n">text_raw</span><span class="p">,</span> <span class="n">aspect</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
+
+        <span class="n">dlcf_cdm_vec</span> <span class="o">=</span> <span class="n">get_dynamic_cdm_vec</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">max_dist</span><span class="p">,</span> <span class="n">text_bert_indices</span><span class="p">,</span> <span class="n">aspect_bert_indices</span><span class="p">,</span>
+                                           <span class="n">aspect_begin</span><span class="p">,</span> <span class="n">syntactical_dist</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">dlcf_cdw_vec</span> <span class="o">=</span> <span class="n">get_dynamic_cdw_vec</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">max_dist</span><span class="p">,</span> <span class="n">text_bert_indices</span><span class="p">,</span> <span class="n">aspect_bert_indices</span><span class="p">,</span>
+                                           <span class="n">aspect_begin</span><span class="p">,</span> <span class="n">syntactical_dist</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="n">dlcfs_cdm_vec</span> <span class="o">=</span> <span class="n">get_dynamic_cdm_vec</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">max_dist</span><span class="p">,</span> <span class="n">text_bert_indices</span><span class="p">,</span> <span class="n">aspect_bert_indices</span><span class="p">,</span>
+                                            <span class="n">aspect_begin</span><span class="p">,</span> <span class="n">syntactical_dist</span><span class="p">)</span>
+        <span class="n">dlcfs_cdw_vec</span> <span class="o">=</span> <span class="n">get_dynamic_cdw_vec</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">max_dist</span><span class="p">,</span> <span class="n">text_bert_indices</span><span class="p">,</span> <span class="n">aspect_bert_indices</span><span class="p">,</span>
+                                            <span class="n">aspect_begin</span><span class="p">,</span> <span class="n">syntactical_dist</span><span class="p">)</span>
+
+        <span class="n">depend_vec</span><span class="p">,</span> <span class="n">depended_vec</span> <span class="o">=</span> <span class="n">calculate_cluster</span><span class="p">(</span><span class="n">text_raw</span><span class="p">,</span> <span class="n">aspect</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
+
+        <span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;dlcf_cdm_vec&#39;</span><span class="p">:</span> <span class="n">dlcf_cdm_vec</span><span class="p">,</span>
+            <span class="s1">&#39;dlcf_cdw_vec&#39;</span><span class="p">:</span> <span class="n">dlcf_cdw_vec</span><span class="p">,</span>
+            <span class="s1">&#39;dlcfs_cdm_vec&#39;</span><span class="p">:</span> <span class="n">dlcfs_cdm_vec</span><span class="p">,</span>
+            <span class="s1">&#39;dlcfs_cdw_vec&#39;</span><span class="p">:</span> <span class="n">dlcfs_cdw_vec</span><span class="p">,</span>
+            <span class="s1">&#39;depend_vec&#39;</span><span class="p">:</span> <span class="n">depend_vec</span><span class="p">,</span>
+            <span class="s1">&#39;depended_vec&#39;</span><span class="p">:</span> <span class="n">depended_vec</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">inputs</span></div>
+
+
+<div class="viewcode-block" id="get_dynamic_cdw_vec"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/apc/dataset_utils/apc_utils_for_dlcf_dca/index.html#pyabsa.core.apc.dataset_utils.apc_utils_for_dlcf_dca.get_dynamic_cdw_vec">[docs]</a><span class="k">def</span> <span class="nf">get_dynamic_cdw_vec</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">max_dist</span><span class="p">,</span> <span class="n">bert_spc_indices</span><span class="p">,</span> <span class="n">aspect_indices</span><span class="p">,</span> <span class="n">aspect_begin</span><span class="p">,</span> <span class="n">syntactical_dist</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># the function is used to set dynamic threshold and calculate cdm/cdw for DLCF_DCA_BERT</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">dlcf_a</span>
+    <span class="k">if</span> <span class="n">max_dist</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">dynamic_threshold</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">max_dist</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="n">a</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dynamic_threshold</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="n">cdw_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">aspect_len</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">aspect_indices</span><span class="p">)</span>
+    <span class="n">text_len</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">bert_spc_indices</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">aspect_indices</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">syntactical_dist</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">text_len</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">max_dist</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">syntactical_dist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">dynamic_threshold</span><span class="p">:</span>
+                    <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">syntactical_dist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">max_dist</span>
+                    <span class="n">cdw_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">cdw_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cdw_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">local_context_begin</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">aspect_begin</span> <span class="o">-</span> <span class="n">dynamic_threshold</span><span class="p">)</span>
+        <span class="n">local_context_end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">aspect_begin</span> <span class="o">+</span> <span class="n">aspect_len</span> <span class="o">+</span> <span class="n">dynamic_threshold</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">text_len</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">local_context_begin</span><span class="p">:</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">local_context_begin</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="n">text_len</span>
+            <span class="k">elif</span> <span class="n">local_context_begin</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">local_context_end</span><span class="p">:</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">local_context_end</span><span class="p">)</span> <span class="o">/</span> <span class="n">text_len</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">w</span> <span class="o">&lt;=</span> <span class="mi">1</span>  <span class="c1"># exception</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning! invalid CDW weight:&#39;</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+            <span class="n">cdw_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">cdw_vec</span></div>
+
+
+<div class="viewcode-block" id="get_dynamic_cdm_vec"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/apc/dataset_utils/apc_utils_for_dlcf_dca/index.html#pyabsa.core.apc.dataset_utils.apc_utils_for_dlcf_dca.get_dynamic_cdm_vec">[docs]</a><span class="k">def</span> <span class="nf">get_dynamic_cdm_vec</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">max_dist</span><span class="p">,</span> <span class="n">bert_spc_indices</span><span class="p">,</span> <span class="n">aspect_indices</span><span class="p">,</span> <span class="n">aspect_begin</span><span class="p">,</span> <span class="n">syntactical_dist</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># the function is used to set dynamic threshold and calculate cdm/cdw for DLCF_DCA_BERT</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">dlcf_a</span>
+    <span class="k">if</span> <span class="n">max_dist</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">dynamic_threshold</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">max_dist</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="n">a</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dynamic_threshold</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="n">cdm_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">aspect_len</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">aspect_indices</span><span class="p">)</span>
+    <span class="n">text_len</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">bert_spc_indices</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">aspect_indices</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">syntactical_dist</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">text_len</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">syntactical_dist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">dynamic_threshold</span><span class="p">:</span>
+                <span class="n">cdm_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">local_context_begin</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">aspect_begin</span> <span class="o">-</span> <span class="n">dynamic_threshold</span><span class="p">)</span>
+        <span class="n">local_context_end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">aspect_begin</span> <span class="o">+</span> <span class="n">aspect_len</span> <span class="o">+</span> <span class="n">dynamic_threshold</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">text_len</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">local_context_begin</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">local_context_end</span><span class="p">:</span>
+                <span class="n">cdm_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">cdm_vec</span></div>
+
+
+<div class="viewcode-block" id="configure_dlcf_spacy_model"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/apc/dataset_utils/apc_utils_for_dlcf_dca/index.html#pyabsa.core.apc.dataset_utils.apc_utils_for_dlcf_dca.configure_dlcf_spacy_model">[docs]</a><span class="k">def</span> <span class="nf">configure_dlcf_spacy_model</span><span class="p">(</span><span class="n">opt</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="s1">&#39;spacy_model&#39;</span><span class="p">):</span>
+        <span class="n">opt</span><span class="o">.</span><span class="n">spacy_model</span> <span class="o">=</span> <span class="s1">&#39;en_core_web_sm&#39;</span>
+    <span class="k">global</span> <span class="n">nlp</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">spacy_model</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Can not load </span><span class="si">{}</span><span class="s1"> from spacy, try to download it in order to parse syntax tree:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">spacy_model</span><span class="p">),</span>
+              <span class="n">termcolor</span><span class="o">.</span><span class="n">colored</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">python -m spacy download </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">spacy_model</span><span class="p">),</span> <span class="s1">&#39;green&#39;</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;python -m spacy download </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">spacy_model</span><span class="p">))</span>
+            <span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">spacy_model</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Download failed, you can download </span><span class="si">{}</span><span class="s1"> manually.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">spacy_model</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">nlp</span></div>
+
+
+<div class="viewcode-block" id="calculate_cluster"><a class="viewcode-back" href="../../../../../autoapi/pyabsa/core/apc/dataset_utils/apc_utils_for_dlcf_dca/index.html#pyabsa.core.apc.dataset_utils.apc_utils_for_dlcf_dca.calculate_cluster">[docs]</a><span class="k">def</span> <span class="nf">calculate_cluster</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">aspect</span><span class="p">,</span> <span class="n">opt</span><span class="p">):</span>
+    <span class="n">terms</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">aspect</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+
+    <span class="n">doc_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">sentence</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="p">)):</span>
+        <span class="n">doc_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">sentence</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="c1"># Load spacy&#39;s dependency tree into a networkx graph</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">term_ids</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
+        <span class="c1"># Record the position of aspect terms</span>
+        <span class="k">if</span> <span class="n">cnt</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span> <span class="ow">and</span> <span class="n">token</span><span class="o">.</span><span class="n">lower_</span> <span class="o">==</span> <span class="n">terms</span><span class="p">[</span><span class="n">cnt</span><span class="p">]:</span>
+            <span class="n">term_ids</span><span class="p">[</span><span class="n">cnt</span><span class="p">]</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">i</span>
+            <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">token</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">child</span><span class="o">.</span><span class="n">i</span><span class="p">))</span>
+
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+    <span class="n">graph2</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+
+    <span class="n">no_connect</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">term_ids</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">j</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">sum</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">shortest_path_length</span><span class="p">(</span><span class="n">graph2</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">no_connect</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">term_ids</span><span class="p">):</span>
+                    <span class="n">no_connect</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="n">depend_ids</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">depended_ids</span> <span class="o">=</span> <span class="n">doc_list</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">terms</span><span class="p">)):</span>
+        <span class="n">temp_aspcet_ids</span> <span class="o">=</span> <span class="n">term_ids</span><span class="p">[</span><span class="n">k</span><span class="p">];</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">temp_nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">dfs_preorder_nodes</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">temp_aspcet_ids</span><span class="p">))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">temp_nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">temp_aspcet_ids</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">temp_nodes</span><span class="p">)):</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">depend_ids</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">depend_ids</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">temp_nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                    <span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">flag</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">depend_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp_nodes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">depend_ids</span><span class="p">)):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">depend_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">depended_ids</span><span class="p">:</span>
+            <span class="n">depended_ids</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">terms</span><span class="p">)):</span>
+        <span class="n">temp_aspcet_ids</span> <span class="o">=</span> <span class="n">term_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">temp_aspcet_ids</span> <span class="ow">in</span> <span class="n">depend_ids</span><span class="p">:</span>
+            <span class="n">depend_ids</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_aspcet_ids</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">terms</span><span class="p">)):</span>
+        <span class="n">temp_aspcet_ids</span> <span class="o">=</span> <span class="n">term_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">temp_aspcet_ids</span> <span class="ow">in</span> <span class="n">depended_ids</span><span class="p">:</span>
+            <span class="n">depended_ids</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_aspcet_ids</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">no_connect</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">no_connect</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">depended_ids</span><span class="p">:</span>
+            <span class="n">depended_ids</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">no_connect</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="n">depend_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">depended_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="n">depended_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">depend_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">depend_ids</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">depend_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">depend_vec</span><span class="p">[</span><span class="n">depend_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">depended_ids</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">depended_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">max_seq_len</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">depended_vec</span><span class="p">[</span><span class="n">depended_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">depend_vec</span><span class="p">,</span> <span class="n">depended_vec</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Heng Yang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+:py:mod:`pyabsa.core.tc.prediction`
+===================================
+
+.. py:module:: pyabsa.core.tc.prediction
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   text_classifier/index.rst
+
+

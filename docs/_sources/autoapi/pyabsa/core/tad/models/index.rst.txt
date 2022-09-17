@@ -1,0 +1,50 @@
+:py:mod:`pyabsa.core.tad.models`
+================================
+
+.. py:module:: pyabsa.core.tad.models
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.core.tad.models.GloVeTADModelList
+   pyabsa.core.tad.models.BERTTADModelList
+
+
+
+
+.. py:class:: GloVeTADModelList
+
+   Bases: :py:obj:`list`
+
+   Built-in mutable sequence.
+
+   If no argument is given, the constructor creates a new empty list.
+   The argument must be an iterable if specified.
+
+   .. py:attribute:: TADLSTM
+      
+
+      
+
+
+.. py:class:: BERTTADModelList
+
+   Bases: :py:obj:`list`
+
+   Built-in mutable sequence.
+
+   If no argument is given, the constructor creates a new empty list.
+   The argument must be an iterable if specified.
+
+   .. py:attribute:: TADBERT
+      
+
+      
+
+

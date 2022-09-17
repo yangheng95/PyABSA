@@ -1,0 +1,301 @@
+:py:mod:`pyabsa.functional.dataset`
+===================================
+
+.. py:module:: pyabsa.functional.dataset
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   dataset_manager/index.rst
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.functional.dataset.ABSADatasetList
+   pyabsa.functional.dataset.TCDatasetList
+   pyabsa.functional.dataset.AdvTCDatasetList
+   pyabsa.functional.dataset.DatasetItem
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.functional.dataset.detect_dataset
+   pyabsa.functional.dataset.detect_infer_dataset
+
+
+
+.. py:class:: ABSADatasetList
+
+   Bases: :py:obj:`list`
+
+   Built-in mutable sequence.
+
+   If no argument is given, the constructor creates a new empty list.
+   The argument must be an iterable if specified.
+
+   .. py:attribute:: Laptop14
+      
+
+      
+
+   .. py:attribute:: Restaurant14
+      
+
+      
+
+   .. py:attribute:: ARTS_Laptop14
+      
+
+      
+
+   .. py:attribute:: ARTS_Restaurant14
+      
+
+      
+
+   .. py:attribute:: Restaurant15
+      
+
+      
+
+   .. py:attribute:: Restaurant16
+      
+
+      
+
+   .. py:attribute:: ACL_Twitter
+      
+
+      
+
+   .. py:attribute:: MAMS
+      
+
+      
+
+   .. py:attribute:: Television
+      
+
+      
+
+   .. py:attribute:: TShirt
+      
+
+      
+
+   .. py:attribute:: Yelp
+      
+
+      
+
+   .. py:attribute:: Phone
+      
+
+      
+
+   .. py:attribute:: Car
+      
+
+      
+
+   .. py:attribute:: Notebook
+      
+
+      
+
+   .. py:attribute:: Camera
+      
+
+      
+
+   .. py:attribute:: Shampoo
+      
+
+      
+
+   .. py:attribute:: MOOC
+      
+
+      
+
+   .. py:attribute:: MOOC_En
+      
+
+      
+
+   .. py:attribute:: Chinese
+      
+
+      
+
+   .. py:attribute:: Binary_Polarity_Chinese
+      
+
+      
+
+   .. py:attribute:: Triple_Polarity_Chinese
+      
+
+      
+
+   .. py:attribute:: SemEval2016Task5
+      
+
+      
+
+   .. py:attribute:: Arabic_SemEval2016Task5
+      
+
+      
+
+   .. py:attribute:: Dutch_SemEval2016Task5
+      
+
+      
+
+   .. py:attribute:: Spanish_SemEval2016Task5
+      
+
+      
+
+   .. py:attribute:: Turkish_SemEval2016Task5
+      
+
+      
+
+   .. py:attribute:: Russian_SemEval2016Task5
+      
+
+      
+
+   .. py:attribute:: French_SemEval2016Task5
+      
+
+      
+
+   .. py:attribute:: English_SemEval2016Task5
+      
+
+      
+
+   .. py:attribute:: English
+      
+
+      
+
+   .. py:attribute:: SemEval
+      
+
+      
+
+   .. py:attribute:: Restaurant
+      
+
+      
+
+   .. py:attribute:: Multilingual
+      
+
+      
+
+
+.. py:class:: TCDatasetList
+
+   Bases: :py:obj:`list`
+
+   Built-in mutable sequence.
+
+   If no argument is given, the constructor creates a new empty list.
+   The argument must be an iterable if specified.
+
+   .. py:attribute:: SST1
+      
+
+      
+
+   .. py:attribute:: SST5
+      
+
+      
+
+   .. py:attribute:: SST2
+      
+
+      
+
+   .. py:attribute:: AGNews10K
+      
+
+      
+
+   .. py:attribute:: IMDB10K
+      
+
+      
+
+   .. py:attribute:: AGNews120K
+      
+
+      
+
+   .. py:attribute:: IMDB50K
+      
+
+      
+
+   .. py:attribute:: Yelp10K
+      
+
+      
+
+   .. py:attribute:: Yelp700K
+      
+
+      
+
+   .. py:attribute:: SST
+      
+
+      
+
+
+.. py:class:: AdvTCDatasetList
+
+   Bases: :py:obj:`TCDatasetList`
+
+   Built-in mutable sequence.
+
+   If no argument is given, the constructor creates a new empty list.
+   The argument must be an iterable if specified.
+
+
+.. py:function:: detect_dataset(dataset_path, task='apc', load_aug=False)
+
+
+.. py:function:: detect_infer_dataset(dataset_path, task='apc')
+
+
+.. py:class:: DatasetItem(dataset_name, dataset_items=None)
+
+   Bases: :py:obj:`list`
+
+   Built-in mutable sequence.
+
+   If no argument is given, the constructor creates a new empty list.
+   The argument must be an iterable if specified.
+
+

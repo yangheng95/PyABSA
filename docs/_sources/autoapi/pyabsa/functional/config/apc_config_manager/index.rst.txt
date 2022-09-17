@@ -1,0 +1,138 @@
+:py:mod:`pyabsa.functional.config.apc_config_manager`
+=====================================================
+
+.. py:module:: pyabsa.functional.config.apc_config_manager
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.functional.config.apc_config_manager.APCConfigManager
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   pyabsa.functional.config.apc_config_manager._apc_config_template
+   pyabsa.functional.config.apc_config_manager._apc_config_base
+   pyabsa.functional.config.apc_config_manager._apc_config_english
+   pyabsa.functional.config.apc_config_manager._apc_config_multilingual
+   pyabsa.functional.config.apc_config_manager._apc_config_chinese
+   pyabsa.functional.config.apc_config_manager._apc_config_glove
+   pyabsa.functional.config.apc_config_manager._apc_config_bert_baseline
+
+
+.. py:data:: _apc_config_template
+   
+
+   
+
+.. py:data:: _apc_config_base
+   
+
+   
+
+.. py:data:: _apc_config_english
+   
+
+   
+
+.. py:data:: _apc_config_multilingual
+   
+
+   
+
+.. py:data:: _apc_config_chinese
+   
+
+   
+
+.. py:data:: _apc_config_glove
+   
+
+   
+
+.. py:data:: _apc_config_bert_baseline
+   
+
+   
+
+.. py:class:: APCConfigManager(args, **kwargs)
+
+   Bases: :py:obj:`pyabsa.functional.config.config_manager.ConfigManager`
+
+   Simple object for storing attributes.
+
+   Implements equality by attribute names and values, and provides a simple
+   string representation.
+
+   .. py:method:: set_apc_config(configType: str, newitem: dict)
+      :staticmethod:
+
+
+   .. py:method:: set_apc_config_template(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_apc_config_base(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_apc_config_english(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_apc_config_chinese(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_apc_config_multilingual(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_apc_config_glove(newitem)
+      :staticmethod:
+
+
+   .. py:method:: set_apc_config_bert_baseline(newitem)
+      :staticmethod:
+
+
+   .. py:method:: get_apc_config_template() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_apc_config_base() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_apc_config_english() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_apc_config_chinese() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_apc_config_multilingual() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_apc_config_glove() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+   .. py:method:: get_apc_config_bert_baseline() -> pyabsa.functional.config.config_manager.ConfigManager
+      :staticmethod:
+
+
+
