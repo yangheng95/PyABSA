@@ -67,6 +67,8 @@ class Trainer:
                  load_aug=False
                  ):
         """
+        Init a trainer for training a APC, ATEPC, TC or TAD model, after training,
+        you need to call load_trained_model() to get the trained model for inference.
 
         :param config: PyABSA.config.ConfigManager
         :param dataset: Dataset name, or a dataset_manager path, or a list of dataset_manager paths
