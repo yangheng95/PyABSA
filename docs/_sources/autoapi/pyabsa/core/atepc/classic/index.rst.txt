@@ -1,6 +1,0 @@
-:py:mod:`pyabsa.core.atepc.classic`
-===================================
-
-.. py:module:: pyabsa.core.atepc.classic
-
-

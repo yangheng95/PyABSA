@@ -86,6 +86,9 @@ class ABSADatasetList(list):
     MOOC = DatasetItem('MOOC', '105.MOOC')
     MOOC_En = DatasetItem('MOOC_En', '121.MOOC_En')
 
+    # https://www.kaggle.com/datasets/cf7394cb629b099cf94f3c3ba87e1d37da7bfb173926206247cd651db7a8da07
+    Kaggle = DatasetItem('Kaggle', '122.Kaggle')
+
     # assembled dataset
     Chinese = DatasetItem('Chinese', ['107.Phone', '103.Camera', '106.Notebook', '104.Car', '105.MOOC'])
     Binary_Polarity_Chinese = DatasetItem('Chinese', ['107.Phone', '103.Camera', '106.Notebook', '104.Car'])
@@ -101,19 +104,19 @@ class ABSADatasetList(list):
     English_SemEval2016Task5 = DatasetItem('English_SemEval2016Task5', ['124.English'])
 
     English = DatasetItem('English', ['113.Laptop14', '114.Restaurant14', '116.Restaurant16', '101.ACL_Twitter',
-                                      '109.MAMS', '117.Television', '118.TShirt', '119.Yelp', '121.MOOC_En'])
+                                      '109.MAMS', '117.Television', '118.TShirt', '119.Yelp', '121.MOOC_En', '122.Kaggle'])
 
     # Abandon rest15 dataset due to data leakage, See https://github.com/yangheng95/PyABSA/issues/53
     SemEval = DatasetItem('SemEval', ['113.Laptop14', '114.Restaurant14', '116.Restaurant16'])
     Restaurant = DatasetItem('Restaurant', ['114.Restaurant14', '116.Restaurant16'])
     Multilingual = DatasetItem('Multilingual', ['113.Laptop14', '114.Restaurant14', '116.Restaurant16', '101.ACL_Twitter', '109.MAMS', '117.Television',
-                                                '118.TShirt', '119.Yelp', '107.Phone', '103.Camera', '106.Notebook', '104.Car', '105.MOOC',
+                                                '118.TShirt', '119.Yelp', '107.Phone', '103.Camera', '106.Notebook', '104.Car', '105.MOOC',  '122.Kaggle',
                                                 '120.SemEval2016Task5', '121.MOOC_En'])
 
     def __init__(self):
         dataset_list = [
             self.Laptop14, self.Restaurant14, self.Restaurant15, self.Restaurant16,
-            self.ACL_Twitter, self.MAMS, self.Television, self.TShirt,
+            self.ACL_Twitter, self.MAMS, self.Television, self.TShirt,self.Kaggle,
             self.Phone, self.Car, self.Notebook, self.Camera, self.MOOC, self.MOOC_En,
             self.Chinese, self.Arabic_SemEval2016Task5, self.Dutch_SemEval2016Task5,
             self.Spanish_SemEval2016Task5, self.Turkish_SemEval2016Task5, self.Russian_SemEval2016Task5,
@@ -270,8 +273,8 @@ def detect_dataset(dataset_path, task='apc', load_aug=False):
         if os.path.isdir(d) or os.path.isdir(search_path):
             print('No train set found from: {}, detected files: {}'.format(dataset_path, ', '.join(os.listdir(d) + os.listdir(search_path))))
         raise RuntimeError(
-            'Fail to locate dataset: {}. you may need rename your dataset according to {}'.format(
-                dataset_path,
+            'Fail to locate dataset: {}. Your dataset should be in "datasets" folder end withs ".apc" or ".atepc" or "tc". If the error persists, '
+            'you may need rename your dataset according to {}'.format(dataset_path,
                 'https://github.com/yangheng95/ABSADatasets#important-rename-your-dataset-filename-before-use-it-in-pyabsa')
         )
     if len(dataset_file['test']) == 0:

@@ -14,7 +14,6 @@ This docs is pending for elaboration.
    :caption: Contents:
 
 
-
 Indices and tables
 ==================
 
