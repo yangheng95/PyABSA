@@ -32,10 +32,10 @@ apc_config_english.cache_dataset = False
 apc_config_english.dynamic_truncate = True
 apc_config_english.srd_alignment = True
 
-Dataset = ABSADatasetList.Laptop14
+Dataset = 'kaggle'
 sent_classifier = Trainer(config=apc_config_english,
                           dataset=Dataset,
-                          checkpoint_save_mode=0,
+                          checkpoint_save_mode=1,
                           auto_device=True,
                           # load_aug=True
                           ).load_trained_model()
