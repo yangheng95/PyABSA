@@ -1,52 +1,52 @@
 [
   {
     "referrer": "Google",
-    "count": 741,
-    "uniques": 124
+    "count": 780,
+    "uniques": 129
   },
   {
     "referrer": "github.com",
-    "count": 452,
-    "uniques": 110
+    "count": 435,
+    "uniques": 109
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 361,
-    "uniques": 88
+    "count": 391,
+    "uniques": 96
+  },
+  {
+    "referrer": "link.zhihu.com",
+    "count": 101,
+    "uniques": 16
   },
   {
     "referrer": "hf.space",
-    "count": 83,
-    "uniques": 17
+    "count": 88,
+    "uniques": 14
   },
   {
     "referrer": "youtube.com",
     "count": 72,
-    "uniques": 20
-  },
-  {
-    "referrer": "link.zhihu.com",
-    "count": 44,
-    "uniques": 14
-  },
-  {
-    "referrer": "huggingface.co",
-    "count": 41,
-    "uniques": 18
+    "uniques": 21
   },
   {
     "referrer": "arxiv.org",
-    "count": 38,
+    "count": 70,
     "uniques": 8
+  },
+  {
+    "referrer": "huggingface.co",
+    "count": 44,
+    "uniques": 21
+  },
+  {
+    "referrer": "mp.csdn.net",
+    "count": 32,
+    "uniques": 1
   },
   {
     "referrer": "pypi.org",
     "count": 12,
     "uniques": 4
-  },
-  {
-    "referrer": "colab.research.google.com",
-    "count": 7,
-    "uniques": 5
   }
 ]
