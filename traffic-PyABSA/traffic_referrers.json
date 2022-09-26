@@ -1,43 +1,43 @@
 [
   {
     "referrer": "Google",
-    "count": 788,
-    "uniques": 128
+    "count": 710,
+    "uniques": 117
   },
   {
     "referrer": "github.com",
-    "count": 477,
-    "uniques": 112
+    "count": 445,
+    "uniques": 105
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 405,
-    "uniques": 98
+    "count": 389,
+    "uniques": 91
   },
   {
     "referrer": "link.zhihu.com",
-    "count": 101,
-    "uniques": 15
-  },
-  {
-    "referrer": "hf.space",
-    "count": 90,
-    "uniques": 16
+    "count": 100,
+    "uniques": 14
   },
   {
     "referrer": "youtube.com",
-    "count": 73,
+    "count": 72,
     "uniques": 22
   },
   {
     "referrer": "arxiv.org",
-    "count": 69,
+    "count": 67,
     "uniques": 7
   },
   {
     "referrer": "huggingface.co",
-    "count": 43,
-    "uniques": 20
+    "count": 54,
+    "uniques": 21
+  },
+  {
+    "referrer": "hf.space",
+    "count": 53,
+    "uniques": 12
   },
   {
     "referrer": "mp.csdn.net",
