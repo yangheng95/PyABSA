@@ -121,8 +121,9 @@ class TextClassifier:
 
                         self.tokenizer = tokenizer
 
-                print('Config used in Training:')
-                print_args(self.opt, mode=1)
+                if kwargs.pop('verbose', False):
+                    print('Config used in Training:')
+                    print_args(self.opt)
 
             except Exception as e:
                 raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, model_arg))
