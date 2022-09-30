@@ -72,7 +72,7 @@ class APCCheckpointManager(CheckpointManager):
         return sent_classifier
 
     @staticmethod
-    def get_checkpoint(checkpoint: str = 'Chinese'):
+    def get_checkpoint(checkpoint: str = 'multilingual'):
         """
         download the checkpoint and return the path of the downloaded checkpoint
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
@@ -119,7 +119,7 @@ class ATEPCCheckpointManager(CheckpointManager):
         return aspect_extractor
 
     @staticmethod
-    def get_checkpoint(checkpoint: str = 'Chinese'):
+    def get_checkpoint(checkpoint: str = 'multilingual'):
         """
         download the checkpoint and return the path of the downloaded checkpoint
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
@@ -168,7 +168,7 @@ class TCCheckpointManager(CheckpointManager):
         return text_classifier
 
     @staticmethod
-    def get_checkpoint(checkpoint: str = 'Chinese'):
+    def get_checkpoint(checkpoint: str = 'multilingual'):
         """
         download the checkpoint and return the path of the downloaded checkpoint
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
@@ -218,7 +218,7 @@ class TADCheckpointManager(CheckpointManager):
         return tad_text_classifier
 
     @staticmethod
-    def get_checkpoint(checkpoint: str = 'Chinese'):
+    def get_checkpoint(checkpoint: str = 'multilingual'):
         """
         download the checkpoint and return the path of the downloaded checkpoint
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
@@ -237,7 +237,7 @@ class TADCheckpointManager(CheckpointManager):
                                    checkpoint=tad_classification_checkpoint[checkpoint.lower()])
 
 
-def parse_checkpoint_info(t_checkpoint_map, task='APC'):
+def parse_checkpoint_info(t_checkpoint_map, task='APC', show_ckpts=False):
     print('*' * 10,
           colored('Available {} model checkpoints for Version:{} (this version)'.format(task, __version__), 'green'),
           '*' * 10)
@@ -266,7 +266,7 @@ def parse_checkpoint_info(t_checkpoint_map, task='APC'):
     return t_checkpoint_map
 
 
-def available_checkpoints(task=''):
+def available_checkpoints(task='', show_ckpts=False):
     try:
 
         try:  # from huggingface space
@@ -297,9 +297,9 @@ def available_checkpoints(task=''):
             max_ver = max_ver if max_ver else 'N.A.'
             if max_ver == 'N.A.' or StrictVersion(min_ver) <= StrictVersion(__version__) <= StrictVersion(max_ver):
                 if task:
-                    t_checkpoint_map.update(
-                        checkpoint_map[c_version][task.upper()] if task.upper() in checkpoint_map[c_version] else {})
-                    parse_checkpoint_info(t_checkpoint_map, task)
+                    t_checkpoint_map.update(checkpoint_map[c_version][task.upper()] if task.upper() in checkpoint_map[c_version] else {})
+                    if show_ckpts:
+                        parse_checkpoint_info(t_checkpoint_map, task, show_ckpts)
 
         print(colored(
             'There may be some checkpoints available for early versions of PyABSA, see {}'.format(task, __version__,

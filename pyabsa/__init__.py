@@ -7,7 +7,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 
-__version__ = '1.16.17'
+__version__ = '1.16.18'
 
 __name__ = 'pyabsa'
 
@@ -40,14 +40,6 @@ from pyabsa.utils.file_utils import check_update_log
 from pyabsa.utils.pyabsa_utils import validate_pyabsa_version
 
 from pyabsa.utils.make_dataset import make_ABSA_dataset
-
-# compatible for v1.14.3 and earlier versions
-ClassificationDatasetList = TCDatasetList
-TextClassifierCheckpointManager = TCCheckpointManager
-GloVeClassificationModelList = GloVeTCModelList
-BERTClassificationModelList = BERTTCModelList
-ClassificationConfigManager = TCConfigManager
-TextClassificationTrainer = TCTrainer
 
 validate_pyabsa_version()
 

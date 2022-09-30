@@ -5,9 +5,7 @@
 import json
 import os
 import pickle
-import random
 
-import numpy
 import torch
 import tqdm
 from findfile import find_file, find_cwd_dir
@@ -111,8 +109,9 @@ class SentimentClassifier:
 
                             self.tokenizer = tokenizer
 
-                print('Config used in Training:')
-                print_args(self.opt, mode=1)
+                if kwargs.pop('verbose', False):
+                    print('Config used in Training:')
+                    print_args(self.opt)
 
             except Exception as e:
                 raise RuntimeError('Fail to load the model from {}! '

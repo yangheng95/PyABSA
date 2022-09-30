@@ -54,7 +54,8 @@ _tad_config_base = {'model': TADBERT,
                     'polarities_dim': 3,
                     'log_step': 10,
                     'evaluate_begin': 0,
-                    'cross_validate_fold': -1
+                    'cross_validate_fold': -1,
+                    'use_amp': False,
                     # split train and test datasets into 5 folds and repeat 3 training
                     }
 
@@ -76,7 +77,8 @@ _tad_config_english = {'model': TADBERT,
                        'polarities_dim': 3,
                        'log_step': 10,
                        'evaluate_begin': 0,
-                       'cross_validate_fold': -1
+                       'cross_validate_fold': -1,
+                       'use_amp': False,
                        # split train and test datasets into 5 folds and repeat 3 training
                        }
 
@@ -98,7 +100,8 @@ _tad_config_multilingual = {'model': TADBERT,
                             'polarities_dim': 3,
                             'log_step': 10,
                             'evaluate_begin': 0,
-                            'cross_validate_fold': -1
+                            'cross_validate_fold': -1,
+                            'use_amp': False,
                             # split train and test datasets into 5 folds and repeat 3 training
                             }
 
@@ -120,7 +123,8 @@ _tad_config_chinese = {'model': TADBERT,
                        'polarities_dim': 3,
                        'log_step': 10,
                        'evaluate_begin': 0,
-                       'cross_validate_fold': -1
+                       'cross_validate_fold': -1,
+                       'use_amp': False,
                        # split train and test datasets into 5 folds and repeat 3 training
                        }
 
@@ -144,7 +148,8 @@ _tad_config_glove = {'model': TADLSTM,
                      'log_step': 5,
                      'hops': 3,  # valid in MemNet and RAM only
                      'evaluate_begin': 0,
-                     'cross_validate_fold': -1
+                     'cross_validate_fold': -1,
+                     'use_amp': False,
                      }
 
 
