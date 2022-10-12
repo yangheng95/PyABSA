@@ -125,12 +125,12 @@ class TADTextClassifier:
 
                 with open(config_path, mode='rb') as f:
                     self.opt = pickle.load(f)
-                    self.opt.device = get_device(kwargs.pop('auto_device', True))[0]
+                    self.opt.device = get_device(kwargs.get('auto_device', True))[0]
 
                 if state_dict_path or model_path:
                     if hasattr(BERTTADModelList, self.opt.model.__name__):
                         if state_dict_path:
-                            if kwargs.pop('offline', False):
+                            if kwargs.get('offline', False):
                                 self.bert = AutoModel.from_pretrained(
                                     find_cwd_dir(self.opt.pretrained_bert.split('/')[-1]))
                             else:
@@ -172,7 +172,7 @@ class TADTextClassifier:
 
                         self.tokenizer = tokenizer
 
-                if kwargs.pop('verbose', False):
+                if kwargs.get('verbose', False):
                     print('Config used in Training:')
                     print_args(self.opt)
 
@@ -184,7 +184,7 @@ class TADTextClassifier:
                 raise KeyError('The checkpoint you are loading is not from classifier model.')
 
         self.infer_dataloader = None
-        self.opt.eval_batch_size = kwargs.pop('eval_batch_size', 128)
+        self.opt.eval_batch_size = kwargs.get('eval_batch_size', 128)
 
         # if self.opt.seed is not None:
         #     random.seed(self.opt.seed)

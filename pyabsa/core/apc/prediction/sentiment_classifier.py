@@ -74,7 +74,7 @@ class SentimentClassifier:
 
                 with open(config_path, mode='rb') as f:
                     self.opt = pickle.load(f)
-                    self.opt.device = get_device(kwargs.pop('auto_device', True))[0]
+                    self.opt.device = get_device(kwargs.get('auto_device', True))[0]
 
                 if state_dict_path or model_path:
                     if state_dict_path:
@@ -85,7 +85,7 @@ class SentimentClassifier:
                     with open(tokenizer_path, mode='rb') as f:
                         if hasattr(APCModelList, self.opt.model.__name__):
                             try:
-                                if kwargs.pop('offline', False):
+                                if kwargs.get('offline', False):
                                     self.tokenizer = AutoTokenizer.from_pretrained(find_cwd_dir(self.opt.pretrained_bert.split('/')[-1]), do_lower_case='uncased' in self.opt.pretrained_bert)
                                 else:
                                     self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
@@ -109,7 +109,7 @@ class SentimentClassifier:
 
                             self.tokenizer = tokenizer
 
-                if kwargs.pop('verbose', False):
+                if kwargs.get('verbose', False):
                     print('Config used in Training:')
                     print_args(self.opt)
 
@@ -153,7 +153,7 @@ class SentimentClassifier:
         #     torch.backends.cudnn.benchmark = False
 
         self.opt.initializer = self.opt.initializer
-        self.opt.eval_batch_size = kwargs.pop('eval_batch_size', 128)
+        self.opt.eval_batch_size = kwargs.get('eval_batch_size', 128)
 
         if self.cal_perplexity:
             try:

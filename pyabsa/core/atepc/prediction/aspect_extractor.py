@@ -59,10 +59,10 @@ class AspectExtractor:
 
                 with open(config_path, mode='rb') as f:
                     self.opt = pickle.load(f)
-                    self.opt.device = get_device(kwargs.pop('auto_device', True))[0]
+                    self.opt.device = get_device(kwargs.get('auto_device', True))[0]
                 if state_dict_path:
                     try:
-                        if kwargs.pop('offline', False):
+                        if kwargs.get('offline', False):
                             bert_base_model = AutoModel.from_pretrained(find_cwd_dir(self.opt.pretrained_bert.split('/')[-1]))
                         else:
                             bert_base_model = AutoModel.from_pretrained(self.opt.pretrained_bert)
@@ -76,7 +76,7 @@ class AspectExtractor:
                     self.model = torch.load(model_path, map_location='cpu')
                     self.model.opt = self.opt
                 try:
-                    if kwargs.pop('offline', False):
+                    if kwargs.get('offline', False):
                         self.tokenizer = AutoTokenizer.from_pretrained(find_cwd_dir(self.opt.pretrained_bert.split('/')[-1]))
                     else:
                         self.tokenizer = AutoTokenizer.from_pretrained(self.opt.pretrained_bert, do_lower_case='uncased' in self.opt.pretrained_bert)
@@ -102,7 +102,7 @@ class AspectExtractor:
         # np.random.seed(self.opt.seed)
         # torch.manual_seed(self.opt.seed)
 
-        if kwargs.pop('verbose', False):
+        if kwargs.get('verbose', False):
             print('Config used in Training:')
             print_args(self.opt)
 
@@ -112,7 +112,7 @@ class AspectExtractor:
                 self.opt.gradient_accumulation_steps))
 
         self.eval_dataloader = None
-        self.opt.eval_batch_size = kwargs.pop('eval_batch_size', 128)
+        self.opt.eval_batch_size = kwargs.get('eval_batch_size', 128)
 
         self.to(self.opt.device)
 

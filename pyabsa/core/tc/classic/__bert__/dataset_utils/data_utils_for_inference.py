@@ -14,7 +14,7 @@ from pyabsa.core.apc.dataset_utils.apc_utils import load_apc_datasets, LABEL_PAD
 
 class Tokenizer4Pretraining:
     def __init__(self, max_seq_len, opt, **kwargs):
-        if kwargs.pop('offline', False):
+        if kwargs.get('offline', False):
             self.tokenizer = AutoTokenizer.from_pretrained(find_cwd_dir(opt.pretrained_bert.split('/')[-1]),
                                                            do_lower_case='uncased' in opt.pretrained_bert)
         else:
