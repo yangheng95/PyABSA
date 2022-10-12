@@ -1,18 +1,18 @@
 [
   {
     "referrer": "github.com",
-    "count": 466,
-    "uniques": 87
+    "count": 469,
+    "uniques": 89
   },
   {
     "referrer": "Google",
-    "count": 411,
-    "uniques": 85
+    "count": 418,
+    "uniques": 89
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 406,
-    "uniques": 84
+    "count": 410,
+    "uniques": 92
   },
   {
     "referrer": "huggingface.co",
@@ -25,9 +25,14 @@
     "uniques": 22
   },
   {
+    "referrer": "colab.research.google.com",
+    "count": 85,
+    "uniques": 7
+  },
+  {
     "referrer": "youtube.com",
-    "count": 56,
-    "uniques": 15
+    "count": 46,
+    "uniques": 14
   },
   {
     "referrer": "arxiv.org",
@@ -35,14 +40,9 @@
     "uniques": 8
   },
   {
-    "referrer": "colab.research.google.com",
-    "count": 15,
+    "referrer": "link.zhihu.com",
+    "count": 16,
     "uniques": 7
-  },
-  {
-    "referrer": "56th420b0w4-496ff2e9c6d22116-0-colab.googleusercontent.com",
-    "count": 12,
-    "uniques": 1
   },
   {
     "referrer": "libhunt.com",
