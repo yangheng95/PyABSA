@@ -106,7 +106,7 @@ def load_apc_datasets(fname):
         _lines_ = fin.readlines()
         for i, line in enumerate(_lines_):
             if not line.strip():
-                raise ValueError('empty line: #{}, previous line: {}'.format(i, _lines_[i - 1]))
+                raise ValueError('empty line: #{} in {}, previous line: {}'.format(i, f, _lines_[i - 1]))
             lines.append(line.strip())
         fin.close()
     return lines

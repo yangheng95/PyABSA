@@ -17,6 +17,7 @@ from pyabsa.functional import APCModelList
 
 apc_config_multilingual = APCConfigManager.get_apc_config_multilingual()
 apc_config_multilingual.model = APCModelList.FAST_LSA_T_V2
+apc_config_multilingual.log_step = -1
 
 datasets_path = ABSADatasetList.Multilingual
 sent_classifier = Trainer(config=apc_config_multilingual,

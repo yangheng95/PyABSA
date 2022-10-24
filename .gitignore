@@ -17,6 +17,7 @@ integrated_datasets/
 *.DS_Store
 *.tmp
 *.args.txt
+*.summary.txt
 *.dat
 *.graph
 # Byte-compiled / optimized / DLL files
