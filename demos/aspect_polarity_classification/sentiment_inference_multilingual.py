@@ -10,7 +10,7 @@ from pyabsa import ABSADatasetList, APCCheckpointManager, available_checkpoints
 
 checkpoint_map = available_checkpoints()
 
-sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='multilingual2')
+sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='multilingual')
 
 text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent ,' \
        ' the [ASP]decor[ASP] cool and understated . !sent! Positive, Positive'
