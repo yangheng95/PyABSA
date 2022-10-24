@@ -21,7 +21,7 @@ from pyabsa.functional.dataset import DatasetItem
 
 atepc_config = ATEPCConfigManager.get_atepc_config_english()
 
-atepc_config.pretrained_bert = 'microsoft/deberta-v3-base'
+atepc_config.pretrained_bert = 'https://huggingface.co/yangheng/deberta-v3-base-absa-v1.1'
 atepc_config.model = ATEPCModelList.FAST_LCF_ATEPC
 atepc_config.lcf = 'fusion'
 dataset_path = ABSADatasetList.Restaurant14
