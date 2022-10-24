@@ -414,9 +414,18 @@ class AspectExtractor:
                     result['probs'] = probs
                     result['confidence'] = max(probs)
                     result['aspect'] = all_aspects[apc_id]
-                    result['pos_ids'] = np.where(np.array(examples[apc_id].IOB_label) != 'O')[0].tolist()
+                    result['pos_ids'] = self.split_position(np.where(np.array(examples[apc_id].IOB_label) != 'O')[0].tolist())[i]
                     result['sentiment'] = sent
                     result['example_id'] = example_id_map[apc_id]
                     res.append(result)
 
         return res
+
+    def split_position(self, lst):
+        new_list = []
+        for i, j in zip(lst, lst[1:]):
+            if j - i > 1:
+                new_list.append(lst[:lst.index(j)])
+                lst = lst[lst.index(j):]
+        new_list.append(lst)
+        return new_list

@@ -1,6 +1,7 @@
 {
   "1.16.21": {
-    "1": "Minor revisions(fix ckpt index)"
+    "1": "Minor revisions(fix ckpt index)",
+    "2": "Fix aspect position tagging in ATEPC results"
   },
   "1.16.19(20)": {
     "1": "Minor fixes and improvements",
