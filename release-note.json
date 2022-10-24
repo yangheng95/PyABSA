@@ -1,4 +1,7 @@
 {
+  "1.16.21": {
+    "1": "Minor revisions"
+  },
   "1.16.19(20)": {
     "1": "Minor fixes and improvements",
     "2": "Fix some examples"
@@ -289,7 +292,7 @@
     "1": "Fix an inference bug for ATEPC"
   },
   "1.8.0": {
-    "1": "Add more pretrained model (i.e., encoder model) for ATEPC task. e.g., microsoft/deberta-v3-base(large), roberta-base(large)",
+    "1": "Add more pretrained model (i.e., encoder model) for ATEPC task. e.g., https://huggingface.co/yangheng/deberta-v3-base-absa-v1.1(large), roberta-base(large)",
     "2": "Refactor Docs"
   },
   "1.6.17": {

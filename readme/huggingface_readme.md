@@ -63,7 +63,7 @@ r.json()
 **If you do not need the best models of APC or ATEPC, you can easily try our pretrained model to save your time!**
 
 To facilitate ABSA research and application, we train our fast-lcf-bert model based on
-the [microsoft/deberta-v3-base](https://huggingface.co/microsoft/deberta-v3-base) with all the english datasets provided
+the [https://huggingface.co/yangheng/deberta-v3-base-absa-v1.1](https://huggingface.co/https://huggingface.co/yangheng/deberta-v3-base-absa-v1.1) with all the english datasets provided
 by [ABSADatasets](https://github.com/yangheng95/ABSADatasets), the model is available
 at [yangheng/deberta-v3-base-absa-v1.1](https://huggingface.co/yangheng/deberta-v3-base-absa-v1.1). You can use **
 yangheng/deberta-v3-base-absa**

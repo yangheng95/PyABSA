@@ -270,9 +270,7 @@ def available_checkpoints(task='', show_ckpts=False):
     try:
 
         try:  # from huggingface space
-            # checkpoint_url = 'https://huggingface.co/spaces/yangheng/PyABSA-ATEPC/raw/main/checkpoint-v1.2.json'
-            # checkpoint_url = 'https://huggingface.co/spaces/yangheng/Multilingual-Aspect-Based-Sentiment-Analysis/raw/main/checkpoint-v1.2.json'
-            checkpoint_url = 'https://huggingface.co/spaces/yangheng/Multilingual-Aspect-Based-Sentiment-Analysis/raw/main/checkpoint-v1.16.json'
+            checkpoint_url = 'https://huggingface.co/spaces/yangheng/Multilingual-Aspect-Based-Sentiment-Analysis/raw/main/checkpoints-v1.16.json'
             response = requests.get(checkpoint_url)
             with open('./checkpoints-v1.16.json', "w") as f:
                 json.dump(response.json(), f)

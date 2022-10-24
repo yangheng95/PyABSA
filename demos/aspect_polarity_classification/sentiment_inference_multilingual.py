@@ -10,19 +10,15 @@ from pyabsa import ABSADatasetList, APCCheckpointManager, available_checkpoints
 
 checkpoint_map = available_checkpoints()
 
-sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='Multilingual')
+sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='multilingual2')
 
 text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent ,' \
-       ' the [ASP]decor[ASP] cool and understated . !sent! 1, 1'
+       ' the [ASP]decor[ASP] cool and understated . !sent! Positive, Positive'
 sent_classifier.infer(text, print_result=True)
 
-# 由于BERT采用单字分词，中文是否用空格分割不影响BERT的表现。欢迎贡献中文或其它语言数据集
-chinese_text = '还有就是笔画的键盘分布我感觉不合理. !sent! -1'
-# chinese_text = '还有就是[ASP]笔画的键盘分布[ASP]我感觉不合理. !sent! -1'
-sent_classifier.infer(chinese_text, print_result=True)
-
-# multilingual = ABSADatasetList.Multilingual
-# sent_classifier.batch_infer(target_file=multilingual,
-#                             print_result=True,
-#                             save_result=True
-#                             )
+multilingual = ABSADatasetList.Multilingual
+sent_classifier.batch_infer(target_file=multilingual,
+                            print_result=True,
+                            save_result=True,
+                            ignore_error=True,
+                            )
