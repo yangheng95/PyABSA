@@ -1,4 +1,8 @@
 {
+  "1.16.19": {
+    "1": "Minor fixes and improvements",
+    "2": "Fix some examples"
+  },
   "1.16.18": {
     "1": "Fix text classification training",
     "2": "remove support 1.14.3 and earlier versions",

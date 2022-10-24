@@ -9,11 +9,11 @@ import shutil
 from torch import cuda
 
 from pyabsa import APCModelList, BERTBaselineAPCModelList, GloVeAPCModelList, \
-    ATEPCModelList, BERTClassificationModelList, GloVeClassificationModelList
-from pyabsa import ABSADatasetList, ClassificationDatasetList
+    ATEPCModelList, BERTTCModelList, GloVeTCModelList
+from pyabsa import ABSADatasetList, TCDatasetList
 from pyabsa import APCConfigManager
 from pyabsa import ATEPCConfigManager
-from pyabsa import ClassificationConfigManager
+from pyabsa import TCConfigManager
 from pyabsa.functional import Trainer
 
 from findfile import find_cwd_dir
@@ -72,10 +72,10 @@ for dataset in ABSADatasetList()[:1]+[ABSADatasetList.MAMS]:
         except Exception as e:
             print(e)
 
-for dataset in ClassificationDatasetList():
-    for model in BERTClassificationModelList():
+for dataset in TCDatasetList():
+    for model in BERTTCModelList():
         cuda.empty_cache()
-        config = ClassificationConfigManager.get_classification_config_english()
+        config = TCConfigManager.get_tc_config_english()
         config.model = model
         config.num_epoch = 1
         config.evaluate_begin = 0

@@ -103,7 +103,7 @@ class BERTBaselineABSADataset(Dataset):
             if lines[i].count("$T$") > 1:
                 continue
             text_left, _, text_right = [s.lower().strip() for s in lines[i].partition("$T$")]
-            aspect = lines[i + 1].lower().strip()
+            aspect = lines[i + 1].strip()
             text_raw = text_left + ' ' + aspect + ' ' + text_right
             polarity = lines[i + 2].strip()
             # polarity = int(polarity)

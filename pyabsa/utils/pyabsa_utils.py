@@ -169,12 +169,12 @@ def prepare_glove840_embedding(glove_path):
         embedding_files = []
         dir_path = os.getenv('$HOME') if os.getenv('$HOME') else os.getcwd()
 
-        if find_file(dir_path, 'glove.42B.300d.txt', exclude_key='.zip'):
-            embedding_files += find_files(dir_path, 'glove.42B.300d.txt', exclude_key='.zip')
-        elif find_file(dir_path, 'glove.840B.300d.txt', exclude_key='.zip'):
-            embedding_files += find_files(dir_path, 'glove.840B.300d.txt', exclude_key='.zip')
-        elif find_file(dir_path, 'glove.twitter.27B.txt', exclude_key='.zip'):
-            embedding_files += find_files(dir_path, 'glove.twitter.27B.txt', exclude_key='.zip')
+        if find_files(dir_path, ['glove', 'B', 'd', '.txt'], exclude_key='.zip'):
+            embedding_files += find_files(dir_path, ['glove', 'B', '.txt'], exclude_key='.zip')
+        elif find_files(dir_path, ['word2vec', 'd', '.txt'], exclude_key='.zip'):
+            embedding_files += find_files(dir_path, ['word2vec', 'd', '.txt'], exclude_key='.zip')
+        else:
+            embedding_files += find_files(dir_path, ['d', '.txt'], exclude_key='.zip')
 
         if embedding_files:
             print(colored('Find embedding file: {}, use: {}'.format(embedding_files, embedding_files[0]), 'green'))
@@ -202,7 +202,6 @@ def prepare_glove840_embedding(glove_path):
             print(colored('Zip file extraction Done.', 'green'))
 
         return prepare_glove840_embedding(glove_path)
-
 
 def _load_word_vec(path, word2idx=None, embed_dim=300):
     fin = open(path, 'r', encoding='utf-8', newline='\n', errors='ignore')

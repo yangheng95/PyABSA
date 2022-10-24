@@ -36,9 +36,8 @@ class ABSADataset(Dataset):
             if lines[i].count("$T$") > 1:
                 continue
             text_left, _, text_right = [s.strip() for s in lines[i].partition("$T$")]
-            aspect = lines[i + 1].lower().strip()
+            aspect = lines[i + 1].strip()
             polarity = lines[i + 2].strip()
-            # polarity = int(polarity)
 
             prepared_inputs = prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect, input_demands=opt.inputs_cols)
 

@@ -34,7 +34,7 @@ def get_example(dataset):
 
 
 dataset_dict = {dataset.name: get_example(dataset.name) for dataset in ABSADatasetList()}
-aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='fast_lcf_atepc_Multilingual_cdw_apcacc_86.68_apcf1_80.63_atef1_75.15')
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='multilingual')
 
 
 def perform_inference(text, dataset):
