@@ -4,6 +4,7 @@
 # author: yangheng <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
+import random
 
 ########################################################################################################################
 #                    train and evaluate on your own apc_datasets (need train and test apc_datasets)                    #
@@ -18,6 +19,8 @@ from pyabsa.functional import APCModelList
 apc_config_multilingual = APCConfigManager.get_apc_config_multilingual()
 apc_config_multilingual.model = APCModelList.FAST_LSA_T_V2
 apc_config_multilingual.log_step = -1
+apc_config_multilingual.seed = random.randint(0, 10000)
+
 
 datasets_path = ABSADatasetList.Multilingual
 sent_classifier = Trainer(config=apc_config_multilingual,
