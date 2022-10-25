@@ -168,7 +168,7 @@ def convert_atepc(fname, use_tokenizer):
     fout.close()
 
 
-def convert_apc_set_to_atepc_set(path, use_tokenizer=True):
+def convert_apc_set_to_atepc_set(path, use_tokenizer=False):
     print('To ensure your conversion is successful, make sure the dataset name contain "apc" and "dataset" string ')
 
     if isinstance(path, DatasetItem):
