@@ -66,7 +66,10 @@ def is_similar(s1, s2):
         return False
 
 
-def assemble_aspects(fname):
+def assemble_aspects(fname, use_tokenizer):
+    if use_tokenizer:
+        from transformers import AutoTokenizer
+        tokenizer = AutoTokenizer.from_pretrained('microsoft/deberta-v3-base')
     fin = open(fname, 'r', encoding='utf-8', newline='\n', errors='ignore')
     lines = fin.readlines()
     for i, line in enumerate(lines):
@@ -75,7 +78,10 @@ def assemble_aspects(fname):
     fin.close()
     for i in range(len(lines)):
         if i % 3 == 0 or i % 3 == 1:
-            lines[i] = ' '.join(split_text(lines[i].strip())).replace('$ t $', '$T$').replace('$ T $', '$T$')
+            if use_tokenizer:
+                lines[i] = ' '.join(tokenizer.tokenize(lines[i].strip())).replace('$ t $', '$T$').replace('$ T $', '$T$')
+            else:
+                lines[i] = ' '.join(split_text(lines[i].strip())).replace('$ t $', '$T$').replace('$ T $', '$T$')
         else:
             lines[i] = lines[i].strip()
 
@@ -140,7 +146,7 @@ def split_aspects(sentence):
     return single_aspect_with_contex
 
 
-def convert_atepc(fname):
+def convert_atepc(fname, use_tokenizer):
     print('coverting {} to {}.atepc'.format(fname, fname))
     dist_fname = fname.replace('apc_datasets', 'atepc_datasets')
 
@@ -148,7 +154,7 @@ def convert_atepc(fname):
         os.makedirs(os.path.dirname(dist_fname))
     dist_fname += '.atepc'
     lines = []
-    samples = assemble_aspects(fname)
+    samples = assemble_aspects(fname, use_tokenizer)
 
     for sample in samples:
         for token_index in range(len(sample[1])):
@@ -162,7 +168,7 @@ def convert_atepc(fname):
     fout.close()
 
 
-def convert_apc_set_to_atepc_set(path):
+def convert_apc_set_to_atepc_set(path, use_tokenizer=True):
     print('To ensure your conversion is successful, make sure the dataset name contain "apc" and "dataset" string ')
 
     if isinstance(path, DatasetItem):
@@ -178,7 +184,7 @@ def convert_apc_set_to_atepc_set(path):
     for target_file in files:
         if not target_file.endswith('.atepc'):
             try:
-                convert_atepc(target_file)
+                convert_atepc(target_file, use_tokenizer)
             except Exception as e:
                 print('failed to process :{}, Exception: {}'.format(target_file, e))
         else:
@@ -243,7 +249,7 @@ def detect_error_in_dataset(dataset):
         # print(lines[i].replace('$T$', lines[i + 1].replace('\n', '')))
         if i + 3 < len(lines):
             if is_similar(lines[i], lines[i + 3]) and len((lines[i] + " " + lines[i + 1]).split()) != len(
-                    (lines[i + 3] + " " + lines[i + 4]).split()):
+                (lines[i + 3] + " " + lines[i + 4]).split()):
                 print(lines[i].replace('$T$', lines[i + 1].replace('\n', '')))
                 print(lines[i + 3].replace('$T$', lines[i + 4].replace('\n', '')))
 

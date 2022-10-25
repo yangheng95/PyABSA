@@ -56,8 +56,8 @@ def config_check(args):
                         'Optimizer {} is not available in PyTorch < 1.10, it will be redirected to Adam instead.'.format(
                             args['optimizer']))
 
-    except AssertionError:
-        raise RuntimeError('Some parameters are not valid, please see the main example.')
+    except AssertionError as e:
+        raise AssertionError('Some parameters are not valid, please refer to the examples for more details. {}'.format(e))
 
 
 class ConfigManager(Namespace):
