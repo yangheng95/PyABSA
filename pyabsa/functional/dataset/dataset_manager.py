@@ -87,7 +87,7 @@ class ABSADatasetList(list):
     MOOC_En = DatasetItem('MOOC_En', '121.MOOC_En')
 
     # https://www.kaggle.com/datasets/cf7394cb629b099cf94f3c3ba87e1d37da7bfb173926206247cd651db7a8da07
-    Kaggle = DatasetItem('Kaggle', '122.Kaggle')
+    Kaggle = DatasetItem('Kaggle', '129.Kaggle')
 
     # assembled dataset
     Chinese = DatasetItem('Chinese', ['107.Phone', '103.Camera', '106.Notebook', '104.Car', '105.MOOC'])
@@ -104,13 +104,13 @@ class ABSADatasetList(list):
     English_SemEval2016Task5 = DatasetItem('English_SemEval2016Task5', ['124.English'])
 
     English = DatasetItem('English', ['113.Laptop14', '114.Restaurant14', '116.Restaurant16', '101.ACL_Twitter',
-                                      '109.MAMS', '117.Television', '118.TShirt', '119.Yelp', '121.MOOC_En', '122.Kaggle'])
+                                      '109.MAMS', '117.Television', '118.TShirt', '119.Yelp', '121.MOOC_En', '129.Kaggle'])
 
     # Abandon rest15 dataset due to data leakage, See https://github.com/yangheng95/PyABSA/issues/53
     SemEval = DatasetItem('SemEval', ['113.Laptop14', '114.Restaurant14', '116.Restaurant16'])
     Restaurant = DatasetItem('Restaurant', ['114.Restaurant14', '116.Restaurant16'])
     Multilingual = DatasetItem('Multilingual', ['113.Laptop14', '114.Restaurant14', '116.Restaurant16', '101.ACL_Twitter', '109.MAMS', '117.Television',
-                                                '118.TShirt', '119.Yelp', '107.Phone', '103.Camera', '106.Notebook', '104.Car', '105.MOOC',  '122.Kaggle',
+                                                '118.TShirt', '119.Yelp', '107.Phone', '103.Camera', '106.Notebook', '104.Car', '105.MOOC',  '129.Kaggle',
                                                 '120.SemEval2016Task5', '121.MOOC_En'])
 
     def __init__(self):
