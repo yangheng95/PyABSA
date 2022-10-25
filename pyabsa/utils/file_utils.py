@@ -66,7 +66,7 @@ def is_similar(s1, s2):
         return False
 
 
-def assemble_aspects(fname, use_tokenizer):
+def assemble_aspects(fname, use_tokenizer=False):
     if use_tokenizer:
         from transformers import AutoTokenizer
         tokenizer = AutoTokenizer.from_pretrained('microsoft/deberta-v3-base')
