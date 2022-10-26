@@ -46,18 +46,22 @@ def make_ABSA_dataset(dataset_name_or_path, checkpoint='english'):
     else:
         print('No files found! Please make sure your dataset names end with ".ignore"')
     for f in fs:
-        f_apc_out = open(f.replace('.ignore', '.apc'), mode='w', encoding='utf-8')
-        f_atepc_out = open(f.replace('.ignore', '.atepc'), mode='w', encoding='utf-8')
-
-        results = aspect_extractor.extract_aspect(open(f, mode='r', encoding='utf-8').readlines())
+        f_apc_out = open(f.replace('.ignore', '') + '.apc', mode='w', encoding='utf-8')
+        f_atepc_out = open(f.replace('.ignore', '') + '.atepc', mode='w', encoding='utf-8')
+        with open(f, mode='r', encoding='utf8') as f_in:
+            lines = f_in.readlines()
+        results = aspect_extractor.extract_aspect(lines)
         for result in results:
             for j, pos in enumerate(result['position']):
                 for i, (token, IOB) in enumerate(zip(result['tokens'], result['IOB'])):
                     if i + 1 in pos:
-                        f_atepc_out.write(token + ' ' + IOB.replace('[CLS]', 'O').replace('[SEP]', 'O') + ' ' + result['sentiment'][j] + '\n')
+                        f_atepc_out.write(
+                            token + ' ' + IOB.replace('[CLS]', 'O').replace('[SEP]', 'O') + ' ' + result['sentiment'][
+                                j] + '\n')
                         result['position'][j].pop(0)
                     else:
-                        f_atepc_out.write(token + ' ' + IOB.replace('[CLS]', 'O').replace('[SEP]', 'O') + ' ' + '-999' + '\n')
+                        f_atepc_out.write(
+                            token + ' ' + IOB.replace('[CLS]', 'O').replace('[SEP]', 'O') + ' ' + '-999' + '\n')
                 f_atepc_out.write('\n')
 
             for aspect, sentiment in zip(result['aspect'], result['sentiment']):
@@ -68,4 +72,6 @@ def make_ABSA_dataset(dataset_name_or_path, checkpoint='english'):
         f_apc_out.close()
         f_atepc_out.close()
     print('Datasets built for {}!'.format(' '.join(fs)))
-    print(colored('You may need add ID for your dataset, and move the generated datasets to integrated_dataset/apc_datasets and integrated_dataset/atepc_datasets, respectively', 'red'))
+    print(colored(
+        'You may need add ID for your dataset, and move the generated datasets to integrated_dataset/apc_datasets and integrated_dataset/atepc_datasets, respectively',
+        'red'))
