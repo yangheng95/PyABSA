@@ -10,7 +10,7 @@ from pyabsa import ATEPCCheckpointManager, available_checkpoints, ABSADatasetLis
 available_checkpoint = available_checkpoints()
 # Download checkpoint from HuggingFace or GooGle Drive according to the checkpoint name,
 # otherwise auto-search locally using the checkpoint name as a keyword.
-AspectExtractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='multilingual')
+aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='multilingual')
 
 # Load a local checkpoint by specifying the checkpoint path.
 # AspectExtractor = ATEPCCheckpointManager.get_aspect_extractor(checkpoint='./checkpoints/multilingual')
