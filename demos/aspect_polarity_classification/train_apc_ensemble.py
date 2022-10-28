@@ -26,7 +26,7 @@ apc_config_english.max_seq_len = 80
 
 apc_config_english.dropout = 0.5
 apc_config_english.log_step = 50
-apc_config_english.pretrained_bert = 'https://huggingface.co/yangheng/deberta-v3-base-absa-v1.1'
+apc_config_english.pretrained_bert = 'yangheng/deberta-v3-base-absa-v1.1'
 apc_config_english.num_epoch = 15
 apc_config_english.batch_size = 16
 apc_config_english.evaluate_begin = 2

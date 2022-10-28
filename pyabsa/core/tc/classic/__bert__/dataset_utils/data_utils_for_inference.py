@@ -65,7 +65,7 @@ class BERTClassificationDataset(Dataset):
             it = tqdm.tqdm(samples, postfix='preparing text classification dataloader...')
         else:
             it = samples
-        for text in it:
+        for ex_id, text in enumerate(it):
             try:
                 # handle for empty lines in inference datasets
                 if text is None or '' == text.strip():
@@ -82,6 +82,8 @@ class BERTClassificationDataset(Dataset):
                 text_indices = self.tokenizer.text_to_sequence('{}'.format(text))
 
                 data = {
+                    'ex_id': ex_id,
+
                     'text_bert_indices': text_indices[0]
                     if 'text_bert_indices' in self.opt.model.inputs else 0,
 

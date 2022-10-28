@@ -26,7 +26,7 @@ config.use_bert_spc = True
 config.l2reg = 1e-5
 config.learning_rate = 1e-5
 multilingual = ABSADatasetList.English
-config.pretrained_bert = 'https://huggingface.co/yangheng/deberta-v3-base-absa-v1.1'
+config.pretrained_bert = 'yangheng/deberta-v3-base-absa-v1.1'
 Dataset = ABSADatasetList.English
 
 aspect_extractor = Trainer(config=config,
