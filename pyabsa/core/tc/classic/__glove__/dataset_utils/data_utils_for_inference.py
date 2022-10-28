@@ -89,7 +89,7 @@ class GloVeTCDataset(Dataset):
         else:
             it = samples
 
-        for text in it:
+        for ex_id, text in enumerate(it):
             try:
                 # handle for empty lines in inference dataset
                 if text is None or '' == text.strip():
@@ -110,6 +110,8 @@ class GloVeTCDataset(Dataset):
                 text_indices = self.tokenizer.text_to_sequence(text)
 
                 data = {
+                    'ex_id': ex_id,
+
                     'text_indices': text_indices
                     if 'text_indices' in self.opt.model.inputs else 0,
 

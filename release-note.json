@@ -1,4 +1,7 @@
 {
+  "1.16.24": {
+    "1": "Improves stability of dataset search, this is the final version of the 1.16.x release"
+  },
   "1.16.23": {
     "1": "Fix the positions output of ATEPC",
     "2": "Fix a demo bug",
@@ -302,7 +305,7 @@
     "1": "Fix an inference bug for ATEPC"
   },
   "1.8.0": {
-    "1": "Add more pretrained model (i.e., encoder model) for ATEPC task. e.g., https://huggingface.co/yangheng/deberta-v3-base-absa-v1.1(large), roberta-base(large)",
+    "1": "Add more pretrained model (i.e., encoder model) for ATEPC task. e.g., yangheng/deberta-v3-base-absa-v1.1(large), roberta-base(large)",
     "2": "Refactor Docs"
   },
   "1.6.17": {

@@ -13,7 +13,7 @@ import time
 
 import autocuda
 import git
-from findfile import find_files, find_dir
+from findfile import find_files, find_dir, find_cwd_files
 
 from pyabsa.core.apc.models import APCModelList
 
@@ -217,8 +217,8 @@ def detect_dataset(dataset_path, task='apc', load_aug=False):
             search_path = find_dir(os.getcwd(), [d, task, 'dataset'], exclude_key=['infer', 'test.'] + filter_key_words, disable_alert=False)
             if not search_path:
                 raise ValueError('Cannot find dataset: {}, you may need to remove existing integrated_datasets and try again. '
-                                 'Please note that if you are using keywords to let findfile search the dataset, '
-                                 'you need to '.format(d))
+                                 'Please note that if you are using keywords to let findfile search the dataset, you need to save your dataset(s)'
+                                 'in integrated_datasets/{}/{} '.format(d, 'task_name', 'dataset_name'))
             if not load_aug:
                 print(colored('You can set load_aug=True in a trainer to augment your dataset (English only yet) and improve performance.'.format(search_path), 'green'))
                 print(colored('Please use a new folder to perform new text augmentation if the former augmentation exited unexpectedly'.format(search_path), 'green'))
@@ -256,10 +256,10 @@ def detect_dataset(dataset_path, task='apc', load_aug=False):
                 dataset_file['valid'] += find_files(d, ['valid', task], exclude_key=['.inference', 'train.'] + filter_key_words)
                 dataset_file['valid'] += find_files(d, ['dev', task], exclude_key=['.inference', 'train.'] + filter_key_words)
             else:
-                dataset_file['train'] += find_files(d, ['train', task], exclude_key=['.inference', 'test.', 'valid.'] + filter_key_words + ['.ignore'])
-                dataset_file['test'] += find_files(d, ['test', task], exclude_key=['.inference', 'train.', 'valid.'] + filter_key_words + ['.ignore'])
-                dataset_file['valid'] += find_files(d, ['valid', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words + ['.ignore'])
-                dataset_file['valid'] += find_files(d, ['dev', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words + ['.ignore'])
+                dataset_file['train'] += find_cwd_files([d, 'train', task], exclude_key=['.inference', 'test.', 'valid.'] + filter_key_words + ['.ignore'])
+                dataset_file['test'] += find_cwd_files([d, 'train', task], exclude_key=['.inference', 'train.', 'valid.'] + filter_key_words + ['.ignore'])
+                dataset_file['valid'] += find_cwd_files([d, 'train', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words + ['.ignore'])
+                dataset_file['valid'] += find_cwd_files([d, 'train', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words + ['.ignore'])
 
     # # if we need train a checkpoint using as much data as possible, we can merge train, valid and test set as training sets
     # dataset_file['train'] = dataset_file['train'] + dataset_file['test'] + dataset_file['valid']

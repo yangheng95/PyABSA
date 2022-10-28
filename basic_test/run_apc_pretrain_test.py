@@ -43,7 +43,8 @@ apc_examples = [
 
 # # for dataset in ABSADatasetList():
 for dataset in ABSADatasetList()[:1]:
-    for model in APCModelList()[:1]:
+    # for model in APCModelList()[:1]:
+    for model in APCModelList():
         cuda.empty_cache()
         config = APCConfigManager.get_apc_config_english()
         config.lcf = 'cdm'
@@ -53,7 +54,7 @@ for dataset in ABSADatasetList()[:1]:
         config.max_seq_len = 10
         config.evaluate_begin = 0
         config.log_step = -1
-        config.cross_validate_fold = 3
+        config.cross_validate_fold = 5
         sent_classifier = Trainer(config=config,
                                   dataset=dataset,
                                   checkpoint_save_mode=1,

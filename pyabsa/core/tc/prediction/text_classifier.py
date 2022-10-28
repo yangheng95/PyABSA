@@ -25,6 +25,8 @@ from ..classic.__glove__.dataset_utils.data_utils_for_training import build_toke
 
 from pyabsa.utils.pyabsa_utils import print_args, TransformerConnectionError, get_device, build_embedding_matrix
 
+from sklearn import metrics
+
 
 def get_mlm_and_tokenizer(text_classifier, config):
     if isinstance(text_classifier, TextClassifier):
@@ -238,6 +240,8 @@ class TextClassifier:
             n_correct = 0
             n_labeled = 0
             n_total = 0
+            t_targets_all, t_outputs_all = None, None
+
             if len(self.infer_dataloader.dataset) >= 100:
                 it = tqdm.tqdm(self.infer_dataloader, postfix='inferring...')
             else:
@@ -248,6 +252,14 @@ class TextClassifier:
                 outputs = self.model(inputs)
                 sen_logits = outputs
                 t_probs = torch.softmax(sen_logits, dim=-1)
+
+                if t_targets_all is None:
+                    t_targets_all = sample['label']
+                    t_outputs_all = sen_logits
+                else:
+                    t_targets_all = torch.cat((t_targets_all, sample['label']), dim=0)
+                    t_outputs_all = torch.cat((t_outputs_all, sen_logits), dim=0)
+
                 for i, i_probs in enumerate(t_probs):
                     if 'index_to_label' in self.opt.args and int(i_probs.argmax(axis=-1)) in self.opt.index_to_label:
                         sent = self.opt.index_to_label[int(i_probs.argmax(axis=-1))]
@@ -266,6 +278,7 @@ class TextClassifier:
                         real_sent = int(sample['label'][i])
 
                     text_raw = sample['text_raw'][i]
+                    ex_id = sample['ex_id'][i]
 
                     if self.cal_perplexity:
                         ids = self.MLM_tokenizer(text_raw, return_tensors="pt")
@@ -277,6 +290,7 @@ class TextClassifier:
                         perplexity = 'N.A.'
 
                     results.append({
+                        'ex_id': ex_id,
                         'text': text_raw,
                         'label': sent,
                         'confidence': float(max(i_probs)),
@@ -317,6 +331,12 @@ class TextClassifier:
             print('Total samples:{}'.format(n_total))
             print('Labeled samples:{}'.format(n_labeled))
             print('Prediction Accuracy:{}%'.format(100 * n_correct / n_labeled if n_labeled else 'N.A.'))
+
+            print('\n---------------------------- Classification Report ----------------------------\n')
+            print(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
+                                                target_names=[self.opt.index_to_label[x] for x in
+                                                              self.opt.index_to_label]))
+            print('\n---------------------------- Classification Report ----------------------------\n')
 
         return results
 
