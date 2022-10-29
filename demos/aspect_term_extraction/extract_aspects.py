@@ -22,4 +22,4 @@ atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source
                                                pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
                                                )
 
-# print(atepc_result)
+print(atepc_result)
