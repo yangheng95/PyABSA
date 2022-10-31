@@ -249,7 +249,7 @@ def detect_dataset(dataset_path, task='apc', load_aug=False):
                 dataset_file['valid'] += find_files(search_path, [d, 'dev', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words + ['.ignore'])
 
         else:
-            print('Try to load {} dataset from local'.format(dataset_path))
+            print('Try to load {} dataset from local disk'.format(dataset_path))
             if load_aug:
                 dataset_file['train'] += find_files(d, ['train', task], exclude_key=['.inference', 'test.', 'valid.'] + filter_key_words)
                 dataset_file['test'] += find_files(d, ['test', task], exclude_key=['.inference', 'train.', 'valid.'] + filter_key_words)
@@ -257,9 +257,9 @@ def detect_dataset(dataset_path, task='apc', load_aug=False):
                 dataset_file['valid'] += find_files(d, ['dev', task], exclude_key=['.inference', 'train.'] + filter_key_words)
             else:
                 dataset_file['train'] += find_cwd_files([d, 'train', task], exclude_key=['.inference', 'test.', 'valid.'] + filter_key_words + ['.ignore'])
-                dataset_file['test'] += find_cwd_files([d, 'train', task], exclude_key=['.inference', 'train.', 'valid.'] + filter_key_words + ['.ignore'])
-                dataset_file['valid'] += find_cwd_files([d, 'train', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words + ['.ignore'])
-                dataset_file['valid'] += find_cwd_files([d, 'train', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words + ['.ignore'])
+                dataset_file['test'] += find_cwd_files([d, 'test', task], exclude_key=['.inference', 'train.', 'valid.'] + filter_key_words + ['.ignore'])
+                dataset_file['valid'] += find_cwd_files([d, 'valid', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words + ['.ignore'])
+                dataset_file['valid'] += find_cwd_files([d, 'valid', task], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words + ['.ignore'])
 
     # # if we need train a checkpoint using as much data as possible, we can merge train, valid and test set as training sets
     # dataset_file['train'] = dataset_file['train'] + dataset_file['test'] + dataset_file['valid']
