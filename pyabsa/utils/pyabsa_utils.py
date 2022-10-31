@@ -215,8 +215,8 @@ def _load_word_vec(path, word2idx=None, embed_dim=300):
 
 
 def build_embedding_matrix(word2idx, embed_dim, dat_fname, opt):
-    if not os.path.exists('run'):
-        os.makedirs('run')
+    if not os.path.exists('run/{}'.format(opt.dataset_name)):
+        os.makedirs('run/{}'.format(opt.dataset_name))
     embed_matrix_path = 'run/{}'.format(os.path.join(opt.dataset_name, dat_fname))
     if os.path.exists(embed_matrix_path):
         print(colored('Loading cached embedding_matrix from {} (Please remove all cached files if there is any problem!)'.format(embed_matrix_path), 'green'))

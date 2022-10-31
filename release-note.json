@@ -1,6 +1,9 @@
 {
-  "1.16.24": {
+  "1.16.25": {
     "1": "Improves stability of dataset search, this is the final version of the 1.16.x release"
+  },
+  "1.16.24": {
+    "1": "Improves stability of dataset search"
   },
   "1.16.23": {
     "1": "Fix the positions output of ATEPC",
