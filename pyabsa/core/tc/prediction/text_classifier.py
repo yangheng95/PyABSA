@@ -318,7 +318,7 @@ class TextClassifier:
                         text_info = '#{}\t -> {}\t'.format(result['ex_id'], result['label'])
                     if self.cal_perplexity:
                         text_printing += colored(' --> <perplexity:{}>\t'.format(result['perplexity']), 'yellow')
-                    text_printing += text_info
+                    text_printing = text_info + text_printing
 
                     print('Example {}:'.format(text_printing))
             if save_path:
