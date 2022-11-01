@@ -17,7 +17,7 @@ def build_tokenizer(dataset_list, max_seq_len, dat_fname, opt):
     if not os.path.exists('run/{}'.format(dataset_name)):
         os.makedirs('run/{}'.format(dataset_name))
     tokenizer_path = 'run/{}/{}'.format(dataset_name, dat_fname)
-    if os.path.exists(tokenizer_path):
+    if os.path.exists(tokenizer_path) and not opt.overwrite_cache:
         print('Loading tokenizer on {}'.format(tokenizer_path))
         tokenizer = pickle.load(open(tokenizer_path, 'rb'))
     else:
@@ -32,7 +32,8 @@ def build_tokenizer(dataset_list, max_seq_len, dat_fname, opt):
 
         tokenizer = Tokenizer(max_seq_len)
         tokenizer.fit_on_text(text)
-        pickle.dump(tokenizer, open(tokenizer_path, 'wb'))
+        if opt.overwrite_cache:
+            pickle.dump(tokenizer, open(tokenizer_path, 'wb'))
     return tokenizer
 
 

@@ -7,7 +7,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 
-__version__ = '1.16.25'
+__version__ = '2.0.0.dev0'
 
 __name__ = 'pyabsa'
 

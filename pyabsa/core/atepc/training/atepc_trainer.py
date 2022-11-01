@@ -32,6 +32,7 @@ from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_exam
 
 import pytorch_warmup as warmup
 
+
 class Instructor:
 
     def __init__(self, opt, logger):
@@ -82,7 +83,7 @@ class Instructor:
         hash_tag = sha256(config_str.encode()).hexdigest()
         cache_path = '{}.{}.dataset.{}.cache'.format(self.opt.model_name, self.opt.dataset_name, hash_tag)
 
-        if os.path.exists(cache_path):
+        if os.path.exists(cache_path) and not self.opt.overwrite_cache:
             print(colored('Loading dataset cache: {}'.format(cache_path), 'green'))
             with open(cache_path, mode='rb') as f:
                 self.train_data, self.valid_data, self.test_data, opt = pickle.load(f)
@@ -143,7 +144,7 @@ class Instructor:
             else:
                 self.test_data = None
 
-            if self.opt.cache_dataset and not os.path.exists(cache_path):
+            if self.opt.cache_dataset and not os.path.exists(cache_path) or self.opt.overwrite_cache:
                 print(colored('Caching dataset... please remove cached dataset if any problem happens.', 'red'))
                 with open(cache_path, mode='wb') as f:
                     pickle.dump((self.train_data, self.valid_data, self.test_data, self.opt), f)
@@ -484,7 +485,7 @@ class Instructor:
                     print(apc_report)
                     print('\n---------------------------- APC Classification Report ----------------------------\n')
                 except:
-                    # No enough data to calculate the report
+                    # No enough raw_data to calculate the report
                     pass
         if eval_ATE:
             try:
@@ -496,7 +497,7 @@ class Instructor:
                     print(report)
                     print('\n---------------------------- ATE Classification Report ----------------------------\n')
             except:
-                # No enough data to calculate the report
+                # No enough raw_data to calculate the report
                 pass
 
         return apc_result, ate_result

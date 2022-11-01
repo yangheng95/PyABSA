@@ -18,7 +18,7 @@ from pyabsa.functional.config.config_manager import ConfigManager
 _apc_config_template = {'model': APCModelList.BERT_SPC,
                         'optimizer': "",
                         'learning_rate': 0.00002,
-                        'pretrained_bert': "yangheng/deberta-v3-base-absa-v1.1",
+                        'pretrained_bert': "microsoft/deberta-v3-base",
                         'cache_dataset': True,
                         'warmup_step': -1,
                         'deep_ensemble': False,
@@ -50,13 +50,14 @@ _apc_config_template = {'model': APCModelList.BERT_SPC,
                         'similarity_threshold': 1,  # disable same text check for different examples
                         'cross_validate_fold': -1,
                         'use_amp': False,
+                        'overwrite_cache': True,
                         # split train and test datasets into 5 folds and repeat 3 training
                         }
 
 _apc_config_base = {'model': APCModelList.BERT_SPC,
                     'optimizer': "adamw",
                     'learning_rate': 0.00002,
-                    'pretrained_bert': "yangheng/deberta-v3-base-absa-v1.1",
+                    'pretrained_bert': "microsoft/deberta-v3-base",
                     'cache_dataset': True,
                     'warmup_step': -1,
                     'deep_ensemble': False,
@@ -86,13 +87,15 @@ _apc_config_base = {'model': APCModelList.BERT_SPC,
                     'srd_alignment': True,  # for srd_alignment
                     'evaluate_begin': 0,
                     'similarity_threshold': 1,  # disable same text check for different examples
-                    'cross_validate_fold': -1  # split train and test datasets into 5 folds and repeat 3 training
+                    'cross_validate_fold': -1,  # split train and test datasets into 5 folds and repeat 3 training
+                    'overwrite_cache': True,
+
                     }
 
 _apc_config_english = {'model': APCModelList.BERT_SPC,
                        'optimizer': "adamw",
                        'learning_rate': 0.00002,
-                       'pretrained_bert': "yangheng/deberta-v3-base-absa-v1.1",
+                       'pretrained_bert': "microsoft/deberta-v3-base",
                        'cache_dataset': True,
                        'warmup_step': -1,
                        'deep_ensemble': False,
@@ -256,7 +259,7 @@ class APCConfigManager(ConfigManager):
         Available Params:   {'model': APCModelList.BERT_SPC,
                             'optimizer': "",
                             'learning_rate': 0.00002,
-                            'pretrained_bert': "yangheng/deberta-v3-base-absa-v1.1",
+                            'pretrained_bert': "microsoft/deberta-v3-base",
                             'cache_dataset': True,
                             'warmup_step': -1,
                             'deep_ensemble': False,

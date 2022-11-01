@@ -106,7 +106,6 @@ class AspectExtractor:
             print('Config used in Training:')
             print_args(self.opt)
 
-
         if self.opt.gradient_accumulation_steps < 1:
             raise ValueError("Invalid gradient_accumulation_steps parameter: {}, should be >= 1".format(
                 self.opt.gradient_accumulation_steps))
@@ -266,7 +265,7 @@ class AspectExtractor:
         all_tokens = [f.tokens for f in infer_features]
         infer_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
                                    all_polarities, all_valid_ids, all_lmask_ids)
-        # Run prediction for full data
+        # Run prediction for full raw_data
         infer_sampler = SequentialSampler(infer_data)
         self.opt.infer_batch_size = infer_batch_size
         self.infer_dataloader = DataLoader(infer_data, sampler=infer_sampler, pin_memory=True, batch_size=self.opt.infer_batch_size)
@@ -366,7 +365,7 @@ class AspectExtractor:
         all_positions = [f.positions for f in infer_features]
         infer_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
                                    all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
-        # Run prediction for full data
+        # Run prediction for full raw_data
         self.opt.infer_batch_size = 128
         self.model.opt.use_bert_spc = True
 
@@ -414,7 +413,7 @@ class AspectExtractor:
                     result['probs'] = probs
                     result['confidence'] = max(probs)
                     result['aspect'] = all_aspects[apc_id]
-                    result['pos_ids'] = all_positions[apc_id]
+                    result['pos_ids'] = np.where(np.array(examples[apc_id].IOB_label) != 'O')[0].tolist()
                     result['sentiment'] = sent
                     result['example_id'] = example_id_map[apc_id]
                     res.append(result)

@@ -65,7 +65,7 @@ class BERTTADDataset(Dataset):
             it = tqdm.tqdm(samples, postfix='preparing text classification inference dataloader...')
         else:
             it = samples
-        for text in it:
+        for ex_id, text in enumerate(it):
             try:
                 # handle for empty lines in inference datasets
                 if text is None or '' == text.strip():

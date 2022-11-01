@@ -131,7 +131,7 @@ class TextClassifier:
                 raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, model_arg))
 
             if not hasattr(GloVeTCModelList, self.opt.model.__name__) \
-                    and not hasattr(BERTTCModelList, self.opt.model.__name__):
+                and not hasattr(BERTTCModelList, self.opt.model.__name__):
                 raise KeyError('The checkpoint you are loading is not from classifier model.')
 
         if hasattr(BERTTCModelList, self.opt.model.__name__):
@@ -308,18 +308,19 @@ class TextClassifier:
                     if result['ref_label'] != -999:
                         if result['label'] == result['ref_label']:
                             text_info = colored(
-                                ' -> <{}(ref:{} confidence:{})>'.format(result['label'], result['ref_label'],
-                                                                        result['confidence']), 'green')
+                                '#{}\t -> <{}(ref:{} confidence:{})>\t'.format(result['ex_id'], result['label'], result['ref_label'],
+                                                                               result['confidence']), 'green')
                         else:
                             text_info = colored(
-                                ' -> <{}(ref:{}) confidence:{}>'.format(result['label'], result['ref_label'],
-                                                                        result['confidence']), 'red')
+                                '#{}\t -> <{}(ref:{}) confidence:{}>\t'.format(result['ex_id'], result['label'], result['ref_label'],
+                                                                               result['confidence']), 'red')
                     else:
-                        text_info = ' -> {}'.format(result['label'])
-                    text_printing += text_info
+                        text_info = '#{}\t -> {}\t'.format(result['ex_id'], result['label'])
                     if self.cal_perplexity:
-                        text_printing += colored(' --> <perplexity:{}>'.format(result['perplexity']), 'yellow')
-                    print('Example {}: {}'.format(ex_id, text_printing))
+                        text_printing += colored(' --> <perplexity:{}>\t'.format(result['perplexity']), 'yellow')
+                    text_printing += text_info
+
+                    print('Example {}:'.format(text_printing))
             if save_path:
                 with open(save_path, 'w', encoding='utf8') as fout:
                     json.dump(str(results), fout, ensure_ascii=False)

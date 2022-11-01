@@ -24,7 +24,7 @@ def build_tokenizer(dataset_list, max_seq_len, dat_fname, opt):
     if not os.path.exists('run/{}'.format(dataset_name)):
         os.makedirs('run/{}'.format(dataset_name))
     tokenizer_path = 'run/{}/{}'.format(dataset_name, dat_fname)
-    if os.path.exists(tokenizer_path):
+    if os.path.exists(tokenizer_path) and not opt.overwrite_cache:
         print('Loading tokenizer on {}'.format(tokenizer_path))
         tokenizer = pickle.load(open(tokenizer_path, 'rb'))
 
@@ -43,7 +43,8 @@ def build_tokenizer(dataset_list, max_seq_len, dat_fname, opt):
 
         tokenizer = Tokenizer(max_seq_len)
         tokenizer.fit_on_text(text)
-        pickle.dump(tokenizer, open(tokenizer_path, 'wb'))
+        if opt.cache_dataset:
+            pickle.dump(tokenizer, open(tokenizer_path, 'wb'))
     return tokenizer
 
 
@@ -89,7 +90,7 @@ class GloVeABSADataset(Dataset):
         dep_cache_path = os.path.join(os.getcwd(), 'run/{}/dependency_cache/'.format(opt.dataset_name))
         if not os.path.exists(dep_cache_path):
             os.makedirs(dep_cache_path)
-        graph_path = prepare_dependency_graph(dataset_list, dep_cache_path, opt.max_seq_len)
+        graph_path = prepare_dependency_graph(dataset_list, dep_cache_path, opt.max_seq_len, opt)
         fin = open(graph_path, 'rb')
         idx2graph = pickle.load(fin)
 
