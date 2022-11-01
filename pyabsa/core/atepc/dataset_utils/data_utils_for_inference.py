@@ -38,7 +38,7 @@ class InputExample(object):
 
 
 class InputFeatures(object):
-    """A single set of features of data."""
+    """A single set of features of raw_data."""
 
     def __init__(self, input_ids_spc, input_mask, segment_ids, label_id, aspect=None, positions=None, polarity=None, valid_ids=None,
                  label_mask=None, tokens=None, lcf_cdm_vec=None, lcf_cdw_vec=None):
@@ -75,7 +75,7 @@ def parse_examples(examples):
 
 
 class ATEPCProcessor:
-    """Processor for the CoNLL-2003 data set."""
+    """Processor for the CoNLL-2003 raw_data set."""
 
     def __init__(self, tokenizer):
         self.tokenizer = tokenizer
@@ -115,7 +115,7 @@ class ATEPCProcessor:
 
 
 def convert_ate_examples_to_features(examples, label_list, max_seq_len, tokenizer, opt=None):
-    """Loads a data file into a list of `InputBatch`s."""
+    """Loads a raw_data file into a list of `InputBatch`s."""
 
     configure_spacy_model(opt)
     bos_token = tokenizer.bos_token
@@ -197,7 +197,7 @@ def convert_ate_examples_to_features(examples, label_list, max_seq_len, tokenize
 
 
 def convert_apc_examples_to_features(examples, label_list, max_seq_len, tokenizer, opt=None):
-    """Loads a data file into a list of `InputBatch`s."""
+    """Loads a raw_data file into a list of `InputBatch`s."""
 
     configure_spacy_model(opt)
 
@@ -216,7 +216,7 @@ def convert_apc_examples_to_features(examples, label_list, max_seq_len, tokenize
         IOB_label = example.IOB_label
         # aspect_label = example.aspect_label
         aspect_label = ['B-ASP'] * len(aspect_tokens)
-        polarity = [SENTIMENT_PADDING] + example.polarity + [SENTIMENT_PADDING]
+        polarity = [-SENTIMENT_PADDING] + example.polarity + [-SENTIMENT_PADDING]
         positions = np.where(np.array(polarity) > 0)[0].tolist()
         tokens = []
         labels = []

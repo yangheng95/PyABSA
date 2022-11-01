@@ -161,7 +161,7 @@ def resume_from_checkpoint(trainer, from_checkpoint_path):
         print(colored('Resume training from Checkpoint: {}!'.format(from_checkpoint_path), 'green'))
 
 
-def prepare_glove840_embedding(glove_path):
+def prepare_glove840_embedding(glove_path, embedding_dim):
     glove840_id = '1G-vd6W1oF9ByyJ-pzp9dcqKnr_plh4Em'
     if os.path.exists(glove_path) and os.path.isfile(glove_path):
         return glove_path
@@ -169,12 +169,12 @@ def prepare_glove840_embedding(glove_path):
         embedding_files = []
         dir_path = os.getenv('$HOME') if os.getenv('$HOME') else os.getcwd()
 
-        if find_files(dir_path, ['glove', 'B', 'd', '.txt'], exclude_key='.zip'):
-            embedding_files += find_files(dir_path, ['glove', 'B', '.txt'], exclude_key='.zip')
+        if find_files(dir_path, ['glove', 'B', 'd', '.txt', str(embedding_dim)], exclude_key='.zip'):
+            embedding_files += find_files(dir_path, ['glove', 'B', '.txt', str(embedding_dim)], exclude_key='.zip')
         elif find_files(dir_path, ['word2vec', 'd', '.txt'], exclude_key='.zip'):
-            embedding_files += find_files(dir_path, ['word2vec', 'd', '.txt'], exclude_key='.zip')
+            embedding_files += find_files(dir_path, ['word2vec', 'd', '.txt', str(embedding_dim)], exclude_key='.zip')
         else:
-            embedding_files += find_files(dir_path, ['d', '.txt'], exclude_key='.zip')
+            embedding_files += find_files(dir_path, ['d', '.txt', str(embedding_dim)], exclude_key='.zip')
 
         if embedding_files:
             print(colored('Find embedding file: {}, use: {}'.format(embedding_files, embedding_files[0]), 'green'))
@@ -201,7 +201,8 @@ def prepare_glove840_embedding(glove_path):
                 z.extractall()
             print(colored('Zip file extraction Done.', 'green'))
 
-        return prepare_glove840_embedding(glove_path)
+        return prepare_glove840_embedding(glove_path, embedding_dim)
+
 
 def _load_word_vec(path, word2idx=None, embed_dim=300):
     fin = open(path, 'r', encoding='utf-8', newline='\n', errors='ignore')
@@ -218,12 +219,12 @@ def build_embedding_matrix(word2idx, embed_dim, dat_fname, opt):
     if not os.path.exists('run/{}'.format(opt.dataset_name)):
         os.makedirs('run/{}'.format(opt.dataset_name))
     embed_matrix_path = 'run/{}'.format(os.path.join(opt.dataset_name, dat_fname))
-    if os.path.exists(embed_matrix_path):
+    if os.path.exists(embed_matrix_path) and not opt.overwrite_cache:
         print(colored('Loading cached embedding_matrix from {} (Please remove all cached files if there is any problem!)'.format(embed_matrix_path), 'green'))
         embedding_matrix = pickle.load(open(embed_matrix_path, 'rb'))
     else:
-        glove_path = prepare_glove840_embedding(embed_matrix_path)
-        embedding_matrix = np.zeros((len(word2idx) + 2, embed_dim))  # idx 0 and len(word2idx)+1 are all-zeros
+        glove_path = prepare_glove840_embedding(embed_matrix_path, embed_dim)
+        embedding_matrix = np.zeros((len(word2idx) + 1, embed_dim))  # idx 0 and len(word2idx)+1 are all-zeros
 
         word_vec = _load_word_vec(glove_path, word2idx=word2idx, embed_dim=embed_dim)
 
@@ -232,7 +233,8 @@ def build_embedding_matrix(word2idx, embed_dim, dat_fname, opt):
             if vec is not None:
                 # words not found in embedding index will be all-zeros.
                 embedding_matrix[i] = vec
-        pickle.dump(embedding_matrix, open(embed_matrix_path, 'wb'))
+        if not opt.overwrite_cache:
+            pickle.dump(embedding_matrix, open(embed_matrix_path, 'wb'))
     return embedding_matrix
 
 

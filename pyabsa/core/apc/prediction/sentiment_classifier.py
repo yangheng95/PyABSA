@@ -282,7 +282,6 @@ class SentimentClassifier:
 
                     aspect = sample['aspect'][i]
                     text_raw = sample['text_raw'][i]
-                    ex_id = sample['ex_id'][i]
 
                     if self.cal_perplexity:
                         ids = self.MLM_tokenizer(text_raw, return_tensors="pt")
@@ -294,7 +293,6 @@ class SentimentClassifier:
                         perplexity = 'N.A.'
 
                     results.append({
-                        'ex_id': ex_id,
                         'text': text_raw,
                         'aspect': aspect,
                         'sentiment': sent,
@@ -309,7 +307,7 @@ class SentimentClassifier:
         results = self.merge_results(results)
         try:
             if print_result:
-                for show_id, result in enumerate(results):
+                for ex_id, result in enumerate(results):
                     # flag = False  # only print error cases
                     # for ref_check in result['ref_check']:
                     #     if ref_check == 'Wrong':
@@ -342,7 +340,7 @@ class SentimentClassifier:
                         text_printing = text_printing.replace(result['aspect'][i], aspect_info)
                     if self.cal_perplexity:
                         text_printing += colored(' --> <perplexity:{}>'.format(result['perplexity']), 'yellow')
-                    print('Example {}: {}'.format(show_id, text_printing))
+                    print('Example {}: {}'.format(ex_id, text_printing))
             if save_path:
                 with open(save_path, 'w', encoding='utf8') as fout:
                     json.dump(str(results), fout, ensure_ascii=False)

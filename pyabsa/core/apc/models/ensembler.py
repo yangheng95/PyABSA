@@ -68,7 +68,7 @@ class APCEnsembler(nn.Module):
             hash_tag = sha256(config_str.encode()).hexdigest()
             cache_path = '{}.{}.dataset.{}.cache'.format(self.opt.model_name, self.opt.dataset_name, hash_tag)
 
-            if load_dataset and os.path.exists(cache_path):
+            if load_dataset and os.path.exists(cache_path) and not self.opt.overwrite_cache:
                 print(colored('Loading dataset cache: {}'.format(cache_path), 'green'))
                 with open(cache_path, mode='rb') as f:
                     self.train_set, self.valid_set, self.test_set, opt = pickle.load(f)
@@ -136,7 +136,7 @@ class APCEnsembler(nn.Module):
                         self.valid_set = GloVeABSADataset(self.opt.dataset_file['valid'], self.tokenizer, self.opt) if not self.valid_set else self.valid_set
                 self.models.append(models[i](copy.deepcopy(self.embedding_matrix) if self.opt.deep_ensemble else self.embedding_matrix, self.opt))
 
-            if self.opt.cache_dataset and not os.path.exists(cache_path):
+            if self.opt.cache_dataset and not os.path.exists(cache_path) and not opt.overwrite_cache:
                 print(colored('Caching dataset... please remove cached dataset if any problem happens.', 'red'))
                 with open(cache_path, mode='wb') as f:
                     pickle.dump((self.train_set, self.valid_set, self.test_set, self.opt), f)

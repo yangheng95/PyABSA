@@ -44,32 +44,32 @@ apc_examples = [
 # # for dataset in ABSADatasetList():
 for dataset in ABSADatasetList()[:1]:
     # for model in APCModelList()[:1]:
-    for model in APCModelList():
-        cuda.empty_cache()
-        config = APCConfigManager.get_apc_config_english()
-        config.lcf = 'cdm'
-        config.model = model
-        config.cache_dataset = True
-        config.num_epoch = 1
-        config.max_seq_len = 10
-        config.evaluate_begin = 0
-        config.log_step = -1
-        config.cross_validate_fold = 5
-        sent_classifier = Trainer(config=config,
-                                  dataset=dataset,
-                                  checkpoint_save_mode=1,
-                                  auto_device='allcuda'
-                                  ).load_trained_model()
-        for ex in apc_examples:
-            result = sent_classifier.infer(ex, print_result=True, ignore_error=False)
-
-        try:
-            checkpoint_dir = find_cwd_dir('checkpoints')
-            shutil.rmtree(checkpoint_dir)
-            del sent_classifier
-            cuda.empty_cache()
-        except Exception as e:
-            print(e)
+    # for model in APCModelList():
+    #     cuda.empty_cache()
+    #     config = APCConfigManager.get_apc_config_english()
+    #     config.lcf = 'cdm'
+    #     config.model = model
+    #     config.cache_dataset = True
+    #     config.num_epoch = 1
+    #     config.max_seq_len = 10
+    #     config.evaluate_begin = 0
+    #     config.log_step = -1
+    #     config.cross_validate_fold = 5
+    #     sent_classifier = Trainer(config=config,
+    #                               dataset=dataset,
+    #                               checkpoint_save_mode=1,
+    #                               auto_device='allcuda'
+    #                               ).load_trained_model()
+    #     for ex in apc_examples:
+    #         result = sent_classifier.infer(ex, print_result=True, ignore_error=False)
+    #
+    #     try:
+    #         checkpoint_dir = find_cwd_dir('checkpoints')
+    #         shutil.rmtree(checkpoint_dir)
+    #         del sent_classifier
+    #         cuda.empty_cache()
+    #     except Exception as e:
+    #         print(e)
 
     for model in BERTBaselineAPCModelList():
         config = APCConfigManager.get_apc_config_english()

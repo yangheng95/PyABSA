@@ -34,6 +34,7 @@ import pytorch_warmup as warmup
 
 from ..models import BERTTADModelList, GloVeTADModelList
 
+
 class Instructor:
     def __init__(self, opt, logger):
         if opt.use_amp:
@@ -124,7 +125,7 @@ class Instructor:
                 self.valid_set = None
             self.model = opt.model(self.embedding_matrix, opt).to(opt.device)
 
-        if self.opt.cache_dataset and not os.path.exists(cache_path):
+        if self.opt.cache_dataset and not os.path.exists(cache_path) or self.opt.overwrite_cache:
             print('Caching dataset... please remove cached dataset if change model or dataset')
             if self.opt.dataset_file['test']:
                 pickle.dump((self.train_set, self.valid_set, self.test_set, self.opt), open(cache_path, mode='wb'))

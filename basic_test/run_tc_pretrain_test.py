@@ -44,7 +44,7 @@ apc_examples = [
     'And I may be the only one but I am really liking [ASP]Windows 8[ASP] . !sent! Positive',
 ]
 
-for dataset in TCDatasetList():
+for dataset in TCDatasetList()[:1]:
     for model in BERTTCModelList():
         cuda.empty_cache()
         config = TCConfigManager.get_tc_config_english()

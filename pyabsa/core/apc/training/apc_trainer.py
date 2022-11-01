@@ -28,6 +28,7 @@ from ..models.ensembler import APCEnsembler
 
 import pytorch_warmup as warmup
 
+
 class Instructor:
     def __init__(self, opt, logger):
         if opt.use_amp:

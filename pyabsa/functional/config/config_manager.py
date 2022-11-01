@@ -41,7 +41,7 @@ def config_check(args):
             assert args['dca_p'] >= 1
         if 'dca_layer' in args:
             assert args['dca_layer'] >= 1
-        if args['model'] == pyabsa.APCModelList.LCA_BERT:
+        if args['model'].__name__ == 'LCA_BERT':
             assert args['lcf'] == 'cdm'  # LCA-Net only support CDM mode
         if 'ensemble_mode' in args:
             assert args['ensemble_mode'] in {'cat', 'mean'}
@@ -57,7 +57,7 @@ def config_check(args):
                             args['optimizer']))
 
     except AssertionError as e:
-        raise AssertionError('Some parameters are not valid, please refer to the examples for more details. {}'.format(e))
+        raise RuntimeError('Exception: {}. Some parameters are not valid, please see the main example.'.format(e))
 
 
 class ConfigManager(Namespace):
@@ -115,3 +115,65 @@ class ConfigManager(Namespace):
             super().__setattr__(arg_name, value)
 
         config_check(args)
+
+    def get(self, key, default=None):
+        return self.args.get(key, default)
+
+    def update(self, *args, **kwargs):
+        self.args.update(*args, **kwargs)
+        config_check(self.args)
+
+    def pop(self, *args):
+        return self.args.pop(*args)
+
+    def keys(self):
+        return self.args.keys()
+
+    def values(self):
+        return self.args.values()
+
+    def items(self):
+        return self.args.items()
+
+    def __str__(self):
+        return str(self.args)
+
+    def __repr__(self):
+        return repr(self.args)
+
+    def __len__(self):
+        return len(self.args)
+
+    def __iter__(self):
+        return iter(self.args)
+
+    def __contains__(self, item):
+        return item in self.args
+
+    def __getitem__(self, item):
+        return self.args[item]
+
+    def __setitem__(self, key, value):
+        self.args[key] = value
+        config_check(self.args)
+
+    def __delitem__(self, key):
+        del self.args[key]
+        config_check(self.args)
+
+    def __eq__(self, other):
+        return self.args == other
+
+    def __ne__(self, other):
+        return self.args != other
+
+
+if __name__ == '__main__':  # test
+    config = ConfigManager({'a': 1, 'b': 2})
+    config.a = 2
+    config.b = 3
+    config.c = 4
+    print(config.a)
+    print(config.b)
+    print(config.c)
+    print(config.args_call_count)

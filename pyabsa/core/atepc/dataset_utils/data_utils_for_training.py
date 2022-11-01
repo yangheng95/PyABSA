@@ -39,7 +39,7 @@ class InputExample(object):
 
 
 class InputFeatures(object):
-    """A single set of features of data."""
+    """A single set of features of raw_data."""
 
     def __init__(self, input_ids_spc,
                  input_mask,
@@ -151,7 +151,7 @@ def split_aspect(tag1, tag2=None):
 
 
 class DataProcessor(object):
-    """Base class for data converters for sequence classification data sets."""
+    """Base class for raw_data converters for sequence classification raw_data sets."""
 
     def get_train_examples(self, data_dir):
         """Gets a collection of `InputExample`s for the train set."""
@@ -162,7 +162,7 @@ class DataProcessor(object):
         raise NotImplementedError()
 
     def get_labels(self):
-        """Gets the list of labels for this data set."""
+        """Gets the list of labels for this raw_data set."""
         raise NotImplementedError()
 
     @classmethod
@@ -175,7 +175,7 @@ class DataProcessor(object):
 
 
 class ATEPCProcessor(DataProcessor):
-    """Processor for the CoNLL-2003 data set."""
+    """Processor for the CoNLL-2003 raw_data set."""
 
     def __init__(self, tokenizer):
         self.tokenizer = tokenizer
@@ -224,7 +224,7 @@ class ATEPCProcessor(DataProcessor):
 
 
 def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
-    """Loads a data file into a list of `InputBatch`s."""
+    """Loads a raw_data file into a list of `InputBatch`s."""
 
     configure_spacy_model(opt)
 

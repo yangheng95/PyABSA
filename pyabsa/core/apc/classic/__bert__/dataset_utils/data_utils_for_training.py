@@ -90,7 +90,7 @@ class BERTBaselineABSADataset(Dataset):
         dep_cache_path = os.path.join(os.getcwd(), 'run/{}/dependency_cache/'.format(opt.dataset_name))
         if not os.path.exists(dep_cache_path):
             os.makedirs(dep_cache_path)
-        graph_path = prepare_dependency_graph(dataset_list, dep_cache_path, opt.max_seq_len)
+        graph_path = prepare_dependency_graph(dataset_list, dep_cache_path, opt.max_seq_len, opt)
         fin = open(graph_path, 'rb')
         idx2graph = pickle.load(fin)
 

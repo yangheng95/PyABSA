@@ -180,7 +180,7 @@ class TADTextClassifier:
                 raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, model_arg))
 
             if not hasattr(GloVeTADModelList, self.opt.model.__name__) \
-                    and not hasattr(BERTTADModelList, self.opt.model.__name__):
+                and not hasattr(BERTTADModelList, self.opt.model.__name__):
                 raise KeyError('The checkpoint you are loading is not from classifier model.')
 
         self.infer_dataloader = None

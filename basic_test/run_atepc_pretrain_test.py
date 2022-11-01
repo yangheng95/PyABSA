@@ -71,25 +71,3 @@ for dataset in ABSADatasetList()[:1]+[ABSADatasetList.MAMS]:
             shutil.rmtree(find_cwd_dir('checkpoints'))
         except Exception as e:
             print(e)
-
-for dataset in TCDatasetList():
-    for model in BERTTCModelList():
-        cuda.empty_cache()
-        config = TCConfigManager.get_tc_config_english()
-        config.model = model
-        config.num_epoch = 1
-        config.evaluate_begin = 0
-        config.max_seq_len = 10
-        config.log_step = -1
-        text_classifier = Trainer(config=config,
-                                  dataset=dataset,
-                                  checkpoint_save_mode=1,
-                                  auto_device='allcuda'
-                                  ).load_trained_model()
-        text_classifier.infer('I love it very much!')
-        try:
-            shutil.rmtree(find_cwd_dir('checkpoints'))
-            del text_classifier
-            cuda.empty_cache()
-        except Exception as e:
-            print(e)
