@@ -1,18 +1,23 @@
 [
   {
     "referrer": "Google",
-    "count": 444,
-    "uniques": 106
+    "count": 502,
+    "uniques": 102
   },
   {
     "referrer": "github.com",
-    "count": 411,
-    "uniques": 116
+    "count": 418,
+    "uniques": 120
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 330,
-    "uniques": 86
+    "count": 370,
+    "uniques": 94
+  },
+  {
+    "referrer": "huggingface.co",
+    "count": 59,
+    "uniques": 20
   },
   {
     "referrer": "youtube.com",
@@ -20,19 +25,9 @@
     "uniques": 23
   },
   {
-    "referrer": "huggingface.co",
-    "count": 58,
-    "uniques": 21
-  },
-  {
     "referrer": "link.zhihu.com",
-    "count": 46,
-    "uniques": 12
-  },
-  {
-    "referrer": "notebooks.githubusercontent.com",
-    "count": 38,
-    "uniques": 12
+    "count": 51,
+    "uniques": 15
   },
   {
     "referrer": "Bing",
@@ -40,13 +35,18 @@
     "uniques": 3
   },
   {
-    "referrer": "colab.research.google.com",
-    "count": 25,
-    "uniques": 3
+    "referrer": "arxiv.org",
+    "count": 26,
+    "uniques": 8
   },
   {
-    "referrer": "arxiv.org",
-    "count": 24,
-    "uniques": 8
+    "referrer": "notebooks.githubusercontent.com",
+    "count": 25,
+    "uniques": 10
+  },
+  {
+    "referrer": "yangheng-multilingual-aspect-based-sentim-6aa230e.hf.space",
+    "count": 25,
+    "uniques": 6
   }
 ]
