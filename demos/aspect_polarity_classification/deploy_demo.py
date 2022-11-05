@@ -16,16 +16,16 @@ sentiment_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint=
 
 
 def inference(text):
-    result = sentiment_classifier.infer(text=text,
-                                        print_result=True,
-                                        ignore_error=False,
-                                        clear_input_samples=True)
+    result = sentiment_classifier.predict(text=text,
+                                          print_result=True,
+                                          ignore_error=False,
+                                          clear_input_samples=True)
 
     result = pd.DataFrame({
         'aspect': result['aspect'],
         'sentiment': result['sentiment'],
         'confidence': [round(c, 3) for c in result['confidence']],
-        'ref_sentiment': ['' if ref == '-999' else ref for ref in result['ref_sentiment']],
+        'ref_sentiment': ['' if ref == str(LabelPaddingOption.LABEL_PADDING) else ref for ref in result['ref_sentiment']],
         'is_correct': result['ref_check'],
     })
 

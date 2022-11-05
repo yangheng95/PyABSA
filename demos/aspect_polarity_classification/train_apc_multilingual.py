@@ -11,10 +11,10 @@ import random
 ########################################################################################################################
 
 
-from pyabsa.functional import Trainer
-from pyabsa.functional import APCConfigManager
-from pyabsa.functional import ABSADatasetList
-from pyabsa.functional import APCModelList
+from pyabsa.framework import Trainer
+from pyabsa.framework import APCConfigManager
+from pyabsa.framework import ABSADatasetList
+from pyabsa.framework import APCModelList
 
 apc_config_multilingual = APCConfigManager.get_apc_config_multilingual()
 apc_config_multilingual.model = APCModelList.FAST_LSA_T_V2
@@ -32,5 +32,5 @@ sent_classifier = Trainer(config=apc_config_multilingual,
                           dataset=datasets_path,
                           checkpoint_save_mode=1,  # save state_dict instead of model
                           auto_device=True,  # auto-select cuda device
-                          # load_aug=True,  # training using augmentation data
+                          # load_aug=True,  # trainer using augment data
                           ).load_trained_model()

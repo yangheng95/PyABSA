@@ -10,10 +10,10 @@
 ########################################################################################################################
 import warnings
 
-from pyabsa.functional import Trainer
-from pyabsa.functional import APCConfigManager
-from pyabsa.functional import ABSADatasetList
-from pyabsa.functional import APCModelList
+from pyabsa.framework import Trainer
+from pyabsa.framework import APCConfigManager
+from pyabsa.framework import ABSADatasetList
+from pyabsa.framework import APCModelList
 
 warnings.filterwarnings("ignore")
 
@@ -51,4 +51,4 @@ examples = [
 inference_sets = examples
 
 for ex in examples:
-    result = sent_classifier.infer(ex, print_result=True)
+    result = sent_classifier.predict(ex, print_result=True)

@@ -7,17 +7,17 @@
 
 
 ########################################################################################################################
-#                                               ATEPC training script                                                  #
+#                                               ATEPC trainer script                                                  #
 ########################################################################################################################
 import os
 
 import findfile
 
-from pyabsa.functional import ATEPCModelList
-from pyabsa.functional import Trainer, ATEPCTrainer
-from pyabsa.functional import ABSADatasetList
-from pyabsa.functional import ATEPCConfigManager
-from pyabsa.functional.dataset import DatasetItem
+from pyabsa.framework import ATEPCModelList
+from pyabsa.framework import Trainer, ATEPCTrainer
+from pyabsa.framework import ABSADatasetList
+from pyabsa.framework import ATEPCConfigManager
+from pyabsa.framework.dataset import DatasetItem
 
 atepc_config = ATEPCConfigManager.get_atepc_config_english()
 
@@ -32,7 +32,7 @@ dataset_path = ABSADatasetList.Restaurant14
 
 aspect_extractor = ATEPCTrainer(config=atepc_config,
                                 dataset=dataset_path,
-                                from_checkpoint='',  # set checkpoint to train on the checkpoint.
+                                from_checkpoint='',  # set checkpoint_class to train on the checkpoint_class.
                                 checkpoint_save_mode=1,
                                 auto_device=True
                                 ).load_trained_model()

@@ -7,7 +7,7 @@
 
 
 from pyabsa import TCConfigManager, TCDatasetList, GloVeTCModelList
-from pyabsa.functional import Trainer
+from pyabsa.framework import Trainer
 
 classification_config_english = TCConfigManager.get_tc_config_glove()
 classification_config_english.model = GloVeTCModelList.LSTM

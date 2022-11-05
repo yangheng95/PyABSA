@@ -39,9 +39,9 @@ sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='engl
 #     result = sent_classifier.infer(ex, print_result=True)
 
 inference_sets = ABSADatasetList.English
-results = sent_classifier.batch_infer(target_file=inference_sets,
-                                      print_result=True,
-                                      save_result=True,
-                                      ignore_error=False,
-                                      )
+results = sent_classifier.batch_predict(target_file=inference_sets,
+                                        print_result=True,
+                                        save_result=True,
+                                        ignore_error=False,
+                                        )
 # print(results)

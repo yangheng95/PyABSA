@@ -7,45 +7,35 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 
-__version__ = '2.0.0.dev0'
+__version__ = '2.0.0'
 
 __name__ = 'pyabsa'
 
-from update_checker import UpdateChecker
+from pyabsa.framework.flag_class import *
 
-from pyabsa.functional.trainer import APCTrainer, ATEPCTrainer, TCTrainer, TADTrainer
-from pyabsa.core.apc.models import (APCModelList,
-                                    BERTBaselineAPCModelList,
-                                    GloVeAPCModelList)
-from pyabsa.core.tc.models import (GloVeTCModelList,
-                                   BERTTCModelList)
-from pyabsa.core.tad.models import (GloVeTADModelList,
-                                    BERTTADModelList)
-from pyabsa.core.atepc.models import ATEPCModelList
+from pyabsa.utils.check_utils.package_version_check import validate_pyabsa_version, query_release_notes, check_pyabsa_update
 
-from pyabsa.functional import (TCCheckpointManager,
-                               TADCheckpointManager,
-                               APCCheckpointManager,
-                               ATEPCCheckpointManager,
-                               )
-from pyabsa.functional.checkpoint.checkpoint_manager import (APCCheckpointManager,
-                                                             ATEPCCheckpointManager,
-                                                             available_checkpoints)
-from pyabsa.functional.dataset import ABSADatasetList, TCDatasetList, AdvTCDatasetList
-from pyabsa.functional.config import APCConfigManager
-from pyabsa.functional.config import ATEPCConfigManager
-from pyabsa.functional.config import TCConfigManager
-from pyabsa.functional.config import TADConfigManager
-from pyabsa.utils.file_utils import check_update_log
-from pyabsa.utils.pyabsa_utils import validate_pyabsa_version
+from pyabsa.utils.data_utils.dataset_item import DatasetItem
+from pyabsa.utils.absa_utils.make_absa_dataset import make_ABSA_dataset
+from pyabsa.utils.absa_utils.absa_utils import generate_inference_set_for_apc, convert_apc_set_to_atepc_set
+from pyabsa.utils.absa_utils.make_absa_dataset import make_ABSA_dataset
 
-from pyabsa.utils.make_dataset import make_ABSA_dataset
+from pyabsa.framework.checkpoint_class.checkpoint_utils import available_checkpoints
+
+from pyabsa.tasks import (
+    AspectPolarityClassification,
+    AspectTermExtraction,
+    TextClassification,
+    TextAdversarialDefense,
+    RNAClassification,
+    RNARegression
+)
+
+import pyabsa.tasks.AspectPolarityClassification as APC
+import pyabsa.tasks.AspectTermExtraction as ATEPC
+import pyabsa.tasks.TextClassification as TC
+import pyabsa.tasks.TextAdversarialDefense as TAD
+import pyabsa.tasks.RNAClassification as RNAC
+import pyabsa.tasks.RNARegression as RNAR
 
 validate_pyabsa_version()
-
-checker = UpdateChecker()
-check_result = checker.check(__name__, __version__)
-
-if check_result:
-    print(check_result)
-    check_update_log()

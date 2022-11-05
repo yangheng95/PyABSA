@@ -9,10 +9,10 @@
 #                    train and evaluate on your own apc_datasets (need train and test apc_datasets)                    #
 ########################################################################################################################
 
-from pyabsa.functional import Trainer
-from pyabsa.functional import APCConfigManager
-from pyabsa.functional import ABSADatasetList
-from pyabsa.functional import APCModelList
+from pyabsa.framework import Trainer
+from pyabsa.framework import APCConfigManager
+from pyabsa.framework import ABSADatasetList
+from pyabsa.framework import APCModelList
 
 # You can place multiple atepc_datasets file in one dir to easily train using some atepc_datasets
 

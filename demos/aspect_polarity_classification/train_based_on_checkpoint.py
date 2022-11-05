@@ -5,11 +5,11 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa.functional import APCCheckpointManager
-from pyabsa.functional import Trainer
-from pyabsa.functional import APCConfigManager
-from pyabsa.functional import ABSADatasetList
-from pyabsa.functional import APCModelList
+from pyabsa.framework import APCCheckpointManager
+from pyabsa.framework import Trainer
+from pyabsa.framework import APCConfigManager
+from pyabsa.framework import ABSADatasetList
+from pyabsa.framework import APCModelList
 
 apc_config_english = APCConfigManager.get_apc_config_english()
 apc_config_english.model = APCModelList.FAST_LSA_T
@@ -22,7 +22,7 @@ apc_config_english.l2reg = 0.0001
 apc_config_english.dynamic_truncate = True
 apc_config_english.srd_alignment = True
 
-checkpoint_path = APCCheckpointManager.get_checkpoint('english')
+checkpoint_path = APCCheckpointManager.get_remote_checkpoint('english')
 SemEval = ABSADatasetList.SemEval
 
 sent_classifier = Trainer(config=apc_config_english,

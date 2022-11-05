@@ -6,13 +6,13 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 ########################################################################################################################
-#                                               ATEPC training script                                                  #
+#                                               ATEPC trainer script                                                  #
 ########################################################################################################################
 
-from pyabsa.functional import ATEPCModelList
-from pyabsa.functional import Trainer, ATEPCTrainer
-from pyabsa.functional import ABSADatasetList
-from pyabsa.functional import ATEPCConfigManager
+from pyabsa.framework import ATEPCModelList
+from pyabsa.framework import Trainer, ATEPCTrainer
+from pyabsa.framework import ABSADatasetList
+from pyabsa.framework import ATEPCConfigManager
 
 config = ATEPCConfigManager.get_atepc_config_english()
 config.model = ATEPCModelList.FAST_LCF_ATEPC
