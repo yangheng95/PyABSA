@@ -24,9 +24,9 @@ automatically.
 If you would like to change english model (or other pre-defined options), you can get/set as following:
 
 ```python3
-from pyabsa.functional.config.apc_config_manager import APCConfigManager
-from pyabsa.functional.config.atepc_config_manager import ATEPCConfigManager
-from pyabsa.functional.config.classification_config_manager import ClassificationConfigManager
+from pyabsa.framework.configuration_class.apc_config_manager import APCConfigManager
+from pyabsa.framework.configuration_class.atepc_config_manager import ATEPCConfigManager
+from pyabsa.framework.configuration_class.classification_config_manager import ClassificationConfigManager
 
 # Set
 APCConfigManager.set_apc_config_english({'spacy_model': 'en_core_web_lg'})

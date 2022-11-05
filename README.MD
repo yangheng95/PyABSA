@@ -73,23 +73,23 @@ If you are looking for the original proposal of local context focus, here are so
     <td> package root (including all interfaces) </td>
 </tr>
 <tr>
-    <td><b> pyabsa.functional </b></td>
+    <td><b> pyabsa.framework </b></td>
     <td> recommend interface entry</td>
 </tr>
 <tr>
-    <td><b> pyabsa.functional.checkpoint </b></td>
+    <td><b> pyabsa.framework.checkpoint </b></td>
     <td> checkpoint manager entry, inference model entry</td>
 </tr>
 <tr>
-    <td><b> pyabsa.functional.dataset </b></td>
+    <td><b> pyabsa.framework.dataset </b></td>
     <td> datasets entry </td>
 </tr>
 <tr>
-    <td><b> pyabsa.functional.config </b></td>
+    <td><b> pyabsa.framework.config </b></td>
     <td> predefined config manager </td>
 </tr>
 <tr>
-    <td><b> pyabsa.functional.trainer </b></td>
+    <td><b> pyabsa.framework.trainer </b></td>
     <td> training module, every trainer return a inference model </td>
 </tr>
 </table>
@@ -117,10 +117,10 @@ python setup.py install
 1. Train a model of aspect term extraction
 
 ```python3
-from pyabsa.functional import ATEPCModelList
-from pyabsa.functional import Trainer, ATEPCTrainer
-from pyabsa.functional import ABSADatasetList
-from pyabsa.functional import ATEPCConfigManager
+from pyabsa.framework import ATEPCModelList
+from pyabsa.framework import Trainer, ATEPCTrainer
+from pyabsa.framework import ABSADatasetList
+from pyabsa.framework import ATEPCConfigManager
 
 atepc_config = ATEPCConfigManager.get_atepc_config_english()
 
@@ -131,7 +131,7 @@ dataset_path = ABSADatasetList.Restaurant14
 
 aspect_extractor = ATEPCTrainer(config=atepc_config,
                                 dataset=dataset_path,
-                                from_checkpoint='',  # set checkpoint to train on the checkpoint.
+                                from_checkpoint='',  # set checkpoint_class to train on the checkpoint_class.
                                 checkpoint_save_mode=1,
                                 auto_device=True
                                 ).load_trained_model()
@@ -142,8 +142,8 @@ aspect_extractor = ATEPCTrainer(config=atepc_config,
 2. Inference Example of aspect term extraction
 
 ```python3
-from pyabsa.functional import ABSADatasetList
-from pyabsa.functional import ATEPCCheckpointManager
+from pyabsa.framework import ABSADatasetList
+from pyabsa.framework import ATEPCCheckpointManager
 
 examples = ['But the staff was so nice to us .',
             'But the staff was so horrible to us .',

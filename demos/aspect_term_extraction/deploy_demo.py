@@ -5,7 +5,7 @@ import pandas as pd
 import requests
 
 from pyabsa import ATEPCCheckpointManager
-from pyabsa.functional.dataset.dataset_manager import download_datasets_from_github, ABSADatasetList, detect_infer_dataset
+from pyabsa.framework.dataset.dataset_manager import download_datasets_from_github, ABSADatasetList, detect_infer_dataset
 
 download_datasets_from_github(os.getcwd())
 
@@ -65,7 +65,7 @@ with demo:
                 [![Downloads](https://pepy.tech/badge/pyabsa/month)](https://pepy.tech/project/pyabsa)
                 """
                 )
-    gr.Markdown("Your input text should be no more than 80 words, that's the longest text we used in training. However, you can try longer text in self-training ")
+    gr.Markdown("Your input text should be no more than 80 words, that's the longest text we used in trainer. However, you can try longer text in self-trainer ")
     gr.Markdown("**You don't need to split each Chinese (Korean, etc.) token as the provided, just input the natural language text.**")
     output_dfs = []
     with gr.Row():

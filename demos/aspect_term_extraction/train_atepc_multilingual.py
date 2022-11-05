@@ -7,10 +7,10 @@
 
 
 ########################################################################################################################
-#                                               ATEPC training script                                                  #
+#                                               ATEPC trainer script                                                  #
 ########################################################################################################################
 
-from pyabsa.functional import ATEPCConfigManager, Trainer, ABSADatasetList
+from pyabsa.framework import ATEPCConfigManager, Trainer, ABSADatasetList
 
 config = ATEPCConfigManager.get_atepc_config_multilingual()
 multilingual = ABSADatasetList.Multilingual

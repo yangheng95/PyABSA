@@ -5,14 +5,14 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 from pyabsa import ATEPCCheckpointManager
-from pyabsa.functional import ATEPCModelList
-from pyabsa.functional import Trainer, ATEPCTrainer
-from pyabsa.functional import ABSADatasetList
-from pyabsa.functional import ATEPCConfigManager
+from pyabsa.framework import ATEPCModelList
+from pyabsa.framework import Trainer, ATEPCTrainer
+from pyabsa.framework import ABSADatasetList
+from pyabsa.framework import ATEPCConfigManager
 
 config = ATEPCConfigManager.get_atepc_config_english()
 
-checkpoint_path = ATEPCCheckpointManager.get_checkpoint(checkpoint='english')  # or
+checkpoint_path = ATEPCCheckpointManager.get_remote_checkpoint(checkpoint='english')  # or
 # checkpoint_path = 'lcfs_atepc_cdw_apcacc_86.17_apcf1_58.3_atef1_70.86'
 
 config.model = ATEPCModelList.LCFS_ATEPC
