@@ -251,7 +251,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
 
                 # evaluate if test set is available
                 if global_step % self.config.log_step == 0:
-                    if self.test_dataloder and epoch >= self.config.evaluate_begin:
+                    if self.test_dataloader and epoch >= self.config.evaluate_begin:
 
                         if self.valid_dataloader:
                             test_label_acc, test_label_f1, test_adv_det_acc, test_adv_det_f1, test_adv_tr_acc, test_adv_tr_f1 = \

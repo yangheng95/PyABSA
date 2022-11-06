@@ -11,7 +11,7 @@ from pyabsa.networks.dynamic_rnn import DynamicLSTM
 
 
 class AOA_BERT(nn.Module):
-    inputs = ['text_bert_indices', 'aspect_indices', 'left_text_bert_indices', 'left_aspect_indices', 'right_text_bert_indices', 'right_aspect_indices']
+    inputs = ['text_indices', 'aspect_indices', 'left_text_indices', 'left_aspect_indices', 'right_text_indices', 'right_aspect_indices']
 
     def __init__(self, bert, config):
         super(AOA_BERT, self).__init__()
@@ -22,11 +22,11 @@ class AOA_BERT(nn.Module):
         self.dense = nn.Linear(2 * config.hidden_dim, config.output_dim)
 
     def forward(self, inputs):
-        text_bert_indices = inputs['text_bert_indices']  # batch_size x seq_len
+        text_indices = inputs['text_indices']  # batch_size x seq_len
         aspect_indices = inputs['aspect_indices']  # batch_size x seq_len
-        ctx_len = torch.sum(text_bert_indices != 0, dim=1)
+        ctx_len = torch.sum(text_indices != 0, dim=1)
         asp_len = torch.sum(aspect_indices != 0, dim=1)
-        ctx = self.embed(text_bert_indices)['last_hidden_state']  # batch_size x seq_len x embed_dim
+        ctx = self.embed(text_indices)['last_hidden_state']  # batch_size x seq_len x embed_dim
         asp = self.embed(aspect_indices)['last_hidden_state']  # batch_size x seq_len x embed_dim
         ctx_out, (_, _) = self.ctx_lstm(ctx, ctx_len)  # batch_size x (ctx) seq_len x 2*hidden_dim
         asp_out, (_, _) = self.asp_lstm(asp, asp_len)  # batch_size x (asp) seq_len x 2*hidden_dim

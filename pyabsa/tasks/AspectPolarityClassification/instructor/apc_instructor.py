@@ -315,7 +315,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
 
                     # evaluate if test set is available
                     if global_step % self.config.log_step == 0:
-                        if self.config.test_dataloader and epoch >= self.config.evaluate_begin:
+                        if self.test_dataloader and epoch >= self.config.evaluate_begin:
 
                             test_acc, f1 = self._evaluate_acc_f1(valid_dataloader)
 

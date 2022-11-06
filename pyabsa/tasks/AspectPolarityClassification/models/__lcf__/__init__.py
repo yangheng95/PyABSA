@@ -65,8 +65,8 @@ class LCFAPCModelList(list):
 
     def __init__(self):
         model_list = [
-            self.SLIDE_LCF_BERT,
-            self.SLIDE_LCFS_BERT,
+            # self.SLIDE_LCF_BERT,
+            # self.SLIDE_LCFS_BERT,
             self.LSA_T,
             self.LSA_S,
             self.FAST_LSA_T,

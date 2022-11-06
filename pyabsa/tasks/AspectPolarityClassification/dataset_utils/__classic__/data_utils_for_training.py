@@ -28,16 +28,15 @@ class GloVeABSADataset(PyABSADataset):
 
     def load_data_from_file(self, dataset_file, **kwargs):
         configure_spacy_model(self.config)
-        dataset_type = kwargs.get('dataset_type', 'train')
 
-        lines = load_dataset_from_file(self.config.dataset_file[dataset_type])
+        lines = load_dataset_from_file(self.config.dataset_file[self.dataset_type])
         all_data = []
         label_set = set()
 
         dep_cache_path = os.path.join(os.getcwd(), 'run/{}/dependency_cache/'.format(self.config.dataset_name))
         if not os.path.exists(dep_cache_path):
             os.makedirs(dep_cache_path)
-        graph_path = prepare_dependency_graph(self.config.dataset_file[dataset_type], dep_cache_path, self.config.max_seq_len, self.config)
+        graph_path = prepare_dependency_graph(self.config.dataset_file[self.dataset_type], dep_cache_path, self.config.max_seq_len, self.config)
         fin = open(graph_path, 'rb')
         idx2graph = pickle.load(fin)
 

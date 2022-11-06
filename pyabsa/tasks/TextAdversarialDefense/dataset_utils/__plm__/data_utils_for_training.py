@@ -52,7 +52,7 @@ class BERTTADDataset(PyABSADataset):
             text_indices = self.tokenizer.text_to_sequence('{}'.format(text))
 
             data = {
-                'text_bert_indices': text_indices,
+                'text_indices': text_indices,
 
                 'text_raw': text,
 

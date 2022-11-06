@@ -34,7 +34,7 @@ class BERTTCDataset(PyABSADataset):
                 '{} {} {}'.format(self.tokenizer.tokenizer.cls_token, text, self.tokenizer.tokenizer.sep_token))
 
             data = {
-                'text_bert_indices': text_indices,
+                'text_indices': text_indices,
                 'label': label,
             }
 

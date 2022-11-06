@@ -238,7 +238,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
 
                 # evaluate if test set is available
                 if global_step % self.config.log_step == 0:
-                    if self.config.test_dataloader and epoch >= self.config.evaluate_begin:
+                    if self.test_dataloader and epoch >= self.config.evaluate_begin:
 
                         if self.valid_dataloader:
                             test_r2 = self._evaluate_r2(self.valid_dataloader, criterion)
@@ -393,7 +393,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
 
                     # evaluate if test set is available
                     if global_step % self.config.log_step == 0:
-                        if self.config.test_dataloader and epoch >= self.config.evaluate_begin:
+                        if self.test_dataloader and epoch >= self.config.evaluate_begin:
 
                             test_r2 = self._evaluate_r2(valid_dataloader, criterion)
 

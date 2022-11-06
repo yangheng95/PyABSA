@@ -103,7 +103,7 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect, input_d
 
     text_raw = text_left + ' ' + aspect + ' ' + text_right
     text_spc = bos_token + ' ' + text_raw + ' ' + eos_token + ' ' + aspect + ' ' + eos_token
-    text_bert_indices = text_to_sequence(tokenizer, text_spc, opt.max_seq_len)
+    text_indices = text_to_sequence(tokenizer, text_spc, opt.max_seq_len)
     text_raw_bert_indices = text_to_sequence(tokenizer, bos_token + ' ' + text_raw + ' ' + eos_token, opt.max_seq_len)
     aspect_bert_indices = text_to_sequence(tokenizer, aspect, opt.max_seq_len)
 
@@ -117,23 +117,23 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect, input_d
 
     if 'lcfs_cdm_vec' in input_demands:
         syntactical_dist, _ = get_syntax_distance(text_raw, aspect, tokenizer, opt)
-        lcfs_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices, aspect_begin, syntactical_dist)
+        lcfs_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_indices, aspect_bert_indices, aspect_begin, syntactical_dist)
     else:
         lcfs_cdm_vec = 0
 
     if 'lcfs_cdw_vec' in input_demands or 'lcfs_vec' in input_demands:
         syntactical_dist, _ = get_syntax_distance(text_raw, aspect, tokenizer, opt)
-        lcfs_cdw_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices, aspect_begin, syntactical_dist)
+        lcfs_cdw_vec = get_cdw_vec(opt, text_indices, aspect_bert_indices, aspect_begin, syntactical_dist)
     else:
         lcfs_cdw_vec = 0
 
     if 'lcf_cdm_vec' in input_demands:
-        lcf_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices, aspect_begin, None)
+        lcf_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_indices, aspect_bert_indices, aspect_begin, None)
     else:
         lcf_cdm_vec = 0
 
     if 'lcf_cdw_vec' in input_demands or 'lcf_vec' in input_demands:
-        lcf_cdw_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices, aspect_begin, None)
+        lcf_cdw_vec = get_cdw_vec(opt, text_indices, aspect_bert_indices, aspect_begin, None)
     else:
         lcf_cdw_vec = 0
 
@@ -142,7 +142,7 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect, input_d
         'text_spc': text_spc,
         'aspect': aspect,
         'aspect_position': aspect_position,
-        'text_bert_indices': text_bert_indices,
+        'text_indices': text_indices,
         'text_raw_bert_indices': text_raw_bert_indices,
         'aspect_bert_indices': aspect_bert_indices,
         'lcf_cdw_vec': lcf_cdw_vec if 'lcf_cdw_vec' in input_demands else 0,
@@ -251,8 +251,8 @@ def build_spc_mask_vec(opt, text_ids):
 def build_sentiment_window(examples, tokenizer, similarity_threshold, input_demands=None):
     copy_side_aspect('left', examples[0], examples[0], examples, input_demands)
     for idx in range(1, len(examples)):
-        if is_similar(examples[idx - 1]['text_bert_indices'],
-                      examples[idx]['text_bert_indices'],
+        if is_similar(examples[idx - 1]['text_indices'],
+                      examples[idx]['text_indices'],
                       tokenizer=tokenizer,
                       similarity_threshold=similarity_threshold):
             copy_side_aspect('right', examples[idx - 1], examples[idx], examples, input_demands)

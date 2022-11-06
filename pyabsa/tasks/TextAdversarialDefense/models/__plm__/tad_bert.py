@@ -10,7 +10,7 @@ from pyabsa.networks.sa_encoder import Encoder
 
 
 class TADBERT(nn.Module):
-    inputs = ['text_bert_indices']
+    inputs = ['text_indices']
 
     def __init__(self, bert, config):
         super(TADBERT, self).__init__()

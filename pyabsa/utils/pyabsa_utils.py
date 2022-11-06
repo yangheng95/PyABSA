@@ -21,10 +21,10 @@ def print_args(config, logger=None):
     args = [key for key in sorted(config.args.keys())]
     for arg in args:
         if logger:
-            if config.args_call_count[arg] and arg != 'dataset':
+            if arg != 'dataset' and arg != 'dataset_dict':
                 logger.info('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
         else:
-            if config.args_call_count[arg] and arg != 'dataset':
+            if arg != 'dataset' and arg != 'dataset_dict':
                 print('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
 
 

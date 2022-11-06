@@ -10,7 +10,7 @@ from pyabsa.networks.dynamic_rnn import DynamicLSTM
 
 
 class LSTM_BERT(nn.Module):
-    inputs = ['text_bert_indices']
+    inputs = ['text_indices']
 
     def __init__(self, bert, config):
         super(LSTM_BERT, self).__init__()
@@ -19,7 +19,7 @@ class LSTM_BERT(nn.Module):
         self.dense = nn.Linear(config.hidden_dim, config.output_dim)
 
     def forward(self, inputs):
-        text_raw_indices = inputs['text_bert_indices']
+        text_raw_indices = inputs['text_indices']
         x = self.embed(text_raw_indices)['last_hidden_state']
         x_len = torch.sum(text_raw_indices != 0, dim=-1)
         _, (h_n, _) = self.lstm(x, x_len)

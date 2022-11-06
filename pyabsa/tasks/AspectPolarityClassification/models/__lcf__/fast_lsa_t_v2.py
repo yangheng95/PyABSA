@@ -11,7 +11,7 @@ from pyabsa.networks.sa_encoder import Encoder
 
 
 class FAST_LSA_T_V2(nn.Module):
-    inputs = ['text_bert_indices', 'spc_mask_vec',
+    inputs = ['text_indices', 'spc_mask_vec',
               'lcf_cdw_vec', 'left_lcf_cdw_vec', 'right_lcf_cdw_vec',
               'lcf_cdm_vec', 'left_lcf_cdm_vec', 'right_lcf_cdm_vec',
               ]
@@ -39,7 +39,7 @@ class FAST_LSA_T_V2(nn.Module):
         self.dense = nn.Linear(config.embed_dim, config.output_dim)
 
     def forward(self, inputs):
-        text_bert_indices = inputs['text_bert_indices']
+        text_indices = inputs['text_indices']
         spc_mask_vec = inputs['spc_mask_vec'].unsqueeze(2)
         lcf_cdw_matrix = inputs['lcf_cdw_vec'].unsqueeze(2)
         left_lcf_cdw_matrix = inputs['left_lcf_cdw_vec'].unsqueeze(2)
@@ -48,7 +48,7 @@ class FAST_LSA_T_V2(nn.Module):
         left_lcf_cdm_matrix = inputs['left_lcf_cdm_vec'].unsqueeze(2)
         right_lcf_cdm_matrix = inputs['right_lcf_cdm_vec'].unsqueeze(2)
 
-        global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
+        global_context_features = self.bert4global(text_indices)['last_hidden_state']
 
         if self.config.lcf == 'cdw':
             sent_out = self.CDW_LSA(global_context_features,

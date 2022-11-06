@@ -71,7 +71,7 @@ class APCEnsembler(nn.Module):
                 print(colored('Loading dataset cache: {}'.format(cache_path), 'green'))
                 with open(cache_path, mode='rb') as f_cache:
                     self.train_set, self.valid_set, self.test_set, self.config = pickle.load(f_cache)
-
+                    config.update(self.config)
             if hasattr(APCModelList, models[i].__name__):
                 try:
 

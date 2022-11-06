@@ -44,7 +44,7 @@ class PointwiseFeedForward(nn.Module):
 
 
 class DLCFS_DCA_BERT(nn.Module):
-    inputs = ['text_bert_indices', 'text_raw_bert_indices', 'dlcfs_vec', 'depend_vec', 'depended_vec']
+    inputs = ['text_indices', 'text_raw_bert_indices', 'dlcfs_vec', 'depend_vec', 'depended_vec']
 
     def __init__(self, bert, config):
         super(DLCFS_DCA_BERT, self).__init__()
@@ -109,15 +109,15 @@ class DLCFS_DCA_BERT(nn.Module):
 
     def forward(self, inputs):
         if self.config.use_bert_spc:
-            text_bert_indices = inputs['text_bert_indices']
+            text_indices = inputs['text_indices']
         else:
-            text_bert_indices = inputs['text_raw_bert_indices']
+            text_indices = inputs['text_raw_bert_indices']
         text_local_indices = inputs['text_raw_bert_indices']
         lcf_matrix = inputs['dlcfs_vec'].unsqueeze(2)
         depend_vec = inputs['depend_vec'].unsqueeze(2)
         depended_vec = inputs['depended_vec'].unsqueeze(2)
 
-        global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
+        global_context_features = self.bert4global(text_indices)['last_hidden_state']
         local_context_features = self.bert4local(text_local_indices)['last_hidden_state']
 
         bert_local_out = torch.mul(local_context_features, lcf_matrix)

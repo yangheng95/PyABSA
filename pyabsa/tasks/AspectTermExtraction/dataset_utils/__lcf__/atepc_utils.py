@@ -94,7 +94,7 @@ def prepare_input_for_atepc(opt, tokenizer, text_left, text_right, aspect):
     text_raw_bert_tokens = tokenizer.tokenize(bos_token + ' ' + text_raw + ' ' + eos_token)
     aspect_bert_tokens = tokenizer.tokenize(aspect)
 
-    text_bert_indices = tokenizer.convert_tokens_to_ids(text_bert_tokens)
+    text_indices = tokenizer.convert_tokens_to_ids(text_bert_tokens)
     text_raw_bert_indices = tokenizer.convert_tokens_to_ids(text_raw_bert_tokens)
     aspect_bert_indices = tokenizer.convert_tokens_to_ids(aspect_bert_tokens)
 
@@ -105,17 +105,17 @@ def prepare_input_for_atepc(opt, tokenizer, text_left, text_right, aspect):
     else:
         syntactical_dist = None
 
-    lcf_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_bert_indices, aspect_bert_indices,
+    lcf_cdm_vec = get_lca_ids_and_cdm_vec(opt, text_indices, aspect_bert_indices,
                                           aspect_begin, syntactical_dist)
 
-    lcf_cdw_vec = get_cdw_vec(opt, text_bert_indices, aspect_bert_indices,
+    lcf_cdw_vec = get_cdw_vec(opt, text_indices, aspect_bert_indices,
                               aspect_begin, syntactical_dist)
 
     inputs = {
         'text_raw': text_raw,
         'text_spc': text_spc,
         'aspect': aspect,
-        'text_bert_indices': text_bert_indices,
+        'text_indices': text_indices,
         'text_raw_bert_indices': text_raw_bert_indices,
         'aspect_bert_indices': aspect_bert_indices,
         'lcf_cdm_vec': lcf_cdm_vec,

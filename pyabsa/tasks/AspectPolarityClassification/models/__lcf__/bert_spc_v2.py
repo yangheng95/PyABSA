@@ -10,9 +10,9 @@ from pyabsa.networks.sa_encoder import Encoder
 
 
 class BERT_SPC_V2(nn.Module):
-    inputs = ['text_bert_indices',
-              'left_text_bert_indices',
-              'right_text_bert_indices']
+    inputs = ['text_indices',
+              'left_text_indices',
+              'right_text_indices']
 
     def __init__(self, bert, config):
         super(BERT_SPC_V2, self).__init__()
@@ -33,9 +33,9 @@ class BERT_SPC_V2(nn.Module):
     def forward(self, inputs):
         res = {'logits': None}
         if self.config.lsa:
-            feat = self.bert(inputs['text_bert_indices'])['last_hidden_state']
-            left_feat = self.bert(inputs['left_text_bert_indices'])['last_hidden_state']
-            right_feat = self.bert(inputs['right_text_bert_indices'])['last_hidden_state']
+            feat = self.bert(inputs['text_indices'])['last_hidden_state']
+            left_feat = self.bert(inputs['left_text_indices'])['last_hidden_state']
+            right_feat = self.bert(inputs['right_text_indices'])['last_hidden_state']
             if 'lr' == self.config.window or 'rl' == self.config.window:
                 if self.eta1 <= 0 and self.config.eta != -1:
                     torch.nn.init.uniform_(self.eta1)
@@ -62,7 +62,7 @@ class BERT_SPC_V2(nn.Module):
             res['logits'] = self.dense(cat_feat)
 
         else:
-            cat_feat = self.bert(inputs['text_bert_indices'])['last_hidden_state']
+            cat_feat = self.bert(inputs['text_indices'])['last_hidden_state']
             cat_feat = self.linear(cat_feat)
             cat_feat = self.dropout(cat_feat)
             cat_feat = self.encoder(cat_feat)

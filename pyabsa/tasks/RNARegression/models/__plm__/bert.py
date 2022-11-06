@@ -13,7 +13,7 @@ from transformers.models.bert.modeling_bert import BertPooler
 
 
 class BERT_MLP(nn.Module):
-    inputs = ['text_bert_indices']
+    inputs = ['text_indices']
 
     def __init__(self, bert, config):
         super(BERT_MLP, self).__init__()

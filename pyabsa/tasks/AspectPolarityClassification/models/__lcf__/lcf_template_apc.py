@@ -9,7 +9,7 @@ import torch.nn as nn
 
 
 class LCF_TEMPLATE_BERT(nn.Module):
-    inputs = ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec']
+    inputs = ['text_indices', 'text_raw_bert_indices', 'lcf_vec']
 
     def __init__(self, bert, config):
         super(LCF_TEMPLATE_BERT, self).__init__()

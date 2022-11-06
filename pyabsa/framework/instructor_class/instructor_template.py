@@ -88,6 +88,10 @@ class BaseTrainingInstructor:
                 self.model.load_state_dict(torch.load(find_file(ckpt, or_key=['.bin', 'state_dict'])))
 
     def _prepare_dataloader(self):
+        # remove dataset dict object used for dataset initialization
+        self.config.pop('dataset', None)
+        self.config.pop('dataset_dict', None)
+
         if self.train_dataloader and self.valid_dataloader:
             self.valid_dataloaders = [self.valid_dataloader]
             self.train_dataloaders = [self.train_dataloader]
