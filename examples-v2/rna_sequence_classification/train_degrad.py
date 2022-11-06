@@ -72,11 +72,11 @@ import random
 from pyabsa import RNAClassification as RNAC
 
 config = RNAC.RNACConfigManager.get_rnac_config_glove()
-config.model = RNAC.GloVeRNACModelList.LSTM
+config.model = RNAC.BERTRNACModelList.BERT_MLP
 config.num_epoch = 10
-config.pretrained_bert = 'rna_decay_bpe_tokenizer'
+config.pretrained_bert = 'roberta-base'
 config.evaluate_begin = 0
-config.max_seq_len = 100
+config.max_seq_len = 120
 config.hidden_dim = 768
 config.embed_dim = 768
 # config.cache_dataset = False
