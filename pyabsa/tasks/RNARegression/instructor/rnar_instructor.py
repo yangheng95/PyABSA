@@ -27,13 +27,13 @@ from pyabsa import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from pyabsa.utils.file_utils.file_utils import save_model
 from pyabsa.tasks.RNARegression.dataset_utils.__classic__.data_utils_for_training import GloVeRNARDataset
-from pyabsa.tasks.RNARegression.dataset_utils.__plm__.data_utils_for_training import BERTTCDataset
+from pyabsa.tasks.RNARegression.dataset_utils.__plm__.data_utils_for_training import BERTRNARDataset
 from pyabsa.tasks.RNARegression.models import GloVeRNARModelList, BERTRNARModelList
 from pyabsa.utils.pyabsa_utils import print_args, init_optimizer
 
 import pytorch_warmup as warmup
 
-from pyabsa.utils.text_utils.tokenizer import Tokenizer, build_embedding_matrix, PretrainedTokenizer
+from pyabsa.framework.tokenizer_class.tokenizer_class import Tokenizer, build_embedding_matrix, PretrainedTokenizer
 
 
 class RNARTrainingInstructor(BaseTrainingInstructor):
@@ -41,11 +41,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
 
         super().__init__(config)
 
-        if hasattr(BERTRNARModelList, config.model.__name__):
-            config.inputs_cols = BERTTCDataset.bert_baseline_input_colses[config.model.__name__.lower()]
-
-        elif hasattr(GloVeRNARModelList, config.model.__name__):
-            config.inputs_cols = GloVeRNARDataset.glove_input_colses[config.model.__name__.lower()]
+        self.config.inputs_cols = self.config.model.inputs
 
         config_str = re.sub(r'<.*?>', '', str(sorted([str(self.config.args[k]) for k in self.config.args if k != 'seed'])))
         hash_tag = sha256(config_str.encode()).hexdigest()
@@ -66,14 +62,14 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
         if hasattr(BERTRNARModelList, config.model.__name__):
             self.tokenizer = PretrainedTokenizer(self.config)
             if not os.path.exists(cache_path) or self.config.overwrite_cache:
-                
-                self.train_set = BERTTCDataset(self.config,  self.tokenizer, dataset_type='train')
+
+                self.train_set = BERTRNARDataset(self.config, self.tokenizer, dataset_type='train')
                 if self.config.dataset_file['test']:
-                    self.test_set = BERTTCDataset(self.config,  self.tokenizer, dataset_type='test')
+                    self.test_set = BERTRNARDataset(self.config, self.tokenizer, dataset_type='test')
                 else:
                     self.test_set = None
                 if self.config.dataset_file['valid']:
-                    self.valid_set = BERTTCDataset(self.config,  self.tokenizer, dataset_type='valid')
+                    self.valid_set = BERTRNARDataset(self.config, self.tokenizer, dataset_type='valid')
                 else:
                     self.valid_set = None
             try:
@@ -509,4 +505,3 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
         # criterion = nn.CrossEntropyLoss()
         criterion = nn.MSELoss()
         return self._train(criterion)
-

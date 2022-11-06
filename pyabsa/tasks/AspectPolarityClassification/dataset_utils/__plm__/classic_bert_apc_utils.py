@@ -13,19 +13,7 @@ import numpy as np
 import spacy
 import termcolor
 
-
-def pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating='post', value=0):
-    x = (np.ones(maxlen) * value).astype(dtype)
-    if truncating == 'pre':
-        trunc = sequence[-maxlen:]
-    else:
-        trunc = sequence[:maxlen]
-    trunc = np.asarray(trunc, dtype=dtype)
-    if padding == 'post':
-        x[:len(trunc)] = trunc
-    else:
-        x[-len(trunc):] = trunc
-    return x
+from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
 
 
 def syntax_distance_alignment(tokens, dist, max_seq_len, tokenizer):

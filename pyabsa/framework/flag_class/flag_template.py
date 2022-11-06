@@ -11,7 +11,7 @@
 class TaskNameOption(dict):
     def __init__(self):
         self.code2name = {
-            'apc': 'Aspect-based Sentiment Classification',
+            TaskCodeOption.Aspect_Polarity_Classification: 'Aspect-based Sentiment Classification',
             'atepc': 'Aspect Term Extraction and Polarity Classification',
             'tc': 'Text Classification',
             'text_classification': 'Text Classification',
@@ -55,6 +55,9 @@ class ModelSaveOption:
 
 class ProxyAddressOption:
     CN_GITHUB_MIRROR = 'https://gitee.com/'
+
+
+PyABSAMaterialHostAddress = 'https://huggingface.co/spaces/yangheng/PyABSA/'
 
 
 class DeviceTypeOption:

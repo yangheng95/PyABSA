@@ -7,7 +7,6 @@
 import numpy as np
 import tqdm
 from termcolor import colored
-from torch.utils.data import Dataset
 
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
@@ -19,16 +18,11 @@ from pyabsa.utils.pyabsa_utils import validate_example
 
 class ABSADataset(PyABSADataset):
 
-    def load_data_from_dict(self, data):
+    def load_data_from_dict(self, data_dict, **kwargs):
         pass
 
-    def load_data_from_file(self, file_path):
-        pass
-
-    def __init__(self, config, tokenizer, dataset_type='train'):
-        self.config = config
-        self.tokenizer = tokenizer
-
+    def load_data_from_file(self, file_path, **kwargs):
+        dataset_type = kwargs.get('dataset_type', 'train')
         configure_spacy_model(self.config)
 
         lines = load_dataset_from_file(self.config.dataset_file[dataset_type])
@@ -49,7 +43,7 @@ class ABSADataset(PyABSADataset):
             aspect = lines[i + 1].strip()
             polarity = lines[i + 2].strip()
 
-            prepared_inputs = prepare_input_for_apc(self.config, self.tokenizer, text_left, text_right, aspect, input_demands=config.inputs_cols)
+            prepared_inputs = prepare_input_for_apc(self.config, self.tokenizer, text_left, text_right, aspect, input_demands=self.config.inputs_cols)
 
             text_raw = prepared_inputs['text_raw']
             text_spc = prepared_inputs['text_spc']
@@ -67,14 +61,14 @@ class ABSADataset(PyABSADataset):
             lcfs_cdm_vec = prepared_inputs['lcfs_cdm_vec']
             lcfs_vec = prepared_inputs['lcfs_vec']
 
-            if validate_example(text_raw, aspect, polarity, config):
+            if validate_example(text_raw, aspect, polarity, self.config):
                 continue
 
-            if config.model_name == 'dlcf_dca_bert' or config.model_name == 'dlcfs_dca_bert':
-                configure_dlcf_spacy_model(config)
-                prepared_inputs = prepare_input_for_dlcf_dca(config, tokenizer, text_left, text_right, aspect)
-                dlcf_vec = prepared_inputs['dlcf_cdm_vec'] if config.lcf == 'cdm' else prepared_inputs['dlcf_cdw_vec']
-                dlcfs_vec = prepared_inputs['dlcfs_cdm_vec'] if config.lcf == 'cdm' else prepared_inputs['dlcfs_cdw_vec']
+            if self.config.model_name == 'dlcf_dca_bert' or self.config.model_name == 'dlcfs_dca_bert':
+                configure_dlcf_spacy_model(self.config)
+                prepared_inputs = prepare_input_for_dlcf_dca(self.config, self.tokenizer, text_left, text_right, aspect)
+                dlcf_vec = prepared_inputs['dlcf_cdm_vec'] if self.config.lcf == 'cdm' else prepared_inputs['dlcf_cdw_vec']
+                dlcfs_vec = prepared_inputs['dlcfs_cdm_vec'] if self.config.lcf == 'cdm' else prepared_inputs['dlcfs_cdw_vec']
                 depend_vec = prepared_inputs['depend_vec']
                 depended_vec = prepared_inputs['depended_vec']
             data = {
@@ -90,33 +84,33 @@ class ABSADataset(PyABSADataset):
 
                 'lca_ids': lcf_vec,  # the lca indices are the same as the refactored CDM (lcf != CDW or Fusion) lcf vec
 
-                'lcf_vec': lcf_vec if 'lcf_vec' in config.inputs_cols else 0,
-                'lcf_cdw_vec': lcf_cdw_vec if 'lcf_cdw_vec' in config.inputs_cols else 0,
-                'lcf_cdm_vec': lcf_cdm_vec if 'lcf_cdm_vec' in config.inputs_cols else 0,
+                'lcf_vec': lcf_vec if 'lcf_vec' in self.config.inputs_cols else 0,
+                'lcf_cdw_vec': lcf_cdw_vec if 'lcf_cdw_vec' in self.config.inputs_cols else 0,
+                'lcf_cdm_vec': lcf_cdm_vec if 'lcf_cdm_vec' in self.config.inputs_cols else 0,
 
-                'lcfs_vec': lcfs_vec if 'lcfs_vec' in config.inputs_cols else 0,
-                'lcfs_cdw_vec': lcfs_cdw_vec if 'lcfs_cdw_vec' in config.inputs_cols else 0,
-                'lcfs_cdm_vec': lcfs_cdm_vec if 'lcfs_cdm_vec' in config.inputs_cols else 0,
+                'lcfs_vec': lcfs_vec if 'lcfs_vec' in self.config.inputs_cols else 0,
+                'lcfs_cdw_vec': lcfs_cdw_vec if 'lcfs_cdw_vec' in self.config.inputs_cols else 0,
+                'lcfs_cdm_vec': lcfs_cdm_vec if 'lcfs_cdm_vec' in self.config.inputs_cols else 0,
 
-                'dlcf_vec': dlcf_vec if 'dlcf_vec' in config.inputs_cols else 0,
+                'dlcf_vec': dlcf_vec if 'dlcf_vec' in self.config.inputs_cols else 0,
 
-                'dlcfs_vec': dlcfs_vec if 'dlcfs_vec' in config.inputs_cols else 0,
+                'dlcfs_vec': dlcfs_vec if 'dlcfs_vec' in self.config.inputs_cols else 0,
 
-                'depend_vec': depend_vec if 'depend_vec' in config.inputs_cols else 0,
+                'depend_vec': depend_vec if 'depend_vec' in self.config.inputs_cols else 0,
 
-                'depended_vec': depended_vec if 'depended_vec' in config.inputs_cols else 0,
+                'depended_vec': depended_vec if 'depended_vec' in self.config.inputs_cols else 0,
 
-                'spc_mask_vec': build_spc_mask_vec(config, text_raw_bert_indices)
-                if 'spc_mask_vec' in config.inputs_cols else 0,
+                'spc_mask_vec': build_spc_mask_vec(self.config, text_raw_bert_indices)
+                if 'spc_mask_vec' in self.config.inputs_cols else 0,
 
                 'text_bert_indices': text_bert_indices
-                if 'text_bert_indices' in config.inputs_cols else 0,
+                if 'text_bert_indices' in self.config.inputs_cols else 0,
 
                 'aspect_bert_indices': aspect_bert_indices
-                if 'aspect_bert_indices' in config.inputs_cols else 0,
+                if 'aspect_bert_indices' in self.config.inputs_cols else 0,
 
                 'text_raw_bert_indices': text_raw_bert_indices
-                if 'text_raw_bert_indices' in config.inputs_cols else 0,
+                if 'text_raw_bert_indices' in self.config.inputs_cols else 0,
 
                 'polarity': polarity,
             }
@@ -125,14 +119,14 @@ class ABSADataset(PyABSADataset):
             label_set.add(polarity)
             all_data.append(data)
 
-        check_and_fix_labels(label_set, 'polarity', all_data, config)
-        config.output_dim = len(label_set)
+        check_and_fix_labels(label_set, 'polarity', all_data, self.config)
+        self.config.output_dim = len(label_set)
 
-        all_data = build_sentiment_window(all_data, tokenizer, config.similarity_threshold, input_demands=config.inputs_cols)
+        all_data = build_sentiment_window(all_data, self.tokenizer, self.config.similarity_threshold, input_demands=self.config.inputs_cols)
         for data in all_data:
 
             cluster_ids = []
-            for pad_idx in range(config.max_seq_len):
+            for pad_idx in range(self.config.max_seq_len):
                 if pad_idx in data['cluster_ids']:
                     cluster_ids.append(data['polarity'])
                 else:
@@ -144,7 +138,8 @@ class ABSADataset(PyABSADataset):
             data['aspect_position'] = np.array(0)
         self.data = all_data
 
-        super().__init__(config)
+    def __init__(self, config, tokenizer, dataset_type='train'):
+        super().__init__(config=config, tokenizer=tokenizer, dataset_type=dataset_type)
 
     def __getitem__(self, index):
         return self.data[index]

@@ -9,6 +9,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 import os
 import time
+from pathlib import Path
 from typing import Union
 
 import findfile
@@ -20,6 +21,7 @@ from transformers import AutoConfig
 
 from pyabsa import __version__ as PyABSAVersion
 from ..configuration_class.config_verification import config_check
+from ..dataset_class.dataset_dict_class import DatasetDict
 
 from ..flag_class.flag_template import DeviceTypeOption, ModelSaveOption
 from ..configuration_class.configuration_template import ConfigManager
@@ -92,11 +94,11 @@ def init_config(config):
 class Trainer:
     def __init__(self,
                  config: ConfigManager = None,
-                 dataset=None,
-                 from_checkpoint: str = None,
-                 checkpoint_save_mode: int = ModelSaveOption.SAVE_MODEL_STATE_DICT,
+                 dataset: Union[DatasetItem, Path, str, DatasetDict] = None,
+                 from_checkpoint: Union[Path, str] = None,
+                 checkpoint_save_mode: Union[ModelSaveOption, int] = ModelSaveOption.SAVE_MODEL_STATE_DICT,
                  auto_device: Union[str, bool] = DeviceTypeOption.AUTO,
-                 path_to_save=None,
+                 path_to_save: Union[Path, str] = None,
                  load_aug=False
                  ):
         """
@@ -141,11 +143,15 @@ class Trainer:
         """
         just return the trained model for inference (e.g., polarity classification, aspect-term extraction)
         """
-
-        # detect dataset
-        dataset_file = detect_dataset(self.config.dataset, task_code=self.config.task_code, load_aug=self.config.load_aug, config=self.config)
-        self.config.dataset_file = dataset_file
-        if self.config.checkpoint_save_mode or self.config.dataset_file['valid']:
+        if isinstance(self.config.dataset, DatasetDict):
+            self.config.dataset_dict = self.config.dataset
+            self.config.dataset = self.config.dataset_dict['dataset_name']
+            self.config.dataset_file = {'train': [], 'valid': [], 'test': []}
+        else:
+            # detect dataset
+            dataset_file = detect_dataset(self.config.dataset, task_code=self.config.task_code, load_aug=self.config.load_aug, config=self.config)
+            self.config.dataset_file = dataset_file
+        if self.config.checkpoint_save_mode or self.config.dataset_file['valid'] or self.config.dataset_dict['test']:
             if self.config.path_to_save:
                 self.config.model_path_to_save = self.config.path_to_save
             elif self.config.dataset_file['valid'] and not self.config.checkpoint_save_mode:

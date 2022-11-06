@@ -33,7 +33,7 @@ import pytorch_warmup as warmup
 
 from pyabsa.utils.file_utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import init_optimizer, print_args
-from pyabsa.utils.text_utils.tokenizer import PretrainedTokenizer, Tokenizer, build_embedding_matrix
+from pyabsa.framework.tokenizer_class.tokenizer_class import PretrainedTokenizer, Tokenizer, build_embedding_matrix
 
 
 class TCTrainingInstructor(BaseTrainingInstructor):
@@ -61,7 +61,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                 self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.config.batch_size, shuffle=False)
 
             if self.valid_set:
-                self.val_dataloader = DataLoader(dataset=self.valid_set, batch_size=self.config.batch_size, shuffle=False)
+                self.valid_dataloader = DataLoader(dataset=self.valid_set, batch_size=self.config.batch_size, shuffle=False)
         else:
             split_dataset = train_set
             len_per_fold = len(split_dataset) // self.config.cross_validate_fold + 1
@@ -75,7 +75,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                 val_sampler = SequentialSampler(val_set if not val_set else val_set)
                 self.train_dataloaders.append(
                     DataLoader(dataset=train_set, batch_size=self.config.batch_size, sampler=train_sampler))
-                self.val_dataloaders.append(
+                self.valid_dataloaders.append(
                     DataLoader(dataset=val_set, batch_size=self.config.batch_size, sampler=val_sampler))
                 if self.test_set:
                     self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.config.batch_size, shuffle=False)
@@ -87,7 +87,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=len(self.train_dataloaders[0]) * self.config.num_epoch)
             self.warmup_scheduler = warmup.UntunedLinearWarmup(self.optimizer)
 
-        if self.val_dataloaders:
+        if self.valid_dataloaders:
             return self._k_fold_train_and_evaluate(criterion)
         else:
             return self._train_and_evaluate(criterion)
@@ -150,8 +150,8 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                 if global_step % self.config.log_step == 0:
                     if self.config.dataset_file['test'] and epoch >= self.config.evaluate_begin:
 
-                        if self.val_dataloader:
-                            test_acc, f1 = self._evaluate_acc_f1(self.val_dataloader)
+                        if self.valid_dataloader:
+                            test_acc, f1 = self._evaluate_acc_f1(self.valid_dataloader)
                         else:
                             test_acc, f1 = self._evaluate_acc_f1(self.test_dataloader)
 
@@ -209,11 +209,11 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             if patience < 0:
                 break
 
-        if not self.val_dataloader:
+        if not self.valid_dataloader:
             self.config.MV.add_metric('Max-Test-Acc w/o Valid Set', max_fold_acc * 100)
             self.config.MV.add_metric('Max-Test-F1 w/o Valid Set', max_fold_f1 * 100)
 
-        if self.val_dataloader:
+        if self.valid_dataloader:
             print('Loading best model: {} and evaluating on test set ...'.format(save_path))
             self.reload_model(find_file(save_path, '.state_dict'))
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
@@ -228,10 +228,10 @@ class TCTrainingInstructor(BaseTrainingInstructor):
 
         print_args(self.config, self.logger)
 
-        if self.val_dataloader or self.config.save_mode:
+        if self.valid_dataloader or self.config.save_mode:
             del self.train_dataloaders
             del self.test_dataloader
-            del self.val_dataloader
+            del self.valid_dataloader
             del self.model
             cuda.empty_cache()
             time.sleep(3)
@@ -245,7 +245,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             #     save_model(self.config, self.model, self.tokenizer, save_path)
             del self.train_dataloaders
             del self.test_dataloader
-            del self.val_dataloader
+            del self.valid_dataloader
             cuda.empty_cache()
             time.sleep(3)
             return self.model, self.config, self.tokenizer
@@ -260,7 +260,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
         self.config.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
         self.config.max_test_metrics = {'max_test_acc': 0, 'max_test_f1': 0}
 
-        for f, (train_dataloader, val_dataloader) in enumerate(zip(self.train_dataloaders, self.val_dataloaders)):
+        for f, (train_dataloader, valid_dataloader) in enumerate(zip(self.train_dataloaders, self.valid_dataloaders)):
             patience = self.config.patience + self.config.evaluate_begin
             if self.config.log_step < 0:
                 self.config.log_step = len(self.train_dataloaders[0]) if self.config.log_step < 0 else self.config.log_step
@@ -315,7 +315,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                     if global_step % self.config.log_step == 0:
                         if self.config.dataset_file['test'] and epoch >= self.config.evaluate_begin:
 
-                            test_acc, f1 = self._evaluate_acc_f1(val_dataloader)
+                            test_acc, f1 = self._evaluate_acc_f1(valid_dataloader)
 
                             self.config.metrics_of_this_checkpoint['acc'] = test_acc
                             self.config.metrics_of_this_checkpoint['f1'] = f1
@@ -398,10 +398,10 @@ class TCTrainingInstructor(BaseTrainingInstructor):
 
         self.reload_model(save_path_k_fold)
 
-        if self.val_dataloader or self.config.save_mode:
+        if self.valid_dataloader or self.config.save_mode:
             del self.train_dataloaders
             del self.test_dataloader
-            del self.val_dataloaders
+            del self.valid_dataloaders
             del self.model
             cuda.empty_cache()
             time.sleep(3)
@@ -415,7 +415,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                 save_model(self.config, self.model, self.tokenizer, save_path_k_fold)
             del self.train_dataloaders
             del self.test_dataloader
-            del self.val_dataloaders
+            del self.valid_dataloaders
             cuda.empty_cache()
             time.sleep(3)
             return self.model, self.config, self.tokenizer
@@ -457,11 +457,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
         torch.manual_seed(self.config.seed)
         torch.cuda.manual_seed(self.config.seed)
 
-        if hasattr(BERTTCModelList, self.config.model.__name__):
-            self.config.inputs_cols = BERTTCDataset.bert_baseline_input_colses[self.config.model.__name__.lower()]
-
-        elif hasattr(GloVeTCModelList, self.config.model.__name__):
-            self.config.inputs_cols = GloVeTCDataset.glove_input_colses[self.config.model.__name__.lower()]
+        self.config.inputs_cols = self.model.inputs
 
         self.config.device = torch.device(self.config.device)
 
@@ -479,7 +475,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
         )
 
         self.train_dataloaders = []
-        self.val_dataloaders = []
+        self.valid_dataloaders = []
 
         if os.path.exists('./init_state_dict.bin'):
             os.remove('./init_state_dict.bin')
@@ -515,13 +511,13 @@ class TCTrainingInstructor(BaseTrainingInstructor):
         if hasattr(BERTTCModelList, self.config.model.__name__):
             self.tokenizer = PretrainedTokenizer(self.config)
             if not os.path.exists(cache_path) or self.config.overwrite_cache:
-                self.train_set = BERTTCDataset(self.config,  self.tokenizer, dataset_type='train')
+                self.train_set = BERTTCDataset(self.config, self.tokenizer, dataset_type='train')
                 if self.config.dataset_file['test']:
-                    self.test_set = BERTTCDataset(self.config,  self.tokenizer, dataset_type='test')
+                    self.test_set = BERTTCDataset(self.config, self.tokenizer, dataset_type='test')
                 else:
                     self.test_set = None
                 if self.config.dataset_file['valid']:
-                    self.valid_set = BERTTCDataset(self.config,  self.tokenizer, dataset_type='valid')
+                    self.valid_set = BERTTCDataset(self.config, self.tokenizer, dataset_type='valid')
                 else:
                     self.valid_set = None
             try:
@@ -543,14 +539,14 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                 tokenizer=self.tokenizer,
                 cache_path='{0}_{1}_embedding_matrix.dat'.format(str(self.config.embed_dim), os.path.basename(self.config.dataset_name)),
             )
-            self.train_set = GloVeTCDataset(self.config,  self.tokenizer, dataset_type='train')
+            self.train_set = GloVeTCDataset(self.config, self.tokenizer, dataset_type='train')
 
             if self.config.dataset_file['test']:
-                self.test_set = GloVeTCDataset(self.config,  self.tokenizer, dataset_type='test')
+                self.test_set = GloVeTCDataset(self.config, self.tokenizer, dataset_type='test')
             else:
                 self.test_set = None
             if self.config.dataset_file['valid']:
-                self.valid_set = GloVeTCDataset(self.config,  self.tokenizer, dataset_type='valid')
+                self.valid_set = GloVeTCDataset(self.config, self.tokenizer, dataset_type='valid')
             else:
                 self.valid_set = None
             self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)

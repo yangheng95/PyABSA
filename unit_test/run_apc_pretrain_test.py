@@ -29,11 +29,11 @@ atepc_examples = ['But the staff was so nice to us .',
                   ]
 
 apc_examples = [
-    'Strong build though which really adds to its [ASP]durability[ASP] .',  # !sent! Positive
-    'Strong [ASP]build[ASP] though which really adds to its durability . !sent! Positive',
-    'The [ASP]battery life[ASP] is excellent - 6-7 hours without charging . !sent! Positive',
-    'I have had my computer for 2 weeks already and it [ASP]works[ASP] perfectly . !sent! Positive',
-    'And I may be the only one but I am really liking [ASP]Windows 8[ASP] . !sent! Positive',
+    'Strong build though which really adds to its [ASP]durability[ASP] .',  # $LABEL$ Positive
+    'Strong [ASP]build[ASP] though which really adds to its durability . $LABEL$ Positive',
+    'The [ASP]battery life[ASP] is excellent - 6-7 hours without charging . $LABEL$ Positive',
+    'I have had my computer for 2 weeks already and it [ASP]works[ASP] perfectly . $LABEL$ Positive',
+    'And I may be the only one but I am really liking [ASP]Windows 8[ASP] . $LABEL$ Positive',
 ]
 
 
@@ -143,7 +143,7 @@ def test_bert_apc_models():
             cuda.empty_cache()
             config.model = model
             config.cache_dataset = True
-            config.max_seq_len = 10
+            config.max_seq_len = 256
             config.num_epoch = 1
             config.evaluate_begin = 0
             config.log_step = -1
@@ -170,7 +170,7 @@ def test_glove_apc_models():
             config.cache_dataset = True
             config.overwrite_cache = True
             config.num_epoch = 1
-            config.max_seq_len = 10
+            config.max_seq_len = 512
             config.evaluate_begin = 0
             config.log_step = -1
             config.cross_validate_fold = 5

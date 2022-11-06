@@ -4,7 +4,6 @@
 # author: yangheng <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-import warnings
 
 import tqdm
 
@@ -69,12 +68,13 @@ def readfile(filename):
     '''
     read file
     '''
-    f = open(filename, encoding='utf8')
+    with open(filename, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
     data = []
     sentence = []
     tag = []
     polarity = []
-    for line in f.readlines():
+    for line in lines:
         if len(line) == 0 or line.startswith('-DOCSTART') or line[0] == "\n":
             if len(sentence) > 0:
                 data.append((sentence, tag, polarity))
@@ -90,7 +90,7 @@ def readfile(filename):
         tag.append(splits[-2])
         polarity.append(splits[-1])
         Labels.add(splits[-2])
-
+    f.close()
     prepared_data = []
     for s, t, p in data:
 

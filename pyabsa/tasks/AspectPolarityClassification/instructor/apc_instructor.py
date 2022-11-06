@@ -487,4 +487,3 @@ class APCTrainingInstructor(BaseTrainingInstructor):
         # Loss and Optimizer
         criterion = nn.CrossEntropyLoss()
         return self._train(criterion)
-

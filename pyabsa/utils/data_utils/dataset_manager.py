@@ -9,13 +9,17 @@ import os
 import shutil
 import tempfile
 import time
+import zipfile
+from typing import Union
 
 import git
 import findfile
+import requests
+import tqdm
 
 from termcolor import colored
 
-from pyabsa import TaskCodeOption
+from pyabsa import TaskCodeOption, PyABSAMaterialHostAddress
 from pyabsa.augment.apc_augment.apc_augment import __perform_apc_augmentation
 from pyabsa.augment.text_agument.tc_augment import __perform_tc_augmentation
 from pyabsa.utils.check_utils.dataset_version_check import check_datasets_version
@@ -27,9 +31,9 @@ filter_key_words = ['.py', '.md', 'readme', 'log', 'result', 'zip',
 
 def detect_dataset(dataset_name_or_path, task_code: TaskCodeOption = None, load_aug=False, config=None, **kwargs):
     """
-    Detect dataset from dataset_path, you need to specify the task type, which can be 'apc', 'atepc' or 'tc', etc.
+    Detect dataset from dataset_path, you need to specify the task type, which can be TaskCodeOption.Aspect_Polarity_Classification, 'atepc' or 'tc', etc.
     :param dataset_name_or_path: dataset name or path
-    :param task_code: task type, which can be 'apc', 'atepc' or 'tc', etc.
+    :param task_code: task type, which can be TaskCodeOption.Aspect_Polarity_Classification, 'atepc' or 'tc', etc.
     :param load_aug: load augmented dataset
     :param config: config
     """
@@ -48,7 +52,18 @@ def detect_dataset(dataset_name_or_path, task_code: TaskCodeOption = None, load_
                 logger.info('Searching dataset {} in local disk...'.format(d))
             else:
                 logger.info('Searching dataset {} in https://github.com/yangheng95/ABSADatasets...'.format(d))
-            download_datasets_from_github(logger=logger, **kwargs)
+
+                try:
+                    download_all_available_datasets(logger=logger)
+                except Exception as e:
+                    if logger:
+                        logger.error('Fail to download dataset from https://github.com/yangheng95/ABSADatasets, please check your network connection')
+                        logger.info('Try to load {} dataset from Huggingface'.format(d))
+                    else:
+                        print('Fail to download dataset from https://github.com/yangheng95/ABSADatasets, please check your network connection')
+                        print('Try to load {} dataset from Huggingface'.format(d))
+                    download_dataset_by_name(logger, task_code, dataset_name=d)
+
             search_path = findfile.find_dir(os.getcwd(), [d, task_code, 'dataset'], exclude_key=['infer', 'test.'] + filter_key_words, disable_alert=False)
             if not search_path:
                 raise ValueError('Cannot find dataset: {}, you may need to remove existing integrated_datasets and try again. '
@@ -68,9 +83,10 @@ def detect_dataset(dataset_name_or_path, task_code: TaskCodeOption = None, load_
                 dataset_file['valid'] += findfile.find_files(search_path, [d, 'valid', task_code], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words)
                 dataset_file['valid'] += findfile.find_files(search_path, [d, 'dev', task_code], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words)
 
-                from pyabsa.utils.file_utils import convert_apc_set_to_atepc_set
 
                 if not any(['augment' in x for x in dataset_file['train']]):
+                    from pyabsa.utils.absa_utils.absa_utils import convert_apc_set_to_atepc_set
+
                     if task_code == TaskCodeOption.Aspect_Polarity_Classification:
                         __perform_apc_augmentation(dataset_name_or_path)
                         convert_apc_set_to_atepc_set(dataset_name_or_path)
@@ -119,7 +135,7 @@ def detect_dataset(dataset_name_or_path, task_code: TaskCodeOption = None, load_
     return dataset_file
 
 
-def detect_infer_dataset(dataset_name_or_path, task_code=TaskCodeOption.Aspect_Polarity_Classification, **kwargs):
+def detect_infer_dataset(dataset_name_or_path, task_code: TaskCodeOption = None, **kwargs):
     """
     Detect the inference dataset from local disk or download from GitHub
     :param dataset_name_or_path: dataset name or path
@@ -147,7 +163,17 @@ def detect_infer_dataset(dataset_name_or_path, task_code=TaskCodeOption.Aspect_P
                     logger.info('Try to download {} dataset from https://github.com/yangheng95/ABSADatasets'.format(d))
                 else:
                     print('Try to download {} dataset from https://github.com/yangheng95/ABSADatasets'.format(d))
-            download_datasets_from_github(logger=logger)
+                try:
+                    download_all_available_datasets(logger=logger)
+                except Exception as e:
+                    if logger:
+                        logger.error('Fail to download dataset from https://github.com/yangheng95/ABSADatasets, please check your network connection')
+                        logger.info('Try to load {} dataset from Huggingface'.format(d))
+                    else:
+                        print('Fail to download dataset from https://github.com/yangheng95/ABSADatasets, please check your network connection')
+                        print('Try to load {} dataset from Huggingface'.format(d))
+                    download_dataset_by_name(logger=logger, task_code=task_code, dataset_name=d)
+
             search_path = findfile.find_dir(os.getcwd(), [d, task_code, 'dataset'], exclude_key=filter_key_words, disable_alert=False)
             dataset_file += findfile.find_files(search_path, ['.inference', d], exclude_key=['train.'] + filter_key_words)
         else:
@@ -167,7 +193,7 @@ def detect_infer_dataset(dataset_name_or_path, task_code=TaskCodeOption.Aspect_P
     return dataset_file
 
 
-def download_datasets_from_github(**kwargs):
+def download_all_available_datasets(**kwargs):
     """
     Download datasets from GitHub
     :param kwargs: other arguments
@@ -194,7 +220,7 @@ def download_datasets_from_github(**kwargs):
     with tempfile.TemporaryDirectory() as tmpdir:
         try:
             print('Clone ABSADatasets from https://github.com/yangheng95/ABSADatasets.git')
-            git.Repo.clone_from('https://github.com/yangheng95/ABSADatasets.git', tmpdir, branch='v1.2', depth=1)
+            git.Repo.clone_from('https://github.com/yangheng95/ABSADatasets.git', tmpdir, branch='v2.0', depth=1)
             # git.Repo.clone_from('https://github.com/yangheng95/ABSADatasets.git', tmpdir, branch='master', depth=1)
             try:
                 shutil.move(os.path.join(tmpdir, 'datasets'), '{}'.format(save_path))
@@ -203,13 +229,54 @@ def download_datasets_from_github(**kwargs):
         except Exception as e:
             try:
                 print('Clone ABSADatasets from https://gitee.com/yangheng95/ABSADatasets.git')
-                git.Repo.clone_from('https://gitee.com/yangheng95/ABSADatasets.git', tmpdir, branch='v1.2', depth=1)
+                git.Repo.clone_from('https://gitee.com/yangheng95/ABSADatasets.git', tmpdir, branch='v2.0', depth=1)
                 # git.Repo.clone_from('https://github.com/yangheng95/ABSADatasets.git', tmpdir, branch='master', depth=1)
                 try:
                     shutil.move(os.path.join(tmpdir, 'datasets'), '{}'.format(save_path))
                 except IOError as e:
                     pass
             except Exception as e:
-                print(colored('Fail to clone ABSADatasets: {}. Please check your connection...'.format(e), 'red'))
+                print(colored('Exception: {}. Fail to clone ABSADatasets, please check your connection...'.format(e), 'red'))
                 time.sleep(3)
-                download_datasets_from_github(save_path)
+                download_all_available_datasets(**kwargs)
+
+
+# from pyabsa.tasks.AspectPolarityClassification import APCDatasetList
+def download_dataset_by_name(task_code: Union[TaskCodeOption, str] = TaskCodeOption.Aspect_Polarity_Classification,
+                             dataset_name: Union[DatasetItem, str] = None,
+                             **kwargs):
+    """
+    If download all datasets failed, try to download dataset by name from Huggingface
+    Download dataset from Huggingface: https://huggingface.co/spaces/yangheng/PyABSA
+    :param task_code: task code -> e.g., TaskCodeOption.Aspect_Polarity_Classification
+    :param dataset_name: dataset name -> e.g, pyabsa.tasks.AspectPolarityClassification.APCDatasetList.Laptop14
+    """
+    logger = kwargs.get('logger', None)
+
+    if isinstance(dataset_name, DatasetItem):
+        for d in dataset_name:
+            download_dataset_by_name(task_code=task_code, dataset_name=d, **kwargs)
+
+    if logger:
+        logger.info('Start downloading...'.format(dataset_name))
+    url = PyABSAMaterialHostAddress + 'resolve/main/integrated_datasets/{}_datasets.{}.zip'.format(
+        task_code, dataset_name
+    ).lower()
+
+    try:  # from Huggingface Space
+        response = requests.get(url, stream=True)
+        save_path = dataset_name.lower() + '.zip'
+        with open(save_path, "wb") as f:
+            for chunk in tqdm.tqdm(response.iter_content(chunk_size=1024),
+                                   unit='KiB',
+                                   total=int(response.headers['content-length']) // 1024,
+                                   postfix='Downloading ({}){} dataset...'.format(TaskNameOption[task_code], dataset_name)):
+                f.write(chunk)
+        with zipfile.ZipFile(save_path, 'r') as zip_ref:
+            zip_ref.extractall(os.getcwd())
+
+    except Exception as e:
+        if logger:
+            logger.info('Exception: {}. Fail to download dataset from {}. Please check your connection...'.format(e, url))
+        else:
+            print(colored('Exception: {}. Fail to download dataset from {}. Please check your connection...'.format(e, url), 'red'))

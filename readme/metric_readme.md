@@ -81,8 +81,8 @@ apc_config_english.MV.violin_plot_by_metric(save_path=save_path, xticks=max_seq_
 apc_config_english.MV.box_plot_by_metric(save_path=save_path, xticks=max_seq_lens, xlabel=r'max_seq_len')
 ```
 
-![traj_plot_example](../demos/documents/pic/traj_plot.png)
+![traj_plot_example](../demos_for_v1.0/documents/pic/traj_plot.png)
 
-![box_plot_example](../demos/documents/pic/box_plot.png)
+![box_plot_example](../demos_for_v1.0/documents/pic/box_plot.png)
 
-![violin_plot_example](../demos/documents/pic/violin_plot.png)
+![violin_plot_example](../demos_for_v1.0/documents/pic/violin_plot.png)

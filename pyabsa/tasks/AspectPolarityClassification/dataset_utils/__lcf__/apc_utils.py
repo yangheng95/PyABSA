@@ -13,7 +13,7 @@ import numpy as np
 import spacy
 import termcolor
 
-from pyabsa.utils.text_utils.tokenizer import pad_and_truncate
+from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
 
 
 def syntax_distance_alignment(tokens, dist, max_seq_len, tokenizer):
@@ -79,7 +79,6 @@ def pad_syntax_based_srd(text, dep_dist, tokenizer, opt):
     dep_dist = pad_and_truncate(dep_dist, opt.max_seq_len, value=opt.max_seq_len)
 
     return sequence, dep_dist
-
 
 
 def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect, input_demands):

@@ -30,11 +30,11 @@ from pyabsa.framework.instructor_class.instructor_template import BaseTrainingIn
 from pyabsa.utils.file_utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import init_optimizer, print_args
 from pyabsa.tasks.RNAClassification.dataset_utils.__classic__.data_utils_for_training import GloVeRNACDataset
-from pyabsa.tasks.RNAClassification.dataset_utils.__plm__.data_utils_for_training import BERTTCDataset
+from pyabsa.tasks.RNAClassification.dataset_utils.__plm__.data_utils_for_training import BERTRNACDataset
 from pyabsa.tasks.RNAClassification.models import GloVeRNACModelList, BERTRNACModelList
 import pytorch_warmup as warmup
 
-from pyabsa.utils.text_utils.tokenizer import Tokenizer, build_embedding_matrix, PretrainedTokenizer
+from pyabsa.framework.tokenizer_class.tokenizer_class import Tokenizer, build_embedding_matrix, PretrainedTokenizer
 
 
 class RNACTrainingInstructor(BaseTrainingInstructor):
@@ -438,11 +438,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         return test_acc, f1
 
     def _load_dataset_and_prepare_dataloader(self):
-        if hasattr(BERTRNACModelList, self.config.model.__name__):
-            self.config.inputs_cols = BERTTCDataset.bert_baseline_input_colses[self.config.model.__name__.lower()]
-
-        elif hasattr(GloVeRNACModelList, self.config.model.__name__):
-            self.config.inputs_cols = GloVeRNACDataset.glove_input_colses[self.config.model.__name__.lower()]
+        self.config.inputs_cols = self.config.model.inputs
 
         config_str = re.sub(r'<.*?>', '', str(sorted([str(self.config.args[k]) for k in self.config.args if k != 'seed'])))
         hash_tag = sha256(config_str.encode()).hexdigest()
@@ -463,13 +459,13 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         if hasattr(BERTRNACModelList, self.config.model.__name__):
             self.tokenizer = PretrainedTokenizer(self.config)
             if not os.path.exists(cache_path) or self.config.overwrite_cache:
-                self.train_set = BERTTCDataset(self.config,  self.tokenizer, dataset_type='train')
+                self.train_set = BERTRNACDataset(self.config, self.tokenizer, dataset_type='train')
                 if self.config.dataset_file['test']:
-                    self.test_set = BERTTCDataset(self.config,  self.tokenizer, dataset_type='test')
+                    self.test_set = BERTRNACDataset(self.config, self.tokenizer, dataset_type='test')
                 else:
                     self.test_set = None
                 if self.config.dataset_file['valid']:
-                    self.valid_set = BERTTCDataset(self.config,  self.tokenizer, dataset_type='valid')
+                    self.valid_set = BERTRNACDataset(self.config, self.tokenizer, dataset_type='valid')
                 else:
                     self.valid_set = None
             try:
@@ -492,14 +488,14 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 tokenizer=self.tokenizer,
                 cache_path='{0}_{1}_embedding_matrix.dat'.format(str(self.config.embed_dim), os.path.basename(self.config.dataset_name)),
             )
-            self.train_set = GloVeRNACDataset(self.config,  self.tokenizer, dataset_type='train')
+            self.train_set = GloVeRNACDataset(self.config, self.tokenizer, dataset_type='train')
 
             if self.config.dataset_file['test']:
-                self.test_set = GloVeRNACDataset(self.config,  self.tokenizer, dataset_type='test')
+                self.test_set = GloVeRNACDataset(self.config, self.tokenizer, dataset_type='test')
             else:
                 self.test_set = None
             if self.config.dataset_file['valid']:
-                self.valid_set = GloVeRNACDataset(self.config,  self.tokenizer, dataset_type='valid')
+                self.valid_set = GloVeRNACDataset(self.config, self.tokenizer, dataset_type='valid')
             else:
                 self.valid_set = None
             self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)

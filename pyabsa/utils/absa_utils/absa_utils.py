@@ -11,7 +11,7 @@ import os
 
 import findfile
 
-from pyabsa import LabelPaddingOption
+from pyabsa import LabelPaddingOption, TaskCodeOption
 from pyabsa.tasks.AspectTermExtraction.dataset_utils.__lcf__.atepc_utils import simple_split_text
 from pyabsa.utils.data_utils.dataset_item import DatasetItem
 
@@ -26,11 +26,11 @@ def generate_inference_set_for_apc(dataset_path):
     else:
         dataset_name = dataset_path
 
-    train_datasets = findfile.find_cwd_files(['dataset', 'train', 'apc', dataset_name],
+    train_datasets = findfile.find_cwd_files(['dataset', 'train', TaskCodeOption.Aspect_Polarity_Classification, dataset_name],
                                              exclude_key=['.inference', 'readme'])
-    valid_datasets = findfile.find_cwd_files(['dataset', 'valid', 'apc', dataset_name],
+    valid_datasets = findfile.find_cwd_files(['dataset', 'valid', TaskCodeOption.Aspect_Polarity_Classification, dataset_name],
                                              exclude_key=['.inference', 'readme'])
-    test_datasets = findfile.find_cwd_files(['dataset', 'test', 'apc', dataset_name],
+    test_datasets = findfile.find_cwd_files(['dataset', 'test', TaskCodeOption.Aspect_Polarity_Classification, dataset_name],
                                             exclude_key=['.inference', 'readme'])
     for file in train_datasets + valid_datasets + test_datasets:
         try:
@@ -44,8 +44,8 @@ def generate_inference_set_for_apc(dataset_path):
             fout = open(path_to_save, 'w', encoding='utf-8', newline='\n', errors='ignore')
 
             for i in range(0, len(lines), 3):
-                sample = lines[i].strip().replace('$T$', '[ASP]{}[ASP]'.format(lines[i + 1].strip()))
-                fout.write(sample + ' !sent! ' + lines[i + 2].strip() + '\n')
+                sample = lines[i].strip().replace('$T$', '[B-ASP]{}[E-ASP]'.format(lines[i + 1].strip()))
+                fout.write(sample + ' $LABEL$ ' + lines[i + 2].strip() + '\n')
             fout.close()
             print('save in: {}'.format(path_to_save))
         except:
@@ -174,9 +174,9 @@ def convert_apc_set_to_atepc_set(path, use_tokenizer=False):
     if os.path.isfile(path):
         files = [path]
     elif os.path.exists(path):
-        files = findfile.find_files(path, ['dataset', 'apc'], exclude_key=['.inference', 'readme'])
+        files = findfile.find_files(path, ['dataset', TaskCodeOption.Aspect_Polarity_Classification], exclude_key=['.inference', 'readme'])
     else:
-        files = findfile.find_cwd_files([path, 'dataset', 'apc'], exclude_key=['.inference', 'readme'])
+        files = findfile.find_cwd_files([path, 'dataset', TaskCodeOption.Aspect_Polarity_Classification], exclude_key=['.inference', 'readme'])
 
     print('Find datasets files at {}:'.format(path))
     for target_file in files:

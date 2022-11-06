@@ -15,19 +15,19 @@ from termcolor import colored
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer
 
-from pyabsa import LabelPaddingOption
+from pyabsa import LabelPaddingOption, TaskCodeOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
 from pyabsa.tasks.AspectPolarityClassification.models.__plm__ import BERTBaselineAPCModelList
 from pyabsa.tasks.AspectPolarityClassification.models.__classic__ import GloVeAPCModelList
 from pyabsa.tasks.AspectPolarityClassification.models.__lcf__ import APCModelList
-from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__classic__.data_utils_for_inference import GloVeABSADataset
-from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__lcf__.data_utils_for_inference import ABSADataset
-from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__plm__.data_utils_for_inference import BERTBaselineABSADataset
+from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__classic__.data_utils_for_inference import GloVeABSAInferenceDataset
+from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__lcf__.data_utils_for_inference import ABSAInferenceDataset
+from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__plm__.data_utils_for_inference import BERTABSAInferenceDataset
 from pyabsa.tasks.AspectPolarityClassification.models.__lcf__.ensembler import APCEnsembler
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import get_device, print_args
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
-from pyabsa.utils.text_utils.tokenizer import Tokenizer
+from pyabsa.framework.tokenizer_class.tokenizer_class import Tokenizer
 
 
 class SentimentClassifier(InferenceModel):
@@ -76,7 +76,8 @@ class SentimentClassifier(InferenceModel):
                         if hasattr(APCModelList, self.config.model.__name__):
                             try:
                                 if kwargs.get('offline', False):
-                                    self.tokenizer = AutoTokenizer.from_pretrained(find_cwd_dir(self.config.pretrained_bert.split('/')[-1]), do_lower_case_case='uncased' in self.config.pretrained_bert)
+                                    self.tokenizer = AutoTokenizer.from_pretrained(find_cwd_dir(self.config.pretrained_bert.split('/')[-1]),
+                                                                                   do_lower_case_case='uncased' in self.config.pretrained_bert)
                                 else:
                                     self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert, do_lower_case_case='uncased' in self.config.pretrained_bert)
                             except ValueError:
@@ -106,24 +107,24 @@ class SentimentClassifier(InferenceModel):
 
         if isinstance(self.config.model, list):
             if hasattr(APCModelList, self.config.model[0].__name__):
-                self.dataset = ABSADataset(self.config, self.tokenizer)
+                self.dataset = ABSAInferenceDataset(self.config, self.tokenizer)
 
             elif hasattr(BERTBaselineAPCModelList, self.config.model[0].__name__):
-                self.dataset = BERTBaselineABSADataset(self.config, self.tokenizer)
+                self.dataset = BERTABSAInferenceDataset(self.config, self.tokenizer)
 
             elif hasattr(GloVeAPCModelList, self.config.model[0].__name__):
-                self.dataset = GloVeABSADataset(self.config, self.tokenizer)
+                self.dataset = GloVeABSAInferenceDataset(self.config, self.tokenizer)
             else:
                 raise KeyError('The checkpoint_class you are loading is not from APC model.')
         else:
             if hasattr(APCModelList, self.config.model.__name__):
-                self.dataset = ABSADataset(self.config, self.tokenizer)
+                self.dataset = ABSAInferenceDataset(self.config, self.tokenizer)
 
             elif hasattr(BERTBaselineAPCModelList, self.config.model.__name__):
-                self.dataset = BERTBaselineABSADataset(self.config, self.tokenizer)
+                self.dataset = BERTABSAInferenceDataset(self.config, self.tokenizer)
 
             elif hasattr(GloVeAPCModelList, self.config.model.__name__):
-                self.dataset = GloVeABSADataset(self.config, self.tokenizer)
+                self.dataset = GloVeABSAInferenceDataset(self.config, self.tokenizer)
             else:
                 raise KeyError('The checkpoint_class you are loading is not from APC model.')
 
@@ -152,7 +153,7 @@ class SentimentClassifier(InferenceModel):
 
         save_path = os.path.join(os.getcwd(), 'apc_inference.result.json')
 
-        target_file = detect_infer_dataset(target_file, task_code='apc')
+        target_file = detect_infer_dataset(target_file, task_code=TaskCodeOption.Aspect_Polarity_Classification)
         if not target_file:
             raise FileNotFoundError('Can not find inference datasets!')
 

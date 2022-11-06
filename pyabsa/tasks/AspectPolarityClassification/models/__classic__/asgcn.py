@@ -87,7 +87,9 @@ class ASGCN_Unit(nn.Module):
         text_len = torch.sum(text_indices != 0, dim=-1)
         aspect_len = torch.sum(aspect_indices != 0, dim=-1)
         left_len = torch.sum(left_indices != 0, dim=-1)
-        aspect_double_idx = torch.cat([left_len.unsqueeze(1), (left_len + aspect_len - 1).unsqueeze(1)], dim=1)
+        aspect_double_idx = torch.cat([left_len.unsqueeze(1),
+                                       torch.where((left_len + aspect_len - 1) < self.config.max_seq_len, left_len + aspect_len - 1,
+                                                   self.config.max_seq_len).unsqueeze(1)], dim=1)
         text = self.embed(text_indices)
         text = self.text_embed_dropout(text)
         text_out, (_, _) = self.text_lstm(text, text_len)

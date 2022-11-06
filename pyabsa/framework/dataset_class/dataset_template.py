@@ -13,12 +13,24 @@ from torch.utils.data import Dataset
 class PyABSADataset(Dataset):
     data = []
 
-    def __init__(self, config):
+    def __init__(self, config, tokenizer, dataset_type, **kwargs):
         super(PyABSADataset, self).__init__()
 
         self.config = config
+        self.tokenizer = tokenizer
+        self.dataset_type = dataset_type
+
+        if hasattr(config, 'dataset_dict'):
+            self.load_data_from_dict(config.dataset_dict, **kwargs)
+        elif hasattr(config, 'dataset_file'):
+            self.load_data_from_file(config.dataset_file, **kwargs)
+        else:
+            raise ValueError('Please specify dataset_dict or dataset_file in config')
+
         self.covert_to_tensor(self.data)
         self.data = self.covert_to_tensor(self.data)
+
+        self.config.pop('dataset_dict', None)
 
     @staticmethod
     def covert_to_tensor(data):
@@ -37,10 +49,10 @@ class PyABSADataset(Dataset):
                     PyABSADataset.covert_to_tensor(value)
         return data
 
-    def load_data_from_dict(self, data):
+    def load_data_from_dict(self, dataset_dict, **kwargs):
         raise NotImplementedError('Please implement load_data_from_dict() in your dataset class')
 
-    def load_data_from_file(self, file_path):
+    def load_data_from_file(self, dataset_file, **kwargs):
         raise NotImplementedError('Please implement load_data_from_file() in your dataset class')
 
     def __len__(self):
@@ -54,4 +66,3 @@ class PyABSADataset(Dataset):
 
     def __repr__(self):
         return self.__str__()
-

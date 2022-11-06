@@ -6,8 +6,8 @@
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
-from distutils.version import StrictVersion
 
+from packaging import version
 import requests
 
 from findfile import find_cwd_file
@@ -82,7 +82,7 @@ def check_datasets_version(**kwargs):
                     'Failed to check local ABSADatasets version, please make sure you have downloaded the latest version of ABSADatasets.',
                     'red'))
 
-        if StrictVersion(local_version) < StrictVersion(remote_version):
+        if version.parse(local_version) < version.parse(remote_version):
             if logger:
                 logger.warning(
                     'Local ABSADatasets version is lower than remote ABSADatasets version, please upgrade your ABSADatasets.')

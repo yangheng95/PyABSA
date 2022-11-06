@@ -16,6 +16,7 @@ from transformers.models.bert.modeling_bert import BertForTokenClassification, B
 from pyabsa import LabelPaddingOption
 from pyabsa.networks.sa_encoder import Encoder
 
+
 class LCF_ATEPC_LARGE(nn.Module):
 
     def __init__(self, bert_base_model, config):

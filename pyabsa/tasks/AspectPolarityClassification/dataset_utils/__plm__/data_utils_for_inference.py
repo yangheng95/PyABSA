@@ -6,7 +6,6 @@
 import numpy as np
 import tqdm
 from torch.utils.data import Dataset
-from transformers import AutoTokenizer
 
 from pyabsa import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
@@ -14,9 +13,10 @@ from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.utils.pyabsa_utils import validate_example
 from .classic_bert_apc_utils import prepare_input_for_apc, build_sentiment_window
 from .dependency_graph import dependency_adj_matrix, configure_spacy_model
+from ..__lcf__.data_utils_for_inference import parse_sample
 
 
-class BERTBaselineABSADataset(Dataset):
+class BERTABSAInferenceDataset(Dataset):
 
     def __init__(self, config, tokenizer):
         configure_spacy_model(config)
@@ -25,40 +25,8 @@ class BERTBaselineABSADataset(Dataset):
         self.config = config
         self.data = []
 
-    def parse_sample(self, text):
-        _text = text
-        samples = []
-
-        if '!sent!' not in text:
-            text += '!sent!'
-        text, _, ref_sent = text.partition('!sent!')
-        ref_sent = ref_sent.split(',') if ref_sent else None
-        text = '[PADDING] ' + text + ' [PADDING]'
-        splits = text.split('[ASP]')
-
-        if ref_sent and int((len(splits) - 1) / 2) == len(ref_sent):
-            for i in range(0, len(splits) - 1, 2):
-                sample = text.replace('[ASP]' + splits[i + 1] + '[ASP]',
-                                      '[TEMP]' + splits[i + 1] + '[TEMP]', 1).replace('[ASP]', '')
-                sample += ' !sent! ' + str(ref_sent[int(i / 2)])
-                samples.append(sample.replace('[TEMP]', '[ASP]'))
-        elif not ref_sent or int((len(splits) - 1) / 2) != len(ref_sent):
-            # if not ref_sent:
-            #     print(_text, ' -> No the reference sentiment found')
-            if ref_sent:
-                print(_text, ' -> Unequal length of reference sentiment and aspects, ignore the reference sentiment.')
-
-            for i in range(0, len(splits) - 1, 2):
-                sample = text.replace('[ASP]' + splits[i + 1] + '[ASP]',
-                                      '[TEMP]' + splits[i + 1] + '[TEMP]', 1).replace('[ASP]', '')
-                samples.append(sample.replace('[TEMP]', '[ASP]'))
-        else:
-            raise ValueError('Invalid Input:{}'.format(text))
-
-        return samples
-
     def prepare_infer_sample(self, text: str, ignore_error=True):
-        self.process_data(self.parse_sample(text), ignore_error=ignore_error)
+        self.process_data(parse_sample(text), ignore_error=ignore_error)
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
 
@@ -66,7 +34,7 @@ class BERTBaselineABSADataset(Dataset):
         samples = []
         for sample in lines:
             if sample:
-                samples.extend(self.parse_sample(sample))
+                samples.extend(parse_sample(sample))
         self.process_data(samples, ignore_error)
 
     def process_data(self, samples, ignore_error=True):
@@ -83,8 +51,8 @@ class BERTBaselineABSADataset(Dataset):
                     raise RuntimeError('Invalid Input!')
 
                 # check for given polarity
-                if '!sent!' in text:
-                    text, polarity = text.split('!sent!')[0].strip(), text.split('!sent!')[1].strip()
+                if '$LABEL$' in text:
+                    text, polarity = text.split('$LABEL$')[0].strip(), text.split('$LABEL$')[1].strip()
                     polarity = polarity if polarity else LabelPaddingOption.SENTIMENT_PADDING
                     text = text.replace('[PADDING]', '')
 
@@ -118,7 +86,7 @@ class BERTBaselineABSADataset(Dataset):
                 aspect_len = np.count_nonzero(aspect_indices)
                 left_len = min(self.config.max_seq_len - aspect_len, np.count_nonzero(left_indices))
                 left_indices = np.concatenate((left_indices[:left_len], np.asarray([0] * (self.config.max_seq_len - left_len))))
-                aspect_boundary = np.asarray([left_len, left_len + aspect_len - 1], dtype=np.int64)
+                aspect_boundary = np.asarray([left_len, min(left_len + aspect_len - 1, self.config.max_seq_len)])
 
                 idx2graph = dependency_adj_matrix(text_left + ' ' + aspect + ' ' + text_right)
                 dependency_graph = np.pad(idx2graph,

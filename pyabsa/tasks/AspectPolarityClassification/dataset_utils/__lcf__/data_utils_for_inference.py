@@ -4,6 +4,8 @@
 # author: yangheng <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
+import re
+
 import numpy as np
 
 from pyabsa import LabelPaddingOption
@@ -19,22 +21,27 @@ from .apc_utils import (build_sentiment_window,
 from .apc_utils_for_dlcf_dca import prepare_input_for_dlcf_dca, configure_dlcf_spacy_model
 
 
-class ABSADataset(Dataset):
+def parse_sample(text):
+    if '[ASP]' not in text:
+        text = '[B-ASP] Global Sentiment [E-ASP]' + text
+    _text = text
+    samples = []
 
-    def __init__(self, config, tokenizer):
-        configure_spacy_model(config)
-        self.tokenizer = tokenizer
-        self.config = config
-        self.data = []
-
-    def parse_sample(self, text):
-        _text = text
-        samples = []
-
-        if '!sent!' not in text:
-            text += '!sent!'
-        text, _, ref_sent = text.partition('!sent!')
+    if '$LABEL$' not in text:
+        text += '$LABEL$'
+    text, _, ref_sent = text.partition('$LABEL$')
+    if '[B-ASP]' in text:
         ref_sent = ref_sent.split(',') if ref_sent else None
+        aspects = re.findall(".*\[B\-ASP\](.*)\[E\-ASP\].*", text)
+
+        for i, aspect in enumerate(aspects):
+            if len(aspects) == len(ref_sent):
+                samples.append(text.replace(f'[B-ASP]{aspect}[E-ASP]', f'[ASP]{aspect}[ASP]') + f'$LABEL${ref_sent[i]}')
+            else:
+                samples.append(text.replace(f'[B-ASP]{aspect}[E-ASP]', f'[ASP]{aspect}[ASP]'))
+
+    else:
+        print('[ASP] tag is detected, please use [B-ASP] and [E-ASP] to annotate aspect terms.')
         text = '[PADDING] ' + text + ' [PADDING]'
         splits = text.split('[ASP]')
 
@@ -42,7 +49,7 @@ class ABSADataset(Dataset):
             for i in range(0, len(splits) - 1, 2):
                 sample = text.replace('[ASP]' + splits[i + 1] + '[ASP]',
                                       '[TEMP]' + splits[i + 1] + '[TEMP]', 1).replace('[ASP]', '')
-                sample += ' !sent! ' + str(ref_sent[int(i / 2)])
+                sample += ' $LABEL$ ' + str(ref_sent[int(i / 2)])
                 samples.append(sample.replace('[TEMP]', '[ASP]'))
         elif not ref_sent or int((len(splits) - 1) / 2) != len(ref_sent):
             # if not ref_sent:
@@ -57,17 +64,26 @@ class ABSADataset(Dataset):
         else:
             raise ValueError('Invalid Input:{}'.format(text))
 
-        return samples
+    return samples
+
+
+class ABSAInferenceDataset(Dataset):
+
+    def __init__(self, config, tokenizer):
+        configure_spacy_model(config)
+        self.tokenizer = tokenizer
+        self.config = config
+        self.data = []
 
     def prepare_infer_sample(self, text: str, ignore_error=True):
-        self.process_data(self.parse_sample(text), ignore_error=ignore_error)
+        self.process_data(parse_sample(text), ignore_error=ignore_error)
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
         lines = load_dataset_from_file(infer_file, logger=self.config.logger)
         samples = []
         for sample in lines:
             if sample:
-                samples.extend(self.parse_sample(sample))
+                samples.extend(parse_sample(sample))
         self.process_data(samples, ignore_error)
 
     def process_data(self, samples, ignore_error=True):
@@ -85,8 +101,8 @@ class ABSADataset(Dataset):
                     raise RuntimeError('Invalid Input!')
 
                 # check for given polarity
-                if '!sent!' in text:
-                    text, polarity = text.split('!sent!')[0].strip(), text.split('!sent!')[1].strip()
+                if '$LABEL$' in text:
+                    text, polarity = text.split('$LABEL$')[0].strip(), text.split('$LABEL$')[1].strip()
                     polarity = polarity if polarity else LabelPaddingOption.LABEL_PADDING
                     text = text.replace('[PADDING]', '')
 

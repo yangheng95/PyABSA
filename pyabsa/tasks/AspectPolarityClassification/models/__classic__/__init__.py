@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: __init__.py.py
+# file: __init__.py
 # time: 02/11/2022 15:48
 # author: yangheng <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95
@@ -36,8 +36,20 @@ class ClassicAPCModelList(list):
 
     def __init__(self):
         super(ClassicAPCModelList, self).__init__(
-            [self.AOA, self.ASGCN, self.ATAE_LSTM, self.Cabasc, self.IAN, self.LSTM, self.MemNet, self.MGAN, self.RAM,
-                self.TC_LSTM, self.TD_LSTM, self.TNet_LF]
+            [
+                self.ASGCN,
+                self.AOA,
+                self.ATAE_LSTM,
+                self.Cabasc,
+                self.IAN,
+                self.LSTM,
+                self.MemNet,
+                self.MGAN,
+                self.RAM,
+                self.TC_LSTM,
+                self.TD_LSTM,
+                self.TNet_LF,
+            ]
         )
 
 

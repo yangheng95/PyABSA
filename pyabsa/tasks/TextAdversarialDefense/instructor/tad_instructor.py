@@ -32,7 +32,7 @@ from pyabsa.tasks.TextAdversarialDefense.dataset_utils.__plm__.data_utils_for_tr
 from pyabsa.tasks.TextAdversarialDefense.models import BERTTADModelList, GloVeTADModelList
 from pyabsa.utils.file_utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args, init_optimizer
-from pyabsa.utils.text_utils.tokenizer import PretrainedTokenizer, Tokenizer, build_embedding_matrix
+from pyabsa.framework.tokenizer_class.tokenizer_class import PretrainedTokenizer, Tokenizer, build_embedding_matrix
 
 
 class TADTrainingInstructor(BaseTrainingInstructor):
@@ -42,14 +42,9 @@ class TADTrainingInstructor(BaseTrainingInstructor):
         torch.manual_seed(self.config.seed)
         torch.cuda.manual_seed(self.config.seed)
 
-        if hasattr(BERTTADModelList, self.config.model.__name__):
-            self.config.inputs_cols = BERTTADDataset.bert_baseline_input_colses[self.config.model.__name__.lower()]
-
-        elif hasattr(GloVeTADModelList, self.config.model.__name__):
-            self.config.inputs_cols = GloVeTADDataset.glove_input_colses[self.config.model.__name__.lower()]
+        self.config.inputs_cols = self.model.inputs
 
         self.config.device = torch.device(self.config.device)
-
 
         # use DataParallel for trainer if device count larger than 1
         if self.config.auto_device == DeviceTypeOption.ALL_CUDA:
@@ -109,13 +104,13 @@ class TADTrainingInstructor(BaseTrainingInstructor):
         if hasattr(BERTTADModelList, self.config.model.__name__):
             self.tokenizer = PretrainedTokenizer(self.config)
             if not os.path.exists(cache_path) or self.config.overwrite_cache:
-                self.train_set = BERTTADDataset(self.config,  self.tokenizer, dataset_type='train')
+                self.train_set = BERTTADDataset(self.config, self.tokenizer, dataset_type='train')
                 if self.config.dataset_file['test']:
-                    self.test_set = BERTTADDataset(self.config,  self.tokenizer, dataset_type='test')
+                    self.test_set = BERTTADDataset(self.config, self.tokenizer, dataset_type='test')
                 else:
                     self.test_set = None
                 if self.config.dataset_file['valid']:
-                    self.valid_set = BERTTADDataset(self.config,  self.tokenizer, dataset_type='valid')
+                    self.valid_set = BERTTADDataset(self.config, self.tokenizer, dataset_type='valid')
                 else:
                     self.valid_set = None
             try:
@@ -137,14 +132,14 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                 tokenizer=self.tokenizer,
                 cache_path='{0}_{1}_embedding_matrix.dat'.format(str(self.config.embed_dim), os.path.basename(self.config.dataset_name)),
             )
-            self.train_set = GloVeTADDataset(self.config,  self.tokenizer, dataset_type='train')
+            self.train_set = GloVeTADDataset(self.config, self.tokenizer, dataset_type='train')
 
             if self.config.dataset_file['test']:
-                self.test_set = GloVeTADDataset(self.config,  self.tokenizer, dataset_type='test')
+                self.test_set = GloVeTADDataset(self.config, self.tokenizer, dataset_type='test')
             else:
                 self.test_set = None
             if self.config.dataset_file['valid']:
-                self.valid_set = GloVeTADDataset(self.config,  self.tokenizer, dataset_type='valid')
+                self.valid_set = GloVeTADDataset(self.config, self.tokenizer, dataset_type='valid')
             else:
                 self.valid_set = None
             self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
@@ -165,9 +160,6 @@ class TADTrainingInstructor(BaseTrainingInstructor):
         self._load_dataset_and_prepare_dataloader()
 
         self._init_misc()
-
-
-
 
     def reload_model_state_dict(self, ckpt='./init_state_dict.bin'):
         if os.path.exists(ckpt):
@@ -232,12 +224,12 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                                          )
         self.config.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
         self.config.max_test_metrics = {'max_cls_test_acc': 0,
-                                     'max_cls_test_f1': 0,
-                                     'max_adv_det_test_acc': 0,
-                                     'max_adv_det_test_f1': 0,
-                                     'max_adv_tr_test_acc': 0,
-                                     'max_adv_tr_test_f1': 0,
-                                     }
+                                        'max_cls_test_f1': 0,
+                                        'max_adv_det_test_acc': 0,
+                                        'max_adv_det_test_f1': 0,
+                                        'max_adv_tr_test_acc': 0,
+                                        'max_adv_tr_test_f1': 0,
+                                        }
 
         self.config.logger.info("***** Running trainer for Text Classification with Adversarial Attack Defense *****")
         self.config.logger.info("Training set examples = %d", len(self.train_set))
@@ -506,7 +498,8 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                                          labels=list(range(self.config.class_dim)), average='macro')
         if self.config.args.get('show_metric', False):
             print('\n---------------------------- Standard Classification Report ----------------------------\n')
-            print(metrics.classification_report(t_label_targets_all.cpu(), torch.argmax(t_label_outputs_all, -1).cpu(), target_names=[self.config.index_to_label[x] for x in self.config.index_to_label]))
+            print(
+                metrics.classification_report(t_label_targets_all.cpu(), torch.argmax(t_label_outputs_all, -1).cpu(), target_names=[self.config.index_to_label[x] for x in self.config.index_to_label]))
             print('\n---------------------------- Standard Classification Report ----------------------------\n')
 
         adv_det_test_acc = n_adv_det_test_correct / n_adv_det_test_total
@@ -524,4 +517,3 @@ class TADTrainingInstructor(BaseTrainingInstructor):
         criterion = nn.CrossEntropyLoss()
 
         return self._train(criterion)
-
