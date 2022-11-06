@@ -12,8 +12,8 @@ def test_glove_rna_classification():
     from pyabsa import RNAClassification as RNAC
     from pyabsa.utils.data_utils.dataset_item import DatasetItem
     for model in [
-        RNAC.GloVeRNACModelList.LSTM,
-        RNAC.GloVeRNACModelList.MHSA,
+        # RNAC.GloVeRNACModelList.LSTM,
+        # RNAC.GloVeRNACModelList.MHSA,
         RNAC.GloVeRNACModelList.CNN,
 
     ]:

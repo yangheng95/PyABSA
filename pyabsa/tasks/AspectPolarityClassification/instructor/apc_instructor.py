@@ -13,7 +13,6 @@ import numpy
 import pandas
 import torch
 import torch.nn as nn
-from findfile import find_file
 from sklearn import metrics
 from torch import cuda
 from tqdm import tqdm
@@ -24,15 +23,12 @@ from pyabsa.tasks.AspectPolarityClassification.models.__lcf__.ensembler import A
 from pyabsa.utils.file_utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args, init_optimizer
 
-import pytorch_warmup as warmup
 
 
 class APCTrainingInstructor(BaseTrainingInstructor):
 
-    def __init__(self, config):
-        super().__init__(config)
+    def _load_dataset_and_prepare_dataloader(self):
 
-        self.config = config
         self.model = APCEnsembler(self.config)
         self.tokenizer = self.model.tokenizer
 
@@ -42,7 +38,14 @@ class APCTrainingInstructor(BaseTrainingInstructor):
         self.valid_dataloader = self.model.valid_dataloader
         self.train_dataloader = self.model.train_dataloader
 
+    def __init__(self, config):
+        super().__init__(config)
+
+        self._load_dataset_and_prepare_dataloader()
+
         self._init_misc()
+
+        self.config.pop('dataset_dict', None)
 
     def _train_and_evaluate(self, criterion):
         global_step = 0
@@ -96,21 +99,25 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                 self.optimizer.zero_grad()
                 inputs = {col: sample_batched[col].to(self.config.device) for col in self.config.inputs_cols}
 
-                with torch.cuda.amp.autocast():
+                if self.config.use_amp:
+                    with torch.cuda.amp.autocast():
+                        outputs = self.model(inputs)
+                else:
                     outputs = self.model(inputs)
-                    targets = sample_batched['polarity'].to(self.config.device)
 
-                    if isinstance(outputs, dict) and 'loss' in outputs and outputs['loss'] != 0:
-                        loss = outputs['loss']
-                    else:
-                        loss = criterion(outputs['logits'], targets)
+                targets = sample_batched['polarity'].to(self.config.device)
 
-                    if self.config.auto_device == DeviceTypeOption.ALL_CUDA:
-                        loss = loss.mean()
+                if isinstance(outputs, dict) and 'loss' in outputs and outputs['loss'] != 0:
+                    loss = outputs['loss']
+                else:
+                    loss = criterion(outputs['logits'], targets)
+
+                if self.config.auto_device == DeviceTypeOption.ALL_CUDA:
+                    loss = loss.mean()
 
                 losses.append(loss.item())
 
-                if self.scaler:
+                if self.config.use_amp and self.scaler:
                     self.scaler.scale(loss).backward()
                     self.scaler.step(self.optimizer)
                     self.scaler.update()
@@ -124,7 +131,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
 
                 # evaluate if test set is available
                 if global_step % self.config.log_step == 0:
-                    if self.config.dataset_file['test'] and epoch >= self.config.evaluate_begin:
+                    if self.test_dataloader and epoch >= self.config.evaluate_begin:
                         if self.valid_dataloaders:
                             test_acc, f1 = self._evaluate_acc_f1(self.valid_dataloaders[0])
                         else:
@@ -191,7 +198,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
 
         if self.valid_dataloaders:
             print('Loading best model: {} and evaluating on test set ...'.format(save_path))
-            self._reload_model_state_dict(find_file(save_path, '.state_dict'))
+            self._reload_model_state_dict(save_path)
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
 
             self.config.MV.add_metric('Max-Test-Acc', max_fold_acc * 100)
@@ -245,7 +252,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
         self.config.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
         self.config.max_test_metrics = {'max_apc_test_acc': 0, 'max_apc_test_f1': 0}
 
-        for f, (train_dataloader, val_dataloader) in enumerate(zip(self.train_dataloaders, self.valid_dataloaders)):
+        for f, (train_dataloader, valid_dataloader) in enumerate(zip(self.train_dataloaders, self.valid_dataloaders)):
             patience = self.config.patience + self.config.evaluate_begin
             if self.config.log_step < 0:
                 self.config.log_step = len(self.train_dataloaders[0]) if self.config.log_step < 0 else self.config.log_step
@@ -275,21 +282,26 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                     self.model.train()
                     self.optimizer.zero_grad()
                     inputs = {col: sample_batched[col].to(self.config.device) for col in self.config.inputs_cols}
-                    with torch.cuda.amp.autocast():
+
+                    if self.config.use_amp:
+                        with torch.cuda.amp.autocast():
+                            outputs = self.model(inputs)
+                    else:
                         outputs = self.model(inputs)
-                        targets = sample_batched['polarity'].to(self.config.device)
 
-                        if isinstance(outputs, dict) and 'loss' in outputs and outputs['loss'] != 0:
-                            loss = outputs['loss']
-                        else:
-                            loss = criterion(outputs['logits'], targets)
+                    targets = sample_batched['polarity'].to(self.config.device)
 
-                        if self.config.auto_device == DeviceTypeOption.ALL_CUDA:
-                            loss = loss.mean()
+                    if isinstance(outputs, dict) and 'loss' in outputs and outputs['loss'] != 0:
+                        loss = outputs['loss']
+                    else:
+                        loss = criterion(outputs['logits'], targets)
+
+                    if self.config.auto_device == DeviceTypeOption.ALL_CUDA:
+                        loss = loss.mean()
 
                     losses.append(loss.item())
 
-                    if self.scaler:
+                    if self.config.use_amp and self.scaler:
                         self.scaler.scale(loss).backward()
                         self.scaler.step(self.optimizer)
                         self.scaler.update()
@@ -303,9 +315,9 @@ class APCTrainingInstructor(BaseTrainingInstructor):
 
                     # evaluate if test set is available
                     if global_step % self.config.log_step == 0:
-                        if self.config.dataset_file['test'] and epoch >= self.config.evaluate_begin:
+                        if self.config.test_dataloader and epoch >= self.config.evaluate_begin:
 
-                            test_acc, f1 = self._evaluate_acc_f1(val_dataloader)
+                            test_acc, f1 = self._evaluate_acc_f1(valid_dataloader)
 
                             self.config.metrics_of_this_checkpoint['acc'] = test_acc
                             self.config.metrics_of_this_checkpoint['f1'] = f1
@@ -370,7 +382,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
 
             self.logger.info(self.config.MV.summary(no_print=True))
 
-            self._reload_model_state_dict()
+            self._reload_model_state_dict(save_path_k_fold)
 
         max_test_acc = numpy.max(fold_test_acc)
         max_test_f1 = numpy.max(fold_test_f1)

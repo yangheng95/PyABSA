@@ -11,10 +11,10 @@ import random
 ########################################################################################################################
 
 
-from pyabsa.framework import Trainer
-from pyabsa.framework import APCConfigManager
-from pyabsa.framework import ABSADatasetList
-from pyabsa.framework import APCModelList
+from pyabsa.functional import Trainer
+from pyabsa.functional import APCConfigManager
+from pyabsa.functional import ABSADatasetList
+from pyabsa.functional import APCModelList
 
 apc_config_multilingual = APCConfigManager.get_apc_config_multilingual()
 apc_config_multilingual.model = APCModelList.FAST_LSA_T_V2

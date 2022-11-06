@@ -19,7 +19,6 @@ class TCDatasetList(list):
     SST2 = DatasetItem('SST2', '201.SST2')
     AGNews10K = DatasetItem('AGNews10K', '204.AGNews10K')
     IMDB10K = DatasetItem('IMDB10K', '202.IMDB10K')
-    Yelp10K = DatasetItem('Amazon', '206.Amazon_Review_Polarity10K')
     SST = DatasetItem('SST', ['201.SST2'])
 
     def __init__(self):
@@ -30,7 +29,6 @@ class TCDatasetList(list):
                 self.SST5,
                 self.AGNews10K,
                 self.IMDB10K,
-                self.Yelp10K,
                 self.SST
             ]
         )

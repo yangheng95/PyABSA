@@ -13,11 +13,11 @@ import os
 
 import findfile
 
-from pyabsa.framework import ATEPCModelList
-from pyabsa.framework import Trainer, ATEPCTrainer
-from pyabsa.framework import ABSADatasetList
-from pyabsa.framework import ATEPCConfigManager
-from pyabsa.framework.dataset import DatasetItem
+from pyabsa.functional import ATEPCModelList
+from pyabsa.functional import Trainer, ATEPCTrainer
+from pyabsa.functional import ABSADatasetList
+from pyabsa.functional import ATEPCConfigManager
+from pyabsa.functional.dataset import DatasetItem
 
 atepc_config = ATEPCConfigManager.get_atepc_config_english()
 

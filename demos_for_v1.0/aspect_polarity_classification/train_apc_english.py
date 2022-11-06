@@ -10,10 +10,10 @@
 ########################################################################################################################
 import warnings
 
-from pyabsa.framework import Trainer
-from pyabsa.framework import APCConfigManager
-from pyabsa.framework import ABSADatasetList
-from pyabsa.framework import APCModelList
+from pyabsa.functional import Trainer
+from pyabsa.functional import APCConfigManager
+from pyabsa.functional import ABSADatasetList
+from pyabsa.functional import APCModelList
 
 warnings.filterwarnings("ignore")
 

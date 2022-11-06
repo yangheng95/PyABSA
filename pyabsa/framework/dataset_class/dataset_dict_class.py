@@ -8,7 +8,7 @@
 # Copyright (C) 2022. All Rights Reserved.
 
 class DatasetDict(dict):
-    def __init__(self, dataset_dict, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         A dict-like object for storing datasets
 
@@ -26,21 +26,8 @@ class DatasetDict(dict):
                 {'data': 'This is a text for validation', 'label': 'Negative'},
             ],
             'dataset_name': str(),
-            'label_name': str(),
+            'column_names': list(),
+            'label_names': list(),
         }
         """
-
-        super().__init__(*args, **kwargs)
-        self.update(dataset_dict)
-
-    def __getattr__(self, item):
-        return self[item]
-
-    def __setattr__(self, key, value):
-        self[key] = value
-
-    def __delattr__(self, item):
-        del self[item]
-
-    def __getitem__(self, item):
-        return super().__getitem__(item)
+        super().__init__(train=[], test=[], valid=[], dataset_name='custom_dataset', column_names=[], label_name=['label'], *args, **kwargs)

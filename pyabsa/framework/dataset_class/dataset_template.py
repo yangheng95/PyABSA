@@ -20,17 +20,15 @@ class PyABSADataset(Dataset):
         self.tokenizer = tokenizer
         self.dataset_type = dataset_type
 
-        if hasattr(config, 'dataset_dict'):
+        if hasattr(self.config, 'dataset_dict') and dataset_type in self.config.dataset_dict:
             self.load_data_from_dict(config.dataset_dict, **kwargs)
-        elif hasattr(config, 'dataset_file'):
-            self.load_data_from_file(config.dataset_file, **kwargs)
-        else:
-            raise ValueError('Please specify dataset_dict or dataset_file in config')
+            self.covert_to_tensor(self.data)
+            self.data = self.covert_to_tensor(self.data)
 
-        self.covert_to_tensor(self.data)
-        self.data = self.covert_to_tensor(self.data)
-
-        self.config.pop('dataset_dict', None)
+        elif hasattr(self.config, 'dataset_file') and dataset_type in self.config.dataset_file:
+            self.load_data_from_file(self.config.dataset_file, **kwargs)
+            self.covert_to_tensor(self.data)
+            self.data = self.covert_to_tensor(self.data)
 
     @staticmethod
     def covert_to_tensor(data):

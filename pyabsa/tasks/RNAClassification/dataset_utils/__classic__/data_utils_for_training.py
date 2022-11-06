@@ -18,10 +18,37 @@ from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
 
 class GloVeRNACDataset(PyABSADataset):
     def load_data_from_dict(self, dataset_dict, **kwargs):
-        pass
+        label_set = set()
+        all_data = []
+
+        for ex_id, data in enumerate(tqdm.tqdm(dataset_dict[self.dataset_type], postfix='preparing dataloader...')):
+
+            rna = data['data']
+            label = data['label']
+            rna = rna.strip()
+            label = label.strip()
+
+            rna_indices = self.tokenizer.text_to_sequence(rna)
+
+            rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len)
+
+
+            data = {
+                'ex_id': ex_id,
+                'text_indices': torch.tensor(rna_indices, dtype=torch.long),
+                'label': label,
+            }
+
+            label_set.add(label)
+
+            all_data.append(data)
+
+        check_and_fix_labels(label_set, 'label', all_data, self.config)
+        self.config.output_dim = len(label_set)
+        self.data = all_data
 
     def load_data_from_file(self, dataset_file, **kwargs):
-        lines = load_dataset_from_file(self.config.dataset_file[self.dataset_type])
+        lines = load_dataset_from_file(dataset_file[self.dataset_type])
 
         all_data = []
 

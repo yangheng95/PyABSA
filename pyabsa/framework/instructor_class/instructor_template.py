@@ -82,7 +82,7 @@ class BaseTrainingInstructor:
 
     def _reload_model_state_dict(self, ckpt='./init_state_dict.bin'):
         if os.path.exists(ckpt):
-            if self.config.auto_device == DeviceTypeOption.ALL_CUDA:
+            if hasattr(self.model, 'module'):
                 self.model.module.load_state_dict(torch.load(find_file(ckpt, or_key=['.bin', 'state_dict'])))
             else:
                 self.model.load_state_dict(torch.load(find_file(ckpt, or_key=['.bin', 'state_dict'])))
@@ -149,8 +149,10 @@ class BaseTrainingInstructor:
         print_args(self.config, self.logger)
 
     def _train(self, criterion):
+
         self._prepare_env()
         self._prepare_dataloader()
+        self._resume_from_checkpoint()
 
         if self.config.warmup_step >= 0:
             self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=len(
@@ -180,9 +182,9 @@ class BaseTrainingInstructor:
     def _load_dataset_and_prepare_dataloader(self):
         raise NotImplementedError('Please implement this method in subclass')
 
-    def _resume_from_checkpoint(self, config):
-        logger = config.logger
-        from_checkpoint_path = config.from_checkpoint_path
+    def _resume_from_checkpoint(self):
+        logger = self.config.logger
+        from_checkpoint_path = self.config.from_checkpoint
         if from_checkpoint_path:
             model_path = find_files(from_checkpoint_path, '.model')
             state_dict_path = find_files(from_checkpoint_path, '.state_dict')

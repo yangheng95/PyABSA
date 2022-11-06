@@ -10,10 +10,15 @@
 #                                               ATEPC trainer script                                                  #
 ########################################################################################################################
 
-from pyabsa.framework import ATEPCConfigManager, Trainer, ABSADatasetList
-
+from pyabsa.functional import ATEPCConfigManager, Trainer, ABSADatasetList
+from pyabsa.functional import ATEPCModelList
 config = ATEPCConfigManager.get_atepc_config_multilingual()
-multilingual = ABSADatasetList.Multilingual
+config.use_amp = True
+config.model = ATEPCModelList.FAST_LCF_ATEPC
+
+config.pretrained_bert = 'microsoft/mdeberta-v3-base'
+multilingual = ABSADatasetList.Laptop14
+
 aspect_extractor = Trainer(config=config,
                            dataset=multilingual,
                            ).load_trained_model()
