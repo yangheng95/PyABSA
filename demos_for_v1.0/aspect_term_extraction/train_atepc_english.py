@@ -9,10 +9,10 @@
 #                                               ATEPC trainer script                                                  #
 ########################################################################################################################
 
-from pyabsa.framework import ATEPCModelList
-from pyabsa.framework import Trainer, ATEPCTrainer
-from pyabsa.framework import ABSADatasetList
-from pyabsa.framework import ATEPCConfigManager
+from pyabsa import ATEPCModelList
+from pyabsa import Trainer, ATEPCTrainer
+from pyabsa import ABSADatasetList
+from pyabsa import ATEPCConfigManager
 
 config = ATEPCConfigManager.get_atepc_config_english()
 config.model = ATEPCModelList.FAST_LCF_ATEPC

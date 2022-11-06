@@ -5,10 +5,10 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 from pyabsa import ATEPCCheckpointManager
-from pyabsa.framework import ATEPCModelList
-from pyabsa.framework import Trainer, ATEPCTrainer
-from pyabsa.framework import ABSADatasetList
-from pyabsa.framework import ATEPCConfigManager
+from pyabsa.functional import ATEPCModelList
+from pyabsa.functional import Trainer, ATEPCTrainer
+from pyabsa.functional import ABSADatasetList
+from pyabsa.functional import ATEPCConfigManager
 
 config = ATEPCConfigManager.get_atepc_config_english()
 

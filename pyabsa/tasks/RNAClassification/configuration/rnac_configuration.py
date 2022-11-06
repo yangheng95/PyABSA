@@ -36,6 +36,8 @@ _rnac_config_template = {'model': BERT_MLP,
                          'use_amp': False,
                          'overwrite_cache': False,
                          'sigmoid_regression': False,
+                         'kernel_size': 3,
+                         'padding': 1,
                          # split train and test datasets into 5 folds and repeat 3 trainer
                          }
 

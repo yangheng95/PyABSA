@@ -70,6 +70,7 @@ def test_auto_device():
             config.lcf = 'cdm'
             config.model = model
             config.cache_dataset = True
+            config.cache_dataset = False
             config.num_epoch = 1
             config.max_seq_len = 10
             config.evaluate_begin = 0

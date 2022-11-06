@@ -10,10 +10,10 @@ import random
 #                    train and evaluate on your own apc_datasets (need train and test apc_datasets)                    #
 ########################################################################################################################
 
-from pyabsa.framework import Trainer
-from pyabsa.framework import APCConfigManager
-from pyabsa.framework import ABSADatasetList
-from pyabsa.framework import APCModelList
+from pyabsa.functional import Trainer
+from pyabsa.functional import APCConfigManager
+from pyabsa.functional import ABSADatasetList
+from pyabsa.functional import APCModelList
 
 config = APCConfigManager.get_apc_config_chinese()
 config.evaluate_begin = 4

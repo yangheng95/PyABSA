@@ -37,79 +37,7 @@ from pyabsa.framework.tokenizer_class.tokenizer_class import Tokenizer, build_em
 
 
 class RNARTrainingInstructor(BaseTrainingInstructor):
-    def __init__(self, config):
-
-        super().__init__(config)
-
-        self.config.inputs_cols = self.config.model.inputs
-
-        config_str = re.sub(r'<.*?>', '', str(sorted([str(self.config.args[k]) for k in self.config.args if k != 'seed'])))
-        hash_tag = sha256(config_str.encode()).hexdigest()
-        cache_path = '{}.{}.dataset.{}.cache'.format(self.config.model_name, self.config.dataset_name, hash_tag)
-
-        if os.path.exists(cache_path) and not self.config.overwrite_cache:
-            print('Loading dataset cache:', cache_path)
-            if self.config.dataset_file['test']:
-                self.train_set, self.valid_set, self.test_set, opt = pickle.load(open(cache_path, mode='rb'))
-            else:
-                self.train_set, opt = pickle.load(open(cache_path, mode='rb'))
-            # reset output dim according to dataset labels
-            self.config.output_dim = config.output_dim
-            self.config.label_to_index = config.label_to_index
-            self.config.index_to_label = config.index_to_label
-
-        # init BERT-based model and dataset
-        if hasattr(BERTRNARModelList, config.model.__name__):
-            self.tokenizer = PretrainedTokenizer(self.config)
-            if not os.path.exists(cache_path) or self.config.overwrite_cache:
-
-                self.train_set = BERTRNARDataset(self.config, self.tokenizer, dataset_type='train')
-                if self.config.dataset_file['test']:
-                    self.test_set = BERTRNARDataset(self.config, self.tokenizer, dataset_type='test')
-                else:
-                    self.test_set = None
-                if self.config.dataset_file['valid']:
-                    self.valid_set = BERTRNARDataset(self.config, self.tokenizer, dataset_type='valid')
-                else:
-                    self.valid_set = None
-            try:
-                self.bert = AutoModel.from_pretrained(self.config.pretrained_bert)
-            except ValueError as e:
-                print('Init pretrained model failed, exception: {}'.format(e))
-
-            # init the model behind the construction of datasets in case of updating output_dim
-            self.model = self.config.model(self.bert, self.config).to(self.config.device)
-
-        elif hasattr(GloVeRNARModelList, config.model.__name__):
-            # init GloVe-based model and dataset
-            self.tokenizer = Tokenizer.build_tokenizer(
-                config=self.config,
-                cache_path='{0}_tokenizer.dat'.format(os.path.basename(self.config.dataset_name)),
-                pre_tokenizer=AutoTokenizer.from_pretrained(self.config.pretrained_bert),
-            )
-            self.embedding_matrix = build_embedding_matrix(
-                config=self.config,
-                tokenizer=self.tokenizer,
-                cache_path='{0}_{1}_embedding_matrix.dat'.format(str(self.config.embed_dim), os.path.basename(self.config.dataset_name)),
-            )
-            self.train_set = GloVeRNARDataset(self.config, self.tokenizer, dataset_type='train')
-
-            if self.config.dataset_file['test']:
-                self.test_set = GloVeRNARDataset(self.config, self.tokenizer, dataset_type='test')
-            else:
-                self.test_set = None
-            if self.config.dataset_file['valid']:
-                self.valid_set = GloVeRNARDataset(self.config, self.tokenizer, dataset_type='valid')
-            else:
-                self.valid_set = None
-            self.model = config.model(self.embedding_matrix, config).to(config.device)
-
-        if self.config.cache_dataset and not os.path.exists(cache_path) or self.config.overwrite_cache:
-            print('Caching dataset... please remove cached dataset if change model or dataset')
-            if self.config.dataset_file['test']:
-                pickle.dump((self.train_set, self.valid_set, self.test_set, self.config), open(cache_path, mode='wb'))
-            else:
-                pickle.dump((self.train_set, self.config), open(cache_path, mode='wb'))
+    def _init_misc(self):
 
         # use DataParallel for trainer if device count larger than 1
         if self.config.auto_device == DeviceTypeOption.ALL_CUDA:
@@ -137,6 +65,72 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
             self.logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.config.device)))
 
         print_args(self.config, self.logger)
+    def _cache_or_load_dataset(self):
+        pass
+
+    def _evaluate_acc_f1(self, test_dataloader):
+        pass
+
+    def _load_dataset_and_prepare_dataloader(self):
+        self.config.inputs_cols = self.config.model.inputs
+
+        config_str = re.sub(r'<.*?>', '', str(sorted([str(self.config.args[k]) for k in self.config.args if k != 'seed'])))
+        hash_tag = sha256(config_str.encode()).hexdigest()
+        cache_path = '{}.{}.dataset.{}.cache'.format(self.config.model_name, self.config.dataset_name, hash_tag)
+
+        if os.path.exists(cache_path) and not self.config.overwrite_cache:
+            print('Loading dataset from cache: {}'.format(cache_path))
+            with open(cache_path, mode='rb') as f_cache:
+                self.train_set, self.valid_set, self.test_set, self.config = pickle.load(f_cache)
+
+        # init BERT-based model and dataset
+        if hasattr(BERTRNARModelList, self.config.model.__name__):
+            self.tokenizer = PretrainedTokenizer(self.config)
+            if not os.path.exists(cache_path) or self.config.overwrite_cache:
+                self.train_set = BERTRNARDataset(self.config, self.tokenizer, dataset_type='train')
+                self.test_set = BERTRNARDataset(self.config, self.tokenizer, dataset_type='test')
+                self.valid_set = BERTRNARDataset(self.config, self.tokenizer, dataset_type='valid')
+
+            try:
+                self.bert = AutoModel.from_pretrained(self.config.pretrained_bert)
+            except ValueError as e:
+                print('Init pretrained model failed, exception: {}'.format(e))
+
+            # init the model behind the construction of datasets in case of updating output_dim
+            self.model = self.config.model(self.bert, self.config).to(self.config.device)
+
+        elif hasattr(GloVeRNARModelList, self.config.model.__name__):
+            # init GloVe-based model and dataset
+            self.tokenizer = Tokenizer.build_tokenizer(
+                config=self.config,
+                cache_path='{0}_tokenizer.dat'.format(os.path.basename(self.config.dataset_name)),
+                pre_tokenizer=AutoTokenizer.from_pretrained(self.config.pretrained_bert),
+            )
+            self.embedding_matrix = build_embedding_matrix(
+                config=self.config,
+                tokenizer=self.tokenizer,
+                cache_path='{0}_{1}_embedding_matrix.dat'.format(str(self.config.embed_dim), os.path.basename(self.config.dataset_name)),
+            )
+            self.train_set = GloVeRNARDataset(self.config, self.tokenizer, dataset_type='train')
+            self.test_set = GloVeRNARDataset(self.config, self.tokenizer, dataset_type='test')
+            self.valid_set = GloVeRNARDataset(self.config, self.tokenizer, dataset_type='valid')
+
+            self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
+
+        if self.config.cache_dataset and not os.path.exists(cache_path) or self.config.overwrite_cache:
+            print('Caching dataset... please remove cached dataset if change model or dataset')
+            with open(cache_path, mode='wb') as f_cache:
+                pickle.dump((self.train_set, self.valid_set, self.test_set, self.config), f_cache)
+
+    def __init__(self, config):
+
+        super().__init__(config)
+
+        self._load_dataset_and_prepare_dataloader()
+
+        self._init_misc()
+
+        self.config.pop('dataset_dict', None)
 
     def reload_model(self, ckpt='./init_state_dict.bin'):
         if os.path.exists(ckpt):
@@ -216,7 +210,12 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                 self.model.train()
                 self.optimizer.zero_grad()
                 inputs = [sample_batched[col].to(self.config.device) for col in self.config.inputs_cols]
-                outputs = self.model(inputs)
+                if self.config.use_amp:
+                    with torch.cuda.amp.autocast():
+                        outputs = self.model(inputs)
+                else:
+                    outputs = self.model(inputs)
+
                 targets = sample_batched['label'].to(self.config.device)
 
                 if isinstance(outputs, dict) and 'loss' in outputs:
@@ -225,7 +224,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                     loss = criterion(outputs.view(-1), targets)
 
                 losses.append(loss.item())
-                if self.scaler:
+                if self.config.use_amp and self.scaler:
                     self.scaler.scale(loss).backward()
                     self.scaler.step(self.optimizer)
                     self.scaler.update()
@@ -239,7 +238,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
 
                 # evaluate if test set is available
                 if global_step % self.config.log_step == 0:
-                    if self.config.dataset_file['test'] and epoch >= self.config.evaluate_begin:
+                    if self.config.test_dataloader and epoch >= self.config.evaluate_begin:
 
                         if self.valid_dataloader:
                             test_r2 = self._evaluate_r2(self.valid_dataloader, criterion)
@@ -367,15 +366,20 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                     self.optimizer.zero_grad()
                     inputs = [sample_batched[col].to(self.config.device) for col in self.config.inputs_cols]
                     with torch.cuda.amp.autocast():
-                        outputs = self.model(inputs)
-                        targets = sample_batched['label'].to(self.config.device)
-
-                        if isinstance(outputs, dict) and 'loss' in outputs:
-                            loss = outputs['loss']
+                        if self.config.use_amp:
+                            with torch.cuda.amp.autocast():
+                                outputs = self.model(inputs)
                         else:
-                            loss = criterion(outputs.view(-1), targets)
+                            outputs = self.model(inputs)
 
-                    if self.scaler:
+                    targets = sample_batched['label'].to(self.config.device)
+
+                    if isinstance(outputs, dict) and 'loss' in outputs:
+                        loss = outputs['loss']
+                    else:
+                        loss = criterion(outputs.view(-1), targets)
+
+                    if self.config.use_amp and self.scaler:
                         self.scaler.scale(loss).backward()
                         self.scaler.step(self.optimizer)
                         self.scaler.update()
@@ -389,7 +393,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
 
                     # evaluate if test set is available
                     if global_step % self.config.log_step == 0:
-                        if self.config.dataset_file['test'] and epoch >= self.config.evaluate_begin:
+                        if self.config.test_dataloader and epoch >= self.config.evaluate_begin:
 
                             test_r2 = self._evaluate_r2(valid_dataloader, criterion)
 

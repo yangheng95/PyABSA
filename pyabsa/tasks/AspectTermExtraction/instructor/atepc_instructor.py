@@ -42,6 +42,8 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
 
         self._init_misc()
 
+        self.config.pop('dataset_dict', None)
+
     def _load_dataset_and_prepare_dataloader(self):
 
         self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert, do_lower_case_case='uncased' in self.config.pretrained_bert)
@@ -54,16 +56,8 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
 
         if os.path.exists(cache_path) and not self.config.overwrite_cache:
             print(colored('Loading dataset cache: {}'.format(cache_path), 'green'))
-            with open(cache_path, mode='rb') as f:
-                self.train_data, self.valid_data, self.test_data, _config = pickle.load(f)
-                self.config.num_labels = _config.num_labels
-
-            # only identify the labels in trainer set, make sure the labels are the same type in the test set
-            for key in _config.args:
-                if key not in self.config.args:
-                    self.config.args[key] = _config.args[key]
-                    self.config.args_call_count[key] = _config.args_call_count[key]
-            self.config.label_list = _config.label_list
+            with open(cache_path, mode='rb') as f_cache:
+                self.train_set, self.valid_set, self.test_set, self.config = pickle.load(f_cache)
 
         else:
             self.train_examples = processor.get_train_examples(self.config.dataset_file['train'], 'train')
@@ -80,8 +74,8 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
             lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in train_features], dtype=torch.float32)
             lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in train_features], dtype=torch.float32)
 
-            self.train_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
-                                            all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
+            self.train_set = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
+                                           all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
 
             if self.config.dataset_file['valid']:
                 self.valid_examples = processor.get_valid_examples(self.config.dataset_file['valid'], 'valid')
@@ -96,10 +90,10 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                 all_lmask_ids = torch.tensor([f.label_mask for f in valid_features], dtype=torch.long)
                 lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in valid_features], dtype=torch.float32)
                 lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in valid_features], dtype=torch.float32)
-                self.valid_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
-                                                all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
+                self.valid_set = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
+                                               all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
             else:
-                self.valid_data = None
+                self.valid_set = None
 
             if self.config.dataset_file['test']:
                 self.test_examples = processor.get_test_examples(self.config.dataset_file['test'], 'test')
@@ -115,33 +109,33 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                 lcf_cdm_vec = torch.tensor([f.lcf_cdm_vec for f in test_features], dtype=torch.float32)
                 lcf_cdw_vec = torch.tensor([f.lcf_cdw_vec for f in test_features], dtype=torch.float32)
 
-                self.test_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
-                                               all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
+                self.test_set = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
+                                              all_polarities, all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
             else:
-                self.test_data = None
-
-            if self.config.cache_dataset and not os.path.exists(cache_path) or self.config.overwrite_cache:
-                print(colored('Caching dataset... please remove cached dataset if any problem happens.', 'red'))
-                with open(cache_path, mode='wb') as f:
-                    pickle.dump((self.train_data, self.valid_data, self.test_data, self.config), f)
+                self.test_set = None
 
         self.num_train_optimization_steps = int(
-            len(self.train_data) / self.config.batch_size / self.config.gradient_accumulation_steps) * self.config.num_epoch
+            len(self.train_set) / self.config.batch_size / self.config.gradient_accumulation_steps) * self.config.num_epoch
 
-        train_sampler = RandomSampler(self.train_data)
-        self.train_dataloader = DataLoader(self.train_data, sampler=train_sampler, pin_memory=True, batch_size=self.config.batch_size)
+        train_sampler = RandomSampler(self.train_set)
+        self.train_dataloader = DataLoader(self.train_set, sampler=train_sampler, pin_memory=True, batch_size=self.config.batch_size)
 
-        if self.config.dataset_file['valid']:
-            valid_sampler = SequentialSampler(self.valid_data)
-            self.valid_dataloader = DataLoader(self.valid_data, sampler=valid_sampler, pin_memory=True, batch_size=self.config.batch_size)
+        if self.valid_set:
+            valid_sampler = SequentialSampler(self.valid_set)
+            self.valid_dataloader = DataLoader(self.valid_set, sampler=valid_sampler, pin_memory=True, batch_size=self.config.batch_size)
 
-        if self.config.dataset_file['test']:
-            test_sampler = SequentialSampler(self.test_data)
-            self.test_dataloader = DataLoader(self.test_data, sampler=test_sampler, pin_memory=True, batch_size=self.config.batch_size)
+        if self.test_set:
+            test_sampler = SequentialSampler(self.test_set)
+            self.test_dataloader = DataLoader(self.test_set, sampler=test_sampler, pin_memory=True, batch_size=self.config.batch_size)
 
         self.bert_base_model = AutoModel.from_pretrained(self.config.pretrained_bert)
         self.config.sep_indices = self.tokenizer.sep_token_id
         self.bert_base_model.config.num_labels = self.config.num_labels
+
+        if self.config.cache_dataset and not os.path.exists(cache_path) or self.config.overwrite_cache:
+            print(colored('Caching dataset... please remove cached dataset if any problem happens.', 'red'))
+            with open(cache_path, mode='wb') as f_cache:
+                pickle.dump((self.train_set, self.valid_set, self.test_set, self.config), f_cache)
 
         self.model = self.config.model(self.bert_base_model, config=self.config)
 
@@ -157,7 +151,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
             self.warmup_scheduler = warmup.UntunedLinearWarmup(self.optimizer)
 
         self.logger.info("***** Running trainer for Aspect Term Extraction *****")
-        self.logger.info("  Num examples = %d", len(self.train_data))
+        self.logger.info("  Num examples = %d", len(self.train_set))
         self.logger.info("  Batch size = %d", self.config.batch_size)
         self.logger.info("  Num steps = %d", self.num_train_optimization_steps)
         sum_loss = 0
@@ -189,7 +183,19 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                 l_mask = l_mask.to(self.config.device)
                 lcf_cdm_vec = lcf_cdm_vec.to(self.config.device)
                 lcf_cdw_vec = lcf_cdw_vec.to(self.config.device)
-                with torch.cuda.amp.autocast():
+                if self.config.use_amp:
+                    with torch.cuda.amp.autocast():
+                        loss_ate, loss_apc = self.model(input_ids_spc,
+                                                        token_type_ids=segment_ids,
+                                                        attention_mask=input_mask,
+                                                        labels=label_ids,
+                                                        polarity=polarity,
+                                                        valid_ids=valid_ids,
+                                                        attention_mask_label=l_mask,
+                                                        lcf_cdm_vec=lcf_cdm_vec,
+                                                        lcf_cdw_vec=lcf_cdw_vec
+                                                        )
+                else:
                     loss_ate, loss_apc = self.model(input_ids_spc,
                                                     token_type_ids=segment_ids,
                                                     attention_mask=input_mask,
@@ -200,18 +206,18 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                                                     lcf_cdm_vec=lcf_cdm_vec,
                                                     lcf_cdw_vec=lcf_cdw_vec
                                                     )
-                    # for multi-gpu, average loss by gpu instance number
-                    if self.config.auto_device == DeviceTypeOption.ALL_CUDA:
-                        loss_ate, loss_apc = loss_ate.mean(), loss_apc.mean()
-                    ate_loss_weight = self.config.args.get('ate_loss_weight', 1.0)
+                # for multi-gpu, average loss by gpu instance number
+                if self.config.auto_device == DeviceTypeOption.ALL_CUDA:
+                    loss_ate, loss_apc = loss_ate.mean(), loss_apc.mean()
+                ate_loss_weight = self.config.args.get('ate_loss_weight', 1.0)
 
-                    loss = loss_ate + ate_loss_weight * loss_apc  # the optimal weight of loss may be different according to dataset
+                loss = loss_ate + ate_loss_weight * loss_apc  # the optimal weight of loss may be different according to dataset
 
                 sum_loss += loss.item()
 
                 losses.append(loss.item())
 
-                if self.scaler:
+                if self.config.use_amp and self.scaler:
                     self.scaler.scale(loss).backward()
                     self.scaler.step(self.optimizer)
                     self.scaler.update()
@@ -229,8 +235,8 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                 global_step += 1
                 global_step += 1
                 if global_step % self.config.log_step == 0:
-                    if self.config.dataset_file['test'] and epoch >= self.config.evaluate_begin:
-                        if self.valid_data:
+                    if self.config.test_dataloader and epoch >= self.config.evaluate_begin:
+                        if self.valid_set:
                             apc_result, ate_result = self._evaluate_acc_f1(self.valid_dataloader)
                         else:
                             apc_result, ate_result = self._evaluate_acc_f1(self.test_dataloader)
@@ -302,7 +308,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
 
         apc_result, ate_result = self._evaluate_acc_f1(self.test_dataloader)
 
-        if self.valid_data and self.test_data:
+        if self.valid_set and self.test_set:
             self.config.MV.add_metric('Test-APC-Acc', apc_result['apc_test_acc'])
             self.config.MV.add_metric('Test-APC-F1', apc_result['apc_test_f1'])
             self.config.MV.add_metric('Test-ATE-F1', ate_result)

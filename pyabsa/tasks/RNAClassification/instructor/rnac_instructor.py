@@ -9,7 +9,6 @@
 
 import os
 import pickle
-import random
 import re
 import shutil
 import time
@@ -18,10 +17,8 @@ from hashlib import sha256
 import numpy
 import torch
 import torch.nn as nn
-from findfile import find_file
 from sklearn import metrics
 from torch import cuda
-from torch.utils.data import DataLoader, random_split, ConcatDataset, RandomSampler, SequentialSampler
 from tqdm import tqdm
 from transformers import AutoModel, AutoTokenizer
 
@@ -46,6 +43,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
 
         self._init_misc()
 
+        self.config.pop('dataset_dict', None)
+
     def _init_misc(self):
         # use DataParallel for trainer if device count larger than 1
         if self.config.auto_device == DeviceTypeOption.ALL_CUDA:
@@ -63,10 +62,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         self.train_dataloaders = []
         self.valid_dataloaders = []
 
-        if os.path.exists('./init_state_dict.bin'):
-            os.remove('./init_state_dict.bin')
-        if self.config.cross_validate_fold > 0:
-            torch.save(self.model.state_dict(), './init_state_dict.bin')
+        torch.save(self.model.state_dict(), './init_state_dict.bin')
 
         self.config.device = torch.device(self.config.device)
         if self.config.device.type == 'cuda':
@@ -110,7 +106,13 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 self.model.train()
                 self.optimizer.zero_grad()
                 inputs = [sample_batched[col].to(self.config.device) for col in self.config.inputs_cols]
-                outputs = self.model(inputs)
+
+                if self.config.use_amp:
+                    with torch.cuda.amp.autocast():
+                        outputs = self.model(inputs)
+                else:
+                    outputs = self.model(inputs)
+
                 targets = sample_batched['label'].to(self.config.device)
 
                 if isinstance(outputs, dict) and 'loss' in outputs:
@@ -119,7 +121,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                     loss = criterion(outputs, targets)
 
                 losses.append(loss.item())
-                if self.scaler:
+                if self.config.use_amp and self.scaler:
                     self.scaler.scale(loss).backward()
                     self.scaler.step(self.optimizer)
                     self.scaler.update()
@@ -133,7 +135,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
 
                 # evaluate if test set is available
                 if global_step % self.config.log_step == 0:
-                    if self.config.dataset_file['test'] and epoch >= self.config.evaluate_begin:
+                    if self.test_dataloader and epoch >= self.config.evaluate_begin:
 
                         if self.valid_dataloader:
                             test_acc, f1 = self._evaluate_acc_f1(self.valid_dataloader)
@@ -200,7 +202,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
 
         if self.valid_dataloader:
             print('Loading best model: {} and evaluating on test set ...'.format(save_path))
-            self._reload_model_state_dict(find_file(save_path, '.state_dict'))
+            self._reload_model_state_dict(save_path)
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
 
             self.config.MV.add_metric('Max-Test-Acc', max_fold_acc * 100)
@@ -245,7 +247,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         self.config.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
         self.config.max_test_metrics = {'max_test_acc': 0, 'max_test_f1': 0}
 
-        for f, (train_dataloader, val_dataloader) in enumerate(zip(self.train_dataloaders, self.valid_dataloaders)):
+        for f, (train_dataloader, valid_dataloader) in enumerate(zip(self.train_dataloaders, self.valid_dataloaders)):
             patience = self.config.patience + self.config.evaluate_begin
             if self.config.log_step < 0:
                 self.config.log_step = len(self.train_dataloaders[0]) if self.config.log_step < 0 else self.config.log_step
@@ -275,16 +277,20 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                     self.model.train()
                     self.optimizer.zero_grad()
                     inputs = [sample_batched[col].to(self.config.device) for col in self.config.inputs_cols]
-                    with torch.cuda.amp.autocast():
+                    if self.config.use_amp:
+                        with torch.cuda.amp.autocast():
+                            outputs = self.model(inputs)
+                    else:
                         outputs = self.model(inputs)
-                        targets = sample_batched['label'].to(self.config.device)
 
-                        if isinstance(outputs, dict) and 'loss' in outputs:
-                            loss = outputs['loss']
-                        else:
-                            loss = criterion(outputs, targets)
+                    targets = sample_batched['label'].to(self.config.device)
 
-                    if self.scaler:
+                    if isinstance(outputs, dict) and 'loss' in outputs:
+                        loss = outputs['loss']
+                    else:
+                        loss = criterion(outputs, targets)
+
+                    if self.config.use_amp and self.scaler:
                         self.scaler.scale(loss).backward()
                         self.scaler.step(self.optimizer)
                         self.scaler.update()
@@ -298,9 +304,9 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
 
                     # evaluate if test set is available
                     if global_step % self.config.log_step == 0:
-                        if self.config.dataset_file['test'] and epoch >= self.config.evaluate_begin:
+                        if self.valid_dataloader and epoch >= self.config.evaluate_begin:
 
-                            test_acc, f1 = self._evaluate_acc_f1(val_dataloader)
+                            test_acc, f1 = self._evaluate_acc_f1(valid_dataloader)
 
                             self.config.metrics_of_this_checkpoint['acc'] = test_acc
                             self.config.metrics_of_this_checkpoint['f1'] = f1
@@ -363,8 +369,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             self.config.MV.add_metric('Fold{}-Max-Valid-F1'.format(f), max_fold_f1 * 100)
 
             self.logger.info(self.config.MV.summary(no_print=True))
-            if os.path.exists('./init_state_dict.bin'):
-                self._reload_model_state_dict()
+            self._reload_model_state_dict('./init_state_dict.bin')
 
         max_test_acc = numpy.max(fold_test_acc)
         max_test_f1 = numpy.mean(fold_test_f1)
@@ -446,28 +451,16 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
 
         if os.path.exists(cache_path) and not self.config.overwrite_cache:
             print('Loading dataset cache:', cache_path)
-            if self.config.dataset_file['test']:
-                self.train_set, self.valid_set, self.test_set, opt = pickle.load(open(cache_path, mode='rb'))
-            else:
-                self.train_set, opt = pickle.load(open(cache_path, mode='rb'))
-            # reset output dim according to dataset labels
-            self.config.output_dim = self.config.output_dim
-            self.config.label_to_index = self.config.label_to_index
-            self.config.index_to_label = self.config.index_to_label
+            with open(cache_path, mode='rb') as f_cache:
+                self.train_set, self.valid_set, self.test_set, self.config = pickle.load(f_cache)
 
         # init BERT-based model and dataset
         if hasattr(BERTRNACModelList, self.config.model.__name__):
             self.tokenizer = PretrainedTokenizer(self.config)
             if not os.path.exists(cache_path) or self.config.overwrite_cache:
                 self.train_set = BERTRNACDataset(self.config, self.tokenizer, dataset_type='train')
-                if self.config.dataset_file['test']:
-                    self.test_set = BERTRNACDataset(self.config, self.tokenizer, dataset_type='test')
-                else:
-                    self.test_set = None
-                if self.config.dataset_file['valid']:
-                    self.valid_set = BERTRNACDataset(self.config, self.tokenizer, dataset_type='valid')
-                else:
-                    self.valid_set = None
+                self.test_set = BERTRNACDataset(self.config, self.tokenizer, dataset_type='test')
+                self.valid_set = BERTRNACDataset(self.config, self.tokenizer, dataset_type='valid')
             try:
                 self.bert = AutoModel.from_pretrained(self.config.pretrained_bert)
             except ValueError as e:
@@ -489,23 +482,15 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 cache_path='{0}_{1}_embedding_matrix.dat'.format(str(self.config.embed_dim), os.path.basename(self.config.dataset_name)),
             )
             self.train_set = GloVeRNACDataset(self.config, self.tokenizer, dataset_type='train')
+            self.test_set = GloVeRNACDataset(self.config, self.tokenizer, dataset_type='test')
+            self.valid_set = GloVeRNACDataset(self.config, self.tokenizer, dataset_type='valid')
 
-            if self.config.dataset_file['test']:
-                self.test_set = GloVeRNACDataset(self.config, self.tokenizer, dataset_type='test')
-            else:
-                self.test_set = None
-            if self.config.dataset_file['valid']:
-                self.valid_set = GloVeRNACDataset(self.config, self.tokenizer, dataset_type='valid')
-            else:
-                self.valid_set = None
             self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
 
         if self.config.cache_dataset and not os.path.exists(cache_path) or self.config.overwrite_cache:
             print('Caching dataset... please remove cached dataset if change model or dataset')
-            if self.config.dataset_file['test']:
-                pickle.dump((self.train_set, self.valid_set, self.test_set, self.config), open(cache_path, mode='wb'))
-            else:
-                pickle.dump((self.train_set, self.config), open(cache_path, mode='wb'))
+            with open(cache_path, mode='wb') as f_cache:
+                pickle.dump((self.train_set, self.valid_set, self.test_set, self.config), f_cache)
 
     def run(self):
         # Loss and Optimizer

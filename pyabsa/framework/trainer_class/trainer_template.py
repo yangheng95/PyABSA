@@ -68,7 +68,9 @@ def init_config(config):
 
     if isinstance(config.dataset, DatasetItem):
         config.dataset_name = config.dataset.dataset_name
-    else:
+    elif isinstance(config.dataset, DatasetDict):
+        config.dataset_name = config.dataset['dataset_name']
+    elif isinstance(config.dataset, str):
         dataset = DatasetItem('custom_dataset', config.dataset)
         config.dataset_name = dataset.dataset_name
 
@@ -145,8 +147,6 @@ class Trainer:
         """
         if isinstance(self.config.dataset, DatasetDict):
             self.config.dataset_dict = self.config.dataset
-            self.config.dataset = self.config.dataset_dict['dataset_name']
-            self.config.dataset_file = {'train': [], 'valid': [], 'test': []}
         else:
             # detect dataset
             dataset_file = detect_dataset(self.config.dataset, task_code=self.config.task_code, load_aug=self.config.load_aug, config=self.config)
@@ -154,7 +154,8 @@ class Trainer:
         if self.config.checkpoint_save_mode or self.config.dataset_file['valid'] or self.config.dataset_dict['test']:
             if self.config.path_to_save:
                 self.config.model_path_to_save = self.config.path_to_save
-            elif self.config.dataset_file['valid'] and not self.config.checkpoint_save_mode:
+            elif ((hasattr(self.config, 'dataset_file') and 'valid' in self.config.dataset_file) or
+                  (hasattr(self.config, 'dataset_dict') and 'valid' in self.config.dataset_dict)) and not self.config.checkpoint_save_mode:
                 print('Using Validation set needs to save checkpoint, turn on checkpoint-saving ...')
                 self.config.model_path_to_save = 'checkpoints'
                 self.config.save_mode = 1

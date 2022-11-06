@@ -69,12 +69,8 @@ class APCEnsembler(nn.Module):
 
             if load_dataset and os.path.exists(cache_path) and not self.config.overwrite_cache:
                 print(colored('Loading dataset cache: {}'.format(cache_path), 'green'))
-                with open(cache_path, mode='rb') as f:
-                    self.train_set, self.valid_set, self.test_set, config = pickle.load(f)
-                    # reset output dim according to dataset labels
-                    self.config.output_dim = config.output_dim
-                    self.config.label_to_index = config.label_to_index
-                    self.config.index_to_label = config.index_to_label
+                with open(cache_path, mode='rb') as f_cache:
+                    self.train_set, self.valid_set, self.test_set, self.config = pickle.load(f_cache)
 
             if hasattr(APCModelList, models[i].__name__):
                 try:
@@ -91,10 +87,8 @@ class APCEnsembler(nn.Module):
 
                 if load_dataset and not os.path.exists(cache_path) or self.config.overwrite_cache:
                     self.train_set = ABSADataset(self.config, self.tokenizer, dataset_type='train') if not self.train_set else self.train_set
-                    if self.config.dataset_file['test']:
-                        self.test_set = ABSADataset(self.config, self.tokenizer, dataset_type='test') if not self.test_set else self.test_set
-                    if self.config.dataset_file['valid']:
-                        self.valid_set = ABSADataset(self.config, self.tokenizer, dataset_type='valid') if not self.valid_set else self.valid_set
+                    self.test_set = ABSADataset(self.config, self.tokenizer, dataset_type='test') if not self.test_set else self.test_set
+                    self.valid_set = ABSADataset(self.config, self.tokenizer, dataset_type='valid') if not self.valid_set else self.valid_set
                 self.models.append(models[i](self.bert, self.config))
 
             elif hasattr(BERTBaselineAPCModelList, models[i].__name__):
@@ -103,10 +97,8 @@ class APCEnsembler(nn.Module):
 
                 if load_dataset and not os.path.exists(cache_path) or self.config.overwrite_cache:
                     self.train_set = BERTBaselineABSADataset(self.config, self.tokenizer, dataset_type='train') if not self.train_set else self.train_set
-                    if self.config.dataset_file['test']:
-                        self.test_set = BERTBaselineABSADataset(self.config, self.tokenizer, dataset_type='test') if not self.test_set else self.test_set
-                    if self.config.dataset_file['valid']:
-                        self.valid_set = BERTBaselineABSADataset(self.config, self.tokenizer, dataset_type='valid') if not self.valid_set else self.valid_set
+                    self.test_set = BERTBaselineABSADataset(self.config, self.tokenizer, dataset_type='test') if not self.test_set else self.test_set
+                    self.valid_set = BERTBaselineABSADataset(self.config, self.tokenizer, dataset_type='valid') if not self.valid_set else self.valid_set
                 self.models.append(models[i](copy.deepcopy(self.bert) if self.config.deep_ensemble else self.bert, self.config))
 
             elif hasattr(GloVeAPCModelList, models[i].__name__):
@@ -122,16 +114,15 @@ class APCEnsembler(nn.Module):
 
                 if load_dataset and not os.path.exists(cache_path) or self.config.overwrite_cache:
                     self.train_set = GloVeABSADataset(self.config, self.tokenizer, dataset_type='train') if not self.train_set else self.train_set
-                    if self.config.dataset_file['test']:
-                        self.test_set = GloVeABSADataset(self.config, self.tokenizer, dataset_type='test') if not self.test_set else self.test_set
-                    if self.config.dataset_file['valid']:
-                        self.valid_set = GloVeABSADataset(self.config, self.tokenizer, dataset_type='valid') if not self.valid_set else self.valid_set
+                    self.test_set = GloVeABSADataset(self.config, self.tokenizer, dataset_type='test') if not self.test_set else self.test_set
+                    self.valid_set = GloVeABSADataset(self.config, self.tokenizer, dataset_type='valid') if not self.valid_set else self.valid_set
                 self.models.append(models[i](copy.deepcopy(self.embedding_matrix) if self.config.deep_ensemble else self.embedding_matrix, self.config))
 
-            if self.config.cache_dataset and not os.path.exists(cache_path) and not config.overwrite_cache:
+            if self.config.cache_dataset and not os.path.exists(cache_path) and not self.config.overwrite_cache:
                 print(colored('Caching dataset... please remove cached dataset if any problem happens.', 'red'))
-                with open(cache_path, mode='wb') as f:
-                    pickle.dump((self.train_set, self.valid_set, self.test_set, self.config), f)
+                with open(cache_path, mode='wb') as f_cache:
+                    pickle.dump((self.train_set, self.valid_set, self.test_set, self.config), f_cache)
+
 
             if load_dataset:
                 train_sampler = RandomSampler(self.train_set if not self.train_set else self.train_set)

@@ -5,7 +5,7 @@ import pandas as pd
 import requests
 
 from pyabsa import ATEPCCheckpointManager
-from pyabsa.framework.dataset.dataset_manager import download_datasets_from_github, ABSADatasetList, detect_infer_dataset
+from pyabsa.functional.dataset.dataset_manager import download_datasets_from_github, ABSADatasetList, detect_infer_dataset
 
 download_datasets_from_github(os.getcwd())
 
@@ -15,7 +15,7 @@ URL = 'https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fhuggingface.c
 
 
 def get_example(dataset):
-    task = TaskCodeOption.Aspect_Polarity_Classification
+    task = 'apc'
     dataset_file = detect_infer_dataset(dataset_items[dataset], task)
 
     for fname in dataset_file:

@@ -37,6 +37,7 @@ from pyabsa.framework.tokenizer_class.tokenizer_class import PretrainedTokenizer
 
 class TADTrainingInstructor(BaseTrainingInstructor):
     def _init_misc(self):
+
         random.seed(self.config.seed)
         numpy.random.seed(self.config.seed)
         torch.manual_seed(self.config.seed)
@@ -60,7 +61,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
         )
 
         self.train_dataloaders = []
-        self.val_dataloaders = []
+        self.valid_dataloaders = []
 
         if os.path.exists('./init_state_dict.bin'):
             os.remove('./init_state_dict.bin')
@@ -83,36 +84,17 @@ class TADTrainingInstructor(BaseTrainingInstructor):
 
         if os.path.exists(cache_path) and not self.config.overwrite_cache:
             print('Loading dataset cache:', cache_path)
-            if self.config.dataset_file['test']:
-                self.train_set, self.valid_set, self.test_set, config = pickle.load(open(cache_path, mode='rb'))
-            else:
-                self.train_set, config = pickle.load(open(cache_path, mode='rb'))
-            # reset output dim according to dataset labels
-            self.config.output_dim1 = config.output_dim1
-            self.config.label_to_index = config.label_to_index
-            self.config.index_to_label = config.index_to_label
-
-            self.config.output_dim2 = config.output_dim2
-            self.config.adv_label_to_index = config.adv_label_to_index
-            self.config.index_to_adv_label = config.index_to_adv_label
-
-            self.config.output_dim3 = config.output_dim3
-            self.config.ood_label_to_index = config.ood_label_to_index
-            self.config.index_to_ood_label = config.index_to_ood_label
+            with open(cache_path, mode='rb') as f_cache:
+                self.train_set, self.valid_set, self.test_set, self.config = pickle.load(f_cache)
 
         # init BERT-based model and dataset
         if hasattr(BERTTADModelList, self.config.model.__name__):
             self.tokenizer = PretrainedTokenizer(self.config)
             if not os.path.exists(cache_path) or self.config.overwrite_cache:
                 self.train_set = BERTTADDataset(self.config, self.tokenizer, dataset_type='train')
-                if self.config.dataset_file['test']:
-                    self.test_set = BERTTADDataset(self.config, self.tokenizer, dataset_type='test')
-                else:
-                    self.test_set = None
-                if self.config.dataset_file['valid']:
-                    self.valid_set = BERTTADDataset(self.config, self.tokenizer, dataset_type='valid')
-                else:
-                    self.valid_set = None
+                self.test_set = BERTTADDataset(self.config, self.tokenizer, dataset_type='test')
+                self.valid_set = BERTTADDataset(self.config, self.tokenizer, dataset_type='valid')
+
             try:
                 self.bert = AutoModel.from_pretrained(self.config.pretrained_bert)
             except ValueError as e:
@@ -133,33 +115,25 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                 cache_path='{0}_{1}_embedding_matrix.dat'.format(str(self.config.embed_dim), os.path.basename(self.config.dataset_name)),
             )
             self.train_set = GloVeTADDataset(self.config, self.tokenizer, dataset_type='train')
+            self.test_set = GloVeTADDataset(self.config, self.tokenizer, dataset_type='test')
+            self.valid_set = GloVeTADDataset(self.config, self.tokenizer, dataset_type='valid')
 
-            if self.config.dataset_file['test']:
-                self.test_set = GloVeTADDataset(self.config, self.tokenizer, dataset_type='test')
-            else:
-                self.test_set = None
-            if self.config.dataset_file['valid']:
-                self.valid_set = GloVeTADDataset(self.config, self.tokenizer, dataset_type='valid')
-            else:
-                self.valid_set = None
             self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
 
         if self.config.cache_dataset and not os.path.exists(cache_path) or self.config.overwrite_cache:
             print('Caching dataset... please remove cached dataset if change model or dataset')
-            if self.config.dataset_file['test']:
-                pickle.dump((self.train_set, self.valid_set, self.test_set, self.config), open(cache_path, mode='wb'))
-            else:
-                pickle.dump((self.train_set, self.config), open(cache_path, mode='wb'))
+            with open(cache_path, mode='wb') as f_cache:
+                pickle.dump((self.train_set, self.valid_set, self.test_set, self.config), f_cache)
 
     def __init__(self, config):
 
         super().__init__(config)
 
-        self.config = config
-
         self._load_dataset_and_prepare_dataloader()
 
         self._init_misc()
+
+        self.config.pop('dataset_dict', None)
 
     def reload_model_state_dict(self, ckpt='./init_state_dict.bin'):
         if os.path.exists(ckpt):
@@ -176,7 +150,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                 self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.config.batch_size, shuffle=False)
 
             if self.valid_set:
-                self.val_dataloader = DataLoader(dataset=self.valid_set, batch_size=self.config.batch_size, shuffle=False)
+                self.valid_dataloader = DataLoader(dataset=self.valid_set, batch_size=self.config.batch_size, shuffle=False)
         else:
             split_dataset = train_set
             len_per_fold = len(split_dataset) // self.config.cross_validate_fold + 1
@@ -190,7 +164,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                 val_sampler = SequentialSampler(val_set if not val_set else val_set)
                 self.train_dataloaders.append(
                     DataLoader(dataset=train_set, batch_size=self.config.batch_size, sampler=train_sampler))
-                self.val_dataloaders.append(
+                self.valid_dataloaders.append(
                     DataLoader(dataset=val_set, batch_size=self.config.batch_size, sampler=val_sampler))
                 if self.test_set:
                     self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.config.batch_size, shuffle=False)
@@ -202,7 +176,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
             self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=len(self.train_dataloaders[0]) * self.config.num_epoch)
             self.warmup_scheduler = warmup.UntunedLinearWarmup(self.optimizer)
 
-        if self.val_dataloaders:
+        if self.valid_dataloaders:
             return self._k_fold_train_and_evaluate(criterion)
         else:
             return self._train_and_evaluate(criterion)
@@ -277,11 +251,11 @@ class TADTrainingInstructor(BaseTrainingInstructor):
 
                 # evaluate if test set is available
                 if global_step % self.config.log_step == 0:
-                    if self.config.dataset_file['test'] and epoch >= self.config.evaluate_begin:
+                    if self.test_dataloder and epoch >= self.config.evaluate_begin:
 
-                        if self.val_dataloader:
+                        if self.valid_dataloader:
                             test_label_acc, test_label_f1, test_adv_det_acc, test_adv_det_f1, test_adv_tr_acc, test_adv_tr_f1 = \
-                                self._evaluate_acc_f1(self.val_dataloader)
+                                self._evaluate_acc_f1(self.valid_dataloader)
                         else:
                             test_label_acc, test_label_f1, test_adv_det_acc, test_adv_det_f1, test_adv_tr_acc, test_adv_tr_f1 = \
                                 self._evaluate_acc_f1(self.test_dataloader)
@@ -380,12 +354,12 @@ class TADTrainingInstructor(BaseTrainingInstructor):
             if patience < 0:
                 break
 
-        if not self.val_dataloader:
+        if not self.valid_dataloader:
             self.config.MV.add_metric('Max-CLS-Acc w/o Valid Set', max_label_fold_acc * 100)
             self.config.MV.add_metric('Max-CLS-F1 w/o Valid Set', max_label_fold_f1 * 100)
             self.config.MV.add_metric('Max-AdvDet-Acc w/o Valid Set', max_adv_det_fold_acc * 100)
             self.config.MV.add_metric('Max-AdvDet-F1 w/o Valid Set', max_adv_det_fold_f1 * 100)
-        if self.val_dataloader:
+        if self.valid_dataloader:
             print('Loading best model: {} and evaluating on test set ...'.format(save_path))
             self.reload_model_state_dict(find_file(save_path, '.state_dict'))
             max_label_fold_acc, max_label_fold_f1, max_adv_det_fold_acc, max_adv_det_fold_f1, max_adv_tr_fold_acc, max_adv_tr_fold_f1 = \
@@ -411,10 +385,10 @@ class TADTrainingInstructor(BaseTrainingInstructor):
 
         print_args(self.config, self.config.logger)
 
-        if self.val_dataloader or self.config.save_mode:
+        if self.valid_dataloader or self.config.save_mode:
             del self.train_dataloaders
             del self.test_dataloader
-            del self.val_dataloader
+            del self.valid_dataloader
             del self.model
             cuda.empty_cache()
             time.sleep(3)
@@ -422,7 +396,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
         else:
             del self.train_dataloaders
             del self.test_dataloader
-            del self.val_dataloader
+            del self.valid_dataloader
             cuda.empty_cache()
             time.sleep(3)
             return self.model, self.config, self.tokenizer

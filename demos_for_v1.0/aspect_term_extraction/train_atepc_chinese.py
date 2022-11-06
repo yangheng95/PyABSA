@@ -10,10 +10,10 @@
 ########################################################################################################################
 import random
 
-from pyabsa.framework import ATEPCModelList
-from pyabsa.framework import Trainer, ATEPCTrainer
-from pyabsa.framework import ABSADatasetList
-from pyabsa.framework import ATEPCConfigManager
+from pyabsa.functional import ATEPCModelList
+from pyabsa.functional import Trainer, ATEPCTrainer
+from pyabsa.functional import ABSADatasetList
+from pyabsa.functional import ATEPCConfigManager
 
 atepc_config_chinese = ATEPCConfigManager.get_atepc_config_chinese()
 atepc_config_chinese.model = ATEPCModelList.FAST_LCF_ATEPC

@@ -40,24 +40,33 @@ class Tokenizer(object):
             config.logger.info('Loading tokenizer on {}'.format(tokenizer_path))
             tokenizer = pickle.load(open(tokenizer_path, 'rb'))
         else:
-            config.logger.info('Building tokenizer for {} on {}'.format(config.dataset_file, tokenizer_path))
             words = set()
-            for dataset_type in config.dataset_file:
-                for file in config.dataset_file[dataset_type]:
-                    fin = open(file, 'r', encoding='utf-8', newline='\n', errors='ignore')
-                    lines = fin.readlines()
-                    fin.close()
-                    for i in range(0, len(lines)):
+            if hasattr(config, 'dataset_file'):
+                config.logger.info('Building tokenizer for {} on {}'.format(config.dataset_file, tokenizer_path))
+                for dataset_type in config.dataset_file:
+                    for file in config.dataset_file[dataset_type]:
+                        fin = open(file, 'r', encoding='utf-8', newline='\n', errors='ignore')
+                        lines = fin.readlines()
+                        fin.close()
+                        for i in range(0, len(lines)):
+                            if pre_tokenizer:
+                                words.update(pre_tokenizer.tokenize(lines[i].strip()))
+                            else:
+                                words.update(lines[i].strip().split())
+            elif hasattr(config, 'dataset_dict'):
+                config.logger.info('Building tokenizer for {} on {}'.format(config.dataset_name, tokenizer_path))
+                for dataset_type in ['train', 'test', 'valid']:
+                    for i, data in enumerate(config.dataset_dict[dataset_type]):
                         if pre_tokenizer:
-                            words.update(pre_tokenizer.tokenize(lines[i].strip()))
+                            words.update(pre_tokenizer.tokenize(data['data']))
                         else:
-                            words.update(lines[i].strip().split())
-
+                            words.update(data['data'].split())
             tokenizer = Tokenizer(config)
             tokenizer.pre_tokenizer = pre_tokenizer
             tokenizer.fit_on_text(list(words))
             if config.cache_dataset:
                 pickle.dump(tokenizer, open(tokenizer_path, 'wb'))
+
         return tokenizer
 
     def fit_on_text(self, text: Union[str, list], **kwargs):

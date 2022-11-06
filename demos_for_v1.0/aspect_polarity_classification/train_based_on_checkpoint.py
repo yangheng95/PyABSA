@@ -5,11 +5,11 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa.framework import APCCheckpointManager
-from pyabsa.framework import Trainer
-from pyabsa.framework import APCConfigManager
-from pyabsa.framework import ABSADatasetList
-from pyabsa.framework import APCModelList
+from pyabsa.functional import APCCheckpointManager
+from pyabsa.functional import Trainer
+from pyabsa.functional import APCConfigManager
+from pyabsa.functional import ABSADatasetList
+from pyabsa.functional import APCModelList
 
 apc_config_english = APCConfigManager.get_apc_config_english()
 apc_config_english.model = APCModelList.FAST_LSA_T

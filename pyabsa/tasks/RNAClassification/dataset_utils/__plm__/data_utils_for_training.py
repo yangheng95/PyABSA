@@ -9,6 +9,7 @@
 
 import torch
 import tqdm
+
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.utils.pyabsa_utils import check_and_fix_labels
@@ -17,16 +18,43 @@ from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
 
 class BERTRNACDataset(PyABSADataset):
     def load_data_from_dict(self, dataset_dict, **kwargs):
-        pass
+        label_set = set()
+        all_data = []
+
+        for ex_id, data in enumerate(tqdm.tqdm(dataset_dict[self.dataset_type], postfix='preparing dataloader...')):
+
+            rna = data['data']
+            label = data['label']
+            rna = rna.strip()
+            label = label.strip()
+
+            rna_indices = self.tokenizer.text_to_sequence(rna)
+
+            rna_indices = [self.tokenizer.tokenizer.cls_token_id] + rna_indices + [self.tokenizer.tokenizer.sep_token_id]
+            rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len)
+
+            data = {
+                'ex_id': ex_id,
+                'text_indices': torch.tensor(rna_indices, dtype=torch.long),
+                'label': label,
+            }
+
+            label_set.add(label)
+
+            all_data.append(data)
+
+        check_and_fix_labels(label_set, 'label', all_data, self.config)
+        self.config.output_dim = len(label_set)
+        self.data = all_data
 
     def load_data_from_file(self, dataset_file, **kwargs):
-        lines = load_dataset_from_file(self.config.dataset_file[self.dataset_type])
+        lines = load_dataset_from_file(dataset_file[self.dataset_type])
 
         all_data = []
 
         label_set = set()
 
-        for i in tqdm.tqdm(range(len(lines)), postfix='preparing dataloader...'):
+        for ex_id, i in enumerate(tqdm.tqdm(range(len(lines)), postfix='preparing dataloader...')):
             line = lines[i].strip().split(',')
             exon1, intron, exon2, label = line[0], line[1], line[2], line[3]
             exon1 = exon1.strip()
@@ -42,6 +70,7 @@ class BERTRNACDataset(PyABSADataset):
             intron_indices = self.tokenizer.text_to_sequence(intron)
 
             data = {
+                'ex_id': ex_id,
                 'text_bert_indices': torch.tensor(rna_indices, dtype=torch.long),
                 'intron_indices': torch.tensor(intron_indices, dtype=torch.long),
                 'label': label,
@@ -53,11 +82,10 @@ class BERTRNACDataset(PyABSADataset):
 
         check_and_fix_labels(label_set, 'label', all_data, self.config)
         self.config.output_dim = len(label_set)
-
         self.data = all_data
 
     def __init__(self, config, tokenizer, dataset_type='train', **kwargs):
-        super().__init__(config, tokenizer, dataset_type, **kwargs)
+        super().__init__(config, tokenizer, dataset_type=dataset_type, **kwargs)
 
     def __getitem__(self, index):
         return self.data[index]
