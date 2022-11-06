@@ -30,4 +30,4 @@ class DatasetDict(dict):
             'label_names': list(),
         }
         """
-        super().__init__(train=[], test=[], valid=[], dataset_name='custom_dataset', column_names=[], label_name=['label'], *args, **kwargs)
+        super().__init__(train=[], test=[], valid=[], dataset_name='custom_dataset', column_names=['text'], label_name=['label'], *args, **kwargs)

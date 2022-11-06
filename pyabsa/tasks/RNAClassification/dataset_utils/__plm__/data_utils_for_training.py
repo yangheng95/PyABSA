@@ -35,7 +35,7 @@ class BERTRNACDataset(PyABSADataset):
 
             data = {
                 'ex_id': ex_id,
-                'text_indices': torch.tensor(rna_indices, dtype=torch.long),
+                'text_bert_indices': torch.tensor(rna_indices, dtype=torch.long),
                 'label': label,
             }
 
