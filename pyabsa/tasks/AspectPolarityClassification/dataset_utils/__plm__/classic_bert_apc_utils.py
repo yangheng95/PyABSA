@@ -104,7 +104,7 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
 
     text_raw = text_left + ' ' + aspect + ' ' + text_right
     text_spc = bos_token + ' ' + text_raw + ' ' + eos_token + ' ' + aspect + ' ' + eos_token
-    text_bert_indices = text_to_sequence(tokenizer, text_spc, opt.max_seq_len)
+    text_indices = text_to_sequence(tokenizer, text_spc, opt.max_seq_len)
     text_raw_bert_indices = text_to_sequence(tokenizer, bos_token + ' ' + text_raw + ' ' + eos_token, opt.max_seq_len)
     aspect_bert_indices = text_to_sequence(tokenizer, aspect, opt.max_seq_len)
 
@@ -121,7 +121,7 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
         'text_spc': text_spc,
         'aspect': aspect,
         'aspect_position': aspect_position,
-        'text_bert_indices': text_bert_indices,
+        'text_indices': text_indices,
         'text_raw_bert_indices': text_raw_bert_indices,
         'aspect_bert_indices': aspect_bert_indices,
     }
@@ -223,8 +223,8 @@ def build_spc_mask_vec(opt, text_ids):
 def build_sentiment_window(examples, tokenizer, similarity_threshold, input_demands=None):
     copy_side_aspect('left', examples[0], examples[0], examples, input_demands)
     for idx in range(1, len(examples)):
-        if is_similar(examples[idx - 1]['text_bert_indices'],
-                      examples[idx]['text_bert_indices'],
+        if is_similar(examples[idx - 1]['text_indices'],
+                      examples[idx]['text_indices'],
                       tokenizer=tokenizer.tokenizer,
                       similarity_threshold=similarity_threshold):
             copy_side_aspect('right', examples[idx - 1], examples[idx], examples, input_demands)

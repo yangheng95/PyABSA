@@ -100,8 +100,8 @@ class BERTABSAInferenceDataset(Dataset):
                 data = {
                     'ex_id': ex_id,
 
-                    'text_bert_indices': text_indices
-                    if 'text_bert_indices' in self.config.inputs_cols else 0,
+                    'text_indices': text_indices
+                    if 'text_indices' in self.config.inputs_cols else 0,
 
                     'context_indices': context_indices
                     if 'context_indices' in self.config.inputs_cols else 0,

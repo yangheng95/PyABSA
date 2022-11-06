@@ -29,7 +29,6 @@ from pyabsa.utils.pyabsa_utils import init_optimizer, print_args
 from pyabsa.tasks.RNAClassification.dataset_utils.__classic__.data_utils_for_training import GloVeRNACDataset
 from pyabsa.tasks.RNAClassification.dataset_utils.__plm__.data_utils_for_training import BERTRNACDataset
 from pyabsa.tasks.RNAClassification.models import GloVeRNACModelList, BERTRNACModelList
-import pytorch_warmup as warmup
 
 from pyabsa.framework.tokenizer_class.tokenizer_class import Tokenizer, build_embedding_matrix, PretrainedTokenizer
 

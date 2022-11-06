@@ -12,7 +12,7 @@ from pyabsa.networks.sa_encoder import Encoder
 
 
 class LSA_T(nn.Module):
-    inputs = ['text_bert_indices', 'left_text_bert_indices', 'right_text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec']
+    inputs = ['text_indices', 'left_text_indices', 'right_text_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec']
 
     def __init__(self, bert, config):
         super(LSA_T, self).__init__()
@@ -35,20 +35,20 @@ class LSA_T(nn.Module):
         self.dense = nn.Linear(config.embed_dim, config.output_dim)
 
     def forward(self, inputs):
-        text_bert_indices = inputs['text_bert_indices']
-        left_text_bert_indices = inputs['left_text_bert_indices']
-        right_text_bert_indices = inputs['right_text_bert_indices']
+        text_indices = inputs['text_indices']
+        left_text_indices = inputs['left_text_indices']
+        right_text_indices = inputs['right_text_indices']
         spc_mask_vec = inputs['spc_mask_vec'].unsqueeze(2)
         lcf_matrix = inputs['lcf_vec'].unsqueeze(2)
         left_lcf_matrix = inputs['left_lcf_vec'].unsqueeze(2)
         right_lcf_matrix = inputs['right_lcf_vec'].unsqueeze(2)
 
-        global_context_features = self.bert4central(text_bert_indices)['last_hidden_state']
-        left_global_context_features = self.bert4central(left_text_bert_indices)['last_hidden_state']
-        right_global_context_features = self.bert4central(right_text_bert_indices)['last_hidden_state']
+        global_context_features = self.bert4central(text_indices)['last_hidden_state']
+        left_global_context_features = self.bert4central(left_text_indices)['last_hidden_state']
+        right_global_context_features = self.bert4central(right_text_indices)['last_hidden_state']
 
-        # left_global_context_features = self.bert4side(left_text_bert_indices)['last_hidden_state']
-        # right_global_context_features = self.bert4side(right_text_bert_indices)['last_hidden_state']
+        # left_global_context_features = self.bert4side(left_text_indices)['last_hidden_state']
+        # right_global_context_features = self.bert4side(right_text_indices)['last_hidden_state']
 
         # # --------------------------------------------------- #
         lcf_features = torch.mul(global_context_features, lcf_matrix)

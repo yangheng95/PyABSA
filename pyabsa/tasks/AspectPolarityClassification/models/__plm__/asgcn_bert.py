@@ -82,13 +82,13 @@ class ASGCN_BERT_Unit(nn.Module):
         return mask * x
 
     def forward(self, inputs):
-        text_bert_indices, aspect_indices, left_indices, adj = \
+        text_indices, aspect_indices, left_indices, adj = \
             inputs[0], inputs[1], inputs[2], inputs[3]
-        text_len = torch.sum(text_bert_indices != 0, dim=-1)
+        text_len = torch.sum(text_indices != 0, dim=-1)
         aspect_len = torch.sum(aspect_indices != 0, dim=-1)
         left_len = torch.sum(left_indices != 0, dim=-1)
         aspect_double_idx = torch.cat([left_len.unsqueeze(1), (left_len + aspect_len - 1).unsqueeze(1)], dim=1)
-        text = self.embed(text_bert_indices)['last_hidden_state']
+        text = self.embed(text_indices)['last_hidden_state']
         text = self.text_embed_dropout(text)
         text_out, (_, _) = self.text_lstm(text, text_len)
         seq_len = text_out.shape[1]
@@ -105,7 +105,7 @@ class ASGCN_BERT_Unit(nn.Module):
 
 class ASGCN_BERT(nn.Module):
     inputs = [
-        'text_bert_indices',
+        'text_indices',
         'aspect_indices',
         'left_indices',
         'dependency_graph',
@@ -133,14 +133,14 @@ class ASGCN_BERT(nn.Module):
         res = {'logits': None}
         if self.config.lsa:
             cat_feat = torch.cat(
-                (self.asgcn_left([inputs['text_bert_indices'], inputs['left_aspect_indices'], inputs['left_left_indices'], inputs['left_dependency_graph']]),
-                 self.asgcn_central([inputs['text_bert_indices'], inputs['aspect_indices'], inputs['left_indices'], inputs['dependency_graph']]),
-                 self.asgcn_right([inputs['text_bert_indices'], inputs['right_aspect_indices'], inputs['right_left_indices'], inputs['right_dependency_graph']])),
+                (self.asgcn_left([inputs['text_indices'], inputs['left_aspect_indices'], inputs['left_left_indices'], inputs['left_dependency_graph']]),
+                 self.asgcn_central([inputs['text_indices'], inputs['aspect_indices'], inputs['left_indices'], inputs['dependency_graph']]),
+                 self.asgcn_right([inputs['text_indices'], inputs['right_aspect_indices'], inputs['right_left_indices'], inputs['right_dependency_graph']])),
                 -1)
             cat_feat = self.dropout(cat_feat)
             res['logits'] = self.linear(cat_feat)
         else:
-            cat_feat = self.asgcn_central([inputs['text_bert_indices'], inputs['aspect_indices'], inputs['left_indices'], inputs['dependency_graph']])
+            cat_feat = self.asgcn_central([inputs['text_indices'], inputs['aspect_indices'], inputs['left_indices'], inputs['dependency_graph']])
             cat_feat = self.dropout(cat_feat)
             res['logits'] = self.dense(cat_feat)
 

@@ -13,7 +13,7 @@ from pyabsa.networks.sa_encoder import Encoder
 
 
 class LCA_BERT(nn.Module):
-    inputs = ['text_bert_indices', 'text_raw_bert_indices', 'lcf_cdm_vec', 'polarity']
+    inputs = ['text_indices', 'text_raw_bert_indices', 'lcf_cdm_vec', 'polarity']
 
     def __init__(self, bert, config):
         super(LCA_BERT, self).__init__()
@@ -34,7 +34,7 @@ class LCA_BERT(nn.Module):
 
     def forward(self, inputs):
         if self.config.use_bert_spc:
-            text_global_indices = inputs['text_bert_indices']
+            text_global_indices = inputs['text_indices']
         else:
             text_global_indices = inputs['text_raw_bert_indices']
         text_local_indices = inputs['text_raw_bert_indices']

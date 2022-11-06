@@ -120,7 +120,7 @@ class ABSAInferenceDataset(Dataset):
                 text_raw = prepared_inputs['text_raw']
                 aspect = prepared_inputs['aspect']
                 aspect_position = prepared_inputs['aspect_position']
-                text_bert_indices = prepared_inputs['text_bert_indices']
+                text_indices = prepared_inputs['text_indices']
                 text_raw_bert_indices = prepared_inputs['text_raw_bert_indices']
                 aspect_bert_indices = prepared_inputs['aspect_bert_indices']
 
@@ -169,8 +169,8 @@ class ABSAInferenceDataset(Dataset):
                     'spc_mask_vec': build_spc_mask_vec(self.config, text_raw_bert_indices)
                     if 'spc_mask_vec' in self.config.inputs_cols else 0,
 
-                    'text_bert_indices': text_bert_indices
-                    if 'text_bert_indices' in self.config.inputs_cols else 0,
+                    'text_indices': text_indices
+                    if 'text_indices' in self.config.inputs_cols else 0,
 
                     'aspect_bert_indices': aspect_bert_indices
                     if 'aspect_bert_indices' in self.config.inputs_cols else 0,

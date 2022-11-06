@@ -235,7 +235,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                 global_step += 1
                 global_step += 1
                 if global_step % self.config.log_step == 0:
-                    if self.config.test_dataloader and epoch >= self.config.evaluate_begin:
+                    if self.test_dataloader and epoch >= self.config.evaluate_begin:
                         if self.valid_set:
                             apc_result, ate_result = self._evaluate_acc_f1(self.valid_dataloader)
                         else:

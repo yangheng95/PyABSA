@@ -83,7 +83,7 @@ class TNet_LF_BERT_Unit(nn.Module):
 
 class TNet_LF_BERT(nn.Module):
     inputs = [
-        'text_bert_indices',
+        'text_indices',
         'aspect_indices',
         'aspect_boundary',
         'left_aspect_indices',
@@ -108,14 +108,14 @@ class TNet_LF_BERT(nn.Module):
         res = {'logits': None}
         if self.config.lsa:
             cat_feat = torch.cat(
-                (self.asgcn_left([inputs['text_bert_indices'], inputs['left_aspect_indices'], inputs['left_aspect_boundary']]),
-                 self.asgcn_central([inputs['text_bert_indices'], inputs['aspect_indices'], inputs['aspect_boundary']]),
-                 self.asgcn_right([inputs['text_bert_indices'], inputs['right_aspect_indices'], inputs['right_aspect_boundary']])),
+                (self.asgcn_left([inputs['text_indices'], inputs['left_aspect_indices'], inputs['left_aspect_boundary']]),
+                 self.asgcn_central([inputs['text_indices'], inputs['aspect_indices'], inputs['aspect_boundary']]),
+                 self.asgcn_right([inputs['text_indices'], inputs['right_aspect_indices'], inputs['right_aspect_boundary']])),
                 -1)
             cat_feat = self.dropout(cat_feat)
             res['logits'] = self.linear(cat_feat)
         else:
-            cat_feat = self.asgcn_central([inputs['text_bert_indices'], inputs['aspect_indices'], inputs['aspect_boundary']])
+            cat_feat = self.asgcn_central([inputs['text_indices'], inputs['aspect_indices'], inputs['aspect_boundary']])
             cat_feat = self.dropout(cat_feat)
             res['logits'] = self.dense(cat_feat)
         return res

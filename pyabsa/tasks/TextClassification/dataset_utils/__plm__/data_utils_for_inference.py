@@ -63,8 +63,8 @@ class BERTTCInferenceDataset(Dataset):
                 data = {
                     'ex_id': ex_id,
 
-                    'text_bert_indices': text_indices
-                    if 'text_bert_indices' in self.config.model.inputs else 0,
+                    'text_indices': text_indices
+                    if 'text_indices' in self.config.model.inputs else 0,
 
                     'text_raw': text,
 

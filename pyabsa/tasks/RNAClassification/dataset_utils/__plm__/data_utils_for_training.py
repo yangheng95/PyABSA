@@ -30,12 +30,12 @@ class BERTRNACDataset(PyABSADataset):
 
             rna_indices = self.tokenizer.text_to_sequence(rna)
 
-            rna_indices = [self.tokenizer.tokenizer.cls_token_id] + rna_indices + [self.tokenizer.tokenizer.sep_token_id]
+            rna_indices = rna_indices
             rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len)
 
             data = {
                 'ex_id': ex_id,
-                'text_bert_indices': torch.tensor(rna_indices, dtype=torch.long),
+                'text_indices': torch.tensor(rna_indices, dtype=torch.long),
                 'label': label,
             }
 
@@ -71,7 +71,7 @@ class BERTRNACDataset(PyABSADataset):
 
             data = {
                 'ex_id': ex_id,
-                'text_bert_indices': torch.tensor(rna_indices, dtype=torch.long),
+                'text_indices': torch.tensor(rna_indices, dtype=torch.long),
                 'intron_indices': torch.tensor(intron_indices, dtype=torch.long),
                 'label': label,
             }

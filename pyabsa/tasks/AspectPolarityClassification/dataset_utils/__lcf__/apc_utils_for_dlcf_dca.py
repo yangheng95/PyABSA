@@ -38,7 +38,7 @@ def prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect):
 
         text_raw = text_left + ' ' + aspect + ' ' + text_right
         text_spc = bos_token + ' ' + text_raw + ' ' + eos_token + ' ' + aspect + ' ' + eos_token
-        text_bert_indices = text_to_sequence(tokenizer, text_spc, opt.max_seq_len)
+        text_indices = text_to_sequence(tokenizer, text_spc, opt.max_seq_len)
         aspect_bert_indices = text_to_sequence(tokenizer, aspect, opt.max_seq_len)
 
         aspect_begin = len(tokenizer.tokenize(bos_token + ' ' + text_left))
@@ -50,14 +50,14 @@ def prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect):
 
         syntactical_dist, max_dist = get_syntax_distance(text_raw, aspect, tokenizer, opt)
 
-        dlcf_cdm_vec = get_dynamic_cdm_vec(opt, max_dist, text_bert_indices, aspect_bert_indices,
+        dlcf_cdm_vec = get_dynamic_cdm_vec(opt, max_dist, text_indices, aspect_bert_indices,
                                            aspect_begin, syntactical_dist=None)
-        dlcf_cdw_vec = get_dynamic_cdw_vec(opt, max_dist, text_bert_indices, aspect_bert_indices,
+        dlcf_cdw_vec = get_dynamic_cdw_vec(opt, max_dist, text_indices, aspect_bert_indices,
                                            aspect_begin, syntactical_dist=None)
 
-        dlcfs_cdm_vec = get_dynamic_cdm_vec(opt, max_dist, text_bert_indices, aspect_bert_indices,
+        dlcfs_cdm_vec = get_dynamic_cdm_vec(opt, max_dist, text_indices, aspect_bert_indices,
                                             aspect_begin, syntactical_dist)
-        dlcfs_cdw_vec = get_dynamic_cdw_vec(opt, max_dist, text_bert_indices, aspect_bert_indices,
+        dlcfs_cdw_vec = get_dynamic_cdw_vec(opt, max_dist, text_indices, aspect_bert_indices,
                                             aspect_begin, syntactical_dist)
 
         depend_vec, depended_vec = calculate_cluster(text_raw, aspect, opt)

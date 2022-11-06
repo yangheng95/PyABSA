@@ -11,7 +11,7 @@ from pyabsa.networks.sa_encoder import Encoder
 
 
 class SSW_S(nn.Module):
-    inputs = ['text_bert_indices', 'spc_mask_vec', 'lcfs_vec', 'left_lcfs_vec', 'right_lcfs_vec', 'polarity', 'left_dist', 'right_dist']
+    inputs = ['text_indices', 'spc_mask_vec', 'lcfs_vec', 'left_lcfs_vec', 'right_lcfs_vec', 'polarity', 'left_dist', 'right_dist']
 
     def __init__(self, bert, config):
         super(SSW_S, self).__init__()
@@ -40,7 +40,7 @@ class SSW_S(nn.Module):
         self.sent_dense = nn.Linear(config.embed_dim, config.output_dim)
 
     def forward(self, inputs):
-        text_bert_indices = inputs['text_bert_indices']
+        text_indices = inputs['text_indices']
         spc_mask_vec = inputs['spc_mask_vec']
         lcf_matrix = inputs['lcfs_vec'].unsqueeze(2)
         left_lcf_matrix = inputs['left_lcfs_vec'].unsqueeze(2)
@@ -49,7 +49,7 @@ class SSW_S(nn.Module):
         left_dist = self.dist_embed(inputs['left_dist'].unsqueeze(1))
         right_dist = self.dist_embed(inputs['right_dist'].unsqueeze(1))
 
-        global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
+        global_context_features = self.bert4global(text_indices)['last_hidden_state']
         masked_global_context_features = torch.mul(spc_mask_vec, global_context_features)
 
         # # --------------------------------------------------- #

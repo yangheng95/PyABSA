@@ -72,7 +72,7 @@ class BERTRNACInferenceDataset(Dataset):
 
                 data = {
                     'ex_id': ex_id,
-                    'text_bert_indices': torch.tensor(rna_indices, dtype=torch.long),
+                    'text_indices': torch.tensor(rna_indices, dtype=torch.long),
                     'intron_indices': torch.tensor(intron_indices, dtype=torch.long),
                     'text_raw': text,
                     'label': label,

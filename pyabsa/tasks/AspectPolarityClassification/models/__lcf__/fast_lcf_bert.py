@@ -13,7 +13,7 @@ from pyabsa.networks.sa_encoder import Encoder
 
 
 class FAST_LCF_BERT(nn.Module):
-    inputs = ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec']
+    inputs = ['text_indices', 'text_raw_bert_indices', 'lcf_vec']
 
     def __init__(self, bert, config):
         super(FAST_LCF_BERT, self).__init__()
@@ -29,12 +29,12 @@ class FAST_LCF_BERT(nn.Module):
 
     def forward(self, inputs):
         if self.config.use_bert_spc:
-            text_bert_indices = inputs['text_bert_indices']
+            text_indices = inputs['text_indices']
         else:
-            text_bert_indices = inputs['text_raw_bert_indices']
+            text_indices = inputs['text_raw_bert_indices']
         text_local_indices = inputs['text_raw_bert_indices']
         lcf_matrix = inputs['lcf_vec'].unsqueeze(2)
-        global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
+        global_context_features = self.bert4global(text_indices)['last_hidden_state']
 
         # LCF layer
         lcf_features = torch.mul(global_context_features, lcf_matrix)

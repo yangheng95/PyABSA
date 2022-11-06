@@ -67,7 +67,7 @@ class BERTRNARDataset(Dataset):
 
                         data = {
                             'ex_id': torch.tensor(ex_id, dtype=torch.long),
-                            'text_bert_indices': torch.tensor(rna_indices, dtype=torch.long),
+                            'text_indices': torch.tensor(rna_indices, dtype=torch.long),
                             'text_raw': seq,
                             'label': torch.tensor(label, dtype=torch.float32),
                             # 'r1r2_label': torch.tensor(r1r2_label, dtype=torch.float32),
@@ -89,7 +89,7 @@ class BERTRNARDataset(Dataset):
 
                     data = {
                         'ex_id': torch.tensor(ex_id, dtype=torch.long),
-                        'text_bert_indices': torch.tensor(rna_indices, dtype=torch.long),
+                        'text_indices': torch.tensor(rna_indices, dtype=torch.long),
                         'text_raw': seq,
                         'label': torch.tensor(label, dtype=torch.float32),
                         # 'r1r2_label': torch.tensor(r1r2_label, dtype=torch.float32),
