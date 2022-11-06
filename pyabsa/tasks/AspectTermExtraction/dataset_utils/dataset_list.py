@@ -8,6 +8,7 @@
 # Copyright (C) 2022. All Rights Reserved.
 from pyabsa.utils.data_utils.dataset_item import DatasetItem
 
+
 class ATEPCDatasetList(list):
     """
     ATEPCDatasetList is a list of datasets for aspect term extraction and polarity classification task.

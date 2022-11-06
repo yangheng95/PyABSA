@@ -19,12 +19,12 @@ from sklearn import metrics
 from pyabsa import TaskCodeOption, LabelPaddingOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
 from pyabsa.tasks.RNAClassification.models import BERTRNACModelList, GloVeRNACModelList
-from pyabsa.tasks.RNAClassification.dataset_utils.__classic__.data_utils_for_inference import GloVeRNACDataset
-from pyabsa.tasks.RNAClassification.dataset_utils.__plm__.data_utils_for_inference import BERTClassificationDataset
+from pyabsa.tasks.RNAClassification.dataset_utils.__classic__.data_utils_for_inference import GloVeRNACInferenceDataset
+from pyabsa.tasks.RNAClassification.dataset_utils.__plm__.data_utils_for_inference import BERTRNACInferenceDataset
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import get_device, print_args
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
-from pyabsa.utils.text_utils.tokenizer import Tokenizer, build_embedding_matrix, PretrainedTokenizer
+from pyabsa.framework.tokenizer_class.tokenizer_class import Tokenizer, build_embedding_matrix, PretrainedTokenizer
 
 
 class RNAClassifier(InferenceModel):
@@ -117,10 +117,10 @@ class RNAClassifier(InferenceModel):
                 raise KeyError('The checkpoint_class you are loading is not from classifier model.')
 
         if hasattr(BERTRNACModelList, self.config.model.__name__):
-            self.dataset = BERTClassificationDataset(config=self.config, tokenizer=self.tokenizer)
+            self.dataset = BERTRNACInferenceDataset(config=self.config, tokenizer=self.tokenizer)
 
         elif hasattr(GloVeRNACModelList, self.config.model.__name__):
-            self.dataset = GloVeRNACDataset(config=self.config, tokenizer=self.tokenizer)
+            self.dataset = GloVeRNACInferenceDataset(config=self.config, tokenizer=self.tokenizer)
 
         self.infer_dataloader = None
         self.config.eval_batch_size = kwargs.get('eval_batch_size', 128)

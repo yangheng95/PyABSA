@@ -36,7 +36,7 @@ class AspectExtractor(InferenceModel):
     def __init__(self, checkpoint=None, **kwargs):
 
         # load from a trainer
-        super().__init__(checkpoint,  task_code=self.task_code,  **kwargs)
+        super().__init__(checkpoint, task_code=self.task_code, **kwargs)
 
         if not isinstance(self.checkpoint, str):
             print('Load aspect extractor from trainer')
@@ -200,9 +200,9 @@ class AspectExtractor(InferenceModel):
         """
         Args:
             inference_source (list): list of input examples or a list of files to be predicted
-            save_result (bool, configional): save result to file. Defaults to True.
-            print_result (bool, configional): print result to console. Defaults to True.
-            pred_sentiment (bool, configional): predict sentiment. Defaults to True.
+            save_result (bool, optional): save result to file. Defaults to True.
+            print_result (bool, optional): print result to console. Defaults to True.
+            pred_sentiment (bool, optional): predict sentiment. Defaults to True.
         Returns:
         """
         results = {'extraction_res': OrderedDict(), 'polarity_res': OrderedDict()}

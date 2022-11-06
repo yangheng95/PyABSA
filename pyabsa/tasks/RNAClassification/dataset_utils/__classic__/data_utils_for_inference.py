@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
-# file: data_utils.py
-# author: songyouwei <youwei0314@gmail.com>
-# Copyright (C) 2018. All Rights Reserved.
-import os
-import pickle
+# file: data_utils_for_inference.py
+# time: 02/11/2022 15:39
+# author: yangheng <hy345@exeter.ac.uk>
+# github: https://github.com/yangheng95
+# GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
+# ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
+# Copyright (C) 2022. All Rights Reserved.
 
-import numpy as np
 import torch
 import tqdm
 from torch.utils.data import Dataset
-from transformers import AutoTokenizer
-
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
+from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
 
 
-class GloVeRNACDataset(Dataset):
+class GloVeRNACInferenceDataset(Dataset):
 
     def __init__(self, tokenizer, config):
 
@@ -64,13 +64,10 @@ class GloVeRNACDataset(Dataset):
                 exon2_ids = self.tokenizer.text_to_sequence(exon2)
 
                 rna_indices = exon1_ids + intron_ids + exon2_ids
-
-                while len(rna_indices) < self.config.max_seq_len:
-                    rna_indices.append(0)
+                rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len)
 
                 intron_indices = self.tokenizer.text_to_sequence(intron)
-                while len(intron_indices) < self.config.max_seq_len:
-                    intron_indices.append(0)
+                intron_indices = pad_and_truncate(intron_indices, self.config.max_seq_len)
 
                 data = {
                     'ex_id': ex_id,
@@ -91,9 +88,8 @@ class GloVeRNACDataset(Dataset):
         self.data = all_data
 
         self.data = PyABSADataset.covert_to_tensor(self.data)
-    
+
         return self.data
-    
 
     def __getitem__(self, index):
         return self.data[index]

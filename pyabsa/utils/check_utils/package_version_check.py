@@ -6,7 +6,7 @@
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
-from distutils.version import StrictVersion
+from packaging import version
 
 import requests
 from termcolor import colored
@@ -17,12 +17,12 @@ from pyabsa.utils.exception_utils import time_out
 
 
 @time_out(10)
-def check_package_version(current_version, min_version, max_version=None):
-    if StrictVersion(current_version) < StrictVersion(min_version):
+def check_package_version(min_version, max_version=None):
+    if version.parse(current_version) < version.parse(min_version):
         raise ValueError(
             f'Current version {current_version} is lower than minimum version {min_version},'
             f' please upgrade your package.')
-    if max_version is not None and StrictVersion(current_version) > StrictVersion(max_version):
+    if max_version is not None and version.parse(current_version) > version.parse(max_version):
         raise ValueError(
             f'Current version {current_version} is higher than maximum version {max_version},'
             f' please downgrade your package.')

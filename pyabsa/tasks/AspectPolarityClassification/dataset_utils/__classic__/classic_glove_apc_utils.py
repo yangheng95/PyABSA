@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # file: apc_utils.py
-# time: 2021/5/23 0023
+# time: 02/11/2022 15:39
 # author: yangheng <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95
-# Copyright (C) 2021. All Rights Reserved.
+# GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
+# ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
+# Copyright (C) 2022. All Rights Reserved.
 
 import os
 
@@ -13,19 +15,7 @@ import numpy as np
 import spacy
 import termcolor
 
-
-def pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating='post', value=0):
-    x = (np.ones(maxlen) * value).astype(dtype)
-    if truncating == 'pre':
-        trunc = sequence[-maxlen:]
-    else:
-        trunc = sequence[:maxlen]
-    trunc = np.asarray(trunc, dtype=dtype)
-    if padding == 'post':
-        x[:len(trunc)] = trunc
-    else:
-        x[-len(trunc):] = trunc
-    return x
+from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
 
 
 def syntax_distance_alignment(tokens, dist, max_seq_len, tokenizer):
@@ -91,7 +81,6 @@ def pad_syntax_based_srd(text, dep_dist, tokenizer, opt):
     dep_dist = pad_and_truncate(dep_dist, opt.max_seq_len, value=opt.max_seq_len)
 
     return sequence, dep_dist
-
 
 
 def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):

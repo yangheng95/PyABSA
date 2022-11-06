@@ -44,8 +44,8 @@ class TADTrainer(Trainer):
 
         """
         super(TADTrainer, self).__init__(config=config, dataset=dataset, from_checkpoint=from_checkpoint,
-                                          checkpoint_save_mode=checkpoint_save_mode, auto_device=auto_device,
-                                          path_to_save=path_to_save, load_aug=load_aug)
+                                         checkpoint_save_mode=checkpoint_save_mode, auto_device=auto_device,
+                                         path_to_save=path_to_save, load_aug=load_aug)
 
         self.training_instructor = TADTrainingInstructor
         self.inference_model_class = TADTextClassifier

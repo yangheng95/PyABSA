@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
-# file: data_utils.py
-# author: songyouwei <youwei0314@gmail.com>
-# Copyright (C) 2018. All Rights Reserved.
-
+# file: data_utils_for_inference.py
+# time: 02/11/2022 15:39
+# author: yangheng <hy345@exeter.ac.uk>
+# github: https://github.com/yangheng95
+# GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
+# ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
+# Copyright (C) 2022. All Rights Reserved.
 import os
 import pickle
 import tqdm
@@ -14,14 +17,11 @@ from pyabsa.utils.pyabsa_utils import check_and_fix_labels
 
 
 class GloVeTADDataset(PyABSADataset):
-    glove_input_colses = {
-        'tadlstm': ['text_indices']
-    }
+    def load_data_from_dict(self, dataset_dict, **kwargs):
+        pass
 
-    def __init__(self, config, tokenizer, dataset_type='train'):
-
-        self.config = config
-        lines = load_dataset_from_file(self.config.dataset_file[dataset_type])
+    def load_data_from_file(self, dataset_file, **kwargs):
+        lines = load_dataset_from_file(self.config.dataset_file[self.dataset_type])
 
         all_data = []
 
@@ -43,7 +43,7 @@ class GloVeTADDataset(PyABSADataset):
                 label = label
                 adv_train_label = '-100'
 
-            text_indices = tokenizer.text_to_sequence('{}'.format(text))
+            text_indices = self.tokenizer.text_to_sequence('{}'.format(text))
 
             data = {
                 'text_indices': text_indices,
@@ -71,7 +71,8 @@ class GloVeTADDataset(PyABSADataset):
 
         self.data = all_data
 
-        super().__init__(config)
+    def __init__(self, config, tokenizer, dataset_type='train'):
+        super().__init__(config, tokenizer, dataset_type)
 
     def __getitem__(self, index):
         return self.data[index]

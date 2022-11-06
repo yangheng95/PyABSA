@@ -18,13 +18,13 @@ from sklearn import metrics
 
 from pyabsa import TaskCodeOption, LabelPaddingOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
-from pyabsa.tasks.TextClassification.dataset_utils.__plm__.data_utils_for_inference import BERTClassificationDataset
+from pyabsa.tasks.TextClassification.dataset_utils.__plm__.data_utils_for_inference import BERTTCInferenceDataset
 from pyabsa.tasks.TextClassification.models import BERTTCModelList, GloVeTCModelList
-from pyabsa.tasks.TextClassification.dataset_utils.__classic__.data_utils_for_inference import GloVeTCDataset
+from pyabsa.tasks.TextClassification.dataset_utils.__classic__.data_utils_for_inference import GloVeTCInferenceDataset
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import get_device, print_args
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
-from pyabsa.utils.text_utils.tokenizer import PretrainedTokenizer, Tokenizer, build_embedding_matrix
+from pyabsa.framework.tokenizer_class.tokenizer_class import PretrainedTokenizer, Tokenizer, build_embedding_matrix
 
 
 class TextClassifier(InferenceModel):
@@ -116,10 +116,10 @@ class TextClassifier(InferenceModel):
                 raise KeyError('The checkpoint_class you are loading is not from classifier model.')
 
         if hasattr(BERTTCModelList, self.config.model.__name__):
-            self.dataset = BERTClassificationDataset(config=self.config, tokenizer=self.tokenizer)
+            self.dataset = BERTTCInferenceDataset(config=self.config, tokenizer=self.tokenizer)
 
         elif hasattr(GloVeTCModelList, self.config.model.__name__):
-            self.dataset = GloVeTCDataset(config=self.config, tokenizer=self.tokenizer)
+            self.dataset = GloVeTCInferenceDataset(config=self.config, tokenizer=self.tokenizer)
 
         self.infer_dataloader = None
         self.config.eval_batch_size = kwargs.get('eval_batch_size', 128)

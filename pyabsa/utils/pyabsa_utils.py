@@ -8,6 +8,7 @@ import os
 import torch
 from autocuda import auto_cuda, auto_cuda_name
 
+
 def save_args(config, save_path):
     f = open(os.path.join(save_path), mode='w', encoding='utf8')
     for arg in config.args:
@@ -20,9 +21,11 @@ def print_args(config, logger=None):
     args = [key for key in sorted(config.args.keys())]
     for arg in args:
         if logger:
-            logger.info('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
+            if config.args_call_count[arg] and arg != 'dataset_dict':
+                logger.info('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
         else:
-            print('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
+            if config.args_call_count[arg] and arg != 'dataset_dict':
+                print('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
 
 
 def validate_example(text: str, aspect: str, polarity: str, config):

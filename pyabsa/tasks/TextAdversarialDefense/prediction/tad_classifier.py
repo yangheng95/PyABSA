@@ -17,13 +17,13 @@ from transformers import AutoModel
 
 from pyabsa import TaskCodeOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
-from pyabsa.tasks.TextAdversarialDefense.dataset_utils.__classic__.data_utils_for_inference import GloVeTADDataset
-from pyabsa.tasks.TextAdversarialDefense.dataset_utils.__plm__.data_utils_for_inference import BERTTADDataset
+from pyabsa.tasks.TextAdversarialDefense.dataset_utils.__classic__.data_utils_for_inference import GloVeTADInferenceDataset
+from pyabsa.tasks.TextAdversarialDefense.dataset_utils.__plm__.data_utils_for_inference import BERTTADInferenceDataset
 from pyabsa.tasks.TextAdversarialDefense.models import BERTTADModelList, GloVeTADModelList
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import get_device, print_args
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
-from pyabsa.utils.text_utils.tokenizer import build_embedding_matrix, PretrainedTokenizer, Tokenizer
+from pyabsa.framework.tokenizer_class.tokenizer_class import build_embedding_matrix, PretrainedTokenizer, Tokenizer
 
 
 def init_attacker(tad_classifier, defense):
@@ -226,10 +226,10 @@ class TADTextClassifier(InferenceModel):
             raise FileNotFoundError('Can not find inference datasets!')
 
         if hasattr(BERTTADModelList, self.config.model.__name__):
-            dataset = BERTTADDataset(config=self.config, tokenizer=self.tokenizer)
+            dataset = BERTTADInferenceDataset(config=self.config, tokenizer=self.tokenizer)
 
         else:
-            dataset = GloVeTADDataset(config=self.config, tokenizer=self.tokenizer)
+            dataset = GloVeTADInferenceDataset(config=self.config, tokenizer=self.tokenizer)
 
         dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
         self.infer_dataloader = DataLoader(dataset=dataset, batch_size=self.config.eval_batch_size, pin_memory=True,
@@ -244,10 +244,10 @@ class TADTextClassifier(InferenceModel):
                 ):
 
         if hasattr(BERTTADModelList, self.config.model.__name__):
-            dataset = BERTTADDataset(config=self.config, tokenizer=self.tokenizer)
+            dataset = BERTTADInferenceDataset(config=self.config, tokenizer=self.tokenizer)
 
         else:
-            dataset = GloVeTADDataset(config=self.config, tokenizer=self.tokenizer)
+            dataset = GloVeTADInferenceDataset(config=self.config, tokenizer=self.tokenizer)
 
         if text:
             dataset.prepare_infer_sample(text, ignore_error=ignore_error)

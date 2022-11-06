@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
-# file: data_utils.py
-# author: songyouwei <youwei0314@gmail.com>
-# Copyright (C) 2018. All Rights Reserved.
-import torch
+# file: data_utils_for_training.py
+# time: 02/11/2022 15:39
+# author: yangheng <hy345@exeter.ac.uk>
+# github: https://github.com/yangheng95
+# GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
+# ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
+# Copyright (C) 2022. All Rights Reserved.
 import tqdm
 
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
@@ -12,19 +15,11 @@ from pyabsa.utils.pyabsa_utils import check_and_fix_labels
 
 class GloVeTCDataset(PyABSADataset):
 
-    def load_data_from_dict(self, data):
+    def load_data_from_dict(self, dataset_dict, **kwargs):
         pass
 
-    def load_data_from_file(self, file_path):
-        pass
-
-    glove_input_colses = {
-        'lstm': ['text_indices']
-    }
-
-    def __init__(self, config, tokenizer, dataset_type='train'):
-        self.config = config
-        lines = load_dataset_from_file(self.config.dataset_file[dataset_type])
+    def load_data_from_file(self, dataset_file, **kwargs):
+        lines = load_dataset_from_file(self.config.dataset_file[self.dataset_type])
 
         all_data = []
 
@@ -35,7 +30,7 @@ class GloVeTCDataset(PyABSADataset):
             text, label = line[0], line[1]
             text = text.strip().lower()
             label = label.strip().lower()
-            text_indices = tokenizer.text_to_sequence(text)
+            text_indices = self.tokenizer.text_to_sequence(text)
 
             data = {
                 'text_indices': text_indices,
@@ -47,12 +42,13 @@ class GloVeTCDataset(PyABSADataset):
 
             all_data.append(data)
 
-        check_and_fix_labels(label_set, 'label', all_data, config)
-        config.output_dim = len(label_set)
+        check_and_fix_labels(label_set, 'label', all_data, self.config)
+        self.config.output_dim = len(label_set)
 
         self.data = all_data
 
-        super().__init__(config)
+    def __init__(self, config, tokenizer, dataset_type='train', **kwargs):
+        super().__init__(config, tokenizer, dataset_type, **kwargs)
 
     def __getitem__(self, index):
         return self.data[index]

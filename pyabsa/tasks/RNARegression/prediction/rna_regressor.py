@@ -19,16 +19,15 @@ from sklearn import metrics
 from pyabsa import TaskCodeOption, LabelPaddingOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
 from pyabsa.tasks.RNARegression.dataset_utils.__classic__.data_utils_for_inference import GloVeRNARDataset
-from pyabsa.tasks.RNARegression.dataset_utils.__plm__.data_utils_for_inference import  BERTClassificationDataset
+from pyabsa.tasks.RNARegression.dataset_utils.__plm__.data_utils_for_inference import BERTRNARDataset
 from pyabsa.tasks.RNARegression.models import BERTRNARModelList, GloVeRNARModelList
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import get_device, print_args
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
-from pyabsa.utils.text_utils.tokenizer import build_embedding_matrix, Tokenizer, PretrainedTokenizer
+from pyabsa.framework.tokenizer_class.tokenizer_class import build_embedding_matrix, Tokenizer, PretrainedTokenizer
 
 
 class RNARegressor(InferenceModel):
-
     task_code = TaskCodeOption.RNASequenceRegression
 
     def __init__(self, checkpoint=None, cal_perplexity=False, **kwargs):
@@ -117,14 +116,13 @@ class RNARegressor(InferenceModel):
                 raise KeyError('The checkpoint you are loading is not from classifier model.')
 
         if hasattr(BERTRNARModelList, self.config.model.__name__):
-            self.dataset = BERTClassificationDataset(config=self.config, tokenizer=self.tokenizer)
+            self.dataset = BERTRNARDataset(config=self.config, tokenizer=self.tokenizer)
 
         elif hasattr(GloVeRNARModelList, self.config.model.__name__):
             self.dataset = GloVeRNARDataset(config=self.config, tokenizer=self.tokenizer)
 
         self.infer_dataloader = None
         self.config.eval_batch_size = kwargs.get('eval_batch_size', 128)
-
 
         self.config.initializer = self.config.initializer
 
@@ -180,7 +178,7 @@ class RNARegressor(InferenceModel):
 
         save_path = os.path.join(os.getcwd(), 'rna_regression.result.json')
 
-        target_file = detect_infer_dataset(target_file, task_code='rnar')
+        target_file = detect_infer_dataset(target_file, task_code=TaskCodeOption.RNASequenceRegression)
         if not target_file:
             raise FileNotFoundError('Can not find inference datasets!')
 

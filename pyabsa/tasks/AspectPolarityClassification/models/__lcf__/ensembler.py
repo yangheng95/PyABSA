@@ -25,7 +25,7 @@ from pyabsa.tasks.AspectPolarityClassification.models.__plm__ import BERTBaselin
 from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__classic__.data_utils_for_training import GloVeABSADataset
 from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__lcf__.data_utils_for_training import ABSADataset
 from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__plm__.data_utils_for_training import BERTBaselineABSADataset
-from pyabsa.utils.text_utils.tokenizer import PretrainedTokenizer, Tokenizer, build_embedding_matrix
+from pyabsa.framework.tokenizer_class.tokenizer_class import PretrainedTokenizer, Tokenizer, build_embedding_matrix
 
 
 def model_pool_check(models):

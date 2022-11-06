@@ -48,7 +48,6 @@ class CheckpointManager:
                     checkpoint if os.path.exists(checkpoint) else find_file(os.getcwd(), checkpoint))
             else:
                 checkpoint = self._get_remote_checkpoint(checkpoint)
-
         return checkpoint
 
     def _get_remote_checkpoint(self, checkpoint: str = 'multilingual'):
@@ -58,6 +57,8 @@ class CheckpointManager:
         This param is for someone wants to load a checkpoint not registered in PyABSA
         :return:
         """
+        print(colored(f'PyABSA is trying to download checkpoint: {checkpoint}, but the checkpoints for early v2.0 are unavailable'
+                      f' now, please use the checkpoints in v1.x versions or wait for the new checkpoints in v2.0.0', 'red'))
         available_checkpoint_by_task = available_checkpoints(self.task_code)
         if checkpoint.lower() in [k.lower() for k in available_checkpoint_by_task.keys()]:
             print(colored('Downloading checkpoint:{} ...'.format(checkpoint), 'green'))
@@ -66,6 +67,6 @@ class CheckpointManager:
                 'Checkpoint:{} is not found, you can raise an issue for requesting shares of checkpoints'.format(
                     checkpoint), 'red'))
             sys.exit(-1)
-        return download_checkpoint(task='apc',
+        return download_checkpoint(task=TaskCodeOption.Aspect_Polarity_Classification,
                                    language=checkpoint.lower(),
                                    checkpoint=available_checkpoint_by_task[checkpoint.lower()])

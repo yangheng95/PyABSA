@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-# file: data_utils.py
-# author: songyouwei <youwei0314@gmail.com>
-# Copyright (C) 2018. All Rights Reserved.
+# file: data_utils_for_inference.py
+# time: 02/11/2022 15:39
+# author: yangheng <hy345@exeter.ac.uk>
+# github: https://github.com/yangheng95
+# GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
+# ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
+# Copyright (C) 2022. All Rights Reserved.
 
-import numpy as np
 import tqdm
 from torch.utils.data import Dataset
 
@@ -12,13 +15,9 @@ from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 
 
-class GloVeTCDataset(Dataset):
+class GloVeTCInferenceDataset(Dataset):
 
     def __init__(self, config, tokenizer):
-        self.glove_input_colses = {
-            'lstm': ['text_indices']
-        }
-
         self.tokenizer = tokenizer
         self.config = config
         self.data = []

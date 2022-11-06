@@ -136,5 +136,5 @@ def load_atepc_inference_datasets(fname):
         lines.extend(fin.readlines())
         fin.close()
     for i in range(len(lines)):
-        lines[i] = lines[i][:lines[i].find('!sent!')].replace('[ASP]', '')
+        lines[i] = lines[i][:lines[i].find('$LABEL$')].replace('[ASP]', '')
     return sorted(set(lines), key=lines.index)

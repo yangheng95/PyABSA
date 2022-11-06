@@ -125,7 +125,6 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                 with open(cache_path, mode='wb') as f:
                     pickle.dump((self.train_data, self.valid_data, self.test_data, self.config), f)
 
-
         self.num_train_optimization_steps = int(
             len(self.train_data) / self.config.batch_size / self.config.gradient_accumulation_steps) * self.config.num_epoch
 

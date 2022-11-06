@@ -13,7 +13,6 @@ import autocuda
 from termcolor import colored
 
 
-
 def __perform_tc_augmentation(dataset, **kwargs):
     print(colored('No augment datasets found, performing TC augment. this may take a long time...', 'yellow'))
 

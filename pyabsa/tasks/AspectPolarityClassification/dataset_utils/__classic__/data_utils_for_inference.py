@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
-# file: data_utils.py
-# author: songyouwei <youwei0314@gmail.com>
-# Copyright (C) 2018. All Rights Reserved.
+# file: data_utils_for_inference.py
+# time: 02/11/2022 15:39
+# author: yangheng <hy345@exeter.ac.uk>
+# github: https://github.com/yangheng95
+# GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
+# ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
+# Copyright (C) 2022. All Rights Reserved.
 
 import numpy as np
 import tqdm
@@ -13,9 +17,10 @@ from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.utils.pyabsa_utils import validate_example
 from .classic_glove_apc_utils import build_sentiment_window
 from .dependency_graph import dependency_adj_matrix, configure_spacy_model
+from ..__lcf__.data_utils_for_inference import parse_sample
 
 
-class GloVeABSADataset(Dataset):
+class GloVeABSAInferenceDataset(Dataset):
 
     def __init__(self, config, tokenizer):
         self.config = config
@@ -25,42 +30,8 @@ class GloVeABSADataset(Dataset):
 
         self.data = []
 
-    def parse_sample(self, text):
-        if '[ASP]' not in text:
-            text = '[ASP] Global Sentiment [ASP]' + text
-        _text = text
-        samples = []
-
-        if '!sent!' not in text:
-            text += '!sent!'
-        text, _, ref_sent = text.partition('!sent!')
-        ref_sent = ref_sent.split(',') if ref_sent else None
-        text = '[PADDING] ' + text + ' [PADDING]'
-        splits = text.split('[ASP]')
-
-        if ref_sent and int((len(splits) - 1) / 2) == len(ref_sent):
-            for i in range(0, len(splits) - 1, 2):
-                sample = text.replace('[ASP]' + splits[i + 1] + '[ASP]',
-                                      '[TEMP]' + splits[i + 1] + '[TEMP]', 1).replace('[ASP]', '')
-                sample += ' !sent! ' + str(ref_sent[int(i / 2)])
-                samples.append(sample.replace('[TEMP]', '[ASP]'))
-        elif not ref_sent or int((len(splits) - 1) / 2) != len(ref_sent):
-            # if not ref_sent:
-            #     print(_text, ' -> No the reference sentiment found')
-            if ref_sent:
-                print(_text, ' -> Unequal length of reference sentiment and aspects, ignore the reference sentiment.')
-
-            for i in range(0, len(splits) - 1, 2):
-                sample = text.replace('[ASP]' + splits[i + 1] + '[ASP]',
-                                      '[TEMP]' + splits[i + 1] + '[TEMP]', 1).replace('[ASP]', '')
-                samples.append(sample.replace('[TEMP]', '[ASP]'))
-        else:
-            raise ValueError('Invalid Input:{}'.format(text))
-
-        return samples
-
     def prepare_infer_sample(self, text: str, ignore_error=True):
-        self.process_data(self.parse_sample(text), ignore_error=ignore_error)
+        self.process_data(parse_sample(text), ignore_error=ignore_error)
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
 
@@ -68,7 +39,7 @@ class GloVeABSADataset(Dataset):
         samples = []
         for sample in lines:
             if sample:
-                samples.extend(self.parse_sample(sample))
+                samples.extend(parse_sample(sample))
         self.process_data(samples, ignore_error)
 
     def process_data(self, samples, ignore_error=True):
@@ -85,8 +56,8 @@ class GloVeABSADataset(Dataset):
                     raise RuntimeError('Invalid Input!')
 
                 # check for given polarity
-                if '!sent!' in text:
-                    text, polarity = text.split('!sent!')[0].strip(), text.split('!sent!')[1].strip()
+                if '$LABEL$' in text:
+                    text, polarity = text.split('$LABEL$')[0].strip(), text.split('$LABEL$')[1].strip()
                     text = text.replace('[PADDING]', '')
 
                     polarity = polarity if polarity else LabelPaddingOption.LABEL_PADDING
@@ -113,7 +84,7 @@ class GloVeABSADataset(Dataset):
                 aspect_indices = self.tokenizer.text_to_sequence(aspect)
                 left_len = np.count_nonzero(left_indices)
                 aspect_len = np.count_nonzero(aspect_indices)
-                aspect_boundary = np.asarray([left_len, left_len + aspect_len - 1], dtype=np.int64)
+                aspect_boundary = np.asarray([left_len, min(left_len + aspect_len - 1, self.config.max_seq_len - 1)])
 
                 idx2graph = dependency_adj_matrix(text_left + ' ' + aspect + ' ' + text_right)
                 dependency_graph = np.pad(idx2graph,

@@ -8,7 +8,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-
 class LocationEncoding(nn.Module):
     def __init__(self, config):
         super(LocationEncoding, self).__init__()
