@@ -27,7 +27,7 @@ def check_emergency_notification():
             for chunk in response.iter_content(chunk_size=1024):
                 f.write(chunk)
         with open(save_path, 'r') as f:
-            print(colored(f.read(), 'red'))
+            print(colored('PyABSA: '+f.read(), 'red'))
         os.remove(save_path)
     except Exception as e:
         pass
