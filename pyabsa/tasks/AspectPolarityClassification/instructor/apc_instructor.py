@@ -45,10 +45,6 @@ class APCTrainingInstructor(BaseTrainingInstructor):
 
         self._init_misc()
 
-        self.config.pop('dataset_dict', None)
-
-        self.config.pop('dataset', None)
-
     def _train_and_evaluate(self, criterion):
         global_step = 0
         max_fold_acc = 0
