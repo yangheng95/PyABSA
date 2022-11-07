@@ -57,8 +57,7 @@ class CheckpointManager:
         This param is for someone wants to load a checkpoint not registered in PyABSA
         :return:
         """
-        print(colored(f'PyABSA is trying to download checkpoint: {checkpoint}, but the checkpoints for early v2.0 are unavailable'
-                      f' now, please use the checkpoints in v1.x versions or wait for the new checkpoints in v2.0.0', 'red'))
+
         available_checkpoint_by_task = available_checkpoints(self.task_code)
         if checkpoint.lower() in [k.lower() for k in available_checkpoint_by_task.keys()]:
             print(colored('Downloading checkpoint:{} ...'.format(checkpoint), 'green'))
