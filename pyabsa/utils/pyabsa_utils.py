@@ -22,11 +22,16 @@ def print_args(config, logger=None):
     for arg in args:
         if logger:
             if arg != 'dataset' and arg != 'dataset_dict':
-                logger.info('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
+                try:
+                    logger.info('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
+                except:
+                    logger.info('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], 0))
         else:
             if arg != 'dataset' and arg != 'dataset_dict':
-                print('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
-
+                try:
+                    print('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
+                except:
+                    print('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], 0))
 
 def validate_example(text: str, aspect: str, polarity: str, config):
     if len(text) < len(aspect):

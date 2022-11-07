@@ -49,6 +49,6 @@ class ATEPCTrainer(Trainer):
         self.training_instructor = ATEPCTrainingInstructor
         self.inference_model_class = AspectExtractor
         self.config.task_code = TaskCodeOption.Aspect_Term_Extraction_and_Classification
-        self.config.task_name = TaskNameOption[TaskCodeOption.Aspect_Term_Extraction_and_Classification]
+        self.config.task_name = TaskNameOption().get(TaskCodeOption.Aspect_Term_Extraction_and_Classification)
 
         self._run()

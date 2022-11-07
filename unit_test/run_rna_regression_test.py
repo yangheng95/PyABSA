@@ -51,7 +51,7 @@ def test_bert_rna_regression():
     config.pretrained_bert = 'roberta-base'
     config.num_epoch = 1
     config.evaluate_begin = 0
-    config.max_seq_len = 512
+    config.max_seq_len = 128
     config.hidden_dim = 768
     config.embed_dim = 768
     config.cache_dataset = False

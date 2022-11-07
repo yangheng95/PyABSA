@@ -49,6 +49,6 @@ class APCTrainer(Trainer):
         self.training_instructor = APCTrainingInstructor
         self.inference_model_class = SentimentClassifier
         self.config.task_code = TaskCodeOption.Aspect_Polarity_Classification
-        self.config.task_name = TaskNameOption[TaskCodeOption.Aspect_Polarity_Classification]
+        self.config.task_name = TaskNameOption().get(TaskCodeOption.Aspect_Polarity_Classification)
 
         self._run()

@@ -12,3 +12,4 @@ import findfile
 
 for f in findfile.find_cwd_files(or_key=['.zip', '.cache', '.mv', '.json'], recursive=1):
     os.remove(f)
+print('Cleaned all files in the current directory.')

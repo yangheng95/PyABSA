@@ -50,6 +50,6 @@ class TADTrainer(Trainer):
         self.training_instructor = TADTrainingInstructor
         self.inference_model_class = TADTextClassifier
         self.config.task_code = TaskCodeOption.Text_Adversarial_Defense
-        self.config.task_name = TaskNameOption[TaskCodeOption.Text_Adversarial_Defense]
+        self.config.task_name = TaskNameOption().get(TaskCodeOption.Text_Adversarial_Defense)
 
         self._run()

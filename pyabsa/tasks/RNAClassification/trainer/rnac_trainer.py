@@ -49,6 +49,6 @@ class RNACTrainer(Trainer):
         self.training_instructor = RNACTrainingInstructor
         self.inference_model_class = RNAClassifier
         self.config.task_code = TaskCodeOption.RNASequenceClassification
-        self.config.task_name = TaskNameOption[TaskCodeOption.RNASequenceClassification]
+        self.config.task_name = TaskNameOption().get(TaskCodeOption.RNASequenceClassification)
 
         self._run()

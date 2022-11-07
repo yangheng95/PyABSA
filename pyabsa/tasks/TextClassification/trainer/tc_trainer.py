@@ -49,6 +49,6 @@ class TCTrainer(Trainer):
         self.training_instructor = TCTrainingInstructor
         self.inference_model_class = TextClassifier
         self.config.task_code = TaskCodeOption.Text_Classification
-        self.config.task_name = TaskNameOption[TaskCodeOption.Text_Classification]
+        self.config.task_name = TaskNameOption().get(TaskCodeOption.Text_Classification)
 
         self._run()

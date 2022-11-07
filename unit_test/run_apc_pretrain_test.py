@@ -144,7 +144,7 @@ def test_bert_apc_models():
             cuda.empty_cache()
             config.model = model
             config.cache_dataset = True
-            config.max_seq_len = 256
+            config.max_seq_len = 128
             config.num_epoch = 1
             config.evaluate_begin = 0
             config.log_step = -1
@@ -171,7 +171,7 @@ def test_glove_apc_models():
             config.cache_dataset = True
             config.overwrite_cache = True
             config.num_epoch = 1
-            config.max_seq_len = 512
+            config.max_seq_len = 128
             config.evaluate_begin = 0
             config.log_step = -1
             config.cross_validate_fold = 5
