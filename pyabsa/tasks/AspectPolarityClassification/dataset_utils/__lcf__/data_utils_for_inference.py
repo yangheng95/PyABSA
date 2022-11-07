@@ -22,8 +22,10 @@ from .apc_utils_for_dlcf_dca import prepare_input_for_dlcf_dca, configure_dlcf_s
 
 
 def parse_sample(text):
-    if '[ASP]' not in text:
-        text = '[B-ASP] Global Sentiment [E-ASP]' + text
+    if '[B-ASP]' not in text and '[ASP]' not in text:
+    # if '[B-ASP]' not in text or '[E-ASP]' not in text:
+        text = ' [B-ASP]Global Sentiment[E-ASP] ' + text
+
     _text = text
     samples = []
 
@@ -32,7 +34,7 @@ def parse_sample(text):
     text, _, ref_sent = text.partition('$LABEL$')
     if '[B-ASP]' in text:
         ref_sent = ref_sent.split(',') if ref_sent else []
-        aspects = re.findall(".*\[B\-ASP\](.*)\[E\-ASP\].*", text)
+        aspects = re.findall(r"\[B\-ASP\](.*?)\[E\-ASP\]", text)
 
         for i, aspect in enumerate(aspects):
             if len(aspects) == len(ref_sent):
@@ -42,7 +44,6 @@ def parse_sample(text):
 
     else:
         print('[ASP] tag is detected, please use [B-ASP] and [E-ASP] to annotate aspect terms.')
-        text = '[PADDING] ' + text + ' [PADDING]'
         splits = text.split('[ASP]')
 
         if ref_sent and int((len(splits) - 1) / 2) == len(ref_sent):
