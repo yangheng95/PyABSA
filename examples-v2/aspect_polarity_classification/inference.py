@@ -11,6 +11,11 @@ from pyabsa import AspectPolarityClassification as APC
 
 inference_sets = APC.APCDatasetList.Laptop14
 
+# sent_classifier = APC.SentimentClassifier('fast_lcf_bert_Multilingual_acc_82.66_f1_82.06.zip')
+sent_classifier = APC.SentimentClassifier('multilingual')
+
+sent_classifier.predict('When I got home, there was a message on the machine because the owner realized that our [B-ASP]waitress[E-ASP] forgot to charge us for our wine. $LABEL$ Negative')
+
 results = sent_classifier.batch_predict(target_file=inference_sets,
                                         print_result=True,
                                         save_result=True,

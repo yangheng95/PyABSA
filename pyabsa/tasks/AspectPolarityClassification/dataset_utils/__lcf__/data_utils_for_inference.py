@@ -31,7 +31,7 @@ def parse_sample(text):
         text += '$LABEL$'
     text, _, ref_sent = text.partition('$LABEL$')
     if '[B-ASP]' in text:
-        ref_sent = ref_sent.split(',') if ref_sent else None
+        ref_sent = ref_sent.split(',') if ref_sent else []
         aspects = re.findall(".*\[B\-ASP\](.*)\[E\-ASP\].*", text)
 
         for i, aspect in enumerate(aspects):

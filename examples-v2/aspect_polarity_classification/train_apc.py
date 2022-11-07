@@ -14,10 +14,10 @@ from pyabsa import AspectPolarityClassification as APC, ModelSaveOption, DeviceT
 
 config = APC.APCConfigManager.get_apc_config_multilingual()
 # config.pretrained_bert = 'microsoft/deberta-v3-base'
-config.model = APC.APCModelList.FAST_LSA_T_V2
+config.model = APC.APCModelList.FAST_LCF_BERT
 config.pretrained_bert = 'microsoft/mdeberta-v3-base'
 config.evaluate_begin = 0
-config.max_seq_len = 512
+config.max_seq_len = 256
 config.num_epoch = 20
 config.log_step = -1
 config.dropout = 0
