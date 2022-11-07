@@ -13,6 +13,8 @@
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/back-to-reality-leveraging-pattern-driven/aspect-based-sentiment-analysis-on-semeval)](https://paperswithcode.com/sota/aspect-based-sentiment-analysis-on-semeval?p=back-to-reality-leveraging-pattern-driven)
 
+# Note: If you need to find the v1.x version, please visit [release](https://github.com/yangheng95/PyABSA/tree/release)
+
 **Hi, there!** Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks.
 
 PyABSA is a free and open-source tool for everyone, but please do not forget to attach the (informal or formal) author
