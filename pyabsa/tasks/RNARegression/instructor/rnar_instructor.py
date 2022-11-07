@@ -120,9 +120,6 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
 
         self._init_misc()
 
-        self.config.pop('dataset_dict', None)
-
-        self.config.pop('dataset', None)
 
     def reload_model(self, ckpt='./init_state_dict.bin'):
         if os.path.exists(ckpt):

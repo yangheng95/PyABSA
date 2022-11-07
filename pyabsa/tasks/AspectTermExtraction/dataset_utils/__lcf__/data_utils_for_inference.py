@@ -214,7 +214,7 @@ def convert_apc_examples_to_features(examples, label_list, max_seq_len, tokenize
         IOB_label = example.IOB_label
         # aspect_label = example.aspect_label
         aspect_label = ['B-ASP'] * len(aspect_tokens)
-        polarity = [-LabelPaddingOption.SENTIMENT_PADDING] + example.polarity + [-LabelPaddingOption.SENTIMENT_PADDING]
+        polarity = [LabelPaddingOption.SENTIMENT_PADDING] + example.polarity + [LabelPaddingOption.SENTIMENT_PADDING]
         positions = np.where(np.array(polarity) > 0)[0].tolist()
         tokens = []
         labels = []

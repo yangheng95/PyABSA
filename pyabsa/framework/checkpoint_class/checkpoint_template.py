@@ -66,6 +66,6 @@ class CheckpointManager:
                 'Checkpoint:{} is not found, you can raise an issue for requesting shares of checkpoints'.format(
                     checkpoint), 'red'))
             sys.exit(-1)
-        return download_checkpoint(task=TaskCodeOption.Aspect_Polarity_Classification,
+        return download_checkpoint(task=self.task_code,
                                    language=checkpoint.lower(),
                                    checkpoint=available_checkpoint_by_task[checkpoint.lower()])
