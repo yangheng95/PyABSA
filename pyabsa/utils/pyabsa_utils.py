@@ -41,7 +41,7 @@ def print_args(config, logger=None, mode=0):
     args = [key for key in sorted(config.args.keys())]
     for arg in args:
         if logger:
-            logger.info('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
+            print('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
         else:
             print('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
 
@@ -161,7 +161,11 @@ def resume_from_checkpoint(trainer, from_checkpoint_path):
         print(colored('Resume training from Checkpoint: {}!'.format(from_checkpoint_path), 'green'))
 
 
-def prepare_glove840_embedding(glove_path):
+def prepare_glove840_embedding(glove_path, embedding_dim, config):
+    if config.args.get('glove_or_word2vec_path', None):
+        glove_path = config.glove_or_word2vec_path
+        return glove_path
+
     glove840_id = '1G-vd6W1oF9ByyJ-pzp9dcqKnr_plh4Em'
     if os.path.exists(glove_path) and os.path.isfile(glove_path):
         return glove_path
@@ -169,21 +173,23 @@ def prepare_glove840_embedding(glove_path):
         embedding_files = []
         dir_path = os.getenv('$HOME') if os.getenv('$HOME') else os.getcwd()
 
-        if find_files(dir_path, ['glove', 'B', 'd', '.txt'], exclude_key='.zip'):
-            embedding_files += find_files(dir_path, ['glove', 'B', '.txt'], exclude_key='.zip')
+        if find_files(dir_path, ['glove', 'B', 'd', '.txt', str(embedding_dim)], exclude_key='.zip'):
+            embedding_files += find_files(dir_path, ['glove', 'B', '.txt', str(embedding_dim)], exclude_key='.zip')
         elif find_files(dir_path, ['word2vec', 'd', '.txt'], exclude_key='.zip'):
-            embedding_files += find_files(dir_path, ['word2vec', 'd', '.txt'], exclude_key='.zip')
+            embedding_files += find_files(dir_path, ['word2vec', 'd', '.txt', str(embedding_dim)], exclude_key='.zip')
         else:
-            embedding_files += find_files(dir_path, ['d', '.txt'], exclude_key='.zip')
+            embedding_files += find_files(dir_path, ['d', '.txt', str(embedding_dim)], exclude_key='.zip')
 
         if embedding_files:
-            print(colored('Find embedding file: {}, use: {}'.format(embedding_files, embedding_files[0]), 'green'))
+            print('Find embedding file: {}, use: {}'.format(embedding_files, embedding_files[0]))
             return embedding_files[0]
 
         else:
+            if config.embed_dim != 300:
+                raise ValueError('Please provide embedding file for embedding dim: {} in current wording dir '.format(config.embed_dim))
             zip_glove_path = os.path.join(os.path.dirname(glove_path), 'glove.840B.300d.zip')
-            print(colored('No GloVe embedding found at {},'
-                          ' downloading glove.840B.300d.txt (2GB will be downloaded / 5.5GB after unzip)...'.format(glove_path), 'yellow'))
+            print('No GloVe embedding found at {},'
+                        ' downloading glove.840B.300d.txt (2GB will be downloaded / 5.5GB after unzip)...'.format(glove_path))
             try:
                 response = requests.get('https://huggingface.co/spaces/yangheng/PyABSA-ATEPC/resolve/main/open-access/glove.840B.300d.zip', stream=True)
                 with open(zip_glove_path, "wb") as f:
@@ -196,12 +202,13 @@ def prepare_glove840_embedding(glove_path):
                 gdown.download(id=glove840_id, output=zip_glove_path)
 
         if find_cwd_file('glove.840B.300d.zip'):
-            print(colored('unzip glove.840B.300d.zip...', 'yellow'))
+            print('unzip glove.840B.300d.zip...')
             with zipfile.ZipFile(find_cwd_file('glove.840B.300d.zip'), 'r') as z:
                 z.extractall()
-            print(colored('Zip file extraction Done.', 'green'))
+            print('Zip file extraction Done.')
 
-        return prepare_glove840_embedding(glove_path)
+        return prepare_glove840_embedding(glove_path, embedding_dim, config)
+
 
 def _load_word_vec(path, word2idx=None, embed_dim=300):
     fin = open(path, 'r', encoding='utf-8', newline='\n', errors='ignore')
@@ -222,7 +229,7 @@ def build_embedding_matrix(word2idx, embed_dim, dat_fname, opt):
         print(colored('Loading cached embedding_matrix from {} (Please remove all cached files if there is any problem!)'.format(embed_matrix_path), 'green'))
         embedding_matrix = pickle.load(open(embed_matrix_path, 'rb'))
     else:
-        glove_path = prepare_glove840_embedding(embed_matrix_path)
+        glove_path = prepare_glove840_embedding(embed_matrix_path, embed_dim, opt)
         embedding_matrix = np.zeros((len(word2idx) + 2, embed_dim))  # idx 0 and len(word2idx)+1 are all-zeros
 
         word_vec = _load_word_vec(glove_path, word2idx=word2idx, embed_dim=embed_dim)

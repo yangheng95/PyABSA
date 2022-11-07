@@ -32,6 +32,7 @@ from ..dataset_utils.data_utils_for_training import ATEPCProcessor, convert_exam
 
 import pytorch_warmup as warmup
 
+
 class Instructor:
 
     def __init__(self, opt, logger):
@@ -244,7 +245,20 @@ class Instructor:
                 l_mask = l_mask.to(self.opt.device)
                 lcf_cdm_vec = lcf_cdm_vec.to(self.opt.device)
                 lcf_cdw_vec = lcf_cdw_vec.to(self.opt.device)
-                with torch.cuda.amp.autocast():
+                if self.opt.use_amp:
+                    with torch.cuda.amp.autocast():
+                        loss_ate, loss_apc = self.model(input_ids_spc,
+                                                        token_type_ids=segment_ids,
+                                                        attention_mask=input_mask,
+                                                        labels=label_ids,
+                                                        polarity=polarity,
+                                                        valid_ids=valid_ids,
+                                                        attention_mask_label=l_mask,
+                                                        lcf_cdm_vec=lcf_cdm_vec,
+                                                        lcf_cdw_vec=lcf_cdw_vec
+                                                        )
+
+                else:
                     loss_ate, loss_apc = self.model(input_ids_spc,
                                                     token_type_ids=segment_ids,
                                                     attention_mask=input_mask,
@@ -255,18 +269,18 @@ class Instructor:
                                                     lcf_cdm_vec=lcf_cdm_vec,
                                                     lcf_cdw_vec=lcf_cdw_vec
                                                     )
-                    # for multi-gpu, average loss by gpu instance number
-                    if self.opt.auto_device == 'allcuda':
-                        loss_ate, loss_apc = loss_ate.mean(), loss_apc.mean()
-                    ate_loss_weight = self.opt.args.get('ate_loss_weight', 1.0)
+                # for multi-gpu, average loss by gpu instance number
+                if self.opt.auto_device == 'allcuda':
+                    loss_ate, loss_apc = loss_ate.mean(), loss_apc.mean()
+                ate_loss_weight = self.opt.args.get('ate_loss_weight', 1.0)
 
-                    loss = loss_ate + ate_loss_weight * loss_apc  # the optimal weight of loss may be different according to dataset
+                loss = loss_ate + ate_loss_weight * loss_apc  # the optimal weight of loss may be different according to dataset
 
                 sum_loss += loss.item()
 
                 losses.append(loss.item())
 
-                if self.scaler:
+                if self.opt.use_amp and self.scaler:
                     self.scaler.scale(loss).backward()
                     self.scaler.step(self.optimizer)
                     self.scaler.update()

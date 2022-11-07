@@ -7,10 +7,11 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 
-__version__ = '1.16.25'
+__version__ = '1.16.26'
 
 __name__ = 'pyabsa'
 
+from termcolor import colored
 from update_checker import UpdateChecker
 
 from pyabsa.functional.trainer import APCTrainer, ATEPCTrainer, TCTrainer, TADTrainer
@@ -48,4 +49,7 @@ check_result = checker.check(__name__, __version__)
 
 if check_result:
     print(check_result)
+    print(colored('PyABSA INFO: The PyABSA >= 2.0.0 version contains breaking changes, '
+                  'if you want to use the training and inference scripts (in demos directory), '
+                  'please do not upgrade to the >= 2.0.0 version', 'red'))
     check_update_log()

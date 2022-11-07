@@ -215,7 +215,19 @@ class Instructor:
                 self.optimizer.zero_grad()
                 inputs = {col: sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols}
 
-                with torch.cuda.amp.autocast():
+                if self.opt.use_amp:
+                    with torch.cuda.amp.autocast():
+                        outputs = self.model(inputs)
+                        targets = sample_batched['polarity'].to(self.opt.device)
+
+                        if isinstance(outputs, dict) and 'loss' in outputs and outputs['loss'] != 0:
+                            loss = outputs['loss']
+                        else:
+                            loss = criterion(outputs['logits'], targets)
+
+                        if self.opt.auto_device == 'allcuda':
+                            loss = loss.mean()
+                else:
                     outputs = self.model(inputs)
                     targets = sample_batched['polarity'].to(self.opt.device)
 
@@ -229,7 +241,7 @@ class Instructor:
 
                 losses.append(loss.item())
 
-                if self.scaler:
+                if self.opt.use_amp and self.scaler:
                     self.scaler.scale(loss).backward()
                     self.scaler.step(self.optimizer)
                     self.scaler.update()
@@ -394,7 +406,19 @@ class Instructor:
                     self.model.train()
                     self.optimizer.zero_grad()
                     inputs = {col: sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols}
-                    with torch.cuda.amp.autocast():
+                    if self.opt.use_amp:
+                        with torch.cuda.amp.autocast():
+                            outputs = self.model(inputs)
+                            targets = sample_batched['polarity'].to(self.opt.device)
+
+                            if isinstance(outputs, dict) and 'loss' in outputs and outputs['loss'] != 0:
+                                loss = outputs['loss']
+                            else:
+                                loss = criterion(outputs['logits'], targets)
+
+                            if self.opt.auto_device == 'allcuda':
+                                loss = loss.mean()
+                    else:
                         outputs = self.model(inputs)
                         targets = sample_batched['polarity'].to(self.opt.device)
 
@@ -408,7 +432,7 @@ class Instructor:
 
                     losses.append(loss.item())
 
-                    if self.scaler:
+                    if self.opt.use_amp and self.scaler:
                         self.scaler.scale(loss).backward()
                         self.scaler.step(self.optimizer)
                         self.scaler.update()

@@ -225,7 +225,13 @@ class Instructor:
                 self.model.train()
                 self.optimizer.zero_grad()
                 inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
-                outputs = self.model(inputs)
+
+                if self.opt.use_amp:
+                    with torch.cuda.amp.autocast():
+                        outputs = self.model(inputs)
+                else:
+                    outputs = self.model(inputs)
+
                 targets = sample_batched['label'].to(self.opt.device)
 
                 if isinstance(outputs, dict) and 'loss' in outputs:
@@ -234,7 +240,7 @@ class Instructor:
                     loss = criterion(outputs, targets)
 
                 losses.append(loss.item())
-                if self.scaler:
+                if self.opt.use_amp and self.scaler:
                     self.scaler.scale(loss).backward()
                     self.scaler.step(self.optimizer)
                     self.scaler.update()

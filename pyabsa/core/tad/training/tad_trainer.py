@@ -247,18 +247,22 @@ class Instructor:
                 self.model.train()
                 self.optimizer.zero_grad()
                 inputs = [sample_batched[col].to(self.opt.device) for col in self.opt.inputs_cols]
-                with torch.cuda.amp.autocast():
+                if self.opt.use_amp:
+                    with torch.cuda.amp.autocast():
+                        outputs = self.model(inputs)
+                else:
                     outputs = self.model(inputs)
-                    label_targets = sample_batched['label'].to(self.opt.device)
-                    adv_tr_targets = sample_batched['adv_train_label'].to(self.opt.device)
-                    adv_det_targets = sample_batched['is_adv'].to(self.opt.device)
 
-                    sen_logits, advdet_logits, adv_tr_logits = outputs['sent_logits'], outputs['advdet_logits'], outputs['adv_tr_logits']
-                    sen_loss = criterion(sen_logits, label_targets)
-                    adv_det_loss = criterion(advdet_logits, adv_det_targets)
-                    adv_train_loss = criterion(adv_tr_logits, adv_tr_targets)
-                    loss = sen_loss + self.opt.args.get('adv_det_weight', 5) * adv_det_loss + self.opt.args.get('adv_train_weight', 5) * adv_train_loss
-                    losses.append(loss.item())
+                label_targets = sample_batched['label'].to(self.opt.device)
+                adv_tr_targets = sample_batched['adv_train_label'].to(self.opt.device)
+                adv_det_targets = sample_batched['is_adv'].to(self.opt.device)
+
+                sen_logits, advdet_logits, adv_tr_logits = outputs['sent_logits'], outputs['advdet_logits'], outputs['adv_tr_logits']
+                sen_loss = criterion(sen_logits, label_targets)
+                adv_det_loss = criterion(advdet_logits, adv_det_targets)
+                adv_train_loss = criterion(adv_tr_logits, adv_tr_targets)
+                loss = sen_loss + self.opt.args.get('adv_det_weight', 5) * adv_det_loss + self.opt.args.get('adv_train_weight', 5) * adv_train_loss
+                losses.append(loss.item())
 
                 if self.scaler:
                     self.scaler.scale(loss).backward()
