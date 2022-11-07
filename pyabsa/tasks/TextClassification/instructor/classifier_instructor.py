@@ -47,6 +47,8 @@ class TCTrainingInstructor(BaseTrainingInstructor):
 
         self.config.pop('dataset_dict', None)
 
+        self.config.pop('dataset', None)
+
     def reload_model(self, ckpt='./init_state_dict.bin'):
         if os.path.exists(ckpt):
             self.model.load_state_dict(torch.load(find_file(ckpt, or_key=['.bin', 'state_dict'])))

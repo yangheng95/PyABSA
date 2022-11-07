@@ -7,7 +7,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 
-__version__ = '2.0.0.dev0'
+__version__ = '2.0.0.dev1'
 
 __name__ = 'pyabsa'
 
@@ -22,6 +22,9 @@ from pyabsa.utils.data_utils.dataset_manager import download_all_available_datas
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 
 from pyabsa.utils.check_utils.package_version_check import validate_pyabsa_version, query_release_notes, check_pyabsa_update, check_package_version
+
+from pyabsa.utils.notification_utils.notification_utils import check_emergency_notification
+
 from pyabsa.framework.checkpoint_class.checkpoint_utils import available_checkpoints, download_checkpoint
 from pyabsa.framework.dataset_class.dataset_dict_class import DatasetDict
 from pyabsa.tasks import (
@@ -42,6 +45,4 @@ import pyabsa.tasks.RNARegression as RNAR
 
 validate_pyabsa_version()
 
-
-from pyabsa.utils.notification_utils.notification_utils import check_emergency_notification
 check_emergency_notification()
