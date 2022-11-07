@@ -72,7 +72,7 @@ import random
 from pyabsa import RNAClassification as RNAC
 
 config = RNAC.RNACConfigManager.get_rnac_config_glove()
-config.model = RNAC.GloVeRNACModelList.LSTM
+config.model = RNAC.GloVeRNACModelList.MHSA
 config.num_epoch = 10
 config.pretrained_bert = 'rna_bpe_tokenizer'
 config.evaluate_begin = 0
@@ -85,7 +85,7 @@ config.dropout = 0.5
 config.l2reg = 0
 config.num_lstm_layer = 1
 config.do_lower_case = False
-config.seed = [random.randint(0, 10000) for _ in range(3)]
+config.seed = [random.randint(0, 10000) for _ in range(1)]
 config.log_step = -1
 config.save_last_ckpt_only = True
 config.num_mhsa_layer = 1

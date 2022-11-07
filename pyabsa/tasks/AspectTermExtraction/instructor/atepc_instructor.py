@@ -51,17 +51,8 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
         self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert, do_lower_case_case='uncased' in self.config.pretrained_bert)
 
         processor = ATEPCProcessor(self.tokenizer)
-
-        config_str = re.sub(r'<.*?>', '', str(sorted([str(self.config.args[k]) for k in self.config.args if k != 'seed'])))
-        hash_tag = sha256(config_str.encode()).hexdigest()
-        cache_path = '{}.{}.dataset.{}.cache'.format(self.config.model_name, self.config.dataset_name, hash_tag)
-
-        if os.path.exists(cache_path) and not self.config.overwrite_cache:
-            print(colored('Loading dataset cache: {}'.format(cache_path), 'green'))
-            with open(cache_path, mode='rb') as f_cache:
-                self.train_set, self.valid_set, self.test_set, self.config = pickle.load(f_cache)
-
-        else:
+        cache_path = self.load_cache_dataset()
+        if cache_path is None:
             self.train_examples = processor.get_train_examples(self.config.dataset_file['train'], 'train')
             train_features = convert_examples_to_features(self.train_examples, self.config.max_seq_len, self.tokenizer, self.config)
             self.config.label_list = sorted(list(self.config.IOB_label_to_index.keys()))
@@ -134,10 +125,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
         self.config.sep_indices = self.tokenizer.sep_token_id
         self.bert_base_model.config.num_labels = self.config.num_labels
 
-        if self.config.cache_dataset and not os.path.exists(cache_path) or self.config.overwrite_cache:
-            print(colored('Caching dataset... please remove cached dataset if any problem happens.', 'red'))
-            with open(cache_path, mode='wb') as f_cache:
-                pickle.dump((self.train_set, self.valid_set, self.test_set, self.config), f_cache)
+        self.save_cache_dataset()
 
         self.model = self.config.model(self.bert_base_model, config=self.config)
 

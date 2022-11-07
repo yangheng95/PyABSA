@@ -48,7 +48,7 @@ def test_all_bert_models():
             config.num_epoch = 1
             config.evaluate_begin = 0
             config.log_step = -1
-            config.cache_dataset = False
+            config.cache_dataset = True
             text_classifier = TC.TCTrainer(config=config,
                                            dataset=dataset,
                                            checkpoint_save_mode=1,
@@ -65,9 +65,15 @@ def test_all_glove_models():
         for model in TC.GloVeTCModelList():
             config = TC.TCConfigManager.get_tc_config_glove()
             config.model = model
-            config.num_epoch = 1
-            config.evaluate_begin = 0
-            config.log_step = -1
+            config.num_epoch = 100
+            config.num_epoch = 100
+            config.evaluate_begin = 2
+            config.max_seq_len = 80
+            config.do_lower_case = True
+            config.dropout = 0.5
+            config.log_step = 5
+            config.l2reg = 0.001
+
             text_classifier = TC.TCTrainer(config=config,
                                            dataset=dataset,
                                            checkpoint_save_mode=1,

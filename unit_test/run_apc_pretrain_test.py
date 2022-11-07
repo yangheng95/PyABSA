@@ -166,15 +166,14 @@ def test_glove_apc_models():
         for model in APC.GloVeAPCModelList():
             cuda.empty_cache()
             config = APC.APCConfigManager.get_apc_config_glove()
-            config.lcf = 'cdm'
             config.model = model
             config.cache_dataset = True
             config.overwrite_cache = True
-            config.num_epoch = 1
-            config.max_seq_len = 128
+            config.num_epoch = 100
+            config.patience = 20
+            config.max_seq_len = 256
             config.evaluate_begin = 0
-            config.log_step = -1
-            config.cross_validate_fold = 5
+            config.log_step = 10
             sent_classifier = APC.APCTrainer(config=config,
                                              dataset=dataset,
                                              checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,

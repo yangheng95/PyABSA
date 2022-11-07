@@ -12,6 +12,9 @@ import os
 import pickle
 import random
 
+import re
+from hashlib import sha256
+
 import numpy
 import torch
 from findfile import find_file, find_files
@@ -87,13 +90,34 @@ class BaseTrainingInstructor:
             else:
                 self.model.load_state_dict(torch.load(find_file(ckpt, or_key=['.bin', 'state_dict'])))
 
+    def load_cache_dataset(self, **kwargs):
+        config_str = re.sub(r'<.*?>', '', str(sorted([str(self.config.args[k]) for k in self.config.args if k != 'seed'])))
+        hash_tag = sha256(config_str.encode()).hexdigest()
+        cache_path = '{}.{}.dataset.{}.cache'.format(self.config.model_name, self.config.dataset_name, hash_tag)
+        if os.path.exists(cache_path) and not self.config.overwrite_cache:
+            with open(cache_path, mode='rb') as f_cache:
+                self.config.logger.info('Load cache dataset from {}'.format(cache_path))
+                self.train_set, self.valid_set, self.test_set, self.config = pickle.load(f_cache)
+                _config = kwargs.get('config', None)
+                if _config:
+                    _config.update(self.config)
+                    _config.args_call_count.update(self.config.args_call_count)
+                return cache_path
+        return None
+
+    def save_cache_dataset(self, **kwargs):
+        config_str = re.sub(r'<.*?>', '', str(sorted([str(self.config.args[k]) for k in self.config.args if k != 'seed'])))
+        hash_tag = sha256(config_str.encode()).hexdigest()
+        cache_path = '{}.{}.dataset.{}.cache'.format(self.config.model_name, self.config.dataset_name, hash_tag)
+        if (not os.path.exists(cache_path) or self.config.overwrite_cache) and self.config.cache_dataset:
+            with open(cache_path, mode='wb') as f_cache:
+                self.config.logger.info('Save cache dataset to {}'.format(cache_path))
+                pickle.dump([self.train_set, self.valid_set, self.test_set, self.config], f_cache)
+                return cache_path
+        return None
+
     def _prepare_dataloader(self):
         # remove dataset dict object used for dataset initialization
-        self.config.pop('dataset', None)
-        self.config.pop('dataset_dict', None)
-
-        self.config.pop('dataset', None)
-
         if self.train_dataloader and self.valid_dataloader:
             self.valid_dataloaders = [self.valid_dataloader]
             self.train_dataloaders = [self.train_dataloader]
