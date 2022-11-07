@@ -92,6 +92,8 @@ class BaseTrainingInstructor:
         self.config.pop('dataset', None)
         self.config.pop('dataset_dict', None)
 
+        self.config.pop('dataset', None)
+
         if self.train_dataloader and self.valid_dataloader:
             self.valid_dataloaders = [self.valid_dataloader]
             self.train_dataloaders = [self.train_dataloader]
