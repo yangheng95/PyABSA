@@ -446,19 +446,11 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
     def _load_dataset_and_prepare_dataloader(self):
         self.config.inputs_cols = self.config.model.inputs
 
-        config_str = re.sub(r'<.*?>', '', str(sorted([str(self.config.args[k]) for k in self.config.args if k != 'seed'])))
-        hash_tag = sha256(config_str.encode()).hexdigest()
-        cache_path = '{}.{}.dataset.{}.cache'.format(self.config.model_name, self.config.dataset_name, hash_tag)
-
-        if os.path.exists(cache_path) and not self.config.overwrite_cache:
-            print('Loading dataset cache:', cache_path)
-            with open(cache_path, mode='rb') as f_cache:
-                self.train_set, self.valid_set, self.test_set, self.config = pickle.load(f_cache)
-
+        cache_path = self.load_cache_dataset()
         # init BERT-based model and dataset
         if hasattr(BERTRNACModelList, self.config.model.__name__):
             self.tokenizer = PretrainedTokenizer(self.config)
-            if not os.path.exists(cache_path) or self.config.overwrite_cache:
+            if cache_path is None or self.config.overwrite_cache:
                 self.train_set = BERTRNACDataset(self.config, self.tokenizer, dataset_type='train')
                 self.test_set = BERTRNACDataset(self.config, self.tokenizer, dataset_type='test')
                 self.valid_set = BERTRNACDataset(self.config, self.tokenizer, dataset_type='valid')
@@ -488,10 +480,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
 
             self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
 
-        if self.config.cache_dataset and not os.path.exists(cache_path) or self.config.overwrite_cache:
-            print('Caching dataset... please remove cached dataset if change model or dataset')
-            with open(cache_path, mode='wb') as f_cache:
-                pickle.dump((self.train_set, self.valid_set, self.test_set, self.config), f_cache)
+        self.save_cache_dataset()
 
     def run(self):
         # Loss and Optimizer

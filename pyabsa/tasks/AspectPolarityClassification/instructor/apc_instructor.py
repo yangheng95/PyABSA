@@ -19,7 +19,7 @@ from tqdm import tqdm
 
 from pyabsa import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
-from pyabsa.tasks.AspectPolarityClassification.models.__lcf__.ensembler import APCEnsembler
+from pyabsa.tasks.AspectPolarityClassification.instructor.ensembler import APCEnsembler
 from pyabsa.utils.file_utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args, init_optimizer
 

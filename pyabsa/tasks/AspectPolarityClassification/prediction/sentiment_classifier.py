@@ -23,7 +23,7 @@ from pyabsa.tasks.AspectPolarityClassification.models.__lcf__ import APCModelLis
 from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__classic__.data_utils_for_inference import GloVeABSAInferenceDataset
 from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__lcf__.data_utils_for_inference import ABSAInferenceDataset
 from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__plm__.data_utils_for_inference import BERTABSAInferenceDataset
-from pyabsa.tasks.AspectPolarityClassification.models.__lcf__.ensembler import APCEnsembler
+from pyabsa.tasks.AspectPolarityClassification.instructor.ensembler import APCEnsembler
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import get_device, print_args
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer

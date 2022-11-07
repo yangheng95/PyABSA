@@ -15,13 +15,11 @@ from pyabsa import AspectTermExtraction as ATEPC
 config = ATEPC.ATEPCConfigManager.get_atepc_config_english()
 config.model = ATEPC.ATEPCModelList.FAST_LCF_ATEPC
 config.evaluate_begin = 0
-config.max_seq_len = 512
+config.max_seq_len = 256
 # config.pretrained_bert = 'yangheng/deberta-v3-base-absa'
 config.pretrained_bert = 'microsoft/mdeberta-v3-base'
 config.log_step = -1
-config.optimizer = 'adam'
-config.l2reg = 1e-8
-config.learning_rate = 2e-5
+config.l2reg = 1e-5
 config.num_epoch = 20
 config.seed = random.randint(1, 100)
 config.use_bert_spc = True

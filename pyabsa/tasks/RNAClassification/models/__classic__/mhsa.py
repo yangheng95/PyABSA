@@ -33,6 +33,7 @@ class MHSA(nn.Module):
         super(MHSA, self).__init__()
         self.config = config
         self.bert_config = AutoConfig.from_pretrained('bert-base-uncased')
+        self.bert_config.hidden_size = self.config.hidden_dim
         self.embed = nn.Embedding.from_pretrained(torch.tensor(embedding_matrix, dtype=torch.float))
         self.mhsa = MultiHeadSelfAttention(self.bert_config, self.config)
         self.pooler = BertPooler(self.bert_config)
