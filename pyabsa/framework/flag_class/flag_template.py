@@ -9,26 +9,27 @@
 
 
 class TaskNameOption(dict):
+    code2name = {
+        'apc': 'Aspect-based Sentiment Classification',
+        'atepc': 'Aspect Term Extraction and Polarity Classification',
+        'tc': 'Text Classification',
+        'text_classification': 'Text Classification',
+        'tad': 'Text Adversarial Defense',
+        'rnac': 'RNA Sequence Classification',
+        'rnar': 'RNA Sequence Regression',
+        'APC': 'Aspect-based Sentiment Classification',
+        'ATEPC': 'Aspect Term Extraction and Polarity Classification',
+        'TC': 'Text Classification',
+        'TAD': 'Text Adversarial Defense',
+        'RNAC': 'RNA Sequence Classification',
+        'RNAR': 'RNA Sequence Regression',
+    }
+
     def __init__(self):
-        self.code2name = {
-            TaskCodeOption.Aspect_Polarity_Classification: 'Aspect-based Sentiment Classification',
-            'atepc': 'Aspect Term Extraction and Polarity Classification',
-            'tc': 'Text Classification',
-            'text_classification': 'Text Classification',
-            'tad': 'Text Adversarial Defense',
-            'rnac': 'RNA Sequence Classification',
-            'rnar': 'RNA Sequence Regression',
-            'APC': 'Aspect-based Sentiment Classification',
-            'ATEPC': 'Aspect Term Extraction and Polarity Classification',
-            'TC': 'Text Classification',
-            'TAD': 'Text Adversarial Defense',
-            'RNAC': 'RNA Sequence Classification',
-            'RNAR': 'RNA Sequence Regression',
-        }
         super(TaskNameOption, self).__init__(self.code2name)
 
     def get(self, key):
-        return self.code2name.get(key, None)
+        return self.code2name.get(key, 'Unknown Task')
 
 
 class TaskCodeOption:

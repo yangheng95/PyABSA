@@ -53,7 +53,7 @@ def dependency_adj_matrix(text):
     return matrix
 
 
-def prepare_dependency_graph(dataset_list, graph_path, max_seq_len, opt):
+def prepare_dependency_graph(dataset_list, graph_path, max_seq_len, config):
     if 'train' in dataset_list[0].lower():
         append_name = 'train_set_{}x{}.graph'.format(max_seq_len, max_seq_len)
     elif 'test' in dataset_list[0].lower():

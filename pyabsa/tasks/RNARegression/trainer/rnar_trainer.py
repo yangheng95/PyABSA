@@ -49,6 +49,6 @@ class RNARTrainer(Trainer):
         self.training_instructor = RNARTrainingInstructor
         self.inference_model_class = RNARegressor
         self.config.task_code = TaskCodeOption.RNASequenceRegression
-        self.config.task_name = TaskNameOption[TaskCodeOption.RNASequenceRegression]
+        self.config.task_name = TaskNameOption().get(TaskCodeOption.RNASequenceRegression)
 
         self._run()

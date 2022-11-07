@@ -72,6 +72,7 @@ class APCEnsembler(nn.Module):
                 with open(cache_path, mode='rb') as f_cache:
                     self.train_set, self.valid_set, self.test_set, self.config = pickle.load(f_cache)
                     config.update(self.config)
+                    config.args_call_count.update(self.config.args_call_count)
             if hasattr(APCModelList, models[i].__name__):
                 try:
 
