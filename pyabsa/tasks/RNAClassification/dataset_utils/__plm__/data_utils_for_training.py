@@ -10,6 +10,7 @@
 import torch
 import tqdm
 
+from pyabsa import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.utils.pyabsa_utils import check_and_fix_labels
@@ -22,25 +23,33 @@ class BERTRNACDataset(PyABSADataset):
         all_data = []
 
         for ex_id, data in enumerate(tqdm.tqdm(dataset_dict[self.dataset_type], postfix='preparing dataloader...')):
-            rna = data['data']
-            label = data['label']
-            rna = rna.strip()
-            label = label.strip()
+            if self.config.dataset_name.lower() in 'degrad':
+                rna, label = data['text'], data['label']
+                rna_indices = self.tokenizer.text_to_sequence(rna)
+                rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len)
+                data = {
+                    'ex_id': ex_id,
+                    'text_indices': rna_indices,
+                    'label': label,
+                }
+                label_set.add(label)
+                all_data.append(data)
 
-            rna_indices = self.tokenizer.text_to_sequence(rna)
+            elif self.config.dataset_name.lower() in 'sfe':
+                exon1, intron, exon2, label = data['exon1'], data['intron'], data['exon2'], data['label']
+                exon1_ids = self.tokenizer.text_to_sequence(exon1, padding='do_not_pad')
+                intron_ids = self.tokenizer.text_to_sequence(intron, padding='do_not_pad')
+                exon2_ids = self.tokenizer.text_to_sequence(exon2, padding='do_not_pad')
 
-            rna_indices = rna_indices
-            rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len)
-
-            data = {
-                'ex_id': ex_id,
-                'text_indices': torch.tensor(rna_indices, dtype=torch.long),
-                'label': label,
-            }
-
-            label_set.add(label)
-
-            all_data.append(data)
+                rna_indices = exon1_ids + intron_ids + exon2_ids
+                rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len)
+                data = {
+                    'ex_id': ex_id,
+                    'text_indices': rna_indices,
+                    'label': label,
+                }
+                label_set.add(label)
+                all_data.append(data)
 
         check_and_fix_labels(label_set, 'label', all_data, self.config)
         self.config.output_dim = len(label_set)
@@ -54,30 +63,46 @@ class BERTRNACDataset(PyABSADataset):
         label_set = set()
 
         for ex_id, i in enumerate(tqdm.tqdm(range(len(lines)), postfix='preparing dataloader...')):
-            line = lines[i].strip().split(',')
-            exon1, intron, exon2, label = line[0], line[1], line[2], line[3]
-            exon1 = exon1.strip()
-            intron = intron.strip()
-            exon2 = exon2.strip()
-            label = label.strip()
-            exon1_ids = self.tokenizer.text_to_sequence(exon1, padding='do_not_pad')
-            intron_ids = self.tokenizer.text_to_sequence(intron, padding='do_not_pad')
-            exon2_ids = self.tokenizer.text_to_sequence(exon2, padding='do_not_pad')
-            rna_indices = [self.tokenizer.tokenizer.cls_token_id] + exon1_ids + intron_ids + exon2_ids + [self.tokenizer.tokenizer.sep_token_id]
-            rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len, value=self.tokenizer.pad_token_id)
+            if self.config.dataset_name.lower() in 'degrad':
+                text, _, label = lines[i].strip().partition('$LABEL$')
+                rna = text.strip()
+                label = label.strip()
 
-            intron_indices = self.tokenizer.text_to_sequence(intron)
+                rna_indices = self.tokenizer.text_to_sequence(rna)
 
-            data = {
-                'ex_id': ex_id,
-                'text_indices': torch.tensor(rna_indices, dtype=torch.long),
-                'intron_indices': torch.tensor(intron_indices, dtype=torch.long),
-                'label': label,
-            }
+                rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len)
 
-            label_set.add(label)
+                data = {
+                    'ex_id': ex_id,
+                    'text_indices': rna_indices,
+                    'label': label,
+                }
+                label_set.add(label)
+                all_data.append(data)
 
-            all_data.append(data)
+            elif self.config.dataset_name.lower() in 'sfe':
+                text, _, label = lines[i].strip().partition('$LABEL$')
+                label = label.strip() if label else LabelPaddingOption.LABEL_PADDING
+                exon1, intron, exon2 = text.strip().split(',')
+                exon1 = exon1.strip()
+                intron = intron.strip()
+                exon2 = exon2.strip()
+                exon1_ids = self.tokenizer.text_to_sequence(exon1, padding='do_not_pad')
+                intron_ids = self.tokenizer.text_to_sequence(intron, padding='do_not_pad')
+                exon2_ids = self.tokenizer.text_to_sequence(exon2, padding='do_not_pad')
+                rna_indices = [self.tokenizer.tokenizer.cls_token_id] + exon1_ids + intron_ids + exon2_ids + [self.tokenizer.tokenizer.sep_token_id]
+                rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len, value=self.tokenizer.pad_token_id)
+
+                intron_indices = self.tokenizer.text_to_sequence(intron)
+
+                data = {
+                    'ex_id': ex_id,
+                    'text_indices': rna_indices,
+                    'intron_indices': intron_indices,
+                    'label': label,
+                }
+                label_set.add(label)
+                all_data.append(data)
 
         check_and_fix_labels(label_set, 'label', all_data, self.config)
         self.config.output_dim = len(label_set)

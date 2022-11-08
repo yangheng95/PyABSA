@@ -208,7 +208,7 @@ class RNAClassifier(InferenceModel):
 
         correct = {True: 'Correct', False: 'Wrong'}
         results = []
-        perplexity = 'N.A.'
+
         with torch.no_grad():
             self.model.eval()
             n_correct = 0

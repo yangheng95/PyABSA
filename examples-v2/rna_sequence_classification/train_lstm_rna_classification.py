@@ -13,26 +13,41 @@ from pyabsa.utils.data_utils.dataset_item import DatasetItem
 
 config = RNAC.RNACConfigManager.get_rnac_config_glove()
 config.model = RNAC.GloVeRNACModelList.LSTM
-config.num_epoch = 1
+config.num_epoch = 10
 config.pretrained_bert = 'rna_bpe_tokenizer'
 config.evaluate_begin = 0
-config.max_seq_len = 512
+config.max_seq_len = 60
 config.hidden_dim = 768
 config.embed_dim = 768
-config.cache_dataset = False
+config.cache_dataset = True
 # config.cache_dataset = True
 config.dropout = 0.5
 config.num_lstm_layer = 1
 config.do_lower_case = False
 config.seed = [random.randint(0, 10000) for _ in range(1)]
 config.log_step = -1
+config.show_metric = True
 config.l2reg = 0.001
 config.save_last_ckpt_only = True
 config.num_mhsa_layer = 1
 
-dataset = DatasetItem('sfe')
-sent_classifier = RNAC.RNACTrainer(config=config,
-                                   dataset=dataset,
-                                   checkpoint_save_mode=1,
-                                   auto_device=True
-                                   ).load_trained_model()
+dataset = DatasetItem('degrad')
+
+# classifier = RNAC.RNACTrainer(config=config,
+#                               dataset=dataset,
+#                               checkpoint_save_mode=1,
+#                               auto_device=True
+#                               ).load_trained_model()
+
+rnas = [
+    'GTGCGATCGTTGATCTTGTGGCTTGTGAGCCGTCGGATTCCACGGAGAGGCGAGAGACAGCGAGGAAGTGGTCGAGGAGGATGAGGAATAGTGGGTTTGGAGCGGTGGGGTATAGTGATGAGGTGGCGGATGATGTCAGAGCTTTGTTGAGGAGATATAAAGAAGGTGTTTGGTCGATGGTACAGTGTCCTGATGCCGCCGGAATATTCC',
+    'GTGCGATCGTTGATCTTGTGGCTTGTGAGCCGTCGGATTCCACGGAGAGGCGAGAGACAGCGAGGAAGTGGTCGAGGAGGATGAGGAATAGTGGGTTTGAGGCGGTGGGGTATAGTGATGAGGTGGCGGATGATGTCAGAGCTTTGTTGAGGAGATATAAAGAAGGTGTTTGGTCGATGGTACAGTGTCCTGATGCCGCCGGAATATTCC',
+    'GTGCGATCGTTGATCTTGTGGCTTGTGAGCCGTCGGATTCCACGGAGAGGCGAGAGACAGCGAGGAAGTGGTCGAGGAGGATGAGGAATAGTGGGTTTGAAGCAGTAGGATATAGTGATGAGGTGGCGGATGATGTCAGAGCTTTGTTGAGGAGATATAAAGAAGGTGTTTGGTCGATGGTACAGTGTCCTGATGCCGCCGGAATATTCC',
+    'GTGCGATCGTTGATCTTGTGGCTTGTGAGCCGTCGGATTCCACGGAGAGGCGAGAGACAGCGAGGAAGTGGTCGAGGAGGATGAGGAATAGTGAATTTGAAGCAGTAGAATATAGTGATGAGGTGGCGGATGATGTCAGAGCTTTGTTGAGGAGATATAAAGAAGGTGTTTGGTCGATGGTACAGTGTCCTGATGCCGCCGGAATATTCC',
+    'TTGATCTTGTGGCTTGTGAGCCGTCGGATTCCACGGAGAGGCGAGAGACAGCGAGGAAGTGGTCGAGGAGGATGAGGAATAGTGAATTTGAAGCAGTAGAATATAGTGATGAGGTGGCGGATGATGTCAGAGCTTTGTTGAGGAGATATAAAGAAGGTGTTTGGTCGATGGTACAGTGTCCTGATGCCGCCGGAATATTCC'
+]
+classifier = RNAC.RNAClassifier('lstm_degrad_acc_85.26_f1_84.62')
+for rna in rnas:
+    classifier.predict(rna + '$LABEL$')
+
+# classifier.batch_predict(dataset)
