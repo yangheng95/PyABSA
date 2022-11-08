@@ -213,17 +213,9 @@ class AspectExtractor(InferenceModel):
         self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
 
         results = {'extraction_res': OrderedDict(), 'polarity_res': OrderedDict()}
-
-        if isinstance(inference_source, DatasetItem):
+        if isinstance(inference_source, DatasetItem) or isinstance(inference_source, str):
             # using integrated inference dataset
-            for d in inference_source:
-                inference_set = detect_infer_dataset(d, task_code=TaskCodeOption.Aspect_Polarity_Classification)
-                inference_source = load_atepc_inference_datasets(inference_set)
-
-        elif isinstance(inference_source, str):  # for dataset path
-            inference_source = DatasetItem(inference_source)
-            # using custom inference dataset
-            inference_set = detect_infer_dataset(inference_source, task_code=TaskCodeOption.Aspect_Polarity_Classification)
+            inference_set = detect_infer_dataset(d, task_code=TaskCodeOption.Aspect_Polarity_Classification)
             inference_source = load_atepc_inference_datasets(inference_set)
 
         elif isinstance(inference_source, list):
