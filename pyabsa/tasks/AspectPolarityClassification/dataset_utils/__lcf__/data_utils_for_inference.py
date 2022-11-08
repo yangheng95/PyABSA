@@ -42,6 +42,7 @@ def parse_sample(text):
                 sample += f'$LABEL${ref_sent[i]}'
                 samples.append(sample.replace('[TEMP]', '[ASP]'))
             else:
+                print(f'Warning: aspect number {len(aspects)} not equal to reference sentiment number {len(ref_sent)}, text: {_text}')
                 samples.append(sample.replace('[TEMP]', '[ASP]'))
 
     else:
