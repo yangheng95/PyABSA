@@ -42,7 +42,6 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
 
         self._init_misc()
 
-
     def _init_misc(self):
         # use DataParallel for trainer if device count larger than 1
         if self.config.auto_device == DeviceTypeOption.ALL_CUDA:

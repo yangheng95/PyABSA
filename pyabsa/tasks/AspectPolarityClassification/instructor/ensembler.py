@@ -124,7 +124,6 @@ class APCEnsembler(nn.Module):
                 with open(cache_path, mode='wb') as f_cache:
                     pickle.dump((self.train_set, self.valid_set, self.test_set, self.config), f_cache)
 
-
             if load_dataset:
                 train_sampler = RandomSampler(self.train_set if not self.train_set else self.train_set)
                 self.train_dataloader = DataLoader(self.train_set, batch_size=self.config.batch_size, pin_memory=True, sampler=train_sampler)

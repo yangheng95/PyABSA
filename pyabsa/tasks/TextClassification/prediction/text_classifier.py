@@ -122,7 +122,6 @@ class TextClassifier(InferenceModel):
             self.dataset = GloVeTCInferenceDataset(config=self.config, tokenizer=self.tokenizer)
 
         self.infer_dataloader = None
-        self.config.eval_batch_size = kwargs.get('eval_batch_size', 128)
 
         self.config.initializer = self.config.initializer
 
@@ -170,15 +169,15 @@ class TextClassifier(InferenceModel):
                       target_file=None,
                       print_result=True,
                       save_result=False,
-                      clear_input_samples=True,
-                      ignore_error=True):
+                      ignore_error=True,
+                      **kwargs
+                      ):
 
-        if clear_input_samples:
-            self.clear_input_samples()
+        self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
 
         save_path = os.path.join(os.getcwd(), 'text_classification.result.json')
 
-        target_file = detect_infer_dataset(target_file, task_code='text_classification')
+        target_file = detect_infer_dataset(target_file, task_code=TaskCodeOption.Text_Classification)
         if not target_file:
             raise FileNotFoundError('Can not find inference datasets!')
 
@@ -190,10 +189,10 @@ class TextClassifier(InferenceModel):
     def predict(self, text: str = None,
                 print_result=True,
                 ignore_error=True,
-                clear_input_samples=True):
+                **kwargs):
 
-        if clear_input_samples:
-            self.clear_input_samples()
+        self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
+
         if text:
             self.dataset.prepare_infer_sample(text, ignore_error=ignore_error)
         else:

@@ -12,20 +12,20 @@ import random
 
 from pyabsa import AspectPolarityClassification as APC, ModelSaveOption, DeviceTypeOption
 
-config = APC.APCConfigManager.get_apc_config_multilingual()
+config = APC.APCConfigManager.get_apc_config_chinese()
 # config.pretrained_bert = 'microsoft/deberta-v3-base'
 config.model = APC.APCModelList.FAST_LCF_BERT
-config.pretrained_bert = 'microsoft/mdeberta-v3-base'
+# config.pretrained_bert = 'microsoft/deberta-v3-base'
 config.evaluate_begin = 0
-config.max_seq_len = 256
+config.max_seq_len = 512
 config.num_epoch = 20
 config.log_step = -1
 config.dropout = 0
 config.cache_dataset = False
-config.l2reg = 1e-5
+config.l2reg = 1e-8
 config.seed = random.randint(0, 10000)
-config.model = APC.APCModelList.FAST_LCF_BERT
-dataset = APC.APCDatasetList.Multilingual
+config.model = APC.APCModelList.FAST_LSA_T_V2
+dataset = APC.APCDatasetList.Chinese
 sent_classifier = APC.APCTrainer(config=config,
                                  dataset=dataset,
                                  checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,

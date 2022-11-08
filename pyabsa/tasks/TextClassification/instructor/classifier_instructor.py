@@ -299,9 +299,9 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                     targets = sample_batched['label'].to(self.config.device)
 
                     if isinstance(outputs, dict) and 'loss' in outputs:
-                            loss = outputs['loss']
+                        loss = outputs['loss']
                     else:
-                            loss = criterion(outputs, targets)
+                        loss = criterion(outputs, targets)
 
                     if self.config.use_amp and self.scaler:
                         self.scaler.scale(loss).backward()

@@ -33,6 +33,7 @@ def print_args(config, logger=None):
                 except:
                     print('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], 0))
 
+
 def validate_example(text: str, aspect: str, polarity: str, config):
     if len(text) < len(aspect):
         raise ValueError('AspectLengthExceedTextError -> <aspect: {}> is longer than <text: {}>, <polarity: {}>'.format(aspect, text, polarity))

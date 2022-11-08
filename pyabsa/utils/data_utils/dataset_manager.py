@@ -83,7 +83,6 @@ def detect_dataset(dataset_name_or_path, task_code: TaskCodeOption = None, load_
                 dataset_file['valid'] += findfile.find_files(search_path, [d, 'valid', task_code], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words)
                 dataset_file['valid'] += findfile.find_files(search_path, [d, 'dev', task_code], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words)
 
-
                 if not any(['augment' in x for x in dataset_file['train']]):
                     from pyabsa.utils.absa_utils.absa_utils import convert_apc_set_to_atepc_set
 
