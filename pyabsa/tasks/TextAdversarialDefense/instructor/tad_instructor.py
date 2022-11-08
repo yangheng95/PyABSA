@@ -113,7 +113,6 @@ class TADTrainingInstructor(BaseTrainingInstructor):
 
             self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
 
-
         self.save_cache_dataset()
 
     def __init__(self, config):
@@ -123,7 +122,6 @@ class TADTrainingInstructor(BaseTrainingInstructor):
         self._load_dataset_and_prepare_dataloader()
 
         self._init_misc()
-
 
     def reload_model_state_dict(self, ckpt='./init_state_dict.bin'):
         if os.path.exists(ckpt):

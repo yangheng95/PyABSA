@@ -52,6 +52,7 @@ class InferenceModel:
             self.MLM.to(device)
 
     def batch_predict(self, **kwargs):
+
         raise NotImplementedError('Please implement batch_infer() in your subclass!')
 
     def predict(self, **kwargs):
@@ -60,9 +61,6 @@ class InferenceModel:
 
     def _run_prediction(self, **kwargs):
         raise NotImplementedError('Please implement _infer() in your subclass!')
-
-    def clear_input_samples(self):
-        self.dataset.all_data = []
 
     def destroy(self):
         del self.model

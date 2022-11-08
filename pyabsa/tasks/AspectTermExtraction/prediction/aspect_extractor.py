@@ -16,6 +16,7 @@ import torch
 import torch.nn.functional as F
 import tqdm
 from findfile import find_file, find_cwd_dir
+from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from termcolor import colored
 from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
 from transformers import AutoTokenizer, AutoModel
@@ -105,7 +106,6 @@ class AspectExtractor(InferenceModel):
                 self.config.gradient_accumulation_steps))
 
         self.eval_dataloader = None
-        self.config.eval_batch_size = kwargs.get('eval_batch_size', 128)
 
         self.to(self.config.device)
 
@@ -196,7 +196,11 @@ class AspectExtractor(InferenceModel):
         """
         return self.batch_predict([example], save_result, print_result, pred_sentiment, **kwargs)[0]
 
-    def batch_predict(self, inference_source: list, save_result=True, print_result=True, pred_sentiment=True, **kwargs):
+    def batch_predict(self, inference_source: list,
+                      save_result=True,
+                      print_result=True,
+                      pred_sentiment=True,
+                      **kwargs):
         """
         Args:
             inference_source (list): list of input examples or a list of files to be predicted
@@ -205,8 +209,11 @@ class AspectExtractor(InferenceModel):
             pred_sentiment (bool, optional): predict sentiment. Defaults to True.
         Returns:
         """
+
+        self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
+
         results = {'extraction_res': OrderedDict(), 'polarity_res': OrderedDict()}
-        from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
+
         if isinstance(inference_source, DatasetItem):
             # using integrated inference dataset
             for d in inference_source:
@@ -255,7 +262,7 @@ class AspectExtractor(InferenceModel):
             return results
 
     # Temporal code, pending configimization
-    def _extract(self, examples, infer_batch_size=256):
+    def _extract(self, examples):
         sentence_res = []  # extraction result by sentence
         extraction_res = []  # extraction result flatten by aspect
 
@@ -279,8 +286,7 @@ class AspectExtractor(InferenceModel):
                                    all_polarities, all_valid_ids, all_lmask_ids)
         # Run prediction for full raw_data
         infer_sampler = SequentialSampler(infer_data)
-        self.config.infer_batch_size = infer_batch_size
-        self.infer_dataloader = DataLoader(infer_data, sampler=infer_sampler, pin_memory=True, batch_size=self.config.infer_batch_size)
+        self.infer_dataloader = DataLoader(infer_data, sampler=infer_sampler, pin_memory=True, batch_size=self.config.eval_batch_size)
 
         # extract_aspects
         self.model.eval()
@@ -316,18 +322,18 @@ class AspectExtractor(InferenceModel):
             label_ids = label_ids.to('cpu').numpy()
             for i, i_ate_logits in enumerate(ate_logits):
                 pred_iobs = []
-                sentence_res.append((all_tokens[i + (self.config.infer_batch_size * i_batch)], pred_iobs))
+                sentence_res.append((all_tokens[i + (self.config.eval_batch_size * i_batch)], pred_iobs))
                 for j, m in enumerate(label_ids[i]):
                     if j == 0:
                         continue
-                    elif len(pred_iobs) == len(all_tokens[i + (self.config.infer_batch_size * i_batch)]):
+                    elif len(pred_iobs) == len(all_tokens[i + (self.config.eval_batch_size * i_batch)]):
                         break
                     else:
                         pred_iobs.append(label_map.get(i_ate_logits[j], 'O'))
 
                 ate_result = []
                 polarity = []
-                for t, l in zip(all_tokens[i + (self.config.infer_batch_size * i_batch)], pred_iobs):
+                for t, l in zip(all_tokens[i + (self.config.eval_batch_size * i_batch)], pred_iobs):
                     ate_result.append('{}({})'.format(t, l))
                     if 'ASP' in l:
                         polarity.append(abs(LabelPaddingOption.SENTIMENT_PADDING))  # 1 tags the valid position aspect terms
@@ -335,19 +341,19 @@ class AspectExtractor(InferenceModel):
                         polarity.append(LabelPaddingOption.SENTIMENT_PADDING)
 
                 POLARITY_PADDING = [LabelPaddingOption.SENTIMENT_PADDING] * len(polarity)
-                example_id = i_batch * self.config.infer_batch_size + i
+                example_id = i_batch * self.config.eval_batch_size + i
                 pred_iobs = process_iob_tags(pred_iobs)
                 for idx in range(1, len(polarity)):
 
                     if polarity[idx - 1] != str(LabelPaddingOption.SENTIMENT_PADDING) and split_aspect(pred_iobs[idx - 1], pred_iobs[idx]):
                         _polarity = polarity[:idx] + POLARITY_PADDING[idx:]
                         polarity = POLARITY_PADDING[:idx] + polarity[idx:]
-                        extraction_res.append((all_tokens[i + (self.config.infer_batch_size * i_batch)], pred_iobs, _polarity, example_id))
+                        extraction_res.append((all_tokens[i + (self.config.eval_batch_size * i_batch)], pred_iobs, _polarity, example_id))
 
                     if polarity[idx] != str(LabelPaddingOption.SENTIMENT_PADDING) and idx == len(polarity) - 1 and split_aspect(pred_iobs[idx]):
                         _polarity = polarity[:idx + 1] + POLARITY_PADDING[idx + 1:]
                         polarity = POLARITY_PADDING[:idx + 1] + polarity[idx + 1:]
-                        extraction_res.append((all_tokens[i + (self.config.infer_batch_size * i_batch)], pred_iobs, _polarity, example_id))
+                        extraction_res.append((all_tokens[i + (self.config.eval_batch_size * i_batch)], pred_iobs, _polarity, example_id))
 
         return extraction_res, sentence_res
 
@@ -378,11 +384,10 @@ class AspectExtractor(InferenceModel):
         infer_data = TensorDataset(all_spc_input_ids, all_segment_ids, all_input_mask, all_label_ids,
                                    all_valid_ids, all_lmask_ids, lcf_cdm_vec, lcf_cdw_vec)
         # Run prediction for full raw_data
-        self.config.infer_batch_size = 128
         self.model.config.use_bert_spc = True
 
         infer_sampler = SequentialSampler(infer_data)
-        self.infer_dataloader = DataLoader(infer_data, sampler=infer_sampler, pin_memory=True, batch_size=self.config.infer_batch_size)
+        self.infer_dataloader = DataLoader(infer_data, sampler=infer_sampler, pin_memory=True, batch_size=self.config.eval_batch_size)
 
         # extract_aspects
         self.model.eval()
@@ -419,7 +424,7 @@ class AspectExtractor(InferenceModel):
                         sent = int(torch.argmax(i_apc_logits, -1))
                     result = {}
                     probs = [float(x) for x in F.softmax(i_apc_logits).cpu().numpy().tolist()]
-                    apc_id = i_batch * self.config.infer_batch_size + i
+                    apc_id = i_batch * self.config.eval_batch_size + i
                     result['sentence'] = ' '.join(all_tokens[apc_id])
                     result['tokens'] = all_tokens[apc_id]
                     result['probs'] = probs

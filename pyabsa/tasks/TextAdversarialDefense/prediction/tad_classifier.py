@@ -164,7 +164,6 @@ class TADTextClassifier(InferenceModel):
                 raise KeyError('The checkpoint_class you are loading is not from classifier model.')
 
         self.infer_dataloader = None
-        self.config.eval_batch_size = kwargs.get('eval_batch_size', 128)
 
         self.config.initializer = self.config.initializer
 
@@ -213,11 +212,11 @@ class TADTextClassifier(InferenceModel):
                       print_result=True,
                       save_result=False,
                       ignore_error=True,
-                      defense: str = None
+                      defense: str = None,
+                      **kwargs
                       ):
 
-        # if clear_input_samples:
-        #     self.clear_input_samples()
+        self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
 
         save_path = os.path.join(os.getcwd(), 'tad_text_classification.result.json')
 
@@ -240,8 +239,11 @@ class TADTextClassifier(InferenceModel):
                 text: str = None,
                 print_result=True,
                 ignore_error=True,
-                defense: str = None
+                defense: str = None,
+                **kwargs
                 ):
+
+        self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
 
         if hasattr(BERTTADModelList, self.config.model.__name__):
             dataset = BERTTADInferenceDataset(config=self.config, tokenizer=self.tokenizer)

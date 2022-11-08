@@ -131,7 +131,6 @@ class SentimentClassifier(InferenceModel):
         self.infer_dataloader = None
 
         self.config.initializer = self.config.initializer
-        self.config.eval_batch_size = kwargs.get('eval_batch_size', 128)
 
         if self.cal_perplexity:
             try:
@@ -146,10 +145,9 @@ class SentimentClassifier(InferenceModel):
                       print_result=True,
                       save_result=False,
                       ignore_error=True,
-                      clear_input_samples=True):
+                      **kwargs):
 
-        if clear_input_samples:
-            self.clear_input_samples()
+        self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
 
         save_path = os.path.join(os.getcwd(), 'apc_inference.result.json')
 
@@ -164,9 +162,11 @@ class SentimentClassifier(InferenceModel):
     def predict(self, text: str = None,
                 print_result=True,
                 ignore_error=True,
-                clear_input_samples=True):
-        if clear_input_samples:
-            self.clear_input_samples()
+                **kwargs
+                ):
+
+        self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
+
         if text:
             self.dataset.prepare_infer_sample(text, ignore_error=ignore_error)
         else:

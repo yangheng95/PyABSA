@@ -24,7 +24,6 @@ from pyabsa.utils.file_utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args, init_optimizer
 
 
-
 class APCTrainingInstructor(BaseTrainingInstructor):
 
     def _load_dataset_and_prepare_dataloader(self):

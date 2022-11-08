@@ -12,12 +12,12 @@ import random
 
 from pyabsa import AspectTermExtraction as ATEPC
 
-config = ATEPC.ATEPCConfigManager.get_atepc_config_english()
+config = ATEPC.ATEPCConfigManager.get_atepc_config_chinese()
 config.model = ATEPC.ATEPCModelList.FAST_LCF_ATEPC
 config.evaluate_begin = 0
-config.max_seq_len = 256
+config.max_seq_len = 512
 # config.pretrained_bert = 'yangheng/deberta-v3-base-absa'
-config.pretrained_bert = 'microsoft/mdeberta-v3-base'
+# config.pretrained_bert = 'microsoft/deberta-v3-base'
 config.log_step = -1
 config.l2reg = 1e-5
 config.num_epoch = 20
@@ -26,7 +26,7 @@ config.use_bert_spc = True
 config.use_amp = False
 config.cache_dataset = False
 
-chinese_sets = ATEPC.ATEPCDatasetList.Multilingual
+chinese_sets = ATEPC.ATEPCDatasetList.Chinese
 
 aspect_extractor = ATEPC.ATEPCTrainer(config=config,
                                       dataset=chinese_sets,
@@ -42,7 +42,7 @@ atepc_examples = ['But the staff was so nice to us .',
                   'the food -LRB- from appetizers to entrees -RRB- was delectable .',
                   'How pretentious and inappropriate for MJ Grill to claim that it provides power lunch and dinners !'
                   ]
-aspect_extractor.batch_predict(inference_source=atepc_examples,  #
+aspect_extractor.batch_predict(target_file_or_examples=atepc_examples,  #
                                save_result=True,
                                print_result=True,  # print the result
                                pred_sentiment=True,  # Predict the sentiment of extracted aspect terms

@@ -65,6 +65,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
             self.logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.config.device)))
 
         print_args(self.config, self.logger)
+
     def _cache_or_load_dataset(self):
         pass
 
@@ -119,7 +120,6 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
         self._load_dataset_and_prepare_dataloader()
 
         self._init_misc()
-
 
     def reload_model(self, ckpt='./init_state_dict.bin'):
         if os.path.exists(ckpt):

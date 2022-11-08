@@ -22,7 +22,6 @@ class BERTRNACDataset(PyABSADataset):
         all_data = []
 
         for ex_id, data in enumerate(tqdm.tqdm(dataset_dict[self.dataset_type], postfix='preparing dataloader...')):
-
             rna = data['data']
             label = data['label']
             rna = rna.strip()

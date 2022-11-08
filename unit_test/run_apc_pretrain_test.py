@@ -50,14 +50,15 @@ def test_cross_validate():
             config.max_seq_len = 10
             config.evaluate_begin = 0
             config.log_step = -1
-            sent_classifier = APC.APCTrainer(config=config,
-                                             dataset=dataset,
-                                             checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                                             auto_device=DeviceTypeOption.ALL_CUDA
-                                             ).load_trained_model()
+            apc_trainer = APC.APCTrainer(config=config,
+                                         dataset=dataset,
+                                         checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
+                                         auto_device=DeviceTypeOption.ALL_CUDA
+                                         )
+            sent_classifier = apc_trainer.load_trained_model()
             for ex in apc_examples:
                 result = sent_classifier.predict(ex, print_result=True, ignore_error=False)
-
+            apc_trainer.destroy()
             sent_classifier.destroy()
 
 
@@ -99,14 +100,15 @@ def test_lcf_apc_models():
             config.max_seq_len = 10
             config.evaluate_begin = 0
             config.log_step = -1
-            sent_classifier = APC.APCTrainer(config=config,
-                                             dataset=dataset,
-                                             checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                                             auto_device=DeviceTypeOption.ALL_CUDA
-                                             ).load_trained_model()
+            apc_trainer = APC.APCTrainer(config=config,
+                                         dataset=dataset,
+                                         checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
+                                         auto_device=DeviceTypeOption.ALL_CUDA
+                                         )
+            sent_classifier = apc_trainer.load_trained_model()
             for ex in apc_examples:
                 result = sent_classifier.predict(ex, print_result=True, ignore_error=False)
-
+            apc_trainer.destroy()
             sent_classifier.destroy()
 
 
@@ -148,14 +150,15 @@ def test_bert_apc_models():
             config.num_epoch = 1
             config.evaluate_begin = 0
             config.log_step = -1
-            sent_classifier = APC.APCTrainer(config=config,
-                                             dataset=dataset,
-                                             checkpoint_save_mode=2,
-                                             auto_device=DeviceTypeOption.ALL_CUDA
-                                             ).load_trained_model()
+            apc_trainer = APC.APCTrainer(config=config,
+                                         dataset=dataset,
+                                         checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
+                                         auto_device=DeviceTypeOption.ALL_CUDA
+                                         )
+            sent_classifier = apc_trainer.load_trained_model()
             for ex in apc_examples:
                 result = sent_classifier.predict(ex, print_result=True, ignore_error=False)
-
+            apc_trainer.destroy()
             sent_classifier.destroy()
 
 

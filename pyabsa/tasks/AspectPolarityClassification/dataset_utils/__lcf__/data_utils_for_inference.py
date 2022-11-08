@@ -23,7 +23,7 @@ from .apc_utils_for_dlcf_dca import prepare_input_for_dlcf_dca, configure_dlcf_s
 
 def parse_sample(text):
     if '[B-ASP]' not in text and '[ASP]' not in text:
-    # if '[B-ASP]' not in text or '[E-ASP]' not in text:
+        # if '[B-ASP]' not in text or '[E-ASP]' not in text:
         text = ' [B-ASP]Global Sentiment[E-ASP] ' + text
 
     _text = text
@@ -37,10 +37,12 @@ def parse_sample(text):
         aspects = re.findall(r"\[B\-ASP\](.*?)\[E\-ASP\]", text)
 
         for i, aspect in enumerate(aspects):
+            sample = text.replace(f'[B-ASP]{aspect}[E-ASP]', f'[TEMP]{aspect}[TEMP]', 1).replace('[B-ASP]', '').replace('[E-ASP]', '')
             if len(aspects) == len(ref_sent):
-                samples.append(text.replace(f'[B-ASP]{aspect}[E-ASP]', f'[ASP]{aspect}[ASP]') + f'$LABEL${ref_sent[i]}')
+                sample += f'$LABEL${ref_sent[i]}'
+                samples.append(sample.replace('[TEMP]', '[ASP]'))
             else:
-                samples.append(text.replace(f'[B-ASP]{aspect}[E-ASP]', f'[ASP]{aspect}[ASP]'))
+                samples.append(sample.replace('[TEMP]', '[ASP]'))
 
     else:
         print('[ASP] tag is detected, please use [B-ASP] and [E-ASP] to annotate aspect terms.')
@@ -189,7 +191,7 @@ class ABSAInferenceDataset(Dataset):
                 if ignore_error:
                     print('Ignore error while processing: {} Error info:{}'.format(text, e))
                 else:
-                    raise RuntimeError('Catch Exception: {}, use ignore_error=True to remove error samples.'.format(e))
+                    raise RuntimeError('Ignore error while processing: {} Catch Exception: {}, use ignore_error=True to remove error samples.'.format(text, e))
 
         all_data = build_sentiment_window(all_data, self.tokenizer, self.config.similarity_threshold, input_demands=self.config.inputs_cols)
         for data in all_data:
