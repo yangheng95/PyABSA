@@ -9,9 +9,9 @@ from pyabsa import AspectTermExtraction as ATEPC, DeviceTypeOption
 # checkpoint_map = available_checkpoints()
 
 
-# aspect_extractor = ATEPC.AspectExtractor('multilingual', auto_device=DeviceTypeOption.AUTO)
+aspect_extractor = ATEPC.AspectExtractor('multilingual', auto_device=DeviceTypeOption.AUTO)
 # aspect_extractor = ATEPC.AspectExtractor('english', auto_device=DeviceTypeOption.AUTO)
-aspect_extractor = ATEPC.AspectExtractor('chinese', auto_device=DeviceTypeOption.AUTO)
+# aspect_extractor = ATEPC.AspectExtractor('chinese', auto_device=DeviceTypeOption.AUTO)
 
 inference_source = ATEPC.ATEPCDatasetList.Chinese
 atepc_result = aspect_extractor.batch_predict(inference_source,  #

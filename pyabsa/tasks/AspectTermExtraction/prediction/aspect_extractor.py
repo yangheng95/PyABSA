@@ -215,7 +215,7 @@ class AspectExtractor(InferenceModel):
         results = {'extraction_res': OrderedDict(), 'polarity_res': OrderedDict()}
         if isinstance(inference_source, DatasetItem) or isinstance(inference_source, str):
             # using integrated inference dataset
-            inference_set = detect_infer_dataset(d, task_code=TaskCodeOption.Aspect_Polarity_Classification)
+            inference_set = detect_infer_dataset(inference_source, task_code=TaskCodeOption.Aspect_Polarity_Classification)
             inference_source = load_atepc_inference_datasets(inference_set)
 
         elif isinstance(inference_source, list):
