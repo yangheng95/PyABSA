@@ -69,7 +69,7 @@ else:
 
 import random
 
-from pyabsa import RNAClassification as RNAC, DatasetItem
+from pyabsa import RNAClassification as RNAC
 
 config = RNAC.RNACConfigManager.get_rnac_config_english()
 config.model = RNAC.BERTRNACModelList.BERT_MLP
@@ -85,7 +85,6 @@ config.dropout = 0.5
 config.l2reg = 0
 config.batch_size = 64
 config.learning_rate = 1e-5
-config.show_metric = True
 config.num_lstm_layer = 1
 config.do_lower_case = False
 config.seed = [random.randint(0, 10000) for _ in range(3)]
@@ -93,24 +92,15 @@ config.log_step = -1
 config.save_last_ckpt_only = True
 config.num_mhsa_layer = 1
 
-dataset = DatasetItem('degrad')
+dataset_dict['dataset_name'] = 'degrad'
+dataset_dict['label_name'] = 'label'
 
-# classifier = RNAC.RNACTrainer(config=config,
-#                                    dataset=dataset,
-#                                    checkpoint_save_mode=1,
-#                                    auto_device=True
-#                                    ).load_trained_model()
 
-classifier = RNAC.RNAClassifier('bert_mlp_degrad_acc_87.44_f1_86.99', auto_device=True)
-# classifier = RNAC.RNAClassifier('bert_mlp_degrad_acc_83.41_f1_82.66', auto_device=True)
+if not os.path.exists('integrated_datasets/rnac_datasets/degrad/degrad.pkl'):
+    pickle.dump(dataset_dict, open('integrated_datasets/rnac_datasets/degrad/degrad.pkl', 'wb'))
 
-rnas = [
-    'GTGCGATCGTTGATCTTGTGGCTTGTGAGCCGTCGGATTCCACGGAGAGGCGAGAGACAGCGAGGAAGTGGTCGAGGAGGATGAGGAATAGTGGGTTTGGAGCGGTGGGGTATAGTGATGAGGTGGCGGATGATGTCAGAGCTTTGTTGAGGAGATATAAAGAAGGTGTTTGGTCGATGGTACAGTGTCCTGATGCCGCCGGAATATTCC',
-    'GTGCGATCGTTGATCTTGTGGCTTGTGAGCCGTCGGATTCCACGGAGAGGCGAGAGACAGCGAGGAAGTGGTCGAGGAGGATGAGGAATAGTGGGTTTGAGGCGGTGGGGTATAGTGATGAGGTGGCGGATGATGTCAGAGCTTTGTTGAGGAGATATAAAGAAGGTGTTTGGTCGATGGTACAGTGTCCTGATGCCGCCGGAATATTCC',
-    'GTGCGATCGTTGATCTTGTGGCTTGTGAGCCGTCGGATTCCACGGAGAGGCGAGAGACAGCGAGGAAGTGGTCGAGGAGGATGAGGAATAGTGGGTTTGAAGCAGTAGGATATAGTGATGAGGTGGCGGATGATGTCAGAGCTTTGTTGAGGAGATATAAAGAAGGTGTTTGGTCGATGGTACAGTGTCCTGATGCCGCCGGAATATTCC',
-    'GTGCGATCGTTGATCTTGTGACTTGTGAGCCGTCGAATTCCACGAAGAGACGAGAGACAGCGAGAAAGTGATCGAGAAGAATGAGAAATAGTGAATTTGAAGCAGTAGAATATAGTGATGAGATGACGAATGATGTCAGAGCTTTGTTGAGAAGATATAAAGAAGATGTTTGATCGATGATACAGTGTCCTGATGCCGCCGAAATATTCC'
-]
-for rna in rnas:
-    print(classifier.predict(rna + '$LABEL$'))
-
-classifier.batch_predict(dataset)
+sent_classifier = RNAC.RNACTrainer(config=config,
+                                   dataset=dataset_dict,
+                                   checkpoint_save_mode=1,
+                                   auto_device=True
+                                   ).load_trained_model()

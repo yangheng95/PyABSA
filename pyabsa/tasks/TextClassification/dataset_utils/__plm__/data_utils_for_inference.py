@@ -17,7 +17,7 @@ from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 
 class BERTTCInferenceDataset(Dataset):
 
-    def __init__(self, tokenizer, config):
+    def __init__(self, config, tokenizer):
 
         self.tokenizer = tokenizer
         self.config = config

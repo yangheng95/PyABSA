@@ -10,6 +10,8 @@
 import torch
 import tqdm
 from torch.utils.data import Dataset
+
+from pyabsa import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
@@ -17,10 +19,10 @@ from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
 
 class GloVeRNACInferenceDataset(Dataset):
 
-    def __init__(self, tokenizer, config):
-
-        self.tokenizer = tokenizer
+    def __init__(self, config, tokenizer, dataset_type='infer'):
         self.config = config
+        self.tokenizer = tokenizer
+        self.dataset_type = dataset_type
         self.data = []
 
     def parse_sample(self, text):
@@ -46,38 +48,48 @@ class GloVeRNACInferenceDataset(Dataset):
             it = samples
         for ex_id, text in enumerate(it):
             try:
-                # handle for empty lines in inference datasets
-                if text is None or '' == text.strip():
-                    raise RuntimeError('Invalid Input!')
-                try:
-                    exon1, intron, exon2, label = text.strip().split(',')
-                except ValueError as e:
-                    exon1, intron, exon2 = text.strip().split(',')
-                    label = ''
-                exon1 = exon1.strip()
-                intron = intron.strip()
-                exon2 = exon2.strip()
-                label = label.strip()
-                seq = exon1 + ' ' + intron + ' ' + exon2
-                exon1_ids = self.tokenizer.text_to_sequence(exon1)
-                intron_ids = self.tokenizer.text_to_sequence(intron)
-                exon2_ids = self.tokenizer.text_to_sequence(exon2)
+                if self.config.dataset_name.lower() in 'degrad':
+                    text, _, label = text.strip().partition('$LABEL$')
+                    rna = text.strip()
+                    label = label.strip() if label else LabelPaddingOption.LABEL_PADDING
 
-                rna_indices = exon1_ids + intron_ids + exon2_ids
-                rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len)
+                    rna_indices = self.tokenizer.text_to_sequence(rna)
 
-                intron_indices = self.tokenizer.text_to_sequence(intron)
-                intron_indices = pad_and_truncate(intron_indices, self.config.max_seq_len)
+                    rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len)
 
-                data = {
-                    'ex_id': ex_id,
-                    'text_raw': seq,
-                    'text_indices': torch.tensor(rna_indices, dtype=torch.long),
-                    'intron_indices': torch.tensor(intron_indices, dtype=torch.long),
-                    'label': label,
-                }
+                    data = {
+                        'ex_id': ex_id,
+                        'text_raw': rna,
+                        'text_indices': rna_indices,
+                        'label': label,
+                    }
+                    all_data.append(data)
 
-                all_data.append(data)
+                elif self.config.dataset_name.lower() in 'sfe':
+                    text, _, label = text.strip().partition('$LABEL$')
+                    exon1, intron, exon2 = text.split(',')
+                    label = label.strip() if label else LabelPaddingOption.LABEL_PADDING
+                    exon1 = exon1.strip()
+                    intron = intron.strip()
+                    exon2 = exon2.strip()
+                    exon1_ids = self.tokenizer.text_to_sequence(exon1, padding='do_not_pad')
+                    intron_ids = self.tokenizer.text_to_sequence(intron, padding='do_not_pad')
+                    exon2_ids = self.tokenizer.text_to_sequence(exon2, padding='do_not_pad')
+                    rna_indices = [self.tokenizer.tokenizer.cls_token_id] + exon1_ids + intron_ids + exon2_ids + [self.tokenizer.tokenizer.sep_token_id]
+                    rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len, value=self.tokenizer.pad_token_id)
+
+                    intron_indices = self.tokenizer.text_to_sequence(intron)
+
+                    data = {
+                        'ex_id': ex_id,
+                        'text_raw': text,
+                        'text_indices': rna_indices,
+                        'intron_indices': intron_indices,
+                        'label': label,
+                    }
+                    all_data.append(data)
+
+                self.data = all_data
 
             except Exception as e:
                 if ignore_error:
