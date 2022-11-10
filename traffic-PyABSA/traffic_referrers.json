@@ -1,52 +1,52 @@
 [
   {
     "referrer": "Google",
-    "count": 632,
-    "uniques": 119
+    "count": 700,
+    "uniques": 114
   },
   {
     "referrer": "github.com",
-    "count": 500,
-    "uniques": 119
+    "count": 663,
+    "uniques": 128
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 366,
-    "uniques": 100
+    "count": 392,
+    "uniques": 96
   },
   {
     "referrer": "link.zhihu.com",
-    "count": 90,
-    "uniques": 16
+    "count": 101,
+    "uniques": 18
   },
   {
     "referrer": "youtube.com",
-    "count": 54,
-    "uniques": 20
-  },
-  {
-    "referrer": "huggingface.co",
-    "count": 36,
-    "uniques": 15
-  },
-  {
-    "referrer": "yangheng-multilingual-aspect-based-sentim-6aa230e.hf.space",
-    "count": 36,
-    "uniques": 10
-  },
-  {
-    "referrer": "pypi.org",
-    "count": 36,
-    "uniques": 6
+    "count": 57,
+    "uniques": 19
   },
   {
     "referrer": "colab.research.google.com",
+    "count": 57,
+    "uniques": 6
+  },
+  {
+    "referrer": "pypi.org",
+    "count": 37,
+    "uniques": 7
+  },
+  {
+    "referrer": "yangheng-multilingual-aspect-based-sentim-6aa230e.hf.space",
     "count": 35,
-    "uniques": 5
+    "uniques": 9
   },
   {
     "referrer": "Bing",
-    "count": 29,
+    "count": 30,
     "uniques": 3
+  },
+  {
+    "referrer": "huggingface.co",
+    "count": 27,
+    "uniques": 11
   }
 ]
