@@ -7,17 +7,46 @@
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2021. All Rights Reserved.
 
+
+import findfile
+import tqdm
+
 from pyabsa import RNAClassification as RNAC
 
-model_path = 'lstm_sfe_acc_71.21_f1_41.59'
-rna_classifier = RNAC.RNAClassifier(model_path)
 
-# batch inference works on the dataset files
-# inference_sets = DatasetItem('sfe')
-inference_sets = 'integrated_datasets/rnac_datasets/sfe/pure_splicing_unuq_events_sequence_intron500.csv.test.tc.inference'
-# inference_sets = 'pure_splicing_non-unuq_events_sequence_intron500.csv.inference'
-results = rna_classifier.batch_predict(target_file=inference_sets,
-                                       print_result=True,
-                                       save_result=True,
-                                       ignore_error=False,
-                                       )
+def ensemble_predict(rna_classifiers: dict, rna, print_result=False):
+    result = []
+    for key, rna_classifier in rna_classifiers.items():
+        if 'bert' in key:
+            result += rna_classifier.predict(rna, print_result=print_result)['label'] * 3
+        else:
+            result += rna_classifier.predict(rna, print_result=print_result)['label'] * 1
+    return max(set(result), key=result.count)
+
+
+if __name__ == '__main__':
+
+    ckpts = findfile.find_cwd_dirs(or_key=['lstm_degrad', 'bert_mlp_degrad'])
+    # ckpts = findfile.find_cwd_files('.zip')
+
+    rna_classifiers = {}
+    for ckpt in ckpts:
+        rna_classifiers[ckpt] = (RNAC.RNAClassifier(ckpt))
+
+    # 测试总体准确率
+    count = 0
+    rnas = open('integrated_datasets/rnac_datasets/degrad/degrad.test.dat.rnac.inference', 'r').readlines()
+    for i, rna in enumerate(tqdm.tqdm(rnas)):
+        result = ensemble_predict(rna_classifiers, rna, print_result=True)
+        if result == rna.split('$LABEL$')[-1].strip():
+            count += 1
+        print(count / (i+1))
+
+    while True:
+        text = input('Please input your RNA sequence: ')
+        if text == 'exit':
+            break
+        if text == '':
+            continue
+
+        print('Predicted Label:', ensemble_predict(rna_classifiers, text, print_result=False))

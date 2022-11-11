@@ -18,18 +18,19 @@ from pyabsa.framework.checkpoint_class.checkpoint_template import CheckpointMana
 class InferenceModel:
     task_code = TaskCodeOption.Aspect_Polarity_Classification
 
-    def __init__(self, checkpoint: Union[str, object] = None, cal_perplexity=False, **kwargs):
+    def __init__(self, checkpoint: Union[str, object] = None,  config=None, **kwargs):
         '''
         :param checkpoint: checkpoint path or checkpoint object
         :param kwargs:
 
         '''
 
-        self.cal_perplexity = cal_perplexity
+        self.cal_perplexity = kwargs.get('cal_perplexity', False)
 
         self.checkpoint = CheckpointManager().parse_checkpoint(checkpoint, task_code=self.task_code)
 
-        self.config = None
+        self.config = config
+
         self.model = None
         self.dataset = None
 

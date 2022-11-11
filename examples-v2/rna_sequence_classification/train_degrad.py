@@ -15,8 +15,8 @@ def load_file(file_path):
         lines = f.readlines()
         return lines
 
-if os.path.exists('integrated_datasets/rnac_datasets/degrad/degrad.pkl'):
-    dataset_dict = pickle.load(open('integrated_datasets/rnac_datasets/degrad/degrad.pkl', 'rb'))
+if os.path.exists('integrated_datasets/rnac_datasets/degrad/degrad.pkl.ignore'):
+    dataset_dict = pickle.load(open('integrated_datasets/rnac_datasets/degrad/degrad.pkl.ignore', 'rb'))
 
 else:
     positive_data = load_file('integrated_datasets/rnac_datasets/degrad/Degrad_XRN4_DL_0_sample.tsv')
@@ -92,8 +92,8 @@ config.num_mhsa_layer = 1
 
 dataset_dict['dataset_name'] = 'degrad'
 dataset_dict['label_name'] = 'label'
-if not os.path.exists('integrated_datasets/rnac_datasets/degrad/degrad.pkl'):
-    pickle.dump(dataset_dict, open('integrated_datasets/rnac_datasets/degrad/degrad.pkl', 'wb'))
+if not os.path.exists('integrated_datasets/rnac_datasets/degrad/degrad.pkl.ignore'):
+    pickle.dump(dataset_dict, open('integrated_datasets/rnac_datasets/degrad/degrad.pkl.ignore', 'wb'))
 
 sent_classifier = RNAC.RNACTrainer(config=config,
                                    dataset=dataset_dict,

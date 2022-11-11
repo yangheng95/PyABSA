@@ -475,6 +475,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             self.valid_set = GloVeRNACDataset(self.config, self.tokenizer, dataset_type='valid')
 
             self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
+            self.config.tokenizer = self.tokenizer
+            self.config.embedding_matrix = self.embedding_matrix
 
         self.save_cache_dataset()
 
