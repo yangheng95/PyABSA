@@ -26,6 +26,7 @@ class BERTRNACDataset(PyABSADataset):
             if self.config.dataset_name.lower() in 'degrad':
                 rna, label = data['text'], data['label']
                 rna_indices = self.tokenizer.text_to_sequence(rna)
+
                 rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len)
                 data = {
                     'ex_id': ex_id,
@@ -68,7 +69,22 @@ class BERTRNACDataset(PyABSADataset):
                 rna = text.strip()
                 label = label.strip()
 
-                rna_indices = self.tokenizer.text_to_sequence(rna)
+                rna_indices = self.tokenizer.text_to_sequence(rna, padding='do_not_pad')
+
+                import numpy as np
+                if self.dataset_type != 'test' and self.dataset_type != 'valid':
+                    new_rna_indices = np.array(rna_indices[:])
+                    new_rna_indices[np.random.randint(0, np.count_nonzero(new_rna_indices) - 1, size=np.count_nonzero(new_rna_indices) // 10, dtype=int)] = self.tokenizer.pad_token_id
+                    new_rna_indices = new_rna_indices.tolist()
+                    new_rna_indices = pad_and_truncate(new_rna_indices, self.config.max_seq_len)
+                    if np.count_nonzero(new_rna_indices) != 0:
+                        data = {
+                            'ex_id': ex_id,
+                            'text_indices': new_rna_indices,
+                            'label': label,
+                        }
+                        label_set.add(label)
+                        all_data.append(data)
 
                 rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len)
 
