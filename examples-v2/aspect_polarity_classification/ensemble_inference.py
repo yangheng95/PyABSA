@@ -9,6 +9,8 @@
 import random
 
 import findfile
+import tqdm
+from sklearn.metrics import classification_report
 
 from pyabsa import AspectPolarityClassification as APC
 
@@ -19,40 +21,35 @@ def ensemble_predict(apc_classifiers: dict, text, print_result=False):
         result += apc_classifier.predict(text, print_result=print_result)['sentiment']
     return max(set(result), key=result.count)
 
-if __name__ == '__main__':
-    # # ckpts = findfile.find_cwd_dirs('fast_lsa_t_v2_Laptop14_acc')
-    # # ckpts = findfile.find_cwd_dirs('fast_lsa_s_v2_Laptop14_acc')
-    # ckpts = findfile.find_cwd_dirs('Laptop14_acc')
-    # random.shuffle(ckpts)
-    # apc_classifiers = {}
-    # for ckpt in ckpts[:5]:
-    #     apc_classifiers[ckpt] = (APC.SentimentClassifier(ckpt))
-    #
-    # # 测试总体准确率
-    # count = 0
-    # texts = open('integrated_datasets/apc_datasets/110.SemEval/113.laptop14/Laptops_Test_Gold.xml.seg.inference', 'r').readlines()
-    # for i, text in enumerate(texts):
-    #
-    #     result = ensemble_predict(apc_classifiers, text, print_result=False)
-    #     if result == text.split('$LABEL$')[-1].strip():
-    #         count += 1
-    #     print(count / (i+1))
 
-
-    # ckpts = findfile.find_cwd_dirs('fast_lsa_t_v2_Restaurant14_acc')
-    # ckpts = findfile.find_cwd_dirs('fast_lsa_s_v2_Restaurant14_acc')
-    ckpts = findfile.find_cwd_dirs('Restaurant14_acc')
+def ensemble_performance(dataset, print_result=False):
+    ckpts = findfile.find_cwd_dirs(dataset+'_acc')
     random.shuffle(ckpts)
     apc_classifiers = {}
-    for ckpt in ckpts[:5]:
+    for ckpt in ckpts[:]:
         apc_classifiers[ckpt] = (APC.SentimentClassifier(ckpt))
+    inference_file = {
+        'laptop14': 'integrated_datasets/apc_datasets/110.SemEval/113.laptop14/Laptops_Test_Gold.xml.seg.inference',
+        'restaurant14': 'integrated_datasets/apc_datasets/110.SemEval/114.restaurant14/Restaurants_Test_Gold.xml.seg.inference',
+        'restaurant15': 'integrated_datasets/apc_datasets/110.SemEval/115.restaurant15/restaurant_test.raw.inference',
+        'restaurant16': 'integrated_datasets/apc_datasets/110.SemEval/116.restaurant16/restaurant_test.raw.inference',
+        'twitter': 'integrated_datasets/apc_datasets/120.Twitter/120.twitter/twitter_test.raw.inference',
+        'mams': 'integrated_datasets/apc_datasets/109.MAMS/test.xml.dat.inference',
+    }
 
-    # 测试总体准确率
-    count = 0
-    texts = open('integrated_datasets/apc_datasets/110.SemEval/114.restaurant14/Restaurants_Test_Gold.xml.seg.inference', 'r').readlines()
-    for i, text in enumerate(texts):
+    pred = []
+    gold = []
+    texts = open(inference_file[dataset], 'r').readlines()
+    for i, text in enumerate(tqdm.tqdm(texts)):
+        result = ensemble_predict(apc_classifiers, text, print_result)
+        pred.append(result)
+        gold.append(text.split('$LABEL$')[-1].strip())
+    print(classification_report(gold, pred, digits=4))
 
-        result = ensemble_predict(apc_classifiers, text, print_result=False)
-        if result == text.split('$LABEL$')[-1].strip():
-            count += 1
-        print(count / (i+1))
+if __name__ == '__main__':
+
+    # ensemble_performance('laptop14')
+    ensemble_performance('restaurant14')
+    # ensemble_performance('restaurant 15')
+    ensemble_performance('restaurant16')
+    # ensemble_performance('mams')
