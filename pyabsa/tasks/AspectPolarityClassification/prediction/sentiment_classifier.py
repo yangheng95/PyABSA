@@ -156,7 +156,8 @@ class SentimentClassifier(InferenceModel):
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size, pin_memory=True, shuffle=False)
         return self._run_prediction(save_path=save_path if save_result else None, print_result=print_result)
 
-    def predict(self, text: str = None,
+    def predict(self,
+                text: str = None,
                 print_result=True,
                 ignore_error=True,
                 **kwargs

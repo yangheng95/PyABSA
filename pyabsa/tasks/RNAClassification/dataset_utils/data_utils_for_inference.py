@@ -17,7 +17,7 @@ from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
 
 
-class BERTRNACInferenceDataset(Dataset):
+class RNACInferenceDataset(Dataset):
 
     def __init__(self, config, tokenizer, dataset_type='infer'):
         self.config = config
@@ -54,6 +54,7 @@ class BERTRNACInferenceDataset(Dataset):
                     label = label.strip() if label else LabelPaddingOption.LABEL_PADDING
 
                     rna_indices = self.tokenizer.text_to_sequence(rna)
+
                     rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len)
 
                     data = {
@@ -89,6 +90,7 @@ class BERTRNACInferenceDataset(Dataset):
                     all_data.append(data)
 
                 self.data = all_data
+
             except Exception as e:
                 if ignore_error:
                     print('Ignore error while processing:', text)
@@ -106,3 +108,12 @@ class BERTRNACInferenceDataset(Dataset):
 
     def __len__(self):
         return len(self.data)
+
+
+class BERTRNACInferenceDataset(RNACInferenceDataset):
+    pass
+
+
+class GloVeRNACInferenceDataset(RNACInferenceDataset):
+    pass
+

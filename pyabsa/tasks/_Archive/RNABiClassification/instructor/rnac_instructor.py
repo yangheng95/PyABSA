@@ -12,6 +12,8 @@ import shutil
 import time
 
 import numpy
+import numpy as np
+import sklearn
 import torch
 import torch.nn as nn
 from sklearn import metrics
@@ -23,9 +25,9 @@ from pyabsa import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from pyabsa.utils.file_utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import init_optimizer, print_args
-from pyabsa.tasks.RNAClassification.dataset_utils.data_utils_for_training import GloVeRNACDataset
-from pyabsa.tasks.RNAClassification.dataset_utils.data_utils_for_training import BERTRNACDataset
-from pyabsa.tasks.RNAClassification.models import GloVeRNACModelList, BERTRNACModelList
+from ..dataset_utils.data_utils_for_training import GloVeRNACDataset
+from ..dataset_utils.data_utils_for_training import BERTRNACDataset
+from ..models import GloVeRNACModelList, BERTRNACModelList
 
 from pyabsa.framework.tokenizer_class.tokenizer_class import Tokenizer, build_embedding_matrix, PretrainedTokenizer
 
@@ -69,8 +71,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
 
     def _train_and_evaluate(self, criterion):
         global_step = 0
-        max_fold_acc = 0
-        max_fold_f1 = 0
+        max_fold_acc1 = 0
+        max_fold_acc2 = 0
         save_path = '{0}/{1}_{2}'.format(self.config.model_path_to_save,
                                          self.config.model_name,
                                          self.config.dataset_name
@@ -107,12 +109,15 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 else:
                     outputs = self.model(inputs)
 
-                targets = sample_batched['label'].to(self.config.device)
+                label1_targets = sample_batched['label1'].to(self.config.device)
+                label2_targets = sample_batched['label2'].to(self.config.device)
 
                 if isinstance(outputs, dict) and 'loss' in outputs:
                     loss = outputs['loss']
                 else:
-                    loss = criterion(outputs, targets)
+                    loss1 = criterion(outputs[0], label1_targets)
+                    loss2 = criterion(outputs[1], label2_targets)
+                    loss = loss1 + loss2
 
                 losses.append(loss.item())
                 if self.config.use_amp and self.scaler:
@@ -132,21 +137,21 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                     if self.test_dataloader and epoch >= self.config.evaluate_begin:
 
                         if self.valid_dataloader:
-                            test_acc, f1 = self._evaluate_acc_f1(self.valid_dataloader)
+                            acc1, f1_1, acc2, f1_2 = self._evaluate_acc_f1(self.valid_dataloader)
                         else:
-                            test_acc, f1 = self._evaluate_acc_f1(self.test_dataloader)
+                            acc1, f1_1, acc2, f1_2 = self._evaluate_acc_f1(self.test_dataloader)
 
-                        self.config.metrics_of_this_checkpoint['acc'] = test_acc
-                        self.config.metrics_of_this_checkpoint['f1'] = f1
+                        self.config.metrics_of_this_checkpoint['decay_acc'] = acc1
+                        self.config.metrics_of_this_checkpoint['rna_cls_acc'] = acc2
 
-                        if test_acc > max_fold_acc or f1 > max_fold_f1:
+                        if acc1 > max_fold_acc1 or acc2 > max_fold_acc2:
 
-                            if test_acc > max_fold_acc:
+                            if acc1 > max_fold_acc1:
                                 patience = self.config.patience
-                                max_fold_acc = test_acc
+                                max_fold_acc1 = acc1
 
-                            if f1 > max_fold_f1:
-                                max_fold_f1 = f1
+                            if acc2 > max_fold_acc2:
+                                max_fold_acc2 = acc2
                                 patience = self.config.patience
 
                             if self.config.model_path_to_save:
@@ -162,24 +167,18 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                                 save_path = '{0}/{1}_{2}_acc_{3}_f1_{4}/'.format(self.config.model_path_to_save,
                                                                                  self.config.model_name,
                                                                                  self.config.dataset_name,
-                                                                                 round(test_acc * 100, 2),
-                                                                                 round(f1 * 100, 2)
+                                                                                 round(acc1 * 100, 2),
+                                                                                 round(acc2 * 100, 2)
                                                                                  )
-
-                                if test_acc > self.config.max_test_metrics['max_test_acc']:
-                                    self.config.max_test_metrics['max_test_acc'] = test_acc
-                                if f1 > self.config.max_test_metrics['max_test_f1']:
-                                    self.config.max_test_metrics['max_test_f1'] = f1
 
                                 save_model(self.config, self.model, self.tokenizer, save_path)
 
-                        postfix = ('Epoch:{} | Loss:{:.4f} | Test Acc:{:.2f}(max:{:.2f}) |'
-                                   ' Test F1:{:.2f}(max:{:.2f})'.format(epoch,
-                                                                        loss.item(),
-                                                                        test_acc * 100,
-                                                                        max_fold_acc * 100,
-                                                                        f1 * 100,
-                                                                        max_fold_f1 * 100))
+                        postfix = ('Epoch:{} | Loss:{:.4f} | DecayAcc:{:.2f}(max:{:.2f}) | RNACLS Acc:{:.2f}(max:{:.2f})'.format(epoch,
+                                                                                                                                            loss.item(),
+                                                                                                                                            acc1 * 100,
+                                                                                                                                            max_fold_acc1 * 100,
+                                                                                                                                            acc2 * 100,
+                                                                                                                                            max_fold_acc2 * 100))
                     else:
                         if self.config.save_mode and epoch >= self.config.evaluate_begin:
                             save_model(self.config, self.model, self.tokenizer, save_path + '_{}/'.format(loss.item()))
@@ -191,16 +190,16 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 break
 
         if not self.valid_dataloader:
-            self.config.MV.add_metric('Max-Test-Acc w/o Valid Set', max_fold_acc * 100)
-            self.config.MV.add_metric('Max-Test-F1 w/o Valid Set', max_fold_f1 * 100)
+            self.config.MV.add_metric('Max-Decay-Acc w/o Valid Set', max_fold_acc1 * 100)
+            self.config.MV.add_metric('Max-RNACLS-Acc w/o Valid Set', max_fold_acc2 * 100)
 
         if self.valid_dataloader:
             print('Loading best model: {} and evaluating on test set ...'.format(save_path))
             self._reload_model_state_dict(save_path)
-            max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
+            max_fold_acc_1, max_fold_f1_1, max_fold_acc_2, max_fold_f1_2 = self._evaluate_acc_f1(self.test_dataloader)
 
-            self.config.MV.add_metric('Max-Test-Acc', max_fold_acc * 100)
-            self.config.MV.add_metric('Max-Test-F1', max_fold_f1 * 100)
+            self.config.MV.add_metric('Max-Test-Decay-Acc', max_fold_acc_1 * 100)
+            self.config.MV.add_metric('Max-Test-RNACLS-Acc', max_fold_acc_2 * 100)
 
         self.logger.info(self.config.MV.summary(no_print=True))
 
@@ -277,12 +276,13 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                     else:
                         outputs = self.model(inputs)
 
-                    targets = sample_batched['label'].to(self.config.device)
+                    label1_targets = sample_batched['label1'].to(self.config.device)
+                    label2_targets = sample_batched['label2'].to(self.config.device)
 
                     if isinstance(outputs, dict) and 'loss' in outputs:
                         loss = outputs['loss']
                     else:
-                        loss = criterion(outputs, targets)
+                        loss = criterion(outputs[0], label1_targets) + criterion(outputs[0], label2_targets)
 
                     if self.config.use_amp and self.scaler:
                         self.scaler.scale(loss).backward()
@@ -407,34 +407,39 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
     def _evaluate_acc_f1(self, test_dataloader):
         # switch model to evaluation mode
         self.model.eval()
-        n_test_correct, n_test_total = 0, 0
-        t_targets_all, t_outputs_all = None, None
+        t_targets_all1, t_outputs_all1 = [], []
+        t_outputs_all2, t_targets_all2 = [], []
         with torch.no_grad():
             for t_batch, t_sample_batched in enumerate(test_dataloader):
-
                 t_inputs = [t_sample_batched[col].to(self.config.device) for col in self.config.inputs_cols]
-                t_targets = t_sample_batched['label'].to(self.config.device)
+                t_targets1 = t_sample_batched['label1'].to(self.config.device)
+                t_targets2 = t_sample_batched['label2'].to(self.config.device)
 
-                sen_outputs = self.model(t_inputs)
-                n_test_correct += (torch.argmax(sen_outputs, -1) == t_targets).sum().item()
-                n_test_total += len(sen_outputs)
+                outputs = self.model(t_inputs)
 
-                if t_targets_all is None:
-                    t_targets_all = t_targets
-                    t_outputs_all = sen_outputs
-                else:
-                    t_targets_all = torch.cat((t_targets_all, t_targets), dim=0)
-                    t_outputs_all = torch.cat((t_outputs_all, sen_outputs), dim=0)
+                t_outputs_all1.extend(outputs[0].cpu().numpy().tolist())
+                t_outputs_all2.extend(outputs[1].cpu().numpy().tolist())
+                t_targets_all1.extend(t_targets1.cpu().numpy().tolist())
+                t_targets_all2.extend(t_targets2.cpu().numpy().tolist())
 
-        test_acc = n_test_correct / n_test_total
-        f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
-                              labels=list(range(self.config.output_dim)), average='macro')
+        f1_1 = metrics.f1_score(t_targets_all1, np.argmax(t_outputs_all1, axis=-1), average='macro')
+
+        acc_1 = metrics.accuracy_score(t_targets_all1, np.argmax(t_outputs_all1, axis=-1))
+
+        f1_2 = metrics.f1_score(t_targets_all2, np.argmax(t_outputs_all2, axis=-1), average='macro')
+
+        acc_2 = metrics.accuracy_score(t_targets_all2, np.argmax(t_outputs_all2, axis=-1))
+
         if self.config.args.get('show_metric', False):
             print('\n---------------------------- Classification Report ----------------------------\n')
-            print(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
-                                                target_names=[str(self.config.index_to_label[x]) for x in self.config.index_to_label]))
+            print(metrics.classification_report(t_targets_all1, np.argmax(t_outputs_all1, -1), digits=4,
+                                                target_names=[str(self.config.index_to_label1[x]) for x in self.config.index_to_label1]))
+            print('\n-------------------------------------------------------------------------------\n')
+            print(metrics.classification_report(t_targets_all2, np.argmax(t_outputs_all2, -1), digits=4,
+                                                target_names=[str(self.config.index_to_label2[x]) for x in self.config.index_to_label2]))
+
             print('\n---------------------------- Classification Report ----------------------------\n')
-        return test_acc, f1
+        return acc_1, f1_1, acc_2, f1_2
 
     def _load_dataset_and_prepare_dataloader(self):
         self.config.inputs_cols = self.config.model.inputs

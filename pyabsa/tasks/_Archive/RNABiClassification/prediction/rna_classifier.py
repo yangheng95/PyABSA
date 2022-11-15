@@ -17,9 +17,9 @@ from sklearn import metrics
 
 from pyabsa import TaskCodeOption, LabelPaddingOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
-from pyabsa.tasks.RNAClassification.models import BERTRNACModelList, GloVeRNACModelList
-from pyabsa.tasks.RNAClassification.dataset_utils.data_utils_for_inference import GloVeRNACInferenceDataset
-from pyabsa.tasks.RNAClassification.dataset_utils.data_utils_for_inference import BERTRNACInferenceDataset
+from ..models import BERTRNACModelList, GloVeRNACModelList
+from ..dataset_utils.data_utils_for_inference import GloVeRNACInferenceDataset
+from ..dataset_utils.data_utils_for_inference import BERTRNACInferenceDataset
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import get_device, print_args
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
@@ -201,7 +201,8 @@ class RNAClassifier(InferenceModel):
             n_correct = 0
             n_labeled = 0
             n_total = 0
-            t_targets_all, t_outputs_all = None, None
+            decay_targets_all, decay_outputs_all = [], []
+            seq_targets_all, seq_outputs_all = [], []
 
             if len(self.infer_dataloader.dataset) >= 100:
                 it = tqdm.tqdm(self.infer_dataloader, postfix='run inference...')
@@ -211,29 +212,21 @@ class RNAClassifier(InferenceModel):
                 inputs = [sample[col].to(self.config.device) for col in self.config.inputs_cols if col != 'label']
 
                 outputs = self.model(inputs)
-                sen_logits = outputs
-                t_probs = torch.softmax(sen_logits, dim=-1)
+                decay_logits, seq_logits = outputs
+                t_probs = torch.softmax(decay_logits, dim=-1)
+                s_probs = torch.softmax(seq_logits, dim=-1)
 
-                if t_targets_all is None:
-                    t_targets_all = np.array([self.config.label_to_index[x] if x in self.config.label_to_index else
-                                              LabelPaddingOption.SENTIMENT_PADDING for x in sample['label']])
-                    t_outputs_all = np.array(sen_logits.cpu()).astype(np.float32)
-                else:
-                    t_targets_all = np.concatenate((t_targets_all, [self.config.label_to_index[x] if x in self.config.label_to_index else
-                                                                    LabelPaddingOption.SENTIMENT_PADDING for x in sample['label']]), axis=0)
-                    t_outputs_all = np.concatenate((t_outputs_all, np.array(sen_logits.cpu()).astype(np.float32)), axis=0)
+                decay_targets_all += [self.config.label1_to_index[x] for x in sample['label1']]
+                decay_outputs_all += t_probs.argmax(dim=-1).tolist()
+                seq_targets_all += [self.config.label2_to_index[x] for x in sample['label2']]
+                seq_outputs_all += s_probs.argmax(dim=-1).tolist()
 
-                for i, i_probs in enumerate(t_probs):
-                    sent = self.config.index_to_label[int(i_probs.argmax(axis=-1))]
-                    if sample['label'][i] != LabelPaddingOption.LABEL_PADDING:
-                        real_sent = sample['label'][i]
-                    else:
-                        real_sent = 'N.A.'
-                    if real_sent != LabelPaddingOption.LABEL_PADDING:
-                        n_labeled += 1
+                for i, (i_probs1, i_probs2) in enumerate(zip(t_probs, s_probs)):
 
                     text_raw = sample['text_raw'][i]
                     ex_id = sample['ex_id'][i]
+                    label1 = sample['label1'][i]
+                    label2 = sample['label2'][i]
 
                     if self.cal_perplexity:
                         ids = self.MLM_tokenizer(text_raw, truncation=True, padding='max_length', max_length=self.config.max_seq_len, return_tensors='pt')
@@ -247,12 +240,13 @@ class RNAClassifier(InferenceModel):
                     results.append({
                         'ex_id': ex_id,
                         'text': text_raw,
-                        'label': sent,
-                        'confidence': float(max(i_probs)),
-                        'probs': i_probs.cpu().numpy(),
-                        'ref_label': real_sent,
-                        'ref_check': correct[sent == real_sent] if real_sent != str(LabelPaddingOption.LABEL_PADDING) else '',
-                        'perplexity': perplexity,
+                        'decay_label': self.config.index_to_label1[int(t_probs[i].argmax(axis=-1))],
+                        'ref_decay_label': label1,
+                        'seq_label': self.config.index_to_label2[int(s_probs[i].argmax(axis=-1))],
+                        'ref_seq_label': label2,
+                        'decay_confidence': round(float(max(i_probs1)), 4),
+                        'seq_confidence': round(float(max(i_probs2)), 4),
+                        'perplexity': perplexity
                     })
                     n_total += 1
 
@@ -260,17 +254,29 @@ class RNAClassifier(InferenceModel):
             if print_result:
                 for ex_id, result in enumerate(results):
                     text_printing = result['text'][:]
-                    if result['ref_label'] != LabelPaddingOption.LABEL_PADDING:
-                        if result['label'] == result['ref_label']:
+                    if result['ref_decay_label'] != LabelPaddingOption.LABEL_PADDING:
+                        if result['decay_label'] == result['ref_decay_label']:
                             text_info = colored(
-                                '#{}\t -> <{}(ref:{} confidence:{})>\t'.format(result['ex_id'], result['label'], result['ref_label'],
-                                                                               result['confidence']), 'green')
+                                '#{}\t -> <Decay Label: {}(ref:{} decay_confidence:{})>\t'.format(result['ex_id'], result['decay_label'], result['ref_decay_label'],
+                                                                                                  result['decay_confidence']), 'green')
                         else:
                             text_info = colored(
-                                '#{}\t -> <{}(ref:{}) confidence:{}>\t'.format(result['ex_id'], result['label'], result['ref_label'],
-                                                                               result['confidence']), 'red')
+                                '#{}\t -> <Decay Label: {}(ref:{}) decay_confidence:{}>\t'.format(result['ex_id'], result['decay_label'], result['ref_decay_label'],
+                                                                                                  result['decay_confidence']), 'red')
                     else:
-                        text_info = '#{}\t -> {}\t'.format(result['ex_id'], result['label'])
+                        text_info = '#{}\t -> Decay Label: {}\t'.format(result['ex_id'], result['decay_label'])
+
+                    if result['ref_seq_label'] != LabelPaddingOption.LABEL_PADDING:
+                        if result['seq_label'] == result['ref_seq_label']:
+                            text_info += colored(
+                                '\t -> <RNA Label: {}(ref:{} seq_confidence:{})>\t'.format(result['seq_label'], result['ref_seq_label'],
+                                                                                           result['seq_confidence']), 'green')
+                        else:
+                            text_info += colored(
+                                '\t -> <RNA Label: {}(ref:{}) seq_confidence:{}>\t'.format(result['seq_label'], result['ref_seq_label'],
+                                                                                           result['seq_confidence']), 'red')
+                    else:
+                        text_info += '\t -> RNA Label: {}\t'.format(result['label'])
                     if self.cal_perplexity:
                         text_printing += colored(' --> <perplexity:{}>\t'.format(result['perplexity']), 'yellow')
                     text_printing = text_info + text_printing
@@ -288,9 +294,13 @@ class RNAClassifier(InferenceModel):
             print('Labeled samples:{}'.format(n_labeled))
 
             print('\n---------------------------- Classification Report ----------------------------\n')
-            print(metrics.classification_report(t_targets_all, np.argmax(t_outputs_all, -1), digits=4,
-                                                target_names=[str(self.config.index_to_label[x]) for x in
-                                                              self.config.index_to_label]))
+            print(metrics.classification_report(decay_targets_all, np.argmax(decay_outputs_all, -1), digits=4,
+                                                target_names=[str(self.config.index_to_label1[x]) for x in
+                                                              self.config.index_to_label1]))
+            print('\n-------------------------------------------------------------------------------\n')
+            print(metrics.classification_report(seq_targets_all, np.argmax(seq_outputs_all, -1), digits=4,
+                                                target_names=[str(self.config.index_to_label2[x]) for x in
+                                                              self.config.index_to_label2]))
             print('\n---------------------------- Classification Report ----------------------------\n')
 
         return results
