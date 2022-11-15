@@ -18,10 +18,10 @@ import warnings
 warnings.filterwarnings('ignore')
 
 for dataset in [
-    # APCDatasetList.Laptop14,
-    # APCDatasetList.Restaurant14,
-    # APCDatasetList.Restaurant15,
-    # APCDatasetList.Restaurant16,
+    APCDatasetList.Laptop14,
+    APCDatasetList.Restaurant14,
+    APCDatasetList.Restaurant15,
+    APCDatasetList.Restaurant16,
     APCDatasetList.MAMS
 ]:
     config = APC.APCConfigManager.get_apc_config_english()
@@ -31,13 +31,13 @@ for dataset in [
     config.pretrained_bert = 'microsoft/deberta-v3-large'
     config.evaluate_begin = 2
     config.max_seq_len = 80
-    config.num_epoch = 10
+    config.num_epoch = 30
     config.log_step = 10
     config.dropout = 0
     config.cache_dataset = False
     config.l2reg = 1e-8
     config.lsa = True
-    config.seed = [random.randint(0, 10000) for _ in range(3)]
+    config.seed = [random.randint(0, 10000) for _ in range(5)]
 
     APC.APCTrainer(config=config,
                    dataset=dataset,
@@ -53,13 +53,13 @@ for dataset in [
     config.pretrained_bert = 'microsoft/deberta-v3-large'
     config.evaluate_begin = 2
     config.max_seq_len = 80
-    config.num_epoch = 10
+    config.num_epoch = 30
     config.log_step = 10
     config.dropout = 0
     config.cache_dataset = False
     config.l2reg = 1e-8
     config.lsa = True
-    config.seed = [random.randint(0, 10000) for _ in range(3)]
+    config.seed = [random.randint(0, 10000) for _ in range(5)]
 
     APC.APCTrainer(config=config,
                    dataset=dataset,
@@ -75,14 +75,14 @@ for dataset in [
     # config.pretrained_bert = 'microsoft/deberta-v3-large'
     # config.evaluate_begin = 2
     # config.max_seq_len = 80
-    # config.num_epoch = 10
+    # config.num_epoch = 30
     # config.log_step = 10
     # config.dropout = 0
     # config.batch_size = 16
     # config.cache_dataset = False
     # config.l2reg = 1e-8
     # config.lsa = True
-    # config.seed = [random.randint(0, 10000) for _ in range(3)]
+    # config.seed = [random.randint(0, 10000) for _ in range(5)]
     #
     # APC.APCTrainer(config=config,
     #                dataset=dataset,

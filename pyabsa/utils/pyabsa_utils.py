@@ -5,6 +5,8 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 import os
+from typing import Union
+
 import torch
 from autocuda import auto_cuda, auto_cuda_name
 

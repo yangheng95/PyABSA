@@ -7,7 +7,6 @@
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
 
-import torch
 import tqdm
 
 from pyabsa import LabelPaddingOption
@@ -17,7 +16,7 @@ from pyabsa.utils.pyabsa_utils import check_and_fix_labels
 from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
 
 
-class BERTRNACDataset(PyABSADataset):
+class RNACDataset(PyABSADataset):
     def load_data_from_dict(self, dataset_dict, **kwargs):
         label_set = set()
         all_data = []
@@ -26,7 +25,6 @@ class BERTRNACDataset(PyABSADataset):
             if self.config.dataset_name.lower() in 'degrad':
                 rna, label = data['text'], data['label']
                 rna_indices = self.tokenizer.text_to_sequence(rna)
-
                 rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len)
                 data = {
                     'ex_id': ex_id,
@@ -35,7 +33,6 @@ class BERTRNACDataset(PyABSADataset):
                 }
                 label_set.add(label)
                 all_data.append(data)
-
             elif self.config.dataset_name.lower() in 'sfe':
                 exon1, intron, exon2, label = data['exon1'], data['intron'], data['exon2'], data['label']
                 exon1_ids = self.tokenizer.text_to_sequence(exon1, padding='do_not_pad')
@@ -80,16 +77,19 @@ class BERTRNACDataset(PyABSADataset):
                     if np.count_nonzero(new_rna_indices) != 0:
                         data = {
                             'ex_id': ex_id,
+                            'text': rna,
                             'text_indices': new_rna_indices,
                             'label': label,
                         }
                         label_set.add(label)
                         all_data.append(data)
 
+                rna_indices = self.tokenizer.text_to_sequence(rna)
                 rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len)
 
                 data = {
                     'ex_id': ex_id,
+                    'text': rna,
                     'text_indices': rna_indices,
                     'label': label,
                 }
@@ -97,9 +97,9 @@ class BERTRNACDataset(PyABSADataset):
                 all_data.append(data)
 
             elif self.config.dataset_name.lower() in 'sfe':
-                text, _, label = lines[i].strip().partition('$LABEL$')
+                sequence, _, label = lines[i].strip().partition('$LABEL$')
                 label = label.strip() if label else LabelPaddingOption.LABEL_PADDING
-                exon1, intron, exon2 = text.strip().split(',')
+                exon1, intron, exon2 = sequence.strip().split(',')
                 exon1 = exon1.strip()
                 intron = intron.strip()
                 exon2 = exon2.strip()
@@ -132,3 +132,11 @@ class BERTRNACDataset(PyABSADataset):
 
     def __len__(self):
         return len(self.data)
+
+
+class GloVeRNACDataset(RNACDataset):
+    pass
+
+
+class BERTRNACDataset(RNACDataset):
+    pass

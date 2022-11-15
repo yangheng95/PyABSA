@@ -48,8 +48,8 @@ def ensemble_performance(dataset, print_result=False):
 
 if __name__ == '__main__':
 
-    # ensemble_performance('laptop14')
+    ensemble_performance('laptop14')
     ensemble_performance('restaurant14')
-    # ensemble_performance('restaurant 15')
+    ensemble_performance('restaurant15')
     ensemble_performance('restaurant16')
-    # ensemble_performance('mams')
+    ensemble_performance('mams')

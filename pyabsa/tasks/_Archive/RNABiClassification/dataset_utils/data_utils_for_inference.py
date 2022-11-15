@@ -17,7 +17,7 @@ from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
 
 
-class GloVeRNACInferenceDataset(Dataset):
+class RNACInferenceDataset(Dataset):
 
     def __init__(self, config, tokenizer, dataset_type='infer'):
         self.config = config
@@ -48,20 +48,19 @@ class GloVeRNACInferenceDataset(Dataset):
             it = samples
         for ex_id, text in enumerate(it):
             try:
-                if self.config.dataset_name.lower() in 'degrad':
+                if self.config.dataset_name.lower() in 'degrad-v2':
                     text, _, label = text.strip().partition('$LABEL$')
                     rna = text.strip()
-                    label = label.strip() if label else LabelPaddingOption.LABEL_PADDING
+                    labels = label.strip().split(',')
 
                     rna_indices = self.tokenizer.text_to_sequence(rna)
-
-                    rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len)
 
                     data = {
                         'ex_id': ex_id,
                         'text_raw': rna,
                         'text_indices': rna_indices,
-                        'label': label,
+                        'label1': labels[0],
+                        'label2': labels[1],
                     }
                     all_data.append(data)
 
@@ -108,3 +107,12 @@ class GloVeRNACInferenceDataset(Dataset):
 
     def __len__(self):
         return len(self.data)
+
+
+class BERTRNACInferenceDataset(RNACInferenceDataset):
+    pass
+
+
+class GloVeRNACInferenceDataset(RNACInferenceDataset):
+    pass
+
