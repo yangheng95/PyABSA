@@ -43,6 +43,7 @@ for dataset in [
 
         APC.APCTrainer(config=config,
                        dataset=dataset,
+                       from_checkpoint='english',
                        checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
                        auto_device=DeviceTypeOption.AUTO,
                        ).destroy()

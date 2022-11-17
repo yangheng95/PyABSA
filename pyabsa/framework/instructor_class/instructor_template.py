@@ -251,6 +251,7 @@ class BaseTrainingInstructor:
 
 
 def get_resume_checkpoint(config):
+    ckpt = config.from_checkpoint
     if config.from_checkpoint:
         config_path = find_files(config.from_checkpoint, '.config')
 
@@ -261,3 +262,4 @@ def get_resume_checkpoint(config):
             except Exception as e:
                 print(e)
                 raise ValueError('Cannot find checkpoint file in {}'.format(config.from_checkpoint))
+    return ckpt
