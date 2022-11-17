@@ -17,7 +17,7 @@ from pyabsa.utils.pyabsa_utils import check_and_fix_labels
 from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
 
 
-class BERTRNACDataset(PyABSADataset):
+class RNACDataset(PyABSADataset):
     def load_data_from_dict(self, dataset_dict, **kwargs):
         label_set = set()
         all_data = []
@@ -83,3 +83,11 @@ class BERTRNACDataset(PyABSADataset):
 
     def __len__(self):
         return len(self.data)
+
+
+class BERTRNACDataset(RNACDataset):
+    pass
+
+
+class GloVeRNACDataset(RNACDataset):
+    pass
