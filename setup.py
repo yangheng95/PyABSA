@@ -48,5 +48,6 @@ setup(
                       'torch>1.0.0',
                       'sentencepiece',
                       'protobuf<4.0.0',
+                      'pandas'
                       ],
 )

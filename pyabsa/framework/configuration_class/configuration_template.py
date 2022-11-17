@@ -55,7 +55,6 @@ class ConfigManager(Namespace):
             args_call_count = super().__getattribute__('args_call_count')
 
             if arg_name in args_call_count:
-                # args_call_count[arg_name] += 1
                 super().__setattr__('args_call_count', args_call_count)
 
             else:
@@ -68,6 +67,8 @@ class ConfigManager(Namespace):
         # config_check(args)
 
     def get(self, key, default=None):
+        if key in self.args_call_count:
+            self.args_call_count[key] += 1
         return self.args.get(key, default)
 
     def update(self, *args, **kwargs):
@@ -106,6 +107,7 @@ class ConfigManager(Namespace):
 
     def __setitem__(self, key, value):
         self.args[key] = value
+        self.args_call_count[key] = 0
         config_check(self.args)
 
     def __delitem__(self, key):

@@ -6,12 +6,8 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 import os
-import pickle
-import random
-import re
 import shutil
 import time
-from hashlib import sha256
 
 import numpy
 import torch
@@ -110,6 +106,8 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
             self.valid_set = GloVeRNARDataset(self.config, self.tokenizer, dataset_type='valid')
 
             self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
+            self.config.tokenizer = self.config.tokenizer
+            self.config.embedding_matrix = self.config.embedding_matrix
 
         self.save_cache_dataset()
 

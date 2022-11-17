@@ -66,8 +66,8 @@ class GloVeRNARDataset(PyABSADataset):
 
                 rna_indices = exon1_ids + intron_ids + exon2_ids
 
-                rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len, value=0)
-                intron_ids = pad_and_truncate(intron_ids, self.config.max_seq_len, value=0)
+                rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len, value=self.tokenizer.pad_token_id)
+                intron_ids = pad_and_truncate(intron_ids, self.config.max_seq_len, value=self.tokenizer.pad_token_id)
 
                 data = {
                     'ex_id': torch.tensor(ex_id, dtype=torch.long),

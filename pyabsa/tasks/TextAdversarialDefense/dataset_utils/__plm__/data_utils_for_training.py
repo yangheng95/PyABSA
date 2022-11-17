@@ -87,7 +87,7 @@ class BERTTADDataset(PyABSADataset):
         return len(self.data)
 
 
-def check_and_fix_adv_train_labels(label_set: set, label_name, all_data, opt):
+def check_and_fix_adv_train_labels(label_set: set, label_name, all_data, config):
     # update output_dim, init model behind execution of this function!
     if '-100' in label_set:
         adv_train_label_to_index = {origin_label: int(idx) - 1 if origin_label != '-100' else -100 for origin_label, idx
@@ -99,14 +99,14 @@ def check_and_fix_adv_train_labels(label_set: set, label_name, all_data, opt):
                                     zip(sorted(label_set), range(len(label_set)))}
         index_to_adv_train_label = {int(idx): origin_label for origin_label, idx in
                                     zip(sorted(label_set), range(len(label_set)))}
-    if 'index_to_adv_train_label' not in opt.args:
-        opt.index_to_adv_train_label = index_to_adv_train_label
-        opt.adv_train_label_to_index = adv_train_label_to_index
+    if 'index_to_adv_train_label' not in config.args:
+        config.index_to_adv_train_label = index_to_adv_train_label
+        config.adv_train_label_to_index = adv_train_label_to_index
 
-    if opt.index_to_adv_train_label != index_to_adv_train_label:
+    if config.index_to_adv_train_label != index_to_adv_train_label:
         # raise KeyError('Fail to fix the labels, the number of labels are not equal among all datasets!')
-        opt.index_to_adv_train_label.update(index_to_adv_train_label)
-        opt.adv_train_label_to_index.update(adv_train_label_to_index)
+        config.index_to_adv_train_label.update(index_to_adv_train_label)
+        config.adv_train_label_to_index.update(adv_train_label_to_index)
     num_label = {l: 0 for l in label_set}
     num_label['Sum'] = len(all_data)
     for item in all_data:
@@ -120,7 +120,7 @@ def check_and_fix_adv_train_labels(label_set: set, label_name, all_data, opt):
     print('Dataset Label Details: {}'.format(num_label))
 
 
-def check_and_fix_is_adv_labels(label_set: set, label_name, all_data, opt):
+def check_and_fix_is_adv_labels(label_set: set, label_name, all_data, config):
     # update output_dim, init model behind execution of this function!
     if '-100' in label_set:
         is_adv_to_index = {origin_label: int(idx) - 1 if origin_label != '-100' else -100 for origin_label, idx in
@@ -132,14 +132,14 @@ def check_and_fix_is_adv_labels(label_set: set, label_name, all_data, opt):
                            zip(sorted(label_set), range(len(label_set)))}
         index_to_is_adv = {int(idx): origin_label for origin_label, idx in
                            zip(sorted(label_set), range(len(label_set)))}
-    if 'index_to_is_adv' not in opt.args:
-        opt.index_to_is_adv = index_to_is_adv
-        opt.is_adv_to_index = is_adv_to_index
+    if 'index_to_is_adv' not in config.args:
+        config.index_to_is_adv = index_to_is_adv
+        config.is_adv_to_index = is_adv_to_index
 
-    if opt.index_to_is_adv != index_to_is_adv:
+    if config.index_to_is_adv != index_to_is_adv:
         # raise KeyError('Fail to fix the labels, the number of labels are not equal among all datasets!')
-        opt.index_to_is_adv.update(index_to_is_adv)
-        opt.is_adv_to_index.update(is_adv_to_index)
+        config.index_to_is_adv.update(index_to_is_adv)
+        config.is_adv_to_index.update(is_adv_to_index)
     num_label = {l: 0 for l in label_set}
     num_label['Sum'] = len(all_data)
     for item in all_data:

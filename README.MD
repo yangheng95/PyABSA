@@ -67,35 +67,6 @@ Aspect sentiment polarity classification & Aspect term extraction models
 If you are looking for the original proposal of local context focus, here are some introduction at
 [here](https://github.com/yangheng95/PyABSA/tree/release/demos/documents).
 
-## Package Overview
-
-<table>
-<tr>
-    <td><b> pyabsa </b></td>
-    <td> package root (including all interfaces) </td>
-</tr>
-<tr>
-    <td><b> pyabsa.framework </b></td>
-    <td> recommend interface entry</td>
-</tr>
-<tr>
-    <td><b> pyabsa.framework.checkpoint </b></td>
-    <td> checkpoint manager entry, inference model entry</td>
-</tr>
-<tr>
-    <td><b> pyabsa.framework.dataset </b></td>
-    <td> datasets entry </td>
-</tr>
-<tr>
-    <td><b> pyabsa.framework.config </b></td>
-    <td> predefined config manager </td>
-</tr>
-<tr>
-    <td><b> pyabsa.framework.trainer </b></td>
-    <td> training module, every trainer return a inference model </td>
-</tr>
-</table>
-
 ## Installation
 
 ### install via pip

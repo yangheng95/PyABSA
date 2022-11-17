@@ -28,6 +28,10 @@ class Tokenizer(object):
         self.idx = 1
         self.pre_tokenizer = None
         self.pad_token_id = 0
+        self.unk_token_id = 0
+        self.cls_token_id = 0
+        self.sep_token_id = 0
+        self.mask_token_id = 0
 
     @staticmethod
     def build_tokenizer(config, cache_path=None, pre_tokenizer=None, **kwargs):
@@ -122,6 +126,10 @@ class PretrainedTokenizer:
         self.tokenizer = AutoTokenizer.from_pretrained(config.pretrained_bert, **kwargs)
         self.max_seq_len = self.config.max_seq_len
         self.pad_token_id = self.tokenizer.pad_token_id
+        self.unk_token_id = self.tokenizer.unk_token_id
+        self.cls_token_id = self.tokenizer.cls_token_id
+        self.sep_token_id = self.tokenizer.sep_token_id
+        self.mask_token_id = self.tokenizer.mask_token_id
 
     def text_to_sequence(self, text, padding='max_length', return_tensors=None, **kwargs):
         return self.tokenizer.encode(text,

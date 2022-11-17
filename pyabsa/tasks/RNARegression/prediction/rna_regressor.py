@@ -5,6 +5,7 @@
 import json
 import os
 import pickle
+import random
 
 import numpy as np
 import torch
@@ -84,28 +85,8 @@ class RNARegressor(InferenceModel):
                                 with open(tokenizer_path, mode='rb') as f:
                                     self.tokenizer = pickle.load(f)
                     else:
-                        # tokenizer = Tokenizer.build_tokenizer(
-                        #     config=self.config,
-                        #     cache_path='{0}_tokenizer.dat'.format(os.path.basename(self.config.dataset_name)),
-                        #     pre_tokenizer=AutoTokenizer.from_pretrained(self.config.pretrained_bert)
-                        # )
-                        # if model_path:
-                        #     self.model = torch.load(model_path, map_location='cpu')
-                        # else:
-                        #     embedding_matrix = build_embedding_matrix(
-                        #         config=self.config,
-                        #         tokenizer=tokenizer,
-                        #         cache_path='{0}_{1}_embedding_matrix.dat'.format(str(self.config.embed_dim),
-                        #                                                          os.path.basename(
-                        #                                                              self.config.dataset_name)),
-                        #     )
-                        #     self.model = self.config.model(embedding_matrix, self.config).to(self.config.device)
-                        #     self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
-                        #
-                        # self.tokenizer = tokenizer
-
-                        self.tokenizer = self.config.tokenizer
                         self.embedding_matrix = self.config.embedding_matrix
+                        self.tokenizer = self.config.tokenizer
                         if model_path:
                             self.model = torch.load(model_path, map_location='cpu')
                         else:
