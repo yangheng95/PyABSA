@@ -482,4 +482,4 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
         pass
 
     def run(self):
-        return self._train_and_evaluate(criterion=None)
+        return self._train(criterion=None)

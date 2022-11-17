@@ -15,7 +15,9 @@ from typing import Union
 import findfile
 import torch
 import transformers
+from findfile import find_files
 from metric_visualizer import MetricVisualizer
+from pyabsa.framework.checkpoint_class.checkpoint_template import CheckpointManager
 from torch import cuda
 from transformers import AutoConfig
 
@@ -79,19 +81,18 @@ def init_config(config):
                                      trial_tag='Model & Dataset',
                                      trial_tag_list=[config.model.__name__ + '-' + config.dataset_name])
 
-    config.from_checkpoint = findfile.find_dir(os.getcwd(), config.from_checkpoint) if config.from_checkpoint else ''
     checkpoint_save_mode = config.checkpoint_save_mode
 
     config.save_mode = checkpoint_save_mode
     config_check(config)
     config.logger = get_logger(os.getcwd(), log_name=config.model_name, log_type='trainer')
+
     config.logger.info('PyABSA version: {}'.format(config.PyABSAVersion))
     config.logger.info('Transformers version: {}'.format(config.TransformersVersion))
     config.logger.info('Torch version: {}'.format(config.TorchVersion))
     config.logger.info('Device: {}'.format(config.device_name))
 
     return config
-
 
 class Trainer:
     def __init__(self,

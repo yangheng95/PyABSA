@@ -18,6 +18,7 @@ from hashlib import sha256
 import numpy
 import torch
 from findfile import find_file, find_files
+from pyabsa.framework.checkpoint_class.checkpoint_template import CheckpointManager
 from torch.utils.data import DataLoader, random_split, ConcatDataset, RandomSampler, SequentialSampler
 from transformers import BertModel
 
@@ -220,7 +221,7 @@ class BaseTrainingInstructor:
 
     def _resume_from_checkpoint(self):
         logger = self.config.logger
-        from_checkpoint_path = self.config.from_checkpoint
+        from_checkpoint_path = get_resume_checkpoint(self.config)
         if from_checkpoint_path:
             model_path = find_files(from_checkpoint_path, '.model')
             state_dict_path = find_files(from_checkpoint_path, '.state_dict')
@@ -247,3 +248,16 @@ class BaseTrainingInstructor:
             else:
                 logger.info('No checkpoint found in {}'.format(from_checkpoint_path))
             logger.info('Resume trainer from Checkpoint: {}!'.format(from_checkpoint_path))
+
+
+def get_resume_checkpoint(config):
+    if config.from_checkpoint:
+        config_path = find_files(config.from_checkpoint, '.config')
+
+        if not config_path:
+            try:
+                ckpt = CheckpointManager().parse_checkpoint(checkpoint=config.from_checkpoint, task_code=config.task_code)
+                config.logger.info('Checkpoint downloaded at: {}'.format(ckpt))
+            except Exception as e:
+                print(e)
+                raise ValueError('Cannot find checkpoint file in {}'.format(config.from_checkpoint))
