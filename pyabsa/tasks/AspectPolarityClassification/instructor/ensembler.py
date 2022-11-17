@@ -117,7 +117,10 @@ class APCEnsembler(nn.Module):
                     self.train_set = GloVeABSADataset(self.config, self.tokenizer, dataset_type='train') if not self.train_set else self.train_set
                     self.test_set = GloVeABSADataset(self.config, self.tokenizer, dataset_type='test') if not self.test_set else self.test_set
                     self.valid_set = GloVeABSADataset(self.config, self.tokenizer, dataset_type='valid') if not self.valid_set else self.valid_set
+
                 self.models.append(models[i](copy.deepcopy(self.embedding_matrix) if self.config.deep_ensemble else self.embedding_matrix, self.config))
+                self.config.tokenizer = self.tokenizer
+                self.config.embedding_matrix = self.embedding_matrix
 
             if self.config.cache_dataset and not os.path.exists(cache_path) and not self.config.overwrite_cache:
                 print(colored('Caching dataset... please remove cached dataset if any problem happens.', 'red'))

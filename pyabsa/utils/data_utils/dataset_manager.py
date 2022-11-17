@@ -19,7 +19,7 @@ import tqdm
 
 from termcolor import colored
 
-from pyabsa import TaskCodeOption, PyABSAMaterialHostAddress
+from pyabsa.framework.flag_class import TaskCodeOption, PyABSAMaterialHostAddress, TaskNameOption
 from pyabsa.augment.apc_augment.apc_augment import __perform_apc_augmentation
 from pyabsa.augment.text_agument.tc_augment import __perform_tc_augmentation
 from pyabsa.utils.check_utils.dataset_version_check import check_datasets_version

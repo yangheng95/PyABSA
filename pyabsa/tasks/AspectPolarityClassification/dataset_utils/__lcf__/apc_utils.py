@@ -75,7 +75,7 @@ def pad_syntax_based_srd(text, dep_dist, tokenizer, opt):
             sequence.append(token)
             distances.append(dist)
     sequence = tokenizer.convert_tokens_to_ids(sequence)
-    sequence = pad_and_truncate(sequence, opt.max_seq_len)
+    sequence = pad_and_truncate(sequence, opt.max_seq_len, value=tokenizer.pad_token_id)
     dep_dist = pad_and_truncate(dep_dist, opt.max_seq_len, value=opt.max_seq_len)
 
     return sequence, dep_dist
@@ -157,7 +157,7 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect, input_d
 
 
 def text_to_sequence(tokenizer, text, max_seq_len):
-    return pad_and_truncate(tokenizer.convert_tokens_to_ids(tokenizer.tokenize(text)), max_seq_len)
+    return pad_and_truncate(tokenizer.convert_tokens_to_ids(tokenizer.tokenize(text)), max_seq_len, value=tokenizer.pad_token_id)
 
 
 def get_syntax_distance(text_raw, aspect, tokenizer, opt):

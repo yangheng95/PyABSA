@@ -15,7 +15,7 @@ class TaskNameOption(dict):
         'tc': 'Text Classification',
         'text_classification': 'Text Classification',
         'tad': 'Text Adversarial Defense',
-        'rnac': 'RNA Sequence Classification',
+        'rnac_datasets': 'RNA Sequence Classification',
         'rnar': 'RNA Sequence Regression',
         'APC': 'Aspect-based Sentiment Classification',
         'ATEPC': 'Aspect Term Extraction and Polarity Classification',

@@ -72,6 +72,9 @@ class BaseTrainingInstructor:
         self.lr_scheduler = None
         self.warmup_scheduler = None
 
+        self.tokenizer = None
+        self.embedding_matrix = None
+
     def _reset_params(self):
         for child in self.model.children():
             if type(child) != BertModel:  # skip bert params
@@ -175,6 +178,9 @@ class BaseTrainingInstructor:
         self.config.device = torch.device(self.config.device)
         if self.config.device.type == 'cuda':
             self.logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.config.device)))
+
+        self.config.tokenizer = self.tokenizer
+        self.config.embedding_matrix = self.embedding_matrix
 
         print_args(self.config, self.logger)
 

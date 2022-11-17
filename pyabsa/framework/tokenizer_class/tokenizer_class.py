@@ -99,7 +99,7 @@ class Tokenizer(object):
             if kwargs.get('reverse', False):
                 sequence = sequence[::-1]
             if padding == 'max_length':
-                return pad_and_truncate(sequence, self.max_seq_len)
+                return pad_and_truncate(sequence, self.max_seq_len, self.pad_token_id)
             else:
                 return sequence
 
@@ -167,14 +167,11 @@ def build_embedding_matrix(config, tokenizer, cache_path=None):
     return embedding_matrix
 
 
-def pad_and_truncate(sequence, max_seq_len, **kwargs):
+def pad_and_truncate(sequence, max_seq_len, value, **kwargs):
     if len(sequence) > max_seq_len:
         sequence = sequence[:max_seq_len]
     else:
-        if kwargs.get('value'):
-            sequence = sequence + [kwargs['value']] * (max_seq_len - len(sequence))
-        else:
-            sequence = sequence + [0] * (max_seq_len - len(sequence))
+        sequence = sequence + [value] * (max_seq_len - len(sequence))
     return sequence
 
 

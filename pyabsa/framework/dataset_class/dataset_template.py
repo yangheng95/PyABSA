@@ -36,11 +36,8 @@ class PyABSADataset(Dataset):
             if isinstance(d, dict):
                 for key, value in d.items():
                     try:
-                        if len(value) > 1:
-                            d[key] = torch.tensor(value)
-                            # print(f'Convert {key} to tensor')
+                        d[key] = torch.tensor(value)
                     except Exception as e:
-                        # print(f'Cannot convert {key} to tensor, {e}')
                         pass
             elif isinstance(d, list):
                 for value in data:

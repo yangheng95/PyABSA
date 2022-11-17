@@ -31,7 +31,7 @@ class CheckpointManager:
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
         This param is for someone wants to load a checkpoint not registered in PyABSA
-        :param task_code: task code, e.g. apc, atepc, tad, rnac, rnar, tc, etc.
+        :param task_code: task code, e.g. apc, atepc, tad, rnac_datasets, rnar, tc, etc.
 
         :return:
         """

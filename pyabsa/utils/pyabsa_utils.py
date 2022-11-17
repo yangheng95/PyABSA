@@ -21,13 +21,13 @@ def print_args(config, logger=None):
     args = [key for key in sorted(config.args.keys())]
     for arg in args:
         if logger:
-            if arg != 'dataset' and arg != 'dataset_dict':
+            if arg != 'dataset' and arg != 'dataset_dict' and arg != 'embedding_matrix':
                 try:
                     logger.info('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
                 except:
                     logger.info('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], 0))
         else:
-            if arg != 'dataset' and arg != 'dataset_dict':
+            if arg != 'dataset' and arg != 'dataset_dict' and arg != 'embedding_matrix':
                 try:
                     print('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
                 except:

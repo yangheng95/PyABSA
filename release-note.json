@@ -1,4 +1,15 @@
 {
+  "2.0.2(0,1)": {
+    "1": "Refactor major package implementation; the package is now organized by NLP tasks, and the package is now more modular. The package structure is expected to be stable in the future.",
+    "2": "Refactor inference model initialization methods, you need to load a inference using SentimentClassifier(), etc. All the inference APIs are named with predict and batch_predict now.",
+    "3": "Add tokenization, training, inference and other support for RNA sequence processing",
+    "4": "The online demos are stilled based on the old version, please wait for the update",
+    "5": "The auto-text augmentation is not available in this version, please wait for the update",
+    "6": "The checkpoints also save the tokenizer and embedding(glove, etc), so you can load the tokenizer, embedding from the checkpoint",
+    "7": "You need to remove old datasets for v1.x. The dataset annotation has been changed; the input and and label are separated by $LABEL$. The padding label is -100 now",
+    "8": "You can set eval_batch_size in inference (i.e., predict or batch_predict) to save memory",
+    "9": "You will be able to pass a list of data to fine-tune existing checkpoints in the next version, which is very useful for online learning",
+  },
   "1.16.26": {
     "1": "Improves Config Manager"
   },
