@@ -23,8 +23,7 @@ from pyabsa import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from pyabsa.utils.file_utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import init_optimizer, print_args
-from pyabsa.tasks.RNAClassification.dataset_utils.data_utils_for_training import GloVeRNACDataset
-from pyabsa.tasks.RNAClassification.dataset_utils.data_utils_for_training import BERTRNACDataset
+from pyabsa.tasks.RNAClassification.dataset_utils.data_utils_for_training import BERTRNACDataset, GloVeRNACDataset
 from pyabsa.tasks.RNAClassification.models import GloVeRNACModelList, BERTRNACModelList
 
 from pyabsa.framework.tokenizer_class.tokenizer_class import Tokenizer, build_embedding_matrix, PretrainedTokenizer
