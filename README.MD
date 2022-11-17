@@ -13,11 +13,9 @@
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/back-to-reality-leveraging-pattern-driven/aspect-based-sentiment-analysis-on-semeval)](https://paperswithcode.com/sota/aspect-based-sentiment-analysis-on-semeval?p=back-to-reality-leveraging-pattern-driven)
 
-# Note: If you need to find the v1.x version, please visit [release](https://github.com/yangheng95/PyABSA/tree/release)
+# Note: If you need to find the v1.x version, please visit [release](https://github.com/yangheng95/PyABSA/tree/release). The final release of v1.x is [v1.16.27](https://github.com/yangheng95/PyABSA/tree/release)
 
-**Hi, there!** Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks.
-
-PyABSA is a free and open-source tool for everyone, but please do not forget to attach the (informal or formal) author
+**Hi, there!** Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks. PyABSA is a free and open-source tool for everyone, but please do not forget to attach the (informal or formal) author
 information and project address in your works, products and publications, etc.
 
 # | [Overview](./README.MD) | [Paper](https://arxiv.org/abs/2208.01368) | [HuggingfaceHub](https://huggingface.co/yangheng) | [ABDADatasets](readme/dataset_readme.md) | [ABSA Models](readme/model_readme.md) | [Colab Tutorials](readme/tutorial_readme.md) | [Troubleshooting(常见问题解决)](https://github.com/yangheng95/PyABSA/issues/189)
