@@ -94,4 +94,3 @@ class BERTRNACInferenceDataset(RNACInferenceDataset):
 
 class GloVeRNACInferenceDataset(RNACInferenceDataset):
     pass
-

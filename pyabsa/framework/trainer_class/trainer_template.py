@@ -94,6 +94,7 @@ def init_config(config):
 
     return config
 
+
 class Trainer:
     def __init__(self,
                  config: ConfigManager = None,

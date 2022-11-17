@@ -42,7 +42,6 @@ class TCTrainingInstructor(BaseTrainingInstructor):
 
         self._init_misc()
 
-
     def _init_misc(self):
         random.seed(self.config.seed)
         numpy.random.seed(self.config.seed)

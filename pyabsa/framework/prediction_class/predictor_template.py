@@ -18,7 +18,7 @@ from pyabsa.framework.checkpoint_class.checkpoint_template import CheckpointMana
 class InferenceModel:
     task_code = TaskCodeOption.Aspect_Polarity_Classification
 
-    def __init__(self, checkpoint: Union[str, object] = None,  config=None, **kwargs):
+    def __init__(self, checkpoint: Union[str, object] = None, config=None, **kwargs):
         '''
         :param checkpoint: checkpoint path or checkpoint object
         :param kwargs:
