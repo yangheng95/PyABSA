@@ -1,4 +1,8 @@
 {
+  "2.0.4(3)": {
+    "1": "Add compatibility with the inference API of v1.x, but the checkpoints are not compatible with v1.x, so you may find there is no match checkpoint in your old code.",
+    "2": "Fix resuming from checkpoint bug in ATEPC"
+  },
   "2.0.2(0,1)": {
     "1": "Refactor major package implementation; the package is now organized by NLP tasks, and the package is now more modular. The package structure is expected to be stable in the future.",
     "2": "Refactor inference model initialization methods, you need to load a inference using SentimentClassifier(), etc. All the inference APIs are named with predict and batch_predict now.",

@@ -36,6 +36,19 @@ from pyabsa.tasks import (
     RNARegression
 )
 
+# for compatibility of v1.x
+from pyabsa.framework.checkpoint_class.checkpoint_template import (APCCheckpointManager,
+                                                                   ATEPCCheckpointManager,
+                                                                   TCCheckpointManager,
+                                                                   TADCheckpointManager,
+                                                                   RNACCheckpointManager,
+                                                                   RNARCheckpointManager
+                                                                   )
+from pyabsa.tasks.AspectPolarityClassification import APCDatasetList
+
+ABSADatasetList = APCDatasetList
+# for compatibility of v1.x
+
 validate_pyabsa_version()
 
 check_emergency_notification()

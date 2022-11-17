@@ -5,10 +5,8 @@
 import json
 import os
 import pickle
-import random
 import time
 
-import numpy as np
 import torch
 import tqdm
 from findfile import find_file, find_cwd_dir
@@ -25,7 +23,7 @@ from pyabsa.tasks.TextAdversarialDefense.models import BERTTADModelList, GloVeTA
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import get_device, print_args
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
-from pyabsa.framework.tokenizer_class.tokenizer_class import build_embedding_matrix, PretrainedTokenizer, Tokenizer
+from pyabsa.framework.tokenizer_class.tokenizer_class import PretrainedTokenizer
 
 
 def init_attacker(tad_classifier, defense):
@@ -202,6 +200,34 @@ class TADTextClassifier(InferenceModel):
         for arg in vars(self.config):
             if getattr(self.config, arg) is not None:
                 print('>>> {0}: {1}'.format(arg, getattr(self.config, arg)))
+
+    def batch_infer(self,
+                    target_file=None,
+                    print_result=True,
+                    save_result=False,
+                    ignore_error=True,
+                    defense: str = None,
+                    **kwargs
+                    ):
+        return self.batch_predict(target_file=target_file,
+                                  print_result=print_result,
+                                  save_result=save_result,
+                                  ignore_error=ignore_error,
+                                  **kwargs)
+
+    def infer(self,
+              text: str = None,
+              print_result=True,
+              ignore_error=True,
+              defense: str = None,
+              **kwargs
+              ):
+
+        return self.predict(target_file=text,
+                            print_result=print_result,
+                            ignore_error=ignore_error,
+                            defense=defense,
+                            **kwargs)
 
     def batch_predict(self,
                       target_file=None,

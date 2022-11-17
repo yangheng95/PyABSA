@@ -132,6 +132,30 @@ class SentimentClassifier(InferenceModel):
 
         self.to(self.config.device)
 
+    def batch_infer(self,
+                    target_file=None,
+                    print_result=True,
+                    save_result=False,
+                    ignore_error=True,
+                    **kwargs):
+
+        return self.batch_predict(target_file=target_file,
+                                  print_result=print_result,
+                                  save_result=save_result,
+                                  ignore_error=ignore_error,
+                                  **kwargs)
+
+    def predict(self,
+                text: str = None,
+                print_result=True,
+                ignore_error=True,
+                **kwargs
+                ):
+        return self.predict(text=text,
+                            print_result=print_result,
+                            ignore_error=ignore_error,
+                            **kwargs)
+
     def batch_predict(self,
                       target_file=None,
                       print_result=True,
