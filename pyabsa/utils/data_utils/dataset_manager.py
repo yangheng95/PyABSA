@@ -112,7 +112,7 @@ def detect_dataset(dataset_name_or_path, task_code: TaskCodeOption = None, load_
                 dataset_file['valid'] += findfile.find_cwd_files([d, 'dev', task_code], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words + ['.ignore'])
                 dataset_file['valid'] += findfile.find_cwd_files([d, 'valid', task_code], exclude_key=['.inference', 'train.', 'test.'] + filter_key_words + ['.ignore'])
 
-    # # if we need train a checkpoint_class using as much data as possible, we can merge train, valid and test set as trainer sets
+    # # if we need train a checkpoint using as much data as possible, we can merge train, valid and test set as trainer sets
     # dataset_file['train'] = dataset_file['train'] + dataset_file['test'] + dataset_file['valid']
     # dataset_file['test'] = []
     # dataset_file['valid'] = []

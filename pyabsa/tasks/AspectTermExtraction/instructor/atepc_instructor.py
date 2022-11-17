@@ -44,7 +44,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
 
     def _load_dataset_and_prepare_dataloader(self):
 
-        self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert, do_lower_case_case='uncased' in self.config.pretrained_bert)
+        self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert, do_lower_case='uncased' in self.config.pretrained_bert)
 
         processor = ATEPCProcessor(self.tokenizer)
         cache_path = self.load_cache_dataset()
@@ -307,7 +307,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
         self.config.MV.summary(no_print=True)
         self.logger.info(self.config.MV.summary(no_print=True))
 
-        print('Training finished, we hope you can share your checkpoint_class with community, please see:',
+        print('Training finished, we hope you can share your checkpoint with community, please see:',
               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
 
         rolling_intv = 5

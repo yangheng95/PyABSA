@@ -78,19 +78,19 @@ class SentimentClassifier(InferenceModel):
                             try:
                                 if kwargs.get('offline', False):
                                     self.tokenizer = AutoTokenizer.from_pretrained(find_cwd_dir(self.config.pretrained_bert.split('/')[-1]),
-                                                                                   do_lower_case_case='uncased' in self.config.pretrained_bert)
+                                                                                   do_lower_case='uncased' in self.config.pretrained_bert)
                                 else:
-                                    self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert, do_lower_case_case='uncased' in self.config.pretrained_bert)
+                                    self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert, do_lower_case='uncased' in self.config.pretrained_bert)
                             except ValueError:
                                 self.tokenizer = pickle.load(f)
                         elif hasattr(GloVeAPCModelList, self.config.model.__name__):
                             self.embedding_matrix = self.config.embedding_matrix
                             self.tokenizer = self.config.tokenizer
-                            if model_path:
-                                self.model = torch.load(model_path, map_location='cpu')
-                            else:
-                                self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
-                                self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
+                            # if model_path:
+                            #     self.model = torch.load(model_path, map_location='cpu')
+                            # else:
+                            #     self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
+                            #     self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
 
                 if kwargs.get('verbose', False):
                     print('Config used in Training:')
@@ -98,8 +98,8 @@ class SentimentClassifier(InferenceModel):
 
             except Exception as e:
                 raise RuntimeError('Fail to load the model from {}! '
-                                   'Please make sure the version of checkpoint_class and PyABSA are compatible.'
-                                   ' Try to remove he checkpoint_class and download again'
+                                   'Please make sure the version of checkpoint and PyABSA are compatible.'
+                                   ' Try to remove he checkpoint and download again'
                                    ' \nException: {} '.format(e, checkpoint))
 
         if isinstance(self.config.model, list):
@@ -112,7 +112,7 @@ class SentimentClassifier(InferenceModel):
             elif hasattr(GloVeAPCModelList, self.config.model[0].__name__):
                 self.dataset = GloVeABSAInferenceDataset(self.config, self.tokenizer)
             else:
-                raise KeyError('The checkpoint_class you are loading is not from APC model.')
+                raise KeyError('The checkpoint you are loading is not from APC model.')
         else:
             if hasattr(APCModelList, self.config.model.__name__):
                 self.dataset = ABSAInferenceDataset(self.config, self.tokenizer)
@@ -123,7 +123,7 @@ class SentimentClassifier(InferenceModel):
             elif hasattr(GloVeAPCModelList, self.config.model.__name__):
                 self.dataset = GloVeABSAInferenceDataset(self.config, self.tokenizer)
             else:
-                raise KeyError('The checkpoint_class you are loading is not from APC model.')
+                raise KeyError('The checkpoint you are loading is not from APC model.')
 
         self.infer_dataloader = None
 

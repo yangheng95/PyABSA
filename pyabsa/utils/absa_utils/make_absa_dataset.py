@@ -30,7 +30,7 @@ def make_ABSA_dataset(dataset_name_or_path, checkpoint='english'):
     is much more time-consuming.
     :param dataset_name_or_path: The name of the dataset to be processed. If the name is a directory, all files in the directory will be processed. If it is a file, only the file will be processed.
     If it is a directory name, I use the findfile to find all files in the directory.
-    :param checkpoint: Which checkpoint_class to use. Basically, You can select from {'multilingual', 'english', 'chinese'}, Default is 'english'.
+    :param checkpoint: Which checkpoint to use. Basically, You can select from {'multilingual', 'english', 'chinese'}, Default is 'english'.
     :return:
     """
 

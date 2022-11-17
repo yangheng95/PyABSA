@@ -80,7 +80,7 @@ class AspectExtractor(InferenceModel):
                     if kwargs.get('offline', False):
                         self.tokenizer = AutoTokenizer.from_pretrained(find_cwd_dir(self.config.pretrained_bert.split('/')[-1]))
                     else:
-                        self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert, do_lower_case_case='uncased' in self.config.pretrained_bert)
+                        self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert, do_lower_case='uncased' in self.config.pretrained_bert)
                 except ValueError:
                     if tokenizer_path:
                         with open(tokenizer_path, mode='rb') as f:
@@ -93,7 +93,7 @@ class AspectExtractor(InferenceModel):
                 raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, self.checkpoint))
 
             if not hasattr(ATEPCModelList, self.model.__class__.__name__):
-                raise KeyError('The checkpoint_class you are loading is not from any ATEPC model.')
+                raise KeyError('The checkpoint you are loading is not from any ATEPC model.')
 
         self.processor = ATEPCProcessor(self.tokenizer)
         self.num_labels = len(self.config.label_list) + 1

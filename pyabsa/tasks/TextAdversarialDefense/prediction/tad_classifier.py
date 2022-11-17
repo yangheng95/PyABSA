@@ -152,7 +152,7 @@ class TADTextClassifier(InferenceModel):
 
             if not hasattr(GloVeTADModelList, self.config.model.__name__) \
                 and not hasattr(BERTTADModelList, self.config.model.__name__):
-                raise KeyError('The checkpoint_class you are loading is not from classifier model.')
+                raise KeyError('The checkpoint you are loading is not from classifier model.')
 
         if hasattr(BERTTADModelList, self.config.model.__name__):
             self.dataset = BERTTADInferenceDataset(config=self.config, tokenizer=self.tokenizer)
