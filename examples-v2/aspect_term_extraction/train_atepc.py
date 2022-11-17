@@ -15,20 +15,22 @@ from pyabsa import AspectTermExtraction as ATEPC
 config = ATEPC.ATEPCConfigManager.get_atepc_config_chinese()
 config.model = ATEPC.ATEPCModelList.FAST_LCF_ATEPC
 config.evaluate_begin = 0
-config.max_seq_len = 512
+config.max_seq_len = 80
 # config.pretrained_bert = 'yangheng/deberta-v3-base-absa'
 # config.pretrained_bert = 'microsoft/deberta-v3-base'
 config.log_step = -1
 config.l2reg = 1e-5
 config.num_epoch = 20
-config.seed = random.randint(1, 100)
+config.seed = 31
 config.use_bert_spc = True
 config.use_amp = False
-config.cache_dataset = False
+config.cache_dataset = True
+config.cross_validate_fold = -1
 
-chinese_sets = ATEPC.ATEPCDatasetList.Chinese
+chinese_sets = ATEPC.ATEPCDatasetList.Laptop14
 
 aspect_extractor = ATEPC.ATEPCTrainer(config=config,
+                                      from_checkpoint='english',
                                       dataset=chinese_sets,
                                       checkpoint_save_mode=1,
                                       auto_device=True

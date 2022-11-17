@@ -20,8 +20,6 @@ from pyabsa.utils.file_utils.file_utils import unzip_checkpoint
 
 
 class CheckpointManager:
-    def __init__(self):
-        self.task_code = None
 
     def parse_checkpoint(self,
                          checkpoint: Union[str, Path] = None,
@@ -36,7 +34,6 @@ class CheckpointManager:
         :return:
         """
         if isinstance(checkpoint, str) or isinstance(checkpoint, Path):
-            self.task_code = task_code
             if os.path.exists(checkpoint):
                 checkpoint_config = find_file(checkpoint, and_key=['.config'])
             else:
@@ -47,10 +44,10 @@ class CheckpointManager:
                 checkpoint = unzip_checkpoint(
                     checkpoint if os.path.exists(checkpoint) else find_file(os.getcwd(), checkpoint))
             else:
-                checkpoint = self._get_remote_checkpoint(checkpoint)
+                checkpoint = self._get_remote_checkpoint(checkpoint, task_code)
         return checkpoint
 
-    def _get_remote_checkpoint(self, checkpoint: str = 'multilingual'):
+    def _get_remote_checkpoint(self, checkpoint: str = 'multilingual', task_code: str = None) -> Path:
         """
         download the checkpoint and return the path of the downloaded checkpoint
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
@@ -58,7 +55,7 @@ class CheckpointManager:
         :return:
         """
 
-        available_checkpoint_by_task = available_checkpoints(self.task_code)
+        available_checkpoint_by_task = available_checkpoints(task_code)
         if checkpoint.lower() in [k.lower() for k in available_checkpoint_by_task.keys()]:
             print(colored('Downloading checkpoint:{} ...'.format(checkpoint), 'green'))
         else:
@@ -66,6 +63,6 @@ class CheckpointManager:
                 'Checkpoint:{} is not found, you can raise an issue for requesting shares of checkpoints'.format(
                     checkpoint), 'red'))
             sys.exit(-1)
-        return download_checkpoint(task=self.task_code,
+        return download_checkpoint(task=task_code,
                                    language=checkpoint.lower(),
                                    checkpoint=available_checkpoint_by_task[checkpoint.lower()])
