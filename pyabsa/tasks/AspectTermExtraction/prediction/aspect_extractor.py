@@ -187,25 +187,11 @@ class AspectExtractor(InferenceModel):
 
         return final_res
 
-    def infer(self, example: str, save_result=True, print_result=True, pred_sentiment=True, **kwargs):
-        """
-        Args:
-            example (str): input example
-            save_result (bool): whether to save the result to file
-            print_result (bool): whether to print the result to console
-            pred_sentiment (bool): whether to predict sentiment
-        """
-        return self.batch_predict([example],
-                                  save_result,
-                                  print_result,
-                                  pred_sentiment,
-                                  **kwargs)[0]
-
-    def batch_infer(self, inference_source: list,
-                    save_result=True,
-                    print_result=True,
-                    pred_sentiment=True,
-                    **kwargs):
+    def extract_aspect(self, inference_source: list,
+                       save_result=True,
+                       print_result=True,
+                       pred_sentiment=True,
+                       **kwargs):
         return self.batch_predict(inference_source,
                                   save_result,
                                   print_result,
