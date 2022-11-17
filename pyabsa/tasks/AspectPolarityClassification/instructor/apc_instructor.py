@@ -204,7 +204,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
 
         self.logger.info(self.config.MV.summary(no_print=True))
 
-        print('Training finished, we hope you can share your checkpoint_class with community, please see:',
+        print('Training finished, we hope you can share your checkpoint with community, please see:',
               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
 
         rolling_intv = 5
@@ -389,7 +389,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
 
         self.logger.info(self.config.MV.summary(no_print=True))
         self._reload_model_state_dict(save_path_k_fold)
-        print('Training finished, we hope you can share your checkpoint_class with everybody, please see:',
+        print('Training finished, we hope you can share your checkpoint with everybody, please see:',
               'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
 
         rolling_intv = 5

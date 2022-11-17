@@ -122,7 +122,7 @@ class RNAClassifier(InferenceModel):
 
             if not hasattr(GloVeRNACModelList, self.config.model.__name__) \
                 and not hasattr(BERTRNACModelList, self.config.model.__name__):
-                raise KeyError('The checkpoint_class you are loading is not from classifier model.')
+                raise KeyError('The checkpoint you are loading is not from classifier model.')
 
         if hasattr(BERTRNACModelList, self.config.model.__name__):
             self.dataset = BERTRNACInferenceDataset(config=self.config, tokenizer=self.tokenizer)

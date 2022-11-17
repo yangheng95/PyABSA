@@ -103,7 +103,7 @@ class TextClassifier(InferenceModel):
 
             if not hasattr(GloVeTCModelList, self.config.model.__name__) \
                 and not hasattr(BERTTCModelList, self.config.model.__name__):
-                raise KeyError('The checkpoint_class you are loading is not from classifier model.')
+                raise KeyError('The checkpoint and PyABSA you are loading is not from classifier model.')
 
         if hasattr(BERTTCModelList, self.config.model.__name__):
             self.dataset = BERTTCInferenceDataset(config=self.config, tokenizer=self.tokenizer)

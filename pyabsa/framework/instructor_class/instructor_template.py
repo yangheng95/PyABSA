@@ -232,7 +232,7 @@ class BaseTrainingInstructor:
                 config = pickle.load(open(config_path[0], 'rb'))
                 if model_path:
                     if config.model != self.config.model:
-                        logger.info('Warning, the checkpoint_class was not trained using {} from param_dict'.format(
+                        logger.info('Warning, the checkpoint was not trained using {} from param_dict'.format(
                             self.config.model.__name__))
                     self.model = torch.load(model_path[0])
                 if state_dict_path:
@@ -245,5 +245,5 @@ class BaseTrainingInstructor:
                 else:
                     logger.info('.model or .state_dict file is missing!')
             else:
-                logger.info('No checkpoint_class found in {}'.format(from_checkpoint_path))
+                logger.info('No checkpoint found in {}'.format(from_checkpoint_path))
             logger.info('Resume trainer from Checkpoint: {}!'.format(from_checkpoint_path))
