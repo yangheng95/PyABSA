@@ -20,7 +20,7 @@
 PyABSA is a free and open-source tool for everyone, but please do not forget to attach the (informal or formal) author
 information and project address in your works, products and publications, etc.
 
-# | [Overview](./README.MD) | [Paper](https://arxiv.org/abs/2208.01368) | [HuggingfaceHub](readme/huggingface_readme.md) | [ABDADatasets](readme/dataset_readme.md) | [ABSA Models](readme/model_readme.md) | [Colab Tutorials](readme/tutorial_readme.md) | [Troubleshooting(常见问题解决)](https://github.com/yangheng95/PyABSA/issues/189)
+# | [Overview](./README.MD) | [Paper](https://arxiv.org/abs/2208.01368) | [HuggingfaceHub](https://huggingface.co/yangheng) | [ABDADatasets](readme/dataset_readme.md) | [ABSA Models](readme/model_readme.md) | [Colab Tutorials](readme/tutorial_readme.md) | [Troubleshooting(常见问题解决)](https://github.com/yangheng95/PyABSA/issues/189)
 
 ## Try our demos on Huggingface Space
 

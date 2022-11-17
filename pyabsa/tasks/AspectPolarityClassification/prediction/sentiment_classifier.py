@@ -5,6 +5,7 @@
 import json
 import os
 import pickle
+import random
 
 import numpy as np
 import torch
@@ -73,7 +74,7 @@ class SentimentClassifier(InferenceModel):
                     elif model_path:
                         self.model = torch.load(model_path, map_location='cpu')
                     with open(tokenizer_path, mode='rb') as f:
-                        if hasattr(APCModelList, self.config.model.__name__):
+                        if hasattr(APCModelList, self.config.model.__name__) or hasattr(BERTBaselineAPCModelList, self.config.model.__name__):
                             try:
                                 if kwargs.get('offline', False):
                                     self.tokenizer = AutoTokenizer.from_pretrained(find_cwd_dir(self.config.pretrained_bert.split('/')[-1]),
@@ -82,18 +83,11 @@ class SentimentClassifier(InferenceModel):
                                     self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert, do_lower_case_case='uncased' in self.config.pretrained_bert)
                             except ValueError:
                                 self.tokenizer = pickle.load(f)
-                        elif hasattr(BERTBaselineAPCModelList, self.config.model.__name__):
-                            if tokenizer_path:
-                                self.tokenizer = pickle.load(f)
-                            else:
-                                raise ValueError('No .tokenizer file found in checkpoint_class path!')
-                        else:
-                            tokenizer = Tokenizer.build_tokenizer(
-                                config=self.config,
-                                cache_path='{0}_tokenizer.dat'.format(os.path.basename(self.config.dataset_name)),
-                            )
-
-                            self.tokenizer = tokenizer
+                        elif hasattr(GloVeAPCModelList, self.config.model.__name__):
+                            self.embedding_matrix = self.config.embedding_matrix
+                            self.tokenizer = self.config.tokenizer
+                            self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
+                            self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
 
                 if kwargs.get('verbose', False):
                     print('Config used in Training:')
@@ -159,7 +153,8 @@ class SentimentClassifier(InferenceModel):
         self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size, pin_memory=True, shuffle=False)
         return self._run_prediction(save_path=save_path if save_result else None, print_result=print_result)
 
-    def predict(self, text: str = None,
+    def predict(self,
+                text: str = None,
                 print_result=True,
                 ignore_error=True,
                 **kwargs

@@ -7,7 +7,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 
-__version__ = '2.0.3b0'
+__version__ = '2.0.3'
 
 __name__ = 'pyabsa'
 
@@ -35,13 +35,6 @@ from pyabsa.tasks import (
     RNAClassification,
     RNARegression
 )
-
-import pyabsa.tasks.AspectPolarityClassification as APC
-import pyabsa.tasks.AspectTermExtraction as ATEPC
-import pyabsa.tasks.TextClassification as TC
-import pyabsa.tasks.TextAdversarialDefense as TAD
-import pyabsa.tasks.RNAClassification as RNAC
-import pyabsa.tasks.RNARegression as RNAR
 
 validate_pyabsa_version()
 

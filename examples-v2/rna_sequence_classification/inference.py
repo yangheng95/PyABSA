@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: inference.py
+# file: ensemble_classification_inference.py
 # time: 23/10/2022 15:10
 # author: yangheng <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95

@@ -29,7 +29,7 @@ experiments/
 tests/
 *.result.json
 .idea/
-
+JIC/
 # Embedding
 glove.840B.300d.txt
 glove.42B.300d.txt

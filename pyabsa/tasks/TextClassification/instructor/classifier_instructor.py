@@ -201,7 +201,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                     else:
                         if self.config.save_mode and epoch >= self.config.evaluate_begin:
                             save_model(self.config, self.model, self.tokenizer, save_path + '_{}/'.format(loss.item()))
-                        postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.config.evaluate_begin)
+                        postfix = 'Epoch:{} | Loss: {} |No lstm.evaluation.txt until epoch:{}'.format(epoch, round(loss.item(), 8), self.config.evaluate_begin)
 
                     iterator.postfix = postfix
                     iterator.refresh()
@@ -365,7 +365,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                                                                             f1 * 100,
                                                                             max_fold_f1 * 100))
                         else:
-                            postfix = 'Epoch:{} | Loss:{} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.config.evaluate_begin)
+                            postfix = 'Epoch:{} | Loss:{} | No lstm.evaluation.txt until epoch:{}'.format(epoch, round(loss.item(), 8), self.config.evaluate_begin)
 
                     iterator.postfix = postfix
                     iterator.refresh()
@@ -425,7 +425,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             return self.model, self.config, self.tokenizer
 
     def _evaluate_acc_f1(self, test_dataloader):
-        # switch model to evaluation mode
+        # switch model to lstm.evaluation.txt mode
         self.model.eval()
         n_test_correct, n_test_total = 0, 0
         t_targets_all, t_outputs_all = None, None

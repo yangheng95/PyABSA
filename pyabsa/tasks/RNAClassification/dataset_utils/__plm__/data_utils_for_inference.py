@@ -48,47 +48,27 @@ class BERTRNACInferenceDataset(Dataset):
             it = samples
         for ex_id, text in enumerate(it):
             try:
-                if self.config.dataset_name.lower() in 'degrad':
-                    text, _, label = text.strip().partition('$LABEL$')
-                    rna = text.strip()
-                    label = label.strip() if label else LabelPaddingOption.LABEL_PADDING
+                text, _, label = text.strip().partition('$LABEL$')
+                # exon1, intron, exon2 = text.split(',')
+                # label = label.strip() if label else LabelPaddingOption.LABEL_PADDING
+                # exon1 = exon1.strip()
+                # intron = intron.strip()
+                # exon2 = exon2.strip()
+                # exon1_ids = self.tokenizer.text_to_sequence(exon1, padding='do_not_pad')
+                # intron_ids = self.tokenizer.text_to_sequence(intron, padding='do_not_pad')
+                # exon2_ids = self.tokenizer.text_to_sequence(exon2, padding='do_not_pad')
+                # rna_indices = [self.tokenizer.tokenizer.cls_token_id] + exon1_ids + intron_ids + exon2_ids + [self.tokenizer.tokenizer.sep_token_id]
+                # rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len, value=self.tokenizer.pad_token_id)
+                # intron_indices = self.tokenizer.text_to_sequence(intron)
+                rna_indices = self.tokenizer.text_to_sequence(text)
+                data = {
+                    'ex_id': ex_id,
+                    'text_raw': text,
+                    'text_indices': rna_indices,
+                    'label': label,
+                }
+                all_data.append(data)
 
-                    rna_indices = self.tokenizer.text_to_sequence(rna)
-                    rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len)
-
-                    data = {
-                        'ex_id': ex_id,
-                        'text_raw': rna,
-                        'text_indices': rna_indices,
-                        'label': label,
-                    }
-                    all_data.append(data)
-
-                elif self.config.dataset_name.lower() in 'sfe':
-                    text, _, label = text.strip().partition('$LABEL$')
-                    exon1, intron, exon2 = text.split(',')
-                    label = label.strip() if label else LabelPaddingOption.LABEL_PADDING
-                    exon1 = exon1.strip()
-                    intron = intron.strip()
-                    exon2 = exon2.strip()
-                    exon1_ids = self.tokenizer.text_to_sequence(exon1, padding='do_not_pad')
-                    intron_ids = self.tokenizer.text_to_sequence(intron, padding='do_not_pad')
-                    exon2_ids = self.tokenizer.text_to_sequence(exon2, padding='do_not_pad')
-                    rna_indices = [self.tokenizer.tokenizer.cls_token_id] + exon1_ids + intron_ids + exon2_ids + [self.tokenizer.tokenizer.sep_token_id]
-                    rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len, value=self.tokenizer.pad_token_id)
-
-                    intron_indices = self.tokenizer.text_to_sequence(intron)
-
-                    data = {
-                        'ex_id': ex_id,
-                        'text_raw': text,
-                        'text_indices': rna_indices,
-                        'intron_indices': intron_indices,
-                        'label': label,
-                    }
-                    all_data.append(data)
-
-                self.data = all_data
             except Exception as e:
                 if ignore_error:
                     print('Ignore error while processing:', text)

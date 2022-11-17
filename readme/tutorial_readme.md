@@ -18,11 +18,12 @@
 
 ## Demos of APC and ATEPC
 
-## Here are tutorials on Colab: [APC](https://colab.research.google.com/drive/1QViqvAE-oG4TYOmID4jchAsZyjSN9Wzu?usp=sharing) and [ATEPC](https://colab.research.google.com/drive/1oDgxmc9aYNjBbzIQcv_g7XZax8On8zma?usp=sharing)
+## Here are tutorials: [APC](https://github.com/yangheng95/PyABSA/blob/v2.0.0/examples-v2/aspect_polarity_classification/Aspect_Sentiment_Cassification.ipynb) 
+and [ATEPC](https://github.com/yangheng95/PyABSA/blob/v2.0.0/examples-v2/aspect_term_extraction/Aspect_Term_Extractor.ipynb)
 
 We also provide enough demos to help you use PyABSA, these demos can be found
-in [aspect-based sentiment classification](../demos_for_v1.0/aspect_polarity_classification),
-[aspect term extraction](../demos_for_v1.0/aspect_term_extraction) and [text classification](../demos_for_v1.0/text_classification).
+in [aspect-based sentiment classification](../examples-v2/aspect_polarity_classification),
+[aspect term extraction](../examples-v2/aspect_term_extraction) and [text classification](../examples-v2/text_classification).
 
 ## How to start
 
