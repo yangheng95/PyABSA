@@ -14,7 +14,7 @@ from distutils.version import StrictVersion
 import gdown
 import requests
 import tqdm
-from findfile import find_files, find_cwd_files
+from findfile import find_files, find_cwd_files, find_cwd_dir
 from packaging import version
 from termcolor import colored
 from pyabsa import __version__ as current_version, PyABSAMaterialHostAddress
@@ -98,7 +98,7 @@ def download_checkpoint(task: str, language: str, checkpoint: dict):
         return dest_path
 
     if find_cwd_files([checkpoint['Training Model'], checkpoint['Checkpoint File'].strip('.zip'), '.config']):
-        return
+        return find_cwd_dir([checkpoint['Training Model'], checkpoint['Checkpoint File'].strip('.zip')])
     save_path = os.path.join(dest_path, checkpoint['Checkpoint File'])
 
     try:  # from Huggingface Space

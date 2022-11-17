@@ -86,8 +86,11 @@ class SentimentClassifier(InferenceModel):
                         elif hasattr(GloVeAPCModelList, self.config.model.__name__):
                             self.embedding_matrix = self.config.embedding_matrix
                             self.tokenizer = self.config.tokenizer
-                            self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
-                            self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
+                            if model_path:
+                                self.model = torch.load(model_path, map_location='cpu')
+                            else:
+                                self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
+                                self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
 
                 if kwargs.get('verbose', False):
                     print('Config used in Training:')

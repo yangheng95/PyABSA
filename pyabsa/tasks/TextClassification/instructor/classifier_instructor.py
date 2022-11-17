@@ -6,12 +6,9 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 import os
-import pickle
 import random
-import re
 import shutil
 import time
-from hashlib import sha256
 
 import numpy
 import torch
@@ -44,6 +41,87 @@ class TCTrainingInstructor(BaseTrainingInstructor):
         self._load_dataset_and_prepare_dataloader()
 
         self._init_misc()
+
+
+    def _init_misc(self):
+        random.seed(self.config.seed)
+        numpy.random.seed(self.config.seed)
+        torch.manual_seed(self.config.seed)
+        torch.cuda.manual_seed(self.config.seed)
+
+        self.config.inputs_cols = self.model.inputs
+
+        self.config.device = torch.device(self.config.device)
+
+        # use DataParallel for trainer if device count larger than 1
+        if self.config.auto_device == DeviceTypeOption.ALL_CUDA:
+            self.model.to(self.config.device)
+            self.model = torch.nn.parallel.DataParallel(self.model).module
+        else:
+            self.model.to(self.config.device)
+
+        self.optimizer = init_optimizer(self.config.optimizer)(
+            self.model.parameters(),
+            lr=self.config.learning_rate,
+            weight_decay=self.config.l2reg
+        )
+
+        self.train_dataloaders = []
+        self.valid_dataloaders = []
+
+        if os.path.exists('./init_state_dict.bin'):
+            os.remove('./init_state_dict.bin')
+        if self.config.cross_validate_fold > 0:
+            torch.save(self.model.state_dict(), './init_state_dict.bin')
+
+        self.config.device = torch.device(self.config.device)
+        if self.config.device.type == 'cuda':
+            self.logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.config.device)))
+
+        print_args(self.config, self.logger)
+
+    def _cache_or_load_dataset(self):
+        pass
+
+    def _load_dataset_and_prepare_dataloader(self):
+
+        cache_path = self.load_cache_dataset()
+
+        # init BERT-based model and dataset
+        if hasattr(BERTTCModelList, self.config.model.__name__):
+            self.tokenizer = PretrainedTokenizer(self.config)
+            if cache_path is None or self.config.overwrite_cache:
+                self.train_set = BERTTCDataset(self.config, self.tokenizer, dataset_type='train')
+                self.test_set = BERTTCDataset(self.config, self.tokenizer, dataset_type='test')
+                self.valid_set = BERTTCDataset(self.config, self.tokenizer, dataset_type='valid')
+            try:
+                self.bert = AutoModel.from_pretrained(self.config.pretrained_bert)
+            except ValueError as e:
+                print('Init pretrained model failed, exception: {}'.format(e))
+
+            # init the model behind the construction of datasets in case of updating output_dim
+            self.model = self.config.model(self.bert, self.config).to(self.config.device)
+
+        elif hasattr(GloVeTCModelList, self.config.model.__name__):
+            # init GloVe-based model and dataset
+            self.tokenizer = Tokenizer.build_tokenizer(
+                config=self.config,
+                cache_path='{0}_tokenizer.dat'.format(os.path.basename(self.config.dataset_name))
+            )
+            self.embedding_matrix = build_embedding_matrix(
+                config=self.config,
+                tokenizer=self.tokenizer,
+                cache_path='{0}_{1}_embedding_matrix.dat'.format(str(self.config.embed_dim), os.path.basename(self.config.dataset_name)),
+            )
+            self.train_set = GloVeTCDataset(self.config, self.tokenizer, dataset_type='train')
+            self.test_set = GloVeTCDataset(self.config, self.tokenizer, dataset_type='test')
+            self.valid_set = GloVeTCDataset(self.config, self.tokenizer, dataset_type='valid')
+
+            self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
+            self.config.tokenizer = self.tokenizer
+            self.config.embedding_matrix = self.embedding_matrix
+
+        self.save_cache_dataset()
 
     def reload_model(self, ckpt='./init_state_dict.bin'):
         if os.path.exists(ckpt):
@@ -454,84 +532,6 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             print(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(), target_names=[self.config.index_to_label[x] for x in self.config.index_to_label]))
             print('\n---------------------------- Classification Report ----------------------------\n')
         return test_acc, f1
-
-    def _init_misc(self):
-        random.seed(self.config.seed)
-        numpy.random.seed(self.config.seed)
-        torch.manual_seed(self.config.seed)
-        torch.cuda.manual_seed(self.config.seed)
-
-        self.config.inputs_cols = self.model.inputs
-
-        self.config.device = torch.device(self.config.device)
-
-        # use DataParallel for trainer if device count larger than 1
-        if self.config.auto_device == DeviceTypeOption.ALL_CUDA:
-            self.model.to(self.config.device)
-            self.model = torch.nn.parallel.DataParallel(self.model).module
-        else:
-            self.model.to(self.config.device)
-
-        self.optimizer = init_optimizer(self.config.optimizer)(
-            self.model.parameters(),
-            lr=self.config.learning_rate,
-            weight_decay=self.config.l2reg
-        )
-
-        self.train_dataloaders = []
-        self.valid_dataloaders = []
-
-        if os.path.exists('./init_state_dict.bin'):
-            os.remove('./init_state_dict.bin')
-        if self.config.cross_validate_fold > 0:
-            torch.save(self.model.state_dict(), './init_state_dict.bin')
-
-        self.config.device = torch.device(self.config.device)
-        if self.config.device.type == 'cuda':
-            self.logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.config.device)))
-
-        print_args(self.config, self.logger)
-
-    def _cache_or_load_dataset(self):
-        pass
-
-    def _load_dataset_and_prepare_dataloader(self):
-
-        cache_path = self.load_cache_dataset()
-
-        # init BERT-based model and dataset
-        if hasattr(BERTTCModelList, self.config.model.__name__):
-            self.tokenizer = PretrainedTokenizer(self.config)
-            if cache_path is None or self.config.overwrite_cache:
-                self.train_set = BERTTCDataset(self.config, self.tokenizer, dataset_type='train')
-                self.test_set = BERTTCDataset(self.config, self.tokenizer, dataset_type='test')
-                self.valid_set = BERTTCDataset(self.config, self.tokenizer, dataset_type='valid')
-            try:
-                self.bert = AutoModel.from_pretrained(self.config.pretrained_bert)
-            except ValueError as e:
-                print('Init pretrained model failed, exception: {}'.format(e))
-
-            # init the model behind the construction of datasets in case of updating output_dim
-            self.model = self.config.model(self.bert, self.config).to(self.config.device)
-
-        elif hasattr(GloVeTCModelList, self.config.model.__name__):
-            # init GloVe-based model and dataset
-            self.tokenizer = Tokenizer.build_tokenizer(
-                config=self.config,
-                cache_path='{0}_tokenizer.dat'.format(os.path.basename(self.config.dataset_name))
-            )
-            self.embedding_matrix = build_embedding_matrix(
-                config=self.config,
-                tokenizer=self.tokenizer,
-                cache_path='{0}_{1}_embedding_matrix.dat'.format(str(self.config.embed_dim), os.path.basename(self.config.dataset_name)),
-            )
-            self.train_set = GloVeTCDataset(self.config, self.tokenizer, dataset_type='train')
-            self.test_set = GloVeTCDataset(self.config, self.tokenizer, dataset_type='test')
-            self.valid_set = GloVeTCDataset(self.config, self.tokenizer, dataset_type='valid')
-
-            self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
-
-        self.save_cache_dataset()
 
     def run(self):
         # Loss and Optimizer

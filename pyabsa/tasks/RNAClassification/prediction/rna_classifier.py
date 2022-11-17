@@ -12,19 +12,18 @@ import tqdm
 from findfile import find_file, find_cwd_dir
 from termcolor import colored
 from torch.utils.data import DataLoader
-from transformers import AutoModel, AutoTokenizer
-
+from transformers import AutoModel
 from sklearn import metrics
 
 from pyabsa import TaskCodeOption, LabelPaddingOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
 from pyabsa.tasks.RNAClassification.models import BERTRNACModelList, GloVeRNACModelList
-from pyabsa.tasks.RNAClassification.dataset_utils.__classic__.data_utils_for_inference import GloVeRNACInferenceDataset
-from pyabsa.tasks.RNAClassification.dataset_utils.__plm__.data_utils_for_inference import BERTRNACInferenceDataset
+from pyabsa.tasks.RNAClassification.dataset_utils.data_utils_for_inference import GloVeRNACInferenceDataset
+from pyabsa.tasks.RNAClassification.dataset_utils.data_utils_for_inference import BERTRNACInferenceDataset
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import get_device, print_args
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
-from pyabsa.framework.tokenizer_class.tokenizer_class import Tokenizer, build_embedding_matrix, PretrainedTokenizer
+from pyabsa.framework.tokenizer_class.tokenizer_class import PretrainedTokenizer
 
 
 class RNAClassifier(InferenceModel):
@@ -85,32 +84,12 @@ class RNAClassifier(InferenceModel):
                                 with open(tokenizer_path, mode='rb') as f:
                                     self.tokenizer = pickle.load(f)
                     else:
-                        # tokenizer = Tokenizer.build_tokenizer(
-                        #     config=self.config,
-                        #     cache_path='{0}_tokenizer.dat'.format(os.path.basename(self.config.dataset_name)),
-                        #     pre_tokenizer=AutoTokenizer.from_pretrained(self.config.pretrained_bert)
-                        # )
-                        # if model_path:
-                        #     self.model = torch.load(model_path, map_location='cpu')
-                        # else:
-                        #     embedding_matrix = build_embedding_matrix(
-                        #         config=self.config,
-                        #         tokenizer=tokenizer,
-                        #         cache_path='{0}_{1}_embedding_matrix.dat'.format(str(self.config.embed_dim),
-                        #                                                          os.path.basename(
-                        #                                                              self.config.dataset_name)),
-                        #     )
-                        #     self.model = self.config.model(embedding_matrix, self.config).to(self.config.device)
-                        #
-                        # self.tokenizer = tokenizer
-
-                        self.tokenizer = self.config.tokenizer
                         self.embedding_matrix = self.config.embedding_matrix
+                        self.tokenizer = self.config.tokenizer
                         if model_path:
                             self.model = torch.load(model_path, map_location='cpu')
                         else:
                             self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
-                            self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
                             self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
 
                 if kwargs.get('verbose', False):

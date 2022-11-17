@@ -5,8 +5,10 @@
 import json
 import os
 import pickle
+import random
 import time
 
+import numpy as np
 import torch
 import tqdm
 from findfile import find_file, find_cwd_dir
@@ -133,27 +135,8 @@ class TADTextClassifier(InferenceModel):
                                 with open(tokenizer_path, mode='rb') as f:
                                     self.tokenizer = pickle.load(f)
                     else:
-                        # tokenizer = Tokenizer.build_tokenizer(
-                        #     config=self.config,
-                        #     cache_path='{0}_tokenizer.dat'.format(os.path.basename(self.config.dataset_name)),
-                        # )
-                        # if model_path:
-                        #     self.model = torch.load(model_path, map_location='cpu')
-                        # else:
-                        #     embedding_matrix = build_embedding_matrix(
-                        #         config=self.config,
-                        #         tokenizer=tokenizer,
-                        #         cache_path='{0}_{1}_embedding_matrix.dat'.format(str(self.config.embed_dim),
-                        #                                                          os.path.basename(
-                        #                                                              self.config.dataset_name)),
-                        #     )
-                        #     self.model = self.config.model(embedding_matrix, self.config).to(self.config.device)
-                        #     self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
-                        #
-                        # self.tokenizer = tokenizer
-
-                        self.tokenizer = self.config.tokenizer
                         self.embedding_matrix = self.config.embedding_matrix
+                        self.tokenizer = self.config.tokenizer
                         if model_path:
                             self.model = torch.load(model_path, map_location='cpu')
                         else:
@@ -170,6 +153,11 @@ class TADTextClassifier(InferenceModel):
             if not hasattr(GloVeTADModelList, self.config.model.__name__) \
                 and not hasattr(BERTTADModelList, self.config.model.__name__):
                 raise KeyError('The checkpoint_class you are loading is not from classifier model.')
+
+        if hasattr(BERTTADModelList, self.config.model.__name__):
+            self.dataset = BERTTADInferenceDataset(config=self.config, tokenizer=self.tokenizer)
+        else:
+            self.dataset = GloVeTADInferenceDataset(config=self.config, tokenizer=self.tokenizer)
 
         self.infer_dataloader = None
 
@@ -232,14 +220,8 @@ class TADTextClassifier(InferenceModel):
         if not target_file:
             raise FileNotFoundError('Can not find inference datasets!')
 
-        if hasattr(BERTTADModelList, self.config.model.__name__):
-            dataset = BERTTADInferenceDataset(config=self.config, tokenizer=self.tokenizer)
-
-        else:
-            dataset = GloVeTADInferenceDataset(config=self.config, tokenizer=self.tokenizer)
-
-        dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
-        self.infer_dataloader = DataLoader(dataset=dataset, batch_size=self.config.eval_batch_size, pin_memory=True,
+        self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
+        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size, pin_memory=True,
                                            shuffle=False)
         return self._run_prediction(save_path=save_path if save_result else None, print_result=print_result, defense=defense)
 
@@ -253,17 +235,11 @@ class TADTextClassifier(InferenceModel):
 
         self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
 
-        if hasattr(BERTTADModelList, self.config.model.__name__):
-            dataset = BERTTADInferenceDataset(config=self.config, tokenizer=self.tokenizer)
-
-        else:
-            dataset = GloVeTADInferenceDataset(config=self.config, tokenizer=self.tokenizer)
-
         if text:
-            dataset.prepare_infer_sample(text, ignore_error=ignore_error)
+            self.dataset.prepare_infer_sample(text, ignore_error=ignore_error)
         else:
             raise RuntimeError('Please specify your datasets path!')
-        self.infer_dataloader = DataLoader(dataset=dataset, batch_size=self.config.eval_batch_size, shuffle=False)
+        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size, shuffle=False)
         return self._run_prediction(print_result=print_result, defense=defense)[0]
 
     def _run_prediction(self, save_path=None, print_result=True, defense=None):

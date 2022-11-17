@@ -8,11 +8,8 @@
 # Copyright (C) 2022. All Rights Reserved.
 
 import os
-import pickle
-import re
 import shutil
 import time
-from hashlib import sha256
 
 import numpy
 import torch
@@ -26,8 +23,8 @@ from pyabsa import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from pyabsa.utils.file_utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import init_optimizer, print_args
-from pyabsa.tasks.RNAClassification.dataset_utils.__classic__.data_utils_for_training import GloVeRNACDataset
-from pyabsa.tasks.RNAClassification.dataset_utils.__plm__.data_utils_for_training import BERTRNACDataset
+from pyabsa.tasks.RNAClassification.dataset_utils.data_utils_for_training import GloVeRNACDataset
+from pyabsa.tasks.RNAClassification.dataset_utils.data_utils_for_training import BERTRNACDataset
 from pyabsa.tasks.RNAClassification.models import GloVeRNACModelList, BERTRNACModelList
 
 from pyabsa.framework.tokenizer_class.tokenizer_class import Tokenizer, build_embedding_matrix, PretrainedTokenizer
@@ -475,6 +472,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             self.valid_set = GloVeRNACDataset(self.config, self.tokenizer, dataset_type='valid')
 
             self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
+            self.config.tokenizer = self.tokenizer
+            self.config.embedding_matrix = self.embedding_matrix
 
         self.save_cache_dataset()
 
