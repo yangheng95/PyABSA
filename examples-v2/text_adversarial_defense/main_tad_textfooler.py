@@ -23,7 +23,7 @@ from textattack.models.wrappers import HuggingFaceModelWrapper
 import os
 
 import autocuda
-from anonymous_demo import TADCheckpointManager
+from pyabsa import TADCheckpointManager
 
 os.environ['PYTHONIOENCODING'] = 'UTF8'
 
@@ -208,9 +208,9 @@ if __name__ == '__main__':
     for dataset in datasets:
         tad_classifier = TADCheckpointManager.get_tad_text_classifier(
             # f'TAD-{dataset}{attack_name}',
-            # f'TAD-{dataset}',
+            f'TAD-{dataset}',
             # f'tadbert_{dataset}{attack_name}',
-            f'tadbert_{dataset}',
+            # f'tadbert_{dataset}',
             # auto_device=autocuda.auto_cuda()
             auto_device='cuda:0'
         )
