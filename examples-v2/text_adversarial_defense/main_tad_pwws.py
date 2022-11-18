@@ -22,7 +22,7 @@ from textattack.models.wrappers import HuggingFaceModelWrapper
 
 import os
 
-from anonymous_demo import TADCheckpointManager
+from pyabsa import TADCheckpointManager
 import tensorflow as tf
 gpus = tf.config.experimental.list_physical_devices('GPU')
 # 将对应GPU设置为内存自增长

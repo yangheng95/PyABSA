@@ -15,7 +15,7 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 dataset = 'SST2TextFooler'
 inference_sets = DatasetItem(dataset, findfile.find_cwd_files([dataset, '.org', '.inference']))
 
-text_classifier = TAD.TADTextClassifier('tadbert_SST2TextFooler_cls_acc_94.18_cls_f1_94.16_adv_det_acc_90.69_adv_det_f1_90.65_adv_training_acc_92.67_adv_training_f1_92.67',
+text_classifier = TAD.TADTextClassifier('tadbert_SST2',
                                         auto_device=True,  # Use CUDA if available
                                         )
 
