@@ -240,7 +240,7 @@ class BaseTrainingInstructor:
                     if torch.cuda.device_count() > 1 and self.config.device == DeviceTypeOption.ALL_CUDA:
                         self.model.module.load_state_dict(torch.load(state_dict_path[0]))
                     else:
-                        self.model.load_state_dict(torch.load(state_dict_path[0]))
+                        self.model.load_state_dict(torch.load(state_dict_path[0], map_location=self.config.device))
                     self.model.config = self.config
                     self.model.to(self.config.device)
                 else:
