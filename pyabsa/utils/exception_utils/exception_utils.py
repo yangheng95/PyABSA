@@ -24,7 +24,6 @@ def time_out(max_timeout):
                 async_result = pool.apply_async(item, args=args, kwds=kwargs)
                 return async_result.get(max_timeout)
             except Exception as e:
-                print('Function call timed out')
                 return None
 
         return func_wrapper

@@ -8,3 +8,6 @@
 from pyabsa.utils.data_utils.dataset_item import DatasetItem
 from pyabsa.utils.absa_utils.make_absa_dataset import make_ABSA_dataset
 from pyabsa.utils.absa_utils.absa_utils import generate_inference_set_for_apc, convert_apc_set_to_atepc_set
+
+from pyabsa.utils.text_utils.word2vec import train_word2vec
+from pyabsa.utils.text_utils.bpe_tokenizer import train_bpe_tokenizer
