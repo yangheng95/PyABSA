@@ -278,7 +278,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                     else:
                         if self.config.save_mode and epoch >= self.config.evaluate_begin:
                             save_model(self.config, self.model, self.tokenizer, save_path + '_{}/'.format(loss.item()))
-                        postfix = 'Epoch:{} | Loss: {} |No lstm.evaluation.txt until epoch:{}'.format(epoch, round(loss.item(), 8), self.config.evaluate_begin)
+                        postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.config.evaluate_begin)
 
                     iterator.postfix = postfix
                     iterator.refresh()

@@ -19,10 +19,13 @@ def time_out(max_timeout):
         @functools.wraps(item)
         def func_wrapper(*args, **kwargs):
             """Closure for function."""
-            pool = multiprocessing.pool.ThreadPool(processes=1)
-            async_result = pool.apply_async(item, args, kwargs)
-
-            return async_result.get(max_timeout)
+            try:
+                pool = multiprocessing.Pool(processes=1)
+                async_result = pool.apply_async(item, args=args, kwds=kwargs)
+                return async_result.get(max_timeout)
+            except Exception as e:
+                print('Function call timed out')
+                return None
 
         return func_wrapper
 
