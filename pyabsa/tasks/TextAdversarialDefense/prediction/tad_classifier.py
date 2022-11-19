@@ -223,7 +223,7 @@ class TADTextClassifier(InferenceModel):
               **kwargs
               ):
 
-        return self.predict(target_file=text,
+        return self.predict(text=text,
                             print_result=print_result,
                             ignore_error=ignore_error,
                             defense=defense,
