@@ -7,10 +7,6 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 
-__version__ = '2.0.6'
-
-__name__ = 'pyabsa'
-
 from pyabsa.framework.flag_class import *
 
 from pyabsa.utils.check_utils.package_version_check import validate_pyabsa_version, query_release_notes, check_pyabsa_update

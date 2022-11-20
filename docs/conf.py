@@ -22,7 +22,8 @@ copyright = '2022, Heng Yang'
 author = 'Heng Yang'
 
 # The full version, including alpha/beta/rc tags
-release = '1.16.16'
+__version__ = '2.0.7'
+__name__ = 'pyabsa'
 
 # -- General configuration ---------------------------------------------------
 

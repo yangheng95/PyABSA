@@ -1,0 +1,20 @@
+pyabsa>=2.0.7
+findfile>=1.7.8
+autocuda>=0.12
+metric-visualizer>=0.6.5
+boostaug>=2.2.5
+spacy
+networkx
+seqeval
+update-checker
+typing_extensions
+tqdm
+pytorch_warmup
+termcolor
+gitpython  # need git installed in your OS
+gdown>=4.4.0
+transformers>4.20.0
+torch>1.0.0
+sentencepiece
+protobuf<4.0.0
+pandas

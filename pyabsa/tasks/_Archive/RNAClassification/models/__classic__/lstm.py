@@ -44,11 +44,11 @@ class LSTM(nn.Module):
     def forward(self, inputs):
         text_raw_indices = inputs[0]
         rna_type = inputs[1]
-        rna_type_ids = self.type_embed(rna_type)
+        # rna_type_ids = self.type_embed(rna_type)
         x = self.embed(text_raw_indices)
-        dot_product = torch.mul(x, rna_type_ids.unsqueeze(1))
-        cat_product = torch.cat([dot_product, x], dim=-1)
-        x = self.linear(cat_product)
+        # dot_product = torch.mul(x, rna_type_ids)
+        # cat_product = torch.cat([dot_product, x], dim=-1)
+        # x = self.linear(cat_product)
         x_len = torch.sum(text_raw_indices != 0, dim=-1)
         _, (h_n, _) = self.lstm(x, x_len)
         out = self.dense(h_n[0])
