@@ -11,7 +11,7 @@ import pickle
 import json
 from collections import OrderedDict
 from pathlib import Path
-from typing import Union
+from typing import Union, List
 
 import numpy as np
 import torch
@@ -189,7 +189,7 @@ class AspectExtractor(InferenceModel):
         return final_res
 
     def extract_aspect(self,
-                       inference_source: Union[list[Path], list[str], str],
+                       inference_source: Union[List[Path], list, str],
                        save_result=True,
                        print_result=True,
                        pred_sentiment=True,
@@ -202,7 +202,7 @@ class AspectExtractor(InferenceModel):
                                   **kwargs)
 
     def predict(self,
-                text: Union[str, list[str]],
+                text: Union[str, List[str]],
                 save_result=True,
                 print_result=True,
                 pred_sentiment=True,
@@ -220,7 +220,7 @@ class AspectExtractor(InferenceModel):
             return self.batch_predict(text, save_result, print_result, pred_sentiment, **kwargs)
 
     def batch_predict(self,
-                      target_file: Union[list[Path], list[str], str],
+                      target_file: Union[List[Path], list, str],
                       save_result=True,
                       print_result=True,
                       pred_sentiment=True,

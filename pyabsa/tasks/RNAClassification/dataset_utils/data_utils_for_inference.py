@@ -6,7 +6,7 @@
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
-from typing import Union
+from typing import Union, List
 
 import torch
 import tqdm
@@ -29,7 +29,7 @@ class RNACInferenceDataset(Dataset):
     def parse_sample(self, text):
         return [text]
 
-    def prepare_infer_sample(self, text: Union[str, list[str]], ignore_error):
+    def prepare_infer_sample(self, text: Union[str, List[str]], ignore_error):
         if isinstance(text, str):
             self.process_data(self.parse_sample(text), ignore_error=ignore_error)
         elif isinstance(text, list):

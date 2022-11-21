@@ -183,7 +183,7 @@ class RNAClassifier(InferenceModel):
         return self._run_prediction(save_path=save_path if save_result else None, print_result=print_result)
 
     def predict(self,
-                text: Union[str, list[str]] = None,
+                text: Union[str, list] = None,
                 print_result=True,
                 ignore_error=True,
                 **kwargs
