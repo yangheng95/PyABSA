@@ -218,7 +218,7 @@ class TADTextClassifier(InferenceModel):
                                   **kwargs)
 
     def infer(self,
-              text: Union[str, list[str]] = None,
+              text: Union[str, list] = None,
               print_result=True,
               ignore_error=True,
               defense: str = None,
@@ -261,7 +261,7 @@ class TADTextClassifier(InferenceModel):
         return self._run_prediction(save_path=save_path if save_result else None, print_result=print_result, defense=defense)
 
     def predict(self,
-                text: Union[str, list[str]] = None,
+                text: Union[str, list] = None,
                 print_result=True,
                 ignore_error=True,
                 defense: str = None,
