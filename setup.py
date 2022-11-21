@@ -7,7 +7,7 @@
 
 from setuptools import setup, find_packages
 
-from docs import __name__, __version__
+from pyabsa import __name__, __version__
 from pathlib import Path
 
 cwd = Path(__file__).parent
@@ -30,9 +30,9 @@ setup(
     exclude_package_date={'': ['.gitignore']},
     # Choose your license
     license='MIT',
-    install_requires=['findfile>=1.7.9.8',
-                      'autocuda>=0.11',
-                      'metric-visualizer>=0.6.3',
+    install_requires=['findfile>=1.7.10',
+                      'autocuda>=0.12',
+                      'metric-visualizer>=0.6.5',
                       'boostaug>=2.2.5',
                       'spacy',
                       'networkx',

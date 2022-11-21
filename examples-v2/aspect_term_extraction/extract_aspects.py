@@ -13,7 +13,7 @@ aspect_extractor = ATEPC.AspectExtractor('multilingual', auto_device=DeviceTypeO
 # aspect_extractor = ATEPC.AspectExtractor('english', auto_device=DeviceTypeOption.AUTO)
 # aspect_extractor = ATEPC.AspectExtractor('chinese', auto_device=DeviceTypeOption.AUTO)
 
-inference_source = ATEPC.ATEPCDatasetList.Chinese
+inference_source = ATEPC.ATEPCDatasetList.Restaurant14
 atepc_result = aspect_extractor.batch_predict(inference_source,  #
                                               save_result=False,
                                               print_result=True,  # print the result
