@@ -53,11 +53,25 @@ class InferenceModel:
             self.MLM.to(device)
 
     def batch_predict(self, **kwargs):
-
+        """
+        Predict from a file of sentences.
+        param: target_file: the file path of the sentences to be predicted.
+        param: print_result: whether to print the result.
+        param: save_result: whether to save the result.
+        param: ignore_error: whether to ignore the error when predicting.
+        param: kwargs: other parameters.
+        """
         raise NotImplementedError('Please implement batch_infer() in your subclass!')
 
     def predict(self, **kwargs):
 
+        """
+        Predict from a sentence or a list of sentences.
+        param: text: the sentence or a list of sentence to be predicted.
+        param: print_result: whether to print the result.
+        param: ignore_error: whether to ignore the error when predicting.
+        param: kwargs: other parameters.
+        """
         raise NotImplementedError('Please implement infer() in your subclass!')
 
     def _run_prediction(self, **kwargs):

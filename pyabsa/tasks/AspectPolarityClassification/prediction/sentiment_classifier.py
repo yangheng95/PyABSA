@@ -6,6 +6,7 @@ import json
 import os
 import pickle
 import random
+from typing import Union
 
 import numpy as np
 import torch
@@ -138,19 +139,24 @@ class SentimentClassifier(InferenceModel):
                     save_result=False,
                     ignore_error=True,
                     **kwargs):
-
+        """
+        Old version of batch_predict, will be deprecated in the future
+        """
         return self.batch_predict(target_file=target_file,
                                   print_result=print_result,
                                   save_result=save_result,
                                   ignore_error=ignore_error,
                                   **kwargs)
 
-    def predict(self,
-                text: str = None,
-                print_result=True,
-                ignore_error=True,
-                **kwargs
-                ):
+    def infer(self,
+              text: str = None,
+              print_result=True,
+              ignore_error=True,
+              **kwargs
+              ):
+        """
+        Old version of predict, will be deprecated in the future
+        """
         return self.predict(text=text,
                             print_result=print_result,
                             ignore_error=ignore_error,
@@ -162,7 +168,14 @@ class SentimentClassifier(InferenceModel):
                       save_result=False,
                       ignore_error=True,
                       **kwargs):
-
+        """
+        Predict the sentiment from a file of sentences.
+        param: target_file: the file path of the sentences to be predicted.
+        param: print_result: whether to print the result.
+        param: save_result: whether to save the result.
+        param: ignore_error: whether to ignore the error when predicting.
+        param: kwargs: other parameters.
+        """
         self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
 
         save_path = os.path.join(os.getcwd(), 'apc_inference.result.json')
@@ -176,20 +189,28 @@ class SentimentClassifier(InferenceModel):
         return self._run_prediction(save_path=save_path if save_result else None, print_result=print_result)
 
     def predict(self,
-                text: str = None,
+                text: Union[str, list[str]] = None,
                 print_result=True,
                 ignore_error=True,
                 **kwargs
                 ):
-
+        """
+        Predict the sentiment from a sentence or a list of sentences.
+        param: text: the sentence to be predicted.
+        param: print_result: whether to print the result.
+        param: ignore_error: whether to ignore the error when predicting.
+        param: kwargs: other parameters.
+        """
         self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
-
+        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size, shuffle=False)
         if text:
             self.dataset.prepare_infer_sample(text, ignore_error=ignore_error)
         else:
             raise RuntimeError('Please specify your datasets path!')
-        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size, shuffle=False)
-        return self._run_prediction(print_result=print_result)[0]
+        if isinstance(text, str):
+            return self._run_prediction(print_result=print_result)[0]
+        else:
+            return self._run_prediction(print_result=print_result)
 
     def merge_results(self, results):
         """ merge APC results have the same input text
@@ -338,11 +359,17 @@ class SentimentClassifier(InferenceModel):
             print('Labeled samples:{}'.format(n_labeled))
             print('Prediction Accuracy:{}%'.format(100 * n_correct / n_labeled if n_labeled else 'N.A.'))
 
-            print('\n---------------------------- Classification Report ----------------------------\n')
-            print(metrics.classification_report(t_targets_all, np.argmax(t_outputs_all, -1), digits=4,
-                                                target_names=[self.config.index_to_label[x] for x in
-                                                              self.config.index_to_label]))
-            print('\n---------------------------- Classification Report ----------------------------\n')
+            try:
+                print('\n---------------------------- Classification Report ----------------------------\n')
+                print(metrics.classification_report(t_targets_all, np.argmax(t_outputs_all, -1), digits=4,
+                                                    target_names=[self.config.index_to_label[x] for x in
+                                                                  self.config.index_to_label]))
+                print('\n---------------------------- Classification Report ----------------------------\n')
+                print('\n---------------------------- Confusion Matrix ----------------------------\n')
+                print(metrics.confusion_matrix(t_targets_all, np.argmax(t_outputs_all, -1)))
+                print('\n---------------------------- Confusion Matrix ----------------------------\n')
+            except Exception as e:
+                print('Can not print classification report: {}'.format(e))
 
         return results
 

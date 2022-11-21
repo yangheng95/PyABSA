@@ -70,7 +70,7 @@ def make_ABSA_dataset(dataset_name_or_path, checkpoint='english'):
                         f_apc_out.write('{}\n'.format(aspect))
                         f_apc_out.write('{}\n'.format(sentiment))
 
-    print('Datasets built for {}!'.format(' '.join(fs)))
+    print('APC and ATEPC Datasets built for {}!'.format(' '.join(fs)))
     print(colored(
         'You may need add ID for your dataset, and move the generated datasets to integrated_dataset/apc_datasets and integrated_dataset/atepc_datasets, respectively',
         'red'))

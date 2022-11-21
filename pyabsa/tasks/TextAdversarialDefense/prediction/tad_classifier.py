@@ -6,6 +6,7 @@ import json
 import os
 import pickle
 import time
+from typing import Union
 
 import torch
 import tqdm
@@ -212,11 +213,12 @@ class TADTextClassifier(InferenceModel):
         return self.batch_predict(target_file=target_file,
                                   print_result=print_result,
                                   save_result=save_result,
+                                  defense=defense,
                                   ignore_error=ignore_error,
                                   **kwargs)
 
     def infer(self,
-              text: str = None,
+              text: Union[str, list[str]] = None,
               print_result=True,
               ignore_error=True,
               defense: str = None,
@@ -237,7 +239,14 @@ class TADTextClassifier(InferenceModel):
                       defense: str = None,
                       **kwargs
                       ):
-
+        """
+        Predict from a file of sentences.
+        param: target_file: the file path of the sentences to be predicted.
+        param: print_result: whether to print the result.
+        param: save_result: whether to save the result.
+        param: ignore_error: whether to ignore the error when predicting.
+        param: kwargs: other parameters.
+        """
         self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
 
         save_path = os.path.join(os.getcwd(), 'tad_text_classification.result.json')
@@ -252,21 +261,30 @@ class TADTextClassifier(InferenceModel):
         return self._run_prediction(save_path=save_path if save_result else None, print_result=print_result, defense=defense)
 
     def predict(self,
-                text: str = None,
+                text: Union[str, list[str]] = None,
                 print_result=True,
                 ignore_error=True,
                 defense: str = None,
                 **kwargs
                 ):
 
+        """
+        Predict from a sentence or a list of sentences.
+        param: text: the sentence or a list of sentence to be predicted.
+        param: print_result: whether to print the result.
+        param: ignore_error: whether to ignore the error when predicting.
+        param: kwargs: other parameters.
+        """
         self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
-
+        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size, shuffle=False)
         if text:
             self.dataset.prepare_infer_sample(text, ignore_error=ignore_error)
         else:
             raise RuntimeError('Please specify your datasets path!')
-        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size, shuffle=False)
-        return self._run_prediction(print_result=print_result, defense=defense)[0]
+        if isinstance(text, str):
+            return self._run_prediction(print_result=print_result)[0]
+        else:
+            return self._run_prediction(print_result=print_result)
 
     def _run_prediction(self, save_path=None, print_result=True, defense=None):
 
