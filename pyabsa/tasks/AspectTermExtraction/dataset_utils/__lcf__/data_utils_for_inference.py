@@ -105,7 +105,7 @@ class ATEPCProcessor:
                         aspect.append(s)
             else:
                 for j, (t, s, p) in enumerate(zip(tag, sentence, polarity)):
-                    if int(-LabelPaddingOption.SENTIMENT_PADDING) == int(p):
+                    if -int(LabelPaddingOption.SENTIMENT_PADDING) == int(p):
                         aspect.append(s)
             examples.append(InputExample(guid=str(i), text_a=sentence, text_b=aspect, IOB_label=tag,
                                          aspect_label=[], polarity=polarity))
