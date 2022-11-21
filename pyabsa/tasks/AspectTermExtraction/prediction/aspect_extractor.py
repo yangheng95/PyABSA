@@ -10,6 +10,8 @@ import pickle
 
 import json
 from collections import OrderedDict
+from pathlib import Path
+from typing import Union
 
 import numpy as np
 import torch
@@ -186,35 +188,46 @@ class AspectExtractor(InferenceModel):
 
         return final_res
 
-    def extract_aspect(self, inference_source: list,
+    def extract_aspect(self,
+                       inference_source: Union[list[Path], list[str], str],
                        save_result=True,
                        print_result=True,
                        pred_sentiment=True,
                        **kwargs):
+
         return self.batch_predict(inference_source,
                                   save_result,
                                   print_result,
                                   pred_sentiment,
                                   **kwargs)
 
-    def predict(self, example: str, save_result=True, print_result=True, pred_sentiment=True, **kwargs):
+    def predict(self,
+                text: Union[str, list[str]],
+                save_result=True,
+                print_result=True,
+                pred_sentiment=True,
+                **kwargs):
         """
         Args:
-            example (str): input example
+            text (str): input example
             save_result (bool): whether to save the result to file
             print_result (bool): whether to print the result to console
             pred_sentiment (bool): whether to predict sentiment
         """
-        return self.batch_predict([example], save_result, print_result, pred_sentiment, **kwargs)[0]
+        if isinstance(text, str):
+            return self.batch_predict([text], save_result, print_result, pred_sentiment, **kwargs)[0]
+        elif isinstance(text, list):
+            return self.batch_predict(text, save_result, print_result, pred_sentiment, **kwargs)
 
-    def batch_predict(self, inference_source: list,
+    def batch_predict(self,
+                      target_file: Union[list[Path], list[str], str],
                       save_result=True,
                       print_result=True,
                       pred_sentiment=True,
                       **kwargs):
         """
         Args:
-            inference_source (list): list of input examples or a list of files to be predicted
+            target_file (list): list of input examples or a list of files to be predicted
             save_result (bool, optional): save result to file. Defaults to True.
             print_result (bool, optional): print result to console. Defaults to True.
             pred_sentiment (bool, optional): predict sentiment. Defaults to True.
@@ -224,19 +237,19 @@ class AspectExtractor(InferenceModel):
         self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
 
         results = {'extraction_res': OrderedDict(), 'polarity_res': OrderedDict()}
-        if isinstance(inference_source, DatasetItem) or isinstance(inference_source, str):
+        if isinstance(target_file, DatasetItem) or isinstance(target_file, str):
             # using integrated inference dataset
-            inference_set = detect_infer_dataset(inference_source, task_code=TaskCodeOption.Aspect_Polarity_Classification)
-            inference_source = load_atepc_inference_datasets(inference_set)
+            inference_set = detect_infer_dataset(target_file, task_code=TaskCodeOption.Aspect_Polarity_Classification)
+            target_file = load_atepc_inference_datasets(inference_set)
 
-        elif isinstance(inference_source, list):
+        elif isinstance(target_file, list):
             pass
 
         else:
             raise ValueError('Please run inference using examples list or inference dataset path (list)!')
 
-        if inference_source:
-            extraction_res, sentence_res = self._extract(inference_source)
+        if target_file:
+            extraction_res, sentence_res = self._extract(target_file)
             results['extraction_res'] = extraction_res
             if pred_sentiment:
                 results['polarity_res'] = self._run_prediction(results['extraction_res'])

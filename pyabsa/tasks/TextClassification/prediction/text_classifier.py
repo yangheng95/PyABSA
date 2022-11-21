@@ -6,6 +6,7 @@ import json
 import os
 import pickle
 import random
+from typing import Union
 
 import numpy as np
 import torch
@@ -169,7 +170,8 @@ class TextClassifier(InferenceModel):
                                   ignore_error=ignore_error,
                                   **kwargs)
 
-    def infer(self, text: str = None,
+    def infer(self,
+              text: Union[str, list[str]] = None,
               print_result=True,
               ignore_error=True,
               **kwargs):
@@ -185,7 +187,14 @@ class TextClassifier(InferenceModel):
                       ignore_error=True,
                       **kwargs
                       ):
-
+        """
+        Predict from a file of sentences.
+        param: target_file: the file path of the sentences to be predicted.
+        param: print_result: whether to print the result.
+        param: save_result: whether to save the result.
+        param: ignore_error: whether to ignore the error when predicting.
+        param: kwargs: other parameters.
+        """
         self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
 
         save_path = os.path.join(os.getcwd(), 'text_classification.result.json')
@@ -199,19 +208,29 @@ class TextClassifier(InferenceModel):
                                            shuffle=False)
         return self._run_prediction(save_path=save_path if save_result else None, print_result=print_result)
 
-    def predict(self, text: str = None,
+    def predict(self,
+                text: Union[str, list[str]] = None,
                 print_result=True,
                 ignore_error=True,
                 **kwargs):
 
+        """
+        Predict from a sentence or a list of sentences.
+        param: text: the sentence or a list of sentence to be predicted.
+        param: print_result: whether to print the result.
+        param: ignore_error: whether to ignore the error when predicting.
+        param: kwargs: other parameters.
+        """
         self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
-
+        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size, shuffle=False)
         if text:
             self.dataset.prepare_infer_sample(text, ignore_error=ignore_error)
         else:
             raise RuntimeError('Please specify your datasets path!')
-        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size, shuffle=False)
-        return self._run_prediction(print_result=print_result)[0]
+        if isinstance(text, str):
+            return self._run_prediction(print_result=print_result)[0]
+        else:
+            return self._run_prediction(print_result=print_result)
 
     def _run_prediction(self, save_path=None, print_result=True):
 

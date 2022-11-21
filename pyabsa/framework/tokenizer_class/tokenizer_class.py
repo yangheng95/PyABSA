@@ -73,7 +73,7 @@ class Tokenizer(object):
 
         return tokenizer
 
-    def fit_on_text(self, text: Union[str, list], **kwargs):
+    def fit_on_text(self, text: Union[str, list[str]], **kwargs):
         if isinstance(text, str):
             if self.pre_tokenizer:
                 words = self.pre_tokenizer.tokenize(text)
@@ -89,7 +89,7 @@ class Tokenizer(object):
                 self.idx2word[self.idx] = word
                 self.idx += 1
 
-    def text_to_sequence(self, text: Union[str, list], padding='max_length', **kwargs):
+    def text_to_sequence(self, text: Union[str, list[str]], padding='max_length', **kwargs):
         if isinstance(text, str):
             if self.config.do_lower_case:
                 text = text.lower()

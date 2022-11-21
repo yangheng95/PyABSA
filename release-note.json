@@ -1,5 +1,8 @@
 {
-  "2.0.7": {
+  "2.0.9": {
+    "1": "Now predict() API can be used to predict a list of a texts."
+  },
+  "2.0.8(7)": {
     "1": "Add Word2Vec training and BPE tokenizer training APIs and examples"
   },
   "2.0.6(5)": {

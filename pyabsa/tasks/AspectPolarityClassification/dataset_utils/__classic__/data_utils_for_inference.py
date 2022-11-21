@@ -13,14 +13,13 @@ from torch.utils.data import Dataset
 
 from pyabsa import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
-from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.utils.pyabsa_utils import validate_example
 from .classic_glove_apc_utils import build_sentiment_window
 from .dependency_graph import dependency_adj_matrix, configure_spacy_model
-from ..__lcf__.data_utils_for_inference import parse_sample
+from ..__lcf__.data_utils_for_inference import ABSAInferenceDataset
 
 
-class GloVeABSAInferenceDataset(Dataset):
+class GloVeABSAInferenceDataset(ABSAInferenceDataset):
 
     def __init__(self, config, tokenizer):
         self.config = config
@@ -29,18 +28,6 @@ class GloVeABSAInferenceDataset(Dataset):
         configure_spacy_model(config)
 
         self.data = []
-
-    def prepare_infer_sample(self, text: str, ignore_error=True):
-        self.process_data(parse_sample(text), ignore_error=ignore_error)
-
-    def prepare_infer_dataset(self, infer_file, ignore_error):
-
-        lines = load_dataset_from_file(infer_file, logger=self.config.logger)
-        samples = []
-        for sample in lines:
-            if sample:
-                samples.extend(parse_sample(sample))
-        self.process_data(samples, ignore_error)
 
     def process_data(self, samples, ignore_error=True):
         all_data = []

@@ -5,6 +5,7 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 import re
+from typing import Union
 
 import numpy as np
 
@@ -79,8 +80,14 @@ class ABSAInferenceDataset(Dataset):
         self.config = config
         self.data = []
 
-    def prepare_infer_sample(self, text: str, ignore_error=True):
-        self.process_data(parse_sample(text), ignore_error=ignore_error)
+    def prepare_infer_sample(self, text: Union[str, list[str]], ignore_error=True):
+        if isinstance(text, str):
+            self.process_data(parse_sample(text), ignore_error=ignore_error)
+        elif isinstance(text, list):
+            examples = []
+            for sample in text:
+                examples.extend(parse_sample(sample))
+            self.process_data(examples, ignore_error=ignore_error)
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
         lines = load_dataset_from_file(infer_file, logger=self.config.logger)

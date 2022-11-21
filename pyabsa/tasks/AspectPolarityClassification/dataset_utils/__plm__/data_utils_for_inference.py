@@ -13,10 +13,10 @@ from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.utils.pyabsa_utils import validate_example
 from .classic_bert_apc_utils import prepare_input_for_apc, build_sentiment_window
 from .dependency_graph import dependency_adj_matrix, configure_spacy_model
-from ..__lcf__.data_utils_for_inference import parse_sample
+from ..__lcf__.data_utils_for_inference import parse_sample, ABSAInferenceDataset
 
 
-class BERTABSAInferenceDataset(Dataset):
+class BERTABSAInferenceDataset(ABSAInferenceDataset):
 
     def __init__(self, config, tokenizer):
         configure_spacy_model(config)
@@ -24,18 +24,6 @@ class BERTABSAInferenceDataset(Dataset):
         self.tokenizer = tokenizer
         self.config = config
         self.data = []
-
-    def prepare_infer_sample(self, text: str, ignore_error=True):
-        self.process_data(parse_sample(text), ignore_error=ignore_error)
-
-    def prepare_infer_dataset(self, infer_file, ignore_error):
-
-        lines = load_dataset_from_file(infer_file, logger=self.config.logger)
-        samples = []
-        for sample in lines:
-            if sample:
-                samples.extend(parse_sample(sample))
-        self.process_data(samples, ignore_error)
 
     def process_data(self, samples, ignore_error=True):
         all_data = []

@@ -17,7 +17,13 @@ sent_classifier = APC.SentimentClassifier('multilingual')
 
 sent_classifier.predict('When I got home, there was a message on the machine because the owner realized that our [B-ASP]waitress[E-ASP] forgot to charge us for our wine. $LABEL$ Negative')
 
-inference_sets = APC.APCDatasetList.Chinese
+sent_classifier.predict(
+    ['The [B-ASP]food[E-ASP] was good, but the [B-ASP]service[E-ASP] was terrible. $LABEL$ Positive, Negative',
+     'The [B-ASP]food[E-ASP] was terrible, but the [B-ASP]service[E-ASP] was good. $LABEL$ Negative, Positive',]
+)
+
+
+inference_sets = APC.APCDatasetList.Restaurant14
 
 results = sent_classifier.batch_predict(target_file=inference_sets,
                                         print_result=True,
