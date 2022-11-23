@@ -144,6 +144,7 @@ class APCEnsembler(nn.Module):
         loss = torch.tensor(0., requires_grad=True)
         if 'ensemble_mode' not in self.config:
             self.config.ensemble_mode = 'cat'
+        logits = None
         if len(outputs) > 1:
             for i, out in enumerate(outputs):
                 if self.config.ensemble_mode == 'cat':
