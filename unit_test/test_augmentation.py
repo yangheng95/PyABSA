@@ -18,43 +18,48 @@ from pyabsa import TextClassification as TC
 
 warnings.filterwarnings('ignore')
 
-config = TC.TCConfigManager.get_tc_config_english()
-config.model = TC.BERTTCModelList.BERT_MLP
-config.num_epoch = 1
-config.evaluate_begin = 0
-config.max_seq_len = 80
-config.dropout = 0.5
-config.seed = {42}
-config.log_step = -1
-config.l2reg = 0.00001
+def test_classification_augmentation():
 
-SST2 = TC.TCDatasetList.SST2
+    config = TC.TCConfigManager.get_tc_config_english()
+    config.model = TC.BERTTCModelList.BERT_MLP
+    config.num_epoch = 1
+    config.evaluate_begin = 0
+    config.max_seq_len = 80
+    config.dropout = 0.5
+    config.seed = {42}
+    config.log_step = -1
+    config.l2reg = 0.00001
 
-auto_classification_augmentation(config=config, dataset=SST2, device='cuda')
+    SST2 = TC.TCDatasetList.SST2
 
-for dataset in [
-    APCDatasetList.Laptop14,
-    # APCDatasetList.Restaurant14,
-    # APCDatasetList.Restaurant15,
-    # APCDatasetList.Restaurant16,
-    # APCDatasetList.MAMS
-]:
-    for model in [
-        APC.APCModelList.FAST_LSA_T_V2,
-        # APC.APCModelList.FAST_LSA_S_V2,
-        # APC.APCModelList.BERT_SPC_V2
+    auto_classification_augmentation(config=config, dataset=SST2, device='cuda')
+
+
+def test_aspect_sentiment_classification_augmentation():
+
+    for dataset in [
+        APCDatasetList.Laptop14,
+        # APCDatasetList.Restaurant14,
+        # APCDatasetList.Restaurant15,
+        # APCDatasetList.Restaurant16,
+        # APCDatasetList.MAMS
     ]:
-        config = APC.APCConfigManager.get_apc_config_english()
-        config.model = model
-        config.pretrained_bert = 'microsoft/deberta-v3-base'
-        config.evaluate_begin = 5
-        config.max_seq_len = 80
-        config.num_epoch = 30
-        config.log_step = 10
-        config.dropout = 0
-        config.cache_dataset = False
-        config.l2reg = 1e-8
-        config.lsa = True
-        config.seed = [random.randint(0, 10000) for _ in range(3)]
+        for model in [
+            APC.APCModelList.FAST_LSA_T_V2,
+            # APC.APCModelList.FAST_LSA_S_V2,
+            # APC.APCModelList.BERT_SPC_V2
+        ]:
+            config = APC.APCConfigManager.get_apc_config_english()
+            config.model = model
+            config.pretrained_bert = 'microsoft/deberta-v3-base'
+            config.evaluate_begin = 5
+            config.max_seq_len = 80
+            config.num_epoch = 30
+            config.log_step = 10
+            config.dropout = 0
+            config.cache_dataset = False
+            config.l2reg = 1e-8
+            config.lsa = True
+            config.seed = [random.randint(0, 10000) for _ in range(3)]
 
-        auto_aspect_sentiment_classification_augmentation(config=config, dataset=dataset, device='cuda')
+            auto_aspect_sentiment_classification_augmentation(config=config, dataset=dataset, device='cuda')
