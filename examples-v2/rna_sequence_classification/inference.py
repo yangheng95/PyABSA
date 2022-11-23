@@ -42,7 +42,7 @@ if __name__ == '__main__':
         result = ensemble_predict(rna_classifiers, rna, print_result=True)
         if result == rna.split('$LABEL$')[-1].strip():
             count += 1
-        print(count / (i+1))
+        print(count / (i + 1))
 
     while True:
         text = input('Please input your RNA sequence: ')

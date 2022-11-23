@@ -6,11 +6,9 @@
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
-import os
+
 import random
 import warnings
-
-import findfile
 
 # Transfer Experiments and Multitask Experiments
 
@@ -51,7 +49,6 @@ text_classifier = TAD.TADTrainer(config=get_config(),
                                  checkpoint_save_mode=1,
                                  auto_device=True
                                  ).load_trained_model()
-
 
 dataset = DatasetItem('Amazon')
 text_classifier = TAD.TADTrainer(config=get_config(),

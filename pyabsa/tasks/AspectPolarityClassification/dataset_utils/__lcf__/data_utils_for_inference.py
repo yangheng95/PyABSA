@@ -49,6 +49,7 @@ def parse_sample(text):
     else:
         print('[ASP] tag is detected, please use [B-ASP] and [E-ASP] to annotate aspect terms.')
         splits = text.split('[ASP]')
+        ref_sent = ref_sent.split(',') if ref_sent else []
 
         if ref_sent and int((len(splits) - 1) / 2) == len(ref_sent):
             for i in range(0, len(splits) - 1, 2):

@@ -4,21 +4,18 @@
 # author: yangheng <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-import copy
+
 import json
 import os
 import pickle
 import sys
 import zipfile
 
-import gdown
-import numpy as np
 import requests
 import torch
 import tqdm
 from findfile import find_files, find_cwd_file
 from termcolor import colored
-from transformers import AutoTokenizer
 
 from pyabsa.utils.pyabsa_utils import save_args
 
@@ -100,7 +97,8 @@ def prepare_glove840_embedding(glove_path, embedding_dim, config):
                                            postfix=colored('Downloading GloVe-840B embedding...', 'yellow')):
                         f.write(chunk)
             except Exception as e:
-                gdown.download(id=glove840_id, output=zip_glove_path)
+                raise ValueError('Download failed, please download glove.840B.300d.zip from '
+                                 'https://nlp.stanford.edu/projects/glove/, unzip it and put it in {}.'.format(glove_path))
 
         if find_cwd_file('glove.840B.300d.zip'):
             logger.info('unzip glove.840B.300d.zip...')

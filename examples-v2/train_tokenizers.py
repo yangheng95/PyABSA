@@ -12,7 +12,6 @@ from transformers import AutoTokenizer
 from pyabsa.utils import train_word2vec, train_bpe_tokenizer
 
 if __name__ == '__main__':
-
     # train word2vec
     paths = findfile.find_cwd_files('.txt')
     pre_tokenizer = AutoTokenizer.from_pretrained('roberta-base')

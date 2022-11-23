@@ -33,7 +33,7 @@ setup(
     install_requires=['findfile>=1.7.10',
                       'autocuda>=0.12',
                       'metric-visualizer>=0.6.5',
-                      'boostaug>=2.2.5',
+                      'boostaug>=2.3.0',
                       'spacy',
                       'networkx',
                       'seqeval',
@@ -43,7 +43,6 @@ setup(
                       'pytorch_warmup',
                       'termcolor',
                       'gitpython',  # need git installed in your OS
-                      'gdown>=4.4.0',
                       'transformers>4.20.0',
                       'torch>1.0.0',
                       'sentencepiece',

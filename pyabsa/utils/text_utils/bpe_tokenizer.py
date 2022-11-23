@@ -13,8 +13,6 @@ import time
 import findfile
 from transformers import AutoTokenizer
 
-from tokenizers import ByteLevelBPETokenizer
-
 
 def train_bpe_tokenizer(corpus_files=None,
                         base_tokenizer='roberta-base',
@@ -39,6 +37,8 @@ def train_bpe_tokenizer(corpus_files=None,
     Returns:
 
     """
+    from tokenizers import ByteLevelBPETokenizer
+
     if special_tokens is None:
         special_tokens = [
             "<s>",

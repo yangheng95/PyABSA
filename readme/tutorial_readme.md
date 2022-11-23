@@ -22,7 +22,8 @@
 
 We also provide enough demos to help you use PyABSA, these demos can be found
 in [aspect-based sentiment classification](../examples-v2/aspect_polarity_classification),
-[aspect term extraction](../examples-v2/aspect_term_extraction) and [text classification](../examples-v2/text_classification).
+[aspect term extraction](../examples-v2/aspect_term_extraction)
+and [text classification](../examples-v2/text_classification).
 
 ## How to start
 

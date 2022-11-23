@@ -24,9 +24,11 @@ import os
 
 from pyabsa import TADCheckpointManager
 import tensorflow as tf
+
 gpus = tf.config.experimental.list_physical_devices('GPU')
 # 将对应GPU设置为内存自增长
 tf.config.experimental.set_memory_growth(gpus[0], True)
+
 
 # Quiet TensorFlow.
 def get_ensembled_tad_results(results):
@@ -189,6 +191,7 @@ def generate_adversarial_example(dataset, attack_recipe):
             mv.add_metric('Defense Accuracy', def_acc_count / def_num * 100)
             mv.add_metric('Restored Accuracy', acc_count / all_num * 100)
 
+
 if __name__ == '__main__':
 
     # attack_name = 'BAE'
@@ -228,4 +231,3 @@ if __name__ == '__main__':
             generate_adversarial_example(dataset, attack_recipe=attack_recipes[attack_name.lower()])
         mv.summary()
         mv.dump()
-

@@ -190,6 +190,7 @@ def evaluate_tad(dataset, attack_recipe):
             mv.add_metric('Defense Accuracy', def_acc_count / def_num * 100)
             mv.add_metric('Restored Accuracy', acc_count / all_num * 100)
 
+
 if __name__ == '__main__':
 
     # attack_name = 'BAE'

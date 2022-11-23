@@ -22,5 +22,6 @@ SST2 = TC.TCDatasetList.SST2
 sent_classifier = TC.TCTrainer(config=classification_config_english,
                                dataset=SST2,
                                checkpoint_save_mode=1,
+                               load_aug=True,
                                auto_device=True
                                ).load_trained_model()

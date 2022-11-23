@@ -28,9 +28,9 @@ for dataset in [APC.APCDatasetList.Laptop14]:
         sent_classifier = APC.APCTrainer(config=config,
                                          dataset=dataset,
                                          checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                                         auto_device=DeviceTypeOption.ALL_CUDA
+                                         auto_device=DeviceTypeOption.ALL_CUDA,
+                                         load_aug=True
                                          ).load_trained_model()
-
 
         inference_sets = APC.APCDatasetList.Laptop14
         results = sent_classifier.batch_predict(target_file=inference_sets,

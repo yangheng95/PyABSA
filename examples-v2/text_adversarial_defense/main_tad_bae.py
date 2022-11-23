@@ -21,7 +21,6 @@ from textattack.models.wrappers import HuggingFaceModelWrapper
 import os
 
 
-
 # Quiet TensorFlow.
 def get_ensembled_tad_results(results):
     target_dict = {}
@@ -200,6 +199,7 @@ if __name__ == '__main__':
         # 'agnews10k',
     ]
     from pyabsa import TextAdversarialDefense as TAD
+
     for dataset in datasets:
         tad_classifier = TAD.TADTextClassifier(
             # f'TAD-{dataset}{attack_name}',
