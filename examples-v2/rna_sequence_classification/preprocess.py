@@ -8,16 +8,14 @@
 # Copyright (C) 2022. All Rights Reserved.
 
 def preprocess_rna():
-
     def load_file(file_path):
         with open(file_path, 'r') as f:
             lines = f.readlines()
             return lines
 
-
     positive_data = load_file('integrated_datasets/rnac_datasets/degrad/Degrad_XRN4_DL_1.tsv')
     negative_data = load_file('integrated_datasets/rnac_datasets/degrad/Degrad_XRN4_DL_0.tsv')
-    negative_data = negative_data[: len(negative_data)//100]
+    negative_data = negative_data[: len(negative_data) // 100]
 
     positive_rna_name_list = dict()
     negative_rna_name_list = dict()
@@ -80,7 +78,6 @@ def preprocess_rna():
             if data in negative_test_names:
                 for seq in negative_rna_name_list[data]:
                     f.write(seq + '$LABEL$0')
-
 
 
 if __name__ == '__main__':

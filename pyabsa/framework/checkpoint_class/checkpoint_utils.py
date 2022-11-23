@@ -8,10 +8,8 @@
 # Copyright (C) 2022. All Rights Reserved.
 import json
 import os
-import sys
 from distutils.version import StrictVersion
 
-import gdown
 import requests
 import tqdm
 from findfile import find_files, find_cwd_files, find_cwd_dir
@@ -112,10 +110,7 @@ def download_checkpoint(task: str, language: str, checkpoint: dict):
                                    postfix='Downloading checkpoint...'):
                 f.write(chunk)
     except Exception as e:
-        try:  # from Google Drive
-            gdown.download(id=checkpoint['id'], output=save_path)
-        except ConnectionError as e:
-            raise ConnectionError("Fail to download checkpoint: {}".format(e))
+        raise ConnectionError("Fail to download checkpoint: {}".format(e))
     unzip_checkpoint(save_path)
     os.remove(save_path)
     print(colored(

@@ -28,7 +28,7 @@ def ensemble_predict(apc_classifiers: dict, text, print_result=False):
 
 
 def ensemble_performance(dataset, print_result=False):
-    ckpts = findfile.find_cwd_dirs(dataset+'_acc')
+    ckpts = findfile.find_cwd_dirs(dataset + '_acc')
     random.shuffle(ckpts)
     apc_classifiers = {}
     for ckpt in ckpts[:]:
@@ -50,6 +50,7 @@ def ensemble_performance(dataset, print_result=False):
         pred.append(result)
         gold.append(text.split('$LABEL$')[-1].strip())
     print(classification_report(gold, pred, digits=4))
+
 
 if __name__ == '__main__':
 

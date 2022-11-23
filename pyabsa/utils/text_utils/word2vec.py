@@ -10,10 +10,7 @@
 import os
 import time
 
-import findfile
 from findfile import find_cwd_files
-from gensim.models import Word2Vec
-from gensim.models.word2vec import LineSentence
 from transformers import AutoTokenizer
 
 
@@ -39,6 +36,7 @@ def train_word2vec(corpus_files: list = None,
     alpha (float, optional) – 初始学习率
     iter (int, optional) – 迭代次数，默认为5
     '''
+    from gensim.models import Word2Vec
 
     if not os.path.exists(save_path):
         os.makedirs(save_path)

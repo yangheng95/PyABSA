@@ -6,3 +6,6 @@
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
+
+from .apc_augment.apc_augment import auto_aspect_sentiment_classification_augmentation
+from .text_augment.tc_augment import auto_classification_augmentation

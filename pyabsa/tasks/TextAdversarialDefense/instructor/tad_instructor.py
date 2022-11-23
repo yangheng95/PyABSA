@@ -395,7 +395,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
         raise NotImplementedError()
 
     def _evaluate_acc_f1(self, test_dataloader):
-        # switch model to lstm.evaluation.txt mode
+        # switch model to evaluation mode
         self.model.eval()
         n_label_test_correct, n_label_test_total = 0, 0
         n_adv_det_test_correct, n_adv_det_test_total = 0, 0

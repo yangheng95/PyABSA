@@ -1,6 +1,16 @@
 {
-  "2.0.9": {
+  "2.0.11": {
+    "1": "Fix auto-augmentation API",
+    "2": "You can see the augmentation examples in the examples folder",
+    "3": "Fix a typo in training progress bar",
+    "4": "Fix a bug for compatible inference with the v1.x versions"
+  },
+  "2.0.10": {
     "1": "Now predict() API can be used to predict a list of a texts."
+  },
+  "2.0.9": {
+    "1": "Now predict() API can be used to predict a list of a texts.",
+    "2": "Deprecated version because it use a feature from python3.9 and above"
   },
   "2.0.8(7)": {
     "1": "Add Word2Vec training and BPE tokenizer training APIs and examples"
@@ -21,7 +31,7 @@
     "6": "The checkpoints also save the tokenizer and embedding(glove, etc), so you can load the tokenizer, embedding from the checkpoint",
     "7": "You need to remove old datasets for v1.x. The dataset annotation has been changed; the input and and label are separated by $LABEL$. The padding label is -100 now",
     "8": "You can set eval_batch_size in inference (i.e., predict or batch_predict) to save memory",
-    "9": "You will be able to pass a list of data to fine-tune existing checkpoints in the next version, which is very useful for online learning",
+    "9": "You will be able to pass a list of data to fine-tune existing checkpoints in the next version, which is very useful for online learning"
   },
   "1.16.26": {
     "1": "Improves Config Manager"

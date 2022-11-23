@@ -69,7 +69,6 @@ if __name__ == '__main__':
         decay_label, seq_label = ensemble_predict(rna_classifiers, rna, print_result=False)
         print('Predicted Label:', decay_label, decay_label == labels[0], seq_label, seq_label == labels[1])
 
-
     while True:
         rna = input('Please input your RNA sequence: ')
         if rna == 'exit':

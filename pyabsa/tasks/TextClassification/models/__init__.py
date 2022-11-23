@@ -11,6 +11,7 @@ class BERTTCModelList(list):
     from .__plm__.bert import BERT_MLP
 
     BERT_MLP = BERT_MLP
+    BERT = BERT_MLP
 
     def __init__(self):
         super(BERTTCModelList, self).__init__(

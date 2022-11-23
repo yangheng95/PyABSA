@@ -4,6 +4,7 @@
 *.mv
 state_dict/
 integrated_datasets/
+source_datasets.backup/
 *.results
 *.tokenizer
 *.model

@@ -33,6 +33,7 @@ class BERTRNACModelList(list):
     from .__plm__.bert import BERT_MLP
 
     BERT_MLP = BERT_MLP
+    BERT = BERT_MLP
 
     def __init__(self):
         super(BERTRNACModelList, self).__init__(

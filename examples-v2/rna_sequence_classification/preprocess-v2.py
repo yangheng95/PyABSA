@@ -10,7 +10,6 @@ import random
 
 
 def preprocess_rna():
-
     def load_file(file_path):
         with open(file_path, 'r') as f:
             lines = f.readlines()
@@ -46,31 +45,30 @@ def preprocess_rna():
         for line in train_data:
             line = line.strip()
             if line.split('$LABEL$')[0].strip() in positive_rna_label:
-                line = line.strip() + ','+positive_rna_label[line.split('$LABEL$')[0].strip()][0] + '\n'
+                line = line.strip() + ',' + positive_rna_label[line.split('$LABEL$')[0].strip()][0] + '\n'
             else:
-                line = line.strip() + ','+negative_rna_label[line.split('$LABEL$')[0].strip()][0] + '\n'
+                line = line.strip() + ',' + negative_rna_label[line.split('$LABEL$')[0].strip()][0] + '\n'
             f.write(line)
 
     with open('integrated_datasets/rnac_datasets/degrad-v2/degrad-v2.test.dat.rnac', 'w') as f:
         for line in test_data:
             if line.split('$LABEL$')[0].strip() in positive_rna_label:
-                line = line.strip() + ','+positive_rna_label[line.split('$LABEL$')[0].strip()][0] + '\n'
+                line = line.strip() + ',' + positive_rna_label[line.split('$LABEL$')[0].strip()][0] + '\n'
             else:
-                line = line.strip() + ','+negative_rna_label[line.split('$LABEL$')[0].strip()][0] + '\n'
+                line = line.strip() + ',' + negative_rna_label[line.split('$LABEL$')[0].strip()][0] + '\n'
             f.write(line)
 
     with open('integrated_datasets/rnac_datasets/degrad-v2/degrad-v2.valid.dat.rnac', 'w') as f:
         for line in valid_data:
             if line.split('$LABEL$')[0].strip() in positive_rna_label:
-                line = line.strip() + ','+positive_rna_label[line.split('$LABEL$')[0].strip()][0] + '\n'
+                line = line.strip() + ',' + positive_rna_label[line.split('$LABEL$')[0].strip()][0] + '\n'
             else:
-                line = line.strip() + ','+negative_rna_label[line.split('$LABEL$')[0].strip()][0] + '\n'
+                line = line.strip() + ',' + negative_rna_label[line.split('$LABEL$')[0].strip()][0] + '\n'
             f.write(line)
-
 
     random.shuffle(negative_data)
     random.shuffle(positive_data)
-    negative_data = negative_data[: len(negative_data)//100]
+    negative_data = negative_data[: len(negative_data) // 100]
 
     positive_rna_name_list = dict()
     negative_rna_name_list = dict()

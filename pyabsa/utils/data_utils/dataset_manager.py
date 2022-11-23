@@ -19,9 +19,8 @@ import tqdm
 
 from termcolor import colored
 
+from pyabsa.augmentation import auto_aspect_sentiment_classification_augmentation, auto_classification_augmentation
 from pyabsa.framework.flag_class import TaskCodeOption, PyABSAMaterialHostAddress, TaskNameOption
-from pyabsa.augment.apc_augment.apc_augment import __perform_apc_augmentation
-from pyabsa.augment.text_agument.tc_augment import __perform_tc_augmentation
 from pyabsa.utils.check_utils.dataset_version_check import check_datasets_version
 from pyabsa.utils.data_utils.dataset_item import DatasetItem
 
@@ -87,10 +86,10 @@ def detect_dataset(dataset_name_or_path, task_code: TaskCodeOption = None, load_
                     from pyabsa.utils.absa_utils.absa_utils import convert_apc_set_to_atepc_set
 
                     if task_code == TaskCodeOption.Aspect_Polarity_Classification:
-                        __perform_apc_augmentation(dataset_name_or_path)
+                        auto_aspect_sentiment_classification_augmentation(config=config, dataset=dataset_name_or_path, device=config.device, **kwargs)
                         convert_apc_set_to_atepc_set(dataset_name_or_path)
                     elif task_code == TaskCodeOption.Text_Classification:
-                        __perform_tc_augmentation(dataset_name_or_path)
+                        auto_classification_augmentation(config=config, dataset=dataset_name_or_path, device=config.device, **kwargs)
                     else:
                         raise ValueError('Task {} is not supported for auto-augment'.format(task_code))
             else:

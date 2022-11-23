@@ -15,6 +15,7 @@ def load_file(file_path):
         lines = f.readlines()
         return lines
 
+
 if os.path.exists('integrated_datasets/rnac_datasets/degrad/degrad.pkl.ignore'):
     dataset_dict = pickle.load(open('integrated_datasets/rnac_datasets/degrad/degrad.pkl.ignore', 'rb'))
 
@@ -65,7 +66,6 @@ else:
         for line in negative_data:
             if line.split('\t')[0].strip() == valid_name:
                 dataset_dict['valid'].append({'data': line.split('\t')[-1], 'label': '0'})
-
 
 import random
 

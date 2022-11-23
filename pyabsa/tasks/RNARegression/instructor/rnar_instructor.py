@@ -417,7 +417,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                                                                                                           test_r2,
                                                                                                           max_fold_r2))
                         else:
-                            postfix = 'Epoch:{} | Loss:{} | No lstm.evaluation.txt until epoch:{}'.format(epoch, round(loss.item(), 8), self.config.evaluate_begin)
+                            postfix = 'Epoch:{} | Loss:{} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.config.evaluate_begin)
 
                     iterator.postfix = postfix
                     iterator.refresh()
@@ -473,7 +473,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
             return self.model, self.config, self.tokenizer
 
     def _evaluate_r2(self, test_dataloader, criterion):
-        # switch model to lstm.evaluation.txt mode
+        # switch model to evaluation mode
         self.model.eval()
         all_targets = torch.tensor([], dtype=torch.float32).to(self.config.device)
         all_outputs = torch.tensor([], dtype=torch.float32).to(self.config.device)

@@ -31,6 +31,7 @@ sent_classifier = AspectPolarityClassification.APCTrainer(config=config,  # set 
                                                           ).load_trained_model()
 
 from pyabsa import AspectPolarityClassification as APC
+
 inference_sets = APC.APCDatasetList.Laptop14
 results = sent_classifier.batch_predict(target_file=inference_sets,
                                         print_result=True,
