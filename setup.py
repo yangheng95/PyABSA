@@ -32,7 +32,7 @@ setup(
     license='MIT',
     install_requires=['findfile>=1.7.10',
                       'autocuda>=0.12',
-                      'metric-visualizer>=0.6.5',
+                      'metric-visualizer>=0.6.6',
                       'boostaug>=2.3.0',
                       'spacy',
                       'networkx',
@@ -48,6 +48,5 @@ setup(
                       'sentencepiece',
                       'protobuf<4.0.0',
                       'pandas',
-                      'gensim',
                       ],
 )
