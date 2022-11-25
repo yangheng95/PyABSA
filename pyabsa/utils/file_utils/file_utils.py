@@ -84,6 +84,7 @@ def prepare_glove840_embedding(glove_path, embedding_dim, config):
 
         else:
             if config.embed_dim != 300:
+
                 raise ValueError('Please provide embedding file for embedding dim: {} in current wording dir '.format(config.embed_dim))
             zip_glove_path = os.path.join(os.path.dirname(glove_path), 'glove.840B.300d.zip')
             logger.info('No GloVe embedding found at {},'

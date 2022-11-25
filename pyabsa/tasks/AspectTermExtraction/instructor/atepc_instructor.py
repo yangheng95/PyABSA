@@ -19,14 +19,13 @@ import torch.nn.functional as F
 import tqdm
 from seqeval.metrics import classification_report
 from sklearn.metrics import f1_score
-from termcolor import colored
 from torch import cuda
 from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler, TensorDataset)
 from transformers import AutoTokenizer, AutoModel
 
 from pyabsa import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
-from pyabsa.tasks.AspectTermExtraction.dataset_utils.__lcf__.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
+from ..dataset_utils.__lcf__.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
 from pyabsa.utils.file_utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args, init_optimizer
 
@@ -468,9 +467,12 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
             self.model.to(self.config.device)
 
         if isinstance(self.config.optimizer, str):
-            self.optimizer = init_optimizer(self.config.optimizer)(self.optimizer_grouped_parameters,
-                                                                   lr=self.config.learning_rate,
-                                                                   weight_decay=self.config.l2reg)
+            self.optimizer = init_optimizer(self.config.optimizer)(
+                self.optimizer_grouped_parameters,
+                lr=self.config.learning_rate,
+                weight_decay=self.config.l2reg,
+                maximize=self.config.maximize_loss if self.config.get('maximize_loss') else False
+            )
         self.config.device = torch.device(self.config.device)
         if self.config.device.type == 'cuda':
             self.logger.info(

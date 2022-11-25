@@ -10,7 +10,7 @@
 import copy
 
 from pyabsa.framework.configuration_class.configuration_template import ConfigManager
-from pyabsa.tasks.AspectTermExtraction.models.__lcf__.lcf_atepc import LCF_ATEPC
+from ..models.__lcf__.lcf_atepc import LCF_ATEPC
 
 # if you find the optimal param set of some situation, e.g., some model on some datasets
 # please share the main use template main

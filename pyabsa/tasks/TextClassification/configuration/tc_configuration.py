@@ -12,8 +12,8 @@ import copy
 # if you find the optimal param set of some situation, e.g., some model on some datasets
 # please share the main use template main
 from pyabsa.framework.configuration_class.configuration_template import ConfigManager
-from pyabsa.tasks.TextClassification.models.__classic__.lstm import LSTM
-from pyabsa.tasks.TextClassification.models.__plm__.bert import BERT_MLP
+from ..models.__classic__.lstm import LSTM
+from ..models.__plm__.bert import BERT_MLP
 
 _tc_config_template = {'model': BERT_MLP,
                        'optimizer': "adamw",

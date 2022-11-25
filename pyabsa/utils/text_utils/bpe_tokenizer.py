@@ -48,8 +48,6 @@ def train_bpe_tokenizer(corpus_files=None,
             "<mask>",
         ]
 
-    if not os.path.exists(save_path):
-        os.makedirs(save_path)
 
     if not corpus_files:
         corpus_files = findfile.find_cwd_files('.txt', exclude_key=['word2vec', 'ignore'])
@@ -59,17 +57,20 @@ def train_bpe_tokenizer(corpus_files=None,
         assert isinstance(corpus_files, list)
     print('Start loading corpus files:', corpus_files)
 
-    assert isinstance(base_tokenizer, str), 'base_tokenizer must be a string of the pretrained tokenizer name.'
-    from transformers import AutoConfig
-    config = AutoConfig.from_pretrained(base_tokenizer)
-    config.save_pretrained(f'{save_path}/')
-
     tokenizer = ByteLevelBPETokenizer()
     # Customize training
     print('Start training BPE tokenizer...')
     start = time.time()
     tokenizer.train(files=corpus_files, vocab_size=vocab_size, min_frequency=min_frequency, special_tokens=special_tokens)
     print('Time cost: ', time.time() - start)
+
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+
+    assert isinstance(base_tokenizer, str), 'base_tokenizer must be a string of the pretrained tokenizer name.'
+    from transformers import AutoConfig
+    config = AutoConfig.from_pretrained(base_tokenizer)
+    config.save_pretrained(f'{save_path}/')
 
     tokenizer.save(f'{save_path}/tokenizer.json')
     tokenizer.save_model(f'{save_path}/')

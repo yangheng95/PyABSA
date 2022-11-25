@@ -25,10 +25,10 @@ from transformers import AutoTokenizer, AutoModel
 
 from pyabsa import LabelPaddingOption, TaskCodeOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
-from pyabsa.tasks.AspectTermExtraction.models import ATEPCModelList
-from pyabsa.tasks.AspectTermExtraction.dataset_utils.__lcf__.atepc_utils import load_atepc_inference_datasets, process_iob_tags
-from pyabsa.tasks.AspectTermExtraction.dataset_utils.__lcf__.data_utils_for_inference import ATEPCProcessor, convert_ate_examples_to_features, convert_apc_examples_to_features
-from pyabsa.tasks.AspectTermExtraction.dataset_utils.__lcf__.data_utils_for_training import split_aspect
+from ..models import ATEPCModelList
+from ..dataset_utils.__lcf__.atepc_utils import load_atepc_inference_datasets, process_iob_tags
+from ..dataset_utils.__lcf__.data_utils_for_inference import ATEPCProcessor, convert_ate_examples_to_features, convert_apc_examples_to_features
+from ..dataset_utils.__lcf__.data_utils_for_training import split_aspect
 from pyabsa.utils.data_utils.dataset_item import DatasetItem
 from pyabsa.utils.pyabsa_utils import get_device, print_args
 
@@ -41,7 +41,7 @@ class AspectExtractor(InferenceModel):
         # load from a trainer
         super().__init__(checkpoint, task_code=self.task_code, **kwargs)
 
-        if not isinstance(self.checkpoint, str):
+        if self.checkpoint and not isinstance(self.checkpoint, str):
             print('Load aspect extractor from trainer')
             self.model = self.checkpoint[0]
             self.config = self.checkpoint[1]

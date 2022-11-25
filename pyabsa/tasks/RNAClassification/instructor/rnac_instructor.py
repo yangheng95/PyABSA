@@ -23,8 +23,8 @@ from pyabsa import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from pyabsa.utils.file_utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import init_optimizer, print_args
-from pyabsa.tasks.RNAClassification.dataset_utils.data_utils_for_training import BERTRNACDataset, GloVeRNACDataset
-from pyabsa.tasks.RNAClassification.models import GloVeRNACModelList, BERTRNACModelList
+from ..dataset_utils.data_utils_for_training import BERTRNACDataset, GloVeRNACDataset
+from ..models import GloVeRNACModelList, BERTRNACModelList
 
 from pyabsa.framework.tokenizer_class.tokenizer_class import Tokenizer, build_embedding_matrix, PretrainedTokenizer
 
@@ -49,7 +49,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         self.optimizer = init_optimizer(self.config.optimizer)(
             self.model.parameters(),
             lr=self.config.learning_rate,
-            weight_decay=self.config.l2reg
+            weight_decay=self.config.l2reg,
+            maximize=self.config.maximize_loss if self.config.get('maximize_loss') else False
         )
 
         self.train_dataloaders = []
@@ -471,9 +472,9 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             self.valid_set = GloVeRNACDataset(self.config, self.tokenizer, dataset_type='valid')
 
             self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
-            self.config.tokenizer = self.tokenizer
             self.config.embedding_matrix = self.embedding_matrix
 
+        self.config.tokenizer = self.tokenizer
         self.save_cache_dataset()
 
     def run(self):

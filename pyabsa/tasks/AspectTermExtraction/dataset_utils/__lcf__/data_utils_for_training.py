@@ -9,7 +9,7 @@ import tqdm
 
 from pyabsa import LabelPaddingOption
 from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__lcf__.apc_utils import configure_spacy_model
-from pyabsa.tasks.AspectTermExtraction.dataset_utils.__lcf__.atepc_utils import prepare_input_for_atepc
+from ...dataset_utils.__lcf__.atepc_utils import prepare_input_for_atepc
 from pyabsa.utils.pyabsa_utils import validate_example, check_and_fix_labels, check_and_fix_IOB_labels
 
 Labels = set()

@@ -49,6 +49,8 @@ def train_word2vec(corpus_files: list = None,
     else:
         assert isinstance(corpus_files, list)
     print('Start loading corpus files:', corpus_files)
+    if isinstance(pre_tokenizer, str):
+        pre_tokenizer = AutoTokenizer.from_pretrained(pre_tokenizer)
     for f in corpus_files:
         with open(f, 'r', encoding='utf-8') as fin:
             for line in fin:

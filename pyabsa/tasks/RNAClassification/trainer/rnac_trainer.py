@@ -11,9 +11,9 @@ from typing import Union
 
 from pyabsa import DeviceTypeOption, ModelSaveOption, TaskCodeOption, TaskNameOption
 from pyabsa.framework.trainer_class.trainer_template import Trainer
-from pyabsa.tasks.RNAClassification.configuration.rnac_configuration import RNACConfigManager
-from pyabsa.tasks.RNAClassification.prediction.rna_classifier import RNAClassifier
-from pyabsa.tasks.RNAClassification.instructor.rnac_instructor import RNACTrainingInstructor
+from ..configuration.rnac_configuration import RNACConfigManager
+from ..prediction.rna_classifier import RNAClassifier
+from ..instructor.rnac_instructor import RNACTrainingInstructor
 
 
 class RNACTrainer(Trainer):

@@ -38,7 +38,7 @@ class RNAClassifier(InferenceModel):
         super().__init__(checkpoint, cal_perplexity, **kwargs)
 
         # load from a trainer
-        if not isinstance(self.checkpoint, str):
+        if self.checkpoint and not isinstance(self.checkpoint, str):
             print('Load text classifier from trainer')
             self.model = self.checkpoint[0]
             self.config = self.checkpoint[1]

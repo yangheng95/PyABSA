@@ -19,12 +19,12 @@ import torch
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
 from transformers import AutoTokenizer, AutoModel
 
-from pyabsa.tasks.AspectPolarityClassification.models.__classic__ import GloVeAPCModelList
-from pyabsa.tasks.AspectPolarityClassification.models.__lcf__ import APCModelList
-from pyabsa.tasks.AspectPolarityClassification.models.__plm__ import BERTBaselineAPCModelList
-from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__classic__.data_utils_for_training import GloVeABSADataset
-from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__lcf__.data_utils_for_training import ABSADataset
-from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__plm__.data_utils_for_training import BERTBaselineABSADataset
+from ..models.__classic__ import GloVeAPCModelList
+from ..models.__lcf__ import APCModelList
+from ..models.__plm__ import BERTBaselineAPCModelList
+from ..dataset_utils.__classic__.data_utils_for_training import GloVeABSADataset
+from ..dataset_utils.__lcf__.data_utils_for_training import ABSADataset
+from ..dataset_utils.__plm__.data_utils_for_training import BERTBaselineABSADataset
 from pyabsa.framework.tokenizer_class.tokenizer_class import PretrainedTokenizer, Tokenizer, build_embedding_matrix
 
 
@@ -119,7 +119,6 @@ class APCEnsembler(nn.Module):
                     self.valid_set = GloVeABSADataset(self.config, self.tokenizer, dataset_type='valid') if not self.valid_set else self.valid_set
 
                 self.models.append(models[i](copy.deepcopy(self.embedding_matrix) if self.config.deep_ensemble else self.embedding_matrix, self.config))
-                self.config.tokenizer = self.tokenizer
                 self.config.embedding_matrix = self.embedding_matrix
 
             if self.config.cache_dataset and not os.path.exists(cache_path) and not self.config.overwrite_cache:
@@ -136,6 +135,8 @@ class APCEnsembler(nn.Module):
                 if self.valid_set:
                     valid_sampler = SequentialSampler(self.valid_set if not self.valid_set else self.valid_set)
                     self.valid_dataloader = DataLoader(self.valid_set, batch_size=self.config.batch_size, pin_memory=True, sampler=valid_sampler)
+
+            self.config.tokenizer = self.tokenizer
 
         self.dense = nn.Linear(config.output_dim * len(models), config.output_dim)
 

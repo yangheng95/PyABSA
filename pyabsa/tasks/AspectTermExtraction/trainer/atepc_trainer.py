@@ -10,9 +10,9 @@
 from typing import Union
 
 from pyabsa import DeviceTypeOption, ModelSaveOption, TaskCodeOption, TaskNameOption
-from pyabsa.tasks.AspectTermExtraction.configuration.atepc_configuration import ATEPCConfigManager
-from pyabsa.tasks.AspectTermExtraction.prediction.aspect_extractor import AspectExtractor
-from pyabsa.tasks.AspectTermExtraction.instructor.atepc_instructor import ATEPCTrainingInstructor
+from ..configuration.atepc_configuration import ATEPCConfigManager
+from ..prediction.aspect_extractor import AspectExtractor
+from ..instructor.atepc_instructor import ATEPCTrainingInstructor
 from pyabsa.framework.trainer_class.trainer_template import Trainer
 
 

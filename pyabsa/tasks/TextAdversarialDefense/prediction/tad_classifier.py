@@ -18,9 +18,9 @@ from transformers import AutoModel
 
 from pyabsa import TaskCodeOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
-from pyabsa.tasks.TextAdversarialDefense.dataset_utils.__classic__.data_utils_for_inference import GloVeTADInferenceDataset
-from pyabsa.tasks.TextAdversarialDefense.dataset_utils.__plm__.data_utils_for_inference import BERTTADInferenceDataset
-from pyabsa.tasks.TextAdversarialDefense.models import BERTTADModelList, GloVeTADModelList
+from ..dataset_utils.__classic__.data_utils_for_inference import GloVeTADInferenceDataset
+from ..dataset_utils.__plm__.data_utils_for_inference import BERTTADInferenceDataset
+from ..models import BERTTADModelList, GloVeTADModelList
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import get_device, print_args
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
@@ -88,7 +88,7 @@ class TADTextClassifier(InferenceModel):
 
         self.cal_perplexity = cal_perplexity
         # load from a trainer
-        if not isinstance(self.checkpoint, str):
+        if self.checkpoint and not isinstance(self.checkpoint, str):
             print('Load text classifier from trainer')
             self.model = self.checkpoint[0]
             self.config = self.checkpoint[1]
