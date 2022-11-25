@@ -23,6 +23,7 @@ class TaskNameOption(dict):
         'TAD': 'Text Adversarial Defense',
         'RNAC': 'RNA Sequence Classification',
         'RNAR': 'RNA Sequence Regression',
+        'PR': 'Protein Sequence Regression',
     }
 
     def __init__(self):
@@ -40,6 +41,7 @@ class TaskCodeOption:
     Text_Adversarial_Defense = 'TAD'
     RNASequenceClassification = 'RNAC'
     RNASequenceRegression = 'RNAR'
+    ProteinSequenceRegression = 'PR'
 
 
 class LabelPaddingOption:

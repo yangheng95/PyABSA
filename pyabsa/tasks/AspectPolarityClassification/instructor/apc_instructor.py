@@ -19,7 +19,7 @@ from tqdm import tqdm
 
 from pyabsa import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
-from pyabsa.tasks.AspectPolarityClassification.instructor.ensembler import APCEnsembler
+from ..instructor.ensembler import APCEnsembler
 from pyabsa.utils.file_utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import print_args, init_optimizer
 
@@ -480,14 +480,17 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                     {'params': self.model.models[0].eta2, 'lr': self.config.eta_lr, 'weight_decay': self.config.l2reg}
                 ],
                 lr=self.config.learning_rate,
-                weight_decay=self.config.l2reg
+                weight_decay=self.config.l2reg,
+                maximize=self.config.maximize_loss if self.config.get('maximize_loss') else False
             )
         else:
             self.optimizer = init_optimizer(self.config.optimizer)(
                 self.model.parameters(),
                 lr=self.config.learning_rate,
-                weight_decay=self.config.l2reg
+                weight_decay=self.config.l2reg,
+                maximize=self.config.maximize_loss if self.config.get('maximize_loss') else False
             )
+
 
     def _cache_or_load_dataset(self):
         pass

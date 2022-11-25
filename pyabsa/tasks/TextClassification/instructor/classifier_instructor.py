@@ -22,9 +22,9 @@ from transformers import AutoModel
 
 from pyabsa import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
-from pyabsa.tasks.TextClassification.dataset_utils.__classic__.data_utils_for_training import GloVeTCDataset
-from pyabsa.tasks.TextClassification.dataset_utils.__plm__.data_utils_for_training import BERTTCDataset
-from pyabsa.tasks.TextClassification.models import GloVeTCModelList, BERTTCModelList
+from ..dataset_utils.__classic__.data_utils_for_training import GloVeTCDataset
+from ..dataset_utils.__plm__.data_utils_for_training import BERTTCDataset
+from ..models import GloVeTCModelList, BERTTCModelList
 
 import pytorch_warmup as warmup
 
@@ -62,7 +62,8 @@ class TCTrainingInstructor(BaseTrainingInstructor):
         self.optimizer = init_optimizer(self.config.optimizer)(
             self.model.parameters(),
             lr=self.config.learning_rate,
-            weight_decay=self.config.l2reg
+            weight_decay=self.config.l2reg,
+            maximize=self.config.maximize_loss if self.config.get('maximize_loss') else False
         )
 
         self.train_dataloaders = []
@@ -117,9 +118,9 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             self.valid_set = GloVeTCDataset(self.config, self.tokenizer, dataset_type='valid')
 
             self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
-            self.config.tokenizer = self.tokenizer
             self.config.embedding_matrix = self.embedding_matrix
 
+        self.config.tokenizer = self.tokenizer
         self.save_cache_dataset()
 
     def reload_model(self, ckpt='./init_state_dict.bin'):

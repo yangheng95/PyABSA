@@ -10,9 +10,9 @@
 from typing import Union
 
 from pyabsa.framework.flag_class.flag_template import DeviceTypeOption, ModelSaveOption, TaskCodeOption, TaskNameOption
-from pyabsa.tasks.TextClassification.configuration.tc_configuration import TCConfigManager
-from pyabsa.tasks.TextClassification.instructor.classifier_instructor import TCTrainingInstructor
-from pyabsa.tasks.TextClassification.prediction.text_classifier import TextClassifier
+from ..configuration.tc_configuration import TCConfigManager
+from ..instructor.classifier_instructor import TCTrainingInstructor
+from ..prediction.text_classifier import TextClassifier
 from pyabsa.framework.trainer_class.trainer_template import Trainer
 
 

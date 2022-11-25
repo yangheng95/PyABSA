@@ -18,9 +18,9 @@ from sklearn import metrics
 
 from pyabsa import TaskCodeOption, LabelPaddingOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
-from pyabsa.tasks.RNAClassification.models import BERTRNACModelList, GloVeRNACModelList
-from pyabsa.tasks.RNAClassification.dataset_utils.data_utils_for_inference import GloVeRNACInferenceDataset
-from pyabsa.tasks.RNAClassification.dataset_utils.data_utils_for_inference import BERTRNACInferenceDataset
+from ..models import BERTRNACModelList, GloVeRNACModelList
+from ..dataset_utils.data_utils_for_inference import GloVeRNACInferenceDataset
+from ..dataset_utils.data_utils_for_inference import BERTRNACInferenceDataset
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import get_device, print_args
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
@@ -38,7 +38,7 @@ class RNAClassifier(InferenceModel):
         super().__init__(checkpoint, cal_perplexity, **kwargs)
 
         # load from a trainer
-        if not isinstance(self.checkpoint, str):
+        if self.checkpoint and not isinstance(self.checkpoint, str):
             print('Load text classifier from trainer')
             self.model = self.checkpoint[0]
             self.config = self.checkpoint[1]

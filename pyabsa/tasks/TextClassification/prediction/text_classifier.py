@@ -20,9 +20,9 @@ from sklearn import metrics
 
 from pyabsa import TaskCodeOption, LabelPaddingOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
-from pyabsa.tasks.TextClassification.dataset_utils.__plm__.data_utils_for_inference import BERTTCInferenceDataset
-from pyabsa.tasks.TextClassification.models import BERTTCModelList, GloVeTCModelList
-from pyabsa.tasks.TextClassification.dataset_utils.__classic__.data_utils_for_inference import GloVeTCInferenceDataset
+from ..dataset_utils.__plm__.data_utils_for_inference import BERTTCInferenceDataset
+from ..models import BERTTCModelList, GloVeTCModelList
+from ..dataset_utils.__classic__.data_utils_for_inference import GloVeTCInferenceDataset
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import get_device, print_args
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
@@ -41,7 +41,7 @@ class TextClassifier(InferenceModel):
         super().__init__(checkpoint, cal_perplexity, task_code=self.task_code, **kwargs)
 
         # load from a trainer
-        if not isinstance(self.checkpoint, str):
+        if self.checkpoint and not isinstance(self.checkpoint, str):
             print('Load text classifier from trainer')
             self.model = self.checkpoint[0]
             self.config = self.checkpoint[1]

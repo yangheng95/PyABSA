@@ -19,17 +19,16 @@ from transformers import AutoTokenizer
 
 from pyabsa import LabelPaddingOption, TaskCodeOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
-from pyabsa.tasks.AspectPolarityClassification.models.__plm__ import BERTBaselineAPCModelList
-from pyabsa.tasks.AspectPolarityClassification.models.__classic__ import GloVeAPCModelList
-from pyabsa.tasks.AspectPolarityClassification.models.__lcf__ import APCModelList
-from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__classic__.data_utils_for_inference import GloVeABSAInferenceDataset
-from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__lcf__.data_utils_for_inference import ABSAInferenceDataset
-from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__plm__.data_utils_for_inference import BERTABSAInferenceDataset
-from pyabsa.tasks.AspectPolarityClassification.instructor.ensembler import APCEnsembler
+from ..models.__plm__ import BERTBaselineAPCModelList
+from ..models.__classic__ import GloVeAPCModelList
+from ..models.__lcf__ import APCModelList
+from ..dataset_utils.__classic__.data_utils_for_inference import GloVeABSAInferenceDataset
+from ..dataset_utils.__lcf__.data_utils_for_inference import ABSAInferenceDataset
+from ..dataset_utils.__plm__.data_utils_for_inference import BERTABSAInferenceDataset
+from ..instructor.ensembler import APCEnsembler
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import get_device, print_args
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
-from pyabsa.framework.tokenizer_class.tokenizer_class import Tokenizer
 
 
 class SentimentClassifier(InferenceModel):
@@ -41,7 +40,7 @@ class SentimentClassifier(InferenceModel):
         super().__init__(checkpoint, cal_perplexity, task_code=self.task_code, **kwargs)
 
         # load from a trainer
-        if not isinstance(self.checkpoint, str):
+        if self.checkpoint and not isinstance(self.checkpoint, str):
             print('Load sentiment classifier from trainer')
             self.model = self.checkpoint[0]
             self.config = self.checkpoint[1]

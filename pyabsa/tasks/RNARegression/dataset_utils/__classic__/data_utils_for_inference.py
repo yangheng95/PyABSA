@@ -85,7 +85,7 @@ class GloVeRNARDataset(Dataset):
                     intron_ids = self.tokenizer.text_to_sequence(intron)
                     exon2_ids = self.tokenizer.text_to_sequence(exon2)
 
-                    intron_ids = pad_and_truncate(intron_ids, self.config.max_seq_len)
+                    intron_ids = pad_and_truncate(intron_ids, self.config.max_seq_len, value=self.tokenizer.pad_token_id)
 
                     rna_indices = exon1_ids + intron_ids + exon2_ids
                     rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len, value=self.tokenizer.pad_token_id)

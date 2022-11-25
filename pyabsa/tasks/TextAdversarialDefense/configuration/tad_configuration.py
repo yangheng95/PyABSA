@@ -12,8 +12,8 @@ import copy
 # if you find the optimal param set of some situation, e.g., some model on some datasets
 # please share the main use template main
 from pyabsa.framework.configuration_class.configuration_template import ConfigManager
-from pyabsa.tasks.TextAdversarialDefense.models.__classic__.tad_lstm import TADLSTM
-from pyabsa.tasks.TextAdversarialDefense.models.__plm__.tad_bert import TADBERT
+from ..models.__classic__.tad_lstm import TADLSTM
+from ..models.__plm__.tad_bert import TADBERT
 
 _tad_config_template = {'model': TADBERT,
                         'optimizer': "adamw",

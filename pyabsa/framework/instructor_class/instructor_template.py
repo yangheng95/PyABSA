@@ -164,6 +164,9 @@ class BaseTrainingInstructor:
                     DataLoader(dataset=val_set, batch_size=self.config.batch_size, sampler=val_sampler))
 
     def _prepare_env(self):
+        self.config.tokenizer = self.tokenizer
+        self.config.embedding_matrix = self.embedding_matrix
+
         if os.path.exists('init_state_dict.bin'):
             os.remove('init_state_dict.bin')
         if self.config.cross_validate_fold > 0:
@@ -180,8 +183,6 @@ class BaseTrainingInstructor:
         if self.config.device.type == 'cuda':
             self.logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.config.device)))
 
-        self.config.tokenizer = self.tokenizer
-        self.config.embedding_matrix = self.embedding_matrix
 
         print_args(self.config, self.logger)
 

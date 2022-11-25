@@ -11,9 +11,9 @@ from typing import Union
 
 from pyabsa import DeviceTypeOption, ModelSaveOption, TaskCodeOption, TaskNameOption
 from pyabsa.framework.trainer_class.trainer_template import Trainer
-from pyabsa.tasks.TextAdversarialDefense.configuration.tad_configuration import TADConfigManager
-from pyabsa.tasks.TextAdversarialDefense.prediction.tad_classifier import TADTextClassifier
-from pyabsa.tasks.TextAdversarialDefense.instructor.tad_instructor import TADTrainingInstructor
+from ..configuration.tad_configuration import TADConfigManager
+from ..prediction.tad_classifier import TADTextClassifier
+from ..instructor.tad_instructor import TADTrainingInstructor
 
 
 class TADTrainer(Trainer):

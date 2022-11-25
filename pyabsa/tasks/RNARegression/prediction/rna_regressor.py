@@ -20,9 +20,9 @@ from sklearn import metrics
 
 from pyabsa import TaskCodeOption, LabelPaddingOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
-from pyabsa.tasks.RNARegression.dataset_utils.__classic__.data_utils_for_inference import GloVeRNARDataset
-from pyabsa.tasks.RNARegression.dataset_utils.__plm__.data_utils_for_inference import BERTRNARDataset
-from pyabsa.tasks.RNARegression.models import BERTRNARModelList, GloVeRNARModelList
+from ..dataset_utils.__classic__.data_utils_for_inference import GloVeRNARDataset
+from ..dataset_utils.__plm__.data_utils_for_inference import BERTRNARDataset
+from ..models import BERTRNARModelList, GloVeRNARModelList
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import get_device, print_args
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
@@ -40,7 +40,7 @@ class RNARegressor(InferenceModel):
         super(RNARegressor, self).__init__(checkpoint, **kwargs)
 
         # load from a trainer
-        if not isinstance(self.checkpoint, str):
+        if self.checkpoint and not isinstance(self.checkpoint, str):
             print('Load text classifier from trainer')
             self.model = self.checkpoint[0]
             self.config = self.checkpoint[1]

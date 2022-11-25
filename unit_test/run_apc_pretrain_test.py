@@ -50,6 +50,7 @@ def test_cross_validate():
             config.max_seq_len = 10
             config.evaluate_begin = 0
             config.log_step = -1
+            config.cross_valid_fold = 5
             apc_trainer = APC.APCTrainer(config=config,
                                          dataset=dataset,
                                          checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,

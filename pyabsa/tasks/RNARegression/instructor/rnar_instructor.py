@@ -22,9 +22,9 @@ from transformers import AutoModel, AutoTokenizer
 from pyabsa import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from pyabsa.utils.file_utils.file_utils import save_model
-from pyabsa.tasks.RNARegression.dataset_utils.__classic__.data_utils_for_training import GloVeRNARDataset
-from pyabsa.tasks.RNARegression.dataset_utils.__plm__.data_utils_for_training import BERTRNARDataset
-from pyabsa.tasks.RNARegression.models import GloVeRNARModelList, BERTRNARModelList
+from ..dataset_utils.__classic__.data_utils_for_training import GloVeRNARDataset
+from ..dataset_utils.__plm__.data_utils_for_training import BERTRNARDataset
+from ..models import GloVeRNARModelList, BERTRNARModelList
 from pyabsa.utils.pyabsa_utils import print_args, init_optimizer
 
 import pytorch_warmup as warmup
@@ -45,7 +45,8 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
         self.optimizer = init_optimizer(self.config.optimizer)(
             self.model.parameters(),
             lr=self.config.learning_rate,
-            weight_decay=self.config.l2reg
+            weight_decay=self.config.l2reg,
+            maximize=self.config.maximize_loss if self.config.get('maximize_loss') else False
         )
 
         self.train_dataloaders = []
@@ -106,9 +107,9 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
             self.valid_set = GloVeRNARDataset(self.config, self.tokenizer, dataset_type='valid')
 
             self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
-            self.config.tokenizer = self.config.tokenizer
-            self.config.embedding_matrix = self.config.embedding_matrix
+            self.config.embedding_matrix = self.embedding_matrix
 
+        self.config.tokenizer = self.tokenizer
         self.save_cache_dataset()
 
     def __init__(self, config):

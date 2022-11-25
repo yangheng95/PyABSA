@@ -11,9 +11,9 @@ from typing import Union
 
 from pyabsa import DeviceTypeOption, ModelSaveOption, TaskCodeOption, TaskNameOption
 from pyabsa.framework.trainer_class.trainer_template import Trainer
-from pyabsa.tasks.RNARegression.configuration.rnar_configuration import RNARConfigManager
-from pyabsa.tasks.RNARegression.prediction.rna_regressor import RNARegressor
-from pyabsa.tasks.RNARegression.instructor.rnar_instructor import RNARTrainingInstructor
+from ..configuration.rnar_configuration import RNARConfigManager
+from ..prediction.rna_regressor import RNARegressor
+from ..instructor.rnar_instructor import RNARTrainingInstructor
 
 
 class RNARTrainer(Trainer):

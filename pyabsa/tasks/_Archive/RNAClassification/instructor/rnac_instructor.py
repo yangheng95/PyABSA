@@ -50,7 +50,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         self.optimizer = init_optimizer(self.config.optimizer)(
             self.model.parameters(),
             lr=self.config.learning_rate,
-            weight_decay=self.config.l2reg
+            weight_decay=self.config.l2reg,
+            maximize=self.config.maximize_loss if self.config.get('maximize_loss') else False
         )
 
         self.train_dataloaders = []

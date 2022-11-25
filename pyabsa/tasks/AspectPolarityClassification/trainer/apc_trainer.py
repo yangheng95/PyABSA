@@ -11,9 +11,9 @@ from typing import Union
 
 from pyabsa import DeviceTypeOption, ModelSaveOption, TaskCodeOption, TaskNameOption
 from pyabsa.framework.trainer_class.trainer_template import Trainer
-from pyabsa.tasks.AspectPolarityClassification.configuration.apc_configuration import APCConfigManager
-from pyabsa.tasks.AspectPolarityClassification.prediction.sentiment_classifier import SentimentClassifier
-from pyabsa.tasks.AspectPolarityClassification.instructor.apc_instructor import APCTrainingInstructor
+from ..configuration.apc_configuration import APCConfigManager
+from ..prediction.sentiment_classifier import SentimentClassifier
+from ..instructor.apc_instructor import APCTrainingInstructor
 
 
 class APCTrainer(Trainer):
