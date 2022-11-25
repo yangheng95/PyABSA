@@ -12,7 +12,7 @@ import time
 import zipfile
 from typing import Union
 
-import git
+# import git
 import findfile
 import requests
 import tqdm
@@ -218,7 +218,7 @@ def download_all_available_datasets(**kwargs):
     with tempfile.TemporaryDirectory() as tmpdir:
         try:
             print('Clone ABSADatasets from https://github.com/yangheng95/ABSADatasets.git')
-            git.Repo.clone_from('https://github.com/yangheng95/ABSADatasets.git', tmpdir, branch='v2.0', depth=1)
+            # git.Repo.clone_from('https://github.com/yangheng95/ABSADatasets.git', tmpdir, branch='v2.0', depth=1)
             # git.Repo.clone_from('https://github.com/yangheng95/ABSADatasets.git', tmpdir, branch='master', depth=1)
             try:
                 shutil.move(os.path.join(tmpdir, 'datasets'), '{}'.format(save_path))
@@ -227,7 +227,7 @@ def download_all_available_datasets(**kwargs):
         except Exception as e:
             try:
                 print('Clone ABSADatasets from https://gitee.com/yangheng95/ABSADatasets.git')
-                git.Repo.clone_from('https://gitee.com/yangheng95/ABSADatasets.git', tmpdir, branch='v2.0', depth=1)
+                # git.Repo.clone_from('https://gitee.com/yangheng95/ABSADatasets.git', tmpdir, branch='v2.0', depth=1)
                 # git.Repo.clone_from('https://github.com/yangheng95/ABSADatasets.git', tmpdir, branch='master', depth=1)
                 try:
                     shutil.move(os.path.join(tmpdir, 'datasets'), '{}'.format(save_path))
