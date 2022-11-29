@@ -1,22 +1,22 @@
 [
   {
     "referrer": "github.com",
-    "count": 869,
-    "uniques": 127
+    "count": 752,
+    "uniques": 121
   },
   {
     "referrer": "Google",
-    "count": 551,
-    "uniques": 115
+    "count": 437,
+    "uniques": 107
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 421,
-    "uniques": 102
+    "count": 375,
+    "uniques": 94
   },
   {
     "referrer": "huggingface.co",
-    "count": 117,
+    "count": 110,
     "uniques": 25
   },
   {
@@ -26,8 +26,8 @@
   },
   {
     "referrer": "link.zhihu.com",
-    "count": 73,
-    "uniques": 20
+    "count": 57,
+    "uniques": 18
   },
   {
     "referrer": "gradio-blocks-multilingual-aspect-based-sentim-c04f821.hf.space",
@@ -36,8 +36,8 @@
   },
   {
     "referrer": "youtube.com",
-    "count": 50,
-    "uniques": 22
+    "count": 47,
+    "uniques": 19
   },
   {
     "referrer": "cn.bing.com",
@@ -45,8 +45,8 @@
     "uniques": 3
   },
   {
-    "referrer": "notebooks.githubusercontent.com",
-    "count": 33,
-    "uniques": 4
+    "referrer": "Bing",
+    "count": 30,
+    "uniques": 3
   }
 ]
