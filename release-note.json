@@ -1,4 +1,7 @@
 {
+  "2.0.15": {
+    "1": "Fix available checkpoints printing in all_available_checkpoints()"
+  },
   "2.0.14(12,13)": {
     "1": "Fix device setting in inference, to set auto_device to set device in a inference class",
     "2": "Fix a bug in APC inference",

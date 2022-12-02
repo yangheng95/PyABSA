@@ -14,15 +14,16 @@ import requests
 import tqdm
 from findfile import find_files, find_cwd_files, find_cwd_dir
 from packaging import version
+from pyabsa.framework.flag_class import TaskCodeOption
 from termcolor import colored
 from pyabsa import __version__ as current_version, PyABSAMaterialHostAddress
 from pyabsa.utils.file_utils.file_utils import unzip_checkpoint
 from pyabsa.utils.pyabsa_utils import fprint
 
 
-def parse_checkpoint_info(t_checkpoint_map, task='APC', show_ckpts=False):
+def parse_checkpoint_info(t_checkpoint_map, task_code, show_ckpts=False):
     fprint('*' * 10,
-           colored('Available {} model checkpoints for Version:{} (this version)'.format(task, current_version), 'green'),
+           colored('Available {} model checkpoints for Version:{} (this version)'.format(task_code, current_version), 'green'),
            '*' * 10)
     for i, checkpoint_name in enumerate(t_checkpoint_map):
         checkpoint = t_checkpoint_map[checkpoint_name]
@@ -40,16 +41,28 @@ def parse_checkpoint_info(t_checkpoint_map, task='APC', show_ckpts=False):
             max_ver = ''
         max_ver = max_ver if max_ver else 'N.A.'
         if max_ver == 'N.A.' or StrictVersion(min_ver) <= StrictVersion(current_version) <= StrictVersion(max_ver):
-
-            fprint('-' * 100)
-            fprint('Checkpoint Name: {}'.format(checkpoint_name))
-            for key in checkpoint:
-                fprint('{}: {}'.format(key, checkpoint[key]))
-            fprint('-' * 100)
+            if show_ckpts:
+                fprint('-' * 100)
+                fprint('Checkpoint Name: {}'.format(checkpoint_name))
+                for key in checkpoint:
+                    fprint('{}: {}'.format(key, checkpoint[key]))
+                fprint('-' * 100)
     return t_checkpoint_map
 
 
-def available_checkpoints(task='', show_ckpts=False):
+def available_checkpoints(task_code: TaskCodeOption = None, show_ckpts=False):
+    """
+    :param task_code: see TaskCodeOption, e.g.
+    from pyabsa import TaskCodeOption
+    TaskCodeOption.Aspect_Polarity_Classification
+    TaskCodeOption.Aspect_Term_Extraction_and_Classification
+    TaskCodeOption.Sentiment_Analysis
+    TaskCodeOption.Text_Classification
+    TaskCodeOption.Text_Adversarial_Defense
+    :param show_ckpts: show all checkpoints
+    """
+    if task_code is None:
+        fprint('Please specify the task code, e.g. from pyabsa import TaskCodeOption')
     try:  # from huggingface space
         checkpoint_url = PyABSAMaterialHostAddress + 'raw/main/checkpoints-v2.0.json'
         response = requests.get(checkpoint_url)
@@ -71,12 +84,11 @@ def available_checkpoints(task='', show_ckpts=False):
             max_ver = ''
         max_ver = max_ver if max_ver else 'N.A.'
         if max_ver == 'N.A.' or version.parse(min_ver) <= version.parse(current_version) <= version.parse(max_ver):
-            if task:
-                t_checkpoint_map.update(checkpoint_map[c_version][task.upper()] if task.upper() in checkpoint_map[c_version] else {})
-                if show_ckpts:
-                    parse_checkpoint_info(t_checkpoint_map, task, show_ckpts)
+            if task_code:
+                t_checkpoint_map.update(checkpoint_map[c_version][task_code.upper()] if task_code.upper() in checkpoint_map[c_version] else {})
+                parse_checkpoint_info(t_checkpoint_map, task_code, show_ckpts)
 
-    return t_checkpoint_map if task else checkpoint_map
+    return t_checkpoint_map if task_code else checkpoint_map
 
 
 def download_checkpoint(task: str, language: str, checkpoint: dict):
