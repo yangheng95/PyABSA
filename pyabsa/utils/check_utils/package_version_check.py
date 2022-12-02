@@ -14,6 +14,7 @@ from update_checker import parse_version, UpdateChecker
 
 from pyabsa import __version__ as current_version
 from pyabsa.utils.exception_utils import time_out
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 @time_out(10)
@@ -39,7 +40,7 @@ def validate_pyabsa_version():
         versions = list(data["releases"].keys())
         versions.sort(key=parse_version, reverse=True)
         if current_version not in versions:
-            print(colored(
+            fprint(colored(
                 'You are using a DEPRECATED or TEST version of PyABSA. Consider update using pip install -U pyabsa!',
                 'red'))
 
@@ -55,8 +56,8 @@ def query_release_notes(**kwargs):
             logger.info('Release note: ')
             logger.info(release_note)
         else:
-            print('Release note: ')
-            print(release_note[current_version])
+            fprint('Release note: ')
+            fprint(release_note[current_version])
     except Exception as e:
         try:
             release_url = 'https://gitee.com/yangheng95/PyABSA/raw/release/release-note.json'
@@ -70,8 +71,8 @@ def query_release_notes(**kwargs):
                 logger.warning('Failed to query release notes, '
                                'please check the latest version of PyABSA at {}'.format(release_url))
             else:
-                print(colored('Failed to query release notes, '
-                              'please check the latest version of PyABSA at {}'.format(release_url), 'red'))
+                fprint(colored('Failed to query release notes, '
+                               'please check the latest version of PyABSA at {}'.format(release_url), 'red'))
 
 
 @time_out(10)
@@ -81,7 +82,7 @@ def check_pyabsa_update():
         check_result = checker.check(__name__, current_version)
 
         if check_result:
-            print(check_result)
+            fprint(check_result)
             query_release_notes()
     except Exception as e:
-        print('Failed to check update for {}, error: {}'.format(__name__, e))
+        fprint('Failed to check update for {}, error: {}'.format(__name__, e))

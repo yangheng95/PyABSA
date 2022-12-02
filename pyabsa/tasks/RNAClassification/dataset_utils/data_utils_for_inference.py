@@ -8,14 +8,12 @@
 # Copyright (C) 2022. All Rights Reserved.
 from typing import Union, List
 
-import torch
 import tqdm
 from torch.utils.data import Dataset
 
-from pyabsa import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
-from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 class RNACInferenceDataset(Dataset):
@@ -78,7 +76,7 @@ class RNACInferenceDataset(Dataset):
 
             except Exception as e:
                 if ignore_error:
-                    print('Ignore error while processing:', text)
+                    fprint('Ignore error while processing:', text)
                 else:
                     raise e
 

@@ -126,7 +126,7 @@ if __name__ == '__main__':  # test
     config.a = 2
     config.b = 3
     config.c = 4
-    print(config.a)
-    print(config.b)
-    print(config.c)
-    print(config.args_call_count)
+    fprint(config.a)
+    fprint(config.b)
+    fprint(config.c)
+    fprint(config.args_call_count)

@@ -1,4 +1,8 @@
 {
+  "2.0.12": {
+    "1": "Fix device setting in inference, to set auto_device to set device in a inference class",
+    "2": "Other improvements"
+  },
   "2.0.11": {
     "1": "Fix auto-augmentation API",
     "2": "You can see the augmentation examples in the examples folder",

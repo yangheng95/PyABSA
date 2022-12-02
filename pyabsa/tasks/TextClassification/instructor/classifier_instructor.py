@@ -29,7 +29,7 @@ from ..models import GloVeTCModelList, BERTTCModelList
 import pytorch_warmup as warmup
 
 from pyabsa.utils.file_utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import init_optimizer, print_args
+from pyabsa.utils.pyabsa_utils import init_optimizer, print_args, fprint
 from pyabsa.framework.tokenizer_class.tokenizer_class import PretrainedTokenizer, Tokenizer, build_embedding_matrix
 
 
@@ -97,7 +97,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             try:
                 self.bert = AutoModel.from_pretrained(self.config.pretrained_bert)
             except ValueError as e:
-                print('Init pretrained model failed, exception: {}'.format(e))
+                fprint('Init pretrained model failed, exception: {}'.format(e))
 
             # init the model behind the construction of datasets in case of updating output_dim
             self.model = self.config.model(self.bert, self.config).to(self.config.device)
@@ -291,7 +291,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             self.config.MV.add_metric('Max-Test-F1 w/o Valid Set', max_fold_f1 * 100)
 
         if self.valid_dataloader:
-            print('Loading best model: {} and evaluating on test set ...'.format(save_path))
+            fprint('Loading best model: {} and evaluating on test set ...'.format(save_path))
             self.reload_model(find_file(save_path, '.state_dict'))
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
 
@@ -300,8 +300,8 @@ class TCTrainingInstructor(BaseTrainingInstructor):
 
         self.logger.info(self.config.MV.summary(no_print=True))
 
-        print('Training finished, we hope you can share your checkpoint with everybody, please see:',
-              'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
+        fprint('Training finished, we hope you can share your checkpoint with everybody, please see:',
+               'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
 
         print_args(self.config, self.logger)
 
@@ -473,8 +473,8 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             self.logger.info(self.config.MV.summary(no_print=True))
         # self.config.MV.summary()
 
-        print('Training finished, we hope you can share your checkpoint with community, please see:',
-              'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
+        fprint('Training finished, we hope you can share your checkpoint with community, please see:',
+               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
 
         print_args(self.config, self.logger)
 
@@ -528,9 +528,9 @@ class TCTrainingInstructor(BaseTrainingInstructor):
         f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
                               labels=list(range(self.config.output_dim)), average='macro')
         if self.config.args.get('show_metric', False):
-            print('\n---------------------------- Classification Report ----------------------------\n')
-            print(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(), target_names=[self.config.index_to_label[x] for x in self.config.index_to_label]))
-            print('\n---------------------------- Classification Report ----------------------------\n')
+            fprint('\n---------------------------- Classification Report ----------------------------\n')
+            fprint(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(), target_names=[self.config.index_to_label[x] for x in self.config.index_to_label]))
+            fprint('\n---------------------------- Classification Report ----------------------------\n')
         return test_acc, f1
 
     def run(self):

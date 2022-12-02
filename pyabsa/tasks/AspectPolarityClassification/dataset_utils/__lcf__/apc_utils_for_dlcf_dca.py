@@ -13,7 +13,8 @@ import numpy as np
 import spacy
 import termcolor
 
-from .apc_utils import pad_and_truncate, text_to_sequence, get_syntax_distance
+from pyabsa.utils.pyabsa_utils import fprint
+from .apc_utils import text_to_sequence, get_syntax_distance
 
 
 def prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect):
@@ -107,7 +108,7 @@ def get_dynamic_cdw_vec(opt, max_dist, bert_spc_indices, aspect_indices, aspect_
             try:
                 assert 0 <= w <= 1  # exception
             except:
-                print('Warning! invalid CDW weight:', w)
+                fprint('Warning! invalid CDW weight:', w)
             cdw_vec[i] = 1
     return cdw_vec
 
@@ -143,8 +144,8 @@ def configure_dlcf_spacy_model(opt):
     try:
         nlp = spacy.load(opt.spacy_model)
     except:
-        print('Can not load {} from spacy, try to download it in order to parse syntax tree:'.format(opt.spacy_model),
-              termcolor.colored('\npython -m spacy download {}'.format(opt.spacy_model), 'green'))
+        fprint('Can not load {} from spacy, try to download it in order to parse syntax tree:'.format(opt.spacy_model),
+               termcolor.colored('\npython -m spacy download {}'.format(opt.spacy_model), 'green'))
         try:
             os.system('python -m spacy download {}'.format(opt.spacy_model))
             nlp = spacy.load(opt.spacy_model)

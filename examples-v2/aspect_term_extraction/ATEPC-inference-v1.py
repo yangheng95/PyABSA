@@ -8,6 +8,7 @@
 
 from pyabsa import ABSADatasetList, available_checkpoints
 from pyabsa import ATEPCCheckpointManager
+from pyabsa.utils.pyabsa_utils import fprint
 
 # checkpoint_map = available_checkpoints(from_local=False)
 
@@ -24,4 +25,4 @@ atepc_result = aspect_extractor.extract_aspect(inference_source=inference_source
                                                pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
                                                )
 
-print(atepc_result)
+fprint(atepc_result)

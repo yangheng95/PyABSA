@@ -18,6 +18,7 @@ from pyabsa import AspectPolarityClassification as APC, ModelSaveOption, DeviceT
 import warnings
 
 from pyabsa.tasks.AspectPolarityClassification import APCDatasetList
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 def ensemble_predict(apc_classifiers: dict, text, print_result=False):
@@ -49,7 +50,7 @@ def ensemble_performance(dataset, print_result=False):
         result = ensemble_predict(apc_classifiers, text, print_result)
         pred.append(result)
         gold.append(text.split('$LABEL$')[-1].strip())
-    print(classification_report(gold, pred, digits=4))
+    fprint(classification_report(gold, pred, digits=4))
 
 
 if __name__ == '__main__':

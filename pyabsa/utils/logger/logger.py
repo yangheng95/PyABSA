@@ -9,8 +9,6 @@ import os
 import sys
 import time
 
-import termcolor
-
 today = time.strftime('%Y%m%d %H%M%S', time.localtime(time.time()))
 
 

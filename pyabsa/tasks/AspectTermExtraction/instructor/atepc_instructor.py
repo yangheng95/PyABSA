@@ -27,7 +27,7 @@ from pyabsa import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from ..dataset_utils.__lcf__.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
 from pyabsa.utils.file_utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args, init_optimizer
+from pyabsa.utils.pyabsa_utils import print_args, init_optimizer, fprint
 
 import pytorch_warmup as warmup
 
@@ -306,8 +306,8 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
         self.config.MV.summary(no_print=True)
         self.logger.info(self.config.MV.summary(no_print=True))
 
-        print('Training finished, we hope you can share your checkpoint with community, please see:',
-              'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
+        fprint('Training finished, we hope you can share your checkpoint with community, please see:',
+               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
 
         rolling_intv = 5
         df = pandas.DataFrame(losses)
@@ -419,9 +419,9 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                 try:
                     apc_report = metrics.classification_report(test_apc_logits_all.cpu(), torch.argmax(test_polarities_all, -1).cpu(),
                                                                target_names=[self.config.index_to_label[x] for x in self.config.index_to_label])
-                    print('\n---------------------------- APC Classification Report ----------------------------\n')
-                    print(apc_report)
-                    print('\n---------------------------- APC Classification Report ----------------------------\n')
+                    fprint('\n---------------------------- APC Classification Report ----------------------------\n')
+                    fprint(apc_report)
+                    fprint('\n---------------------------- APC Classification Report ----------------------------\n')
                 except:
                     # No enough raw_data to calculate the report
                     pass
@@ -431,9 +431,9 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                 tmps = report.split()
                 ate_result = round(float(tmps[7]) * 100, 2)
                 if self.config.args.get('show_metric', False):
-                    print('\n---------------------------- ATE Classification Report ----------------------------\n')
-                    print(report)
-                    print('\n---------------------------- ATE Classification Report ----------------------------\n')
+                    fprint('\n---------------------------- ATE Classification Report ----------------------------\n')
+                    fprint(report)
+                    fprint('\n---------------------------- ATE Classification Report ----------------------------\n')
             except:
                 # No enough raw_data to calculate the report
                 pass

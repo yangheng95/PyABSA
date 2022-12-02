@@ -15,7 +15,6 @@ class BERTMeanPooler(nn.Module):
         super(BERTMeanPooler, self).__init__()
 
     def forward(self, model_output, attention_mask):
-
         token_embeddings = model_output
         input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
         sum_embeddings = torch.sum(token_embeddings * input_mask_expanded, 1)

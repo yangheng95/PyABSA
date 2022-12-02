@@ -30,7 +30,7 @@ from ..dataset_utils.__lcf__.atepc_utils import load_atepc_inference_datasets, p
 from ..dataset_utils.__lcf__.data_utils_for_inference import ATEPCProcessor, convert_ate_examples_to_features, convert_apc_examples_to_features
 from ..dataset_utils.__lcf__.data_utils_for_training import split_aspect
 from pyabsa.utils.data_utils.dataset_item import DatasetItem
-from pyabsa.utils.pyabsa_utils import get_device, print_args
+from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint
 
 
 class AspectExtractor(InferenceModel):
@@ -42,29 +42,29 @@ class AspectExtractor(InferenceModel):
         super().__init__(checkpoint, task_code=self.task_code, **kwargs)
 
         if self.checkpoint and not isinstance(self.checkpoint, str):
-            print('Load aspect extractor from trainer')
+            fprint('Load aspect extractor from trainer')
             self.model = self.checkpoint[0]
             self.config = self.checkpoint[1]
             self.tokenizer = self.checkpoint[2]
         else:
             if 'fine-tuned' in self.checkpoint:
                 raise ValueError('Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!')
-            print('Load aspect extractor from', self.checkpoint)
+            fprint('Load aspect extractor from', self.checkpoint)
             try:
                 state_dict_path = find_file(self.checkpoint, '.state_dict', exclude_key=['__MACOSX'])
                 model_path = find_file(self.checkpoint, '.model', exclude_key=['__MACOSX'])
                 tokenizer_path = find_file(self.checkpoint, '.tokenizer', exclude_key=['__MACOSX'])
                 config_path = find_file(self.checkpoint, '.config', exclude_key=['__MACOSX'])
 
-                print('config: {}'.format(config_path))
-                print('state_dict: {}'.format(state_dict_path))
-                print('model: {}'.format(model_path))
-                print('tokenizer: {}'.format(tokenizer_path))
+                fprint('config: {}'.format(config_path))
+                fprint('state_dict: {}'.format(state_dict_path))
+                fprint('model: {}'.format(model_path))
+                fprint('tokenizer: {}'.format(tokenizer_path))
 
                 with open(config_path, mode='rb') as f:
                     self.config = pickle.load(f)
                     self.config.auto_device = kwargs.get('auto_device', True)
-                    get_device(self.config)
+                    set_device(self.config, self.config.auto_device)
                 if state_dict_path:
                     if kwargs.get('offline', False):
                         bert_base_model = AutoModel.from_pretrained(find_cwd_dir(self.config.pretrained_bert.split('/')[-1]))
@@ -100,7 +100,7 @@ class AspectExtractor(InferenceModel):
         self.num_labels = len(self.config.label_list) + 1
 
         if kwargs.get('verbose', False):
-            print('Config used in Training:')
+            fprint('Config used in Training:')
             print_args(self.config)
 
         if self.config.gradient_accumulation_steps < 1:
@@ -256,7 +256,7 @@ class AspectExtractor(InferenceModel):
             results = self.merge_result(sentence_res, results)
             if save_result:
                 save_path = os.path.join(os.getcwd(), 'atepc_inference.result.json')
-                print('The results of aspect term extraction have been saved in {}'.format(save_path))
+                fprint('The results of aspect term extraction have been saved in {}'.format(save_path))
                 with open(save_path, 'w', encoding="utf8") as f:
                     json.dump(results, f, ensure_ascii=False)
             if print_result:
@@ -273,7 +273,7 @@ class AspectExtractor(InferenceModel):
                             colored_aspect = colored('<{}:{} Confidence:{}>'.format(aspect, sentiment, confidence), 'magenta')
                         colored_text = colored_text.replace(' {} '.format(aspect), ' {} '.format(colored_aspect), 1)
                     res_format = 'Example {}: {}'.format(ex_id, colored_text)
-                    print(res_format)
+                    fprint(res_format)
 
             return results
 

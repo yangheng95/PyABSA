@@ -14,6 +14,7 @@ from torch.utils.data import Dataset
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 class GloVeProteinRDataset(Dataset):
@@ -71,7 +72,7 @@ class GloVeProteinRDataset(Dataset):
 
             except Exception as e:
                 if ignore_error:
-                    print('Ignore error while processing:', text, e)
+                    fprint('Ignore error while processing:', text, e)
                 else:
                     raise e
 

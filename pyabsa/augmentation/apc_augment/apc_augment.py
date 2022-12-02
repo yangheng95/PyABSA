@@ -11,11 +11,13 @@ import sys
 
 from termcolor import colored
 
+from pyabsa.utils.pyabsa_utils import fprint
+
 
 def auto_aspect_sentiment_classification_augmentation(config, dataset, device, **kwargs):
-    print(colored('Performing augmentation for aspect sentiment classification. This may take a long time...', 'yellow'))
+    fprint(colored('Performing augmentation for aspect sentiment classification. This may take a long time...', 'yellow'))
 
-    print(colored('The augment tool is available at: {}'.format('https://github.com/yangheng95/BoostTextAugmentation'), 'yellow'))
+    fprint(colored('The augment tool is available at: {}'.format('https://github.com/yangheng95/BoostTextAugmentation'), 'yellow'))
     from pyabsa.tasks.AspectPolarityClassification import APCModelList
     from boost_aug import ABSCBoostAug
 

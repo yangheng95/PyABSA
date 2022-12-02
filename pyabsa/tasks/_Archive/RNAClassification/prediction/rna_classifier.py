@@ -22,7 +22,7 @@ from ..models import BERTRNACModelList, GloVeRNACModelList
 from ..dataset_utils.data_utils_for_inference import GloVeRNACInferenceDataset
 from ..dataset_utils.data_utils_for_inference import BERTRNACInferenceDataset
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
-from pyabsa.utils.pyabsa_utils import get_device, print_args
+from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
 from pyabsa.framework.tokenizer_class.tokenizer_class import Tokenizer, build_embedding_matrix, PretrainedTokenizer
 
@@ -39,7 +39,7 @@ class RNAClassifier(InferenceModel):
 
         # load from a trainer
         if self.checkpoint and not isinstance(self.checkpoint, str):
-            print('Load text classifier from trainer')
+            fprint('Load text classifier from trainer')
             self.model = self.checkpoint[0]
             self.config = self.checkpoint[1]
             self.tokenizer = self.checkpoint[2]
@@ -48,21 +48,21 @@ class RNAClassifier(InferenceModel):
                 if 'fine-tuned' in self.checkpoint:
                     raise ValueError(
                         'Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!')
-                print('Load text classifier from', self.checkpoint)
+                fprint('Load text classifier from', self.checkpoint)
                 state_dict_path = find_file(self.checkpoint, key='.state_dict', exclude_key=['__MACOSX'])
                 model_path = find_file(self.checkpoint, key='.model', exclude_key=['__MACOSX'])
                 tokenizer_path = find_file(self.checkpoint, key='.tokenizer', exclude_key=['__MACOSX'])
                 config_path = find_file(self.checkpoint, key='.config', exclude_key=['__MACOSX'])
 
-                print('config: {}'.format(config_path))
-                print('state_dict: {}'.format(state_dict_path))
-                print('model: {}'.format(model_path))
-                print('tokenizer: {}'.format(tokenizer_path))
+                fprint('config: {}'.format(config_path))
+                fprint('state_dict: {}'.format(state_dict_path))
+                fprint('model: {}'.format(model_path))
+                fprint('tokenizer: {}'.format(tokenizer_path))
 
                 with open(config_path, mode='rb') as f:
                     self.config = pickle.load(f)
                     self.config.auto_device = kwargs.get('auto_device', True)
-                    get_device(self.config)
+                    set_device(self.config, self.config.auto_device)
 
                 if state_dict_path or model_path:
                     if hasattr(BERTRNACModelList, self.config.model.__name__):
@@ -114,7 +114,7 @@ class RNAClassifier(InferenceModel):
                             self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
 
                 if kwargs.get('verbose', False):
-                    print('Config used in Training:')
+                    fprint('Config used in Training:')
                     print_args(self.config)
 
             except Exception as e:
@@ -168,11 +168,11 @@ class RNAClassifier(InferenceModel):
                 n_trainable_params += n_params
             else:
                 n_nontrainable_params += n_params
-        print(
+        fprint(
             'n_trainable_params: {0}, n_nontrainable_params: {1}'.format(n_trainable_params, n_nontrainable_params))
         for arg in vars(self.config):
             if getattr(self.config, arg) is not None:
-                print('>>> {0}: {1}'.format(arg, getattr(self.config, arg)))
+                fprint('>>> {0}: {1}'.format(arg, getattr(self.config, arg)))
 
     def batch_predict(self,
                       target_file=None,
@@ -296,23 +296,23 @@ class RNAClassifier(InferenceModel):
                         text_printing += colored(' --> <perplexity:{}>\t'.format(result['perplexity']), 'yellow')
                     text_printing = text_info + text_printing
 
-                    print('Example :{}'.format(text_printing))
+                    fprint('Example :{}'.format(text_printing))
             if save_path:
                 with open(save_path, 'w', encoding='utf8') as fout:
                     json.dump(str(results), fout, ensure_ascii=False)
-                    print('inference result saved in: {}'.format(save_path))
+                    fprint('inference result saved in: {}'.format(save_path))
         except Exception as e:
-            print('Can not save result: {}, Exception: {}'.format(text_raw, e))
+            fprint('Can not save result: {}, Exception: {}'.format(text_raw, e))
 
         if len(results) > 1:
-            print('Total samples:{}'.format(n_total))
-            print('Labeled samples:{}'.format(n_labeled))
+            fprint('Total samples:{}'.format(n_total))
+            fprint('Labeled samples:{}'.format(n_labeled))
 
-            print('\n---------------------------- Classification Report ----------------------------\n')
-            print(metrics.classification_report(t_targets_all, np.argmax(t_outputs_all, -1), digits=4,
-                                                target_names=[str(self.config.index_to_label[x]) for x in
-                                                              self.config.index_to_label]))
-            print('\n---------------------------- Classification Report ----------------------------\n')
+            fprint('\n---------------------------- Classification Report ----------------------------\n')
+            fprint(metrics.classification_report(t_targets_all, np.argmax(t_outputs_all, -1), digits=4,
+                                                 target_names=[str(self.config.index_to_label[x]) for x in
+                                                               self.config.index_to_label]))
+            fprint('\n---------------------------- Classification Report ----------------------------\n')
 
         return results
 

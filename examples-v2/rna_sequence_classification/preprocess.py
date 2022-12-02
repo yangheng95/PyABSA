@@ -6,6 +6,8 @@
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
+from pyabsa.utils.pyabsa_utils import fprint
+
 
 def preprocess_rna():
     def load_file(file_path):
@@ -82,4 +84,4 @@ def preprocess_rna():
 
 if __name__ == '__main__':
     preprocess_rna()
-    print('Done!')
+    fprint('Done!')

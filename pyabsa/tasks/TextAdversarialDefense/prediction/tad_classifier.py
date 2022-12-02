@@ -22,7 +22,7 @@ from ..dataset_utils.__classic__.data_utils_for_inference import GloVeTADInferen
 from ..dataset_utils.__plm__.data_utils_for_inference import BERTTADInferenceDataset
 from ..models import BERTTADModelList, GloVeTADModelList
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
-from pyabsa.utils.pyabsa_utils import get_device, print_args
+from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
 from pyabsa.framework.tokenizer_class.tokenizer_class import PretrainedTokenizer
 
@@ -70,10 +70,10 @@ def init_attacker(tad_classifier, defense):
         }
         return SentAttacker(tad_classifier, attackers[defense])
     except Exception as e:
-        print('If you need to evaluate text adversarial attack, please make sure you have installed:\n',
-              colored('[1] pip install git+https://github.com/yangheng95/TextAttack\n', 'red'), 'and \n',
-              colored('[2] pip install tensorflow_text \n', 'red'))
-        print('Original error:', e)
+        fprint('If you need to evaluate text adversarial attack, please make sure you have installed:\n',
+               colored('[1] pip install git+https://github.com/yangheng95/TextAttack\n', 'red'), 'and \n',
+               colored('[2] pip install tensorflow_text \n', 'red'))
+        fprint('Original error:', e)
 
 
 class TADTextClassifier(InferenceModel):
@@ -89,7 +89,7 @@ class TADTextClassifier(InferenceModel):
         self.cal_perplexity = cal_perplexity
         # load from a trainer
         if self.checkpoint and not isinstance(self.checkpoint, str):
-            print('Load text classifier from trainer')
+            fprint('Load text classifier from trainer')
             self.model = self.checkpoint[0]
             self.config = self.checkpoint[1]
             self.tokenizer = self.checkpoint[2]
@@ -98,21 +98,21 @@ class TADTextClassifier(InferenceModel):
                 if 'fine-tuned' in self.checkpoint:
                     raise ValueError(
                         'Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!')
-                print('Load text classifier from', self.checkpoint)
+                fprint('Load text classifier from', self.checkpoint)
                 state_dict_path = find_file(self.checkpoint, key='.state_dict', exclude_key=['__MACOSX'])
                 model_path = find_file(self.checkpoint, key='.model', exclude_key=['__MACOSX'])
                 tokenizer_path = find_file(self.checkpoint, key='.tokenizer', exclude_key=['__MACOSX'])
                 config_path = find_file(self.checkpoint, key='.config', exclude_key=['__MACOSX'])
 
-                print('config: {}'.format(config_path))
-                print('state_dict: {}'.format(state_dict_path))
-                print('model: {}'.format(model_path))
-                print('tokenizer: {}'.format(tokenizer_path))
+                fprint('config: {}'.format(config_path))
+                fprint('state_dict: {}'.format(state_dict_path))
+                fprint('model: {}'.format(model_path))
+                fprint('tokenizer: {}'.format(tokenizer_path))
 
                 with open(config_path, mode='rb') as f:
                     self.config = pickle.load(f)
                     self.config.auto_device = kwargs.get('auto_device', True)
-                    get_device(self.config)
+                    set_device(self.config, self.config.auto_device)
 
                 if state_dict_path or model_path:
                     if hasattr(BERTTADModelList, self.config.model.__name__):
@@ -143,7 +143,7 @@ class TADTextClassifier(InferenceModel):
                             self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
 
                 if kwargs.get('verbose', False):
-                    print('Config used in Training:')
+                    fprint('Config used in Training:')
                     print_args(self.config)
 
             except Exception as e:
@@ -196,11 +196,11 @@ class TADTextClassifier(InferenceModel):
                 n_trainable_params += n_params
             else:
                 n_nontrainable_params += n_params
-        print(
+        fprint(
             'n_trainable_params: {0}, n_nontrainable_params: {1}'.format(n_trainable_params, n_nontrainable_params))
         for arg in vars(self.config):
             if getattr(self.config, arg) is not None:
-                print('>>> {0}: {1}'.format(arg, getattr(self.config, arg)))
+                fprint('>>> {0}: {1}'.format(arg, getattr(self.config, arg)))
 
     def batch_infer(self,
                     target_file=None,
@@ -373,7 +373,7 @@ class TADTextClassifier(InferenceModel):
                                 result['is_fixed'] = False
 
                         except Exception as e:
-                            print('Error:{}, try install TextAttack and tensorflow_text after 10 seconds...'.format(e))
+                            fprint('Error:{}, try install TextAttack and tensorflow_text after 10 seconds...'.format(e))
                             time.sleep(10)
                             raise RuntimeError('Installation done, please run again...')
 
@@ -432,17 +432,17 @@ class TADTextClassifier(InferenceModel):
                     text_printing += text_info
                     if self.cal_perplexity:
                         text_printing += colored(' --> <perplexity:{}>'.format(result['perplexity']), 'yellow')
-                    print('Example {}: {}'.format(ex_id, text_printing))
+                    fprint('Example {}: {}'.format(ex_id, text_printing))
             if save_path:
                 with open(save_path, 'w', encoding='utf8') as fout:
                     json.dump(str(results), fout, ensure_ascii=False)
-                    print('inference result saved in: {}'.format(save_path))
+                    fprint('inference result saved in: {}'.format(save_path))
         except Exception as e:
-            print('Can not save result: {}, Exception: {}'.format(text_raw, e))
+            fprint('Can not save result: {}, Exception: {}'.format(text_raw, e))
 
         if len(results) > 1:
-            print('CLS Acc:{}%'.format(100 * n_correct / n_labeled if n_labeled else ''))
-            print('AdvDet Acc:{}%'.format(100 * n_advdet_correct / n_advdet_labeled if n_advdet_labeled else ''))
+            fprint('CLS Acc:{}%'.format(100 * n_correct / n_labeled if n_labeled else ''))
+            fprint('AdvDet Acc:{}%'.format(100 * n_advdet_correct / n_advdet_labeled if n_advdet_labeled else ''))
 
         return results
 

@@ -12,6 +12,7 @@ import findfile
 import tqdm
 
 from pyabsa.tasks import RNABiClassification as RNAC
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 def ensemble_predict(rna_classifiers: dict, rna, print_result=False):
@@ -51,8 +52,8 @@ if __name__ == '__main__':
             count1 += 1
         if results[1] == rna.split('$LABEL$')[-1].strip().split(',')[1]:
             count2 += 1
-        print('Decay classification accuracy:', count1 / (i + 1))
-        print('RNA classification accuracy:', count2 / (i + 1))
+        fprint('Decay classification accuracy:', count1 / (i + 1))
+        fprint('RNA classification accuracy:', count2 / (i + 1))
 
     rnas = [
         'ATGGGATAATGGTTTCGTACCAAAAGCTGGTGCGTTCCTTCCTTTTGGTGCTGGAAGCCATCTATGCCCGGGAAATGATCTGGCTAAGCTCGAGATTTCAATTTTTCTTCATCATTTCCTCCTCAAATATCAGGTGAAACGGAGCAACCCCGAATGTCCAGTGATGTATCTGCCTCATACCAGACCAACTGATAATTGCT$LABEL$1,cds',
@@ -67,7 +68,7 @@ if __name__ == '__main__':
         _, _, labels = rna.partition('$LABEL$')
         labels = labels.split(',')
         decay_label, seq_label = ensemble_predict(rna_classifiers, rna, print_result=False)
-        print('Predicted Label:', decay_label, decay_label == labels[0], seq_label, seq_label == labels[1])
+        fprint('Predicted Label:', decay_label, decay_label == labels[0], seq_label, seq_label == labels[1])
 
     while True:
         rna = input('Please input your RNA sequence: ')
@@ -79,6 +80,6 @@ if __name__ == '__main__':
         labels = labels.split(',')
         try:
             decay_label, seq_label = ensemble_predict(rna_classifiers, rna, print_result=False)
-            print('Predicted Label:', decay_label, decay_label == labels[0], seq_label, seq_label == labels[1])
+            fprint('Predicted Label:', decay_label, decay_label == labels[0], seq_label, seq_label == labels[1])
         except Exception as e:
-            print(e)
+            fprint(e)

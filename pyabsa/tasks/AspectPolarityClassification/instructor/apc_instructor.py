@@ -21,7 +21,7 @@ from pyabsa import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from ..instructor.ensembler import APCEnsembler
 from pyabsa.utils.file_utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args, init_optimizer
+from pyabsa.utils.pyabsa_utils import print_args, init_optimizer, fprint
 
 
 class APCTrainingInstructor(BaseTrainingInstructor):
@@ -194,7 +194,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
             self.config.MV.add_metric('Max-Test-F1 w/o Valid Set', max_fold_f1 * 100)
 
         if self.valid_dataloaders:
-            print('Loading best model: {} and evaluating on test set ...'.format(save_path))
+            fprint('Loading best model: {} and evaluating on test set ...'.format(save_path))
             self._reload_model_state_dict(save_path)
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
 
@@ -204,8 +204,8 @@ class APCTrainingInstructor(BaseTrainingInstructor):
 
         self.logger.info(self.config.MV.summary(no_print=True))
 
-        print('Training finished, we hope you can share your checkpoint with community, please see:',
-              'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
+        fprint('Training finished, we hope you can share your checkpoint with community, please see:',
+               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
 
         rolling_intv = 5
         df = pandas.DataFrame(losses)
@@ -389,8 +389,8 @@ class APCTrainingInstructor(BaseTrainingInstructor):
 
         self.logger.info(self.config.MV.summary(no_print=True))
         self._reload_model_state_dict(save_path_k_fold)
-        print('Training finished, we hope you can share your checkpoint with everybody, please see:',
-              'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
+        fprint('Training finished, we hope you can share your checkpoint with everybody, please see:',
+               'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
 
         rolling_intv = 5
         df = pandas.DataFrame(losses)
@@ -458,9 +458,9 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                               labels=list(range(self.config.output_dim)), average='macro')
 
         if self.config.args.get('show_metric', False):
-            print('\n---------------------------- APC Classification Report ----------------------------\n')
-            print(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(), target_names=[self.config.index_to_label[x] for x in self.config.index_to_label]))
-            print('\n---------------------------- APC Classification Report ----------------------------\n')
+            fprint('\n---------------------------- APC Classification Report ----------------------------\n')
+            fprint(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(), target_names=[self.config.index_to_label[x] for x in self.config.index_to_label]))
+            fprint('\n---------------------------- APC Classification Report ----------------------------\n')
         return test_acc, f1
 
     def _init_misc(self):
@@ -490,7 +490,6 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                 weight_decay=self.config.l2reg,
                 maximize=self.config.maximize_loss if self.config.get('maximize_loss') else False
             )
-
 
     def _cache_or_load_dataset(self):
         pass

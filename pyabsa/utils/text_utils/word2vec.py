@@ -13,6 +13,8 @@ import time
 from findfile import find_cwd_files
 from transformers import AutoTokenizer
 
+from pyabsa.utils.pyabsa_utils import fprint
+
 
 # from gensim.models.word2vec import LineSentence
 
@@ -36,7 +38,7 @@ def train_word2vec(corpus_files: list = None,
     alpha (float, optional) – 初始学习率
     iter (int, optional) – 迭代次数，默认为5
     '''
-    from gensim.models import Word2Vec
+    from gensim.models import Word2Vec  # please install gensim first
 
     if not os.path.exists(save_path):
         os.makedirs(save_path)
@@ -48,7 +50,7 @@ def train_word2vec(corpus_files: list = None,
         corpus_files = [corpus_files]
     else:
         assert isinstance(corpus_files, list)
-    print('Start loading corpus files:', corpus_files)
+    fprint('Start loading corpus files:', corpus_files)
     if isinstance(pre_tokenizer, str):
         pre_tokenizer = AutoTokenizer.from_pretrained(pre_tokenizer)
     for f in corpus_files:
@@ -60,7 +62,7 @@ def train_word2vec(corpus_files: list = None,
                     res = line.strip().split()
                 in_corpus.append(res)
 
-    print('Start training word2vec model...')
+    fprint('Start training word2vec model...')
     start = time.time()
     model = Word2Vec(sentences=in_corpus,
                      vector_size=vector_dim,
@@ -70,11 +72,11 @@ def train_word2vec(corpus_files: list = None,
                      workers=num_workers if num_workers else os.cpu_count() - 1,
                      epochs=epochs,
                      **kwargs)
-    print('Time cost: ', time.time() - start)
+    fprint('Time cost: ', time.time() - start)
 
     model.wv.save_word2vec_format(os.path.join(save_path, 'word2vec768d.txt'), binary=False)  # 不以C语言可以解析的形式存储词向量
     model.save(os.path.join(save_path, 'w2v768d.model'))
-    print('Word2vec training done ...')
+    fprint('Word2vec training done ...')
 
 
 if __name__ == '__main__':

@@ -18,8 +18,8 @@ from pyabsa import TextClassification as TC
 
 warnings.filterwarnings('ignore')
 
-def test_classification_augmentation():
 
+def test_classification_augmentation():
     config = TC.TCConfigManager.get_tc_config_english()
     config.model = TC.BERTTCModelList.BERT_MLP
     config.num_epoch = 1
@@ -36,7 +36,6 @@ def test_classification_augmentation():
 
 
 def test_aspect_sentiment_classification_augmentation():
-
     for dataset in [
         APCDatasetList.Laptop14,
         # APCDatasetList.Restaurant14,

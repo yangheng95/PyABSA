@@ -16,6 +16,7 @@ from termcolor import colored
 from pyabsa import LabelPaddingOption
 
 from pyabsa.tasks.AspectTermExtraction.prediction.aspect_extractor import AspectExtractor
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 def make_ABSA_dataset(dataset_name_or_path, checkpoint='english'):
@@ -43,7 +44,7 @@ def make_ABSA_dataset(dataset_name_or_path, checkpoint='english'):
     if fs:
         aspect_extractor = AspectExtractor(checkpoint=checkpoint)
     else:
-        print('No files found! Please make sure your dataset names end with ".ignore"')
+        fprint('No files found! Please make sure your dataset names end with ".ignore"')
     for f in fs:
 
         with open(f, mode='r', encoding='utf8') as f_in:
@@ -70,7 +71,7 @@ def make_ABSA_dataset(dataset_name_or_path, checkpoint='english'):
                         f_apc_out.write('{}\n'.format(aspect))
                         f_apc_out.write('{}\n'.format(sentiment))
 
-    print('APC and ATEPC Datasets built for {}!'.format(' '.join(fs)))
-    print(colored(
+    fprint('APC and ATEPC Datasets built for {}!'.format(' '.join(fs)))
+    fprint(colored(
         'You may need add ID for your dataset, and move the generated datasets to integrated_dataset/apc_datasets and integrated_dataset/atepc_datasets, respectively',
         'red'))

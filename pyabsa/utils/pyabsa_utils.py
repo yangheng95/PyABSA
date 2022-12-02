@@ -5,10 +5,13 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 import os
-from typing import Union
+import sys
+import time
 
 import torch
 from autocuda import auto_cuda, auto_cuda_name
+
+from pyabsa import __version__ as pyabsa_version
 
 
 def save_args(config, save_path):
@@ -30,9 +33,9 @@ def print_args(config, logger=None):
                     logger.info('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], 0))
             else:
                 try:
-                    print('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
+                    fprint('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
                 except:
-                    print('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], 0))
+                    fprint('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], 0))
 
 
 def validate_example(text: str, aspect: str, polarity: str, config):
@@ -92,7 +95,7 @@ def check_and_fix_labels(label_set: set, label_name, all_data, config):
             num_label[item[label_name]] += 1
             item[label_name] = label_to_index[item[label_name]]
         except Exception as e:
-            # print(e)
+            # fprint(e)
             num_label[item.polarity] += 1
             item.polarity = label_to_index[item.polarity]
     config.logger.info('Dataset Label Details: {}'.format(num_label))
@@ -104,10 +107,18 @@ def check_and_fix_IOB_labels(label_map, config):
     config.index_to_IOB_label = index_to_IOB_label
 
 
-def get_device(config):
-    if config.get('auto_device', True):
+def set_device(config, auto_device=True):
+    if auto_device == True:
         config.device = auto_cuda()
         config.device_name = auto_cuda_name()
+    elif auto_device:
+        config.device = auto_device
+        config.device_name = 'User Specified Device'
+
+
+def fprint(*objects, sep=' ', end='\n', file=sys.stdout, flush=False):
+    print(time.strftime('[%Y-%m-%d %H:%M:%S] ({})'.format(pyabsa_version), time.localtime(time.time())),
+          *objects, sep=sep, end=end, file=file, flush=flush)
 
 
 def init_optimizer(optimizer):

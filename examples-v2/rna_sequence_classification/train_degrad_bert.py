@@ -82,6 +82,7 @@ import pickle
 import random
 
 from pyabsa import RNAClassification as RNAC, DatasetItem
+from pyabsa.utils.pyabsa_utils import fprint
 
 # preprocess_rna()
 config = RNAC.RNACConfigManager.get_rnac_config_english()
@@ -124,6 +125,6 @@ rnas = [
     'GTGCGATCGTTGATCTTGTGACTTGTGAGCCGTCGAATTCCACGAAGAGACGAGAGACAGCGAGAAAGTGATCGAGAAGAATGAGAAATAGTGAATTTGAAGCAGTAGAATATAGTGATGAGATGACGAATGATGTCAGAGCTTTGTTGAGAAGATATAAAGAAGATGTTTGATCGATGATACAGTGTCCTGATGCCGCCGAAATATTCC'
 ]
 for rna in rnas:
-    print(classifier.predict(rna + '$LABEL$'))
+    fprint(classifier.predict(rna + '$LABEL$'))
 
 classifier.batch_predict(dataset)

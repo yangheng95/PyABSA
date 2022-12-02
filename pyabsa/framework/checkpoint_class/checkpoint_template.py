@@ -17,6 +17,7 @@ from termcolor import colored
 from pyabsa import TaskCodeOption
 from pyabsa.framework.checkpoint_class.checkpoint_utils import available_checkpoints, download_checkpoint
 from pyabsa.utils.file_utils.file_utils import unzip_checkpoint
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 class CheckpointManager:
@@ -57,9 +58,9 @@ class CheckpointManager:
 
         available_checkpoint_by_task = available_checkpoints(task_code)
         if checkpoint.lower() in [k.lower() for k in available_checkpoint_by_task.keys()]:
-            print(colored('Downloading checkpoint:{} ...'.format(checkpoint), 'green'))
+            fprint(colored('Downloading checkpoint:{} ...'.format(checkpoint), 'green'))
         else:
-            print(colored(
+            fprint(colored(
                 'Checkpoint:{} is not found, you can raise an issue for requesting shares of checkpoints'.format(
                     checkpoint), 'red'))
             sys.exit(-1)

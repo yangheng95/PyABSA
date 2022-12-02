@@ -8,6 +8,7 @@ from transformers.models.bert.modeling_bert import BertPooler
 
 from pyabsa.networks.lsa import LSA
 from pyabsa.networks.sa_encoder import Encoder
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 class FAST_LSA_S_V2(nn.Module):
@@ -82,7 +83,7 @@ class FAST_LSA_S_V2(nn.Module):
             sent_out = self.fusion_linear(torch.cat((global_context_features, cdw_sent_out, cdm_sent_out), -1))
 
         else:
-            print('Invalid LCF mode: {}'.format(self.config.lcf))
+            fprint('Invalid LCF mode: {}'.format(self.config.lcf))
             sent_out = global_context_features
 
         sent_out = self.dropout(sent_out)

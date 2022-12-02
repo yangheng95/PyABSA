@@ -14,7 +14,7 @@ from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from ...dataset_utils.__plm__.classic_bert_apc_utils import prepare_input_for_apc, build_sentiment_window
 from ...dataset_utils.__plm__.dependency_graph import configure_spacy_model, prepare_dependency_graph
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
-from pyabsa.utils.pyabsa_utils import check_and_fix_labels, validate_example
+from pyabsa.utils.pyabsa_utils import check_and_fix_labels, validate_example, fprint
 
 
 class BERTBaselineABSADataset(PyABSADataset):
@@ -41,7 +41,7 @@ class BERTBaselineABSADataset(PyABSADataset):
         ex_id = 0
 
         if len(lines) % 3 != 0:
-            print(colored('ERROR: one or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.', 'red'))
+            fprint(colored('ERROR: one or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.', 'red'))
 
         for i in tqdm.tqdm(range(0, len(lines), 3), postfix='preparing dataloader...'):
             if lines[i].count("$T$") > 1:

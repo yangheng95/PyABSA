@@ -10,7 +10,7 @@ from termcolor import colored
 
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
-from pyabsa.utils.pyabsa_utils import check_and_fix_labels
+from pyabsa.utils.pyabsa_utils import check_and_fix_labels, fprint
 from .apc_utils import build_sentiment_window, build_spc_mask_vec, prepare_input_for_apc, configure_spacy_model
 from .apc_utils_for_dlcf_dca import prepare_input_for_dlcf_dca, configure_dlcf_spacy_model
 from pyabsa.utils.pyabsa_utils import validate_example
@@ -27,7 +27,7 @@ class ABSADataset(PyABSADataset):
         lines = load_dataset_from_file(self.config.dataset_file[self.dataset_type])
 
         if len(lines) % 3 != 0:
-            print(colored('ERROR: one or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.', 'red'))
+            fprint(colored('ERROR: one or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.', 'red'))
 
         all_data = []
         # record polarities type to update output_dim

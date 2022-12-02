@@ -8,6 +8,8 @@ import torch
 from pyabsa.networks.sa_encoder import Encoder
 from torch import nn
 
+from pyabsa.utils.pyabsa_utils import fprint
+
 
 class LSA(nn.Module):
     def __init__(self, bert, config):
@@ -38,10 +40,10 @@ class LSA(nn.Module):
         if 'lr' == self.config.window or 'rl' == self.config.window:
             if self.eta1 <= 0 and self.config.eta != -1:
                 torch.nn.init.uniform_(self.eta1)
-                print('reset eta1 to: {}'.format(self.eta1.item()))
+                fprint('reset eta1 to: {}'.format(self.eta1.item()))
             if self.eta2 <= 0 and self.config.eta != -1:
                 torch.nn.init.uniform_(self.eta2)
-                print('reset eta2 to: {}'.format(self.eta2.item()))
+                fprint('reset eta2 to: {}'.format(self.eta2.item()))
             if self.config.eta >= 0:
                 cat_features = torch.cat((lcf_features, self.eta1 * left_lcf_features, self.eta2 * right_lcf_features),
                                          -1)

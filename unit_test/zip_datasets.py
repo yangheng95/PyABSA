@@ -27,7 +27,7 @@ def cascade_zip_datasets():
             if dataset_name in [os.path.basename(dataset)]:
                 continue
 
-            print(f'Zip dataset: {dataset_name}')
+            fprint(f'Zip dataset: {dataset_name}')
 
             zip_file = zipfile.ZipFile(f'integrated_datasets/{os.path.basename(dataset)}.{dataset_name}.zip'.lower(), 'w', zipfile.ZIP_DEFLATED)
 

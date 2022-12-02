@@ -13,7 +13,7 @@ from torch.utils.data import Dataset
 
 from pyabsa import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
-from pyabsa.utils.pyabsa_utils import validate_example
+from pyabsa.utils.pyabsa_utils import validate_example, fprint
 from .classic_glove_apc_utils import build_sentiment_window
 from .dependency_graph import dependency_adj_matrix, configure_spacy_model
 from ..__lcf__.data_utils_for_inference import ABSAInferenceDataset
@@ -132,7 +132,7 @@ class GloVeABSAInferenceDataset(ABSAInferenceDataset):
 
             except Exception as e:
                 if ignore_error:
-                    print('Ignore error while processing: {} Error info:{}'.format(text, e))
+                    fprint('Ignore error while processing: {} Error info:{}'.format(text, e))
                 else:
                     raise RuntimeError('Catch Exception: {}, use ignore_error=True to remove error samples.'.format(e))
 

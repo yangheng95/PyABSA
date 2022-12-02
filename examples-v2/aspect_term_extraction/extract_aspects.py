@@ -21,4 +21,5 @@ atepc_result = aspect_extractor.batch_predict(inference_source,  #
                                               eval_batch_size=32
                                               )
 
-print(atepc_result)
+while True:
+    aspect_extractor.predict(input('Please input a sentence: '))

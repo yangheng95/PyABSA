@@ -30,6 +30,8 @@ class PyABSADataset(Dataset):
             self.covert_to_tensor(self.data)
             self.data = self.covert_to_tensor(self.data)
 
+        self.config.logger.info('Training data examples:\n %s' % self.data[:2])
+
     @staticmethod
     def covert_to_tensor(data):
         for d in data:

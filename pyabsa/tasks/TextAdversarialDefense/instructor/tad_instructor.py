@@ -31,7 +31,7 @@ from ..dataset_utils.__classic__.data_utils_for_training import GloVeTADDataset
 from ..dataset_utils.__plm__.data_utils_for_training import BERTTADDataset
 from ..models import BERTTADModelList, GloVeTADModelList
 from pyabsa.utils.file_utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args, init_optimizer
+from pyabsa.utils.pyabsa_utils import print_args, init_optimizer, fprint
 from pyabsa.framework.tokenizer_class.tokenizer_class import PretrainedTokenizer, Tokenizer, build_embedding_matrix
 
 
@@ -92,7 +92,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
             try:
                 self.bert = AutoModel.from_pretrained(self.config.pretrained_bert)
             except ValueError as e:
-                print('Init pretrained model failed, exception: {}'.format(e))
+                fprint('Init pretrained model failed, exception: {}'.format(e))
 
             # init the model behind the construction of datasets in case of updating output_dim
             self.model = self.config.model(self.bert, self.config).to(self.config.device)
@@ -351,7 +351,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
             self.config.MV.add_metric('Max-AdvDet-Acc w/o Valid Set', max_adv_det_fold_acc * 100)
             self.config.MV.add_metric('Max-AdvDet-F1 w/o Valid Set', max_adv_det_fold_f1 * 100)
         if self.valid_dataloader:
-            print('Loading best model: {} and evaluating on test set ...'.format(save_path))
+            fprint('Loading best model: {} and evaluating on test set ...'.format(save_path))
             self.reload_model_state_dict(find_file(save_path, '.state_dict'))
             max_label_fold_acc, max_label_fold_f1, max_adv_det_fold_acc, max_adv_det_fold_f1, max_adv_tr_fold_acc, max_adv_tr_fold_f1 = \
                 self._evaluate_acc_f1(self.test_dataloader)
@@ -365,8 +365,8 @@ class TADTrainingInstructor(BaseTrainingInstructor):
 
         self.config.logger.info(self.config.MV.summary(no_print=True))
 
-        print('Training finished, we hope you can share your checkpoint with everybody, please see:',
-              'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
+        fprint('Training finished, we hope you can share your checkpoint with everybody, please see:',
+               'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
 
         rolling_intv = 5
         df = pandas.DataFrame(losses)
@@ -462,10 +462,10 @@ class TADTrainingInstructor(BaseTrainingInstructor):
         label_test_f1 = metrics.f1_score(t_label_targets_all.cpu(), torch.argmax(t_label_outputs_all, -1).cpu(),
                                          labels=list(range(self.config.class_dim)), average='macro')
         if self.config.args.get('show_metric', False):
-            print('\n---------------------------- Standard Classification Report ----------------------------\n')
-            print(
+            fprint('\n---------------------------- Standard Classification Report ----------------------------\n')
+            fprint(
                 metrics.classification_report(t_label_targets_all.cpu(), torch.argmax(t_label_outputs_all, -1).cpu(), target_names=[self.config.index_to_label[x] for x in self.config.index_to_label]))
-            print('\n---------------------------- Standard Classification Report ----------------------------\n')
+            fprint('\n---------------------------- Standard Classification Report ----------------------------\n')
 
         adv_det_test_acc = n_adv_det_test_correct / n_adv_det_test_total
         adv_det_test_f1 = metrics.f1_score(t_adv_det_targets_all.cpu(), torch.argmax(t_adv_det_outputs_all, -1).cpu(),

@@ -24,6 +24,7 @@ import os
 
 import autocuda
 from pyabsa import TADCheckpointManager
+from pyabsa.utils.pyabsa_utils import fprint
 
 os.environ['PYTHONIOENCODING'] = 'UTF8'
 
@@ -136,7 +137,7 @@ def evaluate_tad(dataset, attack_recipe):
         data = []
         label_set = set()
         for data_file in dataset_file[dat_type]:
-            print(colored("Attack: {}".format(data_file), 'green'))
+            fprint(colored("Attack: {}".format(data_file), 'green'))
 
             with open(data_file, mode='r', encoding='utf8') as fin:
                 lines = fin.readlines()

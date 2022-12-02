@@ -10,7 +10,7 @@ import tqdm
 from pyabsa import LabelPaddingOption
 from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__lcf__.apc_utils import configure_spacy_model
 from ...dataset_utils.__lcf__.atepc_utils import prepare_input_for_atepc
-from pyabsa.utils.pyabsa_utils import validate_example, check_and_fix_labels, check_and_fix_IOB_labels
+from pyabsa.utils.pyabsa_utils import validate_example, check_and_fix_labels, check_and_fix_IOB_labels, fprint
 
 Labels = set()
 
@@ -84,7 +84,7 @@ def readfile(filename):
             continue
         splits = line.strip().split(' ')
         if len(splits) != 3:
-            print('warning! ignore detected error line(s) in input file:{}'.format(line))
+            fprint('warning! ignore detected error line(s) in input file:{}'.format(line))
             break
         sentence.append(splits[0])
         tag.append(splits[-2])
