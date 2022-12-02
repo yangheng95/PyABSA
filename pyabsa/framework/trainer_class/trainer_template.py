@@ -41,7 +41,7 @@ warnings.filterwarnings('once')
 
 
 def init_config(config):
-    set_device(config)
+    set_device(config, config.auto_device)
     if not torch.cuda.device_count() > 1 and config.auto_device == DeviceTypeOption.ALL_CUDA:
         fprint('Cuda devices count <= 1, so reset auto_device=True to auto specify device...')
         config.auto_device = True

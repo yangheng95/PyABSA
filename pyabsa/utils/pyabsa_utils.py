@@ -10,6 +10,7 @@ import time
 
 import torch
 from autocuda import auto_cuda, auto_cuda_name
+from termcolor import colored
 
 from pyabsa import __version__ as pyabsa_version
 
@@ -107,16 +108,26 @@ def check_and_fix_IOB_labels(label_map, config):
     config.index_to_IOB_label = index_to_IOB_label
 
 
-def set_device(config, auto_device=True):
-    if auto_device is True:
-        config.device = auto_cuda()
-        config.device_name = auto_cuda_name()
-    elif auto_device:
-        config.device = auto_device
-        config.device_name = 'User Specified Device'
+def set_device(config, auto_device):
+    if isinstance(auto_device, str) and auto_device == 'allcuda':
+        device = 'cuda'
+    elif isinstance(auto_device, str):
+        device = auto_device
+    elif isinstance(auto_device, bool):
+        device = auto_cuda() if auto_device else 'cpu'
     else:
-        config.device = torch.device('cpu')
-        config.device_name = 'CPU'
+        device = auto_cuda()
+        try:
+            torch.device(device)
+        except RuntimeError as e:
+            print(colored('Device assignment error: {}, redirect to CPU'.format(e), 'red'))
+            device = 'cpu'
+    device_name = auto_cuda_name()
+    config.device = device
+    config.device_name = device_name
+    fprint('Set Model Device: {}'.format(device))
+    fprint('Device Name: {}'.format(device_name))
+    return device, device_name
 
 
 def fprint(*objects, sep=' ', end='\n', file=sys.stdout, flush=False):
