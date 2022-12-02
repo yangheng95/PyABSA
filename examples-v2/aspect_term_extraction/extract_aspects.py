@@ -4,8 +4,9 @@
 # author: yangheng <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-from pyabsa import AspectTermExtraction as ATEPC, DeviceTypeOption
-
+from pyabsa import AspectTermExtraction as ATEPC, DeviceTypeOption, available_checkpoints
+from pyabsa import TaskCodeOption
+checkpoint_map = available_checkpoints(TaskCodeOption.Aspect_Term_Extraction_and_Classification, show_ckpts=True)
 # checkpoint_map = available_checkpoints()
 
 

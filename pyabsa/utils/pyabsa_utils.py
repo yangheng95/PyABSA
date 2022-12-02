@@ -12,7 +12,7 @@ import torch
 from autocuda import auto_cuda, auto_cuda_name
 from termcolor import colored
 
-from pyabsa import __version__ as pyabsa_version
+from pyabsa import __version__ as pyabsa_version, DeviceTypeOption
 
 
 def save_args(config, save_path):
@@ -109,7 +109,7 @@ def check_and_fix_IOB_labels(label_map, config):
 
 
 def set_device(config, auto_device):
-    if isinstance(auto_device, str) and auto_device == 'allcuda':
+    if isinstance(auto_device, str) and auto_device == DeviceTypeOption.ALL_CUDA:
         device = 'cuda'
     elif isinstance(auto_device, str):
         device = auto_device
