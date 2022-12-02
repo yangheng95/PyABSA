@@ -9,6 +9,7 @@
 
 from argparse import Namespace
 from pyabsa.framework.configuration_class.config_verification import config_check
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 class ConfigManager(Namespace):
