@@ -65,6 +65,7 @@ class AspectExtractor(InferenceModel):
                     self.config = pickle.load(f)
                     self.config.auto_device = kwargs.get('auto_device', True)
                     set_device(self.config, self.config.auto_device)
+
                 if state_dict_path:
                     if kwargs.get('offline', False):
                         bert_base_model = AutoModel.from_pretrained(find_cwd_dir(self.config.pretrained_bert.split('/')[-1]))

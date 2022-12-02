@@ -65,7 +65,7 @@ class SentimentClassifier(InferenceModel):
                 with open(config_path, mode='rb') as f:
                     self.config = pickle.load(f)
                     self.config.auto_device = kwargs.get('auto_device', True)
-
+                    set_device(self.config, self.config.auto_device)
 
                 if state_dict_path or model_path:
                     if state_dict_path:
