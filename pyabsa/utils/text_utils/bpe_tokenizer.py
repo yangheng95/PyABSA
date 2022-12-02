@@ -13,6 +13,8 @@ import time
 import findfile
 from transformers import AutoTokenizer
 
+from pyabsa.utils.pyabsa_utils import fprint
+
 
 def train_bpe_tokenizer(corpus_files=None,
                         base_tokenizer='roberta-base',
@@ -48,21 +50,20 @@ def train_bpe_tokenizer(corpus_files=None,
             "<mask>",
         ]
 
-
     if not corpus_files:
         corpus_files = findfile.find_cwd_files('.txt', exclude_key=['word2vec', 'ignore'])
     elif isinstance(corpus_files, str):
         corpus_files = [corpus_files]
     else:
         assert isinstance(corpus_files, list)
-    print('Start loading corpus files:', corpus_files)
+    fprint('Start loading corpus files:', corpus_files)
 
     tokenizer = ByteLevelBPETokenizer()
     # Customize training
-    print('Start training BPE tokenizer...')
+    fprint('Start training BPE tokenizer...')
     start = time.time()
     tokenizer.train(files=corpus_files, vocab_size=vocab_size, min_frequency=min_frequency, special_tokens=special_tokens)
-    print('Time cost: ', time.time() - start)
+    fprint('Time cost: ', time.time() - start)
 
     if not os.path.exists(save_path):
         os.makedirs(save_path)
@@ -74,7 +75,7 @@ def train_bpe_tokenizer(corpus_files=None,
 
     tokenizer.save(f'{save_path}/tokenizer.json')
     tokenizer.save_model(f'{save_path}/')
-    print('BPE tokenizer training done ...')
+    fprint('BPE tokenizer training done ...')
 
 
 if __name__ == '__main__':
@@ -89,4 +90,4 @@ if __name__ == '__main__':
         "GTGAGTTTACATATTCCTTTTATATACCGTTATCACTCATGATTAGGTGATCATAATTGGTAGGAAGAACCTTTGGTTAAGTAAGGTAAAAGAA"
         "ATAGGCTAGTTCGTGCCAAATATTTCTTAATGAATACAATTCAGATAGATGTTTACTGCAGAGTTATTTTTTGAGCTTTGGTTGCTGGTAGTAGTC"
         "GCCAATTCCAGAAATTGTGGTTTTAGGATCCTCTCAGTTTTATAAATTCAAGCAGTGATTCTTTCCTTGAAGATTTATGTTCCGTCTAAGTAGTTCAAAGGTTTTGTATATTTATACTGCTCTTATTATCTTTCTTTTTTGAAATTGCAG")
-    print(output)
+    fprint(output)

@@ -22,7 +22,7 @@ from transformers import AutoModel, AutoTokenizer
 from pyabsa import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from pyabsa.utils.file_utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import init_optimizer, print_args
+from pyabsa.utils.pyabsa_utils import init_optimizer, print_args, fprint
 from ..dataset_utils.data_utils_for_training import GloVeRNACDataset
 from ..dataset_utils.data_utils_for_training import BERTRNACDataset
 from ..models import GloVeRNACModelList, BERTRNACModelList
@@ -196,7 +196,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             self.config.MV.add_metric('Max-Test-F1 w/o Valid Set', max_fold_f1 * 100)
 
         if self.valid_dataloader:
-            print('Loading best model: {} and evaluating on test set ...'.format(save_path))
+            fprint('Loading best model: {} and evaluating on test set ...'.format(save_path))
             self._reload_model_state_dict(save_path)
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
 
@@ -205,8 +205,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
 
         self.logger.info(self.config.MV.summary(no_print=True))
 
-        print('Training finished, we hope you can share your checkpoint with everybody, please see:',
-              'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
+        fprint('Training finished, we hope you can share your checkpoint with everybody, please see:',
+               'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
 
         print_args(self.config, self.logger)
 
@@ -376,8 +376,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             self.logger.info(self.config.MV.summary(no_print=True))
         # self.config.MV.summary()
 
-        print('Training finished, we hope you can share your checkpoint with community, please see:',
-              'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
+        fprint('Training finished, we hope you can share your checkpoint with community, please see:',
+               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
 
         print_args(self.config, self.logger)
 
@@ -431,10 +431,10 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
                               labels=list(range(self.config.output_dim)), average='macro')
         if self.config.args.get('show_metric', False):
-            print('\n---------------------------- Classification Report ----------------------------\n')
-            print(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
-                                                target_names=[str(self.config.index_to_label[x]) for x in self.config.index_to_label]))
-            print('\n---------------------------- Classification Report ----------------------------\n')
+            fprint('\n---------------------------- Classification Report ----------------------------\n')
+            fprint(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
+                                                 target_names=[str(self.config.index_to_label[x]) for x in self.config.index_to_label]))
+            fprint('\n---------------------------- Classification Report ----------------------------\n')
         return test_acc, f1
 
     def _load_dataset_and_prepare_dataloader(self):
@@ -451,7 +451,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             try:
                 self.bert = AutoModel.from_pretrained(self.config.pretrained_bert)
             except ValueError as e:
-                print('Init pretrained model failed, exception: {}'.format(e))
+                fprint('Init pretrained model failed, exception: {}'.format(e))
 
             # init the model behind the construction of datasets in case of updating output_dim
             self.model = self.config.model(self.bert, self.config).to(self.config.device)

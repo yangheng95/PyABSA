@@ -20,7 +20,7 @@ class DatasetItem(list):
         """
         super().__init__()
         if os.path.exists(dataset_name):
-            # print('Construct DatasetItem from {}, assign dataset_name={}...'.format(dataset_name, os.path.basename(dataset_name)))
+            # fprint('Construct DatasetItem from {}, assign dataset_name={}...'.format(dataset_name, os.path.basename(dataset_name)))
             # Normalizing the dataset's name (or path) to not end with a '/' or '\'
             while dataset_name and dataset_name[-1] in ['/', '\\']:
                 dataset_name = dataset_name[:-1]

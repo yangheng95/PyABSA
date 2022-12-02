@@ -10,7 +10,7 @@ from torch.utils.data import Dataset
 from pyabsa import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
-from pyabsa.utils.pyabsa_utils import validate_example
+from pyabsa.utils.pyabsa_utils import validate_example, fprint
 from .classic_bert_apc_utils import prepare_input_for_apc, build_sentiment_window
 from .dependency_graph import dependency_adj_matrix, configure_spacy_model
 from ..__lcf__.data_utils_for_inference import parse_sample, ABSAInferenceDataset
@@ -127,7 +127,7 @@ class BERTABSAInferenceDataset(ABSAInferenceDataset):
 
             except Exception as e:
                 if ignore_error:
-                    print('Ignore error while processing: {} Error info:{}'.format(text, e))
+                    fprint('Ignore error while processing: {} Error info:{}'.format(text, e))
                 else:
                     raise RuntimeError('Catch Exception: {}, use ignore_error=True to remove error samples.'.format(e))
 
@@ -139,7 +139,7 @@ class BERTABSAInferenceDataset(ABSAInferenceDataset):
             cluster_ids = []
             for pad_idx in range(self.config.max_seq_len):
                 if pad_idx in data['cluster_ids']:
-                    # print(data['polarity'])
+                    # fprint(data['polarity'])
                     cluster_ids.append(self.config.label_to_index.get(self.config.index_to_label.get(data['polarity'], 'N.A.'),
                                                                       LabelPaddingOption.SENTIMENT_PADDING))
                 else:

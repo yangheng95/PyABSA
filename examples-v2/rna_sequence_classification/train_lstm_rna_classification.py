@@ -10,10 +10,11 @@ import random
 
 from pyabsa import RNAClassification as RNAC
 from pyabsa.utils.data_utils.dataset_item import DatasetItem
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 def preprocess_rna():
-    print('splitting data...')
+    fprint('splitting data...')
 
     def load_file(file_path):
         with open(file_path, 'r') as f:

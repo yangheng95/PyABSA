@@ -19,6 +19,7 @@ import torch
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
 from transformers import AutoTokenizer, AutoModel
 
+from pyabsa.utils.pyabsa_utils import fprint
 from ..models.__classic__ import GloVeAPCModelList
 from ..models.__lcf__ import APCModelList
 from ..models.__plm__ import BERTBaselineAPCModelList
@@ -68,7 +69,7 @@ class APCEnsembler(nn.Module):
             cache_path = '{}.{}.dataset.{}.cache'.format(self.config.model_name, self.config.dataset_name, hash_tag)
 
             if load_dataset and os.path.exists(cache_path) and not self.config.overwrite_cache:
-                print(colored('Loading dataset cache: {}'.format(cache_path), 'green'))
+                fprint(colored('Loading dataset cache: {}'.format(cache_path), 'green'))
                 with open(cache_path, mode='rb') as f_cache:
                     self.train_set, self.valid_set, self.test_set, self.config = pickle.load(f_cache)
                     config.update(self.config)
@@ -83,7 +84,7 @@ class APCEnsembler(nn.Module):
                         self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert, do_lower_case='uncased' in self.config.pretrained_bert)
                         self.bert = AutoModel.from_pretrained(self.config.pretrained_bert) if not self.bert else self.bert
                 except ValueError as e:
-                    print('Init pretrained model failed, exception: {}'.format(e))
+                    fprint('Init pretrained model failed, exception: {}'.format(e))
                     exit(-1)
 
                 if load_dataset and not os.path.exists(cache_path) or self.config.overwrite_cache:
@@ -122,7 +123,7 @@ class APCEnsembler(nn.Module):
                 self.config.embedding_matrix = self.embedding_matrix
 
             if self.config.cache_dataset and not os.path.exists(cache_path) and not self.config.overwrite_cache:
-                print(colored('Caching dataset... please remove cached dataset if any problem happens.', 'red'))
+                fprint(colored('Caching dataset... please remove cached dataset if any problem happens.', 'red'))
                 with open(cache_path, mode='wb') as f_cache:
                     pickle.dump((self.train_set, self.valid_set, self.test_set, self.config), f_cache)
 

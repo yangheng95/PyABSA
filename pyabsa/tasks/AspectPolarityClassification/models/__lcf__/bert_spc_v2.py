@@ -7,6 +7,7 @@ import torch.nn as nn
 from transformers.models.bert.modeling_bert import BertPooler
 
 from pyabsa.networks.sa_encoder import Encoder
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 class BERT_SPC_V2(nn.Module):
@@ -39,10 +40,10 @@ class BERT_SPC_V2(nn.Module):
             if 'lr' == self.config.window or 'rl' == self.config.window:
                 if self.eta1 <= 0 and self.config.eta != -1:
                     torch.nn.init.uniform_(self.eta1)
-                    print('reset eta1 to: {}'.format(self.eta1.item()))
+                    fprint('reset eta1 to: {}'.format(self.eta1.item()))
                 if self.eta2 <= 0 and self.config.eta != -1:
                     torch.nn.init.uniform_(self.eta2)
-                    print('reset eta2 to: {}'.format(self.eta2.item()))
+                    fprint('reset eta2 to: {}'.format(self.eta2.item()))
                 if self.config.eta >= 0:
                     cat_features = torch.cat((feat, self.eta1 * left_feat, self.eta2 * right_feat), -1)
                 else:

@@ -20,6 +20,8 @@ from textattack.models.wrappers import HuggingFaceModelWrapper
 
 import os
 
+from pyabsa.utils.pyabsa_utils import fprint
+
 
 # Quiet TensorFlow.
 def get_ensembled_tad_results(results):
@@ -129,7 +131,7 @@ def adversarial_attack_detection_and_defense(dataset, attack_recipe):
         data = []
         label_set = set()
         for data_file in dataset_file[dat_type]:
-            print(colored("Attack: {}".format(data_file), 'green'))
+            fprint(colored("Attack: {}".format(data_file), 'green'))
 
             with open(data_file, mode='r', encoding='utf8') as fin:
                 lines = fin.readlines()

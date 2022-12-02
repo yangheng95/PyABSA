@@ -8,6 +8,8 @@
 # Copyright (C) 2022. All Rights Reserved.
 import random
 
+from pyabsa.utils.pyabsa_utils import fprint
+
 
 def preprocess_rna():
     def load_file(file_path):
@@ -135,4 +137,4 @@ def preprocess_rna():
 
 if __name__ == '__main__':
     preprocess_rna()
-    print('Done!')
+    fprint('Done!')

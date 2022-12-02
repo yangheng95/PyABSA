@@ -14,6 +14,7 @@ import spacy
 import termcolor
 
 from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 def syntax_distance_alignment(tokens, dist, max_seq_len, tokenizer):
@@ -144,7 +145,7 @@ def get_syntax_distance(text_raw, aspect, tokenizer, opt):
     try:
         raw_tokens, dist, max_dist = calculate_dep_dist(text_raw, aspect)
     except Exception as e:
-        print('Text: {} Aspect: {}'.format(text_raw, aspect))
+        fprint('Text: {} Aspect: {}'.format(text_raw, aspect))
         raise RuntimeError('Ignore failure in calculate the syntax based SRD: {}, maybe the aspect is None'.format(e))
 
     if opt.model_name == 'dlcf_dca_bert':
@@ -208,7 +209,7 @@ def get_cdw_vec(opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical
                 assert 0 <= w <= 1  # exception
             except:
                 pass
-                # print('Warning! invalid CDW weight:', w)
+                # fprint('Warning! invalid CDW weight:', w)
             cdw_vec[i] = w
     return cdw_vec
 
@@ -299,8 +300,8 @@ def configure_spacy_model(opt):
     try:
         nlp = spacy.load(opt.spacy_model)
     except:
-        print('Can not load {} from spacy, try to download it in order to parse syntax tree:'.format(opt.spacy_model),
-              termcolor.colored('\npython -m spacy download {}'.format(opt.spacy_model), 'green'))
+        fprint('Can not load {} from spacy, try to download it in order to parse syntax tree:'.format(opt.spacy_model),
+               termcolor.colored('\npython -m spacy download {}'.format(opt.spacy_model), 'green'))
         try:
             os.system('python -m spacy download {}'.format(opt.spacy_model))
             nlp = spacy.load(opt.spacy_model)

@@ -17,7 +17,7 @@ import tqdm
 from findfile import find_files, find_cwd_file
 from termcolor import colored
 
-from pyabsa.utils.pyabsa_utils import save_args
+from pyabsa.utils.pyabsa_utils import save_args, fprint
 
 
 def save_json(dic, save_path):
@@ -32,7 +32,7 @@ def save_json(dic, save_path):
 def load_json(save_path):
     with open(save_path, 'r', encoding='utf-8') as f:
         data = f.readline().strip()
-        print(type(data), data)
+        fprint(type(data), data)
         dic = json.loads(data)
     return dic
 
@@ -47,7 +47,7 @@ def load_dataset_from_file(fname, **kwargs):
         if logger:
             logger.info('Load dataset from {}'.format(f))
         else:
-            print('Load dataset from {}'.format(f))
+            fprint('Load dataset from {}'.format(f))
         fin = open(f, 'r', encoding='utf-8')
         _lines_ = fin.readlines()
         for i, line in enumerate(_lines_):
@@ -84,7 +84,6 @@ def prepare_glove840_embedding(glove_path, embedding_dim, config):
 
         else:
             if config.embed_dim != 300:
-
                 raise ValueError('Please provide embedding file for embedding dim: {} in current wording dir '.format(config.embed_dim))
             zip_glove_path = os.path.join(os.path.dirname(glove_path), 'glove.840B.300d.zip')
             logger.info('No GloVe embedding found at {},'
@@ -112,25 +111,25 @@ def prepare_glove840_embedding(glove_path, embedding_dim, config):
 
 def unzip_checkpoint(zip_path):
     try:
-        print('Find zipped checkpoint: {}, unzipping...'.format(zip_path))
+        fprint('Find zipped checkpoint: {}, unzipping...'.format(zip_path))
         sys.stdout.flush()
         if not os.path.exists(zip_path):
             os.makedirs(zip_path.replace('.zip', ''))
         z = zipfile.ZipFile(zip_path, 'r')
         z.extractall(os.path.dirname(zip_path))
-        print('Done.')
+        fprint('Done.')
     except zipfile.BadZipfile:
-        print('Unzip failed'.format(zip_path))
+        fprint('Unzip failed'.format(zip_path))
     return zip_path.replace('.zip', '')
 
 
 def save_model(config, model, tokenizer, save_path, **kwargs):
     # Save a trained model, configuration and tokenizer
     if hasattr(model, 'module') or hasattr(model, 'core'):
-        # print("save model from data-parallel!")
+        # fprint("save model from data-parallel!")
         model_to_save = model.module
     else:
-        # print("save a single cuda model!")
+        # fprint("save a single cuda model!")
         model_to_save = model
     if config.save_mode == 1 or config.save_mode == 2:
         if not os.path.exists(save_path):

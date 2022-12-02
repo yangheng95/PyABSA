@@ -25,6 +25,8 @@ import os
 from pyabsa import TADCheckpointManager
 import tensorflow as tf
 
+from pyabsa.utils.pyabsa_utils import fprint
+
 gpus = tf.config.experimental.list_physical_devices('GPU')
 # 将对应GPU设置为内存自增长
 tf.config.experimental.set_memory_growth(gpus[0], True)
@@ -138,7 +140,7 @@ def generate_adversarial_example(dataset, attack_recipe):
         data = []
         label_set = set()
         for data_file in dataset_file[dat_type]:
-            print(colored("Attack: {}".format(data_file), 'green'))
+            fprint(colored("Attack: {}".format(data_file), 'green'))
 
             with open(data_file, mode='r', encoding='utf8') as fin:
                 lines = fin.readlines()

@@ -18,7 +18,7 @@ from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from .classic_glove_apc_utils import build_sentiment_window
 from .dependency_graph import prepare_dependency_graph, configure_spacy_model
-from pyabsa.utils.pyabsa_utils import check_and_fix_labels, validate_example
+from pyabsa.utils.pyabsa_utils import check_and_fix_labels, validate_example, fprint
 
 
 class GloVeABSADataset(PyABSADataset):
@@ -43,7 +43,7 @@ class GloVeABSADataset(PyABSADataset):
         ex_id = 0
 
         if len(lines) % 3 != 0:
-            print(colored('ERROR: one or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.', 'red'))
+            fprint(colored('ERROR: one or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.', 'red'))
 
         for i in tqdm.tqdm(range(0, len(lines), 3), postfix='preparing dataloader...'):
             if lines[i].count("$T$") > 1:

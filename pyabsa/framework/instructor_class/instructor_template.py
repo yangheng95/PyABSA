@@ -26,7 +26,7 @@ from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
 
 import pytorch_warmup as warmup
 
-from pyabsa.utils.pyabsa_utils import print_args
+from pyabsa.utils.pyabsa_utils import print_args, fprint
 
 
 class BaseTrainingInstructor:
@@ -37,7 +37,7 @@ class BaseTrainingInstructor:
         if config.use_amp:
             try:
                 self.scaler = torch.cuda.amp.GradScaler()
-                print('Use AMP for trainer!')
+                fprint('Use AMP for trainer!')
             except Exception:
                 self.scaler = None
         else:
@@ -183,7 +183,6 @@ class BaseTrainingInstructor:
         if self.config.device.type == 'cuda':
             self.logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.config.device)))
 
-
         print_args(self.config, self.logger)
 
     def _train(self, criterion):
@@ -261,6 +260,6 @@ def get_resume_checkpoint(config):
                 ckpt = CheckpointManager().parse_checkpoint(checkpoint=config.from_checkpoint, task_code=config.task_code)
                 config.logger.info('Checkpoint downloaded at: {}'.format(ckpt))
             except Exception as e:
-                print(e)
+                fprint(e)
                 raise ValueError('Cannot find checkpoint file in {}'.format(config.from_checkpoint))
     return ckpt

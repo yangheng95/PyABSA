@@ -17,6 +17,7 @@ from termcolor import colored
 from transformers import AutoTokenizer
 
 from pyabsa.utils.file_utils.file_utils import prepare_glove840_embedding
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 class Tokenizer(object):
@@ -157,7 +158,7 @@ def build_embedding_matrix(config, tokenizer, cache_path=None):
         os.makedirs('run/{}'.format(config.dataset_name))
     embed_matrix_path = 'run/{}'.format(os.path.join(config.dataset_name, cache_path))
     if cache_path and os.path.exists(embed_matrix_path) and not config.overwrite_cache:
-        print(colored('Loading cached embedding_matrix from {} (Please remove all cached files if there is any problem!)'.format(embed_matrix_path), 'green'))
+        fprint(colored('Loading cached embedding_matrix from {} (Please remove all cached files if there is any problem!)'.format(embed_matrix_path), 'green'))
         embedding_matrix = pickle.load(open(embed_matrix_path, 'rb'))
     else:
         glove_path = prepare_glove840_embedding(embed_matrix_path, config.embed_dim, config=config)

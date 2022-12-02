@@ -27,7 +27,7 @@ from ..dataset_utils.__lcf__.data_utils_for_inference import ABSAInferenceDatase
 from ..dataset_utils.__plm__.data_utils_for_inference import BERTABSAInferenceDataset
 from ..instructor.ensembler import APCEnsembler
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
-from pyabsa.utils.pyabsa_utils import get_device, print_args
+from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
 
 
@@ -41,7 +41,7 @@ class SentimentClassifier(InferenceModel):
 
         # load from a trainer
         if self.checkpoint and not isinstance(self.checkpoint, str):
-            print('Load sentiment classifier from trainer')
+            fprint('Load sentiment classifier from trainer')
             self.model = self.checkpoint[0]
             self.config = self.checkpoint[1]
             self.tokenizer = self.checkpoint[2]
@@ -50,22 +50,22 @@ class SentimentClassifier(InferenceModel):
             try:
                 if 'fine-tuned' in self.checkpoint:
                     raise ValueError('Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!')
-                print('Load sentiment classifier from', self.checkpoint)
+                fprint('Load sentiment classifier from', self.checkpoint)
 
                 state_dict_path = find_file(self.checkpoint, '.state_dict', exclude_key=['__MACOSX'])
                 model_path = find_file(self.checkpoint, '.model', exclude_key=['__MACOSX'])
                 tokenizer_path = find_file(self.checkpoint, '.tokenizer', exclude_key=['__MACOSX'])
                 config_path = find_file(self.checkpoint, '.config', exclude_key=['__MACOSX'])
 
-                print('config: {}'.format(config_path))
-                print('state_dict: {}'.format(state_dict_path))
-                print('model: {}'.format(model_path))
-                print('tokenizer: {}'.format(tokenizer_path))
+                fprint('config: {}'.format(config_path))
+                fprint('state_dict: {}'.format(state_dict_path))
+                fprint('model: {}'.format(model_path))
+                fprint('tokenizer: {}'.format(tokenizer_path))
 
                 with open(config_path, mode='rb') as f:
                     self.config = pickle.load(f)
                     self.config.auto_device = kwargs.get('auto_device', True)
-                    get_device(self.config)
+
 
                 if state_dict_path or model_path:
                     if state_dict_path:
@@ -88,7 +88,7 @@ class SentimentClassifier(InferenceModel):
                             self.tokenizer = self.config.tokenizer
 
                 if kwargs.get('verbose', False):
-                    print('Config used in Training:')
+                    fprint('Config used in Training:')
                     print_args(self.config)
 
             except Exception as e:
@@ -345,30 +345,30 @@ class SentimentClassifier(InferenceModel):
                         text_printing = text_printing.replace(result['aspect'][i], aspect_info)
                     if self.cal_perplexity:
                         text_printing += colored(' --> <perplexity:{}>'.format(result['perplexity']), 'yellow')
-                    print('Example {}: {}'.format(ex_id, text_printing))
+                    fprint('Example {}: {}'.format(ex_id, text_printing))
             if save_path:
                 with open(save_path, 'w', encoding='utf8') as fout:
                     json.dump(str(results), fout, ensure_ascii=False)
-                    print('inference result saved in: {}'.format(save_path))
+                    fprint('inference result saved in: {}'.format(save_path))
         except Exception as e:
-            print('Can not save result: {}, Exception: {}'.format(text_raw, e))
+            fprint('Can not save result: {}, Exception: {}'.format(text_raw, e))
 
         if len(results) > 1:
-            print('Total samples:{}'.format(n_total))
-            print('Labeled samples:{}'.format(n_labeled))
-            print('Prediction Accuracy:{}%'.format(100 * n_correct / n_labeled if n_labeled else 'N.A.'))
+            fprint('Total samples:{}'.format(n_total))
+            fprint('Labeled samples:{}'.format(n_labeled))
+            fprint('Prediction Accuracy:{}%'.format(100 * n_correct / n_labeled if n_labeled else 'N.A.'))
 
             try:
-                print('\n---------------------------- Classification Report ----------------------------\n')
-                print(metrics.classification_report(t_targets_all, np.argmax(t_outputs_all, -1), digits=4,
-                                                    target_names=[self.config.index_to_label[x] for x in
-                                                                  self.config.index_to_label]))
-                print('\n---------------------------- Classification Report ----------------------------\n')
-                print('\n---------------------------- Confusion Matrix ----------------------------\n')
-                print(metrics.confusion_matrix(t_targets_all, np.argmax(t_outputs_all, -1)))
-                print('\n---------------------------- Confusion Matrix ----------------------------\n')
+                fprint('\n---------------------------- Classification Report ----------------------------\n')
+                fprint(metrics.classification_report(t_targets_all, np.argmax(t_outputs_all, -1), digits=4,
+                                                     target_names=[self.config.index_to_label[x] for x in
+                                                                   self.config.index_to_label]))
+                fprint('\n---------------------------- Classification Report ----------------------------\n')
+                fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
+                fprint(metrics.confusion_matrix(t_targets_all, np.argmax(t_outputs_all, -1)))
+                fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
             except Exception as e:
-                print('Can not print classification report: {}'.format(e))
+                fprint('Can not print classification report: {}'.format(e))
 
         return results
 

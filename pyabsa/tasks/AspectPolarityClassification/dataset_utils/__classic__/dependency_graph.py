@@ -16,6 +16,8 @@ import termcolor
 import tqdm
 from spacy.tokens import Doc
 
+from pyabsa.utils.pyabsa_utils import fprint
+
 
 class WhitespaceTokenizer(object):
     def __init__(self, vocab):
@@ -35,8 +37,8 @@ def configure_spacy_model(config):
     try:
         nlp = spacy.load(config.spacy_model)
     except:
-        print('Can not load {} from spacy, try to download it in order to parse syntax tree:'.format(config.spacy_model),
-              termcolor.colored('\npython -m spacy download {}'.format(config.spacy_model), 'green'))
+        fprint('Can not load {} from spacy, try to download it in order to parse syntax tree:'.format(config.spacy_model),
+               termcolor.colored('\npython -m spacy download {}'.format(config.spacy_model), 'green'))
         try:
             os.system('python -m spacy download {}'.format(config.spacy_model))
             nlp = spacy.load(config.spacy_model)
@@ -88,7 +90,7 @@ def prepare_dependency_graph(dataset_list, graph_path, max_seq_len, opt):
 
     for filename in dataset_list:
         try:
-            print('parsing dependency matrix:', filename)
+            fprint('parsing dependency matrix:', filename)
             fin = open(filename, 'r', encoding='utf-8', newline='\n', errors='ignore')
             lines = fin.readlines()
             fin.close()
@@ -99,8 +101,8 @@ def prepare_dependency_graph(dataset_list, graph_path, max_seq_len, opt):
                 text = text_left + ' ' + aspect + ' ' + text_right
                 idx2graph[text.lower()] = adj_matrix
         except Exception as e:
-            print(e)
-            print('unprocessed:', filename)
+            fprint(e)
+            fprint('unprocessed:', filename)
     pickle.dump(idx2graph, fout)
     fout.close()
     return graph_path

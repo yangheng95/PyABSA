@@ -17,12 +17,13 @@ from packaging import version
 from termcolor import colored
 from pyabsa import __version__ as current_version, PyABSAMaterialHostAddress
 from pyabsa.utils.file_utils.file_utils import unzip_checkpoint
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 def parse_checkpoint_info(t_checkpoint_map, task='APC', show_ckpts=False):
-    print('*' * 10,
-          colored('Available {} model checkpoints for Version:{} (this version)'.format(task, current_version), 'green'),
-          '*' * 10)
+    fprint('*' * 10,
+           colored('Available {} model checkpoints for Version:{} (this version)'.format(task, current_version), 'green'),
+           '*' * 10)
     for i, checkpoint_name in enumerate(t_checkpoint_map):
         checkpoint = t_checkpoint_map[checkpoint_name]
         try:
@@ -40,11 +41,11 @@ def parse_checkpoint_info(t_checkpoint_map, task='APC', show_ckpts=False):
         max_ver = max_ver if max_ver else 'N.A.'
         if max_ver == 'N.A.' or StrictVersion(min_ver) <= StrictVersion(current_version) <= StrictVersion(max_ver):
 
-            print('-' * 100)
-            print('Checkpoint Name: {}'.format(checkpoint_name))
+            fprint('-' * 100)
+            fprint('Checkpoint Name: {}'.format(checkpoint_name))
             for key in checkpoint:
-                print('{}: {}'.format(key, checkpoint[key]))
-            print('-' * 100)
+                fprint('{}: {}'.format(key, checkpoint[key]))
+            fprint('-' * 100)
     return t_checkpoint_map
 
 
@@ -55,7 +56,7 @@ def available_checkpoints(task='', show_ckpts=False):
         with open('./checkpoints-v2.0.json', "w") as f:
             json.dump(response.json(), f)
     except Exception as e:
-        print('Fail to download checkpoints info from huggingface space, try to download from local...')
+        fprint('Fail to download checkpoints info from huggingface space, try to download from local...')
     with open('./checkpoints-v2.0.json', 'r', encoding='utf8') as f:
         checkpoint_map = json.load(f)
 
@@ -79,9 +80,9 @@ def available_checkpoints(task='', show_ckpts=False):
 
 
 def download_checkpoint(task: str, language: str, checkpoint: dict):
-    print(colored('Notice: The pretrained model are used for testing, '
-                  'it is recommended to train the model on your own custom datasets', 'red')
-          )
+    fprint(colored('Notice: The pretrained model are used for testing, '
+                   'it is recommended to train the model on your own custom datasets', 'red')
+           )
     huggingface_checkpoint_url = PyABSAMaterialHostAddress + 'resolve/main/checkpoints/{}/{}/{}'.format(
         checkpoint['Language'], task.upper(), checkpoint['Checkpoint File']
     )
@@ -92,7 +93,7 @@ def download_checkpoint(task: str, language: str, checkpoint: dict):
         os.makedirs(dest_path)
 
     if (find_files(dest_path, '.model') or find_files(dest_path, '.state_dict')) and find_files(dest_path, '.config'):
-        print('Checkpoint already downloaded, skip...')
+        fprint('Checkpoint already downloaded, skip...')
         return dest_path
 
     if find_cwd_files([checkpoint['Training Model'], checkpoint['Checkpoint File'].strip('.zip'), '.config']):
@@ -113,7 +114,7 @@ def download_checkpoint(task: str, language: str, checkpoint: dict):
         raise ConnectionError("Fail to download checkpoint: {}".format(e))
     unzip_checkpoint(save_path)
     os.remove(save_path)
-    print(colored(
+    fprint(colored(
         'If the auto-downloading failed, please download it via browser: {} '.format(huggingface_checkpoint_url),
         'yellow'))
     return dest_path

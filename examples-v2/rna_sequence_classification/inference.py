@@ -12,6 +12,7 @@ import findfile
 import tqdm
 
 from pyabsa import RNAClassification as RNAC
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 def ensemble_predict(rna_classifiers: dict, rna, print_result=False):
@@ -42,7 +43,7 @@ if __name__ == '__main__':
         result = ensemble_predict(rna_classifiers, rna, print_result=True)
         if result == rna.split('$LABEL$')[-1].strip():
             count += 1
-        print(count / (i + 1))
+        fprint(count / (i + 1))
 
     while True:
         text = input('Please input your RNA sequence: ')
@@ -51,4 +52,4 @@ if __name__ == '__main__':
         if text == '':
             continue
 
-        print('Predicted Label:', ensemble_predict(rna_classifiers, text, print_result=False))
+        fprint('Predicted Label:', ensemble_predict(rna_classifiers, text, print_result=False))

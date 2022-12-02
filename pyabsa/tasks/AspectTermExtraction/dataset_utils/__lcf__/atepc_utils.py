@@ -10,6 +10,7 @@ import re
 import string
 
 from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__lcf__.apc_utils import get_syntax_distance, get_lca_ids_and_cdm_vec, get_cdw_vec
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 # It is hard to tokenize multilingual text, I decide to use a pretrained tokenizer, you can alter according to your demands
@@ -131,7 +132,7 @@ def load_atepc_inference_datasets(fname):
         fname = [fname]
 
     for f in fname:
-        print('loading: {}'.format(f))
+        fprint('loading: {}'.format(f))
         fin = open(f, 'r', encoding='utf-8')
         lines.extend(fin.readlines())
         fin.close()

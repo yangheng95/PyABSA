@@ -18,7 +18,7 @@ from transformers import AutoTokenizer
 
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
-from pyabsa.utils.pyabsa_utils import check_and_fix_labels
+from pyabsa.utils.pyabsa_utils import check_and_fix_labels, fprint
 
 
 class BERTTADDataset(PyABSADataset):
@@ -114,10 +114,10 @@ def check_and_fix_adv_train_labels(label_set: set, label_name, all_data, config)
             num_label[item[label_name]] += 1
             item[label_name] = adv_train_label_to_index[item[label_name]]
         except Exception as e:
-            # print(e)
+            # fprint(e)
             num_label[item.polarity] += 1
             item.polarity = adv_train_label_to_index[item.polarity]
-    print('Dataset Label Details: {}'.format(num_label))
+    fprint('Dataset Label Details: {}'.format(num_label))
 
 
 def check_and_fix_is_adv_labels(label_set: set, label_name, all_data, config):
@@ -147,7 +147,7 @@ def check_and_fix_is_adv_labels(label_set: set, label_name, all_data, config):
             num_label[item[label_name]] += 1
             item[label_name] = is_adv_to_index[item[label_name]]
         except Exception as e:
-            # print(e)
+            # fprint(e)
             num_label[item.polarity] += 1
             item.polarity = is_adv_to_index[item.polarity]
-    print('Dataset Label Details: {}'.format(num_label))
+    fprint('Dataset Label Details: {}'.format(num_label))

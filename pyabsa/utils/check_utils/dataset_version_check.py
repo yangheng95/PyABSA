@@ -14,6 +14,7 @@ from findfile import find_cwd_file
 from termcolor import colored
 
 from pyabsa.utils.exception_utils import time_out
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 @time_out(10)
@@ -43,7 +44,7 @@ def query_remote_datasets_version(**kwargs):
             if logger:
                 logger.warning('Failed to query remote version')
             else:
-                print(colored('Failed to query remote version', 'red'))
+                fprint(colored('Failed to query remote version', 'red'))
             return None
     return remote_version
 
@@ -62,23 +63,23 @@ def check_datasets_version(**kwargs):
             logger.info(f'Local dataset version: {local_version}')
             logger.info(f'Remote dataset version: {remote_version}')
         else:
-            print(f'Local dataset version: {local_version}')
-            print(f'Remote dataset version: {remote_version}')
+            fprint(f'Local dataset version: {local_version}')
+            fprint(f'Remote dataset version: {remote_version}')
 
         if not remote_version:
             if logger:
                 logger.warning('Failed to check ABSADatasets version, please'
                                'check the latest version of ABSADatasets at https://github.com/yangheng95/ABSADatasets')
             else:
-                print(colored('Failed to check ABSADatasets version, please'
-                              'check the latest version of ABSADatasets at https://github.com/yangheng95/ABSADatasets',
-                              'red'))
+                fprint(colored('Failed to check ABSADatasets version, please'
+                               'check the latest version of ABSADatasets at https://github.com/yangheng95/ABSADatasets',
+                               'red'))
         if not local_version:
             if logger:
                 logger.warning(
                     'Failed to check local ABSADatasets version, please make sure you have downloaded the latest version of ABSADatasets.')
             else:
-                print(colored(
+                fprint(colored(
                     'Failed to check local ABSADatasets version, please make sure you have downloaded the latest version of ABSADatasets.',
                     'red'))
 
@@ -87,7 +88,7 @@ def check_datasets_version(**kwargs):
                 logger.warning(
                     'Local ABSADatasets version is lower than remote ABSADatasets version, please upgrade your ABSADatasets.')
             else:
-                print(colored(
+                fprint(colored(
                     'Local ABSADatasets version is lower than remote ABSADatasets version, please upgrade your ABSADatasets.',
                     'red'))
 
@@ -98,6 +99,6 @@ def check_datasets_version(**kwargs):
                 'ABSADatasets version check failed: {}, please check the latest datasets at https://github.com/yangheng95/ABSADatasets manually.'.format(
                     e))
         else:
-            print(colored(
+            fprint(colored(
                 'ABSADatasets version check failed: {}, please check the latest datasets at https://github.com/yangheng95/ABSADatasets manually.'.format(
                     e), 'red'))

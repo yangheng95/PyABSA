@@ -30,7 +30,7 @@ from ..configuration_class.configuration_template import ConfigManager
 
 from pyabsa.utils.logger.logger import get_logger
 
-from pyabsa.utils.pyabsa_utils import get_device
+from pyabsa.utils.pyabsa_utils import set_device, fprint
 from ...utils.check_utils import query_local_datasets_version
 from ...utils.data_utils.dataset_item import DatasetItem
 from ...utils.data_utils.dataset_manager import detect_dataset
@@ -41,9 +41,9 @@ warnings.filterwarnings('once')
 
 
 def init_config(config):
-    get_device(config)
+    set_device(config)
     if not torch.cuda.device_count() > 1 and config.auto_device == DeviceTypeOption.ALL_CUDA:
-        print('Cuda devices count <= 1, so reset auto_device=True to auto specify device...')
+        fprint('Cuda devices count <= 1, so reset auto_device=True to auto specify device...')
         config.auto_device = True
     config.model_name = config.model.__name__.lower() if not isinstance(config.model, list) else 'ensemble_model'
 
@@ -158,7 +158,7 @@ class Trainer:
                 self.config.model_path_to_save = self.config.path_to_save
             elif ((hasattr(self.config, 'dataset_file') and 'valid' in self.config.dataset_file) or
                   (hasattr(self.config, 'dataset_dict') and 'valid' in self.config.dataset_dict)) and not self.config.checkpoint_save_mode:
-                print('Using Validation set needs to save checkpoint, turn on checkpoint-saving ...')
+                fprint('Using Validation set needs to save checkpoint, turn on checkpoint-saving ...')
                 self.config.model_path_to_save = 'checkpoints'
                 self.config.save_mode = 1
             else:
@@ -199,7 +199,7 @@ class Trainer:
         Load trained model for inference
         """
         if not self.inference_model:
-            print('No trained model found, this could happen while trainer only using trainer set.')
+            fprint('No trained model found, this could happen while trainer only using trainer set.')
         self.inference_model.to(self.config.device)
         return self.inference_model
 

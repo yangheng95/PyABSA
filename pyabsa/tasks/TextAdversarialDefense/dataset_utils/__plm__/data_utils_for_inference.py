@@ -15,6 +15,7 @@ from transformers import AutoTokenizer
 
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 class BERTTADInferenceDataset(Dataset):
@@ -105,7 +106,7 @@ class BERTTADInferenceDataset(Dataset):
 
             except Exception as e:
                 if ignore_error:
-                    print('Ignore error while processing:', text)
+                    fprint('Ignore error while processing:', text)
                 else:
                     raise e
 

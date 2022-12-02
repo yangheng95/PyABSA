@@ -15,6 +15,7 @@ from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from torch.utils.data import Dataset
 import tqdm
 
+from pyabsa.utils.pyabsa_utils import fprint
 from .apc_utils import (build_sentiment_window,
                         build_spc_mask_vec,
                         prepare_input_for_apc,
@@ -43,11 +44,11 @@ def parse_sample(text):
                 sample += f'$LABEL${ref_sent[i]}'
                 samples.append(sample.replace('[TEMP]', '[ASP]'))
             else:
-                print(f'Warning: aspect number {len(aspects)} not equal to reference sentiment number {len(ref_sent)}, text: {_text}')
+                fprint(f'Warning: aspect number {len(aspects)} not equal to reference sentiment number {len(ref_sent)}, text: {_text}')
                 samples.append(sample.replace('[TEMP]', '[ASP]'))
 
     else:
-        print('[ASP] tag is detected, please use [B-ASP] and [E-ASP] to annotate aspect terms.')
+        fprint('[ASP] tag is detected, please use [B-ASP] and [E-ASP] to annotate aspect terms.')
         splits = text.split('[ASP]')
         ref_sent = ref_sent.split(',') if ref_sent else []
 
@@ -59,9 +60,9 @@ def parse_sample(text):
                 samples.append(sample.replace('[TEMP]', '[ASP]'))
         elif not ref_sent or int((len(splits) - 1) / 2) != len(ref_sent):
             # if not ref_sent:
-            #     print(_text, ' -> No the reference sentiment found')
+            #     fprint(_text, ' -> No the reference sentiment found')
             if ref_sent:
-                print(_text, ' -> Unequal length of reference sentiment and aspects, ignore the reference sentiment.')
+                fprint(_text, ' -> Unequal length of reference sentiment and aspects, ignore the reference sentiment.')
 
             for i in range(0, len(splits) - 1, 2):
                 sample = text.replace('[ASP]' + splits[i + 1] + '[ASP]',
@@ -198,7 +199,7 @@ class ABSAInferenceDataset(Dataset):
 
             except Exception as e:
                 if ignore_error:
-                    print('Ignore error while processing: {} Error info:{}'.format(text, e))
+                    fprint('Ignore error while processing: {} Error info:{}'.format(text, e))
                 else:
                     raise RuntimeError('Ignore error while processing: {} Catch Exception: {}, use ignore_error=True to remove error samples.'.format(text, e))
 
@@ -208,7 +209,7 @@ class ABSAInferenceDataset(Dataset):
             cluster_ids = []
             for pad_idx in range(self.config.max_seq_len):
                 if pad_idx in data['cluster_ids']:
-                    # print(data['polarity'])
+                    # fprint(data['polarity'])
                     cluster_ids.append(self.config.label_to_index.get(self.config.index_to_label.get(data['polarity'], 'N.A.'),
                                                                       LabelPaddingOption.SENTIMENT_PADDING))
                 else:

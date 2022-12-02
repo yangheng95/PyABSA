@@ -27,7 +27,7 @@ class FAST_LCF_BERT_ATT(nn.Module):
         self.bert_SA_ = Encoder(bert.config, config)
         self.bert_pooler = BertPooler(bert.config)
         self.dense = nn.Linear(config.embed_dim, config.output_dim)
-        print('{} is a test model!'.format(self.__class__.__name__))
+        fprint('{} is a test model!'.format(self.__class__.__name__))
 
     def forward(self, inputs):
         if self.config.use_bert_spc:

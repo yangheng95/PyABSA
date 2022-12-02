@@ -8,6 +8,8 @@
 # Copyright (C) 2022. All Rights Reserved.
 import torch
 
+from pyabsa.utils.pyabsa_utils import fprint
+
 one_shot_messages = set()
 
 
@@ -31,7 +33,7 @@ def config_check(args):
                 message = 'Warning! cross_validate_fold will be better in [5, 10], instead of {}'.format(
                     args['cross_validate_fold'])
                 if message not in one_shot_messages:
-                    print(message)
+                    fprint(message)
                     one_shot_messages.add(message)
         if 'dlcf_a' in args:
             assert args['dlcf_a'] > 1
@@ -49,7 +51,7 @@ def config_check(args):
                 message = 'Optimizer {} is not available in PyTorch < 1.10, it will be redirected to Adam instead.'.format(
                     args['optimizer'])
                 if message not in one_shot_messages:
-                    print(message)
+                    fprint(message)
                     one_shot_messages.add(
                         'Optimizer {} is not available in PyTorch < 1.10, it will be redirected to Adam instead.'.format(
                             args['optimizer']))

@@ -26,7 +26,7 @@ from pyabsa.utils.file_utils.file_utils import save_model
 from ..dataset_utils.__classic__.data_utils_for_training import GloVeProteinRDataset
 from ..dataset_utils.__plm__.data_utils_for_training import BERTProteinRDataset
 from ..models import GloVeProteinRModelList, BERTProteinRModelList
-from pyabsa.utils.pyabsa_utils import print_args, init_optimizer
+from pyabsa.utils.pyabsa_utils import print_args, init_optimizer, fprint
 
 import pytorch_warmup as warmup
 
@@ -86,7 +86,7 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
             try:
                 self.bert = AutoModel.from_pretrained(self.config.pretrained_bert)
             except ValueError as e:
-                print('Init pretrained model failed, exception: {}'.format(e))
+                fprint('Init pretrained model failed, exception: {}'.format(e))
 
             # init the model behind the construction of datasets in case of updating output_dim
             self.model = self.config.model(self.bert, self.config).to(self.config.device)
@@ -280,7 +280,7 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
             self.config.MV.add_metric('Max-Test-R2-Score w/o Valid Set', max_fold_r2)
 
         if self.valid_dataloader:
-            print('Loading best model: {} and evaluating on test set ...'.format(save_path))
+            fprint('Loading best model: {} and evaluating on test set ...'.format(save_path))
             self.reload_model(find_file(save_path, '.state_dict'))
             max_fold_r2 = self._evaluate_r2(self.test_dataloader, criterion)
 
@@ -288,8 +288,8 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
 
         self.logger.info(self.config.MV.summary(no_print=True))
 
-        print('Training finished, we hope you can share your checkpoint with everybody, please see:',
-              'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
+        fprint('Training finished, we hope you can share your checkpoint with everybody, please see:',
+               'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
 
         print_args(self.config, self.logger)
 
@@ -444,8 +444,8 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
             self.logger.info(self.config.MV.summary(no_print=True))
         # self.config.MV.summary()
 
-        print('Training finished, we hope you can share your checkpoint with community, please see:',
-              'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
+        fprint('Training finished, we hope you can share your checkpoint with community, please see:',
+               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
 
         print_args(self.config, self.logger)
 
