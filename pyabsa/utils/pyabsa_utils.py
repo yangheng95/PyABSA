@@ -108,16 +108,24 @@ def check_and_fix_IOB_labels(label_map, config):
 
 
 def set_device(config, auto_device=True):
-    if auto_device == True:
+    if auto_device is True:
         config.device = auto_cuda()
         config.device_name = auto_cuda_name()
     elif auto_device:
         config.device = auto_device
         config.device_name = 'User Specified Device'
+    else:
+        config.device = torch.device('cpu')
+        config.device_name = 'CPU'
 
 
 def fprint(*objects, sep=' ', end='\n', file=sys.stdout, flush=False):
     print(time.strftime('[%Y-%m-%d %H:%M:%S] ({})'.format(pyabsa_version), time.localtime(time.time())),
+          *objects, sep=sep, end=end, file=file, flush=flush)
+
+
+def rprint(*objects, sep=' ', end='\n', file=sys.stdout, flush=False):
+    print(time.strftime('\n[%Y-%m-%d %H:%M:%S] ({})'.format(pyabsa_version), time.localtime(time.time())),
           *objects, sep=sep, end=end, file=file, flush=flush)
 
 
