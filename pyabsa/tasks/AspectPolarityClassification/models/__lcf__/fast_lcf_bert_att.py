@@ -11,6 +11,7 @@ import torch.nn.functional as F
 from transformers.models.bert.modeling_bert import BertPooler
 
 from pyabsa.networks.sa_encoder import Encoder
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 class FAST_LCF_BERT_ATT(nn.Module):

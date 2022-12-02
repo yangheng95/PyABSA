@@ -13,6 +13,8 @@ from pathlib import Path
 
 import findfile
 
+from pyabsa.utils.pyabsa_utils import fprint
+
 
 def cascade_zip_datasets():
     # iterate zip all datasets in the folder
