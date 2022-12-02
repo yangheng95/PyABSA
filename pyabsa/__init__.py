@@ -7,7 +7,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 __name__ = 'pyabsa'
-__version__ = '2.0.13'
+__version__ = '2.0.14'
 
 from pyabsa.framework.flag_class import *
 
