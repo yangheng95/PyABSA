@@ -189,6 +189,14 @@ class BaseTrainingInstructor:
 
         self._prepare_env()
         self._prepare_dataloader()
+
+        # use torch v2.0.0+ compile
+        try:
+            self.model = torch.compile(self.model, fullgraph=True, dynamic=True)
+            self.logger.info('use torch v2.0+ compile feature')
+        except:
+            pass
+
         self._resume_from_checkpoint()
 
         if self.config.warmup_step >= 0:
