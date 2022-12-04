@@ -110,6 +110,14 @@ class AspectExtractor(InferenceModel):
 
         self.eval_dataloader = None
 
+        # use torch v2.0.0+ compile
+        try:
+            self.model = torch.compile(self.model, fullgraph=True, dynamic=True)
+
+            fprint('use torch v2.0+ compile feature')
+        except:
+            pass
+
         self.to(self.config.device)
 
     def to(self, device=None):
