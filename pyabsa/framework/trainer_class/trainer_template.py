@@ -41,10 +41,11 @@ warnings.filterwarnings('once')
 
 
 def init_config(config):
-    set_device(config, config.auto_device)
     if not torch.cuda.device_count() > 1 and config.auto_device == DeviceTypeOption.ALL_CUDA:
         fprint('Cuda devices count <= 1, so reset auto_device=True to auto specify device...')
         config.auto_device = True
+    set_device(config, config.auto_device)
+
     config.model_name = config.model.__name__.lower() if not isinstance(config.model, list) else 'ensemble_model'
 
     if config.get('pretrained_bert', None):

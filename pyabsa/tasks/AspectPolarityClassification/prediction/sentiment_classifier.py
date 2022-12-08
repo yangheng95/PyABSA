@@ -130,12 +130,13 @@ class SentimentClassifier(InferenceModel):
             except Exception as e:
                 self.MLM, self.MLM_tokenizer = None, None
 
-        # use torch v2.0.0+ compile
-        try:
-            self.model = torch.compile(self.model, fullgraph=True, dynamic=True)
-            fprint('use torch v2.0+ compile feature')
-        except:
-            pass
+        if self.config.get('use_torch_compile', True):
+            # use torch v2.0.0+ compile
+            try:
+                self.model = torch.compile(self.model, fullgraph=True, dynamic=True)
+                fprint('use torch v2.0+ compile feature')
+            except:
+                pass
 
         self.to(self.config.device)
 

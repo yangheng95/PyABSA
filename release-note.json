@@ -1,4 +1,8 @@
 {
+  "2.0.17": {
+    "1": "Fix a potential bug while using auto-device",
+    "2": "General improvements"
+  },
   "2.0.16": {
     "1": "Add PyTorch 2.0 torch.compile() feature, which get considerable speedup on model training. You can install preview version of PyTorch 2.0 following to https://pytorch.org/get-started/pytorch-2.0/#getting-started"
   },

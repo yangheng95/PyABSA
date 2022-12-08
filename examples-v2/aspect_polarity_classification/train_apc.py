@@ -41,12 +41,12 @@ for dataset in [
         config.cache_dataset = False
         config.l2reg = 1e-8
         config.lsa = True
-        config.use_amp = True
+        # config.use_amp = True
         config.seed = [random.randint(0, 10000) for _ in range(3)]
 
         APC.APCTrainer(config=config,
                        dataset=dataset,
                        # from_checkpoint='english',
                        checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                       auto_device=DeviceTypeOption.AUTO,
+                       auto_device=DeviceTypeOption.ALL_CUDA,
                        ).destroy()

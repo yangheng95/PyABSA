@@ -109,6 +109,7 @@ def check_and_fix_IOB_labels(label_map, config):
 
 
 def set_device(config, auto_device):
+    device_name = 'Unknown'
     if isinstance(auto_device, str) and auto_device == DeviceTypeOption.ALL_CUDA:
         device = 'cuda'
     elif isinstance(auto_device, str):
@@ -122,7 +123,8 @@ def set_device(config, auto_device):
         except RuntimeError as e:
             print(colored('Device assignment error: {}, redirect to CPU'.format(e), 'red'))
             device = 'cpu'
-    device_name = auto_cuda_name()
+    if device != 'cpu':
+        device_name = auto_cuda_name()
     config.device = device
     config.device_name = device_name
     fprint('Set Model Device: {}'.format(device))
