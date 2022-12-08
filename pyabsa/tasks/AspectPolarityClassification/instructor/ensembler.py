@@ -76,7 +76,6 @@ class APCEnsembler(nn.Module):
                     config.args_call_count.update(self.config.args_call_count)
             if hasattr(APCModelList, models[i].__name__):
                 try:
-
                     if kwargs.get('offline', False):
                         self.tokenizer = AutoTokenizer.from_pretrained(find_cwd_dir(self.config.pretrained_bert.split('/')[-1]), do_lower_case='uncased' in self.config.pretrained_bert)
                         self.bert = AutoModel.from_pretrained(find_cwd_dir(self.config.pretrained_bert.split('/')[-1])) if not self.bert else self.bert  # share the underlying bert between models
