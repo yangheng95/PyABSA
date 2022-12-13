@@ -50,6 +50,7 @@ def train_word2vec(corpus_files: list = None,
         corpus_files = [corpus_files]
     else:
         assert isinstance(corpus_files, list)
+
     fprint('Start loading corpus files:', corpus_files)
     if isinstance(pre_tokenizer, str):
         pre_tokenizer = AutoTokenizer.from_pretrained(pre_tokenizer)

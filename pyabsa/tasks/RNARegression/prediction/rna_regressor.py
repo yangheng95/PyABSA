@@ -111,25 +111,8 @@ class RNARegressor(InferenceModel):
         elif hasattr(GloVeRNARModelList, self.config.model.__name__):
             self.dataset = GloVeRNARDataset(config=self.config, tokenizer=self.tokenizer)
 
-        self.infer_dataloader = None
+        self.__post_init__()
 
-        self.config.initializer = self.config.initializer
-
-        if cal_perplexity:
-            try:
-                self.MLM, self.MLM_tokenizer = get_mlm_and_tokenizer(self.model, self.config)
-            except Exception as e:
-                self.MLM, self.MLM_tokenizer = None, None
-
-        if self.config.get('use_torch_compile', True):
-            # use torch v2.0.0+ compile
-            try:
-                self.model = torch.compile(self.model, fullgraph=True, dynamic=True)
-                fprint('use torch v2.0+ compile feature')
-            except:
-                pass
-
-        self.to(self.config.device)
 
     def to(self, device=None):
         self.config.device = device
@@ -282,7 +265,6 @@ class RNARegressor(InferenceModel):
                     'ref_label': real_val,
                     'perplexity': perplexity,
                 })
-                n_total += 1
                 pre_ex_id = ex_id
                 sum_val = [pred_val]
                 cat_text = text_raw

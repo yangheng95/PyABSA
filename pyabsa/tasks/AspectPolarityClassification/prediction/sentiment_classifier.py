@@ -120,25 +120,7 @@ class SentimentClassifier(InferenceModel):
             else:
                 raise KeyError('The checkpoint you are loading is not from APC model.')
 
-        self.infer_dataloader = None
-
-        self.config.initializer = self.config.initializer
-
-        if self.cal_perplexity:
-            try:
-                self.MLM, self.MLM_tokenizer = get_mlm_and_tokenizer(self.model, self.config)
-            except Exception as e:
-                self.MLM, self.MLM_tokenizer = None, None
-
-        if self.config.get('use_torch_compile', True):
-            # use torch v2.0.0+ compile
-            try:
-                self.model = torch.compile(self.model, fullgraph=True, dynamic=True)
-                fprint('use torch v2.0+ compile feature')
-            except:
-                pass
-
-        self.to(self.config.device)
+        self.__post_init__()
 
     def batch_infer(self,
                     target_file=None,

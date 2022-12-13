@@ -13,6 +13,7 @@ from typing import Union, List
 
 import numpy as np
 import tqdm
+from numpy import ndarray
 from termcolor import colored
 from transformers import AutoTokenizer
 
@@ -177,11 +178,20 @@ def build_embedding_matrix(config, tokenizer, cache_path=None):
 
 
 def pad_and_truncate(sequence, max_seq_len, value, **kwargs):
-    if len(sequence) > max_seq_len:
-        sequence = sequence[:max_seq_len]
+
+    if isinstance(sequence, ndarray):
+        sequence = list(sequence)
+        if len(sequence) > max_seq_len:
+            sequence = sequence[:max_seq_len]
+        else:
+            sequence = sequence + [value] * (max_seq_len - len(sequence))
+        return np.array(sequence)
     else:
-        sequence = sequence + [value] * (max_seq_len - len(sequence))
-    return sequence
+        if len(sequence) > max_seq_len:
+            sequence = sequence[:max_seq_len]
+        else:
+            sequence = sequence + [value] * (max_seq_len - len(sequence))
+        return sequence
 
 
 def _load_word_vec(path, word2idx=None, embed_dim=300):

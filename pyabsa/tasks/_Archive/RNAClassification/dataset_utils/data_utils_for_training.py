@@ -51,24 +51,36 @@ class BERTRNACDataset(PyABSADataset):
             # rna_type = rna_type_dict[rna_type]
             rna_type = rna_type.upper()
             label = label.strip()
-            rna_indices = self.tokenizer.text_to_sequence(rna)
-
-            import numpy as np
-            noise_masks = np.random.choice([0, 1], size=len(rna_indices), p=[0.2, 0.8])
-            rna_indices = np.array(rna_indices) * noise_masks
-            rna_indices = rna_indices.tolist()
-
+            rna_indices = self.tokenizer.text_to_sequence(rna, padding=False)
             rna_type_indices = self.tokenizer.text_to_sequence(str(rna_type))
-            rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len, value=self.tokenizer.pad_token_id)
 
-            data = {
-                'ex_id': ex_id,
-                'text_indices': rna_indices,
-                'rna_type': rna_type_indices,
-                'label': label,
-            }
-            label_set.add(label)
-            all_data.append(data)
+            for _ in range(self.config.get('noise_instances', 3)):
+                import numpy as np
+                _rna_indices = np.array(rna_indices.copy())
+                # noise_masks = np.abs(len(_rna_indices) // 2 - np.random.normal(loc=len(_rna_indices) // 2,
+                #                                                                scale=self.config.max_seq_len // 5,
+                #                                                                size=int(
+                #                                                                    len(_rna_indices) * 0.2)).astype(
+                #     int))
+                # noise_masks = np.where(noise_masks < 0, 0, noise_masks)
+                # noise_masks = np.where(noise_masks > len(_rna_indices) - 1, len(_rna_indices) - 1, noise_masks)
+                # _rna_indices[noise_masks] = self.tokenizer.pad_token_id
+                noise_masks = np.random.choice([0, 1], size=len(_rna_indices), p=[0.2, 0.8])
+                _rna_indices = np.array(_rna_indices) * (
+                    noise_masks if any(noise_masks) else [1] * len(_rna_indices))
+                _rna_indices = _rna_indices.tolist()
+
+                _rna_indices = pad_and_truncate(_rna_indices, self.config.max_seq_len,
+                                                value=self.tokenizer.pad_token_id)
+
+                data = {
+                    'ex_id': ex_id,
+                    'text_indices': _rna_indices,
+                    'rna_type': rna_type_indices,
+                    'label': label,
+                }
+                label_set.add(label)
+                all_data.append(data)
 
         check_and_fix_labels(label_set, 'label', all_data, self.config)
         self.config.output_dim = len(label_set)

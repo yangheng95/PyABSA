@@ -1,4 +1,8 @@
 {
+  "2.0.18": {
+    "1": "Default to disable torch.compile(), set config.use_torch_compile=True to enabled to enable",
+    "2": "Minor improvements"
+  },
   "2.0.17": {
     "1": "Fix a potential bug while using auto-device",
     "2": "General improvements"
