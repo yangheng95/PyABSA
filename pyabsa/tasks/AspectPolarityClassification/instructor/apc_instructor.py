@@ -411,12 +411,6 @@ class APCTrainingInstructor(BaseTrainingInstructor):
             time.sleep(3)
             return save_path
         else:
-            # direct return model if do not evaluate
-            # if self.config.model_path_to_save:
-            #     save_path = '{0}/{1}/'.format(self.config.model_path_to_save,
-            #                                   self.config.model_name
-            #                                   )
-            #     save_model(self.config, self.model, self.tokenizer, save_path)
             del self.train_dataloaders
             del self.test_dataloader
             del self.valid_dataloaders
@@ -459,25 +453,26 @@ class APCTrainingInstructor(BaseTrainingInstructor):
 
         if self.config.args.get('show_metric', False):
             fprint('\n---------------------------- APC Classification Report ----------------------------\n')
-            fprint(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(), target_names=[self.config.index_to_label[x] for x in self.config.index_to_label]))
+            fprint(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
+                   target_names=[self.config.index_to_label[x] for x in self.config.index_to_label]))
             fprint('\n---------------------------- APC Classification Report ----------------------------\n')
         return test_acc, f1
 
     def _init_misc(self):
         # eta1 and eta2 works only on LSA models, read the LSA paper for more details
-        if hasattr(self.model.models[0], 'eta1') and hasattr(self.model.models[0], 'eta2'):
-            if self.config.eta == 0:
-                torch.nn.init.uniform_(self.model.models[0].eta1)
-                torch.nn.init.uniform_(self.model.models[0].eta2)
-            eta1_id = id(self.model.models[0].eta1)
-            eta2_id = id(self.model.models[0].eta2)
-            base_params = filter(lambda p: id(p) != eta1_id and id(p) != eta2_id, self.model.models[0].parameters())
+        if 'LSA' in str(self.model.models[0].__class__):
+            eta_ids = []
+            etas = []
+            for child in self.model.children():
+                if 'eta' in str(child.__class__):
+                    eta_ids += list(map(id, child.parameters()))
+                    etas.append(child)
+            base_params = filter(lambda p: id(p) not in eta_ids, self.model.models[0].parameters())
             self.config.eta_lr = self.config.learning_rate * 1000 if 'eta_lr' not in self.config.args else self.config.args['eta_lr']
             self.optimizer = init_optimizer(self.config.optimizer)(
                 [
                     {'params': base_params},
-                    {'params': self.model.models[0].eta1, 'lr': self.config.eta_lr, 'weight_decay': self.config.l2reg},
-                    {'params': self.model.models[0].eta2, 'lr': self.config.eta_lr, 'weight_decay': self.config.l2reg}
+                    {'params': etas, 'lr': self.config.eta_lr, 'weight_decay': self.config.l2reg}
                 ],
                 lr=self.config.learning_rate,
                 weight_decay=self.config.l2reg,

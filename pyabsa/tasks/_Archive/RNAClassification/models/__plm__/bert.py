@@ -34,11 +34,11 @@ class BERT_MLP(nn.Module):
         text_raw_indices = inputs[0]
         rna_type = inputs[1]
 
-        rna_type_ids = self.bert(rna_type)['last_hidden_state']
-        last_hidden_state = self.bert(text_raw_indices)['last_hidden_state']
-        last_hidden_state = self.linear(torch.cat([last_hidden_state, rna_type_ids], dim=-1))
-
+        # rna_type_ids = self.bert(rna_type)['last_hidden_state']
         # last_hidden_state = self.bert(text_raw_indices)['last_hidden_state']
+        # last_hidden_state = self.linear(torch.cat([last_hidden_state, rna_type_ids], dim=-1))
+        #
+        last_hidden_state = self.bert(text_raw_indices)['last_hidden_state']
 
         pooled_out = self.pooler(last_hidden_state)
         out = self.dense(pooled_out)

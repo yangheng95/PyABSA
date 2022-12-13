@@ -20,17 +20,17 @@ class PyABSADataset(Dataset):
         self.tokenizer = tokenizer
         self.dataset_type = dataset_type
 
-        if hasattr(self.config, 'dataset_dict') and dataset_type in self.config.dataset_dict and self.config.dataset_dict[dataset_type]:
+        if hasattr(self.config, 'dataset_dict') and dataset_type in self.config.dataset_dict and \
+                self.config.dataset_dict[dataset_type]:
             self.load_data_from_dict(config.dataset_dict, dataset_type=dataset_type, **kwargs)
-            self.covert_to_tensor(self.data)
             self.data = self.covert_to_tensor(self.data)
 
-        elif hasattr(self.config, 'dataset_file') and dataset_type in self.config.dataset_file and self.config.dataset_file[dataset_type]:
+        elif hasattr(self.config, 'dataset_file') and dataset_type in self.config.dataset_file and \
+                self.config.dataset_file[dataset_type]:
             self.load_data_from_file(self.config.dataset_file, dataset_type=dataset_type, **kwargs)
-            self.covert_to_tensor(self.data)
             self.data = self.covert_to_tensor(self.data)
 
-        self.config.logger.info('Training data examples:\n %s' % self.data[:2])
+        self.config.logger.info('{} data examples:\n {}'.format(dataset_type, self.data[:2]))
 
     @staticmethod
     def covert_to_tensor(data):
@@ -42,7 +42,7 @@ class PyABSADataset(Dataset):
                     except Exception as e:
                         pass
             elif isinstance(d, list):
-                for value in data:
+                for value in d:
                     PyABSADataset.covert_to_tensor(value)
         return data
 

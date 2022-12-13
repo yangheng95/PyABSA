@@ -48,8 +48,6 @@ class BaseTrainingInstructor:
         torch.manual_seed(config.seed)
         torch.cuda.manual_seed(config.seed)
 
-        config.device = torch.device(config.device)
-
         self.config = config
         self.logger = self.config.logger
 
@@ -182,7 +180,7 @@ class BaseTrainingInstructor:
         self.config.device = torch.device(self.config.device)
         if self.config.device.type == 'cuda':
             self.logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.config.device)))
-
+        self.config.logger.info('Model Architecture:\n {}'.format(self.model.__repr__()))
         print_args(self.config, self.logger)
 
     def _train(self, criterion):
@@ -190,12 +188,12 @@ class BaseTrainingInstructor:
         self._prepare_env()
         self._prepare_dataloader()
 
-        if self.config.get('use_torch_compile', True):
+        if self.config.get('use_torch_compile', False):
             # use torch v2.0.0+ compile
             try:
-                self.model = torch.compile(self.model, fullgraph=True, dynamic=True)
+                self.model = torch.compile(self.model)
                 self.logger.info('use torch v2.0+ compile feature')
-            except:
+            except Exception as e:
                 pass
 
         self._resume_from_checkpoint()

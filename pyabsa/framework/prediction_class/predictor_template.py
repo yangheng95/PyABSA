@@ -9,6 +9,7 @@
 import time
 from typing import Union
 
+from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
 from torch import cuda
 
 from pyabsa import TaskCodeOption
@@ -34,6 +35,8 @@ class InferenceModel:
         self.model = None
         self.dataset = None
 
+
+
     def to(self, device=None):
         self.config.device = device
         self.model.to(device)
@@ -51,6 +54,22 @@ class InferenceModel:
         self.model.to(device)
         if hasattr(self, 'MLM'):
             self.MLM.to(device)
+
+    def __post_init__(self):
+        self.config.label_to_index['-100'] = -100
+        self.config.label_to_index[''] = -100
+        self.config.index_to_label[-100] = ''
+
+        self.infer_dataloader = None
+        self.config.initializer = self.config.initializer
+
+        if self.cal_perplexity:
+            try:
+                self.MLM, self.MLM_tokenizer = get_mlm_and_tokenizer(self.model, self.config)
+            except Exception as e:
+                self.MLM, self.MLM_tokenizer = None, None
+
+        self.to(self.config.device)
 
     def batch_predict(self, **kwargs):
         """

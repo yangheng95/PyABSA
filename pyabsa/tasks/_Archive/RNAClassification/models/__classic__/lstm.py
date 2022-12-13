@@ -19,7 +19,11 @@ class LSTMLayer(nn.Module):
         self.lstms = nn.ModuleList()
         self.config = config
         for i in range(self.config.num_lstm_layer):
-            self.lstms.append(DynamicLSTM(self.config.embed_dim, self.config.hidden_dim, num_layers=self.config.num_lstm_layer, batch_first=True, bidirectional=True))
+            self.lstms.append(DynamicLSTM(self.config.embed_dim,
+                                          self.config.hidden_dim,
+                                          num_layers=self.config.num_lstm_layer,
+                                          batch_first=True,
+                                          bidirectional=True))
 
     def forward(self, x, x_len):
         h, c = None, None
@@ -49,7 +53,7 @@ class LSTM(nn.Module):
         # dot_product = torch.mul(x, rna_type_ids)
         # cat_product = torch.cat([dot_product, x], dim=-1)
         # x = self.linear(cat_product)
-        x_len = torch.sum(text_raw_indices != 0, dim=-1)
+        x_len = torch.count_nonzero(text_raw_indices, dim=-1)
         _, (h_n, _) = self.lstm(x, x_len)
         out = self.dense(h_n[0])
         return out

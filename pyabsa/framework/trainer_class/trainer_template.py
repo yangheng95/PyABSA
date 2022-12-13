@@ -152,13 +152,16 @@ class Trainer:
             self.config.dataset_dict = self.config.dataset
         else:
             # detect dataset
-            dataset_file = detect_dataset(self.config.dataset, task_code=self.config.task_code, load_aug=self.config.load_aug, config=self.config)
+            dataset_file = detect_dataset(self.config.dataset, task_code=self.config.task_code,
+                                          load_aug=self.config.load_aug, config=self.config)
             self.config.dataset_file = dataset_file
-        if self.config.checkpoint_save_mode or self.config.dataset_file['valid'] or self.config.dataset_dict['test']:
+        if self.config.checkpoint_save_mode or self.config.dataset_file['valid'] \
+                or (self.config.get('data_dict') and self.config.dataset_dict['test']):
             if self.config.path_to_save:
                 self.config.model_path_to_save = self.config.path_to_save
             elif ((hasattr(self.config, 'dataset_file') and 'valid' in self.config.dataset_file) or
-                  (hasattr(self.config, 'dataset_dict') and 'valid' in self.config.dataset_dict)) and not self.config.checkpoint_save_mode:
+                  (hasattr(self.config,
+                           'dataset_dict') and 'valid' in self.config.dataset_dict)) and not self.config.checkpoint_save_mode:
                 fprint('Using Validation set needs to save checkpoint, turn on checkpoint-saving ...')
                 self.config.model_path_to_save = 'checkpoints'
                 self.config.save_mode = 1

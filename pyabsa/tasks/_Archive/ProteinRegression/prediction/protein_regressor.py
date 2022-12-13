@@ -111,17 +111,7 @@ class ProteinRegressor(InferenceModel):
         elif hasattr(GloVeProteinRModelList, self.config.model.__name__):
             self.dataset = GloVeProteinRDataset(config=self.config, tokenizer=self.tokenizer)
 
-        self.infer_dataloader = None
-
-        self.config.initializer = self.config.initializer
-
-        if cal_perplexity:
-            try:
-                self.MLM, self.MLM_tokenizer = get_mlm_and_tokenizer(self.model, self.config)
-            except Exception as e:
-                self.MLM, self.MLM_tokenizer = None, None
-
-        self.to(self.config.device)
+        self.__post_init__()
 
     def to(self, device=None):
         self.config.device = device

@@ -125,7 +125,7 @@ def unzip_checkpoint(zip_path):
 
 def save_model(config, model, tokenizer, save_path, **kwargs):
     # Save a trained model, configuration and tokenizer
-    if hasattr(model, 'module') or hasattr(model, 'core'):
+    if hasattr(model, 'module') or hasattr(model, 'core') or hasattr(model, '_orig_mod'):
         # fprint("save model from data-parallel!")
         model_to_save = model.module
     else:
