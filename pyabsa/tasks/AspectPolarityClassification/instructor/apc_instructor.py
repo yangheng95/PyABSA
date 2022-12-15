@@ -448,13 +448,13 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                     t_outputs_all = torch.cat((t_outputs_all, sen_outputs), dim=0)
 
         test_acc = n_test_correct / n_test_total
-        f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
+        f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all.cpu(), -1),
                               labels=list(range(self.config.output_dim)), average='macro')
 
         if self.config.args.get('show_metric', False):
 
             fprint('\n---------------------------- APC Classification Report ----------------------------\n')
-            fprint(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
+            fprint(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all.cpu(), -1),
                    target_names=[self.config.index_to_label[x] for x in self.config.index_to_label]))
             fprint('\n---------------------------- APC Classification Report ----------------------------\n')
 
