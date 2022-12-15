@@ -10,7 +10,7 @@ import random
 import shutil
 import time
 
-import numpy
+import numpy as np
 import torch
 import torch.nn as nn
 from findfile import find_file
@@ -29,7 +29,7 @@ from ..models import GloVeTCModelList, BERTTCModelList
 import pytorch_warmup as warmup
 
 from pyabsa.utils.file_utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import init_optimizer, print_args, fprint
+from pyabsa.utils.pyabsa_utils import init_optimizer, print_args, fprint, rprint
 from pyabsa.framework.tokenizer_class.tokenizer_class import PretrainedTokenizer, Tokenizer, build_embedding_matrix
 
 
@@ -463,8 +463,8 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             if os.path.exists('./init_state_dict.bin'):
                 self.reload_model()
 
-        max_test_acc = numpy.max(fold_test_acc)
-        max_test_f1 = numpy.mean(fold_test_f1)
+        max_test_acc = np.max(fold_test_acc)
+        max_test_f1 = np.mean(fold_test_f1)
 
         self.config.MV.add_metric('Max-Test-Acc', max_test_acc * 100)
         self.config.MV.add_metric('Max-Test-F1', max_test_f1 * 100)
@@ -528,9 +528,14 @@ class TCTrainingInstructor(BaseTrainingInstructor):
         f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
                               labels=list(range(self.config.output_dim)), average='macro')
         if self.config.args.get('show_metric', False):
-            fprint('\n---------------------------- Classification Report ----------------------------\n')
-            fprint(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(), target_names=[self.config.index_to_label[x] for x in self.config.index_to_label]))
-            fprint('\n---------------------------- Classification Report ----------------------------\n')
+
+            report = metrics.classification_report(t_targets_all, np.argmax(t_outputs_all, -1), digits=4,
+                                                   target_names=[self.config.index_to_label[x] for x in
+                                                                 self.config.index_to_label])
+            rprint('\n---------------------------- Classification Report ----------------------------\n')
+            fprint(report)
+            rprint('\n---------------------------- Classification Report ----------------------------\n')
+
         return test_acc, f1
 
     def run(self):

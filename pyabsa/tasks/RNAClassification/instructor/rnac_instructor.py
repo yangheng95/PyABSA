@@ -12,6 +12,7 @@ import shutil
 import time
 
 import numpy
+import numpy as np
 import torch
 import torch.nn as nn
 from sklearn import metrics
@@ -22,7 +23,7 @@ from transformers import AutoModel, AutoTokenizer
 from pyabsa import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from pyabsa.utils.file_utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import init_optimizer, print_args, fprint
+from pyabsa.utils.pyabsa_utils import init_optimizer, print_args, fprint, rprint
 from ..dataset_utils.data_utils_for_training import BERTRNACDataset, GloVeRNACDataset
 from ..models import GloVeRNACModelList, BERTRNACModelList
 
@@ -430,10 +431,14 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
                               labels=list(range(self.config.output_dim)), average='macro')
         if self.config.args.get('show_metric', False):
-            fprint('\n---------------------------- Classification Report ----------------------------\n')
-            fprint(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
-                                                 target_names=[str(self.config.index_to_label[x]) for x in self.config.index_to_label]))
-            fprint('\n---------------------------- Classification Report ----------------------------\n')
+
+            report = metrics.classification_report(t_targets_all, np.argmax(t_outputs_all, -1), digits=4,
+                                                   target_names=[self.config.index_to_label[x] for x in
+                                                                 self.config.index_to_label])
+            rprint('\n---------------------------- Classification Report ----------------------------\n')
+            fprint(report)
+            rprint('\n---------------------------- Classification Report ----------------------------\n')
+
         return test_acc, f1
 
     def _load_dataset_and_prepare_dataloader(self):
