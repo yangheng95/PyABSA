@@ -5,14 +5,11 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 import os
-import pickle
 import random
-import re
 import shutil
 import time
-from hashlib import sha256
 
-import numpy
+import numpy as np
 import pandas
 import torch
 import torch.nn as nn
@@ -39,7 +36,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
     def _init_misc(self):
 
         random.seed(self.config.seed)
-        numpy.random.seed(self.config.seed)
+        np.random.seed(self.config.seed)
         torch.manual_seed(self.config.seed)
         torch.cuda.manual_seed(self.config.seed)
 
@@ -370,7 +367,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
 
         rolling_intv = 5
         df = pandas.DataFrame(losses)
-        losses = list(numpy.hstack(df.rolling(rolling_intv, min_periods=1).mean().values))
+        losses = list(np.hstack(df.rolling(rolling_intv, min_periods=1).mean().values))
         self.config.loss = losses[-1]
         # self.config.loss = np.average(losses)
 

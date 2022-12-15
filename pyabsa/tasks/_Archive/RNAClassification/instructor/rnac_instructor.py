@@ -436,9 +436,14 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             report = metrics.classification_report(t_targets_all, np.argmax(t_outputs_all, -1), digits=4,
                                                    target_names=[self.config.index_to_label[x] for x in
                                                                  self.config.index_to_label])
-            rprint('\n---------------------------- Classification Report ----------------------------\n')
+            fprint('\n---------------------------- Classification Report ----------------------------\n')
             fprint(report)
-            rprint('\n---------------------------- Classification Report ----------------------------\n')
+            fprint('\n---------------------------- Classification Report ----------------------------\n')
+
+            report = metrics.confusion_matrix(t_targets_all, np.argmax(t_outputs_all, -1))
+            fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
+            fprint(report)
+            fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
 
         return test_acc, f1
 
