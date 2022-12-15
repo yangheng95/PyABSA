@@ -55,7 +55,7 @@ class BERTRNACInferenceDataset(Dataset):
                 rna_type_indices = self.tokenizer.text_to_sequence(str(rna_type))
                 rna_indices = self.tokenizer.text_to_sequence(rna + ' ' + rna_type, padding=False)
 
-                for _ in range(self.config.get('noise_instances', 11)):
+                for _ in range(self.config.get('noise_instances', 1)):
                     import numpy as np
                     _rna_indices = np.array(rna_indices.copy())
 

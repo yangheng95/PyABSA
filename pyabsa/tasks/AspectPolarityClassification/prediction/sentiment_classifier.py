@@ -5,7 +5,6 @@
 import json
 import os
 import pickle
-import random
 from typing import Union
 
 import numpy as np
@@ -27,8 +26,7 @@ from ..dataset_utils.__lcf__.data_utils_for_inference import ABSAInferenceDatase
 from ..dataset_utils.__plm__.data_utils_for_inference import BERTABSAInferenceDataset
 from ..instructor.ensembler import APCEnsembler
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
-from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint
-from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
+from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint, rprint
 
 
 class SentimentClassifier(InferenceModel):
@@ -49,7 +47,8 @@ class SentimentClassifier(InferenceModel):
             # load from a model path
             try:
                 if 'fine-tuned' in self.checkpoint:
-                    raise ValueError('Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!')
+                    raise ValueError(
+                        'Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!')
                 fprint('Load sentiment classifier from', self.checkpoint)
 
                 state_dict_path = find_file(self.checkpoint, '.state_dict', exclude_key=['__MACOSX'])
@@ -74,13 +73,16 @@ class SentimentClassifier(InferenceModel):
                     elif model_path:
                         self.model = torch.load(model_path, map_location='cpu')
                     with open(tokenizer_path, mode='rb') as f:
-                        if hasattr(APCModelList, self.config.model.__name__) or hasattr(BERTBaselineAPCModelList, self.config.model.__name__):
+                        if hasattr(APCModelList, self.config.model.__name__) or hasattr(BERTBaselineAPCModelList,
+                                                                                        self.config.model.__name__):
                             try:
                                 if kwargs.get('offline', False):
-                                    self.tokenizer = AutoTokenizer.from_pretrained(find_cwd_dir(self.config.pretrained_bert.split('/')[-1]),
-                                                                                   do_lower_case='uncased' in self.config.pretrained_bert)
+                                    self.tokenizer = AutoTokenizer.from_pretrained(
+                                        find_cwd_dir(self.config.pretrained_bert.split('/')[-1]),
+                                        do_lower_case='uncased' in self.config.pretrained_bert)
                                 else:
-                                    self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert, do_lower_case='uncased' in self.config.pretrained_bert)
+                                    self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert,
+                                                                                   do_lower_case='uncased' in self.config.pretrained_bert)
                             except ValueError:
                                 self.tokenizer = pickle.load(f)
                         elif hasattr(GloVeAPCModelList, self.config.model.__name__):
@@ -174,7 +176,8 @@ class SentimentClassifier(InferenceModel):
             raise FileNotFoundError('Can not find inference datasets!')
 
         self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
-        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size, pin_memory=True, shuffle=False)
+        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size,
+                                           pin_memory=True, shuffle=False)
         return self._run_prediction(save_path=save_path if save_result else None, print_result=print_result)
 
     def predict(self,
@@ -250,7 +253,8 @@ class SentimentClassifier(InferenceModel):
             else:
                 it = self.infer_dataloader
             for _, sample in enumerate(it):
-                inputs = {col: sample[col].to(self.config.device) for col in self.config.inputs_cols if col != 'polarity'}
+                inputs = {col: sample[col].to(self.config.device) for col in self.config.inputs_cols if
+                          col != 'polarity'}
                 self.model.eval()
                 outputs = self.model(inputs)
                 sen_logits = outputs['logits']
@@ -260,9 +264,11 @@ class SentimentClassifier(InferenceModel):
                                               LabelPaddingOption.SENTIMENT_PADDING for x in sample['polarity']])
                     t_outputs_all = np.array(sen_logits.cpu()).astype(np.float32)
                 else:
-                    t_targets_all = np.concatenate((t_targets_all, [self.config.label_to_index[x] if x in self.config.label_to_index else
-                                                                    LabelPaddingOption.SENTIMENT_PADDING for x in sample['polarity']]), axis=0)
-                    t_outputs_all = np.concatenate((t_outputs_all, np.array(sen_logits.cpu()).astype(np.float32)), axis=0)
+                    t_targets_all = np.concatenate(
+                        (t_targets_all, [self.config.label_to_index[x] if x in self.config.label_to_index else
+                                         LabelPaddingOption.SENTIMENT_PADDING for x in sample['polarity']]), axis=0)
+                    t_outputs_all = np.concatenate((t_outputs_all, np.array(sen_logits.cpu()).astype(np.float32)),
+                                                   axis=0)
 
                 t_probs = torch.softmax(sen_logits, dim=-1)
                 for i, i_probs in enumerate(t_probs):
@@ -279,7 +285,8 @@ class SentimentClassifier(InferenceModel):
                     text_raw = sample['text_raw'][i]
 
                     if self.cal_perplexity:
-                        ids = self.MLM_tokenizer(text_raw, truncation=True, padding='max_length', max_length=self.config.max_seq_len, return_tensors='pt')
+                        ids = self.MLM_tokenizer(text_raw, truncation=True, padding='max_length',
+                                                 max_length=self.config.max_seq_len, return_tensors='pt')
                         ids['labels'] = ids['input_ids'].clone()
                         ids = ids.to(self.config.device)
                         loss = self.MLM(**ids)['loss']
@@ -294,7 +301,8 @@ class SentimentClassifier(InferenceModel):
                         'confidence': confidence,
                         'probs': i_probs.cpu().numpy(),
                         'ref_sentiment': real_sent,
-                        'ref_check': correct[sent == real_sent] if real_sent != str(LabelPaddingOption.LABEL_PADDING) else '',
+                        'ref_check': correct[sent == real_sent] if real_sent != str(
+                            LabelPaddingOption.LABEL_PADDING) else '',
                         'perplexity': perplexity
                     })
                     n_total += 1
@@ -349,14 +357,18 @@ class SentimentClassifier(InferenceModel):
             fprint('Prediction Accuracy:{}%'.format(100 * n_correct / n_labeled if n_labeled else 'N.A.'))
 
             try:
-                fprint('\n---------------------------- Classification Report ----------------------------\n')
-                fprint(metrics.classification_report(t_targets_all, np.argmax(t_outputs_all, -1), digits=4,
-                                                     target_names=[self.config.index_to_label[x] for x in
-                                                                   self.config.index_to_label]))
-                fprint('\n---------------------------- Classification Report ----------------------------\n')
+                report = metrics.classification_report(t_targets_all, np.argmax(t_outputs_all, -1), digits=4,
+                                                       target_names=[self.config.index_to_label[x] for x in
+                                                                     self.config.index_to_label])
+                rprint('\n---------------------------- Classification Report ----------------------------\n')
+                fprint(report)
+                rprint('\n---------------------------- Classification Report ----------------------------\n')
+
+                report = metrics.confusion_matrix(t_targets_all, np.argmax(t_outputs_all, -1))
                 fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
-                fprint(metrics.confusion_matrix(t_targets_all, np.argmax(t_outputs_all, -1)))
+                fprint(report)
                 fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
+
             except Exception as e:
                 fprint('Can not print classification report: {}'.format(e))
 

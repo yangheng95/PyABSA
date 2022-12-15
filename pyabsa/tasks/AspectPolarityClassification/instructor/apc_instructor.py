@@ -467,7 +467,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                 if 'eta' in str(child.__class__):
                     eta_ids += list(map(id, child.parameters()))
                     etas.append(child)
-            base_params = filter(lambda p: id(p) not in eta_ids, self.model.models[0].parameters())
+            base_params = filter(lambda p: id(p) not in eta_ids, self.model.models.parameters())
             self.config.eta_lr = self.config.learning_rate * 1000 if 'eta_lr' not in self.config.args else self.config.args['eta_lr']
             self.optimizer = init_optimizer(self.config.optimizer)(
                 [

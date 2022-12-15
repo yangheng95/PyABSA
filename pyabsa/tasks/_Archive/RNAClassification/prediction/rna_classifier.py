@@ -12,7 +12,7 @@ import tqdm
 from findfile import find_file, find_cwd_dir
 from termcolor import colored
 from torch.utils.data import DataLoader
-from transformers import AutoModel, AutoTokenizer
+from transformers import AutoModel
 
 from sklearn import metrics
 
@@ -22,9 +22,8 @@ from ..models import BERTRNACModelList, GloVeRNACModelList
 from ..dataset_utils.data_utils_for_inference import GloVeRNACInferenceDataset
 from ..dataset_utils.data_utils_for_inference import BERTRNACInferenceDataset
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
-from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint
-from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
-from pyabsa.framework.tokenizer_class.tokenizer_class import Tokenizer, build_embedding_matrix, PretrainedTokenizer
+from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint, rprint
+from pyabsa.framework.tokenizer_class.tokenizer_class import PretrainedTokenizer
 
 
 class RNAClassifier(InferenceModel):
@@ -318,11 +317,12 @@ class RNAClassifier(InferenceModel):
             fprint('Total samples:{}'.format(n_total))
             fprint('Labeled samples:{}'.format(n_labeled))
 
-            fprint('\n---------------------------- Classification Report ----------------------------\n')
-            fprint(metrics.classification_report(t_targets_all, t_outputs_all, digits=4,
-                                                 target_names=[str(self.config.index_to_label[x]) for x in
-                                                               self.config.index_to_label]))
-            fprint('\n---------------------------- Classification Report ----------------------------\n')
+            report = metrics.classification_report(t_targets_all, np.argmax(t_outputs_all, -1), digits=4,
+                                                   target_names=[self.config.index_to_label[x] for x in
+                                                                 self.config.index_to_label])
+            rprint('\n---------------------------- Classification Report ----------------------------\n')
+            fprint(report)
+            rprint('\n---------------------------- Classification Report ----------------------------\n')
 
         return results
 
