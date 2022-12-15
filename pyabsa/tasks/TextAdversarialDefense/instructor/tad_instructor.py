@@ -456,12 +456,13 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                         t_adv_tr_outputs_all = torch.cat((t_adv_tr_outputs_all, valid_adv_tr_logits), dim=0)
 
         label_test_acc = n_label_test_correct / n_label_test_total
-        label_test_f1 = metrics.f1_score(t_label_targets_all.cpu(), torch.argmax(t_label_outputs_all, -1).cpu(),
+        label_test_f1 = metrics.f1_score(t_label_targets_all.cpu(), torch.argmax(t_label_outputs_all.cpu(), -1),
                                          labels=list(range(self.config.class_dim)), average='macro')
         if self.config.args.get('show_metric', False):
             fprint('\n---------------------------- Standard Classification Report ----------------------------\n')
             fprint(
-                metrics.classification_report(t_label_targets_all.cpu(), torch.argmax(t_label_outputs_all, -1).cpu(), target_names=[self.config.index_to_label[x] for x in self.config.index_to_label]))
+                metrics.classification_report(t_label_targets_all.cpu(), torch.argmax(t_label_outputs_all.cpu(), -1),
+                                              target_names=[self.config.index_to_label[x] for x in self.config.index_to_label]))
             fprint('\n---------------------------- Standard Classification Report ----------------------------\n')
 
         adv_det_test_acc = n_adv_det_test_correct / n_adv_det_test_total
