@@ -1,4 +1,7 @@
 {
+  "2.0.19": {
+    "1": "Add VoteEnsemblePredictor to support voting ensemble prediction, see ",
+  },
   "2.0.18": {
     "1": "Default to disable torch.compile(), set config.use_torch_compile=True to enabled to enable",
     "2": "Minor improvements"
