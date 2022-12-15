@@ -109,7 +109,6 @@ class SentAttacker:
 
 
 def generate_adversarial_example(dataset, attack_recipe):
-    attack_recipe_name = attack_recipe.__name__
     sent_attacker = SentAttacker(tad_classifier, attack_recipe)
 
     filter_key_words = ['.py', '.md', 'readme', 'log', 'result', 'zip', '.state_dict', '.model', '.png', 'acc_', 'f1_',
