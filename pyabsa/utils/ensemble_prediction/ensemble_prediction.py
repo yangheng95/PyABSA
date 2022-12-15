@@ -38,33 +38,90 @@ class VoteEnsemblePredictor:
                            'vote': lambda x: max(set(x), key=x.count),
                            'mode': lambda x: max(set(x), key=x.count),
                            }
-        assert numeric_agg in numeric_agg_methods, 'Aggregation method should be either average or vote'
-        assert str_agg in str_agg_methods, 'Aggregation method should be either max or vote'
+        assert numeric_agg in numeric_agg_methods, 'numeric_agg should be either: ' + str(numeric_agg_methods.keys())
+        assert str_agg in str_agg_methods, 'str_agg should be either max or vote' + str(str_agg_methods.keys())
 
         self.numeric_agg = numeric_agg_methods[numeric_agg]
         self.str_agg = str_agg_methods[str_agg]
 
         if isinstance(predictors, dict):
             self.checkpoints = list(predictors.keys())
-            self.rna_classifiers = predictors
+            self.predictors = predictors
             self.weights = list(weights.values()) if weights else [1] * len(self.checkpoints)
         else:
             raise NotImplementedError('Only support dict type for checkpoints and weights')
 
     def predict(self, text, ignore_error=False, print_result=False):
-        results = {}
-        for ckpt, rna_classifier in self.rna_classifiers.items():
-            res = rna_classifier.predict(text, ignore_error=ignore_error, print_result=print_result)
-            for key, value in res.items():
-                if key not in results:
-                    results[key] = []
+        result = {}
+        for ckpt, predictor in self.predictors.items():
+            raw_result = predictor.predict(text, ignore_error=ignore_error, print_result=print_result)
+            for key, value in raw_result.items():
+                if key not in result:
+                    result[key] = []
                 for _ in range(self.weights[self.checkpoints.index(ckpt)]):
-                    results[key].append(value)
+                    result[key].append(value)
         ensemble_result = {}
-        for key, value in results.items():
-            try:
-                ensemble_result[key] = self.numeric_agg(value)
-            except Exception as e:
-                ensemble_result[key] = self.str_agg(value)
-
+        for key, value in result.items():
+            ensemble_result[key] = value
+            if not isinstance(value, list):
+                value = [value]
+            for i, v in enumerate(value):
+                try:
+                    if isinstance(ensemble_result[key][i], list):
+                        ensemble_result[key][i] = self.numeric_agg(v)
+                    else:
+                        ensemble_result[key] = self.numeric_agg(value)
+                except Exception as e:
+                    try:
+                        if isinstance(ensemble_result[key][i], list):
+                            ensemble_result[key][i] = self.str_agg(v)
+                        else:
+                            ensemble_result[key] = self.str_agg(value)
+                    except Exception as e:
+                        ensemble_result[key] = value
         return ensemble_result
+
+    # Test version
+    # def batch_predict(self, texts, ignore_error=False, print_result=False):
+    #     batch_results = []
+    #     for ckpt, predictor in self.predictors.items():
+    #         raw_results = predictor.predict(texts, ignore_error=ignore_error, print_result=print_result)
+    #         for raw_result in raw_results:
+    #             result = {}
+    #             for key, value in raw_result.items():
+    #                 if key not in result:
+    #                     result[key] = []
+    #                 for _ in range(self.weights[self.checkpoints.index(ckpt)]):
+    #                     result[key].append(value)
+    #             batch_results.append(result)
+    #
+    #     ensemble_results = []
+    #     for result in batch_results:
+    #         ensemble_result = {}
+    #         for key, value in result.items():
+    #             ensemble_result[key] = value
+    #             if not isinstance(value, list):
+    #                 value = [value]
+    #             for i, v in enumerate(value):
+    #                 try:
+    #                     if isinstance(ensemble_result[key][i], list):
+    #                         ensemble_result[key][i] = self.numeric_agg(v)
+    #                     else:
+    #                         ensemble_result[key] = self.numeric_agg(value)
+    #                 except Exception as e:
+    #                     try:
+    #                         if isinstance(ensemble_result[key][i], list):
+    #                             ensemble_result[key][i] = self.str_agg(v)
+    #                         else:
+    #                             ensemble_result[key] = self.str_agg(value)
+    #                     except Exception as e:
+    #                         ensemble_result[key] = value
+    #         ensemble_results.append(ensemble_result)
+    #     return ensemble_results
+
+    def batch_predict(self, texts, ignore_error=False, print_result=False):
+        batch_results = []
+        for text in texts:
+            result = self.predict(text, ignore_error=ignore_error, print_result=print_result)
+            batch_results.append(result)
+        return batch_results
