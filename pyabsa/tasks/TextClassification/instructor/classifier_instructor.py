@@ -44,7 +44,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
 
     def _init_misc(self):
         random.seed(self.config.seed)
-        numpy.random.seed(self.config.seed)
+        np.random.seed(self.config.seed)
         torch.manual_seed(self.config.seed)
         torch.cuda.manual_seed(self.config.seed)
 
@@ -532,9 +532,9 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             report = metrics.classification_report(t_targets_all, np.argmax(t_outputs_all, -1), digits=4,
                                                    target_names=[self.config.index_to_label[x] for x in
                                                                  self.config.index_to_label])
-            rprint('\n---------------------------- Classification Report ----------------------------\n')
+            fprint('\n---------------------------- Classification Report ----------------------------\n')
             fprint(report)
-            rprint('\n---------------------------- Classification Report ----------------------------\n')
+            fprint('\n---------------------------- Classification Report ----------------------------\n')
 
         return test_acc, f1
 
