@@ -452,10 +452,12 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                               labels=list(range(self.config.output_dim)), average='macro')
 
         if self.config.args.get('show_metric', False):
+
             fprint('\n---------------------------- APC Classification Report ----------------------------\n')
             fprint(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(),
                    target_names=[self.config.index_to_label[x] for x in self.config.index_to_label]))
             fprint('\n---------------------------- APC Classification Report ----------------------------\n')
+
         return test_acc, f1
 
     def _init_misc(self):

@@ -298,10 +298,12 @@ class RNARegressor(InferenceModel):
             fprint('Can not save result: {}, Exception: {}'.format(text_raw, e))
 
         if len(results) > 1:
+
             fprint('\n---------------------------- Regression Result ----------------------------\n')
             fprint('MSE: {}'.format(metrics.mean_squared_error(t_targets_all.cpu(), t_outputs_all.cpu())))
             fprint('R2: {}'.format(metrics.r2_score(t_targets_all.cpu(), t_outputs_all.cpu())))
             fprint('\n---------------------------- Regression Result ----------------------------\n')
+
         return results
 
     def clear_input_samples(self):

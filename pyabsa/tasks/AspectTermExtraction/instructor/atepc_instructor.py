@@ -417,12 +417,13 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
             apc_result = {'apc_test_acc': test_acc, 'apc_test_f1': test_f1}
             if self.config.args.get('show_metric', False):
                 try:
-                    apc_report = metrics.classification_report(test_apc_logits_all.cpu(), torch.argmax(test_polarities_all, -1).cpu(),
-                                                               target_names=[self.config.index_to_label[x] for x in self.config.index_to_label])
+                    apc_report = metrics.classification_report(test_apc_logits_all.cpu(),
+                                 torch.argmax(test_polarities_all, -1).cpu(),
+                                 target_names=[self.config.index_to_label[x] for x in self.config.index_to_label])
                     fprint('\n---------------------------- APC Classification Report ----------------------------\n')
                     fprint(apc_report)
                     fprint('\n---------------------------- APC Classification Report ----------------------------\n')
-                except:
+                except Exception as e:
                     # No enough raw_data to calculate the report
                     pass
         if eval_ATE:
@@ -434,7 +435,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                     fprint('\n---------------------------- ATE Classification Report ----------------------------\n')
                     fprint(report)
                     fprint('\n---------------------------- ATE Classification Report ----------------------------\n')
-            except:
+            except Exception as e:
                 # No enough raw_data to calculate the report
                 pass
 
