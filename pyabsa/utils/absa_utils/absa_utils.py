@@ -27,12 +27,15 @@ def generate_inference_set_for_apc(dataset_path):
     else:
         dataset_name = dataset_path
 
-    train_datasets = findfile.find_cwd_files(['dataset', 'train', TaskCodeOption.Aspect_Polarity_Classification, dataset_name],
-                                             exclude_key=['.inference', 'readme'])
-    valid_datasets = findfile.find_cwd_files(['dataset', 'valid', TaskCodeOption.Aspect_Polarity_Classification, dataset_name],
-                                             exclude_key=['.inference', 'readme'])
-    test_datasets = findfile.find_cwd_files(['dataset', 'test', TaskCodeOption.Aspect_Polarity_Classification, dataset_name],
-                                            exclude_key=['.inference', 'readme'])
+    train_datasets = findfile.find_cwd_files(
+        ['dataset', 'train', TaskCodeOption.Aspect_Polarity_Classification, dataset_name],
+        exclude_key=['.inference', 'readme'])
+    valid_datasets = findfile.find_cwd_files(
+        ['dataset', 'valid', TaskCodeOption.Aspect_Polarity_Classification, dataset_name],
+        exclude_key=['.inference', 'readme'])
+    test_datasets = findfile.find_cwd_files(
+        ['dataset', 'test', TaskCodeOption.Aspect_Polarity_Classification, dataset_name],
+        exclude_key=['.inference', 'readme'])
     for file in train_datasets + valid_datasets + test_datasets:
         try:
             fin = open(file, 'r', newline='\n', encoding='utf-8')
@@ -78,7 +81,8 @@ def assemble_aspects(fname, use_tokenizer=False):
     for i in range(len(lines)):
         if i % 3 == 0 or i % 3 == 1:
             if use_tokenizer:
-                lines[i] = ' '.join(tokenizer.tokenize(lines[i].strip())).replace('$ t $', '$T$').replace('$ T $', '$T$')
+                lines[i] = ' '.join(tokenizer.tokenize(lines[i].strip())).replace('$ t $', '$T$').replace('$ T $',
+                                                                                                          '$T$')
             else:
                 lines[i] = ' '.join(simple_split_text(lines[i].strip())).replace('$ t $', '$T$').replace('$ T $', '$T$')
         else:
@@ -175,9 +179,11 @@ def convert_apc_set_to_atepc_set(path, use_tokenizer=False):
     if os.path.isfile(path):
         files = [path]
     elif os.path.exists(path):
-        files = findfile.find_files(path, ['dataset', TaskCodeOption.Aspect_Polarity_Classification], exclude_key=['.inference', 'readme'])
+        files = findfile.find_files(path, ['dataset', TaskCodeOption.Aspect_Polarity_Classification],
+                                    exclude_key=['.inference', 'readme'])
     else:
-        files = findfile.find_cwd_files([path, 'dataset', TaskCodeOption.Aspect_Polarity_Classification], exclude_key=['.inference', 'readme'])
+        files = findfile.find_cwd_files([path, 'dataset', TaskCodeOption.Aspect_Polarity_Classification],
+                                        exclude_key=['.inference', 'readme'])
 
     fprint('Find datasets files at {}:'.format(path))
     for target_file in files:
@@ -248,6 +254,6 @@ def detect_error_in_dataset(dataset):
         # fprint(lines[i].replace('$T$', lines[i + 1].replace('\n', '')))
         if i + 3 < len(lines):
             if is_similar(lines[i], lines[i + 3]) and len((lines[i] + " " + lines[i + 1]).split()) != len(
-                (lines[i + 3] + " " + lines[i + 4]).split()):
+                    (lines[i + 3] + " " + lines[i + 4]).split()):
                 fprint(lines[i].replace('$T$', lines[i + 1].replace('\n', '')))
                 fprint(lines[i + 3].replace('$T$', lines[i + 4].replace('\n', '')))

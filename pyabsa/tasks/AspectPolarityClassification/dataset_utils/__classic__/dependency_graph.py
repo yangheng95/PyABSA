@@ -37,8 +37,9 @@ def configure_spacy_model(config):
     try:
         nlp = spacy.load(config.spacy_model)
     except:
-        fprint('Can not load {} from spacy, try to download it in order to parse syntax tree:'.format(config.spacy_model),
-               termcolor.colored('\npython -m spacy download {}'.format(config.spacy_model), 'green'))
+        fprint(
+            'Can not load {} from spacy, try to download it in order to parse syntax tree:'.format(config.spacy_model),
+            termcolor.colored('\npython -m spacy download {}'.format(config.spacy_model), 'green'))
         try:
             os.system('python -m spacy download {}'.format(config.spacy_model))
             nlp = spacy.load(config.spacy_model)

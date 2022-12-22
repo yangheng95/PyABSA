@@ -16,7 +16,8 @@ def weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depe
     bert_local_out2 = torch.zeros_like(bert_local_out)
     depend_vec2 = torch.mul(depend_vec, depend_weight.unsqueeze(2))
     depended_vec2 = torch.mul(depended_vec, depended_weight.unsqueeze(2))
-    bert_local_out2 = bert_local_out2 + torch.mul(bert_local_out, depend_vec2) + torch.mul(bert_local_out, depended_vec2)
+    bert_local_out2 = bert_local_out2 + torch.mul(bert_local_out, depend_vec2) + torch.mul(bert_local_out,
+                                                                                           depended_vec2)
     for j in range(depend_weight.size()[0]):
         bert_local_out2[j][0] = bert_local_out[j][0]
     return bert_local_out2
@@ -131,7 +132,8 @@ class DLCFS_DCA_BERT(nn.Module):
             depend_weight, depended_weight = self.weight_calculate(self.dca_sa[i], self.dca_pool[i], self.dca_lin[i],
                                                                    depend_weight, depended_weight, depend_out,
                                                                    depended_out)
-            bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend_vec, depended_vec,
+            bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend_vec,
+                                                     depended_vec,
                                                      self.config)
 
         out_cat = torch.cat((bert_local_out, global_context_features), dim=-1)

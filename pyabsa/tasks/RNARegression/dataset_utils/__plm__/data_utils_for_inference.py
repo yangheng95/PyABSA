@@ -54,7 +54,8 @@ class BERTRNARDataset(Dataset):
 
                 line = text.strip().split('\t') if '\t' in text else text.strip().split(',')
                 try:
-                    _, label, r1r2_label, r1r3_label, r2r3_label, seq = line[0], line[1], line[2], line[3], line[4], line[5]
+                    _, label, r1r2_label, r1r3_label, r2r3_label, seq = line[0], line[1], line[2], line[3], line[4], \
+                    line[5]
                     label = float(label.strip())
 
                     # r1r2_label = float(r1r2_label.strip())
@@ -86,7 +87,8 @@ class BERTRNARDataset(Dataset):
                     exon2_ids = self.tokenizer.text_to_sequence(exon2, padding='do_not_pad')
 
                     rna_indices = exon1_ids + intron_ids + exon2_ids
-                    rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len, value=self.tokenizer.pad_token_id)
+                    rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len,
+                                                   value=self.tokenizer.pad_token_id)
 
                     data = {
                         'ex_id': torch.tensor(ex_id, dtype=torch.long),

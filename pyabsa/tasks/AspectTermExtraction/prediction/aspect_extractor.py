@@ -27,7 +27,8 @@ from pyabsa import LabelPaddingOption, TaskCodeOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
 from ..models import ATEPCModelList
 from ..dataset_utils.__lcf__.atepc_utils import load_atepc_inference_datasets, process_iob_tags
-from ..dataset_utils.__lcf__.data_utils_for_inference import ATEPCProcessor, convert_ate_examples_to_features, convert_apc_examples_to_features
+from ..dataset_utils.__lcf__.data_utils_for_inference import ATEPCProcessor, convert_ate_examples_to_features, \
+    convert_apc_examples_to_features
 from ..dataset_utils.__lcf__.data_utils_for_training import split_aspect
 from pyabsa.utils.data_utils.dataset_item import DatasetItem
 from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint
@@ -48,7 +49,8 @@ class AspectExtractor(InferenceModel):
             self.tokenizer = self.checkpoint[2]
         else:
             if 'fine-tuned' in self.checkpoint:
-                raise ValueError('Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!')
+                raise ValueError(
+                    'Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!')
             fprint('Load aspect extractor from', self.checkpoint)
             try:
                 state_dict_path = find_file(self.checkpoint, '.state_dict', exclude_key=['__MACOSX'])
@@ -68,7 +70,8 @@ class AspectExtractor(InferenceModel):
 
                 if state_dict_path:
                     if kwargs.get('offline', False):
-                        bert_base_model = AutoModel.from_pretrained(find_cwd_dir(self.config.pretrained_bert.split('/')[-1]))
+                        bert_base_model = AutoModel.from_pretrained(
+                            find_cwd_dir(self.config.pretrained_bert.split('/')[-1]))
                     else:
                         bert_base_model = AutoModel.from_pretrained(self.config.pretrained_bert)
 
@@ -80,9 +83,11 @@ class AspectExtractor(InferenceModel):
                     self.model.config = self.config
                 try:
                     if kwargs.get('offline', False):
-                        self.tokenizer = AutoTokenizer.from_pretrained(find_cwd_dir(self.config.pretrained_bert.split('/')[-1]))
+                        self.tokenizer = AutoTokenizer.from_pretrained(
+                            find_cwd_dir(self.config.pretrained_bert.split('/')[-1]))
                     else:
-                        self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert, do_lower_case='uncased' in self.config.pretrained_bert)
+                        self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert,
+                                                                       do_lower_case='uncased' in self.config.pretrained_bert)
                 except ValueError:
                     if tokenizer_path:
                         with open(tokenizer_path, mode='rb') as f:
@@ -265,13 +270,17 @@ class AspectExtractor(InferenceModel):
                     colored_text = r['sentence'][:]
                     for aspect, sentiment, confidence in zip(r['aspect'], r['sentiment'], r['confidence']):
                         if sentiment.upper() == 'POSITIVE':
-                            colored_aspect = colored('<{}:{} Confidence:{}>'.format(aspect, sentiment, confidence), 'green')
+                            colored_aspect = colored('<{}:{} Confidence:{}>'.format(aspect, sentiment, confidence),
+                                                     'green')
                         elif sentiment.upper() == 'NEUTRAL':
-                            colored_aspect = colored('<{}:{} Confidence:{}>'.format(aspect, sentiment, confidence), 'cyan')
+                            colored_aspect = colored('<{}:{} Confidence:{}>'.format(aspect, sentiment, confidence),
+                                                     'cyan')
                         elif sentiment.upper() == 'NEGATIVE':
-                            colored_aspect = colored('<{}:{} Confidence:{}>'.format(aspect, sentiment, confidence), 'red')
+                            colored_aspect = colored('<{}:{} Confidence:{}>'.format(aspect, sentiment, confidence),
+                                                     'red')
                         else:
-                            colored_aspect = colored('<{}:{} Confidence:{}>'.format(aspect, sentiment, confidence), 'magenta')
+                            colored_aspect = colored('<{}:{} Confidence:{}>'.format(aspect, sentiment, confidence),
+                                                     'magenta')
                         colored_text = colored_text.replace(' {} '.format(aspect), ' {} '.format(colored_aspect), 1)
                     res_format = 'Example {}: {}'.format(ex_id, colored_text)
                     fprint(res_format)
@@ -303,7 +312,8 @@ class AspectExtractor(InferenceModel):
                                    all_polarities, all_valid_ids, all_lmask_ids)
         # Run prediction for full raw_data
         infer_sampler = SequentialSampler(infer_data)
-        self.infer_dataloader = DataLoader(infer_data, sampler=infer_sampler, pin_memory=True, batch_size=self.config.eval_batch_size)
+        self.infer_dataloader = DataLoader(infer_data, sampler=infer_sampler, pin_memory=True,
+                                           batch_size=self.config.eval_batch_size)
 
         # extract_aspects
         self.model.eval()
@@ -353,7 +363,8 @@ class AspectExtractor(InferenceModel):
                 for t, l in zip(all_tokens[i + (self.config.eval_batch_size * i_batch)], pred_iobs):
                     ate_result.append('{}({})'.format(t, l))
                     if 'ASP' in l:
-                        polarity.append(abs(LabelPaddingOption.SENTIMENT_PADDING))  # 1 tags the valid position aspect terms
+                        polarity.append(
+                            abs(LabelPaddingOption.SENTIMENT_PADDING))  # 1 tags the valid position aspect terms
                     else:
                         polarity.append(LabelPaddingOption.SENTIMENT_PADDING)
 
@@ -362,15 +373,19 @@ class AspectExtractor(InferenceModel):
                 pred_iobs = process_iob_tags(pred_iobs)
                 for idx in range(1, len(polarity)):
 
-                    if polarity[idx - 1] != str(LabelPaddingOption.SENTIMENT_PADDING) and split_aspect(pred_iobs[idx - 1], pred_iobs[idx]):
+                    if polarity[idx - 1] != str(LabelPaddingOption.SENTIMENT_PADDING) and split_aspect(
+                            pred_iobs[idx - 1], pred_iobs[idx]):
                         _polarity = polarity[:idx] + POLARITY_PADDING[idx:]
                         polarity = POLARITY_PADDING[:idx] + polarity[idx:]
-                        extraction_res.append((all_tokens[i + (self.config.eval_batch_size * i_batch)], pred_iobs, _polarity, example_id))
+                        extraction_res.append(
+                            (all_tokens[i + (self.config.eval_batch_size * i_batch)], pred_iobs, _polarity, example_id))
 
-                    if polarity[idx] != str(LabelPaddingOption.SENTIMENT_PADDING) and idx == len(polarity) - 1 and split_aspect(pred_iobs[idx]):
+                    if polarity[idx] != str(LabelPaddingOption.SENTIMENT_PADDING) and idx == len(
+                            polarity) - 1 and split_aspect(pred_iobs[idx]):
                         _polarity = polarity[:idx + 1] + POLARITY_PADDING[idx + 1:]
                         polarity = POLARITY_PADDING[:idx + 1] + polarity[idx + 1:]
-                        extraction_res.append((all_tokens[i + (self.config.eval_batch_size * i_batch)], pred_iobs, _polarity, example_id))
+                        extraction_res.append(
+                            (all_tokens[i + (self.config.eval_batch_size * i_batch)], pred_iobs, _polarity, example_id))
 
         return extraction_res, sentence_res
 
@@ -404,7 +419,8 @@ class AspectExtractor(InferenceModel):
         self.model.config.use_bert_spc = True
 
         infer_sampler = SequentialSampler(infer_data)
-        self.infer_dataloader = DataLoader(infer_data, sampler=infer_sampler, pin_memory=True, batch_size=self.config.eval_batch_size)
+        self.infer_dataloader = DataLoader(infer_data, sampler=infer_sampler, pin_memory=True,
+                                           batch_size=self.config.eval_batch_size)
 
         # extract_aspects
         self.model.eval()
@@ -416,7 +432,7 @@ class AspectExtractor(InferenceModel):
             it = self.infer_dataloader
         for i_batch, batch in enumerate(it):
             input_ids_spc, segment_ids, input_mask, label_ids, \
-            valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
+                valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
             input_ids_spc = input_ids_spc.to(self.config.device)
             segment_ids = segment_ids.to(self.config.device)
             input_mask = input_mask.to(self.config.device)
@@ -435,7 +451,8 @@ class AspectExtractor(InferenceModel):
                                                     lcf_cdm_vec=lcf_cdm_vec,
                                                     lcf_cdw_vec=lcf_cdw_vec)
                 for i, i_apc_logits in enumerate(apc_logits):
-                    if 'index_to_label' in self.config.args and int(i_apc_logits.argmax(axis=-1)) in self.config.index_to_label:
+                    if 'index_to_label' in self.config.args and int(
+                            i_apc_logits.argmax(axis=-1)) in self.config.index_to_label:
                         sent = self.config.index_to_label.get(int(i_apc_logits.argmax(axis=-1)))
                     else:
                         sent = int(torch.argmax(i_apc_logits, -1))

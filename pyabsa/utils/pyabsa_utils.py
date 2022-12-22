@@ -29,7 +29,8 @@ def print_args(config, logger=None):
         if arg != 'dataset' and arg != 'dataset_dict' and arg != 'embedding_matrix':
             if logger:
                 try:
-                    logger.info('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
+                    logger.info(
+                        '{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], config.args_call_count[arg]))
                 except:
                     logger.info('{0}:{1}\t-->\tCalling Count:{2}'.format(arg, config.args[arg], 0))
             else:
@@ -41,7 +42,9 @@ def print_args(config, logger=None):
 
 def validate_example(text: str, aspect: str, polarity: str, config):
     if len(text) < len(aspect):
-        raise ValueError('AspectLengthExceedTextError -> <aspect: {}> is longer than <text: {}>, <polarity: {}>'.format(aspect, text, polarity))
+        raise ValueError(
+            'AspectLengthExceedTextError -> <aspect: {}> is longer than <text: {}>, <polarity: {}>'.format(aspect, text,
+                                                                                                           polarity))
 
     if aspect.strip().lower() not in text.strip().lower():
         raise ValueError('AspectNotInTextError -> <aspect: {}> is not in <text: {}>>'.format(aspect, text))
@@ -49,21 +52,27 @@ def validate_example(text: str, aspect: str, polarity: str, config):
     warning = False
 
     if len(aspect.split(' ')) > 10:
-        config.logger.warning('AspectTooLongWarning -> <aspect: {}> is too long, <text: {}>, <polarity: {}>'.format(aspect, text, polarity))
+        config.logger.warning(
+            'AspectTooLongWarning -> <aspect: {}> is too long, <text: {}>, <polarity: {}>'.format(aspect, text,
+                                                                                                  polarity))
         warning = True
 
     if not aspect.strip():
         raise ValueError('AspectIsNullError -> <text: {}>, <aspect: {}>, <polarity: {}>'.format(aspect, text, polarity))
 
     if len(polarity.split(' ')) > 3:
-        config.logger.warning('LabelTooLongWarning -> <polarity: {}> is too long, <text: {}>, <aspect: {}>'.format(polarity, text, aspect))
+        config.logger.warning(
+            'LabelTooLongWarning -> <polarity: {}> is too long, <text: {}>, <aspect: {}>'.format(polarity, text,
+                                                                                                 aspect))
         warning = True
 
     if not polarity.strip():
-        raise ValueError('PolarityIsNullError -> <text: {}>, <aspect: {}>, <polarity: {}>'.format(aspect, text, polarity))
+        raise ValueError(
+            'PolarityIsNullError -> <text: {}>, <aspect: {}>, <polarity: {}>'.format(aspect, text, polarity))
 
     if text.strip() == aspect.strip():
-        config.logger.warning('AspectEqualsTextWarning -> <aspect: {}> equals <text: {}>, <polarity: {}>'.format(aspect, text, polarity))
+        config.logger.warning(
+            'AspectEqualsTextWarning -> <aspect: {}> equals <text: {}>, <polarity: {}>'.format(aspect, text, polarity))
         warning = True
 
     if not text.strip():
@@ -76,8 +85,10 @@ def check_and_fix_labels(label_set: set, label_name, all_data, config):
     # update output_dim, init model behind execution of this function!
     if '-100' in label_set:
 
-        label_to_index = {origin_label: int(idx) - 1 if origin_label != '-100' else -100 for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
-        index_to_label = {int(idx) - 1 if origin_label != '-100' else -100: origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
+        label_to_index = {origin_label: int(idx) - 1 if origin_label != '-100' else -100 for origin_label, idx in
+                          zip(sorted(label_set), range(len(label_set)))}
+        index_to_label = {int(idx) - 1 if origin_label != '-100' else -100: origin_label for origin_label, idx in
+                          zip(sorted(label_set), range(len(label_set)))}
     else:
         label_to_index = {origin_label: int(idx) for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
         index_to_label = {int(idx): origin_label for origin_label, idx in zip(sorted(label_set), range(len(label_set)))}
@@ -138,7 +149,7 @@ def fprint(*objects, sep=' ', end='\n', file=sys.stdout, flush=False):
 
 
 def rprint(*objects, sep=' ', end='\n', file=sys.stdout, flush=False):
-    print(time.strftime('\n[%Y-%m-%d %H:%M:%S] ({})'.format(pyabsa_version), time.localtime(time.time())),
+    print(time.strftime('\n[%Y-%m-%d %H:%M:%S] ({})\n'.format(pyabsa_version), time.localtime(time.time())),
           *objects, sep=sep, end=end, file=file, flush=flush)
 
 
@@ -166,4 +177,5 @@ def init_optimizer(optimizer):
     elif hasattr(torch.optim, optimizer.__name__):
         return optimizer
     else:
-        raise KeyError('Unsupported optimizer: {}. Please use string or the optimizer objects in torch.optim as your optimizer'.format(optimizer))
+        raise KeyError('Unsupported optimizer: {}. '
+                       'Please use string or the optimizer objects in torch.optim as your optimizer'.format(optimizer))

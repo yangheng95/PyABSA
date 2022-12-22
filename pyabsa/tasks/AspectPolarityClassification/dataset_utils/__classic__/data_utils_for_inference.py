@@ -136,14 +136,16 @@ class GloVeABSAInferenceDataset(ABSAInferenceDataset):
                 else:
                     raise RuntimeError('Catch Exception: {}, use ignore_error=True to remove error samples.'.format(e))
 
-        all_data = build_sentiment_window(all_data, self.tokenizer, self.config.similarity_threshold, input_demands=self.config.inputs_cols)
+        all_data = build_sentiment_window(all_data, self.tokenizer, self.config.similarity_threshold,
+                                          input_demands=self.config.inputs_cols)
         for data in all_data:
 
             cluster_ids = []
             for pad_idx in range(self.config.max_seq_len):
                 if pad_idx in data['cluster_ids']:
-                    cluster_ids.append(self.config.label_to_index.get(self.config.index_to_label.get(data['polarity'], 'N.A.'),
-                                                                      LabelPaddingOption.SENTIMENT_PADDING))
+                    cluster_ids.append(
+                        self.config.label_to_index.get(self.config.index_to_label.get(data['polarity'], 'N.A.'),
+                                                       LabelPaddingOption.SENTIMENT_PADDING))
                 else:
                     cluster_ids.append(-100)
                     # cluster_ids.append(3)

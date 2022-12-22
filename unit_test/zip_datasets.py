@@ -31,7 +31,8 @@ def cascade_zip_datasets():
 
             fprint(f'Zip dataset: {dataset_name}')
 
-            zip_file = zipfile.ZipFile(f'integrated_datasets/{os.path.basename(dataset)}.{dataset_name}.zip'.lower(), 'w', zipfile.ZIP_DEFLATED)
+            zip_file = zipfile.ZipFile(f'integrated_datasets/{os.path.basename(dataset)}.{dataset_name}.zip'.lower(),
+                                       'w', zipfile.ZIP_DEFLATED)
 
             for root, dirs, files in os.walk(d):
 

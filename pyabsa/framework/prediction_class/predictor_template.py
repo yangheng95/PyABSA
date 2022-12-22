@@ -35,8 +35,6 @@ class InferenceModel:
         self.model = None
         self.dataset = None
 
-
-
     def to(self, device=None):
         self.config.device = device
         self.model.to(device)

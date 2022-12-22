@@ -12,7 +12,8 @@ from pyabsa.networks.sa_encoder import Encoder
 
 
 class LSA_S(nn.Module):
-    inputs = ['text_indices', 'left_text_indices', 'right_text_indices', 'spc_mask_vec', 'lcfs_vec', 'left_lcfs_vec', 'right_lcfs_vec']
+    inputs = ['text_indices', 'left_text_indices', 'right_text_indices', 'spc_mask_vec', 'lcfs_vec', 'left_lcfs_vec',
+              'right_lcfs_vec']
 
     def __init__(self, bert, config):
         super(LSA_S, self).__init__()

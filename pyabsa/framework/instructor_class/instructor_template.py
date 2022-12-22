@@ -93,7 +93,8 @@ class BaseTrainingInstructor:
                 self.model.load_state_dict(torch.load(find_file(ckpt, or_key=['.bin', 'state_dict'])))
 
     def load_cache_dataset(self, **kwargs):
-        config_str = re.sub(r'<.*?>', '', str(sorted([str(self.config.args[k]) for k in self.config.args if k != 'seed'])))
+        config_str = re.sub(r'<.*?>', '',
+                            str(sorted([str(self.config.args[k]) for k in self.config.args if k != 'seed'])))
         hash_tag = sha256(config_str.encode()).hexdigest()
         cache_path = '{}.{}.dataset.{}.cache'.format(self.config.model_name, self.config.dataset_name, hash_tag)
         if os.path.exists(cache_path) and not self.config.overwrite_cache:
@@ -108,7 +109,8 @@ class BaseTrainingInstructor:
         return None
 
     def save_cache_dataset(self, **kwargs):
-        config_str = re.sub(r'<.*?>', '', str(sorted([str(self.config.args[k]) for k in self.config.args if k != 'seed'])))
+        config_str = re.sub(r'<.*?>', '',
+                            str(sorted([str(self.config.args[k]) for k in self.config.args if k != 'seed'])))
         hash_tag = sha256(config_str.encode()).hexdigest()
         cache_path = '{}.{}.dataset.{}.cache'.format(self.config.model_name, self.config.dataset_name, hash_tag)
         if (not os.path.exists(cache_path) or self.config.overwrite_cache) and self.config.cache_dataset:
@@ -264,7 +266,8 @@ def get_resume_checkpoint(config):
 
         if not config_path:
             try:
-                ckpt = CheckpointManager().parse_checkpoint(checkpoint=config.from_checkpoint, task_code=config.task_code)
+                ckpt = CheckpointManager().parse_checkpoint(checkpoint=config.from_checkpoint,
+                                                            task_code=config.task_code)
                 config.logger.info('Checkpoint downloaded at: {}'.format(ckpt))
             except Exception as e:
                 fprint(e)

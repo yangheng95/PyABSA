@@ -33,7 +33,8 @@ class GloVeProteinRDataset(PyABSADataset):
             for x in range(len(seq) // (self.config.max_seq_len * 2) + 1):
                 _seq = seq[x * (self.config.max_seq_len * 2):(x + 1) * (self.config.max_seq_len * 2)]
                 protein_indices = self.tokenizer.text_to_sequence(_seq)
-                protein_indices = pad_and_truncate(protein_indices, self.config.max_seq_len, value=self.tokenizer.pad_token_id)
+                protein_indices = pad_and_truncate(protein_indices, self.config.max_seq_len,
+                                                   value=self.tokenizer.pad_token_id)
                 if np.count_nonzero(protein_indices) == 0:
                     continue
                 data = {

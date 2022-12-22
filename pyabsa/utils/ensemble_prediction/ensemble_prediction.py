@@ -1,5 +1,5 @@
 ﻿# -*- coding: utf-8 -*-
-# file: ensemble_prediction.py.py
+# file: ensemble_prediction.py
 # time: 0:34 2022/12/15 
 # author: yangheng <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95

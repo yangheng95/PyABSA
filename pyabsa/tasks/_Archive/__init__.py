@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: __init__.py.py
+# file: __init__.py
 # time: 2022/11/15 14:04
 # author: yangheng <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95

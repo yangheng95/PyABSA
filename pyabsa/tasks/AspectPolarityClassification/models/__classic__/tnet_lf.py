@@ -45,8 +45,10 @@ class TNet_LF_Unit(nn.Module):
         C = config.output_dim  # 分类数目
         L = config.max_seq_len
         HD = config.hidden_dim
-        self.lstm1 = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True, bidirectional=True)
-        self.lstm2 = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True, bidirectional=True)
+        self.lstm1 = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True,
+                                 bidirectional=True)
+        self.lstm2 = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True,
+                                 bidirectional=True)
         self.convs3 = nn.Conv1d(2 * HD, 50, 3, padding=1)
         self.fc1 = nn.Linear(4 * HD, 2 * HD)
         self.fc = nn.Linear(50, C)
@@ -98,18 +100,23 @@ class TNet_LF(nn.Module):
         self.asgcn_left = TNet_LF_Unit(bert, config) if self.config.lsa else None
         self.asgcn_central = TNet_LF_Unit(bert, config)
         self.asgcn_right = TNet_LF_Unit(bert, config) if self.config.lsa else None
-        self.dense = nn.Linear(50 * 3, self.config.output_dim) if self.config.lsa else nn.Linear(50, self.config.output_dim)
+        self.dense = nn.Linear(50 * 3, self.config.output_dim) if self.config.lsa else nn.Linear(50,
+                                                                                                 self.config.output_dim)
 
     def forward(self, inputs):
         res = {'logits': None}
         if self.config.lsa:
             cat_feat = torch.cat(
-                (self.asgcn_left([inputs['text_indices'], inputs['left_aspect_indices'], inputs['left_aspect_boundary']]),
-                 self.asgcn_central([inputs['text_indices'], inputs['aspect_indices'], inputs['aspect_boundary'], inputs['aspect_len']]),
-                 self.asgcn_right([inputs['text_indices'], inputs['right_aspect_indices'], inputs['right_aspect_boundary']])),
+                (self.asgcn_left(
+                    [inputs['text_indices'], inputs['left_aspect_indices'], inputs['left_aspect_boundary']]),
+                 self.asgcn_central([inputs['text_indices'], inputs['aspect_indices'], inputs['aspect_boundary'],
+                                     inputs['aspect_len']]),
+                 self.asgcn_right(
+                     [inputs['text_indices'], inputs['right_aspect_indices'], inputs['right_aspect_boundary']])),
                 -1)
             res['logits'] = self.dense(cat_feat)
         else:
-            res['logits'] = self.dense(self.asgcn_central([inputs['text_indices'], inputs['aspect_indices'], inputs['aspect_boundary']]))
+            res['logits'] = self.dense(
+                self.asgcn_central([inputs['text_indices'], inputs['aspect_indices'], inputs['aspect_boundary']]))
 
         return res

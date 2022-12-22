@@ -23,7 +23,8 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 def parse_checkpoint_info(t_checkpoint_map, task_code, show_ckpts=False):
     fprint('*' * 10,
-           colored('Available {} model checkpoints for Version:{} (this version)'.format(task_code, current_version), 'green'),
+           colored('Available {} model checkpoints for Version:{} (this version)'.format(task_code, current_version),
+                   'green'),
            '*' * 10)
     for i, checkpoint_name in enumerate(t_checkpoint_map):
         checkpoint = t_checkpoint_map[checkpoint_name]
@@ -85,7 +86,9 @@ def available_checkpoints(task_code: TaskCodeOption = None, show_ckpts=False):
         max_ver = max_ver if max_ver else 'N.A.'
         if max_ver == 'N.A.' or version.parse(min_ver) <= version.parse(current_version) <= version.parse(max_ver):
             if task_code:
-                t_checkpoint_map.update(checkpoint_map[c_version][task_code.upper()] if task_code.upper() in checkpoint_map[c_version] else {})
+                t_checkpoint_map.update(
+                    checkpoint_map[c_version][task_code.upper()] if task_code.upper() in checkpoint_map[
+                        c_version] else {})
                 parse_checkpoint_info(t_checkpoint_map, task_code, show_ckpts)
 
     return t_checkpoint_map if task_code else checkpoint_map

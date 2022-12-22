@@ -24,8 +24,10 @@ config.model = AspectPolarityClassification.BERTBaselineAPCModelList.TNet_LF_BER
 # chinese_sets = ABSADatasetList.Chinese
 chinese_sets = AspectPolarityClassification.APCDatasetList.Laptop14
 # chinese_sets = ABSADatasetList.MOOC
-sent_classifier = AspectPolarityClassification.APCTrainer(config=config,  # set configuration_class=None to use default model
-                                                          dataset=chinese_sets,  # train set and test set will be automatically detected
+sent_classifier = AspectPolarityClassification.APCTrainer(config=config,
+                                                          # set configuration_class=None to use default model
+                                                          dataset=chinese_sets,
+                                                          # train set and test set will be automatically detected
                                                           checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
                                                           auto_device=True  # automatic choose CUDA or CPU
                                                           ).load_trained_model()

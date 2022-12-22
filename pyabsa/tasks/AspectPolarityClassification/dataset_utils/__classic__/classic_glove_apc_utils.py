@@ -272,7 +272,8 @@ def copy_side_aspect(direct, target, source, examples, input_demands):
             continue
         target[direct + '_' + data_item] = source[data_item]
     try:
-        target[direct + '_dist'] = int(abs(np.average(list(source['aspect_position'])) - np.average(list(target['aspect_position']))))
+        target[direct + '_dist'] = int(
+            abs(np.average(list(source['aspect_position'])) - np.average(list(target['aspect_position']))))
     except:
         target[direct + '_dist'] = np.inf
     # target[direct + '_dist'] = 0 if id(source['lcf_vec']) == id(target['lcf_vec']) else 1

@@ -21,10 +21,12 @@ class TC_LSTM_BERT(nn.Module):
 
     def forward(self, inputs):
         # Get the target and its length(target_len)
-        x_l, x_r, target = inputs['left_with_aspect_indices'], inputs['right_with_aspect_indices'], inputs['aspect_indices']
+        x_l, x_r, target = inputs['left_with_aspect_indices'], inputs['right_with_aspect_indices'], inputs[
+            'aspect_indices']
         x_l_len, x_r_len = torch.sum(x_l != 0, dim=-1), torch.sum(x_r != 0, dim=-1)
         target_len = torch.sum(target != 0, dim=-1, dtype=torch.float)[:, None, None]
-        x_l, x_r, target = self.embed(x_l)['last_hidden_state'], self.embed(x_r)['last_hidden_state'], self.embed(target)['last_hidden_state']
+        x_l, x_r, target = self.embed(x_l)['last_hidden_state'], self.embed(x_r)['last_hidden_state'], \
+        self.embed(target)['last_hidden_state']
         v_target = torch.div(target.sum(dim=1, keepdim=True),
                              target_len)  # v_{target} in paper: average the target words
 

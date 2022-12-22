@@ -99,7 +99,6 @@ if __name__ == '__main__':
         'mams': 'integrated_datasets/apc_datasets/109.MAMS/test.xml.dat.inference',
     }
 
-
     checkpoints = {
         ckpt: APC.SentimentClassifier(checkpoint=ckpt) for ckpt in findfile.find_cwd_dirs(or_key=[f'laptop14_acc'])
     }

@@ -42,7 +42,8 @@ class GloVeRNARDataset(PyABSADataset):
                 for x in range(len(seq) // (self.config.max_seq_len * 3) + 1):
                     _seq = seq[x * (self.config.max_seq_len * 3):(x + 1) * (self.config.max_seq_len * 3)]
                     rna_indices = self.tokenizer.text_to_sequence(_seq)
-                    rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len, value=self.tokenizer.pad_token_id)
+                    rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len,
+                                                   value=self.tokenizer.pad_token_id)
 
                     if any(rna_indices):
                         data = {

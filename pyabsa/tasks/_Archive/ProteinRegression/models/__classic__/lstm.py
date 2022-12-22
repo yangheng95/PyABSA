@@ -19,7 +19,9 @@ class LSTMLayer(nn.Module):
         self.lstms = nn.ModuleList()
         self.config = config
         for i in range(self.config.num_lstm_layer):
-            self.lstms.append(DynamicLSTM(self.config.embed_dim, self.config.hidden_dim, num_layers=self.config.num_lstm_layer, batch_first=True, bidirectional=True))
+            self.lstms.append(
+                DynamicLSTM(self.config.embed_dim, self.config.hidden_dim, num_layers=self.config.num_lstm_layer,
+                            batch_first=True, bidirectional=True))
 
     def forward(self, x, x_len):
         h, c = None, None

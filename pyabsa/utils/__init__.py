@@ -16,4 +16,3 @@ from pyabsa.utils.data_utils.dataset_manager import download_all_available_datas
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 
 from pyabsa.utils.ensemble_prediction.ensemble_prediction import VoteEnsemblePredictor
-

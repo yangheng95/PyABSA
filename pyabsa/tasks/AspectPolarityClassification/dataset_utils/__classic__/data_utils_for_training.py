@@ -36,14 +36,17 @@ class GloVeABSADataset(PyABSADataset):
         dep_cache_path = os.path.join(os.getcwd(), 'run/{}/dependency_cache/'.format(self.config.dataset_name))
         if not os.path.exists(dep_cache_path):
             os.makedirs(dep_cache_path)
-        graph_path = prepare_dependency_graph(self.config.dataset_file[self.dataset_type], dep_cache_path, self.config.max_seq_len, self.config)
+        graph_path = prepare_dependency_graph(self.config.dataset_file[self.dataset_type], dep_cache_path,
+                                              self.config.max_seq_len, self.config)
         fin = open(graph_path, 'rb')
         idx2graph = pickle.load(fin)
 
         ex_id = 0
 
         if len(lines) % 3 != 0:
-            fprint(colored('ERROR: one or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.', 'red'))
+            fprint(colored(
+                'ERROR: one or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.',
+                'red'))
 
         for i in tqdm.tqdm(range(0, len(lines), 3), postfix='preparing dataloader...'):
             if lines[i].count("$T$") > 1:
@@ -124,7 +127,8 @@ class GloVeABSADataset(PyABSADataset):
         check_and_fix_labels(label_set, 'polarity', all_data, self.config)
         self.config.output_dim = len(label_set)
 
-        all_data = build_sentiment_window(all_data, self.tokenizer, self.config.similarity_threshold, input_demands=self.config.inputs_cols)
+        all_data = build_sentiment_window(all_data, self.tokenizer, self.config.similarity_threshold,
+                                          input_demands=self.config.inputs_cols)
         for data in all_data:
 
             cluster_ids = []

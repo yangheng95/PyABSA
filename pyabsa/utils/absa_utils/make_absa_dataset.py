@@ -58,12 +58,14 @@ def make_ABSA_dataset(dataset_name_or_path, checkpoint='english'):
                         for i, (token, IOB) in enumerate(zip(result['tokens'], result['IOB'])):
                             if i + 1 in pos:
                                 f_atepc_out.write(
-                                    token + ' ' + IOB.replace('[CLS]', 'O').replace('[SEP]', 'O') + ' ' + result['sentiment'][
+                                    token + ' ' + IOB.replace('[CLS]', 'O').replace('[SEP]', 'O') + ' ' +
+                                    result['sentiment'][
                                         j - 1] + '\n')
                                 result['position'][j].pop(0)
                             else:
                                 f_atepc_out.write(
-                                    token + ' ' + IOB.replace('[CLS]', 'O').replace('[SEP]', 'O') + ' ' + str(LabelPaddingOption.LABEL_PADDING) + '\n')
+                                    token + ' ' + IOB.replace('[CLS]', 'O').replace('[SEP]', 'O') + ' ' + str(
+                                        LabelPaddingOption.LABEL_PADDING) + '\n')
                         f_atepc_out.write('\n')
 
                     for aspect, sentiment in zip(result['aspect'], result['sentiment']):

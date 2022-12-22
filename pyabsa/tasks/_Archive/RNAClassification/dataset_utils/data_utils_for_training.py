@@ -67,18 +67,19 @@ class BERTRNACDataset(PyABSADataset):
             for _ in range(self.config.get('noise_instances', 3)):
                 import numpy as np
                 _rna_indices = np.array(rna_indices.copy())
-                # noise_masks = np.abs(len(_rna_indices) // 2 - np.random.normal(loc=len(_rna_indices) // 2,
-                #                                                                scale=self.config.max_seq_len // 5,
-                #                                                                size=int(
-                #                                                                    len(_rna_indices) * 0.2)).astype(
-                #     int))
-                # noise_masks = np.where(noise_masks < 0, 0, noise_masks)
-                # noise_masks = np.where(noise_masks > len(_rna_indices) - 1, len(_rna_indices) - 1, noise_masks)
-                # _rna_indices[noise_masks] = self.tokenizer.pad_token_id
-                noise_masks = np.random.choice([0, 1], size=len(_rna_indices), p=[0.2, 0.8])
-                _rna_indices = np.array(_rna_indices) * (
-                    noise_masks if any(noise_masks) else [1] * len(_rna_indices))
-                _rna_indices = _rna_indices.tolist()
+                noise_masks = np.abs(len(_rna_indices) // 2 -
+                                     np.random.normal(
+                                         loc=len(_rna_indices) // 2,
+                                         scale=self.config.max_seq_len // 5,
+                                         size=int(len(_rna_indices) * 0.2)).astype(int)
+                                     )
+                noise_masks = np.where(noise_masks < 0, 0, noise_masks)
+                noise_masks = np.where(noise_masks > len(_rna_indices) - 1, len(_rna_indices) - 1, noise_masks)
+                _rna_indices[noise_masks] = self.tokenizer.pad_token_id
+                # noise_masks = np.random.choice([0, 1], size=len(_rna_indices), p=[0.2, 0.8])
+                # _rna_indices = np.array(_rna_indices) * (
+                #     noise_masks if any(noise_masks) else [1] * len(_rna_indices))
+                # _rna_indices = _rna_indices.tolist()
 
                 _rna_indices = pad_and_truncate(_rna_indices, self.config.max_seq_len,
                                                 value=self.tokenizer.pad_token_id)

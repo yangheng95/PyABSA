@@ -69,14 +69,18 @@ class APCDatasetList(list):
     English_SemEval2016Task5 = DatasetItem('English_SemEval2016Task5', ['124.English'])
 
     English = DatasetItem('English', ['113.Laptop14', '114.Restaurant14', '116.Restaurant16', '101.ACL_Twitter',
-                                      '109.MAMS', '117.Television', '118.TShirt', '119.Yelp', '121.MOOC_En', '129.Kaggle'])
+                                      '109.MAMS', '117.Television', '118.TShirt', '119.Yelp', '121.MOOC_En',
+                                      '129.Kaggle'])
 
     # Abandon rest15 dataset due to data leakage, See https://github.com/yangheng95/PyABSA/issues/53
     SemEval = DatasetItem('SemEval', ['113.Laptop14', '114.Restaurant14', '116.Restaurant16'])
     Restaurant = DatasetItem('Restaurant', ['114.Restaurant14', '116.Restaurant16'])
-    Multilingual = DatasetItem('Multilingual', ['113.Laptop14', '114.Restaurant14', '116.Restaurant16', '101.ACL_Twitter', '109.MAMS', '117.Television',
-                                                '118.TShirt', '119.Yelp', '107.Phone', '103.Camera', '106.Notebook', '104.Car', '105.MOOC', '129.Kaggle',
-                                                '120.SemEval2016Task5', '121.MOOC_En'])
+    Multilingual = DatasetItem('Multilingual',
+                               ['113.Laptop14', '114.Restaurant14', '116.Restaurant16', '101.ACL_Twitter', '109.MAMS',
+                                '117.Television',
+                                '118.TShirt', '119.Yelp', '107.Phone', '103.Camera', '106.Notebook', '104.Car',
+                                '105.MOOC', '129.Kaggle',
+                                '120.SemEval2016Task5', '121.MOOC_En'])
 
     def __init__(self):
         super(APCDatasetList, self).__init__(self.__class__.__dict__.values())

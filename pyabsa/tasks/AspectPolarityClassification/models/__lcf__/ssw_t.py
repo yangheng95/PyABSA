@@ -22,7 +22,8 @@ from pyabsa.networks.sa_encoder import Encoder
 
 
 class SSW_T(nn.Module):
-    inputs = ['text_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec', 'polarity', 'left_dist', 'right_dist']
+    inputs = ['text_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec', 'polarity', 'left_dist',
+              'right_dist']
 
     def __init__(self, bert, config):
         super(SSW_T, self).__init__()

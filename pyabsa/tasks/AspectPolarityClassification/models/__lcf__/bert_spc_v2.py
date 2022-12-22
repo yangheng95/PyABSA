@@ -20,8 +20,10 @@ class BERT_SPC_V2(nn.Module):
         self.bert = bert
         self.config = config
         self.linear = nn.Linear(config.embed_dim, config.embed_dim)
-        self.linear_window_2h = nn.Linear(2 * config.embed_dim, config.embed_dim) if self.config.lsa else nn.Linear(config.embed_dim, config.embed_dim)
-        self.linear_window_3h = nn.Linear(3 * config.embed_dim, config.embed_dim) if self.config.lsa else nn.Linear(config.embed_dim, config.embed_dim)
+        self.linear_window_2h = nn.Linear(2 * config.embed_dim, config.embed_dim) if self.config.lsa else nn.Linear(
+            config.embed_dim, config.embed_dim)
+        self.linear_window_3h = nn.Linear(3 * config.embed_dim, config.embed_dim) if self.config.lsa else nn.Linear(
+            config.embed_dim, config.embed_dim)
         self.encoder = Encoder(bert.config, config)
         self.dropout = nn.Dropout(config.dropout)
         self.pooler = BertPooler(bert.config)

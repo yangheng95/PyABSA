@@ -38,7 +38,8 @@ class InputExample(object):
 class InputFeatures(object):
     """A single set of features of raw_data."""
 
-    def __init__(self, input_ids_spc, input_mask, segment_ids, label_id, aspect=None, positions=None, polarity=None, valid_ids=None,
+    def __init__(self, input_ids_spc, input_mask, segment_ids, label_id, aspect=None, positions=None, polarity=None,
+                 valid_ids=None,
                  label_mask=None, tokens=None, lcf_cdm_vec=None, lcf_cdw_vec=None):
         self.input_ids_spc = input_ids_spc
         self.aspect = aspect

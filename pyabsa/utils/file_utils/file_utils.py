@@ -84,12 +84,16 @@ def prepare_glove840_embedding(glove_path, embedding_dim, config):
 
         else:
             if config.embed_dim != 300:
-                raise ValueError('Please provide embedding file for embedding dim: {} in current wording dir '.format(config.embed_dim))
+                raise ValueError('Please provide embedding file for embedding dim: {} in current wording dir '.format(
+                    config.embed_dim))
             zip_glove_path = os.path.join(os.path.dirname(glove_path), 'glove.840B.300d.zip')
             logger.info('No GloVe embedding found at {},'
-                        ' downloading glove.840B.300d.txt (2GB will be downloaded / 5.5GB after unzip)...'.format(glove_path))
+                        ' downloading glove.840B.300d.txt (2GB will be downloaded / 5.5GB after unzip)...'.format(
+                glove_path))
             try:
-                response = requests.get('https://huggingface.co/spaces/yangheng/PyABSA-ATEPC/resolve/main/open-access/glove.840B.300d.zip', stream=True)
+                response = requests.get(
+                    'https://huggingface.co/spaces/yangheng/PyABSA-ATEPC/resolve/main/open-access/glove.840B.300d.zip',
+                    stream=True)
                 with open(zip_glove_path, "wb") as f:
                     for chunk in tqdm.tqdm(response.iter_content(chunk_size=1024 * 1024),
                                            unit='MB',
@@ -98,7 +102,8 @@ def prepare_glove840_embedding(glove_path, embedding_dim, config):
                         f.write(chunk)
             except Exception as e:
                 raise ValueError('Download failed, please download glove.840B.300d.zip from '
-                                 'https://nlp.stanford.edu/projects/glove/, unzip it and put it in {}.'.format(glove_path))
+                                 'https://nlp.stanford.edu/projects/glove/, unzip it and put it in {}.'.format(
+                    glove_path))
 
         if find_cwd_file('glove.840B.300d.zip'):
             logger.info('unzip glove.840B.300d.zip...')
