@@ -19,8 +19,10 @@ class BERT_SPC(nn.Module):
         self.bert = bert
         self.config = config
         self.linear = nn.Linear(config.embed_dim, config.embed_dim)
-        self.linear_window_2h = nn.Linear(2 * config.embed_dim, config.embed_dim) if self.config.lsa else nn.Linear(config.embed_dim, config.embed_dim)
-        self.linear_window_3h = nn.Linear(3 * config.embed_dim, config.embed_dim) if self.config.lsa else nn.Linear(config.embed_dim, config.embed_dim)
+        self.linear_window_2h = nn.Linear(2 * config.embed_dim, config.embed_dim) if self.config.lsa else nn.Linear(
+            config.embed_dim, config.embed_dim)
+        self.linear_window_3h = nn.Linear(3 * config.embed_dim, config.embed_dim) if self.config.lsa else nn.Linear(
+            config.embed_dim, config.embed_dim)
         self.encoder = Encoder(bert.config, config)
         self.dropout = nn.Dropout(config.dropout)
         self.pooler = BertPooler(bert.config)
@@ -34,7 +36,8 @@ class BERT_SPC(nn.Module):
             right_feat = self.bert(inputs['right_text_indices'])['last_hidden_state']
             if 'lr' == self.config.window or 'rl' == self.config.window:
                 if self.config.eta >= 0:
-                    cat_features = torch.cat((feat, self.config.eta * left_feat, (1 - self.config.eta) * right_feat), -1)
+                    cat_features = torch.cat((feat, self.config.eta * left_feat, (1 - self.config.eta) * right_feat),
+                                             -1)
                 else:
                     cat_features = torch.cat((feat, left_feat, right_feat), -1)
                 sent_out = self.linear_window_3h(cat_features)

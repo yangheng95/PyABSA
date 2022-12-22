@@ -63,7 +63,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             self.model.parameters(),
             lr=self.config.learning_rate,
             weight_decay=self.config.l2reg,
-            maximize=self.config.maximize_loss if self.config.get('maximize_loss') else False
+
         )
 
         self.train_dataloaders = []
@@ -111,7 +111,8 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             self.embedding_matrix = build_embedding_matrix(
                 config=self.config,
                 tokenizer=self.tokenizer,
-                cache_path='{0}_{1}_embedding_matrix.dat'.format(str(self.config.embed_dim), os.path.basename(self.config.dataset_name)),
+                cache_path='{0}_{1}_embedding_matrix.dat'.format(str(self.config.embed_dim),
+                                                                 os.path.basename(self.config.dataset_name)),
             )
             self.train_set = GloVeTCDataset(self.config, self.tokenizer, dataset_type='train')
             self.test_set = GloVeTCDataset(self.config, self.tokenizer, dataset_type='test')
@@ -135,10 +136,12 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                                                      sampler=train_sampler,
                                                      pin_memory=True))
             if self.test_set:
-                self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.config.batch_size, shuffle=False)
+                self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.config.batch_size,
+                                                  shuffle=False)
 
             if self.valid_set:
-                self.valid_dataloader = DataLoader(dataset=self.valid_set, batch_size=self.config.batch_size, shuffle=False)
+                self.valid_dataloader = DataLoader(dataset=self.valid_set, batch_size=self.config.batch_size,
+                                                   shuffle=False)
         else:
             split_dataset = train_set
             len_per_fold = len(split_dataset) // self.config.cross_validate_fold + 1
@@ -155,13 +158,15 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                 self.valid_dataloaders.append(
                     DataLoader(dataset=val_set, batch_size=self.config.batch_size, sampler=val_sampler))
                 if self.test_set:
-                    self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.config.batch_size, shuffle=False)
+                    self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.config.batch_size,
+                                                      shuffle=False)
 
     def _train(self, criterion):
         self.prepare_dataloader(self.train_set)
 
         if self.config.warmup_step >= 0:
-            self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=len(self.train_dataloaders[0]) * self.config.num_epoch)
+            self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=len(
+                self.train_dataloaders[0]) * self.config.num_epoch)
             self.warmup_scheduler = warmup.UntunedLinearWarmup(self.optimizer)
 
         if self.valid_dataloaders:
@@ -188,7 +193,8 @@ class TCTrainingInstructor(BaseTrainingInstructor):
         if self.test_set:
             self.logger.info("Test set examples = %d", len(self.test_set))
         self.logger.info("Batch size = %d", self.config.batch_size)
-        self.logger.info("Num steps = %d", len(self.train_dataloaders[0]) // self.config.batch_size * self.config.num_epoch)
+        self.logger.info("Num steps = %d",
+                         len(self.train_dataloaders[0]) // self.config.batch_size * self.config.num_epoch)
         patience = self.config.patience + self.config.evaluate_begin
         if self.config.log_step < 0:
             self.config.log_step = len(self.train_dataloaders[0]) if self.config.log_step < 0 else self.config.log_step
@@ -279,7 +285,9 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                     else:
                         if self.config.save_mode and epoch >= self.config.evaluate_begin:
                             save_model(self.config, self.model, self.tokenizer, save_path + '_{}/'.format(loss.item()))
-                        postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.config.evaluate_begin)
+                        postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch,
+                                                                                             round(loss.item(), 8),
+                                                                                             self.config.evaluate_begin)
 
                     iterator.postfix = postfix
                     iterator.refresh()
@@ -340,7 +348,8 @@ class TCTrainingInstructor(BaseTrainingInstructor):
         for f, (train_dataloader, valid_dataloader) in enumerate(zip(self.train_dataloaders, self.valid_dataloaders)):
             patience = self.config.patience + self.config.evaluate_begin
             if self.config.log_step < 0:
-                self.config.log_step = len(self.train_dataloaders[0]) if self.config.log_step < 0 else self.config.log_step
+                self.config.log_step = len(
+                    self.train_dataloaders[0]) if self.config.log_step < 0 else self.config.log_step
 
             self.logger.info("***** Running trainer for Text Classification *****")
             self.logger.info("Training set examples = %d", len(self.train_set))
@@ -443,7 +452,9 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                                                                             f1 * 100,
                                                                             max_fold_f1 * 100))
                         else:
-                            postfix = 'Epoch:{} | Loss:{} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.config.evaluate_begin)
+                            postfix = 'Epoch:{} | Loss:{} | No evaluation until epoch:{}'.format(epoch,
+                                                                                                 round(loss.item(), 8),
+                                                                                                 self.config.evaluate_begin)
 
                     iterator.postfix = postfix
                     iterator.refresh()
@@ -528,17 +539,18 @@ class TCTrainingInstructor(BaseTrainingInstructor):
         f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all.cpu(), -1),
                               labels=list(range(self.config.output_dim)), average='macro')
         if self.config.args.get('show_metric', False):
-
             report = metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all.cpu(), -1), digits=4,
                                                    target_names=[self.config.index_to_label[x] for x in
                                                                  self.config.index_to_label])
             fprint('\n---------------------------- Classification Report ----------------------------\n')
-            fprint(report)
+            rprint(report)
             fprint('\n---------------------------- Classification Report ----------------------------\n')
 
-            report = metrics.confusion_matrix(t_targets_all.cpu(), torch.argmax(t_outputs_all.cpu(), -1))
+            report = metrics.confusion_matrix(t_targets_all.cpu(), torch.argmax(t_outputs_all.cpu(), -1),
+                                              labels=[self.config.label_to_index[x]
+                                                      for x in self.config.label_to_index])
             fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
-            fprint(report)
+            rprint(report)
             fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
 
         return test_acc, f1

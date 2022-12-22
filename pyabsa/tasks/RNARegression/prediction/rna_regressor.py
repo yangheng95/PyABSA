@@ -102,7 +102,7 @@ class RNARegressor(InferenceModel):
                 raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, self.checkpoint))
 
             if not hasattr(GloVeRNARModelList, self.config.model.__name__) \
-                and not hasattr(BERTRNARModelList, self.config.model.__name__):
+                    and not hasattr(BERTRNARModelList, self.config.model.__name__):
                 raise KeyError('The checkpoint you are loading is not from classifier model.')
 
         if hasattr(BERTRNARModelList, self.config.model.__name__):
@@ -112,7 +112,6 @@ class RNARegressor(InferenceModel):
             self.dataset = GloVeRNARDataset(config=self.config, tokenizer=self.tokenizer)
 
         self.__post_init__()
-
 
     def to(self, device=None):
         self.config.device = device
@@ -170,7 +169,8 @@ class RNARegressor(InferenceModel):
             raise FileNotFoundError('Can not find inference datasets!')
 
         self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
-        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size, pin_memory=True,
+        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size,
+                                           pin_memory=True,
                                            shuffle=False)
         return self._run_prediction(save_path=save_path if save_result else None, print_result=print_result)
 
@@ -231,7 +231,8 @@ class RNARegressor(InferenceModel):
                     text_raw = sample['text_raw'][i]
                     ex_id = int(sample['ex_id'][i])
                     if self.cal_perplexity:
-                        ids = self.MLM_tokenizer(text_raw, truncation=True, padding='max_length', max_length=self.config.max_seq_len, return_tensors='pt')
+                        ids = self.MLM_tokenizer(text_raw, truncation=True, padding='max_length',
+                                                 max_length=self.config.max_seq_len, return_tensors='pt')
                         ids['labels'] = ids['input_ids'].clone()
                         ids = ids.to(self.config.device)
                         loss = self.MLM(**ids)['loss']
@@ -255,8 +256,10 @@ class RNARegressor(InferenceModel):
                         sum_val = [pred_val]
                         cat_text = text_raw
 
-                        t_targets_all = torch.cat((t_targets_all, torch.tensor([sample['label'][i]]))) if t_targets_all is not None else torch.tensor([sample['label'][i]])
-                        t_outputs_all = torch.cat((t_outputs_all, torch.tensor([np.median(sum_val)]))) if t_outputs_all is not None else torch.tensor([np.median(sum_val)])
+                        t_targets_all = torch.cat((t_targets_all, torch.tensor(
+                            [sample['label'][i]]))) if t_targets_all is not None else torch.tensor([sample['label'][i]])
+                        t_outputs_all = torch.cat((t_outputs_all, torch.tensor(
+                            [np.median(sum_val)]))) if t_outputs_all is not None else torch.tensor([np.median(sum_val)])
 
                 results.append({
                     'ex_id': pre_ex_id,
@@ -269,8 +272,12 @@ class RNARegressor(InferenceModel):
                 sum_val = [pred_val]
                 cat_text = text_raw
                 n_total += 1
-                t_targets_all = torch.cat((t_targets_all, torch.tensor([sample['label'][i]]))) if t_targets_all is not None else torch.tensor([sample['label'][i]])
-                t_outputs_all = torch.cat((t_outputs_all, torch.tensor([np.median(sum_val)]))) if t_outputs_all is not None else torch.tensor([np.median(sum_val)])
+                t_targets_all = torch.cat(
+                    (t_targets_all, torch.tensor([sample['label'][i]]))) if t_targets_all is not None else torch.tensor(
+                    [sample['label'][i]])
+                t_outputs_all = torch.cat(
+                    (t_outputs_all, torch.tensor([np.median(sum_val)]))) if t_outputs_all is not None else torch.tensor(
+                    [np.median(sum_val)])
 
         try:
             if print_result:
@@ -279,10 +286,12 @@ class RNARegressor(InferenceModel):
                     if result['ref_label'] != LabelPaddingOption.LABEL_PADDING:
                         if abs(result['label'] - result['ref_label']) / result['ref_label'] <= 0.2:
                             text_info = colored(
-                                '#{}\t -> <{}(ref:{})>\t'.format(result['ex_id'], result['label'], result['ref_label']), 'green')
+                                '#{}\t -> <{}(ref:{})>\t'.format(result['ex_id'], result['label'], result['ref_label']),
+                                'green')
                         else:
                             text_info = colored(
-                                '#{}\t -> <{}(ref:{})>\t'.format(result['ex_id'], result['label'], result['ref_label']), 'red')
+                                '#{}\t -> <{}(ref:{})>\t'.format(result['ex_id'], result['label'], result['ref_label']),
+                                'red')
                     else:
                         text_info = '#{}\t -> {}\t'.format(result['ex_id'], result['label'])
                     if self.cal_perplexity:
@@ -298,7 +307,6 @@ class RNARegressor(InferenceModel):
             fprint('Can not save result: {}, Exception: {}'.format(text_raw, e))
 
         if len(results) > 1:
-
             fprint('\n---------------------------- Regression Result ----------------------------\n')
             fprint('MSE: {}'.format(metrics.mean_squared_error(t_targets_all.cpu(), t_outputs_all.cpu())))
             fprint('R2: {}'.format(metrics.r2_score(t_targets_all.cpu(), t_outputs_all.cpu())))

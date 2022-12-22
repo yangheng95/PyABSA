@@ -159,15 +159,19 @@ def build_embedding_matrix(config, tokenizer, cache_path=None):
         os.makedirs('run/{}'.format(config.dataset_name))
     embed_matrix_path = 'run/{}'.format(os.path.join(config.dataset_name, cache_path))
     if cache_path and os.path.exists(embed_matrix_path) and not config.overwrite_cache:
-        fprint(colored('Loading cached embedding_matrix from {} (Please remove all cached files if there is any problem!)'.format(embed_matrix_path), 'green'))
+        fprint(colored(
+            'Loading cached embedding_matrix from {} (Please remove all cached files if there is any problem!)'.format(
+                embed_matrix_path), 'green'))
         embedding_matrix = pickle.load(open(embed_matrix_path, 'rb'))
     else:
         glove_path = prepare_glove840_embedding(embed_matrix_path, config.embed_dim, config=config)
-        embedding_matrix = np.zeros((len(tokenizer.word2idx) + 1, config.embed_dim))  # idx 0 and len(word2idx)+1 are all-zeros
+        embedding_matrix = np.zeros(
+            (len(tokenizer.word2idx) + 1, config.embed_dim))  # idx 0 and len(word2idx)+1 are all-zeros
 
         word_vec = _load_word_vec(glove_path, word2idx=tokenizer.word2idx, embed_dim=config.embed_dim)
 
-        for word, i in tqdm.tqdm(tokenizer.word2idx.items(), postfix=colored('Building embedding_matrix {}'.format(cache_path), 'yellow')):
+        for word, i in tqdm.tqdm(tokenizer.word2idx.items(),
+                                 postfix=colored('Building embedding_matrix {}'.format(cache_path), 'yellow')):
             vec = word_vec.get(word)
             if vec is not None:
                 # words not found in embedding index will be all-zeros.
@@ -178,7 +182,6 @@ def build_embedding_matrix(config, tokenizer, cache_path=None):
 
 
 def pad_and_truncate(sequence, max_seq_len, value, **kwargs):
-
     if isinstance(sequence, ndarray):
         sequence = list(sequence)
         if len(sequence) > max_seq_len:

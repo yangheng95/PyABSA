@@ -17,8 +17,10 @@ class AOA(nn.Module):
         super(AOA, self).__init__()
         self.config = config
         self.embed = nn.Embedding.from_pretrained(torch.tensor(embedding_matrix, dtype=torch.float))
-        self.ctx_lstm = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True, bidirectional=True)
-        self.asp_lstm = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True, bidirectional=True)
+        self.ctx_lstm = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True,
+                                    bidirectional=True)
+        self.asp_lstm = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True,
+                                    bidirectional=True)
         self.dense = nn.Linear(2 * config.hidden_dim, config.output_dim)
 
     def forward(self, inputs):

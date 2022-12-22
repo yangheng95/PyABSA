@@ -77,7 +77,8 @@ class RNAClassifier(InferenceModel):
                             self.model = torch.load(model_path, map_location='cpu')
 
                         try:
-                            self.tokenizer = PretrainedTokenizer(max_seq_len=self.config.max_seq_len, config=self.config,
+                            self.tokenizer = PretrainedTokenizer(max_seq_len=self.config.max_seq_len,
+                                                                 config=self.config,
                                                                  **kwargs)
                         except ValueError:
                             if tokenizer_path:
@@ -100,7 +101,7 @@ class RNAClassifier(InferenceModel):
                 raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, self.checkpoint))
 
             if not hasattr(GloVeRNACModelList, self.config.model.__name__) \
-                and not hasattr(BERTRNACModelList, self.config.model.__name__):
+                    and not hasattr(BERTRNACModelList, self.config.model.__name__):
                 raise KeyError('The checkpoint you are loading is not from classifier model.')
 
         if hasattr(BERTRNACModelList, self.config.model.__name__):
@@ -167,7 +168,8 @@ class RNAClassifier(InferenceModel):
             raise FileNotFoundError('Can not find inference datasets!')
 
         self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
-        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size, pin_memory=True,
+        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size,
+                                           pin_memory=True,
                                            shuffle=False)
         return self._run_prediction(save_path=save_path if save_result else None, print_result=print_result)
 
@@ -226,9 +228,11 @@ class RNAClassifier(InferenceModel):
                                               LabelPaddingOption.SENTIMENT_PADDING for x in sample['label']])
                     t_outputs_all = np.array(sen_logits.cpu()).astype(np.float32)
                 else:
-                    t_targets_all = np.concatenate((t_targets_all, [self.config.label_to_index[x] if x in self.config.label_to_index else
-                                                                    LabelPaddingOption.SENTIMENT_PADDING for x in sample['label']]), axis=0)
-                    t_outputs_all = np.concatenate((t_outputs_all, np.array(sen_logits.cpu()).astype(np.float32)), axis=0)
+                    t_targets_all = np.concatenate(
+                        (t_targets_all, [self.config.label_to_index[x] if x in self.config.label_to_index else
+                                         LabelPaddingOption.SENTIMENT_PADDING for x in sample['label']]), axis=0)
+                    t_outputs_all = np.concatenate((t_outputs_all, np.array(sen_logits.cpu()).astype(np.float32)),
+                                                   axis=0)
 
                 for i, i_probs in enumerate(t_probs):
                     sent = self.config.index_to_label[int(i_probs.argmax(axis=-1))]
@@ -243,7 +247,8 @@ class RNAClassifier(InferenceModel):
                     ex_id = sample['ex_id'][i]
 
                     if self.cal_perplexity:
-                        ids = self.MLM_tokenizer(text_raw, truncation=True, padding='max_length', max_length=self.config.max_seq_len, return_tensors='pt')
+                        ids = self.MLM_tokenizer(text_raw, truncation=True, padding='max_length',
+                                                 max_length=self.config.max_seq_len, return_tensors='pt')
                         ids['labels'] = ids['input_ids'].clone()
                         ids = ids.to(self.config.device)
                         loss = self.MLM(**ids)['loss']
@@ -258,7 +263,8 @@ class RNAClassifier(InferenceModel):
                         'confidence': float(max(i_probs)),
                         'probs': i_probs.cpu().numpy(),
                         'ref_label': real_sent,
-                        'ref_check': correct[sent == real_sent] if real_sent != str(LabelPaddingOption.LABEL_PADDING) else '',
+                        'ref_check': correct[sent == real_sent] if real_sent != str(
+                            LabelPaddingOption.LABEL_PADDING) else '',
                         'perplexity': perplexity,
                     })
                     n_total += 1
@@ -270,11 +276,13 @@ class RNAClassifier(InferenceModel):
                     if result['ref_label'] != LabelPaddingOption.LABEL_PADDING:
                         if result['label'] == result['ref_label']:
                             text_info = colored(
-                                '#{}\t -> <{}(ref:{} confidence:{})>\t'.format(result['ex_id'], result['label'], result['ref_label'],
+                                '#{}\t -> <{}(ref:{} confidence:{})>\t'.format(result['ex_id'], result['label'],
+                                                                               result['ref_label'],
                                                                                result['confidence']), 'green')
                         else:
                             text_info = colored(
-                                '#{}\t -> <{}(ref:{}) confidence:{}>\t'.format(result['ex_id'], result['label'], result['ref_label'],
+                                '#{}\t -> <{}(ref:{}) confidence:{}>\t'.format(result['ex_id'], result['label'],
+                                                                               result['ref_label'],
                                                                                result['confidence']), 'red')
                     else:
                         text_info = '#{}\t -> {}\t'.format(result['ex_id'], result['label'])
@@ -298,12 +306,14 @@ class RNAClassifier(InferenceModel):
                                                    target_names=[self.config.index_to_label[x] for x in
                                                                  self.config.index_to_label])
             fprint('\n---------------------------- Classification Report ----------------------------\n')
-            fprint(report)
+            rprint(report)
             fprint('\n---------------------------- Classification Report ----------------------------\n')
 
-            report = metrics.confusion_matrix(t_targets_all, np.argmax(t_outputs_all, -1))
+            report = metrics.confusion_matrix(t_targets_all, np.argmax(t_outputs_all, -1),
+                                              labels=[self.config.label_to_index[x]
+                                                      for x in self.config.label_to_index])
             fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
-            fprint(report)
+            rprint(report)
             fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
 
         return results

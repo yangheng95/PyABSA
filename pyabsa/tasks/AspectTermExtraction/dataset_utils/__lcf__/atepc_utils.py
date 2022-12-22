@@ -9,7 +9,8 @@
 import re
 import string
 
-from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__lcf__.apc_utils import get_syntax_distance, get_lca_ids_and_cdm_vec, get_cdw_vec
+from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__lcf__.apc_utils import get_syntax_distance, \
+    get_lca_ids_and_cdm_vec, get_cdw_vec
 from pyabsa.utils.pyabsa_utils import fprint
 
 
@@ -137,5 +138,6 @@ def load_atepc_inference_datasets(fname):
         lines.extend(fin.readlines())
         fin.close()
     for i in range(len(lines)):
-        lines[i] = lines[i][:lines[i].find('$LABEL$')].replace('[ASP]', '').replace('[B-ASP]', '').replace('[E-ASP]', '').strip()
+        lines[i] = lines[i][:lines[i].find('$LABEL$')].replace('[ASP]', '').replace('[B-ASP]', '').replace('[E-ASP]',
+                                                                                                           '').strip()
     return sorted(set(lines), key=lines.index)

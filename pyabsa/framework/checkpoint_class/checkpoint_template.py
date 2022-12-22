@@ -81,7 +81,8 @@ class APCCheckpointManager(CheckpointManager):
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried
         """
         from pyabsa.tasks.AspectPolarityClassification import SentimentClassifier
-        return SentimentClassifier(CheckpointManager().parse_checkpoint(checkpoint, TaskCodeOption.Aspect_Polarity_Classification))
+        return SentimentClassifier(
+            CheckpointManager().parse_checkpoint(checkpoint, TaskCodeOption.Aspect_Polarity_Classification))
 
 
 class ATEPCCheckpointManager(CheckpointManager):
@@ -95,7 +96,8 @@ class ATEPCCheckpointManager(CheckpointManager):
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried
         """
         from pyabsa.tasks.AspectTermExtraction import AspectExtractor
-        return AspectExtractor(CheckpointManager().parse_checkpoint(checkpoint, TaskCodeOption.Aspect_Term_Extraction_and_Classification))
+        return AspectExtractor(
+            CheckpointManager().parse_checkpoint(checkpoint, TaskCodeOption.Aspect_Term_Extraction_and_Classification))
 
 
 class TADCheckpointManager(CheckpointManager):
@@ -109,7 +111,8 @@ class TADCheckpointManager(CheckpointManager):
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried
         """
         from pyabsa.tasks.TextAdversarialDefense import TADTextClassifier
-        return TADTextClassifier(CheckpointManager().parse_checkpoint(checkpoint, TaskCodeOption.Text_Adversarial_Defense))
+        return TADTextClassifier(
+            CheckpointManager().parse_checkpoint(checkpoint, TaskCodeOption.Text_Adversarial_Defense))
 
 
 class RNACCheckpointManager(CheckpointManager):

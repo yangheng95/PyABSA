@@ -67,6 +67,7 @@ class LCA_BERT(nn.Module):
         if polarity is not None:
             lcp_loss = self.lca_criterion(lca_logits, lca_ids)
             sent_loss = self.classification_criterion(sent_logits, polarity)
-            return {'logits': sent_logits, 'hidden_state': pooled_out, 'loss': (1 - self.config.sigma) * sent_loss + self.config.sigma * lcp_loss}
+            return {'logits': sent_logits, 'hidden_state': pooled_out,
+                    'loss': (1 - self.config.sigma) * sent_loss + self.config.sigma * lcp_loss}
         else:
             return {'logits': sent_logits, 'hidden_state': pooled_out}

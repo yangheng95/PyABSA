@@ -103,19 +103,22 @@ def readfile(filename):
                 for p_idx in range(len(p) - 1):
                     if (p[p_idx] != p[p_idx + 1] and p[p_idx] != str(LabelPaddingOption.SENTIMENT_PADDING)
                         and p[p_idx + 1] != str(LabelPaddingOption.SENTIMENT_PADDING)) \
-                        or (p[p_idx] != str(LabelPaddingOption.SENTIMENT_PADDING) and p[p_idx + 1] == str(LabelPaddingOption.SENTIMENT_PADDING)):
+                            or (p[p_idx] != str(LabelPaddingOption.SENTIMENT_PADDING) and p[p_idx + 1] == str(
+                        LabelPaddingOption.SENTIMENT_PADDING)):
                         _p = p[:p_idx + 1] + polarity_padding[p_idx + 1:]
                         p = polarity_padding[:p_idx + 1] + p[p_idx + 1:]
                         prepared_data.append((s, t, _p))
             else:
                 for t_idx in range(1, len(t)):
                     # for 3 IOB label (B, I, O)
-                    if p[t_idx - 1] != str(LabelPaddingOption.SENTIMENT_PADDING) and split_aspect(t[t_idx - 1], t[t_idx]):
+                    if p[t_idx - 1] != str(LabelPaddingOption.SENTIMENT_PADDING) and split_aspect(t[t_idx - 1],
+                                                                                                  t[t_idx]):
                         _p = p[:t_idx] + polarity_padding[t_idx:]
                         p = polarity_padding[:t_idx] + p[t_idx:]
                         prepared_data.append((s, t, _p))
 
-                    if p[t_idx] != str(LabelPaddingOption.SENTIMENT_PADDING) and t_idx == len(t) - 1 and split_aspect(t[t_idx]):
+                    if p[t_idx] != str(LabelPaddingOption.SENTIMENT_PADDING) and t_idx == len(t) - 1 and split_aspect(
+                            t[t_idx]):
                         _p = p[:t_idx + 1] + polarity_padding[t_idx + 1:]
                         p = polarity_padding[:t_idx + 1] + p[t_idx + 1:]
                         prepared_data.append((s, t, _p))
@@ -232,7 +235,8 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
 
     bos_token = tokenizer.bos_token
     eos_token = tokenizer.eos_token
-    label_map = {label: i for i, label in enumerate(sorted(list(Labels) + [tokenizer.bos_token, tokenizer.eos_token]), 1)}
+    label_map = {label: i for i, label in
+                 enumerate(sorted(list(Labels) + [tokenizer.bos_token, tokenizer.eos_token]), 1)}
     opt.IOB_label_to_index = label_map
     features = []
     polarities_set = set()
@@ -242,7 +246,8 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
         IOB_label = example.IOB_label
         aspect_label = example.aspect_label
         polarity = example.polarity
-        if polarity != LabelPaddingOption.SENTIMENT_PADDING or int(polarity) != LabelPaddingOption.SENTIMENT_PADDING:  # bad case handle in Chinese atepc_datasets
+        if polarity != LabelPaddingOption.SENTIMENT_PADDING or int(
+                polarity) != LabelPaddingOption.SENTIMENT_PADDING:  # bad case handle in Chinese atepc_datasets
             polarities_set.add(polarity)  # ignore samples without polarities
         tokens = []
         labels = []

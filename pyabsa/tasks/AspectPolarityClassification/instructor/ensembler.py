@@ -64,7 +64,8 @@ class APCEnsembler(nn.Module):
 
         for i in range(len(models)):
 
-            config_str = re.sub(r'<.*?>', '', str(sorted([str(self.config.args[k]) for k in self.config.args if k != 'seed'])))
+            config_str = re.sub(r'<.*?>', '',
+                                str(sorted([str(self.config.args[k]) for k in self.config.args if k != 'seed'])))
             hash_tag = sha256(config_str.encode()).hexdigest()
             cache_path = '{}.{}.dataset.{}.cache'.format(self.config.model_name, self.config.dataset_name, hash_tag)
 
@@ -77,19 +78,27 @@ class APCEnsembler(nn.Module):
             if hasattr(APCModelList, models[i].__name__):
                 try:
                     if kwargs.get('offline', False):
-                        self.tokenizer = AutoTokenizer.from_pretrained(find_cwd_dir(self.config.pretrained_bert.split('/')[-1]), do_lower_case='uncased' in self.config.pretrained_bert)
-                        self.bert = AutoModel.from_pretrained(find_cwd_dir(self.config.pretrained_bert.split('/')[-1])) if not self.bert else self.bert  # share the underlying bert between models
+                        self.tokenizer = AutoTokenizer.from_pretrained(
+                            find_cwd_dir(self.config.pretrained_bert.split('/')[-1]),
+                            do_lower_case='uncased' in self.config.pretrained_bert)
+                        self.bert = AutoModel.from_pretrained(find_cwd_dir(self.config.pretrained_bert.split('/')[
+                                                                               -1])) if not self.bert else self.bert  # share the underlying bert between models
                     else:
-                        self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert, do_lower_case='uncased' in self.config.pretrained_bert)
-                        self.bert = AutoModel.from_pretrained(self.config.pretrained_bert) if not self.bert else self.bert
+                        self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert,
+                                                                       do_lower_case='uncased' in self.config.pretrained_bert)
+                        self.bert = AutoModel.from_pretrained(
+                            self.config.pretrained_bert) if not self.bert else self.bert
                 except ValueError as e:
                     fprint('Init pretrained model failed, exception: {}'.format(e))
                     exit(-1)
 
                 if load_dataset and not os.path.exists(cache_path) or self.config.overwrite_cache:
-                    self.train_set = ABSADataset(self.config, self.tokenizer, dataset_type='train') if not self.train_set else self.train_set
-                    self.test_set = ABSADataset(self.config, self.tokenizer, dataset_type='test') if not self.test_set else self.test_set
-                    self.valid_set = ABSADataset(self.config, self.tokenizer, dataset_type='valid') if not self.valid_set else self.valid_set
+                    self.train_set = ABSADataset(self.config, self.tokenizer,
+                                                 dataset_type='train') if not self.train_set else self.train_set
+                    self.test_set = ABSADataset(self.config, self.tokenizer,
+                                                dataset_type='test') if not self.test_set else self.test_set
+                    self.valid_set = ABSADataset(self.config, self.tokenizer,
+                                                 dataset_type='valid') if not self.valid_set else self.valid_set
                 self.models.append(models[i](self.bert, self.config))
 
             elif hasattr(BERTBaselineAPCModelList, models[i].__name__):
@@ -97,10 +106,14 @@ class APCEnsembler(nn.Module):
                 self.bert = AutoModel.from_pretrained(self.config.pretrained_bert) if not self.bert else self.bert
 
                 if load_dataset and not os.path.exists(cache_path) or self.config.overwrite_cache:
-                    self.train_set = BERTBaselineABSADataset(self.config, self.tokenizer, dataset_type='train') if not self.train_set else self.train_set
-                    self.test_set = BERTBaselineABSADataset(self.config, self.tokenizer, dataset_type='test') if not self.test_set else self.test_set
-                    self.valid_set = BERTBaselineABSADataset(self.config, self.tokenizer, dataset_type='valid') if not self.valid_set else self.valid_set
-                self.models.append(models[i](copy.deepcopy(self.bert) if self.config.deep_ensemble else self.bert, self.config))
+                    self.train_set = BERTBaselineABSADataset(self.config, self.tokenizer,
+                                                             dataset_type='train') if not self.train_set else self.train_set
+                    self.test_set = BERTBaselineABSADataset(self.config, self.tokenizer,
+                                                            dataset_type='test') if not self.test_set else self.test_set
+                    self.valid_set = BERTBaselineABSADataset(self.config, self.tokenizer,
+                                                             dataset_type='valid') if not self.valid_set else self.valid_set
+                self.models.append(
+                    models[i](copy.deepcopy(self.bert) if self.config.deep_ensemble else self.bert, self.config))
 
             elif hasattr(GloVeAPCModelList, models[i].__name__):
                 self.tokenizer = Tokenizer.build_tokenizer(
@@ -110,15 +123,21 @@ class APCEnsembler(nn.Module):
                 self.embedding_matrix = build_embedding_matrix(
                     config=self.config,
                     tokenizer=self.tokenizer,
-                    cache_path='{0}_{1}_embedding_matrix.dat'.format(str(config.embed_dim), os.path.basename(config.dataset_name)),
+                    cache_path='{0}_{1}_embedding_matrix.dat'.format(str(config.embed_dim),
+                                                                     os.path.basename(config.dataset_name)),
                 ) if not self.embedding_matrix else self.embedding_matrix
 
                 if load_dataset and not os.path.exists(cache_path) or self.config.overwrite_cache:
-                    self.train_set = GloVeABSADataset(self.config, self.tokenizer, dataset_type='train') if not self.train_set else self.train_set
-                    self.test_set = GloVeABSADataset(self.config, self.tokenizer, dataset_type='test') if not self.test_set else self.test_set
-                    self.valid_set = GloVeABSADataset(self.config, self.tokenizer, dataset_type='valid') if not self.valid_set else self.valid_set
+                    self.train_set = GloVeABSADataset(self.config, self.tokenizer,
+                                                      dataset_type='train') if not self.train_set else self.train_set
+                    self.test_set = GloVeABSADataset(self.config, self.tokenizer,
+                                                     dataset_type='test') if not self.test_set else self.test_set
+                    self.valid_set = GloVeABSADataset(self.config, self.tokenizer,
+                                                      dataset_type='valid') if not self.valid_set else self.valid_set
 
-                self.models.append(models[i](copy.deepcopy(self.embedding_matrix) if self.config.deep_ensemble else self.embedding_matrix, self.config))
+                self.models.append(models[i](
+                    copy.deepcopy(self.embedding_matrix) if self.config.deep_ensemble else self.embedding_matrix,
+                    self.config))
                 self.config.embedding_matrix = self.embedding_matrix
 
             if self.config.cache_dataset and not os.path.exists(cache_path) and not self.config.overwrite_cache:
@@ -128,13 +147,16 @@ class APCEnsembler(nn.Module):
 
             if load_dataset:
                 train_sampler = RandomSampler(self.train_set if not self.train_set else self.train_set)
-                self.train_dataloader = DataLoader(self.train_set, batch_size=self.config.batch_size, pin_memory=True, sampler=train_sampler)
+                self.train_dataloader = DataLoader(self.train_set, batch_size=self.config.batch_size, pin_memory=True,
+                                                   sampler=train_sampler)
                 if self.test_set:
                     test_sampler = SequentialSampler(self.test_set if not self.test_set else self.test_set)
-                    self.test_dataloader = DataLoader(self.test_set, batch_size=self.config.batch_size, pin_memory=True, sampler=test_sampler)
+                    self.test_dataloader = DataLoader(self.test_set, batch_size=self.config.batch_size, pin_memory=True,
+                                                      sampler=test_sampler)
                 if self.valid_set:
                     valid_sampler = SequentialSampler(self.valid_set if not self.valid_set else self.valid_set)
-                    self.valid_dataloader = DataLoader(self.valid_set, batch_size=self.config.batch_size, pin_memory=True, sampler=valid_sampler)
+                    self.valid_dataloader = DataLoader(self.valid_set, batch_size=self.config.batch_size,
+                                                       pin_memory=True, sampler=valid_sampler)
 
             self.config.tokenizer = self.tokenizer
 

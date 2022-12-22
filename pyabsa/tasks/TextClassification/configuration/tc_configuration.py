@@ -202,7 +202,8 @@ class TCConfigManager(ConfigManager):
                 raise ValueError(
                     "Wrong value of configuration_class type supplied, please use one from following type: template, base, english, chinese, multilingual, glove")
         else:
-            raise TypeError("Wrong type of new configuration_class item supplied, please use dict e.g.{'NewConfig': NewValue}")
+            raise TypeError(
+                "Wrong type of new configuration_class item supplied, please use dict e.g.{'NewConfig': NewValue}")
 
     @staticmethod
     def set_tc_config_template(newitem):

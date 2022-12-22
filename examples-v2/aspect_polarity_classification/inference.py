@@ -15,7 +15,8 @@ sent_classifier = APC.SentimentClassifier('multilingual')
 # sent_classifier = APC.SentimentClassifier('english')
 # sent_classifier = APC.SentimentClassifier('chinese')
 
-sent_classifier.predict('When I got home, there was a message on the machine because the owner realized that our [B-ASP]waitress[E-ASP] forgot to charge us for our wine. $LABEL$ Negative')
+sent_classifier.predict(
+    'When I got home, there was a message on the machine because the owner realized that our [B-ASP]waitress[E-ASP] forgot to charge us for our wine. $LABEL$ Negative')
 
 sent_classifier.predict(
     ['The [B-ASP]food[E-ASP] was good, but the [B-ASP]service[E-ASP] was terrible. $LABEL$ Positive, Negative',

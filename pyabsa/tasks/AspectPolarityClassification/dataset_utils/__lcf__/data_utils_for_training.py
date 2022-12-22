@@ -27,7 +27,9 @@ class ABSADataset(PyABSADataset):
         lines = load_dataset_from_file(self.config.dataset_file[self.dataset_type])
 
         if len(lines) % 3 != 0:
-            fprint(colored('ERROR: one or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.', 'red'))
+            fprint(colored(
+                'ERROR: one or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.',
+                'red'))
 
         all_data = []
         # record polarities type to update output_dim
@@ -42,7 +44,8 @@ class ABSADataset(PyABSADataset):
             aspect = lines[i + 1].strip()
             polarity = lines[i + 2].strip()
 
-            prepared_inputs = prepare_input_for_apc(self.config, self.tokenizer, text_left, text_right, aspect, input_demands=self.config.inputs_cols)
+            prepared_inputs = prepare_input_for_apc(self.config, self.tokenizer, text_left, text_right, aspect,
+                                                    input_demands=self.config.inputs_cols)
 
             text_raw = prepared_inputs['text_raw']
             text_spc = prepared_inputs['text_spc']
@@ -66,8 +69,10 @@ class ABSADataset(PyABSADataset):
             if self.config.model_name == 'dlcf_dca_bert' or self.config.model_name == 'dlcfs_dca_bert':
                 configure_dlcf_spacy_model(self.config)
                 prepared_inputs = prepare_input_for_dlcf_dca(self.config, self.tokenizer, text_left, text_right, aspect)
-                dlcf_vec = prepared_inputs['dlcf_cdm_vec'] if self.config.lcf == 'cdm' else prepared_inputs['dlcf_cdw_vec']
-                dlcfs_vec = prepared_inputs['dlcfs_cdm_vec'] if self.config.lcf == 'cdm' else prepared_inputs['dlcfs_cdw_vec']
+                dlcf_vec = prepared_inputs['dlcf_cdm_vec'] if self.config.lcf == 'cdm' else prepared_inputs[
+                    'dlcf_cdw_vec']
+                dlcfs_vec = prepared_inputs['dlcfs_cdm_vec'] if self.config.lcf == 'cdm' else prepared_inputs[
+                    'dlcfs_cdw_vec']
                 depend_vec = prepared_inputs['depend_vec']
                 depended_vec = prepared_inputs['depended_vec']
             data = {
@@ -121,7 +126,8 @@ class ABSADataset(PyABSADataset):
         check_and_fix_labels(label_set, 'polarity', all_data, self.config)
         self.config.output_dim = len(label_set)
 
-        all_data = build_sentiment_window(all_data, self.tokenizer, self.config.similarity_threshold, input_demands=self.config.inputs_cols)
+        all_data = build_sentiment_window(all_data, self.tokenizer, self.config.similarity_threshold,
+                                          input_demands=self.config.inputs_cols)
         for data in all_data:
 
             cluster_ids = []

@@ -27,7 +27,7 @@ from pyabsa import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from ..dataset_utils.__lcf__.data_utils_for_training import ATEPCProcessor, convert_examples_to_features
 from pyabsa.utils.file_utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args, init_optimizer, fprint
+from pyabsa.utils.pyabsa_utils import print_args, init_optimizer, fprint, rprint
 
 import pytorch_warmup as warmup
 
@@ -43,13 +43,15 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
 
     def _load_dataset_and_prepare_dataloader(self):
 
-        self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert, do_lower_case='uncased' in self.config.pretrained_bert)
+        self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert,
+                                                       do_lower_case='uncased' in self.config.pretrained_bert)
 
         processor = ATEPCProcessor(self.tokenizer)
         cache_path = self.load_cache_dataset()
         if cache_path is None:
             self.train_examples = processor.get_train_examples(self.config.dataset_file['train'], 'train')
-            train_features = convert_examples_to_features(self.train_examples, self.config.max_seq_len, self.tokenizer, self.config)
+            train_features = convert_examples_to_features(self.train_examples, self.config.max_seq_len, self.tokenizer,
+                                                          self.config)
             self.config.label_list = sorted(list(self.config.IOB_label_to_index.keys()))
             self.config.num_labels = len(self.config.label_list) + 1
             all_spc_input_ids = torch.tensor([f.input_ids_spc for f in train_features], dtype=torch.long)
@@ -106,15 +108,18 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
             len(self.train_set) / self.config.batch_size / self.config.gradient_accumulation_steps) * self.config.num_epoch
 
         train_sampler = RandomSampler(self.train_set)
-        self.train_dataloader = DataLoader(self.train_set, sampler=train_sampler, pin_memory=True, batch_size=self.config.batch_size)
+        self.train_dataloader = DataLoader(self.train_set, sampler=train_sampler, pin_memory=True,
+                                           batch_size=self.config.batch_size)
 
         if self.valid_set:
             valid_sampler = SequentialSampler(self.valid_set)
-            self.valid_dataloader = DataLoader(self.valid_set, sampler=valid_sampler, pin_memory=True, batch_size=self.config.batch_size)
+            self.valid_dataloader = DataLoader(self.valid_set, sampler=valid_sampler, pin_memory=True,
+                                               batch_size=self.config.batch_size)
 
         if self.test_set:
             test_sampler = SequentialSampler(self.test_set)
-            self.test_dataloader = DataLoader(self.test_set, sampler=test_sampler, pin_memory=True, batch_size=self.config.batch_size)
+            self.test_dataloader = DataLoader(self.test_set, sampler=test_sampler, pin_memory=True,
+                                              batch_size=self.config.batch_size)
 
         self.bert_base_model = AutoModel.from_pretrained(self.config.pretrained_bert)
         self.config.sep_indices = self.tokenizer.sep_token_id
@@ -132,7 +137,8 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
             self.config.log_step = len(self.train_dataloader) if self.config.log_step < 0 else self.config.log_step
 
         if self.config.warmup_step >= 0:
-            self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=len(self.train_dataloader) * self.config.num_epoch)
+            self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=len(
+                self.train_dataloader) * self.config.num_epoch)
             self.warmup_scheduler = warmup.UntunedLinearWarmup(self.optimizer)
 
         self.logger.info("***** Running trainer for Aspect Term Extraction *****")
@@ -158,7 +164,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
             for step, batch in enumerate(iterator):
                 self.model.train()
                 input_ids_spc, segment_ids, input_mask, label_ids, polarity, \
-                valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
+                    valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
                 input_ids_spc = input_ids_spc.to(self.config.device)
                 segment_ids = segment_ids.to(self.config.device)
                 input_mask = input_mask.to(self.config.device)
@@ -233,8 +239,8 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                         self.config.metrics_of_this_checkpoint['ate_f1'] = ate_result
 
                         if apc_result['apc_test_acc'] > self.config.max_test_metrics['max_apc_test_acc'] or \
-                            apc_result['apc_test_f1'] > self.config.max_test_metrics['max_apc_test_f1'] or \
-                            ate_result > self.config.max_test_metrics['max_ate_test_f1']:
+                                apc_result['apc_test_f1'] > self.config.max_test_metrics['max_apc_test_f1'] or \
+                                ate_result > self.config.max_test_metrics['max_ate_test_f1']:
                             patience = self.config.patience
                             if apc_result['apc_test_acc'] > self.config.max_test_metrics['max_apc_test_acc']:
                                 self.config.max_test_metrics['max_apc_test_acc'] = apc_result['apc_test_acc']
@@ -283,7 +289,9 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                     else:
                         if self.config.save_mode and epoch >= self.config.evaluate_begin:
                             save_model(self.config, self.model, self.tokenizer, save_path + '_{}/'.format(loss.item()))
-                        postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.config.evaluate_begin)
+                        postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch,
+                                                                                              round(loss.item(), 8),
+                                                                                              self.config.evaluate_begin)
 
                 iterator.postfix = postfix
                 iterator.refresh()
@@ -299,7 +307,8 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
             self.config.MV.add_metric('Test-ATE-F1', ate_result)
 
         else:
-            self.config.MV.add_metric('Max-APC-Test-Acc w/o Valid Set', self.config.max_test_metrics['max_apc_test_acc'])
+            self.config.MV.add_metric('Max-APC-Test-Acc w/o Valid Set',
+                                      self.config.max_test_metrics['max_apc_test_acc'])
             self.config.MV.add_metric('Max-APC-Test-F1 w/o Valid Set', self.config.max_test_metrics['max_apc_test_f1'])
             self.config.MV.add_metric('Max-ATE-Test-F1 w/o Valid Set', self.config.max_test_metrics['max_ate_test_f1'])
 
@@ -351,7 +360,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
 
         for i_batch, batch in enumerate(test_dataloader):
             input_ids_spc, segment_ids, input_mask, label_ids, polarity, \
-            valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
+                valid_ids, l_mask, lcf_cdm_vec, lcf_cdw_vec = batch
 
             input_ids_spc = input_ids_spc.to(self.config.device)
             segment_ids = segment_ids.to(self.config.device)
@@ -418,8 +427,9 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
             if self.config.args.get('show_metric', False):
                 try:
                     apc_report = metrics.classification_report(test_apc_logits_all.cpu(),
-                                 torch.argmax(test_polarities_all, -1).cpu(),
-                                 target_names=[self.config.index_to_label[x] for x in self.config.index_to_label])
+                                                               torch.argmax(test_polarities_all, -1).cpu(),
+                                                               target_names=[self.config.index_to_label[x] for x in
+                                                                             self.config.index_to_label])
                     fprint('\n---------------------------- APC Classification Report ----------------------------\n')
                     fprint(apc_report)
                     fprint('\n---------------------------- APC Classification Report ----------------------------\n')
@@ -433,7 +443,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                 ate_result = round(float(tmps[7]) * 100, 2)
                 if self.config.args.get('show_metric', False):
                     fprint('\n---------------------------- ATE Classification Report ----------------------------\n')
-                    fprint(report)
+                    rprint(report)
                     fprint('\n---------------------------- ATE Classification Report ----------------------------\n')
             except Exception as e:
                 # No enough raw_data to calculate the report
@@ -472,7 +482,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                 self.optimizer_grouped_parameters,
                 lr=self.config.learning_rate,
                 weight_decay=self.config.l2reg,
-                maximize=self.config.maximize_loss if self.config.get('maximize_loss') else False
+
             )
         self.config.device = torch.device(self.config.device)
         if self.config.device.type == 'cuda':

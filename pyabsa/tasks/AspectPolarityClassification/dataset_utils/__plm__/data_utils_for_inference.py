@@ -58,7 +58,8 @@ class BERTABSAInferenceDataset(ABSAInferenceDataset):
                 if validate_example(text, aspect, polarity, self.config) or not aspect:
                     continue
 
-                prepared_inputs = prepare_input_for_apc(self.config, self.tokenizer.tokenizer, text_left, text_right, aspect)
+                prepared_inputs = prepare_input_for_apc(self.config, self.tokenizer.tokenizer, text_left, text_right,
+                                                        aspect)
 
                 aspect_position = prepared_inputs['aspect_position']
 
@@ -73,7 +74,8 @@ class BERTABSAInferenceDataset(ABSAInferenceDataset):
                 aspect_indices = self.tokenizer.text_to_sequence(aspect)
                 aspect_len = np.count_nonzero(aspect_indices)
                 left_len = min(self.config.max_seq_len - aspect_len, np.count_nonzero(left_indices))
-                left_indices = np.concatenate((left_indices[:left_len], np.asarray([0] * (self.config.max_seq_len - left_len))))
+                left_indices = np.concatenate(
+                    (left_indices[:left_len], np.asarray([0] * (self.config.max_seq_len - left_len))))
                 aspect_boundary = np.asarray([left_len, min(left_len + aspect_len - 1, self.config.max_seq_len)])
 
                 idx2graph = dependency_adj_matrix(text_left + ' ' + aspect + ' ' + text_right)
@@ -133,15 +135,17 @@ class BERTABSAInferenceDataset(ABSAInferenceDataset):
 
         self.data = all_data
 
-        all_data = build_sentiment_window(all_data, self.tokenizer, self.config.similarity_threshold, input_demands=self.config.inputs_cols)
+        all_data = build_sentiment_window(all_data, self.tokenizer, self.config.similarity_threshold,
+                                          input_demands=self.config.inputs_cols)
         for data in all_data:
 
             cluster_ids = []
             for pad_idx in range(self.config.max_seq_len):
                 if pad_idx in data['cluster_ids']:
                     # fprint(data['polarity'])
-                    cluster_ids.append(self.config.label_to_index.get(self.config.index_to_label.get(data['polarity'], 'N.A.'),
-                                                                      LabelPaddingOption.SENTIMENT_PADDING))
+                    cluster_ids.append(
+                        self.config.label_to_index.get(self.config.index_to_label.get(data['polarity'], 'N.A.'),
+                                                       LabelPaddingOption.SENTIMENT_PADDING))
                 else:
                     cluster_ids.append(-100)
                     # cluster_ids.append(3)

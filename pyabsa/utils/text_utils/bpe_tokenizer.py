@@ -62,7 +62,8 @@ def train_bpe_tokenizer(corpus_files=None,
     # Customize training
     fprint('Start training BPE tokenizer...')
     start = time.time()
-    tokenizer.train(files=corpus_files, vocab_size=vocab_size, min_frequency=min_frequency, special_tokens=special_tokens)
+    tokenizer.train(files=corpus_files, vocab_size=vocab_size, min_frequency=min_frequency,
+                    special_tokens=special_tokens)
     fprint('Time cost: ', time.time() - start)
 
     if not os.path.exists(save_path):

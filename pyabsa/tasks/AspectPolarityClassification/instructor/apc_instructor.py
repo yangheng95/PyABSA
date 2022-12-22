@@ -81,7 +81,8 @@ class APCTrainingInstructor(BaseTrainingInstructor):
         self.logger.info("Total params = %d, Trainable params = %d, Non-trainable params = %d", Total_params,
                          Trainable_params, NonTrainable_params)
         self.logger.info("Batch size = %d", self.config.batch_size)
-        self.logger.info("Num steps = %d", len(self.train_dataloaders[0]) // self.config.batch_size * self.config.num_epoch)
+        self.logger.info("Num steps = %d",
+                         len(self.train_dataloaders[0]) // self.config.batch_size * self.config.num_epoch)
         postfix = ''
         for epoch in range(self.config.num_epoch):
             # self.config.ETA_MV.add_metric(r'$\eta_{l}^{*}$'+str(self.config.seed), self.model.models[0].eta1.item())
@@ -182,7 +183,9 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                     else:
                         if self.config.save_mode and epoch >= self.config.evaluate_begin:
                             save_model(self.config, self.model, self.tokenizer, save_path + '_{}/'.format(loss.item()))
-                        postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.config.evaluate_begin)
+                        postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch,
+                                                                                              round(loss.item(), 8),
+                                                                                              self.config.evaluate_begin)
 
                 iterator.postfix = postfix
                 iterator.refresh()
@@ -252,7 +255,8 @@ class APCTrainingInstructor(BaseTrainingInstructor):
         for f, (train_dataloader, valid_dataloader) in enumerate(zip(self.train_dataloaders, self.valid_dataloaders)):
             patience = self.config.patience + self.config.evaluate_begin
             if self.config.log_step < 0:
-                self.config.log_step = len(self.train_dataloaders[0]) if self.config.log_step < 0 else self.config.log_step
+                self.config.log_step = len(
+                    self.train_dataloaders[0]) if self.config.log_step < 0 else self.config.log_step
 
             self.logger.info("***** Running trainer for Aspect Polarity Classification *****")
             self.logger.info("Training set examples = %d", len(self.train_set))
@@ -362,7 +366,9 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                                                                        max_fold_f1 * 100
                                                                        ))
                         else:
-                            postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.config.evaluate_begin)
+                            postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch,
+                                                                                                  round(loss.item(), 8),
+                                                                                                  self.config.evaluate_begin)
 
                     iterator.postfix = postfix
                     iterator.refresh()
@@ -452,10 +458,10 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                               labels=list(range(self.config.output_dim)), average='macro')
 
         if self.config.args.get('show_metric', False):
-
             fprint('\n---------------------------- APC Classification Report ----------------------------\n')
             fprint(metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all.cpu(), -1),
-                   target_names=[self.config.index_to_label[x] for x in self.config.index_to_label]))
+                                                 target_names=[self.config.index_to_label[x] for x in
+                                                               self.config.index_to_label]))
             fprint('\n---------------------------- APC Classification Report ----------------------------\n')
 
         return test_acc, f1
@@ -470,7 +476,8 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                     eta_ids += list(map(id, child.parameters()))
                     etas.append(child)
             base_params = filter(lambda p: id(p) not in eta_ids, self.model.models.parameters())
-            self.config.eta_lr = self.config.learning_rate * 1000 if 'eta_lr' not in self.config.args else self.config.args['eta_lr']
+            self.config.eta_lr = self.config.learning_rate * 1000 if 'eta_lr' not in self.config.args else \
+            self.config.args['eta_lr']
             self.optimizer = init_optimizer(self.config.optimizer)(
                 [
                     {'params': base_params},
@@ -478,14 +485,14 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                 ],
                 lr=self.config.learning_rate,
                 weight_decay=self.config.l2reg,
-                maximize=self.config.maximize_loss if self.config.get('maximize_loss') else False
+    
             )
         else:
             self.optimizer = init_optimizer(self.config.optimizer)(
                 self.model.parameters(),
                 lr=self.config.learning_rate,
                 weight_decay=self.config.l2reg,
-                maximize=self.config.maximize_loss if self.config.get('maximize_loss') else False
+
             )
 
     def _cache_or_load_dataset(self):

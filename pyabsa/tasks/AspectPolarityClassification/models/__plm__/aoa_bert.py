@@ -11,14 +11,17 @@ from pyabsa.networks.dynamic_rnn import DynamicLSTM
 
 
 class AOA_BERT(nn.Module):
-    inputs = ['text_indices', 'aspect_indices', 'left_text_indices', 'left_aspect_indices', 'right_text_indices', 'right_aspect_indices']
+    inputs = ['text_indices', 'aspect_indices', 'left_text_indices', 'left_aspect_indices', 'right_text_indices',
+              'right_aspect_indices']
 
     def __init__(self, bert, config):
         super(AOA_BERT, self).__init__()
         self.config = config
         self.embed = bert
-        self.ctx_lstm = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True, bidirectional=True)
-        self.asp_lstm = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True, bidirectional=True)
+        self.ctx_lstm = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True,
+                                    bidirectional=True)
+        self.asp_lstm = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True,
+                                    bidirectional=True)
         self.dense = nn.Linear(2 * config.hidden_dim, config.output_dim)
 
     def forward(self, inputs):

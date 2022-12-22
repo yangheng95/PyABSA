@@ -131,7 +131,8 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
 
 
 def text_to_sequence(tokenizer, text, max_seq_len):
-    return pad_and_truncate(tokenizer.convert_tokens_to_ids(tokenizer.tokenize(text)), max_seq_len, value=tokenizer.pad_token_id)
+    return pad_and_truncate(tokenizer.convert_tokens_to_ids(tokenizer.tokenize(text)), max_seq_len,
+                            value=tokenizer.pad_token_id)
 
 
 def get_syntax_distance(text_raw, aspect, tokenizer, opt):
@@ -262,7 +263,8 @@ def copy_side_aspect(direct, target, source, examples, input_demands):
         elif data_item.startswith('right_') or data_item.startswith('left_'):
             continue
         target[direct + '_' + data_item] = source[data_item]
-    target[direct + '_dist'] = int(abs(np.average(list(source['aspect_position'])) - np.average(list(target['aspect_position']))))
+    target[direct + '_dist'] = int(
+        abs(np.average(list(source['aspect_position'])) - np.average(list(target['aspect_position']))))
     # target[direct + '_dist'] = 0 if id(source['lcf_vec']) == id(target['lcf_vec']) else 1
 
 

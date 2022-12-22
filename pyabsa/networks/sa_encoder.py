@@ -43,14 +43,14 @@ class BertSelfAttention(nn.Module):
         return x.permute(0, 2, 1, 3)
 
     def forward(
-        self,
-        hidden_states,
-        attention_mask=None,
-        head_mask=None,
-        encoder_hidden_states=None,
-        encoder_attention_mask=None,
-        past_key_value=None,
-        output_attentions=False,
+            self,
+            hidden_states,
+            attention_mask=None,
+            head_mask=None,
+            encoder_hidden_states=None,
+            encoder_attention_mask=None,
+            past_key_value=None,
+            output_attentions=False,
     ):
         mixed_query_layer = self.query(hidden_states)
 

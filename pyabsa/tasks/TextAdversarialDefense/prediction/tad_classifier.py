@@ -128,7 +128,8 @@ class TADTextClassifier(InferenceModel):
                             self.model = torch.load(model_path, map_location='cpu')
 
                         try:
-                            self.tokenizer = PretrainedTokenizer(max_seq_len=self.config.max_seq_len, config=self.config, **kwargs)
+                            self.tokenizer = PretrainedTokenizer(max_seq_len=self.config.max_seq_len,
+                                                                 config=self.config, **kwargs)
                         except ValueError:
                             if tokenizer_path:
                                 with open(tokenizer_path, mode='rb') as f:
@@ -150,7 +151,7 @@ class TADTextClassifier(InferenceModel):
                 raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, self.checkpoint))
 
             if not hasattr(GloVeTADModelList, self.config.model.__name__) \
-                and not hasattr(BERTTADModelList, self.config.model.__name__):
+                    and not hasattr(BERTTADModelList, self.config.model.__name__):
                 raise KeyError('The checkpoint you are loading is not from classifier model.')
 
         if hasattr(BERTTADModelList, self.config.model.__name__):
@@ -159,7 +160,6 @@ class TADTextClassifier(InferenceModel):
             self.dataset = GloVeTADInferenceDataset(config=self.config, tokenizer=self.tokenizer)
 
         self.__post_init__()
-
 
     def to(self, device=None):
         self.config.device = device
@@ -247,9 +247,11 @@ class TADTextClassifier(InferenceModel):
             raise FileNotFoundError('Can not find inference datasets!')
 
         self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
-        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size, pin_memory=True,
+        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size,
+                                           pin_memory=True,
                                            shuffle=False)
-        return self._run_prediction(save_path=save_path if save_result else None, print_result=print_result, defense=defense)
+        return self._run_prediction(save_path=save_path if save_result else None, print_result=print_result,
+                                    defense=defense)
 
     def predict(self,
                 text: Union[str, list] = None,
@@ -317,7 +319,8 @@ class TADTextClassifier(InferenceModel):
                         sample['adv_train_label'][i]) in self.config.index_to_adv_train_label else ''
 
                     if self.cal_perplexity:
-                        ids = self.MLM_tokenizer(text_raw, truncation=True, padding='max_length', max_length=self.config.max_seq_len, return_tensors='pt')
+                        ids = self.MLM_tokenizer(text_raw, truncation=True, padding='max_length',
+                                                 max_length=self.config.max_seq_len, return_tensors='pt')
                         ids['labels'] = ids['input_ids'].clone()
                         ids = ids.to(self.config.device)
                         loss = self.MLM(**ids)['loss']
@@ -338,8 +341,11 @@ class TADTextClassifier(InferenceModel):
                         'is_adv_label': self.config.index_to_is_adv[pred_is_adv_label],
                         'is_adv_probs': advdet_prob.cpu().numpy(),
                         'is_adv_confidence': float(max(advdet_prob)),
-                        'ref_is_adv_label': self.config.index_to_is_adv[ref_is_adv_label] if isinstance(ref_is_adv_label, int) else ref_is_adv_label,
-                        'ref_is_adv_check': correct[pred_is_adv_label == ref_is_adv_label] if ref_is_adv_label != -100 and isinstance(ref_is_adv_label, int) else '',
+                        'ref_is_adv_label': self.config.index_to_is_adv[ref_is_adv_label] if isinstance(
+                            ref_is_adv_label, int) else ref_is_adv_label,
+                        'ref_is_adv_check': correct[
+                            pred_is_adv_label == ref_is_adv_label] if ref_is_adv_label != -100 and isinstance(
+                            ref_is_adv_label, int) else '',
 
                         'pred_adv_tr_label': self.config.index_to_label[pred_adv_tr_label],
                         'ref_adv_tr_label': self.config.index_to_label[ref_adv_tr_label],
@@ -352,11 +358,13 @@ class TADTextClassifier(InferenceModel):
                                 self.sent_attacker = init_attacker(self, defense.lower())
                             if result['is_adv_label'] == '1':
                                 res = self.sent_attacker.attacker.simple_attack(text_raw, int(result['label']))
-                                new_infer_res = self.predict(res.perturbed_result.attacked_text.text, print_result=False)
+                                new_infer_res = self.predict(res.perturbed_result.attacked_text.text,
+                                                             print_result=False)
                                 result['perturbed_label'] = result['label']
                                 result['label'] = new_infer_res['label']
                                 result['probs'] = new_infer_res['probs']
-                                result['ref_label_check'] = correct[int(result['label']) == ref_label] if ref_label != -100 else ''
+                                result['ref_label_check'] = correct[
+                                    int(result['label']) == ref_label] if ref_label != -100 else ''
                                 result['restored_text'] = res.perturbed_result.attacked_text.text
                                 result['is_fixed'] = True
                             else:

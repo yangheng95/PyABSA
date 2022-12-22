@@ -321,12 +321,14 @@ class RNAClassifier(InferenceModel):
                                                    target_names=[self.config.index_to_label[x] for x in
                                                                  self.config.index_to_label])
             fprint('\n---------------------------- Classification Report ----------------------------\n')
-            fprint(report)
+            rprint(report)
             fprint('\n---------------------------- Classification Report ----------------------------\n')
 
-            report = metrics.confusion_matrix(t_targets_all, np.argmax(t_outputs_all, -1))
+            report = metrics.confusion_matrix(t_targets_all, np.argmax(t_outputs_all, -1),
+                                              labels=[self.config.label_to_index[x]
+                                                      for x in self.config.label_to_index])
             fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
-            fprint(report)
+            rprint(report)
             fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
 
         return results

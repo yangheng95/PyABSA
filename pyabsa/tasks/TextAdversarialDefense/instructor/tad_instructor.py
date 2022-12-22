@@ -55,7 +55,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
             self.model.parameters(),
             lr=self.config.learning_rate,
             weight_decay=self.config.l2reg,
-            maximize=self.config.maximize_loss if self.config.get('maximize_loss') else False
+
         )
 
         self.train_dataloaders = []
@@ -68,7 +68,8 @@ class TADTrainingInstructor(BaseTrainingInstructor):
 
         self.config.device = torch.device(self.config.device)
         if self.config.device.type == 'cuda':
-            self.config.logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.config.device)))
+            self.config.logger.info(
+                "cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.config.device)))
 
         print_args(self.config, self.config.logger)
 
@@ -103,7 +104,8 @@ class TADTrainingInstructor(BaseTrainingInstructor):
             self.embedding_matrix = build_embedding_matrix(
                 config=self.config,
                 tokenizer=self.tokenizer,
-                cache_path='{0}_{1}_embedding_matrix.dat'.format(str(self.config.embed_dim), os.path.basename(self.config.dataset_name)),
+                cache_path='{0}_{1}_embedding_matrix.dat'.format(str(self.config.embed_dim),
+                                                                 os.path.basename(self.config.dataset_name)),
             )
             self.train_set = GloVeTADDataset(self.config, self.tokenizer, dataset_type='train')
             self.test_set = GloVeTADDataset(self.config, self.tokenizer, dataset_type='test')
@@ -135,10 +137,12 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                                                      sampler=train_sampler,
                                                      pin_memory=True))
             if self.test_set:
-                self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.config.batch_size, shuffle=False)
+                self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.config.batch_size,
+                                                  shuffle=False)
 
             if self.valid_set:
-                self.valid_dataloader = DataLoader(dataset=self.valid_set, batch_size=self.config.batch_size, shuffle=False)
+                self.valid_dataloader = DataLoader(dataset=self.valid_set, batch_size=self.config.batch_size,
+                                                   shuffle=False)
         else:
             split_dataset = train_set
             len_per_fold = len(split_dataset) // self.config.cross_validate_fold + 1
@@ -155,13 +159,15 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                 self.valid_dataloaders.append(
                     DataLoader(dataset=val_set, batch_size=self.config.batch_size, sampler=val_sampler))
                 if self.test_set:
-                    self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.config.batch_size, shuffle=False)
+                    self.test_dataloader = DataLoader(dataset=self.test_set, batch_size=self.config.batch_size,
+                                                      shuffle=False)
 
     def _train(self, criterion):
         self.prepare_dataloader(self.train_set)
 
         if self.config.warmup_step >= 0:
-            self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=len(self.train_dataloaders[0]) * self.config.num_epoch)
+            self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=len(
+                self.train_dataloaders[0]) * self.config.num_epoch)
             self.warmup_scheduler = warmup.UntunedLinearWarmup(self.optimizer)
 
         if self.valid_dataloaders:
@@ -198,7 +204,8 @@ class TADTrainingInstructor(BaseTrainingInstructor):
         if self.test_set:
             self.config.logger.info("Test set examples = %d", len(self.test_set))
         self.config.logger.info("Batch size = %d", self.config.batch_size)
-        self.config.logger.info("Num steps = %d", len(self.train_dataloaders[0]) // self.config.batch_size * self.config.num_epoch)
+        self.config.logger.info("Num steps = %d",
+                                len(self.train_dataloaders[0]) // self.config.batch_size * self.config.num_epoch)
         patience = self.config.patience + self.config.evaluate_begin
         if self.config.log_step < 0:
             self.config.log_step = len(self.train_dataloaders[0]) if self.config.log_step < 0 else self.config.log_step
@@ -218,11 +225,13 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                     adv_tr_targets = sample_batched['adv_train_label'].to(self.config.device)
                     adv_det_targets = sample_batched['is_adv'].to(self.config.device)
 
-                    sen_logits, advdet_logits, adv_tr_logits = outputs['sent_logits'], outputs['advdet_logits'], outputs['adv_tr_logits']
+                    sen_logits, advdet_logits, adv_tr_logits = outputs['sent_logits'], outputs['advdet_logits'], \
+                    outputs['adv_tr_logits']
                     sen_loss = criterion(sen_logits, label_targets)
                     adv_det_loss = criterion(advdet_logits, adv_det_targets)
                     adv_train_loss = criterion(adv_tr_logits, adv_tr_targets)
-                    loss = sen_loss + self.config.args.get('adv_det_weight', 5) * adv_det_loss + self.config.args.get('adv_train_weight', 5) * adv_train_loss
+                    loss = sen_loss + self.config.args.get('adv_det_weight', 5) * adv_det_loss + self.config.args.get(
+                        'adv_train_weight', 5) * adv_train_loss
                     losses.append(loss.item())
 
                 if self.scaler:
@@ -256,8 +265,8 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                         self.config.metrics_of_this_checkpoint['max_adv_tr_test_f1'] = test_adv_tr_f1
 
                         if test_label_acc > max_label_fold_acc or test_label_acc > max_label_fold_f1 \
-                            or test_adv_det_acc > max_adv_det_fold_acc or test_adv_det_f1 > max_adv_det_fold_f1 \
-                            or test_adv_tr_acc > max_adv_tr_fold_acc or test_adv_tr_f1 > max_adv_tr_fold_f1:
+                                or test_adv_det_acc > max_adv_det_fold_acc or test_adv_det_f1 > max_adv_det_fold_f1 \
+                                or test_adv_tr_acc > max_adv_tr_fold_acc or test_adv_tr_f1 > max_adv_tr_fold_f1:
 
                             if test_label_acc > max_label_fold_acc:
                                 patience = self.config.patience
@@ -294,16 +303,17 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                                         # logger.info('Can not remove sub-configimal trained model:', save_path)
                                         pass
                                 save_path = '{0}/{1}_{2}_cls_acc_{3}_cls_f1_{4}_adv_det_acc_{5}_adv_det_f1_{6}' \
-                                            '_adv_training_acc_{7}_adv_training_f1_{8}/'.format(self.config.model_path_to_save,
-                                                                                                self.config.model_name,
-                                                                                                self.config.dataset_name,
-                                                                                                round(test_label_acc * 100, 2),
-                                                                                                round(test_label_f1 * 100, 2),
-                                                                                                round(test_adv_det_acc * 100, 2),
-                                                                                                round(test_adv_det_f1 * 100, 2),
-                                                                                                round(test_adv_tr_acc * 100, 2),
-                                                                                                round(test_adv_tr_f1 * 100, 2),
-                                                                                                )
+                                            '_adv_training_acc_{7}_adv_training_f1_{8}/'.format(
+                                    self.config.model_path_to_save,
+                                    self.config.model_name,
+                                    self.config.dataset_name,
+                                    round(test_label_acc * 100, 2),
+                                    round(test_label_f1 * 100, 2),
+                                    round(test_adv_det_acc * 100, 2),
+                                    round(test_adv_det_f1 * 100, 2),
+                                    round(test_adv_tr_acc * 100, 2),
+                                    round(test_adv_tr_f1 * 100, 2),
+                                    )
 
                                 if test_label_acc > self.config.max_test_metrics['max_cls_test_acc']:
                                     self.config.max_test_metrics['max_cls_test_acc'] = test_label_acc
@@ -335,7 +345,9 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                     else:
                         if self.config.save_mode and epoch >= self.config.evaluate_begin:
                             save_model(self.config, self.model, self.tokenizer, save_path + '_{}/'.format(loss.item()))
-                        postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8), self.config.evaluate_begin)
+                        postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch,
+                                                                                             round(loss.item(), 8),
+                                                                                             self.config.evaluate_begin)
 
                     iterator.postfix = postfix
                     iterator.refresh()
@@ -410,10 +422,12 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                 t_adv_det_targets = t_sample_batched['is_adv'].to(self.config.device)
 
                 t_outputs = self.model(t_inputs)
-                sent_logits, advdet_logits, adv_tr_logits = t_outputs['sent_logits'], t_outputs['advdet_logits'], t_outputs['adv_tr_logits']
+                sent_logits, advdet_logits, adv_tr_logits = t_outputs['sent_logits'], t_outputs['advdet_logits'], \
+                t_outputs['adv_tr_logits']
 
                 # --------------------------------------------------------------------------------------------#
-                valid_label_targets = torch.tensor([x for x in t_label_targets.cpu() if x != -100]).to(self.config.device)
+                valid_label_targets = torch.tensor([x for x in t_label_targets.cpu() if x != -100]).to(
+                    self.config.device)
                 if any(valid_label_targets):
                     valid_label_logit_ids = [True if x != -100 else False for x in t_label_targets.cpu()]
                     valid_label_logits = sent_logits[valid_label_logit_ids]
@@ -440,12 +454,14 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                     t_adv_det_outputs_all = torch.cat((t_adv_det_outputs_all, advdet_logits), dim=0)
 
                 # --------------------------------------------------------------------------------------------#
-                valid_adv_tr_targets = torch.tensor([x for x in t_adv_tr_targets.cpu() if x != -100]).to(self.config.device)
+                valid_adv_tr_targets = torch.tensor([x for x in t_adv_tr_targets.cpu() if x != -100]).to(
+                    self.config.device)
                 if any(t_adv_tr_targets):
                     valid_adv_tr_logit_ids = [True if x != -100 else False for x in t_adv_tr_targets.cpu()]
                     valid_adv_tr_logits = adv_tr_logits[valid_adv_tr_logit_ids]
 
-                    n_adv_tr_test_correct += (torch.argmax(valid_adv_tr_logits, -1) == valid_adv_tr_targets).sum().item()
+                    n_adv_tr_test_correct += (
+                                torch.argmax(valid_adv_tr_logits, -1) == valid_adv_tr_targets).sum().item()
                     n_adv_tr_test_total += len(valid_adv_tr_logits)
 
                     if t_adv_tr_targets_all is None:
@@ -462,7 +478,8 @@ class TADTrainingInstructor(BaseTrainingInstructor):
             fprint('\n---------------------------- Standard Classification Report ----------------------------\n')
             fprint(
                 metrics.classification_report(t_label_targets_all.cpu(), torch.argmax(t_label_outputs_all.cpu(), -1),
-                                              target_names=[self.config.index_to_label[x] for x in self.config.index_to_label]))
+                                              target_names=[self.config.index_to_label[x] for x in
+                                                            self.config.index_to_label]))
             fprint('\n---------------------------- Standard Classification Report ----------------------------\n')
 
         adv_det_test_acc = n_adv_det_test_correct / n_adv_det_test_total

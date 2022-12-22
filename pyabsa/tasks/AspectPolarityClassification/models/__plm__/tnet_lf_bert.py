@@ -46,8 +46,10 @@ class TNet_LF_BERT_Unit(nn.Module):
         C = config.output_dim  # 分类数目
         L = config.max_seq_len
         HD = config.hidden_dim
-        self.lstm1 = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True, bidirectional=True)
-        self.lstm2 = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True, bidirectional=True)
+        self.lstm1 = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True,
+                                 bidirectional=True)
+        self.lstm2 = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True,
+                                 bidirectional=True)
         self.convs3 = nn.Conv1d(2 * HD, 50, 3, padding=1)
         self.fc1 = nn.Linear(4 * HD, 2 * HD)
         self.fc = nn.Linear(50, C)
@@ -108,9 +110,11 @@ class TNet_LF_BERT(nn.Module):
         res = {'logits': None}
         if self.config.lsa:
             cat_feat = torch.cat(
-                (self.asgcn_left([inputs['text_indices'], inputs['left_aspect_indices'], inputs['left_aspect_boundary']]),
+                (self.asgcn_left(
+                    [inputs['text_indices'], inputs['left_aspect_indices'], inputs['left_aspect_boundary']]),
                  self.asgcn_central([inputs['text_indices'], inputs['aspect_indices'], inputs['aspect_boundary']]),
-                 self.asgcn_right([inputs['text_indices'], inputs['right_aspect_indices'], inputs['right_aspect_boundary']])),
+                 self.asgcn_right(
+                     [inputs['text_indices'], inputs['right_aspect_indices'], inputs['right_aspect_boundary']])),
                 -1)
             cat_feat = self.dropout(cat_feat)
             res['logits'] = self.linear(cat_feat)

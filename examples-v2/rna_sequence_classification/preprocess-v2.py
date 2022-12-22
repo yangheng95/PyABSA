@@ -76,22 +76,28 @@ def preprocess_rna():
     negative_rna_name_list = dict()
     for line in positive_data:
         if line.split('\t')[0].strip() not in positive_rna_name_list:
-            positive_rna_name_list[line.split('\t')[0].strip()] = [(line.split('\t')[-1].strip(), line.split('\t')[2].strip(), '1')]
+            positive_rna_name_list[line.split('\t')[0].strip()] = [
+                (line.split('\t')[-1].strip(), line.split('\t')[2].strip(), '1')]
         else:
-            positive_rna_name_list[line.split('\t')[0].strip()].append((line.split('\t')[-1].strip(), line.split('\t')[2].strip(), '1'))
+            positive_rna_name_list[line.split('\t')[0].strip()].append(
+                (line.split('\t')[-1].strip(), line.split('\t')[2].strip(), '1'))
 
     for line in negative_data:
         if line.split('\t')[0].strip() not in negative_rna_name_list:
-            negative_rna_name_list[line.split('\t')[0].strip()] = [(line.split('\t')[-1].strip(), line.split('\t')[2].strip(), '0')]
+            negative_rna_name_list[line.split('\t')[0].strip()] = [
+                (line.split('\t')[-1].strip(), line.split('\t')[2].strip(), '0')]
         else:
-            negative_rna_name_list[line.split('\t')[0].strip()].append((line.split('\t')[-1].strip(), line.split('\t')[2].strip(), '0'))
+            negative_rna_name_list[line.split('\t')[0].strip()].append(
+                (line.split('\t')[-1].strip(), line.split('\t')[2].strip(), '0'))
 
     positive_train_names = list(positive_rna_name_list.keys())[:int(len(positive_rna_name_list) * 0.8)]
-    positive_test_names = list(positive_rna_name_list.keys())[int(len(positive_rna_name_list) * 0.8):int(len(positive_rna_name_list) * 0.9)]
+    positive_test_names = list(positive_rna_name_list.keys())[
+                          int(len(positive_rna_name_list) * 0.8):int(len(positive_rna_name_list) * 0.9)]
     positive_valid_names = list(positive_rna_name_list.keys())[int(len(positive_rna_name_list) * 0.9):]
 
     negative_train_names = list(negative_rna_name_list.keys())[:int(len(negative_rna_name_list) * 0.8)]
-    negative_test_names = list(negative_rna_name_list.keys())[int(len(negative_rna_name_list) * 0.8):int(len(negative_rna_name_list) * 0.9)]
+    negative_test_names = list(negative_rna_name_list.keys())[
+                          int(len(negative_rna_name_list) * 0.8):int(len(negative_rna_name_list) * 0.9)]
     negative_valid_names = list(negative_rna_name_list.keys())[int(len(negative_rna_name_list) * 0.9):]
 
     with open('integrated_datasets/rnac_datasets/degrad-v2/degrad-v2.train.dat.rnac', 'w') as f:

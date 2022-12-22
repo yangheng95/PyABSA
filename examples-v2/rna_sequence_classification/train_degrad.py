@@ -32,11 +32,13 @@ else:
         negative_rna_name_list.add(line.split('\t')[0].strip())
 
     positive_train_names = list(positive_rna_name_list)[:int(len(positive_rna_name_list) * 0.8)]
-    positive_test_names = list(positive_rna_name_list)[int(len(positive_rna_name_list) * 0.8):int(len(positive_rna_name_list) * 0.9)]
+    positive_test_names = list(positive_rna_name_list)[
+                          int(len(positive_rna_name_list) * 0.8):int(len(positive_rna_name_list) * 0.9)]
     positive_valid_names = list(positive_rna_name_list)[int(len(positive_rna_name_list) * 0.9):]
 
     negative_train_names = list(negative_rna_name_list)[:int(len(negative_rna_name_list) * 0.8)]
-    negative_test_names = list(negative_rna_name_list)[int(len(negative_rna_name_list) * 0.8):int(len(negative_rna_name_list) * 0.9)]
+    negative_test_names = list(negative_rna_name_list)[
+                          int(len(negative_rna_name_list) * 0.8):int(len(negative_rna_name_list) * 0.9)]
     negative_valid_names = list(negative_rna_name_list)[int(len(negative_rna_name_list) * 0.9):]
 
     from pyabsa import DatasetDict

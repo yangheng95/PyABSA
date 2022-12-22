@@ -39,12 +39,14 @@ def parse_sample(text):
         aspects = re.findall(r"\[B\-ASP\](.*?)\[E\-ASP\]", text)
 
         for i, aspect in enumerate(aspects):
-            sample = text.replace(f'[B-ASP]{aspect}[E-ASP]', f'[TEMP]{aspect}[TEMP]', 1).replace('[B-ASP]', '').replace('[E-ASP]', '')
+            sample = text.replace(f'[B-ASP]{aspect}[E-ASP]', f'[TEMP]{aspect}[TEMP]', 1).replace('[B-ASP]', '').replace(
+                '[E-ASP]', '')
             if len(aspects) == len(ref_sent):
                 sample += f'$LABEL${ref_sent[i]}'
                 samples.append(sample.replace('[TEMP]', '[ASP]'))
             else:
-                fprint(f'Warning: aspect number {len(aspects)} not equal to reference sentiment number {len(ref_sent)}, text: {_text}')
+                fprint(
+                    f'Warning: aspect number {len(aspects)} not equal to reference sentiment number {len(ref_sent)}, text: {_text}')
                 samples.append(sample.replace('[TEMP]', '[ASP]'))
 
     else:
@@ -128,7 +130,8 @@ class ABSAInferenceDataset(Dataset):
                 text_right = text_right.replace(' [PADDING]', '')
                 text = text_left + ' ' + aspect + ' ' + text_right
 
-                prepared_inputs = prepare_input_for_apc(self.config, self.tokenizer, text_left, text_right, aspect, input_demands=self.config.inputs_cols)
+                prepared_inputs = prepare_input_for_apc(self.config, self.tokenizer, text_left, text_right, aspect,
+                                                        input_demands=self.config.inputs_cols)
 
                 text_raw = prepared_inputs['text_raw']
                 aspect = prepared_inputs['aspect']
@@ -147,9 +150,12 @@ class ABSAInferenceDataset(Dataset):
 
                 if self.config.model_name == 'dlcf_dca_bert' or self.config.model_name == 'dlcfs_dca_bert':
                     configure_dlcf_spacy_model(self.config)
-                    prepared_inputs = prepare_input_for_dlcf_dca(self.config, self.tokenizer, text_left, text_right, aspect)
-                    dlcf_vec = prepared_inputs['dlcf_cdm_vec'] if self.config.lcf == 'cdm' else prepared_inputs['dlcf_cdw_vec']
-                    dlcfs_vec = prepared_inputs['dlcfs_cdm_vec'] if self.config.lcf == 'cdm' else prepared_inputs['dlcfs_cdw_vec']
+                    prepared_inputs = prepare_input_for_dlcf_dca(self.config, self.tokenizer, text_left, text_right,
+                                                                 aspect)
+                    dlcf_vec = prepared_inputs['dlcf_cdm_vec'] if self.config.lcf == 'cdm' else prepared_inputs[
+                        'dlcf_cdw_vec']
+                    dlcfs_vec = prepared_inputs['dlcfs_cdm_vec'] if self.config.lcf == 'cdm' else prepared_inputs[
+                        'dlcfs_cdw_vec']
                     depend_vec = prepared_inputs['depend_vec']
                     depended_vec = prepared_inputs['depended_vec']
                 data = {
@@ -161,7 +167,8 @@ class ABSAInferenceDataset(Dataset):
 
                     'aspect_position': aspect_position,
 
-                    'lca_ids': lcf_vec,  # the lca indices are the same as the refactored CDM (lcf != CDW or Fusion) lcf vec
+                    'lca_ids': lcf_vec,
+                    # the lca indices are the same as the refactored CDM (lcf != CDW or Fusion) lcf vec
 
                     'lcf_vec': lcf_vec if 'lcf_vec' in self.config.inputs_cols else 0,
                     'lcf_cdw_vec': lcf_cdw_vec if 'lcf_cdw_vec' in self.config.inputs_cols else 0,
@@ -201,17 +208,21 @@ class ABSAInferenceDataset(Dataset):
                 if ignore_error:
                     fprint('Ignore error while processing: {} Error info:{}'.format(text, e))
                 else:
-                    raise RuntimeError('Ignore error while processing: {} Catch Exception: {}, use ignore_error=True to remove error samples.'.format(text, e))
+                    raise RuntimeError(
+                        'Ignore error while processing: {} Catch Exception: {}, use ignore_error=True to remove error samples.'.format(
+                            text, e))
 
-        all_data = build_sentiment_window(all_data, self.tokenizer, self.config.similarity_threshold, input_demands=self.config.inputs_cols)
+        all_data = build_sentiment_window(all_data, self.tokenizer, self.config.similarity_threshold,
+                                          input_demands=self.config.inputs_cols)
         for data in all_data:
 
             cluster_ids = []
             for pad_idx in range(self.config.max_seq_len):
                 if pad_idx in data['cluster_ids']:
                     # fprint(data['polarity'])
-                    cluster_ids.append(self.config.label_to_index.get(self.config.index_to_label.get(data['polarity'], 'N.A.'),
-                                                                      LabelPaddingOption.SENTIMENT_PADDING))
+                    cluster_ids.append(
+                        self.config.label_to_index.get(self.config.index_to_label.get(data['polarity'], 'N.A.'),
+                                                       LabelPaddingOption.SENTIMENT_PADDING))
                 else:
                     cluster_ids.append(-100)
                     # cluster_ids.append(3)

@@ -66,8 +66,10 @@ class MGAN_BERT(nn.Module):
         super(MGAN_BERT, self).__init__()
         self.config = config
         self.embed = bert
-        self.ctx_lstm = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True, bidirectional=True)
-        self.asp_lstm = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True, bidirectional=True)
+        self.ctx_lstm = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True,
+                                    bidirectional=True)
+        self.asp_lstm = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True,
+                                    bidirectional=True)
         self.location = LocationEncoding(config)
         self.w_a2c = nn.Parameter(torch.Tensor(2 * config.hidden_dim, 2 * config.hidden_dim))
         self.w_c2a = nn.Parameter(torch.Tensor(2 * config.hidden_dim, 2 * config.hidden_dim))
