@@ -25,3 +25,4 @@ transformers
 sqlitedict
 stanza
 Cython
+pyabsa

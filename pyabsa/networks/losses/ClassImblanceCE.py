@@ -6,6 +6,8 @@
 # huggingface: https://huggingface.co/yangheng
 # google scholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # Copyright (C) 2021. All Rights Reserved.
+import numpy as np
+import torch
 from torch import nn
 
 
@@ -23,8 +25,8 @@ class ClassBalanceCrossEntropyLoss(nn.Module):
         beta(float, double) : hyper-parameter for class balanced loss to control the cost-sensitive weights.
     """
 
-    def __init__(self, para_dict=None):
-        super(ClassBalanceCE, self).__init__(para_dict)
+    def __init__(self):
+        super(ClassBalanceCrossEntropyLoss, self).__init__()
         self.beta = self.para_dict['cfg'].LOSS.ClassBalanceCE.BETA
         self.class_balanced_weight = np.array([(1 - self.beta) / (1 - self.beta ** N) for N in self.num_class_list])
         self.class_balanced_weight = torch.FloatTensor(

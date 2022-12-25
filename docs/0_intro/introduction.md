@@ -14,6 +14,11 @@
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/back-to-reality-leveraging-pattern-driven/aspect-based-sentiment-analysis-on-semeval)](https://paperswithcode.com/sota/aspect-based-sentiment-analysis-on-semeval?p=back-to-reality-leveraging-pattern-driven)
 
 ## Introduction
+This documentation is for PyABSA, a Python library for Aspect-Based Sentiment Analysis.
+This library is developed by Heng Yang, a PhD student at the University of Exeter, UK.
+This document is pending for elaboration.
+
+## Features
 This repository provides the same training and evaluation methods and prediction codes for various aspects of sentiment analysis tasks. PyABSA is designed to simplify the ABSC utility process and accelerate research.
 PyABSA also provides visualization of evaluation metrics to better understand the performance of the model.
 The framework provides, but is not limited to, the following features.

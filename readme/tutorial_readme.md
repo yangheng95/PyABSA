@@ -18,7 +18,7 @@
 
 ## Demos of APC and ATEPC
 
-## Here are tutorials: [APC](https://github.com/yangheng95/PyABSA/blob/v2.0.0/examples-v2/aspect_polarity_classification/Aspect_Sentiment_Classification.ipynb) and [ATEPC](https://github.com/yangheng95/PyABSA/blob/v2.0.0/examples-v2/aspect_term_extraction/Aspect_Term_Extractor.ipynb)
+## Here are tutorials: [APC](https://github.com/yangheng95/PyABSA/blob/v2/examples-v2/aspect_polarity_classification/Aspect_Sentiment_Classification.ipynb) and [ATEPC](https://github.com/yangheng95/PyABSA/blob/v2/examples-v2/aspect_term_extraction/Aspect_Term_Extractor.ipynb)
 
 We also provide enough demos to help you use PyABSA, these demos can be found
 in [aspect-based sentiment classification](../examples-v2/aspect_polarity_classification),
