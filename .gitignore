@@ -30,7 +30,9 @@ experiments/
 tests/
 *.result.json
 .idea/
+# special project files
 JIC/
+CPDP/
 # Embedding
 glove.840B.300d.txt
 glove.42B.300d.txt

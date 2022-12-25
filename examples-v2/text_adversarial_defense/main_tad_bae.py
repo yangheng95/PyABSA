@@ -151,7 +151,7 @@ def adversarial_attack_detection_and_defense(dataset, attack_recipe):
                 result = sent_attacker.attacker.simple_attack(text, label)
                 if isinstance(result, SuccessfulAttackResult):
                     infer_res = tad_classifier.predict(
-                        result.perturbed_result.attacked_text.text + '!ref!{},{},{}'.format(
+                        result.perturbed_result.attacked_text.text + '$LABEL${},{},{}'.format(
                             result.original_result.ground_truth_output, 1, result.perturbed_result.output),
                         print_result=False,
                         defense='pwws'
@@ -168,7 +168,7 @@ def adversarial_attack_detection_and_defense(dataset, attack_recipe):
                     pass
                 else:
                     infer_res = tad_classifier.predict(
-                        result.original_result.attacked_text.text + '!ref!{},{},{}'.format(
+                        result.original_result.attacked_text.text + '$LABEL${},{},{}'.format(
                             result.original_result.ground_truth_output, 1, result.perturbed_result.output),
                         print_result=False,
                     )

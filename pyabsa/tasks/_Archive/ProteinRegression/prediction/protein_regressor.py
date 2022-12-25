@@ -162,7 +162,7 @@ class ProteinRegressor(InferenceModel):
         """
         self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
 
-        save_path = os.path.join(os.getcwd(), 'protein_regression.result.json')
+        save_path = os.path.join(os.getcwd(), '{}.{}.result.json'.format(self.config.task_name, self.config.model.__name__))
 
         target_file = detect_infer_dataset(target_file, task_code=TaskCodeOption.ProteinSequenceRegression)
         if not target_file:

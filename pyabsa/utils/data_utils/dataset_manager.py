@@ -25,7 +25,7 @@ from pyabsa.utils.check_utils.dataset_version_check import check_datasets_versio
 from pyabsa.utils.data_utils.dataset_item import DatasetItem
 from pyabsa.utils.pyabsa_utils import fprint
 
-filter_key_words = ['.py', '.md', 'readme', 'log', 'result', 'zip',
+filter_key_words = ['.py', '.md', 'readme', '.log', 'result', '.zip',
                     '.state_dict', '.model', '.png', 'acc_', 'f1_', '.backup', '.bak']
 
 

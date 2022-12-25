@@ -141,7 +141,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                 self.train_dataloader) * self.config.num_epoch)
             self.warmup_scheduler = warmup.UntunedLinearWarmup(self.optimizer)
 
-        self.logger.info("***** Running trainer for Aspect Term Extraction *****")
+        self.logger.info("***** Running training for {} *****".format(self.config.task_name))
         self.logger.info("  Num examples = %d", len(self.train_set))
         self.logger.info("  Batch size = %d", self.config.batch_size)
         self.logger.info("  Num steps = %d", self.num_train_optimization_steps)

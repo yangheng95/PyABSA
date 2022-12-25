@@ -188,7 +188,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
         self.config.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
         self.config.max_test_metrics = {'max_test_acc': 0, 'max_test_f1': 0}
 
-        self.logger.info("***** Running trainer for Text Classification *****")
+        self.logger.info("***** Running training for {} *****".format(self.config.task_name))
         self.logger.info("Training set examples = %d", len(self.train_set))
         if self.test_set:
             self.logger.info("Test set examples = %d", len(self.test_set))
@@ -351,7 +351,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                 self.config.log_step = len(
                     self.train_dataloaders[0]) if self.config.log_step < 0 else self.config.log_step
 
-            self.logger.info("***** Running trainer for Text Classification *****")
+            self.logger.info("***** Running training for {} *****".format(self.config.task_name))
             self.logger.info("Training set examples = %d", len(self.train_set))
             if self.test_set:
                 self.logger.info("Test set examples = %d", len(self.test_set))

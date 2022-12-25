@@ -51,8 +51,8 @@ class GloVeTADInferenceDataset(Dataset):
                 if text is None or '' == text.strip():
                     raise RuntimeError('Invalid Input!')
 
-                if '!ref!' in text:
-                    text, _, labels = text.strip().partition('!ref!')
+                if '$LABEL$' in text:
+                    text, _, labels = text.strip().partition('$LABEL$')
                     text = text.strip()
                     if labels.count(',') == 2:
                         label, is_adv, adv_train_label = labels.strip().split(',')

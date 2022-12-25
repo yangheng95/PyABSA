@@ -74,7 +74,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
         if self.config.log_step < 0:
             self.config.log_step = len(self.train_dataloaders[0]) if self.config.log_step < 0 else self.config.log_step
 
-        self.logger.info("***** Running trainer for Aspect Polarity Classification *****")
+        self.logger.info("***** Running training for {} *****".format(self.config.task_name))
         self.logger.info("Training set examples = %d", len(self.train_set))
         if self.test_set:
             self.logger.info("Test set examples = %d", len(self.test_set))
@@ -258,7 +258,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                 self.config.log_step = len(
                     self.train_dataloaders[0]) if self.config.log_step < 0 else self.config.log_step
 
-            self.logger.info("***** Running trainer for Aspect Polarity Classification *****")
+            self.logger.info("***** Running training for {} *****".format(self.config.task_name))
             self.logger.info("Training set examples = %d", len(self.train_set))
             if self.test_set:
                 self.logger.info("Test set examples = %d", len(self.test_set))

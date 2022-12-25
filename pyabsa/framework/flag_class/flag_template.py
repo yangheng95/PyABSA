@@ -24,6 +24,7 @@ class TaskNameOption(dict):
         'RNAC': 'RNA Sequence Classification',
         'RNAR': 'RNA Sequence Regression',
         'PR': 'Protein Sequence Regression',
+        'CDD': 'Code Defect Detection',
     }
 
     def __init__(self):
@@ -42,6 +43,7 @@ class TaskCodeOption:
     RNASequenceClassification = 'RNAC'
     RNASequenceRegression = 'RNAR'
     ProteinSequenceRegression = 'PR'
+    CodeDefectDetection = 'CDD'
 
 
 class LabelPaddingOption:

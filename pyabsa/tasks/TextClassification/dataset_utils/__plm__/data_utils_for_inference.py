@@ -51,8 +51,8 @@ class BERTTCInferenceDataset(Dataset):
                 if text is None or '' == text.strip():
                     raise RuntimeError('Invalid Input!')
 
-                if '!ref!' in text:
-                    text, _, label = text.strip().partition('!ref!')
+                if '$LABEL$' in text:
+                    text, _, label = text.strip().partition('$LABEL$')
                     label = label.strip()
                     text = text.strip().lower()
 

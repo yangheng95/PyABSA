@@ -188,20 +188,7 @@ many ways, including:
   hyper-parameters)
 - Star this repository to keep it active
 
-## Citation
 
-```bibtex
-@misc{YangL2022,
-    title = {PyABSA: Open Framework for Aspect-based Sentiment Analysis},
-    author = {Yang, Heng and Li, Ke},
-    doi = {10.48550/ARXIV.2208.01368},
-    url = {https://arxiv.org/abs/2208.01368},
-    keywords = {Computation and Language (cs.CL), FOS: Computer and information sciences, FOS: Computer and information sciences},
-    publisher = {arXiv},
-    year = {2022},
-    copyright = {arXiv.org perpetual, non-exclusive license}
-}
-```
 
 ## License
 
