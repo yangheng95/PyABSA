@@ -1,6 +1,4 @@
-﻿Text Auto-augmentation for Classification
-=========================================
-## Aspect-based Sentiment Classification
+﻿### Aspect-based Sentiment Classification
 
 ```python3
 import random

@@ -1,7 +1,7 @@
 ﻿Aspect Term Extraction and Classification
 -----------------------------------------
 
-## Inference
+### Inference
 
 ```python3
 from pyabsa import AspectTermExtraction as ATEPC
@@ -26,7 +26,7 @@ print(atepc_result)
 
 ```
 
-## Train a model of aspect term extraction
+### Train a model of aspect term extraction
 
 
 ```python3

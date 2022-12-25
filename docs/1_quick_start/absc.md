@@ -1,7 +1,7 @@
 ﻿Aspect-based Sentiment Classification
 -------------------------------------
 
-## Inference with ABSC checkpoints
+### Inference with ABSC checkpoints
 
 from pyabsa import AspectPolarityClassification as APC
 
@@ -39,7 +39,7 @@ sent_classifier.destroy()
 
 ```
 
-## Train your own ABSC model
+### Train your own ABSC model
 
 ```python3
 import random

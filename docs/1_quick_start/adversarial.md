@@ -1,7 +1,7 @@
 ﻿Adversarial Defense for Text Classification
 ===========================================
 
-## Inference with adversarial defense
+### Inference with adversarial defense
 
 ```python3
 from pyabsa import TextAdversarialDefense as TAD
@@ -14,7 +14,7 @@ classifier.predict(text, defense='pwws')
 
 ```
 
-## Demo for adversarial defense
+### Demo for adversarial defense
 
 ```python3
 import os

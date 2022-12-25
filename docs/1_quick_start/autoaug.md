@@ -1,6 +1,6 @@
 ﻿Text Auto-augmentation for Classification
 =========================================
-## Aspect-based Sentiment Classification
+### Aspect-based Sentiment Classification
 
 ```python3
 import random
@@ -44,7 +44,7 @@ for dataset in [
 ```
 
 
-## Text Classification
+### Text Classification
 
 ```python3
 from pyabsa.augmentation import auto_classification_augmentation

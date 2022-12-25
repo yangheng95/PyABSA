@@ -77,6 +77,13 @@ PyABSA Documentation
 
 .. toctree::
    :maxdepth: 6
-   :caption: API Reference
+   :caption:
 
     apidoc <apidoc/index>
+
+API Reference
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

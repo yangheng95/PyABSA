@@ -1,6 +1,4 @@
-﻿Text Auto-augmentation for Classification
-=========================================
-## Text Classification
+﻿### Text Classification
 
 ```python3
 from pyabsa.augmentation import auto_classification_augmentation

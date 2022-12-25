@@ -1,6 +1,6 @@
 ﻿BPE Tokenizer and Word2Vec Training
 ======================
-## BPE Tokenizer Training
+### BPE Tokenizer Training
 If your text cannot be tokenized by the whitespace tokenizer, you can train a BPE tokenizer by yourself.
 ```python3
 import findfile
