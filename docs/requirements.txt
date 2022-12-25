@@ -41,3 +41,4 @@ gitpython
 transformers
 torch
 sentencepiece
+pyabsa
