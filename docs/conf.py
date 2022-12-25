@@ -62,11 +62,7 @@ autodoc_mock_imports = []
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = "PyABASA_documentation"
-html_theme_options = {
-    "logo_only": False,
-    "style_nav_header_background": "transparent",
-    "analytics_id": "UA-88637452-2",
-}
+
 
 # -- Options for HTML output -------------------------------------------------
 

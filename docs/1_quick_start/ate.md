@@ -2,7 +2,7 @@
 ----------------------
 
 
-## Inference Example of aspect term extraction
+### Inference Example of aspect term extraction
 
 ```python3
 from pyabsa import AspectTermExtraction as ATEPC

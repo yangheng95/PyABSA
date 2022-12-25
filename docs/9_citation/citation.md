@@ -23,7 +23,7 @@ It is now an open source framework that supports a variety of tasks.
 PyABSA currently contains model implementations of the following papers, 
 If you use any of the following papers, please cite them.
 
-## Aspect sentiment polarity classification models
+### Aspect sentiment polarity classification models
 1. [Back to Reality: Leveraging Pattern-driven Modeling to Enable Affordable Sentiment Dependency Learning](https://arxiv.org/abs/2110.08604) (
    e.g., Fast-LSA, 2020)
 2. [Learning for target-dependent sentiment based on local context-aware embedding](https://link.springer.com/article/10.1007/s11227-021-04047-1) (
@@ -33,7 +33,7 @@ If you use any of the following papers, please cite them.
 
 
 
-## Aspect sentiment polarity classification & Aspect term extraction models
+### Aspect sentiment polarity classification & Aspect term extraction models
 
 1. [A multi-task learning model for Chinese-oriented aspect polarity classification and aspect term extraction](https://www.sciencedirect.com/science/article/pii/S0925231220312534)] (
    e.g., Fast-LCF-ATEPC, 2020)

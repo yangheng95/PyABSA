@@ -1,7 +1,7 @@
 ﻿PyABSA Configurations
 =====================
 
-## Introduction
+### Introduction
 PyABSA provides a set of configurations to customize the behavior of PyABSA. 
 You can customize the configurations by modifying the configuration object.
 A configuration object is a Namespace object that contains a set of attributes.
@@ -20,7 +20,7 @@ print(config.attribute_name)
 ```
 You can set any variable in the configuration object as long as it is a valid Python variable name.
 
-## Default Configurations
+### Default Configurations
 
 ```python3
 
