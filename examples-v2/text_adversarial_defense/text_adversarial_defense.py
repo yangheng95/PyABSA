@@ -248,7 +248,7 @@ def generate_adversarial_example(dataset, attacker, text=None, label=None):
                 attack_result.original_result.output == attack_result.original_result.ground_truth_output):
             # with defense
             result = tad_classifiers['tad-{}'.format(dataset.lower())].infer(
-                attack_result.perturbed_result.attacked_text.text + '!ref!{},{},{}'.format(
+                attack_result.perturbed_result.attacked_text.text + '$LABEL${},{},{}'.format(
                     attack_result.original_result.ground_truth_output, 1, attack_result.perturbed_result.output),
                 print_result=True,
                 defense='pwws',

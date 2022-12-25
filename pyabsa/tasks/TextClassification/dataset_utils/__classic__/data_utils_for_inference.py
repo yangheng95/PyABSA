@@ -52,8 +52,8 @@ class GloVeTCInferenceDataset(Dataset):
                 if text is None or '' == text.strip():
                     raise RuntimeError('Invalid Input!')
 
-                if '!ref!' in text:
-                    text, label = text.split('!ref!')[0].strip(), text.split('!ref!')[1].strip()
+                if '$LABEL$' in text:
+                    text, label = text.split('$LABEL$')[0].strip(), text.split('$LABEL$')[1].strip()
                     text = text.replace('[PADDING]', '')
                 else:
                     label = LabelPaddingOption.LABEL_PADDING

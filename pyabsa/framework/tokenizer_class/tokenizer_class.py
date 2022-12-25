@@ -133,13 +133,8 @@ class PretrainedTokenizer:
         self.sep_token_id = self.tokenizer.sep_token_id
         self.mask_token_id = self.tokenizer.mask_token_id
 
-    def text_to_sequence(self, text, padding='max_length', return_tensors=None, **kwargs):
-        return self.tokenizer.encode(text,
-                                     truncation=True,
-                                     padding=padding,
-                                     max_length=self.max_seq_len,
-                                     return_tensors=return_tensors,
-                                     **kwargs)
+    def text_to_sequence(self, text, **kwargs):
+        return self.tokenizer.encode(text, **kwargs)
 
     def sequence_to_text(self, sequence, **kwargs):
         return self.tokenizer.decode(sequence, **kwargs)

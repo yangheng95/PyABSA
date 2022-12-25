@@ -11,11 +11,11 @@ from transformers.models.bert.modeling_bert import BertPooler
 class BERT_MLP(nn.Module):
     inputs = ['text_indices']
 
-    def __init__(self, bert, opt):
+    def __init__(self, bert, config):
         super(BERT_MLP, self).__init__()
         self.bert = bert
         self.pooler = BertPooler(bert.config)
-        self.dense = nn.Linear(opt.hidden_dim, opt.output_dim)
+        self.dense = nn.Linear(config.hidden_dim, config.output_dim)
 
     def forward(self, inputs):
         text_raw_indices = inputs[0]

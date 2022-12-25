@@ -1,6 +1,9 @@
 {
+  "2.0.20": {
+    "1": "Fix the VoteEnsemblePredictor"
+  },
   "2.0.19": {
-    "1": "Add VoteEnsemblePredictor to support voting ensemble prediction, see "
+    "1": "Add VoteEnsemblePredictor to support voting ensemble prediction, see https://github.com/yangheng95/PyABSA/blob/v2/examples-v2/ensemble_inference.py"
   },
   "2.0.18": {
     "1": "Default to disable torch.compile(), set config.use_torch_compile=True to enabled to enable",

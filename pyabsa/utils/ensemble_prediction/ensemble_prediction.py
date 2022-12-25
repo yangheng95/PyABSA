@@ -16,8 +16,7 @@ class VoteEnsemblePredictor:
                  predictors: [List, dict],
                  weights: [List, dict] = None,
                  numeric_agg='average',
-                 str_agg='max_vote',
-                 **kwargs):
+                 str_agg='max_vote'):
         """
 
         :param predictors: list of checkpoints, you can pass initialized predictors or pass the checkpoints
@@ -71,12 +70,14 @@ class VoteEnsemblePredictor:
                         ensemble_result[key][i] = self.numeric_agg(v)
                     else:
                         ensemble_result[key] = self.numeric_agg(value)
+                        break
                 except Exception as e:
                     try:
                         if isinstance(ensemble_result[key][i], list):
                             ensemble_result[key][i] = self.str_agg(v)
                         else:
                             ensemble_result[key] = self.str_agg(value)
+                            break
                     except Exception as e:
                         ensemble_result[key] = value
         return ensemble_result

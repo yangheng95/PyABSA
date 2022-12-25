@@ -44,7 +44,7 @@ setup(
                       'termcolor',
                       'gitpython',  # need git installed in your OS
                       'transformers>=4.18.0',
-                      'torch>=1.11.0',
+                      'torch>=1.0.0',
                       'sentencepiece',
                       'protobuf<4.0.0',
                       'pandas',
