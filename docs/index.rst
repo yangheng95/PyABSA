@@ -66,7 +66,7 @@ PyABSA Documentation
    :maxdepth: 6
    :caption: Integrated Datasets
 
-    Customized Datasets <7_datasets/customized_datasets.md>
+    Customized Datasets <8_datasets/customized_datasets.md>
 
 
 .. toctree::
@@ -74,3 +74,9 @@ PyABSA Documentation
    :caption: Citation
 
     Citation <9_citation/citation.md>
+
+.. toctree::
+   :maxdepth: 6
+   :caption: API Reference
+
+    apidoc <apidoc/index>
