@@ -75,15 +75,10 @@ PyABSA Documentation
 
     Citation <9_citation/citation.md>
 
+Contents
+--------
+
 .. toctree::
-   :maxdepth: 6
-   :caption:
 
-    apidoc <apidoc/index>
-
-API Reference
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   usage
+   api
