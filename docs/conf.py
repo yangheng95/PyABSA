@@ -12,6 +12,7 @@
 #
 import os
 import sys
+from pyabsa import __version__ as pyabsa_version
 
 sys.path.insert(0, os.path.abspath("../"))
 
@@ -21,11 +22,10 @@ copyright = "2020, Heng Yang"
 author = "Heng Yang"
 
 # The full version, including alpha/beta/rc tags
-release = "2.0.20"
+release = pyabsa_version
 
 # Set master doc to `index.rst`.
 master_doc = "index"
-
 
 # -- General configuration ---------------------------------------------------
 
@@ -74,6 +74,10 @@ htmlhelp_basename = "PyABASA_documentation"
 #
 
 latex_engine = 'xelatex'
+latex_use_xindy = False
+latex_elements = {
+    'preamble': '\\usepackage[UTF8]{ctex}\n',
+}
 
 html_theme = "sphinx_rtd_theme"
 html_theme_options = {
