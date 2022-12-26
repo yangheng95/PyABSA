@@ -57,16 +57,16 @@ PyABSA Documentation
 
 .. toctree::
    :maxdepth: 6
-   :caption: Supported Tasks
+   :caption: Integrated Datasets
 
-    Supported Tasks <7_supported_tasks/tasks.md>
+    Customized Datasets <7_datasets/customized_datasets.md>
 
 
 .. toctree::
    :maxdepth: 6
-   :caption: Integrated Datasets
+   :caption: Supported Tasks
 
-    Customized Datasets <8_datasets/customized_datasets.md>
+    Supported Tasks <8_supported_tasks/tasks.md>
 
 
 .. toctree::
@@ -80,5 +80,4 @@ Contents
 
 .. toctree::
 
-   usage
-   api
+   PyABSA <autoapi/pyabsa>

@@ -71,4 +71,3 @@ class BERTCDDDataset(PyABSADataset):
 
     def __len__(self):
         return len(self.data)
-

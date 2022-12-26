@@ -240,7 +240,8 @@ class TADTextClassifier(InferenceModel):
         """
         self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
 
-        save_path = os.path.join(os.getcwd(), '{}.{}.result.json'.format(self.config.task_name, self.config.model.__name__))
+        save_path = os.path.join(os.getcwd(),
+                                 '{}.{}.result.json'.format(self.config.task_name, self.config.model.__name__))
 
         target_file = detect_infer_dataset(target_file, task_code=TaskCodeOption.Text_Adversarial_Defense)
         if not target_file:

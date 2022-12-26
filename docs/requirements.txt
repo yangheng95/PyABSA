@@ -1,4 +1,5 @@
 recommonmark
+sphinx-autoapi
 Sphinx
 sphinx-autobuild
 sphinx-copybutton

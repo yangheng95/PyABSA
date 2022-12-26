@@ -252,7 +252,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                         self.config.metrics_of_this_checkpoint['f1'] = f1
 
                         if test_acc > max_fold_acc or f1 > max_fold_f1:
-                        # if test_acc > max_fold_acc:
+                            # if test_acc > max_fold_acc:
 
                             if test_acc > max_fold_acc:
                                 patience = self.config.patience
@@ -425,7 +425,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                             self.config.metrics_of_this_checkpoint['f1'] = f1
 
                             if test_acc > max_fold_acc or f1 > max_fold_f1:
-                            # if test_acc > max_fold_acc:
+                                # if test_acc > max_fold_acc:
 
                                 if test_acc > max_fold_acc:
                                     patience = self.config.patience

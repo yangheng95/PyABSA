@@ -477,7 +477,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                     etas.append(child)
             base_params = filter(lambda p: id(p) not in eta_ids, self.model.models.parameters())
             self.config.eta_lr = self.config.learning_rate * 1000 if 'eta_lr' not in self.config.args else \
-            self.config.args['eta_lr']
+                self.config.args['eta_lr']
             self.optimizer = init_optimizer(self.config.optimizer)(
                 [
                     {'params': base_params},
@@ -485,7 +485,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                 ],
                 lr=self.config.learning_rate,
                 weight_decay=self.config.l2reg,
-    
+
             )
         else:
             self.optimizer = init_optimizer(self.config.optimizer)(
