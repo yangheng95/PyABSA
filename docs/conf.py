@@ -38,6 +38,7 @@ extensions = [
     "sphinx.ext.inheritance_diagram",
     "sphinx.ext.autosummary",
     "sphinx.ext.napoleon",
+    "autoapi.extension",
     "sphinx_rtd_theme",
     "sphinx_copybutton",
     # Enable .ipynb doc files
@@ -48,6 +49,9 @@ extensions = [
     "IPython.sphinxext.ipython_console_highlighting",
 ]
 autosummary_generate = True
+
+autoapi_type = 'python'
+autoapi_dirs = ['../pyabsa']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = []
@@ -63,12 +67,14 @@ autodoc_mock_imports = []
 # Output file base name for HTML help builder.
 htmlhelp_basename = "PyABASA_documentation"
 
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
+
+latex_engine = 'xelatex'
+
 html_theme = "sphinx_rtd_theme"
 html_theme_options = {
     "collapse_navigation": False,

@@ -261,7 +261,8 @@ class AspectExtractor(InferenceModel):
                 results['polarity_res'] = self._run_prediction(results['extraction_res'])
             results = self.merge_result(sentence_res, results)
             if save_result:
-                save_path = os.path.join(os.getcwd(), '{}.{}.result.json'.format(self.config.task_name, self.config.model.__name__))
+                save_path = os.path.join(os.getcwd(),
+                                         '{}.{}.result.json'.format(self.config.task_name, self.config.model.__name__))
                 fprint('The results of aspect term extraction have been saved in {}'.format(save_path))
                 with open(save_path, 'w', encoding="utf8") as f:
                     json.dump(results, f, ensure_ascii=False)

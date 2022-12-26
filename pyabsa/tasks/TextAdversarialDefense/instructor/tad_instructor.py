@@ -226,7 +226,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                     adv_det_targets = sample_batched['is_adv'].to(self.config.device)
 
                     sen_logits, advdet_logits, adv_tr_logits = outputs['sent_logits'], outputs['advdet_logits'], \
-                    outputs['adv_tr_logits']
+                        outputs['adv_tr_logits']
                     sen_loss = criterion(sen_logits, label_targets)
                     adv_det_loss = criterion(advdet_logits, adv_det_targets)
                     adv_train_loss = criterion(adv_tr_logits, adv_tr_targets)
@@ -313,7 +313,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                                     round(test_adv_det_f1 * 100, 2),
                                     round(test_adv_tr_acc * 100, 2),
                                     round(test_adv_tr_f1 * 100, 2),
-                                    )
+                                )
 
                                 if test_label_acc > self.config.max_test_metrics['max_cls_test_acc']:
                                     self.config.max_test_metrics['max_cls_test_acc'] = test_label_acc
@@ -423,7 +423,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
 
                 t_outputs = self.model(t_inputs)
                 sent_logits, advdet_logits, adv_tr_logits = t_outputs['sent_logits'], t_outputs['advdet_logits'], \
-                t_outputs['adv_tr_logits']
+                    t_outputs['adv_tr_logits']
 
                 # --------------------------------------------------------------------------------------------#
                 valid_label_targets = torch.tensor([x for x in t_label_targets.cpu() if x != -100]).to(
@@ -461,7 +461,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                     valid_adv_tr_logits = adv_tr_logits[valid_adv_tr_logit_ids]
 
                     n_adv_tr_test_correct += (
-                                torch.argmax(valid_adv_tr_logits, -1) == valid_adv_tr_targets).sum().item()
+                            torch.argmax(valid_adv_tr_logits, -1) == valid_adv_tr_targets).sum().item()
                     n_adv_tr_test_total += len(valid_adv_tr_logits)
 
                     if t_adv_tr_targets_all is None:

@@ -55,7 +55,7 @@ class BERTRNARDataset(Dataset):
                 line = text.strip().split('\t') if '\t' in text else text.strip().split(',')
                 try:
                     _, label, r1r2_label, r1r3_label, r2r3_label, seq = line[0], line[1], line[2], line[3], line[4], \
-                    line[5]
+                        line[5]
                     label = float(label.strip())
 
                     # r1r2_label = float(r1r2_label.strip())

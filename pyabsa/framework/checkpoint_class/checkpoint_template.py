@@ -29,7 +29,7 @@ class CheckpointManager:
         """
 
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
-        This param is for someone wants to load a checkpoint not registered in PyABSA
+            This param is for someone wants to load a checkpoint not registered in PyABSA
         :param task_code: task code, e.g. apc, atepc, tad, rnac_datasets, rnar, tc, etc.
 
         :return:
@@ -51,8 +51,8 @@ class CheckpointManager:
     def _get_remote_checkpoint(self, checkpoint: str = 'multilingual', task_code: str = None) -> Path:
         """
         download the checkpoint and return the path of the downloaded checkpoint
-        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
-        This param is for someone wants to load a checkpoint not registered in PyABSA
+
+        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive. This param is for someone wants to load a checkpoint not registered in PyABSA
         :return:
         """
 
@@ -78,6 +78,7 @@ class APCCheckpointManager(CheckpointManager):
     def get_sentiment_classifier(checkpoint: Union[str, Path] = None, **kwargs):
         """
         This interface is used for compatibility with previous APIs
+
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried
         """
         from pyabsa.tasks.AspectPolarityClassification import SentimentClassifier
@@ -93,6 +94,7 @@ class ATEPCCheckpointManager(CheckpointManager):
     def get_aspect_extractor(checkpoint: Union[str, Path] = None, **kwargs):
         """
         This interface is used for compatibility with previous APIs
+
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried
         """
         from pyabsa.tasks.AspectTermExtraction import AspectExtractor
@@ -108,6 +110,7 @@ class TADCheckpointManager(CheckpointManager):
     def get_tad_text_classifier(checkpoint: Union[str, Path] = None, **kwargs):
         """
         This interface is used for compatibility with previous APIs
+
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried
         """
         from pyabsa.tasks.TextAdversarialDefense import TADTextClassifier
@@ -123,6 +126,7 @@ class RNACCheckpointManager(CheckpointManager):
     def get_rna_classifier(checkpoint: Union[str, Path] = None, **kwargs):
         """
         This interface is used for compatibility with previous APIs
+
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried
         """
         from pyabsa.tasks.RNAClassification import RNAClassifier
@@ -137,6 +141,7 @@ class RNARCheckpointManager(CheckpointManager):
     def get_rna_regressor(checkpoint: Union[str, Path] = None, **kwargs):
         """
         This interface is used for compatibility with previous APIs
+
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried
         """
         from pyabsa.tasks.RNARegression import RNARegressor
@@ -151,6 +156,7 @@ class TCCheckpointManager(CheckpointManager):
     def get_text_classifier(checkpoint: Union[str, Path] = None, **kwargs):
         """
         This interface is used for compatibility with previous APIs
+
         :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried
         """
         from pyabsa.tasks.TextClassification import TextClassifier

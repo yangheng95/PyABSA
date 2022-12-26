@@ -4,7 +4,8 @@
 # Copyright (C) 2018. All Rights Reserved.
 import torch
 import torch.nn as nn
-from transformers import RobertaModel, T5ForConditionalGeneration, BartForConditionalGeneration, AutoTokenizer
+from transformers import RobertaModel, T5ForConditionalGeneration, BartForConditionalGeneration, AutoTokenizer, \
+    AutoModel
 
 from pyabsa.networks.losses.ClassImblanceCE import ClassBalanceCrossEntropyLoss
 from pyabsa.networks.losses.FocalLoss import FocalLoss
@@ -15,6 +16,8 @@ from pyabsa.utils.pyabsa_utils import fprint
 class BERT_MLP(nn.Module):
     MODEL_CLASSES = {
         'roberta-base': RobertaModel,
+        'microsoft/codebert-base': AutoModel,
+        'microsoft/graphcodebert-base': AutoModel,
         't5-base': T5ForConditionalGeneration,
         'facebook/bart-base': BartForConditionalGeneration,
         'Salesforce/codet5-small': T5ForConditionalGeneration,
@@ -22,6 +25,7 @@ class BERT_MLP(nn.Module):
     }
     #
     inputs = ['source_ids', 'label', 'corrupt_label']
+
     def __init__(self, bert, config):
         super(BERT_MLP, self).__init__()
         self.config = config
@@ -83,10 +87,8 @@ class BERT_MLP(nn.Module):
             vec = self.get_t5_vec(source_ids)
         elif 'bart' in self.config.pretrained_bert:
             vec = self.get_bart_vec(source_ids)
-        elif 'roberta' in self.config.pretrained_bert:
-            vec = self.get_roberta_vec(source_ids)
         else:
-            raise ValueError("Unknown model type.")
+            vec = self.get_roberta_vec(source_ids)
 
         logits1 = self.classifier1(vec)
         logits2 = self.classifier2(vec)
