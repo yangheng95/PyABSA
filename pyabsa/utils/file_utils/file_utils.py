@@ -37,12 +37,11 @@ def load_json(save_path):
     return dic
 
 
-def load_dataset_from_file(fname, **kwargs):
-    logger = kwargs.get('logger', None)
+def load_dataset_from_file(fname, config):
+    logger = config.get('logger', None)
     lines = []
     if isinstance(fname, str):
         fname = [fname]
-
     for f in fname:
         if logger:
             logger.info('Load dataset from {}'.format(f))
@@ -50,6 +49,7 @@ def load_dataset_from_file(fname, **kwargs):
             fprint('Load dataset from {}'.format(f))
         fin = open(f, 'r', encoding='utf-8')
         _lines_ = fin.readlines()
+        _lines_ = _lines_[:config.get('data_num', len(_lines_))]
         for i, line in enumerate(_lines_):
             if not line.strip():
                 raise ValueError('empty line: #{} in {}, previous line: {}'.format(i, f, _lines_[i - 1]))

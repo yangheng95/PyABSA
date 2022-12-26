@@ -51,6 +51,8 @@ def test_cross_validate():
             config.evaluate_begin = 0
             config.log_step = -1
             config.cross_valid_fold = 5
+            config.data_num = 5
+
             apc_trainer = APC.APCTrainer(config=config,
                                          dataset=dataset,
                                          checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
@@ -77,6 +79,8 @@ def test_auto_device():
             config.max_seq_len = 10
             config.evaluate_begin = 0
             config.log_step = -1
+            config.data_num = 5
+
             sent_classifier = APC.APCTrainer(config=config,
                                              dataset=dataset,
                                              checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
@@ -101,6 +105,8 @@ def test_lcf_apc_models():
             config.max_seq_len = 10
             config.evaluate_begin = 0
             config.log_step = -1
+            config.data_num = 5
+
             apc_trainer = APC.APCTrainer(config=config,
                                          dataset=dataset,
                                          checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
@@ -126,6 +132,8 @@ def test_save_models():
             config.max_seq_len = 10
             config.evaluate_begin = 0
             config.log_step = -1
+            config.data_num = 5
+
             sent_classifier = APC.APCTrainer(config=config,
                                              dataset=dataset,
                                              checkpoint_save_mode=ModelSaveOption.SAVE_FULL_MODEL,
@@ -147,10 +155,12 @@ def test_bert_apc_models():
             cuda.empty_cache()
             config.model = model
             config.cache_dataset = True
-            config.max_seq_len = 128
+            config.max_seq_len = 80
             config.num_epoch = 1
             config.evaluate_begin = 0
             config.log_step = -1
+            config.data_num = 5
+
             apc_trainer = APC.APCTrainer(config=config,
                                          dataset=dataset,
                                          checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
@@ -173,11 +183,13 @@ def test_glove_apc_models():
             config.model = model
             config.cache_dataset = True
             config.overwrite_cache = True
-            config.num_epoch = 100
+            config.num_epoch = 1
             config.patience = 20
-            config.max_seq_len = 256
+            config.max_seq_len = 80
             config.evaluate_begin = 0
-            config.log_step = 10
+            config.log_step = -1
+            config.data_num = 5
+
             sent_classifier = APC.APCTrainer(config=config,
                                              dataset=dataset,
                                              checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,

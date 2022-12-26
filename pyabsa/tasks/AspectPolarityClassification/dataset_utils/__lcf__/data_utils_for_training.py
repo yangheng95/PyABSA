@@ -24,7 +24,7 @@ class ABSADataset(PyABSADataset):
     def load_data_from_file(self, file_path, **kwargs):
         configure_spacy_model(self.config)
 
-        lines = load_dataset_from_file(self.config.dataset_file[self.dataset_type])
+        lines = load_dataset_from_file(self.config.dataset_file[self.dataset_type], config=self.config)
 
         if len(lines) % 3 != 0:
             fprint(colored(

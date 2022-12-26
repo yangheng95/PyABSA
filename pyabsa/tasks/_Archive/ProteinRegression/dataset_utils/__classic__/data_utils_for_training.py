@@ -20,7 +20,7 @@ class GloVeProteinRDataset(PyABSADataset):
         pass
 
     def load_data_from_file(self, dataset_file, **kwargs):
-        lines = load_dataset_from_file(self.config.dataset_file[self.dataset_type])
+        lines = load_dataset_from_file(self.config.dataset_file[self.dataset_type], config=self.config)
 
         all_data = []
 

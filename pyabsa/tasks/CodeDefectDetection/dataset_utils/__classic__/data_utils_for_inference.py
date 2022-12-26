@@ -31,7 +31,7 @@ class GloVeCDDInferenceDataset(Dataset):
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
 
-        lines = load_dataset_from_file(infer_file, logger=self.config.logger)
+        lines = load_dataset_from_file(infer_file, config=self.config)
         samples = []
         for sample in lines:
             if sample:

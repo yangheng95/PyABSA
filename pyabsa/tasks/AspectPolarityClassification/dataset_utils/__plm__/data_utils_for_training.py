@@ -26,7 +26,7 @@ class BERTBaselineABSADataset(PyABSADataset):
 
         configure_spacy_model(self.config)
 
-        lines = load_dataset_from_file(self.config.dataset_file[self.dataset_type])
+        lines = load_dataset_from_file(self.config.dataset_file[self.dataset_type], config=self.config)
 
         all_data = []
         label_set = set()

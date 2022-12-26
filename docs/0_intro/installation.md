@@ -20,7 +20,7 @@ cd PyABSA
 python setup.py install
 ```
 
-### Install from notebook
+### install from notebook
 
 ```notebook
 !pip install -U pyabsa
