@@ -49,12 +49,12 @@ def load_dataset_from_file(fname, config):
             fprint('Load dataset from {}'.format(f))
         fin = open(f, 'r', encoding='utf-8')
         _lines_ = fin.readlines()
-        _lines_ = _lines_[:config.get('data_num', len(_lines_))]
         for i, line in enumerate(_lines_):
             if not line.strip():
                 raise ValueError('empty line: #{} in {}, previous line: {}'.format(i, f, _lines_[i - 1]))
             lines.append(line.strip())
         fin.close()
+    lines = lines[:config.get('data_num', len(lines))]
     return lines
 
 

@@ -15,9 +15,6 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 class BERT_MLP(nn.Module):
     MODEL_CLASSES = {
-        'roberta-base': RobertaModel,
-        'microsoft/codebert-base': AutoModel,
-        'microsoft/graphcodebert-base': AutoModel,
         't5-base': T5ForConditionalGeneration,
         'facebook/bart-base': BartForConditionalGeneration,
         'Salesforce/codet5-small': T5ForConditionalGeneration,
@@ -29,7 +26,8 @@ class BERT_MLP(nn.Module):
     def __init__(self, bert, config):
         super(BERT_MLP, self).__init__()
         self.config = config
-        self.encoder = self.MODEL_CLASSES[self.config.pretrained_bert].from_pretrained(self.config.pretrained_bert)
+        self.encoder = self.MODEL_CLASSES.get(self.config.pretrained_bert, AutoModel) \
+            .from_pretrained(self.config.pretrained_bert)
         self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert)
         self.classifier1 = nn.Linear(config.hidden_dim, 2)
         self.classifier2 = nn.Linear(config.hidden_dim, 2)

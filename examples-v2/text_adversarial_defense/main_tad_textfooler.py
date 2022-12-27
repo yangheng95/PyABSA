@@ -181,7 +181,7 @@ def evaluate_tad(dataset, attack_recipe):
                 all_num += 1
                 if infer_res['label'] == str(result.original_result.ground_truth_output):
                     acc_count += 1
-                it.postfix = colored('Det Acc:{}|TAD Acc: {}|Res Acc: {}'.format(
+                it.description = colored('Det Acc:{}|TAD Acc: {}|Res Acc: {}'.format(
                     round(det_acc_count / def_num * 100, 2),
                     round(def_acc_count / def_num * 100, 2),
                     round(acc_count / all_num * 100, 2)), 'green')

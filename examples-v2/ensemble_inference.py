@@ -116,27 +116,6 @@ if __name__ == '__main__':
                 with open(file, 'r') as f:
                     lines.extend(f.readlines())
 
-        # 测试总体准确率 iteratively predict
-        # eval acc
-        count1 = 0
-        accuracy = 0
-        pred = []
-        gold = []
-        it = tqdm.tqdm(lines, ncols=100)
-        for i, text in enumerate(it):
-            result = ensemble_predictor.predict(text, ignore_error=False, print_result=False)
-            # label = result['label'] # depends on your dataset's label format
-            label = result['sentiment']
-            if label == text.split('$LABEL$')[-1].strip().split(','):
-                count1 += 1
-            pred.append(label)
-            gold.append(text.split('$LABEL$')[-1].strip().split(','))
-            accuracy = count1 / (i + 1)
-            it.set_description(f'Accuracy: {accuracy:.4f}')
-
-        rprint(metrics.classification_report(gold, pred, digits=4))
-        fprint(f'Final accuracy: {accuracy}')
-
         # 测试总体准确率 batch predict
         # eval acc
         count1 = 0
@@ -148,7 +127,6 @@ if __name__ == '__main__':
         it = tqdm.tqdm(results, ncols=100)
         for i, result in enumerate(it):
             label = result['sentiment']
-            print(gold[i], pred[i], label, lines[i].split('$LABEL$')[-1].strip().split(','))
             if label == lines[i].split('$LABEL$')[-1].strip().split(','):
                 count1 += 1
             batch_pred.append(label)

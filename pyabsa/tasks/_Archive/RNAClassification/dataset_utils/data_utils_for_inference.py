@@ -54,6 +54,14 @@ class BERTRNACInferenceDataset(Dataset):
                 label = label.strip().upper() if label else str(LabelPaddingOption.LABEL_PADDING)
                 rna_type_indices = self.tokenizer.text_to_sequence(str(rna_type))
                 rna_indices = self.tokenizer.text_to_sequence(rna + ' ' + rna_type, padding=False)
+                data = {
+                    'ex_id': ex_id,
+                    'text_raw': rna,
+                    'text_indices': rna_indices,
+                    'rna_type': rna_type_indices,
+                    'label': label,
+                }
+                all_data.append(data)
 
                 for _ in range(self.config.get('noise_instances', 1)):
                     import numpy as np

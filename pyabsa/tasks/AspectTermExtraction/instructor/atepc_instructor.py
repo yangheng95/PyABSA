@@ -159,7 +159,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
         for epoch in range(int(self.config.num_epoch)):
             nb_tr_examples, nb_tr_steps = 0, 0
             iterator = tqdm.tqdm(self.train_dataloader, postfix='Epoch:{}'.format(epoch))
-            postfix = ''
+            description = ''
             patience -= 1
             for step, batch in enumerate(iterator):
                 self.model.train()
@@ -273,7 +273,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                         current_apc_test_f1 = apc_result['apc_test_f1']
                         current_ate_test_f1 = round(ate_result, 2)
 
-                        postfix = 'Epoch:{} | '.format(epoch)
+                        description = 'Epoch:{} | '.format(epoch)
 
                         postfix += 'loss_apc:{:.4f} | loss_ate:{:.4f} |'.format(loss_apc.item(), loss_ate.item())
 
@@ -289,11 +289,11 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                     else:
                         if self.config.save_mode and epoch >= self.config.evaluate_begin:
                             save_model(self.config, self.model, self.tokenizer, save_path + '_{}/'.format(loss.item()))
-                        postfix = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch,
-                                                                                              round(loss.item(), 8),
-                                                                                              self.config.evaluate_begin)
+                        description = 'Epoch:{} | Loss: {} | No evaluation until epoch:{}'.format(epoch,
+                                                                                                  round(loss.item(), 8),
+                                                                                                  self.config.evaluate_begin)
 
-                iterator.postfix = postfix
+                iterator.set_description(description)
                 iterator.refresh()
 
             if patience < 0:
@@ -314,9 +314,6 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
 
         self.config.MV.summary(no_print=True)
         self.logger.info(self.config.MV.summary(no_print=True))
-
-        fprint('Training finished, we hope you can share your checkpoint with community, please see:',
-               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
 
         rolling_intv = 5
         df = pandas.DataFrame(losses)

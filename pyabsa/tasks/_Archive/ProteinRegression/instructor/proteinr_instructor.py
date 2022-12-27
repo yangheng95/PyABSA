@@ -198,7 +198,7 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
 
         for epoch in range(self.config.num_epoch):
             patience -= 1
-            iterator = tqdm(self.train_dataloaders[0], postfix='Epoch:{}'.format(epoch))
+            iterator = tqdm(self.train_dataloaders[0])
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
                 # switch model to train mode, clear gradient accumulators
@@ -268,18 +268,18 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
 
                                 save_model(self.config, self.model, self.tokenizer, save_path)
 
-                        postfix = ('Epoch:{} | Loss:{:.4f} | Test R2 Score:{:.4f}(max:{:.4f})'.format(epoch,
-                                                                                                      loss.item(),
-                                                                                                      test_r2,
-                                                                                                      max_fold_r2))
+                        description = ('Epoch:{} | Loss:{:.4f} | Dev R2 Score:{:.4f}(max:{:.4f})'.format(epoch,
+                                                                                                         loss.item(),
+                                                                                                         test_r2,
+                                                                                                         max_fold_r2))
                     else:
                         if self.config.save_mode and epoch >= self.config.evaluate_begin:
                             save_model(self.config, self.model, self.tokenizer, save_path + '_{}/'.format(loss.item()))
-                        postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch,
-                                                                                             round(loss.item(), 8),
-                                                                                             self.config.evaluate_begin)
+                        description = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch,
+                                                                                                 round(loss.item(), 8),
+                                                                                                 self.config.evaluate_begin)
 
-                    iterator.postfix = postfix
+                    iterator.set_description(description)
                     iterator.refresh()
             if patience < 0:
                 break
@@ -296,9 +296,6 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
 
         self.logger.info(self.config.MV.summary(no_print=True))
 
-        fprint('Training finished, we hope you can share your checkpoint with everybody, please see:',
-               'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
-
         print_args(self.config, self.logger)
 
         if self.valid_dataloader or self.config.save_mode:
@@ -310,12 +307,7 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
             time.sleep(3)
             return save_path
         else:
-            # direct return model if do not evaluate
-            # if self.config.model_path_to_save:
-            #     save_path = '{0}/{1}/'.format(self.config.model_path_to_save,
-            #                                   self.config.model_name
-            #                                   )
-            #     save_model(self.config, self.model, self.tokenizer, save_path)
+
             del self.train_dataloaders
             del self.test_dataloader
             del self.valid_dataloader
@@ -355,7 +347,7 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
             for epoch in range(self.config.num_epoch):
                 patience -= 1
                 iterator = tqdm(train_dataloader, postfix='Epoch:{}'.format(epoch))
-                postfix = ''
+                description = ''
                 for i_batch, sample_batched in enumerate(iterator):
                     global_step += 1
                     # switch model to train mode, clear gradient accumulators
@@ -422,16 +414,16 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
 
                                     save_model(self.config, self.model, self.tokenizer, save_path)
 
-                            postfix = ('Epoch:{} | Loss:{:.4f} | Test R2 Score:{:.2f}(max:{:.2f})'.format(epoch,
-                                                                                                          loss.item(),
-                                                                                                          test_r2,
-                                                                                                          max_fold_r2))
+                            description = ('Epoch:{} | Loss:{:.4f} | Dev R2 Score:{:.2f}(max:{:.2f})'.format(epoch,
+                                                                                                             loss.item(),
+                                                                                                             test_r2,
+                                                                                                             max_fold_r2))
                         else:
-                            postfix = 'Epoch:{} | Loss:{} | No evaluation until epoch:{}'.format(epoch,
-                                                                                                 round(loss.item(), 8),
-                                                                                                 self.config.evaluate_begin)
+                            description = 'Epoch:{} | Loss:{} | ' \
+                                          'No evaluation until epoch:{}'.format(epoch, round(loss.item(), 8),
+                                                                                self.config.evaluate_begin)
 
-                    iterator.postfix = postfix
+                    iterator.set_description(description)
                     iterator.refresh()
                 if patience < 0:
                     break
@@ -454,9 +446,6 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
         if self.config.cross_validate_fold > 0:
             self.logger.info(self.config.MV.summary(no_print=True))
         # self.config.MV.summary()
-
-        fprint('Training finished, we hope you can share your checkpoint with community, please see:',
-               'https://github.com/yangheng95/PyABSA/blob/release/demos/documents/share-checkpoint.md')
 
         print_args(self.config, self.logger)
 

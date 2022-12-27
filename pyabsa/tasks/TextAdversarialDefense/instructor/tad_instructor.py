@@ -212,7 +212,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
 
         for epoch in range(self.config.num_epoch):
             patience -= 1
-            iterator = tqdm(self.train_dataloaders[0], postfix='Epoch:{}'.format(epoch))
+            iterator = tqdm(self.train_dataloaders[0])
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
                 # switch model to train mode, clear gradient accumulators
@@ -332,24 +332,25 @@ class TADTrainingInstructor(BaseTrainingInstructor):
 
                                 save_model(self.config, self.model, self.tokenizer, save_path)
 
-                        postfix = ('Epoch:{} | Loss:{:.4f} | CLS ACC:{:.2f}(max:{:.2f}) | AdvDet ACC:{:.2f}(max:{:.2f})'
-                                   ' | AdvCLS ACC:{:.2f}(max:{:.2f})'.format(epoch,
-                                                                             sen_loss.item() + adv_det_loss.item() + adv_train_loss.item(),
-                                                                             test_label_acc * 100,
-                                                                             max_label_fold_acc * 100,
-                                                                             test_adv_det_acc * 100,
-                                                                             max_adv_det_fold_acc * 100,
-                                                                             test_adv_tr_acc * 100,
-                                                                             max_adv_tr_fold_acc * 100,
-                                                                             ))
+                        description = (
+                            'Epoch:{} | Loss:{:.4f} | Dev CLS ACC:{:.2f}(max:{:.2f}) Dev AdvDet ACC:{:.2f}(max:{:.2f})'
+                            ' Dev AdvCLS ACC:{:.2f}(max:{:.2f})'.format(epoch,
+                                                                        sen_loss.item() + adv_det_loss.item() + adv_train_loss.item(),
+                                                                        test_label_acc * 100,
+                                                                        max_label_fold_acc * 100,
+                                                                        test_adv_det_acc * 100,
+                                                                        max_adv_det_fold_acc * 100,
+                                                                        test_adv_tr_acc * 100,
+                                                                        max_adv_tr_fold_acc * 100,
+                                                                        ))
                     else:
                         if self.config.save_mode and epoch >= self.config.evaluate_begin:
                             save_model(self.config, self.model, self.tokenizer, save_path + '_{}/'.format(loss.item()))
-                        postfix = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch,
-                                                                                             round(loss.item(), 8),
-                                                                                             self.config.evaluate_begin)
+                        description = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch,
+                                                                                                 round(loss.item(), 8),
+                                                                                                 self.config.evaluate_begin)
 
-                    iterator.postfix = postfix
+                    iterator.set_description(description)
                     iterator.refresh()
             if patience < 0:
                 break
@@ -373,9 +374,6 @@ class TADTrainingInstructor(BaseTrainingInstructor):
             self.config.MV.add_metric('Max-AdvCLS-F1', max_adv_tr_fold_f1 * 100)
 
         self.config.logger.info(self.config.MV.summary(no_print=True))
-
-        fprint('Training finished, we hope you can share your checkpoint with everybody, please see:',
-               'https://github.com/yangheng95/PyABSA#how-to-share-checkpoints-eg-checkpoints-trained-on-your-custom-dataset-with-community')
 
         rolling_intv = 5
         df = pandas.DataFrame(losses)

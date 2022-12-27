@@ -201,9 +201,9 @@ class SentimentClassifier(InferenceModel):
         else:
             raise RuntimeError('Please specify your datasets path!')
         if isinstance(text, str):
-            return self._run_prediction(print_result=print_result)[0]
+            return self._run_prediction(print_result=print_result, **kwargs)[0]
         else:
-            return self._run_prediction(print_result=print_result)
+            return self._run_prediction(print_result=print_result, **kwargs)
 
     def merge_results(self, results):
         """ merge APC results have the same input text
@@ -235,7 +235,7 @@ class SentimentClassifier(InferenceModel):
 
         return final_res
 
-    def _run_prediction(self, save_path=None, print_result=True):
+    def _run_prediction(self, save_path=None, print_result=True, **kwargs):
 
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
 
@@ -307,8 +307,8 @@ class SentimentClassifier(InferenceModel):
                         'perplexity': perplexity
                     })
                     n_total += 1
-
-        results = self.merge_results(results)
+        if kwargs.get('merge_results', None):
+            results = self.merge_results(results)
         try:
             if print_result:
                 for ex_id, result in enumerate(results):

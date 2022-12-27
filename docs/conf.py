@@ -81,7 +81,12 @@ latex_elements = {
 
 html_theme = "sphinx_rtd_theme"
 html_theme_options = {
-    "collapse_navigation": False,
+    "collapse_navigation": True,
+    "sticky_navigation": True,
+    "navigation_depth": 5,
+    "logo_only": False,
+    "style_nav_header_background": "transparent",
+    "analytics_id": "G-TC6R5H0R74",
 }
 
 html_static_path = ["_static"]
