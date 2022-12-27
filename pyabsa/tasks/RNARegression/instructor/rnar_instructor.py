@@ -288,7 +288,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
             self.config.MV.add_metric('Max-Test-R2-Score w/o Valid Set', max_fold_r2)
 
         if self.valid_dataloader:
-            fprint('Loading best model: {} and evaluating on test set ...'.format(save_path))
+            fprint('Loading best model: {} and evaluating on test set '.format(save_path))
             self.reload_model(find_file(save_path, '.state_dict'))
             max_fold_r2 = self._evaluate_r2(self.test_dataloader, criterion)
 
@@ -337,7 +337,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
             self.logger.info("Batch size = %d", self.config.batch_size)
             self.logger.info("Num steps = %d", len(train_dataloader) // self.config.batch_size * self.config.num_epoch)
             if len(self.train_dataloaders) > 1:
-                self.logger.info('No. {} trainer in {} folds...'.format(f + 1, self.config.cross_validate_fold))
+                self.logger.info('No. {} trainer in {} folds'.format(f + 1, self.config.cross_validate_fold))
             global_step = 0
             max_fold_r2 = 0
             save_path = '{0}/{1}_{2}'.format(self.config.model_path_to_save,

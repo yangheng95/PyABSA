@@ -49,9 +49,9 @@ def detect_dataset(dataset_name_or_path, task_code: TaskCodeOption = None, load_
         if not os.path.exists(d):
 
             if os.path.exists('integrated_datasets'):
-                logger.info('Searching dataset {} in local disk...'.format(d))
+                logger.info('Searching dataset {} in local disk'.format(d))
             else:
-                logger.info('Searching dataset {} in https://github.com/yangheng95/ABSADatasets...'.format(d))
+                logger.info('Searching dataset {} in https://github.com/yangheng95/ABSADatasets'.format(d))
 
                 try:
                     download_all_available_datasets(logger=logger)
@@ -282,7 +282,7 @@ def download_all_available_datasets(**kwargs):
                 except IOError as e:
                     pass
             except Exception as e:
-                fprint(colored('Exception: {}. Fail to clone ABSADatasets, please check your connection...'.format(e),
+                fprint(colored('Exception: {}. Fail to clone ABSADatasets, please check your connection'.format(e),
                                'red'))
                 time.sleep(3)
                 download_all_available_datasets(**kwargs)
@@ -305,7 +305,7 @@ def download_dataset_by_name(task_code: Union[TaskCodeOption, str] = TaskCodeOpt
             download_dataset_by_name(task_code=task_code, dataset_name=d, **kwargs)
 
     if logger:
-        logger.info('Start downloading...'.format(dataset_name))
+        logger.info('Start downloading'.format(dataset_name))
     url = PyABSAMaterialHostAddress + 'resolve/main/integrated_datasets/{}_datasets.{}.zip'.format(
         task_code, dataset_name
     ).lower()
@@ -317,7 +317,7 @@ def download_dataset_by_name(task_code: Union[TaskCodeOption, str] = TaskCodeOpt
             for chunk in tqdm.tqdm(response.iter_content(chunk_size=1024),
                                    unit='KiB',
                                    total=int(response.headers['content-length']) // 1024,
-                                   description='Downloading ({}){} dataset...'.format(TaskNameOption[task_code],
+                                   desc='Downloading ({}){} dataset'.format(TaskNameOption[task_code],
                                                                                   dataset_name)):
                 f.write(chunk)
         with zipfile.ZipFile(save_path, 'r') as zip_ref:
@@ -326,8 +326,8 @@ def download_dataset_by_name(task_code: Union[TaskCodeOption, str] = TaskCodeOpt
     except Exception as e:
         if logger:
             logger.info(
-                'Exception: {}. Fail to download dataset from {}. Please check your connection...'.format(e, url))
+                'Exception: {}. Fail to download dataset from {}. Please check your connection'.format(e, url))
         else:
             fprint(colored(
-                'Exception: {}. Fail to download dataset from {}. Please check your connection...'.format(e, url),
+                'Exception: {}. Fail to download dataset from {}. Please check your connection'.format(e, url),
                 'red'))

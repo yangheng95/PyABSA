@@ -7,7 +7,7 @@
 
 from pyabsa import TextClassification as TC
 
-model_path = 'bert_mlp_SST2_acc_95.3_f1_95.3'  # 'lstm' is a keyword to search the checkpoint in the folder
+model_path = 'bert_mlp'  # 'lstm' is a keyword to search the checkpoint in the folder
 text_classifier = TC.TextClassifier(model_path)
 
 # batch inference works on the dataset files

@@ -70,7 +70,7 @@ def available_checkpoints(task_code: TaskCodeOption = None, show_ckpts=False):
         with open('./checkpoints-v2.0.json', "w") as f:
             json.dump(response.json(), f)
     except Exception as e:
-        fprint('Fail to download checkpoints info from huggingface space, try to download from local...')
+        fprint('Fail to download checkpoints info from huggingface space, try to download from local')
     with open('./checkpoints-v2.0.json', 'r', encoding='utf8') as f:
         checkpoint_map = json.load(f)
 
@@ -108,7 +108,7 @@ def download_checkpoint(task: str, language: str, checkpoint: dict):
         os.makedirs(dest_path)
 
     if (find_files(dest_path, '.model') or find_files(dest_path, '.state_dict')) and find_files(dest_path, '.config'):
-        fprint('Checkpoint already downloaded, skip...')
+        fprint('Checkpoint already downloaded, skip')
         return dest_path
 
     if find_cwd_files([checkpoint['Training Model'], checkpoint['Checkpoint File'].strip('.zip'), '.config']):
@@ -123,7 +123,7 @@ def download_checkpoint(task: str, language: str, checkpoint: dict):
             for chunk in tqdm.tqdm(response.iter_content(chunk_size=1024 * 1024),
                                    unit='MB',
                                    total=int(response.headers['content-length']) // 1024 // 1024,
-                                   description='Downloading checkpoint...'):
+                                   desc='Downloading checkpoint'):
                 f.write(chunk)
     except Exception as e:
         raise ConnectionError("Fail to download checkpoint: {}".format(e))

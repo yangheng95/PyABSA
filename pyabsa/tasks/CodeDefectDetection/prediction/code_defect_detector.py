@@ -233,7 +233,7 @@ class CodeDefectDetector(InferenceModel):
             t_c_targets_all, t_c_outputs_all = None, None
 
             if len(self.infer_dataloader.dataset) >= 100:
-                it = tqdm.tqdm(self.infer_dataloader, description='run inference...')
+                it = tqdm.tqdm(self.infer_dataloader, desc='run inference')
             else:
                 it = self.infer_dataloader
             for _, sample in enumerate(it):

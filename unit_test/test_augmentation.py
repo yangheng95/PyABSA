@@ -29,7 +29,7 @@ def test_classification_augmentation():
     config.seed = {42}
     config.log_step = -1
     config.l2reg = 0.00001
-    config.data_num = 5
+    config.data_num = 6
 
     SST2 = TC.TCDatasetList.SST2
 
@@ -60,7 +60,7 @@ def test_aspect_sentiment_classification_augmentation():
             config.cache_dataset = False
             config.l2reg = 1e-8
             config.lsa = True
-            config.data_num = 5
+            config.data_num = 6
 
             config.seed = [random.randint(0, 10000) for _ in range(1)]
 

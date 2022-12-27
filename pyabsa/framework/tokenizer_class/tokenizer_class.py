@@ -134,7 +134,12 @@ class PretrainedTokenizer:
         self.mask_token_id = self.tokenizer.mask_token_id
 
     def text_to_sequence(self, text, **kwargs):
-        return self.tokenizer.encode(text, **kwargs)
+        return self.tokenizer.encode(text,
+                                     truncation=kwargs.get('truncation', True),
+                                     padding=kwargs.pop('padding', 'max_length'),
+                                     max_length=kwargs.pop('max_length', self.max_seq_len),
+                                     return_tensors=kwargs.pop('return_tensors', None),
+                                     **kwargs)
 
     def sequence_to_text(self, sequence, **kwargs):
         return self.tokenizer.decode(sequence, **kwargs)
@@ -195,7 +200,7 @@ def pad_and_truncate(sequence, max_seq_len, value, **kwargs):
 def _load_word_vec(path, word2idx=None, embed_dim=300):
     fin = open(path, 'r', encoding='utf-8', newline='\n', errors='ignore')
     word_vec = {}
-    for line in tqdm.tqdm(fin.readlines(), description='Loading embedding file...'):
+    for line in tqdm.tqdm(fin.readlines(), desc='Loading embedding file'):
         tokens = line.rstrip().split()
         word, vec = ' '.join(tokens[:-embed_dim]), tokens[-embed_dim:]
         if word in word2idx.keys():

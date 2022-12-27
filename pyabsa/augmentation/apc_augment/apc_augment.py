@@ -16,7 +16,7 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 def auto_aspect_sentiment_classification_augmentation(config, dataset, device, **kwargs):
     fprint(
-        colored('Performing augmentation for aspect sentiment classification. This may take a long time...', 'yellow'))
+        colored('Performing augmentation for aspect sentiment classification. This may take a long time', 'yellow'))
 
     fprint(colored('The augment tool is available at: {}'.format('https://github.com/yangheng95/BoostTextAugmentation'),
                    'yellow'))

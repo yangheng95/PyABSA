@@ -60,7 +60,7 @@ def train_bpe_tokenizer(corpus_files=None,
 
     tokenizer = ByteLevelBPETokenizer()
     # Customize training
-    fprint('Start training BPE tokenizer...')
+    fprint('Start training BPE tokenizer')
     start = time.time()
     tokenizer.train(files=corpus_files, vocab_size=vocab_size, min_frequency=min_frequency,
                     special_tokens=special_tokens)
@@ -76,7 +76,7 @@ def train_bpe_tokenizer(corpus_files=None,
 
     tokenizer.save(f'{save_path}/tokenizer.json')
     tokenizer.save_model(f'{save_path}/')
-    fprint('BPE tokenizer training done ...')
+    fprint('BPE tokenizer training done ')
 
 
 if __name__ == '__main__':

@@ -197,7 +197,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
             self.config.MV.add_metric('Max-Test-F1 w/o Valid Set', max_fold_f1 * 100)
 
         if self.valid_dataloaders:
-            fprint('Loading best model: {} and evaluating on test set ...'.format(save_path))
+            fprint('Loading best model: {} and evaluating on test set '.format(save_path))
             self._reload_model_state_dict(save_path)
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
 
@@ -257,7 +257,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
             self.logger.info("Batch size = %d", self.config.batch_size)
             self.logger.info("Num steps = %d", len(train_dataloader) // self.config.batch_size * self.config.num_epoch)
             if len(self.train_dataloaders) > 1:
-                self.logger.info('No. {} trainer in {} folds...'.format(f + 1, self.config.cross_validate_fold))
+                self.logger.info('No. {} trainer in {} folds'.format(f + 1, self.config.cross_validate_fold))
             global_step = 0
             max_fold_acc = 0
             max_fold_f1 = 0

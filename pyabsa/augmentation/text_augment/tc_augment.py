@@ -15,7 +15,7 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 
 def auto_classification_augmentation(config, dataset, device, **kwargs):
-    fprint(colored('Performing augmentation for text classification. This may take a long time...', 'yellow'))
+    fprint(colored('Performing augmentation for text classification. This may take a long time', 'yellow'))
 
     from pyabsa.tasks.TextClassification import BERTTCModelList
     from boost_aug import TCBoostAug

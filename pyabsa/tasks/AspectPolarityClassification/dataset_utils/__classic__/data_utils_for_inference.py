@@ -33,7 +33,7 @@ class GloVeABSAInferenceDataset(ABSAInferenceDataset):
         all_data = []
 
         if len(samples) > 100:
-            it = tqdm.tqdm(samples, description='preparing apc inference dataloader...')
+            it = tqdm.tqdm(samples, desc='preparing apc inference dataloader')
         else:
             it = samples
         for ex_id, text in enumerate(it):

@@ -49,4 +49,12 @@ setup(
                       'protobuf<4.0.0',
                       'pandas',
                       ],
+    extras_require={
+        'dev': [
+            'git+https://github.com/yangheng95/TextAttack',
+            'tensorflow',
+            'tensorflow_hub',
+            'gensim',
+        ],
+    },
 )

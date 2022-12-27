@@ -49,7 +49,7 @@ def test_all_bert_models():
             config.evaluate_begin = 0
             config.log_step = -1
             config.cache_dataset = True
-            config.data_num = 5
+            config.data_num = 6
 
             text_classifier = TC.TCTrainer(config=config,
                                            dataset=dataset,
@@ -75,7 +75,7 @@ def test_all_glove_models():
             config.dropout = 0.5
             config.log_step = 5
             config.l2reg = 0.001
-            config.data_num = 5
+            config.data_num = 6
 
             text_classifier = TC.TCTrainer(config=config,
                                            dataset=dataset,

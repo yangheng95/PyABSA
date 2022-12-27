@@ -58,7 +58,7 @@ class CheckpointManager:
 
         available_checkpoint_by_task = available_checkpoints(task_code)
         if checkpoint.lower() in [k.lower() for k in available_checkpoint_by_task.keys()]:
-            fprint(colored('Downloading checkpoint:{} ...'.format(checkpoint), 'green'))
+            fprint(colored('Downloading checkpoint:{} '.format(checkpoint), 'green'))
         else:
             fprint(colored(
                 'Checkpoint:{} is not found, you can raise an issue for requesting shares of checkpoints'.format(

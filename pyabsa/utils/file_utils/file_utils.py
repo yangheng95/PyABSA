@@ -88,7 +88,7 @@ def prepare_glove840_embedding(glove_path, embedding_dim, config):
                     config.embed_dim))
             zip_glove_path = os.path.join(os.path.dirname(glove_path), 'glove.840B.300d.zip')
             logger.info('No GloVe embedding found at {},'
-                        ' downloading glove.840B.300d.txt (2GB will be downloaded / 5.5GB after unzip)...'.format(
+                        ' downloading glove.840B.300d.txt (2GB will be downloaded / 5.5GB after unzip)'.format(
                 glove_path))
             try:
                 response = requests.get(
@@ -98,7 +98,7 @@ def prepare_glove840_embedding(glove_path, embedding_dim, config):
                     for chunk in tqdm.tqdm(response.iter_content(chunk_size=1024 * 1024),
                                            unit='MB',
                                            total=int(response.headers['content-length']) // 1024 // 1024,
-                                           description=colored('Downloading GloVe-840B embedding...', 'yellow')):
+                                           description=colored('Downloading GloVe-840B embedding', 'yellow')):
                         f.write(chunk)
             except Exception as e:
                 raise ValueError('Download failed, please download glove.840B.300d.zip from '
@@ -106,7 +106,7 @@ def prepare_glove840_embedding(glove_path, embedding_dim, config):
                     glove_path))
 
         if find_cwd_file('glove.840B.300d.zip'):
-            logger.info('unzip glove.840B.300d.zip...')
+            logger.info('unzip glove.840B.300d.zip')
             with zipfile.ZipFile(find_cwd_file('glove.840B.300d.zip'), 'r') as z:
                 z.extractall()
             logger.info('Zip file extraction Done.')
@@ -116,7 +116,7 @@ def prepare_glove840_embedding(glove_path, embedding_dim, config):
 
 def unzip_checkpoint(zip_path):
     try:
-        fprint('Find zipped checkpoint: {}, unzipping...'.format(zip_path))
+        fprint('Find zipped checkpoint: {}, unzipping'.format(zip_path))
         sys.stdout.flush()
         if not os.path.exists(zip_path):
             os.makedirs(zip_path.replace('.zip', ''))

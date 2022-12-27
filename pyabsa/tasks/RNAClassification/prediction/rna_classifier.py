@@ -214,7 +214,7 @@ class RNAClassifier(InferenceModel):
             t_targets_all, t_outputs_all = None, None
 
             if len(self.infer_dataloader.dataset) >= 100:
-                it = tqdm.tqdm(self.infer_dataloader, description='run inference...')
+                it = tqdm.tqdm(self.infer_dataloader, desc='run inference')
             else:
                 it = self.infer_dataloader
             for _, sample in enumerate(it):

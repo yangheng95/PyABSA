@@ -1,6 +1,9 @@
 {
+  "2.0.22": {
+    "1": "Tokenizer fix"
+  },
   "2.0.21": {
-    "1": "Fix the description of the metrics, now the metrics are displayed in Dev/Valid metric",
+    "1": "Fix the description of the metrics, now the metrics are displayed in Dev/Valid metric"
   },
   "2.0.20": {
     "1": "Fix the VoteEnsemblePredictor"

@@ -35,45 +35,54 @@ def init_attacker(tad_classifier, defense):
         from textattack.datasets import Dataset
         from textattack.models.wrappers import HuggingFaceModelWrapper
 
-        class PyABSAModelWrapper(HuggingFaceModelWrapper):
-            def __init__(self, model):
-                self.model = model  # pipeline = pipeline
-
-            def __call__(self, text_inputs, **kwargs):
-                outputs = []
-                for text_input in text_inputs:
-                    raw_outputs = self.model.predict(text_input, print_result=False, **kwargs)
-                    outputs.append(raw_outputs['probs'])
-                return outputs
-
-        class SentAttacker:
-
-            def __init__(self, model, recipe_class=BAEGarg2019):
-                model = model
-                model_wrapper = PyABSAModelWrapper(model)
-
-                recipe = recipe_class.build(model_wrapper)
-
-                _dataset = [('', 0)]
-                _dataset = Dataset(_dataset)
-
-                self.attacker = Attacker(recipe, _dataset)
-
-        attackers = {
-            'bae': BAEGarg2019,
-            'pwws': PWWSRen2019,
-            'textfooler': TextFoolerJin2019,
-            'pso': PSOZang2020,
-            'iga': IGAWang2019,
-            'ga': GeneticAlgorithmAlzantot2018,
-            'wordbugger': DeepWordBugGao2018,
-        }
-        return SentAttacker(tad_classifier, attackers[defense])
     except Exception as e:
-        fprint('If you need to evaluate text adversarial attack, please make sure you have installed:\n',
-               colored('[1] pip install git+https://github.com/yangheng95/TextAttack\n', 'red'), 'and \n',
-               colored('[2] pip install tensorflow_text \n', 'red'))
-        fprint('Original error:', e)
+        try:
+            os.system('pip install git+https://github.com/yangheng95/TextAttack')
+            from textattack import Attacker
+            from textattack.attack_recipes import BAEGarg2019, PWWSRen2019, TextFoolerJin2019, PSOZang2020, IGAWang2019, \
+                GeneticAlgorithmAlzantot2018, DeepWordBugGao2018
+            from textattack.datasets import Dataset
+            from textattack.models.wrappers import HuggingFaceModelWrapper
+        except Exception as e:
+            fprint('If you need to evaluate text adversarial attack, please make sure you have installed:\n',
+                   colored('[1] pip install git+https://github.com/yangheng95/TextAttack\n', 'red'), 'and \n',
+                   colored('[2] pip install tensorflow_text \n', 'red'))
+            fprint('Original error:', e)
+
+    class PyABSAModelWrapper(HuggingFaceModelWrapper):
+        def __init__(self, model):
+            self.model = model  # pipeline = pipeline
+
+        def __call__(self, text_inputs, **kwargs):
+            outputs = []
+            for text_input in text_inputs:
+                raw_outputs = self.model.predict(text_input, print_result=False, **kwargs)
+                outputs.append(raw_outputs['probs'])
+            return outputs
+
+    class SentAttacker:
+
+        def __init__(self, model, recipe_class=BAEGarg2019):
+            model = model
+            model_wrapper = PyABSAModelWrapper(model)
+
+            recipe = recipe_class.build(model_wrapper)
+
+            _dataset = [('', 0)]
+            _dataset = Dataset(_dataset)
+
+            self.attacker = Attacker(recipe, _dataset)
+
+    attackers = {
+        'bae': BAEGarg2019,
+        'pwws': PWWSRen2019,
+        'textfooler': TextFoolerJin2019,
+        'pso': PSOZang2020,
+        'iga': IGAWang2019,
+        'ga': GeneticAlgorithmAlzantot2018,
+        'wordbugger': DeepWordBugGao2018,
+    }
+    return SentAttacker(tad_classifier, attackers[defense])
 
 
 class TADTextClassifier(InferenceModel):
@@ -295,7 +304,7 @@ class TADTextClassifier(InferenceModel):
             n_advdet_correct = 0
             n_advdet_labeled = 0
             if len(self.infer_dataloader.dataset) >= 100:
-                it = tqdm.tqdm(self.infer_dataloader, description='run inference...')
+                it = tqdm.tqdm(self.infer_dataloader, desc='run inference')
             else:
                 it = self.infer_dataloader
             for _, sample in enumerate(it):
@@ -373,9 +382,9 @@ class TADTextClassifier(InferenceModel):
                                 result['is_fixed'] = False
 
                         except Exception as e:
-                            fprint('Error:{}, try install TextAttack and tensorflow_text after 10 seconds...'.format(e))
+                            fprint('Error:{}, try install TextAttack and tensorflow_text after 10 seconds'.format(e))
                             time.sleep(10)
-                            raise RuntimeError('Installation done, please run again...')
+                            raise RuntimeError('Installation done, please run again')
 
                     if ref_label != -100:
                         n_labeled += 1

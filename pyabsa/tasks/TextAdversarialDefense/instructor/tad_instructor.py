@@ -361,7 +361,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
             self.config.MV.add_metric('Max-AdvDet-Acc w/o Valid Set', max_adv_det_fold_acc * 100)
             self.config.MV.add_metric('Max-AdvDet-F1 w/o Valid Set', max_adv_det_fold_f1 * 100)
         if self.valid_dataloader:
-            fprint('Loading best model: {} and evaluating on test set ...'.format(save_path))
+            fprint('Loading best model: {} and evaluating on test set '.format(save_path))
             self.reload_model_state_dict(find_file(save_path, '.state_dict'))
             max_label_fold_acc, max_label_fold_f1, max_adv_det_fold_acc, max_adv_det_fold_f1, max_adv_tr_fold_acc, max_adv_tr_fold_f1 = \
                 self._evaluate_acc_f1(self.test_dataloader)

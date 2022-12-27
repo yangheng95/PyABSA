@@ -85,7 +85,7 @@ def prepare_dependency_graph(dataset_list, graph_path, max_seq_len, config):
             fin = open(filename, 'r', encoding='utf-8', newline='\n', errors='ignore')
             lines = fin.readlines()
             fin.close()
-            for i in tqdm.tqdm(range(0, len(lines), 3), description='Construct graph for {}'.format(filename)):
+            for i in tqdm.tqdm(range(0, len(lines), 3), desc='Construct graph for {}'.format(filename)):
                 text_left, _, text_right = [s.strip() for s in lines[i].partition("$T$")]
                 aspect = lines[i + 1].strip()
                 adj_matrix = dependency_adj_matrix(text_left + ' ' + aspect + ' ' + text_right)

@@ -42,7 +42,7 @@ class GloVeCDDInferenceDataset(Dataset):
         all_data = []
 
         if len(samples) > 100:
-            it = tqdm.tqdm(samples, description='building word indices...')
+            it = tqdm.tqdm(samples, desc='building word indices')
         else:
             it = samples
 

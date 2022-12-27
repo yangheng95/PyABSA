@@ -63,7 +63,7 @@ def train_word2vec(corpus_files: list = None,
                     res = line.strip().split()
                 in_corpus.append(res)
 
-    fprint('Start training word2vec model...')
+    fprint('Start training word2vec model')
     start = time.time()
     model = Word2Vec(sentences=in_corpus,
                      vector_size=vector_dim,
@@ -77,7 +77,7 @@ def train_word2vec(corpus_files: list = None,
 
     model.wv.save_word2vec_format(os.path.join(save_path, 'word2vec768d.txt'), binary=False)  # 不以C语言可以解析的形式存储词向量
     model.save(os.path.join(save_path, 'w2v768d.model'))
-    fprint('Word2vec training done ...')
+    fprint('Word2vec training done ')
 
 
 if __name__ == '__main__':

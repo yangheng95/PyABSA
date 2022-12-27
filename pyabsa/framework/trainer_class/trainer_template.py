@@ -42,7 +42,7 @@ warnings.filterwarnings('once')
 
 def init_config(config):
     if not torch.cuda.device_count() > 1 and config.auto_device == DeviceTypeOption.ALL_CUDA:
-        fprint('Cuda devices count <= 1, so reset auto_device=True to auto specify device...')
+        fprint('Cuda devices count <= 1, so reset auto_device=True to auto specify device')
         config.auto_device = True
     set_device(config, config.auto_device)
 
@@ -162,7 +162,7 @@ class Trainer:
             elif ((hasattr(self.config, 'dataset_file') and 'valid' in self.config.dataset_file) or
                   (hasattr(self.config,
                            'dataset_dict') and 'valid' in self.config.dataset_dict)) and not self.config.checkpoint_save_mode:
-                fprint('Using Validation set needs to save checkpoint, turn on checkpoint-saving ...')
+                fprint('Using Validation set needs to save checkpoint, turn on checkpoint-saving ')
                 self.config.model_path_to_save = 'checkpoints'
                 self.config.save_mode = 1
             else:

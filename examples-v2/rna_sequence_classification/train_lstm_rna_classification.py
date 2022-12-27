@@ -14,7 +14,7 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 
 def preprocess_rna():
-    fprint('splitting data...')
+    fprint('splitting data')
 
     def load_file(file_path):
         with open(file_path, 'r') as f:
