@@ -106,7 +106,7 @@ class ABSAInferenceDataset(Dataset):
         label_set = set()
         ex_id = 0
         if len(samples) > 100:
-            it = tqdm.tqdm(samples, postfix='preparing apc inference dataloader...')
+            it = tqdm.tqdm(samples, description='preparing apc inference dataloader...')
         else:
             it = samples
         for i, text in enumerate(it):

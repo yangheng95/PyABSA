@@ -98,7 +98,7 @@ def prepare_glove840_embedding(glove_path, embedding_dim, config):
                     for chunk in tqdm.tqdm(response.iter_content(chunk_size=1024 * 1024),
                                            unit='MB',
                                            total=int(response.headers['content-length']) // 1024 // 1024,
-                                           postfix=colored('Downloading GloVe-840B embedding...', 'yellow')):
+                                           description=colored('Downloading GloVe-840B embedding...', 'yellow')):
                         f.write(chunk)
             except Exception as e:
                 raise ValueError('Download failed, please download glove.840B.300d.zip from '

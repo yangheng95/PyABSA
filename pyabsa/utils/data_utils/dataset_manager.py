@@ -317,7 +317,7 @@ def download_dataset_by_name(task_code: Union[TaskCodeOption, str] = TaskCodeOpt
             for chunk in tqdm.tqdm(response.iter_content(chunk_size=1024),
                                    unit='KiB',
                                    total=int(response.headers['content-length']) // 1024,
-                                   postfix='Downloading ({}){} dataset...'.format(TaskNameOption[task_code],
+                                   description='Downloading ({}){} dataset...'.format(TaskNameOption[task_code],
                                                                                   dataset_name)):
                 f.write(chunk)
         with zipfile.ZipFile(save_path, 'r') as zip_ref:

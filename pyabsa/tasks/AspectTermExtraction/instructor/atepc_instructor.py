@@ -158,7 +158,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                                          )
         for epoch in range(int(self.config.num_epoch)):
             nb_tr_examples, nb_tr_steps = 0, 0
-            iterator = tqdm.tqdm(self.train_dataloader, postfix='Epoch:{}'.format(epoch))
+            iterator = tqdm.tqdm(self.train_dataloader)
             description = ''
             patience -= 1
             for step, batch in enumerate(iterator):
@@ -275,16 +275,16 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
 
                         description = 'Epoch:{} | '.format(epoch)
 
-                        postfix += 'loss_apc:{:.4f} | loss_ate:{:.4f} |'.format(loss_apc.item(), loss_ate.item())
+                        description += 'loss_apc:{:.4f} | loss_ate:{:.4f} |'.format(loss_apc.item(), loss_ate.item())
 
-                        postfix += ' APC_ACC: {}(max:{}) | APC_F1: {}(max:{}) | '.format(current_apc_test_acc,
+                        description += ' APC_ACC: {}(max:{}) | APC_F1: {}(max:{}) | '.format(current_apc_test_acc,
                                                                                          self.config.max_test_metrics[
                                                                                              'max_apc_test_acc'],
                                                                                          current_apc_test_f1,
                                                                                          self.config.max_test_metrics[
                                                                                              'max_apc_test_f1']
                                                                                          )
-                        postfix += 'ATE_F1: {}(max:{})'.format(current_ate_test_f1, self.config.max_test_metrics[
+                        description += 'ATE_F1: {}(max:{})'.format(current_ate_test_f1, self.config.max_test_metrics[
                             'max_ate_test_f1'])
                     else:
                         if self.config.save_mode and epoch >= self.config.evaluate_begin:

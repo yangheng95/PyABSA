@@ -295,7 +295,7 @@ class TADTextClassifier(InferenceModel):
             n_advdet_correct = 0
             n_advdet_labeled = 0
             if len(self.infer_dataloader.dataset) >= 100:
-                it = tqdm.tqdm(self.infer_dataloader, postfix='run inference...')
+                it = tqdm.tqdm(self.infer_dataloader, description='run inference...')
             else:
                 it = self.infer_dataloader
             for _, sample in enumerate(it):

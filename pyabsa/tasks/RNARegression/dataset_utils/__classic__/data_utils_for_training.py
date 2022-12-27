@@ -26,7 +26,7 @@ class GloVeRNARDataset(PyABSADataset):
 
         label_set = set()
 
-        for ex_id, i in enumerate(tqdm.tqdm(range(len(lines)), postfix='preparing dataloader...')):
+        for ex_id, i in enumerate(tqdm.tqdm(range(len(lines)), description='preparing dataloader...')):
             line = lines[i].strip().split('\t') if '\t' in lines[i] else lines[i].strip().split(',')
             try:
                 _, label, r1r2_label, r1r3_label, r2r3_label, seq = line[0], line[1], line[2], line[3], line[4], line[5]

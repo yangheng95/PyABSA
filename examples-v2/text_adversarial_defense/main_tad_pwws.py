@@ -155,7 +155,7 @@ def generate_adversarial_example(dataset, attack_recipe):
             acc_count = 0.
             def_acc_count = 0.
             det_acc_count = 0.
-            it = tqdm.tqdm(data[:300], postfix='testing ...')
+            it = tqdm.tqdm(data[:300], description='testing ...')
             for text, label in it:
                 result = sent_attacker.attacker.simple_attack(text, label)
                 if isinstance(result, SuccessfulAttackResult):

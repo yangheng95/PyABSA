@@ -48,7 +48,7 @@ class RNACInferenceDataset(Dataset):
     def process_data(self, samples, ignore_error=True):
         all_data = []
         if len(samples) > 100:
-            it = tqdm.tqdm(samples, postfix='preparing text classification dataloader...')
+            it = tqdm.tqdm(samples, description='preparing text classification dataloader...')
         else:
             it = samples
         for ex_id, text in enumerate(it):

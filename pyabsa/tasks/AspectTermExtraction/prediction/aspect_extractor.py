@@ -323,7 +323,7 @@ class AspectExtractor(InferenceModel):
         else:
             label_map = self.config.index_to_IOB_label
         if len(infer_data) >= 100:
-            it = tqdm.tqdm(self.infer_dataloader, postfix='extracting aspect terms...')
+            it = tqdm.tqdm(self.infer_dataloader, description='extracting aspect terms...')
         else:
             it = self.infer_dataloader
         for i_batch, (input_ids_spc, segment_ids, input_mask, label_ids, polarity, valid_ids, l_mask) in enumerate(it):
@@ -428,7 +428,7 @@ class AspectExtractor(InferenceModel):
 
         # Correct = {True: 'Correct', False: 'Wrong'}
         if len(infer_data) >= 100:
-            it = tqdm.tqdm(self.infer_dataloader, postfix='classifying aspect sentiments...')
+            it = tqdm.tqdm(self.infer_dataloader, description='classifying aspect sentiments...')
         else:
             it = self.infer_dataloader
         for i_batch, batch in enumerate(it):

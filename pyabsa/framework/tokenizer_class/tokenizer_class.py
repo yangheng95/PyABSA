@@ -166,7 +166,7 @@ def build_embedding_matrix(config, tokenizer, cache_path=None):
         word_vec = _load_word_vec(glove_path, word2idx=tokenizer.word2idx, embed_dim=config.embed_dim)
 
         for word, i in tqdm.tqdm(tokenizer.word2idx.items(),
-                                 postfix=colored('Building embedding_matrix {}'.format(cache_path), 'yellow')):
+                                 description=colored('Building embedding_matrix {}'.format(cache_path), 'yellow')):
             vec = word_vec.get(word)
             if vec is not None:
                 # words not found in embedding index will be all-zeros.
@@ -195,7 +195,7 @@ def pad_and_truncate(sequence, max_seq_len, value, **kwargs):
 def _load_word_vec(path, word2idx=None, embed_dim=300):
     fin = open(path, 'r', encoding='utf-8', newline='\n', errors='ignore')
     word_vec = {}
-    for line in tqdm.tqdm(fin.readlines(), postfix='Loading embedding file...'):
+    for line in tqdm.tqdm(fin.readlines(), description='Loading embedding file...'):
         tokens = line.rstrip().split()
         word, vec = ' '.join(tokens[:-embed_dim]), tokens[-embed_dim:]
         if word in word2idx.keys():

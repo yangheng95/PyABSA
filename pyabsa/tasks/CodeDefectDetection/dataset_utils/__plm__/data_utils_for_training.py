@@ -27,7 +27,7 @@ class BERTCDDDataset(PyABSADataset):
         label_set = set()
         c_label_set = set()
 
-        for ex_id, line in enumerate(tqdm.tqdm(lines, postfix='preparing dataloader...')):
+        for ex_id, line in enumerate(tqdm.tqdm(lines, description='preparing dataloader...')):
             code_src, label = line.strip().split('$LABEL$')
             # source_str = "{}: {}".format(args.task, example.source)
 

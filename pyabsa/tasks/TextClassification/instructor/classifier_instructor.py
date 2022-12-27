@@ -360,7 +360,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                                              )
             for epoch in range(self.config.num_epoch):
                 patience -= 1
-                iterator = tqdm(train_dataloader, postfix='Epoch:{}'.format(epoch))
+                iterator = tqdm(train_dataloader)
                 description = ''
                 for i_batch, sample_batched in enumerate(iterator):
                     global_step += 1

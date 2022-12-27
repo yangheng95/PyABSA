@@ -22,7 +22,7 @@ class BERTRNACDataset(PyABSADataset):
         label_set = set()
         all_data = []
 
-        for ex_id, data in enumerate(tqdm.tqdm(dataset_dict[self.dataset_type], postfix='preparing dataloader...')):
+        for ex_id, data in enumerate(tqdm.tqdm(dataset_dict[self.dataset_type], description='preparing dataloader...')):
             rna, label = data['text'], data['label']
             rna_indices = self.tokenizer.text_to_sequence(rna)
             rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len, value=self.tokenizer.pad_token_id)
@@ -45,7 +45,7 @@ class BERTRNACDataset(PyABSADataset):
 
         label_set = set()
         rna_type_dict = {'cds': 1, '5utr': 2, '3utr': 3}
-        for ex_id, i in enumerate(tqdm.tqdm(range(len(lines)), postfix='preparing dataloader...')):
+        for ex_id, i in enumerate(tqdm.tqdm(range(len(lines)), description='preparing dataloader...')):
             text, _, label = lines[i].strip().partition('$LABEL$')
             rna, rna_type = text.strip().split(',')
             # rna_type = rna_type_dict[rna_type]

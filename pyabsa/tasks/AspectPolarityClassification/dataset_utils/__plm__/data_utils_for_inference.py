@@ -29,7 +29,7 @@ class BERTABSAInferenceDataset(ABSAInferenceDataset):
         all_data = []
 
         if len(samples) > 100:
-            it = tqdm.tqdm(samples, postfix='preparing apc inference dataloader...')
+            it = tqdm.tqdm(samples, description='preparing apc inference dataloader...')
         else:
             it = samples
         for ex_id, text in enumerate(it):

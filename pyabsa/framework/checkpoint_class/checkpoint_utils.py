@@ -123,7 +123,7 @@ def download_checkpoint(task: str, language: str, checkpoint: dict):
             for chunk in tqdm.tqdm(response.iter_content(chunk_size=1024 * 1024),
                                    unit='MB',
                                    total=int(response.headers['content-length']) // 1024 // 1024,
-                                   postfix='Downloading checkpoint...'):
+                                   description='Downloading checkpoint...'):
                 f.write(chunk)
     except Exception as e:
         raise ConnectionError("Fail to download checkpoint: {}".format(e))

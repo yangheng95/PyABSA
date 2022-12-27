@@ -122,7 +122,7 @@ def convert_ate_examples_to_features(examples, label_list, max_seq_len, tokenize
     label_map = {label: i for i, label in enumerate(label_list, 1)}
     features = []
     if len(examples) > 100:
-        it = tqdm.tqdm(examples, postfix='preparing apc inference dataloader...')
+        it = tqdm.tqdm(examples, description='preparing apc inference dataloader...')
     else:
         it = examples
     for (ex_index, example) in enumerate(it):
@@ -206,7 +206,7 @@ def convert_apc_examples_to_features(examples, label_list, max_seq_len, tokenize
     opt.IOB_label_to_index = label_map
     features = []
     if len(examples) > 100:
-        it = tqdm.tqdm(examples, postfix='preparing apc inference dataloader...')
+        it = tqdm.tqdm(examples, description='preparing apc inference dataloader...')
     else:
         it = examples
     for (ex_index, example) in enumerate(it):
