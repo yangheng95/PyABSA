@@ -17,7 +17,6 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 
 class BERTTCInferenceDataset(Dataset):
-
     def __init__(self, config, tokenizer):
 
         self.tokenizer = tokenizer
@@ -42,41 +41,39 @@ class BERTTCInferenceDataset(Dataset):
     def process_data(self, samples, ignore_error=True):
         all_data = []
         if len(samples) > 100:
-            it = tqdm.tqdm(samples, desc='preparing text classification dataloader')
+            it = tqdm.tqdm(samples, desc="preparing text classification dataloader")
         else:
             it = samples
         for ex_id, text in enumerate(it):
             try:
                 # handle for empty lines in inference datasets
-                if text is None or '' == text.strip():
-                    raise RuntimeError('Invalid Input!')
+                if text is None or "" == text.strip():
+                    raise RuntimeError("Invalid Input!")
 
-                if '$LABEL$' in text:
-                    text, _, label = text.strip().partition('$LABEL$')
+                if "$LABEL$" in text:
+                    text, _, label = text.strip().partition("$LABEL$")
                     label = label.strip()
                     text = text.strip().lower()
 
                 else:
                     label = LabelPaddingOption.LABEL_PADDING
 
-                text_indices = self.tokenizer.text_to_sequence('{}'.format(text))
+                text_indices = self.tokenizer.text_to_sequence("{}".format(text))
 
                 data = {
-                    'ex_id': ex_id,
-
-                    'text_indices': text_indices
-                    if 'text_indices' in self.config.model.inputs else 0,
-
-                    'text_raw': text,
-
-                    'label': label,
+                    "ex_id": ex_id,
+                    "text_indices": text_indices
+                    if "text_indices" in self.config.model.inputs
+                    else 0,
+                    "text_raw": text,
+                    "label": label,
                 }
 
                 all_data.append(data)
 
             except Exception as e:
                 if ignore_error:
-                    fprint('Ignore error while processing:', text)
+                    fprint("Ignore error while processing:", text)
                 else:
                     raise e
 

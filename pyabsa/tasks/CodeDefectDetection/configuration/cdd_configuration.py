@@ -15,28 +15,29 @@ from pyabsa.framework.configuration_class.configuration_template import ConfigMa
 from ..models.__classic__.lstm import LSTM
 from ..models.__plm__.bert import BERT_MLP
 
-_cdd_config_base = {'model': BERT_MLP,
-                    'optimizer': "adamw",
-                    'learning_rate': 0.00002,
-                    'pretrained_bert': "Salesforce/codet5-small",
-                    'cache_dataset': True,
-                    'warmup_step': -1,
-                    'show_metric': True,
-                    'use_amp': False,
-                    'max_seq_len': 512,
-                    'patience': 99999,
-                    'dropout': 0,
-                    'l2reg': 0.000001,
-                    'num_epoch': 10,
-                    'batch_size': 16,
-                    'initializer': 'xavier_uniform_',
-                    'seed': 52,
-                    'output_dim': 2,
-                    'log_step': 10,
-                    'evaluate_begin': 0,
-                    'cross_validate_fold': -1
-                    # split train and test datasets into 5 folds and repeat 3 trainer
-                    }
+_cdd_config_base = {
+    "model": BERT_MLP,
+    "optimizer": "adamw",
+    "learning_rate": 0.00002,
+    "pretrained_bert": "Salesforce/codet5-small",
+    "cache_dataset": True,
+    "warmup_step": -1,
+    "show_metric": True,
+    "use_amp": False,
+    "max_seq_len": 512,
+    "patience": 99999,
+    "dropout": 0,
+    "l2reg": 0.000001,
+    "num_epoch": 10,
+    "batch_size": 16,
+    "initializer": "xavier_uniform_",
+    "seed": 52,
+    "output_dim": 2,
+    "log_step": 10,
+    "evaluate_begin": 0,
+    "cross_validate_fold": -1
+    # split train and test datasets into 5 folds and repeat 3 trainer
+}
 
 
 class CDDConfigManager(ConfigManager):
@@ -72,18 +73,20 @@ class CDDConfigManager(ConfigManager):
     @staticmethod
     def set_cdd_config(configType: str, newitem: dict):
         if isinstance(newitem, dict):
-            if configType == 'base':
+            if configType == "base":
                 _cdd_config_base.update(newitem)
             else:
                 raise ValueError(
-                    "Wrong value of configuration_class type supplied, please use one from following type:  base")
+                    "Wrong value of configuration_class type supplied, please use one from following type:  base"
+                )
         else:
             raise TypeError(
-                "Wrong type of new configuration_class item supplied, please use dict e.g.{'NewConfig': NewValue}")
+                "Wrong type of new configuration_class item supplied, please use dict e.g.{'NewConfig': NewValue}"
+            )
 
     @staticmethod
     def set_cdd_config_base(newitem):
-        CDDConfigManager.set_cdd_config('base', newitem)
+        CDDConfigManager.set_cdd_config("base", newitem)
 
     @staticmethod
     def get_cdd_config_base():

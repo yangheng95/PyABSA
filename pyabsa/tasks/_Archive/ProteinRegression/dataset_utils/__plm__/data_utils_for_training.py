@@ -20,25 +20,36 @@ class BERTProteinRDataset(PyABSADataset):
         pass
 
     def load_data_from_file(self, dataset_file, **kwargs):
-        lines = load_dataset_from_file(self.config.dataset_file[self.dataset_type], config=self.config)
+        lines = load_dataset_from_file(
+            self.config.dataset_file[self.dataset_type], config=self.config
+        )
 
         all_data = []
 
-        for ex_id, i in enumerate(tqdm.tqdm(range(len(lines)), desc='preparing dataloader')):
+        for ex_id, i in enumerate(
+            tqdm.tqdm(range(len(lines)), desc="preparing dataloader")
+        ):
 
-            text, _, label = lines[i].partition('$LABEL$')
-            seq, ph = text.split(',')
+            text, _, label = lines[i].partition("$LABEL$")
+            seq, ph = text.split(",")
             label = float(label.strip())
 
             for x in range(len(seq) // (self.config.max_seq_len * 2) + 1):
-                _seq = seq[x * (self.config.max_seq_len * 2):(x + 1) * (self.config.max_seq_len * 2)]
+                _seq = seq[
+                    x
+                    * (self.config.max_seq_len * 2) : (x + 1)
+                    * (self.config.max_seq_len * 2)
+                ]
                 protein_indices = self.tokenizer.text_to_sequence(_seq)
-                protein_indices = pad_and_truncate(protein_indices, self.config.max_seq_len,
-                                                   value=self.tokenizer.pad_token_id)
+                protein_indices = pad_and_truncate(
+                    protein_indices,
+                    self.config.max_seq_len,
+                    value=self.tokenizer.pad_token_id,
+                )
                 data = {
-                    'ex_id': torch.tensor(ex_id, dtype=torch.long),
-                    'text_indices': torch.tensor(protein_indices, dtype=torch.long),
-                    'label': torch.tensor(label, dtype=torch.float32),
+                    "ex_id": torch.tensor(ex_id, dtype=torch.long),
+                    "text_indices": torch.tensor(protein_indices, dtype=torch.long),
+                    "label": torch.tensor(label, dtype=torch.float32),
                 }
 
                 all_data.append(data)
@@ -47,7 +58,7 @@ class BERTProteinRDataset(PyABSADataset):
 
         self.data = all_data
 
-    def __init__(self, config, tokenizer, dataset_type='train'):
+    def __init__(self, config, tokenizer, dataset_type="train"):
         super().__init__(config, tokenizer, dataset_type)
 
     def __getitem__(self, index):

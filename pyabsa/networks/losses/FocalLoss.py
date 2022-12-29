@@ -1,6 +1,6 @@
 ﻿# -*- coding: utf-8 -*-
 # file: FocalLoss.py
-# time: 14:16 2022/12/23 
+# time: 14:16 2022/12/23
 # author: yangheng <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95
 # huggingface: https://huggingface.co/yangheng

@@ -7,6 +7,7 @@
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
 
+
 class BERTTCModelList(list):
     from .__plm__.bert import BERT_MLP
 
@@ -14,11 +15,7 @@ class BERTTCModelList(list):
     BERT = BERT_MLP
 
     def __init__(self):
-        super(BERTTCModelList, self).__init__(
-            [
-                self.BERT_MLP
-            ]
-        )
+        super(BERTTCModelList, self).__init__([self.BERT_MLP])
 
 
 class GloVeTCModelList(list):
@@ -27,8 +24,4 @@ class GloVeTCModelList(list):
     LSTM = LSTM
 
     def __init__(self):
-        super(GloVeTCModelList, self).__init__(
-            [
-                self.LSTM
-            ]
-        )
+        super(GloVeTCModelList, self).__init__([self.LSTM])

@@ -10,13 +10,20 @@ from pyabsa.networks.dynamic_rnn import DynamicLSTM
 
 
 class TADLSTM(nn.Module):
-    inputs = ['text_indices']
+    inputs = ["text_indices"]
 
     def __init__(self, embedding_matrix, config):
         super(TADLSTM, self).__init__()
         self.config = config
-        self.embed = nn.Embedding.from_pretrained(torch.tensor(embedding_matrix, dtype=torch.float))
-        self.lstm = DynamicLSTM(self.config.embed_dim, self.config.hidden_dim, num_layers=1, batch_first=True)
+        self.embed = nn.Embedding.from_pretrained(
+            torch.tensor(embedding_matrix, dtype=torch.float)
+        )
+        self.lstm = DynamicLSTM(
+            self.config.embed_dim,
+            self.config.hidden_dim,
+            num_layers=1,
+            batch_first=True,
+        )
         self.dense1 = nn.Linear(self.config.hidden_dim, self.config.class_dim)
         self.dense2 = nn.Linear(self.config.hidden_dim, self.config.adv_det_dim)
         self.dense2 = nn.Linear(self.config.hidden_dim, self.config.class_dim)

@@ -11,5 +11,8 @@
 from .trainer.proteinr_trainer import ProteinRTrainer
 from .configuration.proteinr_configuration import ProteinRConfigManager
 from .models import BERTProteinRModelList, GloVeProteinRModelList
-from .dataset_utils.dataset_list import ProteinRDatasetList, ProteinRegressionDatasetList
+from .dataset_utils.dataset_list import (
+    ProteinRDatasetList,
+    ProteinRegressionDatasetList,
+)
 from .prediction.protein_regressor import ProteinRegressor

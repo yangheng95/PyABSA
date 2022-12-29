@@ -7,7 +7,10 @@
 
 # This function coverts a ABSA datasets to inference set, try to convert every datasets found in the dir
 # please do check the output file!
-from pyabsa.utils.absa_utils.absa_utils import generate_inference_set_for_apc, convert_apc_set_to_atepc_set
+from pyabsa.utils.absa_utils.absa_utils import (
+    generate_inference_set_for_apc,
+    convert_apc_set_to_atepc_set,
+)
 
 
 # def test_apc_inference_set_generation():

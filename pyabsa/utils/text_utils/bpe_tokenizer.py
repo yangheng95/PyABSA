@@ -16,14 +16,15 @@ from transformers import AutoTokenizer
 from pyabsa.utils.pyabsa_utils import fprint
 
 
-def train_bpe_tokenizer(corpus_files=None,
-                        base_tokenizer='roberta-base',
-                        save_path='bpe_tokenizer',
-                        vocab_size=60000,
-                        min_frequency=1000,
-                        special_tokens=None,
-                        **kwargs
-                        ):
+def train_bpe_tokenizer(
+    corpus_files=None,
+    base_tokenizer="roberta-base",
+    save_path="bpe_tokenizer",
+    vocab_size=60000,
+    min_frequency=1000,
+    special_tokens=None,
+    **kwargs,
+):
     """
     Train a Byte-Pair Encoding tokenizer.
     Args:
@@ -51,44 +52,53 @@ def train_bpe_tokenizer(corpus_files=None,
         ]
 
     if not corpus_files:
-        corpus_files = findfile.find_cwd_files('.txt', exclude_key=['word2vec', 'ignore'])
+        corpus_files = findfile.find_cwd_files(
+            ".txt", exclude_key=["word2vec", "ignore"]
+        )
     elif isinstance(corpus_files, str):
         corpus_files = [corpus_files]
     else:
         assert isinstance(corpus_files, list)
-    fprint('Start loading corpus files:', corpus_files)
+    fprint("Start loading corpus files:", corpus_files)
 
     tokenizer = ByteLevelBPETokenizer()
     # Customize training
-    fprint('Start training BPE tokenizer')
+    fprint("Start training BPE tokenizer")
     start = time.time()
-    tokenizer.train(files=corpus_files, vocab_size=vocab_size, min_frequency=min_frequency,
-                    special_tokens=special_tokens)
-    fprint('Time cost: ', time.time() - start)
+    tokenizer.train(
+        files=corpus_files,
+        vocab_size=vocab_size,
+        min_frequency=min_frequency,
+        special_tokens=special_tokens,
+    )
+    fprint("Time cost: ", time.time() - start)
 
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
-    assert isinstance(base_tokenizer, str), 'base_tokenizer must be a string of the pretrained tokenizer name.'
+    assert isinstance(
+        base_tokenizer, str
+    ), "base_tokenizer must be a string of the pretrained tokenizer name."
     from transformers import AutoConfig
+
     config = AutoConfig.from_pretrained(base_tokenizer)
-    config.save_pretrained(f'{save_path}/')
+    config.save_pretrained(f"{save_path}/")
 
-    tokenizer.save(f'{save_path}/tokenizer.json')
-    tokenizer.save_model(f'{save_path}/')
-    fprint('BPE tokenizer training done ')
+    tokenizer.save(f"{save_path}/tokenizer.json")
+    tokenizer.save_model(f"{save_path}/")
+    fprint("BPE tokenizer training done ")
 
 
-if __name__ == '__main__':
-    train_bpe_tokenizer(corpus_files=None,
-                        base_tokenizer='roberta-base',
-                        save_path='bpe_tokenizer'
-                        )
+if __name__ == "__main__":
+    train_bpe_tokenizer(
+        corpus_files=None, base_tokenizer="roberta-base", save_path="bpe_tokenizer"
+    )
 
-    tokenizer = AutoTokenizer.from_pretrained('rna_bpe_tokenizer2')
+    tokenizer = AutoTokenizer.from_pretrained("rna_bpe_tokenizer2")
 
     output = tokenizer.tokenize(
         "GTGAGTTTACATATTCCTTTTATATACCGTTATCACTCATGATTAGGTGATCATAATTGGTAGGAAGAACCTTTGGTTAAGTAAGGTAAAAGAA"
         "ATAGGCTAGTTCGTGCCAAATATTTCTTAATGAATACAATTCAGATAGATGTTTACTGCAGAGTTATTTTTTGAGCTTTGGTTGCTGGTAGTAGTC"
-        "GCCAATTCCAGAAATTGTGGTTTTAGGATCCTCTCAGTTTTATAAATTCAAGCAGTGATTCTTTCCTTGAAGATTTATGTTCCGTCTAAGTAGTTCAAAGGTTTTGTATATTTATACTGCTCTTATTATCTTTCTTTTTTGAAATTGCAG")
+        "GCCAATTCCAGAAATTGTGGTTTTAGGATCCTCTCAGTTTTATAAATTCAAGCAGTGATTCTTTCCTTGAAGATTTATGTTCCGTCTAAGTAGTTCAAAGGTTTTGTATATTTATACTGCTCTTATTATCTTTCTTTTTTGAAATTGCAG"
+    )
     fprint(output)

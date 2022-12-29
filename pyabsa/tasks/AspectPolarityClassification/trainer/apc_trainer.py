@@ -17,14 +17,16 @@ from ..instructor.apc_instructor import APCTrainingInstructor
 
 
 class APCTrainer(Trainer):
-
-    def __init__(self, config: APCConfigManager = None,
-                 dataset=None,
-                 from_checkpoint: str = None,
-                 checkpoint_save_mode: int = ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                 auto_device: Union[bool, str] = DeviceTypeOption.AUTO,
-                 path_to_save=None,
-                 load_aug=False):
+    def __init__(
+        self,
+        config: APCConfigManager = None,
+        dataset=None,
+        from_checkpoint: str = None,
+        checkpoint_save_mode: int = ModelSaveOption.SAVE_MODEL_STATE_DICT,
+        auto_device: Union[bool, str] = DeviceTypeOption.AUTO,
+        path_to_save=None,
+        load_aug=False,
+    ):
         """
         Init a trainer for trainer a APC, ATEPC, TC or TAD model, after trainer,
         you need to call load_trained_model() to get the trained model for inference.
@@ -42,13 +44,21 @@ class APCTrainer(Trainer):
         :param load_aug=False: Load the available augmentation dataset if any
 
         """
-        super(APCTrainer, self).__init__(config=config, dataset=dataset, from_checkpoint=from_checkpoint,
-                                         checkpoint_save_mode=checkpoint_save_mode, auto_device=auto_device,
-                                         path_to_save=path_to_save, load_aug=load_aug)
+        super(APCTrainer, self).__init__(
+            config=config,
+            dataset=dataset,
+            from_checkpoint=from_checkpoint,
+            checkpoint_save_mode=checkpoint_save_mode,
+            auto_device=auto_device,
+            path_to_save=path_to_save,
+            load_aug=load_aug,
+        )
 
         self.training_instructor = APCTrainingInstructor
         self.inference_model_class = SentimentClassifier
         self.config.task_code = TaskCodeOption.Aspect_Polarity_Classification
-        self.config.task_name = TaskNameOption().get(TaskCodeOption.Aspect_Polarity_Classification)
+        self.config.task_name = TaskNameOption().get(
+            TaskCodeOption.Aspect_Polarity_Classification
+        )
 
         self._run()

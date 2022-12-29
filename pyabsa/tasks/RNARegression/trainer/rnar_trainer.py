@@ -17,14 +17,16 @@ from ..instructor.rnar_instructor import RNARTrainingInstructor
 
 
 class RNARTrainer(Trainer):
-
-    def __init__(self, config: RNARConfigManager = None,
-                 dataset=None,
-                 from_checkpoint: str = None,
-                 checkpoint_save_mode: int = ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                 auto_device: Union[bool, str] = DeviceTypeOption.AUTO,
-                 path_to_save=None,
-                 load_aug=False):
+    def __init__(
+        self,
+        config: RNARConfigManager = None,
+        dataset=None,
+        from_checkpoint: str = None,
+        checkpoint_save_mode: int = ModelSaveOption.SAVE_MODEL_STATE_DICT,
+        auto_device: Union[bool, str] = DeviceTypeOption.AUTO,
+        path_to_save=None,
+        load_aug=False,
+    ):
         """
         Init a trainer for trainer a APC, ATEPC, TC or TAD model, after trainer,
         you need to call load_trained_model() to get the trained model for inference.
@@ -42,13 +44,21 @@ class RNARTrainer(Trainer):
         :param load_aug=False: Load the available augmentation dataset if any
 
         """
-        super(RNARTrainer, self).__init__(config=config, dataset=dataset, from_checkpoint=from_checkpoint,
-                                          checkpoint_save_mode=checkpoint_save_mode, auto_device=auto_device,
-                                          path_to_save=path_to_save, load_aug=load_aug)
+        super(RNARTrainer, self).__init__(
+            config=config,
+            dataset=dataset,
+            from_checkpoint=from_checkpoint,
+            checkpoint_save_mode=checkpoint_save_mode,
+            auto_device=auto_device,
+            path_to_save=path_to_save,
+            load_aug=load_aug,
+        )
 
         self.training_instructor = RNARTrainingInstructor
         self.inference_model_class = RNARegressor
         self.config.task_code = TaskCodeOption.RNASequenceRegression
-        self.config.task_name = TaskNameOption().get(TaskCodeOption.RNASequenceRegression)
+        self.config.task_name = TaskNameOption().get(
+            TaskCodeOption.RNASequenceRegression
+        )
 
         self._run()

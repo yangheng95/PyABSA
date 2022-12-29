@@ -54,64 +54,112 @@ class AlignmentMatrix(nn.Module):
         asp_chunks = asp.chunk(asp_len, dim=1)
         for i, ctx_chunk in enumerate(ctx_chunks):
             for j, asp_chunk in enumerate(asp_chunks):
-                feat = torch.cat([ctx_chunk, asp_chunk, ctx_chunk * asp_chunk], dim=2)  # batch_size x 1 x 6*hidden_dim
-                alignment_mat[:, i, j] = feat.matmul(self.w_u.expand(batch_size, -1, -1)).squeeze(-1).squeeze(-1)
+                feat = torch.cat(
+                    [ctx_chunk, asp_chunk, ctx_chunk * asp_chunk], dim=2
+                )  # batch_size x 1 x 6*hidden_dim
+                alignment_mat[:, i, j] = (
+                    feat.matmul(self.w_u.expand(batch_size, -1, -1))
+                    .squeeze(-1)
+                    .squeeze(-1)
+                )
         return alignment_mat
 
 
 class MGAN_BERT(nn.Module):
-    inputs = ['text_indices', 'aspect_indices', 'left_indices']
+    inputs = ["text_indices", "aspect_indices", "left_indices"]
 
     def __init__(self, bert, config):
         super(MGAN_BERT, self).__init__()
         self.config = config
         self.embed = bert
-        self.ctx_lstm = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True,
-                                    bidirectional=True)
-        self.asp_lstm = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True,
-                                    bidirectional=True)
+        self.ctx_lstm = DynamicLSTM(
+            config.embed_dim,
+            config.hidden_dim,
+            num_layers=1,
+            batch_first=True,
+            bidirectional=True,
+        )
+        self.asp_lstm = DynamicLSTM(
+            config.embed_dim,
+            config.hidden_dim,
+            num_layers=1,
+            batch_first=True,
+            bidirectional=True,
+        )
         self.location = LocationEncoding(config)
-        self.w_a2c = nn.Parameter(torch.Tensor(2 * config.hidden_dim, 2 * config.hidden_dim))
-        self.w_c2a = nn.Parameter(torch.Tensor(2 * config.hidden_dim, 2 * config.hidden_dim))
+        self.w_a2c = nn.Parameter(
+            torch.Tensor(2 * config.hidden_dim, 2 * config.hidden_dim)
+        )
+        self.w_c2a = nn.Parameter(
+            torch.Tensor(2 * config.hidden_dim, 2 * config.hidden_dim)
+        )
         self.alignment = AlignmentMatrix(config)
         self.dense = nn.Linear(8 * config.hidden_dim, config.output_dim)
 
     def forward(self, inputs):
-        text_raw_indices = inputs['text_indices']  # batch_size x seq_len
-        aspect_indices = inputs['aspect_indices']
-        text_left_indices = inputs['left_indices']
+        text_raw_indices = inputs["text_indices"]  # batch_size x seq_len
+        aspect_indices = inputs["aspect_indices"]
+        text_left_indices = inputs["left_indices"]
         batch_size = text_raw_indices.size(0)
         ctx_len = torch.sum(text_raw_indices != 0, dim=1)
         asp_len = torch.sum(aspect_indices != 0, dim=1)
         left_len = torch.sum(text_left_indices != 0, dim=-1)
-        aspect_in_text = torch.cat([left_len.unsqueeze(-1), (left_len + asp_len - 1).unsqueeze(-1)], dim=-1)
+        aspect_in_text = torch.cat(
+            [left_len.unsqueeze(-1), (left_len + asp_len - 1).unsqueeze(-1)], dim=-1
+        )
 
-        ctx = self.embed(text_raw_indices)['last_hidden_state']  # batch_size x seq_len x embed_dim
-        asp = self.embed(aspect_indices)['last_hidden_state']  # batch_size x seq_len x embed_dim
+        ctx = self.embed(text_raw_indices)[
+            "last_hidden_state"
+        ]  # batch_size x seq_len x embed_dim
+        asp = self.embed(aspect_indices)[
+            "last_hidden_state"
+        ]  # batch_size x seq_len x embed_dim
 
         ctx_out, (_, _) = self.ctx_lstm(ctx, ctx_len)
-        ctx_out = self.location(ctx_out, aspect_in_text).float()  # batch_size x (ctx)seq_len x 2*hidden_dim
+        ctx_out = self.location(
+            ctx_out, aspect_in_text
+        ).float()  # batch_size x (ctx)seq_len x 2*hidden_dim
         ctx_pool = torch.sum(ctx_out, dim=1)
-        ctx_pool = torch.div(ctx_pool, ctx_len.float().unsqueeze(-1)).unsqueeze(-1)  # batch_size x 2*hidden_dim x 1
+        ctx_pool = torch.div(ctx_pool, ctx_len.float().unsqueeze(-1)).unsqueeze(
+            -1
+        )  # batch_size x 2*hidden_dim x 1
 
-        asp_out, (_, _) = self.asp_lstm(asp, asp_len)  # batch_size x (asp)seq_len x 2*hidden_dim
+        asp_out, (_, _) = self.asp_lstm(
+            asp, asp_len
+        )  # batch_size x (asp)seq_len x 2*hidden_dim
         asp_pool = torch.sum(asp_out, dim=1)
-        asp_pool = torch.div(asp_pool, asp_len.float().unsqueeze(-1)).unsqueeze(-1)  # batch_size x 2*hidden_dim x 1
+        asp_pool = torch.div(asp_pool, asp_len.float().unsqueeze(-1)).unsqueeze(
+            -1
+        )  # batch_size x 2*hidden_dim x 1
 
-        alignment_mat = self.alignment(batch_size, ctx_out, asp_out.float())  # batch_size x (ctx)seq_len x (asp)seq_len
+        alignment_mat = self.alignment(
+            batch_size, ctx_out, asp_out.float()
+        )  # batch_size x (ctx)seq_len x (asp)seq_len
         # batch_size x 2*hidden_dim
-        f_asp2ctx = torch.matmul(ctx_out.transpose(1, 2),
-                                 F.softmax(alignment_mat.max(2, keepdim=True)[0], dim=1)).squeeze(-1)
-        f_ctx2asp = torch.matmul(F.softmax(alignment_mat.max(1, keepdim=True)[0], dim=2), asp_out).transpose(1,
-                                                                                                             2).squeeze(
-            -1)
+        f_asp2ctx = torch.matmul(
+            ctx_out.transpose(1, 2),
+            F.softmax(alignment_mat.max(2, keepdim=True)[0], dim=1),
+        ).squeeze(-1)
+        f_ctx2asp = (
+            torch.matmul(
+                F.softmax(alignment_mat.max(1, keepdim=True)[0], dim=2), asp_out
+            )
+            .transpose(1, 2)
+            .squeeze(-1)
+        )
 
-        c_asp2ctx_alpha = F.softmax(ctx_out.matmul(self.w_a2c.expand(batch_size, -1, -1)).matmul(asp_pool), dim=1)
+        c_asp2ctx_alpha = F.softmax(
+            ctx_out.matmul(self.w_a2c.expand(batch_size, -1, -1)).matmul(asp_pool),
+            dim=1,
+        )
         c_asp2ctx = torch.matmul(ctx_out.transpose(1, 2), c_asp2ctx_alpha).squeeze(-1)
-        c_ctx2asp_alpha = F.softmax(asp_out.matmul(self.w_c2a.expand(batch_size, -1, -1)).matmul(ctx_pool), dim=1)
+        c_ctx2asp_alpha = F.softmax(
+            asp_out.matmul(self.w_c2a.expand(batch_size, -1, -1)).matmul(ctx_pool),
+            dim=1,
+        )
         c_ctx2asp = torch.matmul(asp_out.transpose(1, 2), c_ctx2asp_alpha).squeeze(-1)
 
         feat = torch.cat([c_asp2ctx, f_asp2ctx, f_ctx2asp, c_ctx2asp], dim=1)
         out = self.dense(feat)  # batch_size x polarity_dim
 
-        return {'logits': out}
+        return {"logits": out}

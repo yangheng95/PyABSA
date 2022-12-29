@@ -23,4 +23,6 @@ class ProteinRegressionDatasetList(list):
     """
 
     def __init__(self):
-        super(ProteinRegressionDatasetList, self).__init__(self.__class__.__dict__.values())
+        super(ProteinRegressionDatasetList, self).__init__(
+            self.__class__.__dict__.values()
+        )

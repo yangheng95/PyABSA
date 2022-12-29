@@ -14,14 +14,20 @@ from torch.nn import Conv1d, MaxPool1d, Linear, Dropout, functional as F
 
 
 class CNN(nn.Module):
-    inputs = ['text_indices']
+    inputs = ["text_indices"]
 
     def __init__(self, embedding_matrix, config):
         super(CNN, self).__init__()
         self.config = config
-        self.embed = nn.Embedding.from_pretrained(torch.tensor(embedding_matrix, dtype=torch.float))
-        self.cnn = Conv1d(self.config.embed_dim, self.config.hidden_dim, kernel_size=self.config.kernel_size,
-                          padding=self.config.padding)
+        self.embed = nn.Embedding.from_pretrained(
+            torch.tensor(embedding_matrix, dtype=torch.float)
+        )
+        self.cnn = Conv1d(
+            self.config.embed_dim,
+            self.config.hidden_dim,
+            kernel_size=self.config.kernel_size,
+            padding=self.config.padding,
+        )
         self.pooling = MaxPool1d(self.config.max_seq_len - self.config.kernel_size + 1)
         self.dense = nn.Linear(self.config.hidden_dim, self.config.output_dim)
 

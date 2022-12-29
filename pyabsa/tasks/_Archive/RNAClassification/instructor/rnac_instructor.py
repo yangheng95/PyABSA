@@ -28,11 +28,14 @@ from ..dataset_utils.data_utils_for_training import GloVeRNACDataset
 from ..dataset_utils.data_utils_for_training import BERTRNACDataset
 from ..models import GloVeRNACModelList, BERTRNACModelList
 
-from pyabsa.framework.tokenizer_class.tokenizer_class import Tokenizer, build_embedding_matrix, PretrainedTokenizer
+from pyabsa.framework.tokenizer_class.tokenizer_class import (
+    Tokenizer,
+    build_embedding_matrix,
+    PretrainedTokenizer,
+)
 
 
 class RNACTrainingInstructor(BaseTrainingInstructor):
-
     def __init__(self, config):
         super().__init__(config)
 
@@ -52,17 +55,20 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             self.model.parameters(),
             lr=self.config.learning_rate,
             weight_decay=self.config.l2reg,
-
         )
 
         self.train_dataloaders = []
         self.valid_dataloaders = []
 
-        torch.save(self.model.state_dict(), './init_state_dict.bin')
+        torch.save(self.model.state_dict(), "./init_state_dict.bin")
 
         self.config.device = torch.device(self.config.device)
-        if self.config.device.type == 'cuda':
-            self.logger.info("cuda memory allocated:{}".format(torch.cuda.memory_allocated(device=self.config.device)))
+        if self.config.device.type == "cuda":
+            self.logger.info(
+                "cuda memory allocated:{}".format(
+                    torch.cuda.memory_allocated(device=self.config.device)
+                )
+            )
 
         print_args(self.config, self.logger)
 
@@ -73,26 +79,37 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         global_step = 0
         max_fold_acc = 0
         max_fold_f1 = 0
-        save_path = '{0}/{1}_{2}'.format(self.config.model_path_to_save,
-                                         self.config.model_name,
-                                         self.config.dataset_name
-                                         )
+        save_path = "{0}/{1}_{2}".format(
+            self.config.model_path_to_save,
+            self.config.model_name,
+            self.config.dataset_name,
+        )
 
         losses = []
 
-        self.config.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
-        self.config.max_test_metrics = {'max_test_acc': 0, 'max_test_f1': 0}
+        self.config.metrics_of_this_checkpoint = {"acc": 0, "f1": 0}
+        self.config.max_test_metrics = {"max_test_acc": 0, "max_test_f1": 0}
 
-        self.logger.info("***** Running training for {} *****".format(self.config.task_name))
+        self.logger.info(
+            "***** Running training for {} *****".format(self.config.task_name)
+        )
         self.logger.info("Training set examples = %d", len(self.train_set))
         if self.test_set:
             self.logger.info("Test set examples = %d", len(self.test_set))
         self.logger.info("Batch size = %d", self.config.batch_size)
-        self.logger.info("Num steps = %d",
-                         len(self.train_dataloaders[0]) // self.config.batch_size * self.config.num_epoch)
+        self.logger.info(
+            "Num steps = %d",
+            len(self.train_dataloaders[0])
+            // self.config.batch_size
+            * self.config.num_epoch,
+        )
         patience = self.config.patience + self.config.evaluate_begin
         if self.config.log_step < 0:
-            self.config.log_step = len(self.train_dataloaders[0]) if self.config.log_step < 0 else self.config.log_step
+            self.config.log_step = (
+                len(self.train_dataloaders[0])
+                if self.config.log_step < 0
+                else self.config.log_step
+            )
 
         for epoch in range(self.config.num_epoch):
             patience -= 1
@@ -102,7 +119,10 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 # switch model to train mode, clear gradient accumulators
                 self.model.train()
                 self.optimizer.zero_grad()
-                inputs = [sample_batched[col].to(self.config.device) for col in self.config.inputs_cols]
+                inputs = [
+                    sample_batched[col].to(self.config.device)
+                    for col in self.config.inputs_cols
+                ]
 
                 if self.config.use_amp:
                     with torch.cuda.amp.autocast():
@@ -110,10 +130,10 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 else:
                     outputs = self.model(inputs)
 
-                targets = sample_batched['label'].to(self.config.device)
+                targets = sample_batched["label"].to(self.config.device)
 
-                if isinstance(outputs, dict) and 'loss' in outputs:
-                    loss = outputs['loss']
+                if isinstance(outputs, dict) and "loss" in outputs:
+                    loss = outputs["loss"]
                 else:
                     loss = criterion(outputs, targets)
 
@@ -139,8 +159,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                         else:
                             test_acc, f1 = self._evaluate_acc_f1(self.test_dataloader)
 
-                        self.config.metrics_of_this_checkpoint['acc'] = test_acc
-                        self.config.metrics_of_this_checkpoint['f1'] = f1
+                        self.config.metrics_of_this_checkpoint["acc"] = test_acc
+                        self.config.metrics_of_this_checkpoint["f1"] = f1
 
                         if test_acc > max_fold_acc or f1 > max_fold_f1:
 
@@ -162,34 +182,56 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                                     except:
                                         # logger.info('Can not remove sub-optimal trained model:', save_path)
                                         pass
-                                save_path = '{0}/{1}_{2}_acc_{3}_f1_{4}/'.format(self.config.model_path_to_save,
-                                                                                 self.config.model_name,
-                                                                                 self.config.dataset_name,
-                                                                                 round(test_acc * 100, 2),
-                                                                                 round(f1 * 100, 2)
-                                                                                 )
+                                save_path = "{0}/{1}_{2}_acc_{3}_f1_{4}/".format(
+                                    self.config.model_path_to_save,
+                                    self.config.model_name,
+                                    self.config.dataset_name,
+                                    round(test_acc * 100, 2),
+                                    round(f1 * 100, 2),
+                                )
 
-                                if test_acc > self.config.max_test_metrics['max_test_acc']:
-                                    self.config.max_test_metrics['max_test_acc'] = test_acc
-                                if f1 > self.config.max_test_metrics['max_test_f1']:
-                                    self.config.max_test_metrics['max_test_f1'] = f1
+                                if (
+                                    test_acc
+                                    > self.config.max_test_metrics["max_test_acc"]
+                                ):
+                                    self.config.max_test_metrics[
+                                        "max_test_acc"
+                                    ] = test_acc
+                                if f1 > self.config.max_test_metrics["max_test_f1"]:
+                                    self.config.max_test_metrics["max_test_f1"] = f1
 
-                                save_model(self.config, self.model, self.tokenizer, save_path)
+                                save_model(
+                                    self.config, self.model, self.tokenizer, save_path
+                                )
 
-                        description = ('Epoch:{} | Loss:{:.4f} | {} Acc:{:.2f}(max:{:.2f})'
-                                       ' Dev F1:{:.2f}(max:{:.2f})'.format(epoch,
-                                                                           loss.item(),
-                                                                           'Test' if self.valid_dataloader else 'Valid',
-                                                                           test_acc * 100,
-                                                                           max_fold_acc * 100,
-                                                                           f1 * 100,
-                                                                           max_fold_f1 * 100))
+                        description = (
+                            "Epoch:{} | Loss:{:.4f} | {} Acc:{:.2f}(max:{:.2f})"
+                            " Dev F1:{:.2f}(max:{:.2f})".format(
+                                epoch,
+                                loss.item(),
+                                "Test" if self.valid_dataloader else "Valid",
+                                test_acc * 100,
+                                max_fold_acc * 100,
+                                f1 * 100,
+                                max_fold_f1 * 100,
+                            )
+                        )
                     else:
-                        if self.config.save_mode and epoch >= self.config.evaluate_begin:
-                            save_model(self.config, self.model, self.tokenizer, save_path + '_{}/'.format(loss.item()))
-                        description = 'Epoch:{} | Loss: {} |No evaluation until epoch:{}'.format(epoch,
-                                                                                                 round(loss.item(), 8),
-                                                                                                 self.config.evaluate_begin)
+                        if (
+                            self.config.save_mode
+                            and epoch >= self.config.evaluate_begin
+                        ):
+                            save_model(
+                                self.config,
+                                self.model,
+                                self.tokenizer,
+                                save_path + "_{}/".format(loss.item()),
+                            )
+                        description = (
+                            "Epoch:{} | Loss: {} |No evaluation until epoch:{}".format(
+                                epoch, round(loss.item(), 8), self.config.evaluate_begin
+                            )
+                        )
 
                     iterator.set_description(description)
                     iterator.refresh()
@@ -197,16 +239,18 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 break
 
         if not self.valid_dataloader:
-            self.config.MV.add_metric('Max-Test-Acc w/o Valid Set', max_fold_acc * 100)
-            self.config.MV.add_metric('Max-Test-F1 w/o Valid Set', max_fold_f1 * 100)
+            self.config.MV.add_metric("Max-Test-Acc w/o Valid Set", max_fold_acc * 100)
+            self.config.MV.add_metric("Max-Test-F1 w/o Valid Set", max_fold_f1 * 100)
 
         if self.valid_dataloader:
-            fprint('Loading best model: {} and evaluating on test set '.format(save_path))
+            fprint(
+                "Loading best model: {} and evaluating on test set ".format(save_path)
+            )
             self._reload_model_state_dict(save_path)
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
 
-            self.config.MV.add_metric('Max-Test-Acc', max_fold_acc * 100)
-            self.config.MV.add_metric('Max-Test-F1', max_fold_f1 * 100)
+            self.config.MV.add_metric("Max-Test-Acc", max_fold_acc * 100)
+            self.config.MV.add_metric("Max-Test-F1", max_fold_f1 * 100)
 
         self.logger.info(self.config.MV.summary(no_print=True))
 
@@ -233,53 +277,71 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         fold_test_acc = []
         fold_test_f1 = []
 
-        save_path_k_fold = ''
+        save_path_k_fold = ""
         max_fold_acc_k_fold = 0
 
-        self.config.metrics_of_this_checkpoint = {'acc': 0, 'f1': 0}
-        self.config.max_test_metrics = {'max_test_acc': 0, 'max_test_f1': 0}
+        self.config.metrics_of_this_checkpoint = {"acc": 0, "f1": 0}
+        self.config.max_test_metrics = {"max_test_acc": 0, "max_test_f1": 0}
 
-        for f, (train_dataloader, valid_dataloader) in enumerate(zip(self.train_dataloaders, self.valid_dataloaders)):
+        for f, (train_dataloader, valid_dataloader) in enumerate(
+            zip(self.train_dataloaders, self.valid_dataloaders)
+        ):
             patience = self.config.patience + self.config.evaluate_begin
             if self.config.log_step < 0:
-                self.config.log_step = len(
-                    self.train_dataloaders[0]) if self.config.log_step < 0 else self.config.log_step
+                self.config.log_step = (
+                    len(self.train_dataloaders[0])
+                    if self.config.log_step < 0
+                    else self.config.log_step
+                )
 
-            self.logger.info("***** Running training for {} *****".format(self.config.task_name))
+            self.logger.info(
+                "***** Running training for {} *****".format(self.config.task_name)
+            )
             self.logger.info("Training set examples = %d", len(self.train_set))
             if self.test_set:
                 self.logger.info("Test set examples = %d", len(self.test_set))
             self.logger.info("Batch size = %d", self.config.batch_size)
-            self.logger.info("Num steps = %d", len(train_dataloader) // self.config.batch_size * self.config.num_epoch)
+            self.logger.info(
+                "Num steps = %d",
+                len(train_dataloader) // self.config.batch_size * self.config.num_epoch,
+            )
             if len(self.train_dataloaders) > 1:
-                self.logger.info('No. {} trainer in {} folds'.format(f + 1, self.config.cross_validate_fold))
+                self.logger.info(
+                    "No. {} trainer in {} folds".format(
+                        f + 1, self.config.cross_validate_fold
+                    )
+                )
             global_step = 0
             max_fold_acc = 0
             max_fold_f1 = 0
-            save_path = '{0}/{1}_{2}'.format(self.config.model_path_to_save,
-                                             self.config.model_name,
-                                             self.config.dataset_name
-                                             )
+            save_path = "{0}/{1}_{2}".format(
+                self.config.model_path_to_save,
+                self.config.model_name,
+                self.config.dataset_name,
+            )
             for epoch in range(self.config.num_epoch):
                 patience -= 1
                 iterator = tqdm(train_dataloader)
-                description = ''
+                description = ""
                 for i_batch, sample_batched in enumerate(iterator):
                     global_step += 1
                     # switch model to train mode, clear gradient accumulators
                     self.model.train()
                     self.optimizer.zero_grad()
-                    inputs = [sample_batched[col].to(self.config.device) for col in self.config.inputs_cols]
+                    inputs = [
+                        sample_batched[col].to(self.config.device)
+                        for col in self.config.inputs_cols
+                    ]
                     if self.config.use_amp:
                         with torch.cuda.amp.autocast():
                             outputs = self.model(inputs)
                     else:
                         outputs = self.model(inputs)
 
-                    targets = sample_batched['label'].to(self.config.device)
+                    targets = sample_batched["label"].to(self.config.device)
 
-                    if isinstance(outputs, dict) and 'loss' in outputs:
-                        loss = outputs['loss']
+                    if isinstance(outputs, dict) and "loss" in outputs:
+                        loss = outputs["loss"]
                     else:
                         loss = criterion(outputs, targets)
 
@@ -297,12 +359,15 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
 
                     # evaluate if test set is available
                     if global_step % self.config.log_step == 0:
-                        if self.valid_dataloader and epoch >= self.config.evaluate_begin:
+                        if (
+                            self.valid_dataloader
+                            and epoch >= self.config.evaluate_begin
+                        ):
 
                             test_acc, f1 = self._evaluate_acc_f1(valid_dataloader)
 
-                            self.config.metrics_of_this_checkpoint['acc'] = test_acc
-                            self.config.metrics_of_this_checkpoint['f1'] = f1
+                            self.config.metrics_of_this_checkpoint["acc"] = test_acc
+                            self.config.metrics_of_this_checkpoint["f1"] = f1
                             if test_acc > max_fold_acc or f1 > max_fold_f1:
 
                                 if test_acc > max_fold_acc:
@@ -314,7 +379,9 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                                     patience = self.config.patience
 
                                 if self.config.model_path_to_save:
-                                    if not os.path.exists(self.config.model_path_to_save):
+                                    if not os.path.exists(
+                                        self.config.model_path_to_save
+                                    ):
                                         os.makedirs(self.config.model_path_to_save)
                                     if save_path:
                                         try:
@@ -323,32 +390,46 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                                         except:
                                             # logger.info('Can not remove sub-optimal trained model:', save_path)
                                             pass
-                                    save_path = '{0}/{1}_{2}_acc_{3}_f1_{4}/'.format(self.config.model_path_to_save,
-                                                                                     self.config.model_name,
-                                                                                     self.config.dataset_name,
-                                                                                     round(test_acc * 100, 2),
-                                                                                     round(f1 * 100, 2)
-                                                                                     )
+                                    save_path = "{0}/{1}_{2}_acc_{3}_f1_{4}/".format(
+                                        self.config.model_path_to_save,
+                                        self.config.model_name,
+                                        self.config.dataset_name,
+                                        round(test_acc * 100, 2),
+                                        round(f1 * 100, 2),
+                                    )
 
-                                    if test_acc > self.config.max_test_metrics['max_test_acc']:
-                                        self.config.max_test_metrics['max_test_acc'] = test_acc
-                                    if f1 > self.config.max_test_metrics['max_test_f1']:
-                                        self.config.max_test_metrics['max_test_f1'] = f1
+                                    if (
+                                        test_acc
+                                        > self.config.max_test_metrics["max_test_acc"]
+                                    ):
+                                        self.config.max_test_metrics[
+                                            "max_test_acc"
+                                        ] = test_acc
+                                    if f1 > self.config.max_test_metrics["max_test_f1"]:
+                                        self.config.max_test_metrics["max_test_f1"] = f1
 
-                                    save_model(self.config, self.model, self.tokenizer, save_path)
+                                    save_model(
+                                        self.config,
+                                        self.model,
+                                        self.tokenizer,
+                                        save_path,
+                                    )
 
-                            description = ('Epoch:{} | Loss:{:.4f} | Dev Acc:{:.2f}(max:{:.2f})'
-                                           ' Dev F1:{:.2f}(max:{:.2f})'.format(epoch,
-                                                                               loss.item(),
-                                                                               test_acc * 100,
-                                                                               max_fold_acc * 100,
-                                                                               f1 * 100,
-                                                                               max_fold_f1 * 100))
+                            description = (
+                                "Epoch:{} | Loss:{:.4f} | Dev Acc:{:.2f}(max:{:.2f})"
+                                " Dev F1:{:.2f}(max:{:.2f})".format(
+                                    epoch,
+                                    loss.item(),
+                                    test_acc * 100,
+                                    max_fold_acc * 100,
+                                    f1 * 100,
+                                    max_fold_f1 * 100,
+                                )
+                            )
                         else:
-                            description = 'Epoch:{} | Loss:{} | No evaluation until epoch:{}'.format(epoch,
-                                                                                                     round(loss.item(),
-                                                                                                           8),
-                                                                                                     self.config.evaluate_begin)
+                            description = "Epoch:{} | Loss:{} | No evaluation until epoch:{}".format(
+                                epoch, round(loss.item(), 8), self.config.evaluate_begin
+                            )
 
                     iterator.set_description(description)
                     iterator.refresh()
@@ -361,17 +442,21 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             fold_test_acc.append(max_fold_acc)
             fold_test_f1.append(max_fold_f1)
 
-            self.config.MV.add_metric('Fold{}-Max-Valid-Acc'.format(f), max_fold_acc * 100)
-            self.config.MV.add_metric('Fold{}-Max-Valid-F1'.format(f), max_fold_f1 * 100)
+            self.config.MV.add_metric(
+                "Fold{}-Max-Valid-Acc".format(f), max_fold_acc * 100
+            )
+            self.config.MV.add_metric(
+                "Fold{}-Max-Valid-F1".format(f), max_fold_f1 * 100
+            )
 
             self.logger.info(self.config.MV.summary(no_print=True))
-            self._reload_model_state_dict('./init_state_dict.bin')
+            self._reload_model_state_dict("./init_state_dict.bin")
 
         max_test_acc = numpy.max(fold_test_acc)
         max_test_f1 = numpy.mean(fold_test_f1)
 
-        self.config.MV.add_metric('Max-Test-Acc', max_test_acc * 100)
-        self.config.MV.add_metric('Max-Test-F1', max_test_f1 * 100)
+        self.config.MV.add_metric("Max-Test-Acc", max_test_acc * 100)
+        self.config.MV.add_metric("Max-Test-F1", max_test_f1 * 100)
 
         if self.config.cross_validate_fold > 0:
             self.logger.info(self.config.MV.summary(no_print=True))
@@ -392,9 +477,10 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         else:
             # direct return model if do not evaluate
             if self.config.model_path_to_save:
-                save_path_k_fold = '{0}/{1}/'.format(self.config.model_path_to_save,
-                                                     self.config.model_name,
-                                                     )
+                save_path_k_fold = "{0}/{1}/".format(
+                    self.config.model_path_to_save,
+                    self.config.model_name,
+                )
                 save_model(self.config, self.model, self.tokenizer, save_path_k_fold)
             del self.train_dataloaders
             del self.test_dataloader
@@ -411,11 +497,16 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         with torch.no_grad():
             for t_batch, t_sample_batched in enumerate(test_dataloader):
 
-                t_inputs = [t_sample_batched[col].to(self.config.device) for col in self.config.inputs_cols]
-                t_targets = t_sample_batched['label'].to(self.config.device)
+                t_inputs = [
+                    t_sample_batched[col].to(self.config.device)
+                    for col in self.config.inputs_cols
+                ]
+                t_targets = t_sample_batched["label"].to(self.config.device)
 
                 sen_outputs = self.model(t_inputs)
-                n_test_correct += (torch.argmax(sen_outputs, -1) == t_targets).sum().item()
+                n_test_correct += (
+                    (torch.argmax(sen_outputs, -1) == t_targets).sum().item()
+                )
                 n_test_total += len(sen_outputs)
 
                 if t_targets_all is None:
@@ -426,22 +517,43 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                     t_outputs_all = torch.cat((t_outputs_all, sen_outputs), dim=0)
 
         test_acc = n_test_correct / n_test_total
-        f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all.cpu(), -1),
-                              labels=list(range(self.config.output_dim)), average='macro')
-        if self.config.args.get('show_metric', False):
-            report = metrics.classification_report(t_targets_all.cpu(), torch.argmax(t_outputs_all.cpu(), -1), digits=4,
-                                                   target_names=[self.config.index_to_label[x] for x in
-                                                                 self.config.index_to_label])
-            fprint('\n---------------------------- Classification Report ----------------------------\n')
+        f1 = metrics.f1_score(
+            t_targets_all.cpu(),
+            torch.argmax(t_outputs_all.cpu(), -1),
+            labels=list(range(self.config.output_dim)),
+            average="macro",
+        )
+        if self.config.args.get("show_metric", False):
+            report = metrics.classification_report(
+                t_targets_all.cpu(),
+                torch.argmax(t_outputs_all.cpu(), -1),
+                digits=4,
+                target_names=[
+                    self.config.index_to_label[x] for x in self.config.index_to_label
+                ],
+            )
+            fprint(
+                "\n---------------------------- Classification Report ----------------------------\n"
+            )
             rprint(report)
-            fprint('\n---------------------------- Classification Report ----------------------------\n')
+            fprint(
+                "\n---------------------------- Classification Report ----------------------------\n"
+            )
 
-            report = metrics.confusion_matrix(t_targets_all.cpu(), torch.argmax(t_outputs_all.cpu(), -1),
-                                              labels=[self.config.label_to_index[x]
-                                                      for x in self.config.label_to_index])
-            fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
+            report = metrics.confusion_matrix(
+                t_targets_all.cpu(),
+                torch.argmax(t_outputs_all.cpu(), -1),
+                labels=[
+                    self.config.label_to_index[x] for x in self.config.label_to_index
+                ],
+            )
+            fprint(
+                "\n---------------------------- Confusion Matrix ----------------------------\n"
+            )
             rprint(report)
-            fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
+            fprint(
+                "\n---------------------------- Confusion Matrix ----------------------------\n"
+            )
 
         return test_acc, f1
 
@@ -453,35 +565,57 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         if hasattr(BERTRNACModelList, self.config.model.__name__):
             self.tokenizer = PretrainedTokenizer(self.config)
             if cache_path is None or self.config.overwrite_cache:
-                self.train_set = BERTRNACDataset(self.config, self.tokenizer, dataset_type='train')
-                self.test_set = BERTRNACDataset(self.config, self.tokenizer, dataset_type='test')
-                self.valid_set = BERTRNACDataset(self.config, self.tokenizer, dataset_type='valid')
+                self.train_set = BERTRNACDataset(
+                    self.config, self.tokenizer, dataset_type="train"
+                )
+                self.test_set = BERTRNACDataset(
+                    self.config, self.tokenizer, dataset_type="test"
+                )
+                self.valid_set = BERTRNACDataset(
+                    self.config, self.tokenizer, dataset_type="valid"
+                )
             try:
                 self.bert = AutoModel.from_pretrained(self.config.pretrained_bert)
             except ValueError as e:
-                fprint('Init pretrained model failed, exception: {}'.format(e))
+                fprint("Init pretrained model failed, exception: {}".format(e))
 
             # init the model behind the construction of datasets in case of updating output_dim
-            self.model = self.config.model(self.bert, self.config).to(self.config.device)
+            self.model = self.config.model(self.bert, self.config).to(
+                self.config.device
+            )
 
         elif hasattr(GloVeRNACModelList, self.config.model.__name__):
             # init GloVe-based model and dataset
             self.tokenizer = Tokenizer.build_tokenizer(
                 config=self.config,
-                cache_path='{0}_tokenizer.dat'.format(os.path.basename(self.config.dataset_name)),
-                pre_tokenizer=AutoTokenizer.from_pretrained(self.config.pretrained_bert)
+                cache_path="{0}_tokenizer.dat".format(
+                    os.path.basename(self.config.dataset_name)
+                ),
+                pre_tokenizer=AutoTokenizer.from_pretrained(
+                    self.config.pretrained_bert
+                ),
             )
             self.embedding_matrix = build_embedding_matrix(
                 config=self.config,
                 tokenizer=self.tokenizer,
-                cache_path='{0}_{1}_embedding_matrix.dat'.format(str(self.config.embed_dim),
-                                                                 os.path.basename(self.config.dataset_name)),
+                cache_path="{0}_{1}_embedding_matrix.dat".format(
+                    str(self.config.embed_dim),
+                    os.path.basename(self.config.dataset_name),
+                ),
             )
-            self.train_set = GloVeRNACDataset(self.config, self.tokenizer, dataset_type='train')
-            self.test_set = GloVeRNACDataset(self.config, self.tokenizer, dataset_type='test')
-            self.valid_set = GloVeRNACDataset(self.config, self.tokenizer, dataset_type='valid')
+            self.train_set = GloVeRNACDataset(
+                self.config, self.tokenizer, dataset_type="train"
+            )
+            self.test_set = GloVeRNACDataset(
+                self.config, self.tokenizer, dataset_type="test"
+            )
+            self.valid_set = GloVeRNACDataset(
+                self.config, self.tokenizer, dataset_type="valid"
+            )
 
-            self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
+            self.model = self.config.model(self.embedding_matrix, self.config).to(
+                self.config.device
+            )
 
         self.save_cache_dataset()
 

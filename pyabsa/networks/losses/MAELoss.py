@@ -11,7 +11,6 @@ from torch import nn
 
 
 class MAELoss(nn.Module):
-
     def __init__(self):
         super(MAELoss, self).__init__()
 

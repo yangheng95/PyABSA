@@ -20,17 +20,29 @@ class PyABSADataset(Dataset):
         self.tokenizer = tokenizer
         self.dataset_type = dataset_type
 
-        if self.config.get('dataset_dict') and dataset_type in self.config.dataset_dict and \
-                self.config.dataset_dict[dataset_type]:
-            self.load_data_from_dict(config.dataset_dict, dataset_type=dataset_type, **kwargs)
+        if (
+            self.config.get("dataset_dict")
+            and dataset_type in self.config.dataset_dict
+            and self.config.dataset_dict[dataset_type]
+        ):
+            self.load_data_from_dict(
+                config.dataset_dict, dataset_type=dataset_type, **kwargs
+            )
             self.data = self.covert_to_tensor(self.data)
 
-        elif self.config.get('dataset_file') and dataset_type in self.config.dataset_file and \
-                self.config.dataset_file[dataset_type]:
-            self.load_data_from_file(self.config.dataset_file, dataset_type=dataset_type, **kwargs)
+        elif (
+            self.config.get("dataset_file")
+            and dataset_type in self.config.dataset_file
+            and self.config.dataset_file[dataset_type]
+        ):
+            self.load_data_from_file(
+                self.config.dataset_file, dataset_type=dataset_type, **kwargs
+            )
             self.data = self.covert_to_tensor(self.data)
-
-        self.config.logger.info('{} data examples:\n {}'.format(dataset_type, self.data[:2]))
+        if self.config.get("verbose", True):
+            self.config.logger.info(
+                "{} data examples:\n {}".format(dataset_type, self.data[:2])
+            )
 
     @staticmethod
     def covert_to_tensor(data):
@@ -48,10 +60,14 @@ class PyABSADataset(Dataset):
         return data
 
     def load_data_from_dict(self, dataset_dict, **kwargs):
-        raise NotImplementedError('Please implement load_data_from_dict() in your dataset class')
+        raise NotImplementedError(
+            "Please implement load_data_from_dict() in your dataset class"
+        )
 
     def load_data_from_file(self, dataset_file, **kwargs):
-        raise NotImplementedError('Please implement load_data_from_file() in your dataset class')
+        raise NotImplementedError(
+            "Please implement load_data_from_file() in your dataset class"
+        )
 
     def __len__(self):
         return len(self.data)
@@ -60,7 +76,7 @@ class PyABSADataset(Dataset):
         return self.data[index]
 
     def __str__(self):
-        return f'PyABASDataset: {len(self.data)} samples'
+        return f"PyABASDataset: {len(self.data)} samples"
 
     def __repr__(self):
         return self.__str__()

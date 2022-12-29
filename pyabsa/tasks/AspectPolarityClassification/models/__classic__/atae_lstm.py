@@ -12,19 +12,25 @@ from pyabsa.networks.squeeze_embedding import SqueezeEmbedding
 
 
 class ATAE_LSTM(nn.Module):
-    inputs = ['text_indices', 'aspect_indices']
+    inputs = ["text_indices", "aspect_indices"]
 
     def __init__(self, embedding_matrix, config):
         super(ATAE_LSTM, self).__init__()
         self.config = config
-        self.embed = nn.Embedding.from_pretrained(torch.tensor(embedding_matrix, dtype=torch.float))
+        self.embed = nn.Embedding.from_pretrained(
+            torch.tensor(embedding_matrix, dtype=torch.float)
+        )
         self.squeeze_embedding = SqueezeEmbedding()
-        self.lstm = DynamicLSTM(config.embed_dim * 2, config.hidden_dim, num_layers=1, batch_first=True)
-        self.attention = NoQueryAttention(config.hidden_dim + config.embed_dim, score_function='bi_linear')
+        self.lstm = DynamicLSTM(
+            config.embed_dim * 2, config.hidden_dim, num_layers=1, batch_first=True
+        )
+        self.attention = NoQueryAttention(
+            config.hidden_dim + config.embed_dim, score_function="bi_linear"
+        )
         self.dense = nn.Linear(config.hidden_dim, config.output_dim)
 
     def forward(self, inputs):
-        text_indices, aspect_indices = inputs['text_indices'], inputs['text_indices']
+        text_indices, aspect_indices = inputs["text_indices"], inputs["text_indices"]
         x_len = torch.sum(text_indices != 0, dim=-1)
         x_len_max = torch.max(x_len)
         aspect_len = torch.sum(aspect_indices != 0, dim=-1).float()
@@ -42,4 +48,4 @@ class ATAE_LSTM(nn.Module):
         output = torch.squeeze(torch.bmm(score, h), dim=1)
 
         out = self.dense(output)
-        return {'logits': out}
+        return {"logits": out}

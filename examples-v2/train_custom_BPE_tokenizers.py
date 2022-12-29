@@ -11,7 +11,7 @@ from transformers import AutoTokenizer
 
 from pyabsa.utils import train_word2vec, train_bpe_tokenizer
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     """
     This script is used to train word2vec and bpe tokenizer for rna/protein classification/regression tasks.
     For example:
@@ -22,11 +22,11 @@ if __name__ == '__main__':
     [1*768] or [1*300]
     This is a not a real protein sequence, just for example.
     """
-    paths = findfile.find_cwd_files('.txt')
+    paths = findfile.find_cwd_files(".txt")
 
     # train bpe tokenizer for protein or rna sequence
-    train_bpe_tokenizer(paths, save_path='bpe_tokenizer', base_tokenizer='roberta-base')
+    train_bpe_tokenizer(paths, save_path="bpe_tokenizer", base_tokenizer="roberta-base")
 
     # then you can use the bpe_tokenizer to train a protein or rna sequence word2vec embedding
-    pre_tokenizer = AutoTokenizer.from_pretrained('bpe_tokenizer')
-    train_word2vec(paths, save_path='word2vec', pre_tokenizer=pre_tokenizer)
+    pre_tokenizer = AutoTokenizer.from_pretrained("bpe_tokenizer")
+    train_word2vec(paths, save_path="word2vec", pre_tokenizer=pre_tokenizer)

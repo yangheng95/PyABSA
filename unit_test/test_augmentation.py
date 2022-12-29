@@ -16,7 +16,7 @@ from pyabsa.augmentation import auto_classification_augmentation
 
 from pyabsa import TextClassification as TC
 
-warnings.filterwarnings('ignore')
+warnings.filterwarnings("ignore")
 
 
 def test_classification_augmentation():
@@ -33,7 +33,7 @@ def test_classification_augmentation():
 
     SST2 = TC.TCDatasetList.SST2
 
-    auto_classification_augmentation(config=config, dataset=SST2, device='cuda')
+    auto_classification_augmentation(config=config, dataset=SST2, device="cuda")
 
 
 def test_aspect_sentiment_classification_augmentation():
@@ -51,7 +51,7 @@ def test_aspect_sentiment_classification_augmentation():
         ]:
             config = APC.APCConfigManager.get_apc_config_english()
             config.model = model
-            config.pretrained_bert = 'microsoft/deberta-v3-base'
+            config.pretrained_bert = "microsoft/deberta-v3-base"
             config.evaluate_begin = 5
             config.max_seq_len = 80
             config.num_epoch = 30
@@ -64,4 +64,6 @@ def test_aspect_sentiment_classification_augmentation():
 
             config.seed = [random.randint(0, 10000) for _ in range(1)]
 
-            auto_aspect_sentiment_classification_augmentation(config=config, dataset=dataset, device='cuda')
+            auto_aspect_sentiment_classification_augmentation(
+                config=config, dataset=dataset, device="cuda"
+            )

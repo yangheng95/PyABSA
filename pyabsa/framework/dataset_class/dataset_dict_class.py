@@ -7,6 +7,7 @@
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
 
+
 class DatasetDict(dict):
     def __init__(self, *args, **kwargs):
         """
@@ -34,5 +35,13 @@ class DatasetDict(dict):
         }
 
         """
-        super().__init__(train=[], test=[], valid=[], dataset_name='custom_dataset', column_names=['text'],
-                         label_name=['label'], *args, **kwargs)
+        super().__init__(
+            train=[],
+            test=[],
+            valid=[],
+            dataset_name="custom_dataset",
+            column_names=["text"],
+            label_name=["label"],
+            *args,
+            **kwargs
+        )

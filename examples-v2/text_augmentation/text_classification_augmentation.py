@@ -21,4 +21,4 @@ config.l2reg = 0.00001
 
 SST2 = TC.TCDatasetList.SST2
 
-auto_classification_augmentation(config=config, dataset=SST2, device='cuda')
+auto_classification_augmentation(config=config, dataset=SST2, device="cuda")

@@ -23,7 +23,7 @@ class GraphConvolution(nn.Module):
         if bias:
             self.bias = nn.Parameter(torch.FloatTensor(out_features))
         else:
-            self.register_parameter('bias', None)
+            self.register_parameter("bias", None)
 
     def forward(self, text, adj):
         hidden = torch.matmul(text, self.weight)
@@ -36,14 +36,21 @@ class GraphConvolution(nn.Module):
 
 
 class ASGCN_Unit(nn.Module):
-    inputs = ['text_indices', 'aspect_indices', 'left_indices', 'dependency_graph']
+    inputs = ["text_indices", "aspect_indices", "left_indices", "dependency_graph"]
 
     def __init__(self, embedding_matrix, config):
         super(ASGCN_Unit, self).__init__()
         self.config = config
-        self.embed = nn.Embedding.from_pretrained(torch.tensor(embedding_matrix, dtype=torch.float))
-        self.text_lstm = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True,
-                                     bidirectional=True)
+        self.embed = nn.Embedding.from_pretrained(
+            torch.tensor(embedding_matrix, dtype=torch.float)
+        )
+        self.text_lstm = DynamicLSTM(
+            config.embed_dim,
+            config.hidden_dim,
+            num_layers=1,
+            batch_first=True,
+            bidirectional=True,
+        )
         self.gc1 = GraphConvolution(2 * config.hidden_dim, 2 * config.hidden_dim)
         self.gc2 = GraphConvolution(2 * config.hidden_dim, 2 * config.hidden_dim)
         self.text_embed_dropout = nn.Dropout()
@@ -65,7 +72,9 @@ class ASGCN_Unit(nn.Module):
                 weight[i].append(1 - (j - aspect_double_idx[i, 1]) / context_len)
             for j in range(text_len[i], seq_len):
                 weight[i].append(0)
-        weight = torch.tensor(weight, dtype=torch.float).unsqueeze(2).to(self.config.device)
+        weight = (
+            torch.tensor(weight, dtype=torch.float).unsqueeze(2).to(self.config.device)
+        )
         return weight * x
 
     def mask(self, x, aspect_double_idx):
@@ -83,22 +92,42 @@ class ASGCN_Unit(nn.Module):
         return mask * x
 
     def forward(self, inputs):
-        text_indices, aspect_indices, left_indices, adj = \
-            inputs[0], inputs[1], inputs[2], inputs[3]
+        text_indices, aspect_indices, left_indices, adj = (
+            inputs[0],
+            inputs[1],
+            inputs[2],
+            inputs[3],
+        )
         text_len = torch.sum(text_indices != 0, dim=-1)
         aspect_len = torch.sum(aspect_indices != 0, dim=-1)
         left_len = torch.sum(left_indices != 0, dim=-1)
-        aspect_double_idx = torch.cat([left_len.unsqueeze(1),
-                                       torch.where((left_len + aspect_len - 1) < self.config.max_seq_len,
-                                                   left_len + aspect_len - 1,
-                                                   self.config.max_seq_len).unsqueeze(1)], dim=1)
+        aspect_double_idx = torch.cat(
+            [
+                left_len.unsqueeze(1),
+                torch.where(
+                    (left_len + aspect_len - 1) < self.config.max_seq_len,
+                    left_len + aspect_len - 1,
+                    self.config.max_seq_len,
+                ).unsqueeze(1),
+            ],
+            dim=1,
+        )
         text = self.embed(text_indices)
         text = self.text_embed_dropout(text)
         text_out, (_, _) = self.text_lstm(text, text_len)
         seq_len = text_out.shape[1]
         adj = adj[:, :seq_len, :seq_len]
-        x = F.relu(self.gc1(self.position_weight(text_out, aspect_double_idx, text_len, aspect_len), adj))
-        x = F.relu(self.gc2(self.position_weight(x, aspect_double_idx, text_len, aspect_len), adj))
+        x = F.relu(
+            self.gc1(
+                self.position_weight(text_out, aspect_double_idx, text_len, aspect_len),
+                adj,
+            )
+        )
+        x = F.relu(
+            self.gc2(
+                self.position_weight(x, aspect_double_idx, text_len, aspect_len), adj
+            )
+        )
         x = self.mask(x, aspect_double_idx)
         alpha_mat = torch.matmul(x, text_out.transpose(1, 2))
         alpha = F.softmax(alpha_mat.sum(1, keepdim=True), dim=2)
@@ -109,16 +138,16 @@ class ASGCN_Unit(nn.Module):
 
 class ASGCN(nn.Module):
     inputs = [
-        'text_indices',
-        'aspect_indices',
-        'left_indices',
-        'dependency_graph',
-        'left_aspect_indices',
-        'left_left_indices',
-        'left_dependency_graph',
-        'right_aspect_indices',
-        'right_left_indices',
-        'right_dependency_graph',
+        "text_indices",
+        "aspect_indices",
+        "left_indices",
+        "dependency_graph",
+        "left_aspect_indices",
+        "left_left_indices",
+        "left_dependency_graph",
+        "right_aspect_indices",
+        "right_left_indices",
+        "right_dependency_graph",
     ]
 
     def __init__(self, bert, config):
@@ -127,23 +156,55 @@ class ASGCN(nn.Module):
         self.asgcn_left = ASGCN_Unit(bert, config) if self.config.lsa else None
         self.asgcn_central = ASGCN_Unit(bert, config)
         self.asgcn_right = ASGCN_Unit(bert, config) if self.config.lsa else None
-        self.dense = nn.Linear(self.config.hidden_dim * 6, self.config.output_dim) \
-            if self.config.lsa else nn.Linear(self.config.hidden_dim * 2, self.config.output_dim)
+        self.dense = (
+            nn.Linear(self.config.hidden_dim * 6, self.config.output_dim)
+            if self.config.lsa
+            else nn.Linear(self.config.hidden_dim * 2, self.config.output_dim)
+        )
 
     def forward(self, inputs):
-        res = {'logits': None}
+        res = {"logits": None}
         if self.config.lsa:
             cat_feat = torch.cat(
-                (self.asgcn_left([inputs['text_indices'], inputs['left_aspect_indices'], inputs['left_left_indices'],
-                                  inputs['left_dependency_graph']]),
-                 self.asgcn_central([inputs['text_indices'], inputs['aspect_indices'], inputs['left_indices'],
-                                     inputs['dependency_graph']]),
-                 self.asgcn_right([inputs['text_indices'], inputs['right_aspect_indices'], inputs['right_left_indices'],
-                                   inputs['right_dependency_graph']])),
-                -1)
-            res['logits'] = self.dense(cat_feat)
+                (
+                    self.asgcn_left(
+                        [
+                            inputs["text_indices"],
+                            inputs["left_aspect_indices"],
+                            inputs["left_left_indices"],
+                            inputs["left_dependency_graph"],
+                        ]
+                    ),
+                    self.asgcn_central(
+                        [
+                            inputs["text_indices"],
+                            inputs["aspect_indices"],
+                            inputs["left_indices"],
+                            inputs["dependency_graph"],
+                        ]
+                    ),
+                    self.asgcn_right(
+                        [
+                            inputs["text_indices"],
+                            inputs["right_aspect_indices"],
+                            inputs["right_left_indices"],
+                            inputs["right_dependency_graph"],
+                        ]
+                    ),
+                ),
+                -1,
+            )
+            res["logits"] = self.dense(cat_feat)
         else:
-            res['logits'] = self.dense(self.asgcn_central(
-                [inputs['text_indices'], inputs['aspect_indices'], inputs['left_indices'], inputs['dependency_graph']]))
+            res["logits"] = self.dense(
+                self.asgcn_central(
+                    [
+                        inputs["text_indices"],
+                        inputs["aspect_indices"],
+                        inputs["left_indices"],
+                        inputs["dependency_graph"],
+                    ]
+                )
+            )
 
         return res

@@ -20,10 +20,12 @@ class LCF_Pooler(nn.Module):
         device = hidden_states.device
         lcf_vec = lcf_vec.detach().cpu().numpy()
 
-        pooled_output = numpy.zeros((hidden_states.shape[0], hidden_states.shape[2]), dtype=numpy.float32)
+        pooled_output = numpy.zeros(
+            (hidden_states.shape[0], hidden_states.shape[2]), dtype=numpy.float32
+        )
         hidden_states = hidden_states.detach().cpu().numpy()
         for i, vec in enumerate(lcf_vec):
-            lcf_ids = [j for j in range(len(vec)) if sum(vec[j] - 1.) == 0]
+            lcf_ids = [j for j in range(len(vec)) if sum(vec[j] - 1.0) == 0]
             pooled_output[i] = hidden_states[i][lcf_ids[len(lcf_ids) // 2]]
 
         pooled_output = torch.Tensor(pooled_output).to(device)

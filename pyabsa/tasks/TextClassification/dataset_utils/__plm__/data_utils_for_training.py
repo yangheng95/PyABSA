@@ -19,35 +19,42 @@ class BERTTCDataset(PyABSADataset):
         pass
 
     def load_data_from_file(self, dataset_file, **kwargs):
-        lines = load_dataset_from_file(self.config.dataset_file[self.dataset_type], config=self.config)
+        lines = load_dataset_from_file(
+            self.config.dataset_file[self.dataset_type], config=self.config
+        )
 
         all_data = []
 
         label_set = set()
 
-        for i in tqdm.tqdm(range(len(lines)), desc='preparing dataloader'):
-            line = lines[i].strip().split('$LABEL$')
+        for i in tqdm.tqdm(range(len(lines)), desc="preparing dataloader"):
+            line = lines[i].strip().split("$LABEL$")
             text, label = line[0], line[1]
             text = text.strip()
             label = label.strip()
             text_indices = self.tokenizer.text_to_sequence(
-                '{} {} {}'.format(self.tokenizer.tokenizer.cls_token, text, self.tokenizer.tokenizer.sep_token))
+                "{} {} {}".format(
+                    self.tokenizer.tokenizer.cls_token,
+                    text,
+                    self.tokenizer.tokenizer.sep_token,
+                )
+            )
 
             data = {
-                'text_indices': text_indices,
-                'label': label,
+                "text_indices": text_indices,
+                "label": label,
             }
 
             label_set.add(label)
 
             all_data.append(data)
 
-        check_and_fix_labels(label_set, 'label', all_data, self.config)
+        check_and_fix_labels(label_set, "label", all_data, self.config)
         self.config.output_dim = len(label_set)
 
         self.data = all_data
 
-    def __init__(self, config, tokenizer, dataset_type='train', **kwargs):
+    def __init__(self, config, tokenizer, dataset_type="train", **kwargs):
         super().__init__(config, tokenizer, dataset_type, **kwargs)
 
     def __getitem__(self, index):

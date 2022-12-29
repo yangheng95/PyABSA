@@ -12,23 +12,27 @@ from pyabsa.tasks.AspectPolarityClassification import APCDatasetList
 #                    train and evaluate on your own apc_datasets (need train and test apc_datasets)                    #
 ########################################################################################################################
 
-from pyabsa import AspectPolarityClassification as APC, ModelSaveOption, DeviceTypeOption
+from pyabsa import (
+    AspectPolarityClassification as APC,
+    ModelSaveOption,
+    DeviceTypeOption,
+)
 import warnings
 
-warnings.filterwarnings('ignore')
+warnings.filterwarnings("ignore")
 
 for dataset in [
     APCDatasetList.Laptop14,
     APCDatasetList.Restaurant14,
     APCDatasetList.Restaurant15,
     APCDatasetList.Restaurant16,
-    APCDatasetList.MAMS
+    APCDatasetList.MAMS,
 ]:
     config = APC.APCConfigManager.get_apc_config_english()
     config.model = APC.APCModelList.FAST_LSA_T_V2
     # config.model = APC.APCModelList.FAST_LSA_S_V2
     # config.model = APC.APCModelList.BERT_SPC_V2
-    config.pretrained_bert = 'microsoft/deberta-v3-large'
+    config.pretrained_bert = "microsoft/deberta-v3-large"
     config.evaluate_begin = 2
     config.max_seq_len = 80
     config.num_epoch = 30
@@ -39,18 +43,19 @@ for dataset in [
     config.lsa = True
     config.seed = [random.randint(0, 10000) for _ in range(5)]
 
-    APC.APCTrainer(config=config,
-                   dataset=dataset,
-                   checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                   auto_device=DeviceTypeOption.AUTO,
-                   # load_aug=True
-                   ).destroy()
+    APC.APCTrainer(
+        config=config,
+        dataset=dataset,
+        checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
+        auto_device=DeviceTypeOption.AUTO,
+        # load_aug=True
+    ).destroy()
 
     config = APC.APCConfigManager.get_apc_config_english()
     # config.model = APC.APCModelList.FAST_LSA_T_V2
     config.model = APC.APCModelList.FAST_LSA_S_V2
     # config.model = APC.APCModelList.BERT_SPC_V2
-    config.pretrained_bert = 'microsoft/deberta-v3-large'
+    config.pretrained_bert = "microsoft/deberta-v3-large"
     config.evaluate_begin = 2
     config.max_seq_len = 80
     config.num_epoch = 30
@@ -61,12 +66,13 @@ for dataset in [
     config.lsa = True
     config.seed = [random.randint(0, 10000) for _ in range(5)]
 
-    APC.APCTrainer(config=config,
-                   dataset=dataset,
-                   checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                   auto_device=DeviceTypeOption.AUTO,
-                   # load_aug=True
-                   ).destroy()
+    APC.APCTrainer(
+        config=config,
+        dataset=dataset,
+        checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
+        auto_device=DeviceTypeOption.AUTO,
+        # load_aug=True
+    ).destroy()
 
     # config = APC.APCConfigManager.get_apc_config_english()
     # # config.model = APC.APCModelList.FAST_LSA_T_V2

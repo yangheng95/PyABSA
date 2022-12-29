@@ -7,6 +7,7 @@
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
 
+
 class PLMAPCModelList(list):
     from .aoa_bert import AOA_BERT
     from .asgcn_bert import ASGCN_BERT
@@ -35,18 +36,22 @@ class PLMAPCModelList(list):
     TNet_LF_BERT = TNet_LF_BERT
 
     def __init__(self):
-        super(PLMAPCModelList, self).__init__([self.AOA_BERT,
-                                               self.ASGCN_BERT,
-                                               self.ATAE_LSTM_BERT,
-                                               self.Cabasc_BERT,
-                                               self.IAN_BERT,
-                                               self.LSTM_BERT,
-                                               self.MemNet_BERT,
-                                               self.MGAN_BERT,
-                                               self.RAM_BERT,
-                                               self.TC_LSTM_BERT,
-                                               self.TD_LSTM_BERT,
-                                               self.TNet_LF_BERT])
+        super(PLMAPCModelList, self).__init__(
+            [
+                self.AOA_BERT,
+                self.ASGCN_BERT,
+                self.ATAE_LSTM_BERT,
+                self.Cabasc_BERT,
+                self.IAN_BERT,
+                self.LSTM_BERT,
+                self.MemNet_BERT,
+                self.MGAN_BERT,
+                self.RAM_BERT,
+                self.TC_LSTM_BERT,
+                self.TD_LSTM_BERT,
+                self.TNet_LF_BERT,
+            ]
+        )
 
     def __str__(self):
         return str([model.__name__ for model in self])

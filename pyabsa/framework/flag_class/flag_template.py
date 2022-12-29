@@ -10,40 +10,40 @@
 
 class TaskNameOption(dict):
     code2name = {
-        'apc': 'Aspect-based Sentiment Classification',
-        'atepc': 'Aspect Term Extraction and Polarity Classification',
-        'tc': 'Text Classification',
-        'text_classification': 'Text Classification',
-        'tad': 'Text Adversarial Defense',
-        'rnac_datasets': 'RNA Sequence Classification',
-        'rnar': 'RNA Sequence Regression',
-        'APC': 'Aspect-based Sentiment Classification',
-        'ATEPC': 'Aspect Term Extraction and Polarity Classification',
-        'TC': 'Text Classification',
-        'TAD': 'Text Adversarial Defense',
-        'RNAC': 'RNA Sequence Classification',
-        'RNAR': 'RNA Sequence Regression',
-        'PR': 'Protein Sequence Regression',
-        'CDD': 'Code Defect Detection',
+        "apc": "Aspect-based Sentiment Classification",
+        "atepc": "Aspect Term Extraction and Polarity Classification",
+        "tc": "Text Classification",
+        "text_classification": "Text Classification",
+        "tad": "Text Adversarial Defense",
+        "rnac_datasets": "RNA Sequence Classification",
+        "rnar": "RNA Sequence Regression",
+        "APC": "Aspect-based Sentiment Classification",
+        "ATEPC": "Aspect Term Extraction and Polarity Classification",
+        "TC": "Text Classification",
+        "TAD": "Text Adversarial Defense",
+        "RNAC": "RNA Sequence Classification",
+        "RNAR": "RNA Sequence Regression",
+        "PR": "Protein Sequence Regression",
+        "CDD": "Code Defect Detection",
     }
 
     def __init__(self):
         super(TaskNameOption, self).__init__(self.code2name)
 
     def get(self, key):
-        return self.code2name.get(key, 'Unknown Task')
+        return self.code2name.get(key, "Unknown Task")
 
 
 class TaskCodeOption:
-    Aspect_Polarity_Classification = 'APC'
-    Aspect_Term_Extraction_and_Classification = 'ATEPC'
-    Sentiment_Analysis = 'TC'
-    Text_Classification = 'TC'
-    Text_Adversarial_Defense = 'TAD'
-    RNASequenceClassification = 'RNAC'
-    RNASequenceRegression = 'RNAR'
-    ProteinSequenceRegression = 'PR'
-    CodeDefectDetection = 'CDD'
+    Aspect_Polarity_Classification = "APC"
+    Aspect_Term_Extraction_and_Classification = "ATEPC"
+    Sentiment_Analysis = "TC"
+    Text_Classification = "TC"
+    Text_Adversarial_Defense = "TAD"
+    RNASequenceClassification = "RNAC"
+    RNASequenceRegression = "RNAR"
+    ProteinSequenceRegression = "PR"
+    CodeDefectDetection = "CDD"
 
 
 class LabelPaddingOption:
@@ -59,14 +59,14 @@ class ModelSaveOption:
 
 
 class ProxyAddressOption:
-    CN_GITHUB_MIRROR = 'https://gitee.com/'
+    CN_GITHUB_MIRROR = "https://gitee.com/"
 
 
-PyABSAMaterialHostAddress = 'https://huggingface.co/spaces/yangheng/PyABSA/'
+PyABSAMaterialHostAddress = "https://huggingface.co/spaces/yangheng/PyABSA/"
 
 
 class DeviceTypeOption:
     AUTO = True
-    CPU = 'cpu'
-    CUDA = 'cuda'
-    ALL_CUDA = 'allcuda'
+    CPU = "cpu"
+    CUDA = "cuda"
+    ALL_CUDA = "allcuda"

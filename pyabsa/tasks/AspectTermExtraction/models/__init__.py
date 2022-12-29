@@ -7,6 +7,7 @@
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
 
+
 class ATEPCModelList(list):
     from .__lcf__.bert_base_atepc import BERT_BASE_ATEPC
     from .__lcf__.fast_lcf_atepc import FAST_LCF_ATEPC
@@ -36,6 +37,6 @@ class ATEPCModelList(list):
                 self.LCF_ATEPC,
                 self.LCF_ATEPC_LARGE,
                 self.LCFS_ATEPC,
-                self.LCFS_ATEPC_LARGE
+                self.LCFS_ATEPC_LARGE,
             ]
         )

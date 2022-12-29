@@ -7,6 +7,7 @@
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
 
+
 class BERTCDDModelList(list):
     from .__plm__.bert import BERT_MLP
 
@@ -14,11 +15,7 @@ class BERTCDDModelList(list):
     BERT = BERT_MLP
 
     def __init__(self):
-        super(BERTCDDModelList, self).__init__(
-            [
-                self.BERT_MLP
-            ]
-        )
+        super(BERTCDDModelList, self).__init__([self.BERT_MLP])
 
 
 class GloVeCDDModelList(list):
@@ -27,8 +24,4 @@ class GloVeCDDModelList(list):
     LSTM = LSTM
 
     def __init__(self):
-        super(GloVeCDDModelList, self).__init__(
-            [
-                self.LSTM
-            ]
-        )
+        super(GloVeCDDModelList, self).__init__([self.LSTM])

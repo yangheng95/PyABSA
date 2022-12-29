@@ -14,7 +14,7 @@ import warnings
 
 from pyabsa import TextAdversarialDefense as TAD, DatasetItem
 
-warnings.filterwarnings('ignore')
+warnings.filterwarnings("ignore")
 seeds = [random.randint(1, 10000) for _ in range(1)]
 
 
@@ -36,23 +36,17 @@ def get_config():
     return config
 
 
-dataset = DatasetItem('SST2')
-text_classifier = TAD.TADTrainer(config=get_config(),
-                                 dataset=dataset,
-                                 checkpoint_save_mode=1,
-                                 auto_device=True
-                                 ).load_trained_model()
+dataset = DatasetItem("SST2")
+text_classifier = TAD.TADTrainer(
+    config=get_config(), dataset=dataset, checkpoint_save_mode=1, auto_device=True
+).load_trained_model()
 
-dataset = DatasetItem('AGNews')
-text_classifier = TAD.TADTrainer(config=get_config(),
-                                 dataset=dataset,
-                                 checkpoint_save_mode=1,
-                                 auto_device=True
-                                 ).load_trained_model()
+dataset = DatasetItem("AGNews")
+text_classifier = TAD.TADTrainer(
+    config=get_config(), dataset=dataset, checkpoint_save_mode=1, auto_device=True
+).load_trained_model()
 
-dataset = DatasetItem('Amazon')
-text_classifier = TAD.TADTrainer(config=get_config(),
-                                 dataset=dataset,
-                                 checkpoint_save_mode=1,
-                                 auto_device=True
-                                 ).load_trained_model()
+dataset = DatasetItem("Amazon")
+text_classifier = TAD.TADTrainer(
+    config=get_config(), dataset=dataset, checkpoint_save_mode=1, auto_device=True
+).load_trained_model()

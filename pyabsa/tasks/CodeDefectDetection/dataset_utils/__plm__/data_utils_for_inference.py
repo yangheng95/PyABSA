@@ -18,7 +18,6 @@ from ..cdd_utils import _prepare_corruptted_code_src, read_defect_examples
 
 
 class BERTCDDInferenceDataset(Dataset):
-
     def __init__(self, config, tokenizer):
 
         self.tokenizer = tokenizer
@@ -41,41 +40,48 @@ class BERTCDDInferenceDataset(Dataset):
         self.process_data(samples, ignore_error)
 
     def process_data(self, samples, ignore_error=True):
-        samples = read_defect_examples(samples, self.config.get('data_num', -1),
-                                       self.config.get('remove_comments', True))
+        samples = read_defect_examples(
+            samples,
+            self.config.get("data_num", -1),
+            self.config.get("remove_comments", True),
+        )
         all_data = []
         if len(samples) > 100:
-            it = tqdm.tqdm(samples, desc='preparing text classification dataloader')
+            it = tqdm.tqdm(samples, desc="preparing text classification dataloader")
         else:
             it = samples
         for ex_id, text in enumerate(it):
             try:
                 # handle for empty lines in inference datasets
-                if text is None or '' == text.strip():
-                    raise RuntimeError('Invalid Input!')
+                if text is None or "" == text.strip():
+                    raise RuntimeError("Invalid Input!")
 
-                code_src, _, label = text.strip().partition('$LABEL$')
+                code_src, _, label = text.strip().partition("$LABEL$")
                 # source_str = "{}: {}".format(args.task, example.source)
 
-                code_ids = self.tokenizer.text_to_sequence(code_src, max_length=self.config.max_seq_len,
-                                                           padding='max_length', truncation=True)
+                code_ids = self.tokenizer.text_to_sequence(
+                    code_src,
+                    max_length=self.config.max_seq_len,
+                    padding="max_length",
+                    truncation=True,
+                )
                 try:
                     label = int(label.strip())
                 except:
                     label = LabelPaddingOption.LABEL_PADDING
                 data = {
-                    'ex_id': ex_id,
-                    'code': code_src,
-                    'source_ids': code_ids,
-                    'label': label,
-                    'corrupt_label': LabelPaddingOption.LABEL_PADDING
+                    "ex_id": ex_id,
+                    "code": code_src,
+                    "source_ids": code_ids,
+                    "label": label,
+                    "corrupt_label": LabelPaddingOption.LABEL_PADDING,
                 }
 
                 all_data.append(data)
 
             except Exception as e:
                 if ignore_error:
-                    fprint('Ignore error while processing:', text)
+                    fprint("Ignore error while processing:", text)
                 else:
                     raise e
 

@@ -21,16 +21,16 @@ def check_emergency_notification():
     Check if there is any emergency notification from PyABSA
     """
 
-    url = PyABSAMaterialHostAddress + 'resolve/main/emergency_notification.txt'
+    url = PyABSAMaterialHostAddress + "resolve/main/emergency_notification.txt"
 
     try:  # from Huggingface Space
         response = requests.get(url, stream=True)
-        save_path = 'emergency_notification.txt'
+        save_path = "emergency_notification.txt"
         with open(save_path, "wb") as f:
             for chunk in response.iter_content(chunk_size=1024):
                 f.write(chunk)
-        with open(save_path, 'r') as f:
-            fprint(colored('PyABSA({}): '.format(pyabsa_version) + f.read(), 'red'))
+        with open(save_path, "r") as f:
+            fprint(colored("PyABSA({}): ".format(pyabsa_version) + f.read(), "red"))
         os.remove(save_path)
     except Exception as e:
         pass

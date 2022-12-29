@@ -1,6 +1,6 @@
 ﻿# -*- coding: utf-8 -*-
 # file: ClassImblanceCE.py
-# time: 14:20 2022/12/23 
+# time: 14:20 2022/12/23
 # author: yangheng <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95
 # huggingface: https://huggingface.co/yangheng
@@ -27,10 +27,15 @@ class ClassBalanceCrossEntropyLoss(nn.Module):
 
     def __init__(self):
         super(ClassBalanceCrossEntropyLoss, self).__init__()
-        self.beta = self.para_dict['cfg'].LOSS.ClassBalanceCE.BETA
-        self.class_balanced_weight = np.array([(1 - self.beta) / (1 - self.beta ** N) for N in self.num_class_list])
+        self.beta = self.para_dict["cfg"].LOSS.ClassBalanceCE.BETA
+        self.class_balanced_weight = np.array(
+            [(1 - self.beta) / (1 - self.beta**N) for N in self.num_class_list]
+        )
         self.class_balanced_weight = torch.FloatTensor(
-            self.class_balanced_weight / np.sum(self.class_balanced_weight) * self.num_classes).to(self.device)
+            self.class_balanced_weight
+            / np.sum(self.class_balanced_weight)
+            * self.num_classes
+        ).to(self.device)
 
     def update(self, epoch):
         """

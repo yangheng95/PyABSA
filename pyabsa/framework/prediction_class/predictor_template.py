@@ -20,15 +20,17 @@ class InferenceModel:
     task_code = TaskCodeOption.Aspect_Polarity_Classification
 
     def __init__(self, checkpoint: Union[str, object] = None, config=None, **kwargs):
-        '''
+        """
         :param checkpoint: checkpoint path or checkpoint object
         :param kwargs:
 
-        '''
+        """
 
-        self.cal_perplexity = kwargs.get('cal_perplexity', False)
+        self.cal_perplexity = kwargs.get("cal_perplexity", False)
 
-        self.checkpoint = CheckpointManager().parse_checkpoint(checkpoint, task_code=self.task_code)
+        self.checkpoint = CheckpointManager().parse_checkpoint(
+            checkpoint, task_code=self.task_code
+        )
 
         self.config = config
 
@@ -38,32 +40,34 @@ class InferenceModel:
     def to(self, device=None):
         self.config.device = device
         self.model.to(device)
-        if hasattr(self, 'MLM') and self.MLM is not None:
+        if hasattr(self, "MLM") and self.MLM is not None:
             self.MLM.to(self.config.device)
 
     def cpu(self):
-        self.config.device = 'cpu'
-        self.model.to('cpu')
-        if hasattr(self, 'MLM'):
-            self.MLM.to('cpu')
+        self.config.device = "cpu"
+        self.model.to("cpu")
+        if hasattr(self, "MLM"):
+            self.MLM.to("cpu")
 
-    def cuda(self, device='cuda:0'):
+    def cuda(self, device="cuda:0"):
         self.config.device = device
         self.model.to(device)
-        if hasattr(self, 'MLM'):
+        if hasattr(self, "MLM"):
             self.MLM.to(device)
 
     def __post_init__(self):
-        self.config.label_to_index['-100'] = -100
-        self.config.label_to_index[''] = -100
-        self.config.index_to_label[-100] = ''
+        self.config.label_to_index["-100"] = -100
+        self.config.label_to_index[""] = -100
+        self.config.index_to_label[-100] = ""
 
         self.infer_dataloader = None
         self.config.initializer = self.config.initializer
 
         if self.cal_perplexity:
             try:
-                self.MLM, self.MLM_tokenizer = get_mlm_and_tokenizer(self.model, self.config)
+                self.MLM, self.MLM_tokenizer = get_mlm_and_tokenizer(
+                    self.model, self.config
+                )
             except Exception as e:
                 self.MLM, self.MLM_tokenizer = None, None
 
@@ -78,7 +82,7 @@ class InferenceModel:
         param: ignore_error: whether to ignore the error when predicting.
         param: kwargs: other parameters.
         """
-        raise NotImplementedError('Please implement batch_infer() in your subclass!')
+        raise NotImplementedError("Please implement batch_infer() in your subclass!")
 
     def predict(self, **kwargs):
 
@@ -89,10 +93,10 @@ class InferenceModel:
         param: ignore_error: whether to ignore the error when predicting.
         param: kwargs: other parameters.
         """
-        raise NotImplementedError('Please implement infer() in your subclass!')
+        raise NotImplementedError("Please implement infer() in your subclass!")
 
     def _run_prediction(self, **kwargs):
-        raise NotImplementedError('Please implement _infer() in your subclass!')
+        raise NotImplementedError("Please implement _infer() in your subclass!")
 
     def destroy(self):
         del self.model

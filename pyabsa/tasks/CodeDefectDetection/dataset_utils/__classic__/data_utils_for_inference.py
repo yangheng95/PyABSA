@@ -17,7 +17,6 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 
 class GloVeCDDInferenceDataset(Dataset):
-
     def __init__(self, config, tokenizer):
         self.tokenizer = tokenizer
         self.config = config
@@ -42,40 +41,41 @@ class GloVeCDDInferenceDataset(Dataset):
         all_data = []
 
         if len(samples) > 100:
-            it = tqdm.tqdm(samples, desc='building word indices')
+            it = tqdm.tqdm(samples, desc="building word indices")
         else:
             it = samples
 
         for ex_id, text in enumerate(it):
             try:
                 # handle for empty lines in inference dataset
-                if text is None or '' == text.strip():
-                    raise RuntimeError('Invalid Input!')
+                if text is None or "" == text.strip():
+                    raise RuntimeError("Invalid Input!")
 
-                if '$LABEL$' in text:
-                    text, label = text.split('$LABEL$')[0].strip(), text.split('$LABEL$')[1].strip()
-                    text = text.replace('[PADDING]', '')
+                if "$LABEL$" in text:
+                    text, label = (
+                        text.split("$LABEL$")[0].strip(),
+                        text.split("$LABEL$")[1].strip(),
+                    )
+                    text = text.replace("[PADDING]", "")
                 else:
                     label = LabelPaddingOption.LABEL_PADDING
 
                 text_indices = self.tokenizer.text_to_sequence(text)
 
                 data = {
-                    'ex_id': ex_id,
-
-                    'text_indices': text_indices
-                    if 'text_indices' in self.config.model.inputs else 0,
-
-                    'text_raw': text,
-
-                    'label': label,
+                    "ex_id": ex_id,
+                    "text_indices": text_indices
+                    if "text_indices" in self.config.model.inputs
+                    else 0,
+                    "text_raw": text,
+                    "label": label,
                 }
 
                 all_data.append(data)
 
             except Exception as e:
                 if ignore_error:
-                    fprint('Ignore error while processing:', text)
+                    fprint("Ignore error while processing:", text)
                 else:
                     raise e
 

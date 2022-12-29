@@ -21,12 +21,16 @@ from pyabsa.utils.pyabsa_utils import fprint
 def check_package_version(min_version, max_version=None):
     if version.parse(current_version) < version.parse(min_version):
         raise ValueError(
-            f'Current version {current_version} is lower than minimum version {min_version},'
-            f' please upgrade your package.')
-    if max_version is not None and version.parse(current_version) > version.parse(max_version):
+            f"Current version {current_version} is lower than minimum version {min_version},"
+            f" please upgrade your package."
+        )
+    if max_version is not None and version.parse(current_version) > version.parse(
+        max_version
+    ):
         raise ValueError(
-            f'Current version {current_version} is higher than maximum version {max_version},'
-            f' please downgrade your package.')
+            f"Current version {current_version} is higher than maximum version {max_version},"
+            f" please downgrade your package."
+        )
 
 
 @time_out(10)
@@ -40,39 +44,57 @@ def validate_pyabsa_version():
         versions = list(data["releases"].keys())
         versions.sort(key=parse_version, reverse=True)
         if current_version not in versions:
-            fprint(colored(
-                'You are using a DEPRECATED or TEST version of PyABSA. Consider update using pip install -U pyabsa!',
-                'red'))
+            fprint(
+                colored(
+                    "You are using a DEPRECATED or TEST version of PyABSA. Consider update using pip install -U pyabsa!",
+                    "red",
+                )
+            )
 
 
 @time_out(10)
 def query_release_notes(**kwargs):
-    logger = kwargs.get('logger', None)
+    logger = kwargs.get("logger", None)
     try:
-        release_url = 'https://github.com/yangheng95/PyABSA/blob/release/release-note.json'
+        release_url = (
+            "https://github.com/yangheng95/PyABSA/blob/release/release-note.json"
+        )
         content = requests.get(release_url, timeout=5)
         release_note = content.json()
         if logger:
-            logger.info('Release note: ')
+            logger.info("Release note: ")
             logger.info(release_note)
         else:
-            fprint('Release note: ')
+            fprint("Release note: ")
             fprint(release_note[current_version])
     except Exception as e:
         try:
-            release_url = 'https://gitee.com/yangheng95/PyABSA/raw/release/release-note.json'
+            release_url = (
+                "https://gitee.com/yangheng95/PyABSA/raw/release/release-note.json"
+            )
             content = requests.get(release_url, timeout=5)
             release_note = content.json()
             if logger:
-                logger.info('Release note: ')
+                logger.info("Release note: ")
                 logger.info(release_note[current_version])
         except Exception as e:
             if logger:
-                logger.warning('Failed to query release notes, '
-                               'please check the latest version of PyABSA at {}'.format(release_url))
+                logger.warning(
+                    "Failed to query release notes, "
+                    "please check the latest version of PyABSA at {}".format(
+                        release_url
+                    )
+                )
             else:
-                fprint(colored('Failed to query release notes, '
-                               'please check the latest version of PyABSA at {}'.format(release_url), 'red'))
+                fprint(
+                    colored(
+                        "Failed to query release notes, "
+                        "please check the latest version of PyABSA at {}".format(
+                            release_url
+                        ),
+                        "red",
+                    )
+                )
 
 
 @time_out(10)
@@ -85,4 +107,4 @@ def check_pyabsa_update():
             fprint(check_result)
             query_release_notes()
     except Exception as e:
-        fprint('Failed to check update for {}, error: {}'.format(__name__, e))
+        fprint("Failed to check update for {}, error: {}".format(__name__, e))

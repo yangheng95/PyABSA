@@ -12,10 +12,14 @@ from pyabsa.tasks.AspectPolarityClassification import APCDatasetList
 #                    train and evaluate on your own apc_datasets (need train and test apc_datasets)                    #
 ########################################################################################################################
 
-from pyabsa import AspectPolarityClassification as APC, ModelSaveOption, DeviceTypeOption
+from pyabsa import (
+    AspectPolarityClassification as APC,
+    ModelSaveOption,
+    DeviceTypeOption,
+)
 import warnings
 
-warnings.filterwarnings('ignore')
+warnings.filterwarnings("ignore")
 
 for dataset in [
     APCDatasetList.Laptop14,
@@ -31,7 +35,7 @@ for dataset in [
         # APC.APCModelList.BERT_SPC
     ]:
         for pretrained_bert in [
-            'microsoft/deberta-v3-base',
+            "microsoft/deberta-v3-base",
             # 'roberta-base',
             # 'microsoft/deberta-v3-large',
         ]:
@@ -57,10 +61,11 @@ for dataset in [
             config.use_torch_compile = False
             config.seed = [random.randint(0, 10000) for _ in range(3)]
 
-            APC.APCTrainer(config=config,
-                           dataset=dataset,
-                           # from_checkpoint='english',
-                           checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                           # checkpoint_save_mode=ModelSaveOption.DO_NOT_SAVE_MODEL,
-                           auto_device=DeviceTypeOption.AUTO,
-                           ).destroy()
+            APC.APCTrainer(
+                config=config,
+                dataset=dataset,
+                # from_checkpoint='english',
+                checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
+                # checkpoint_save_mode=ModelSaveOption.DO_NOT_SAVE_MODEL,
+                auto_device=DeviceTypeOption.AUTO,
+            ).destroy()

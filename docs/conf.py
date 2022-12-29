@@ -18,8 +18,8 @@ sys.path.insert(0, os.path.abspath("../"))
 
 # -- Project information -----------------------------------------------------
 project = "PyABSA"
-copyright = "2020, Heng Yang"
-author = "Heng Yang"
+copyright = "2022, Heng Yang"
+author = "Yang, Heng"
 
 # The full version, including alpha/beta/rc tags
 release = pyabsa_version
@@ -50,8 +50,8 @@ extensions = [
 ]
 autosummary_generate = True
 
-autoapi_type = 'python'
-autoapi_dirs = ['../pyabsa']
+autoapi_type = "python"
+autoapi_dirs = ["../pyabsa"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = []
@@ -72,12 +72,6 @@ htmlhelp_basename = "PyABASA_documentation"
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-
-latex_engine = 'xelatex'
-latex_use_xindy = False
-latex_elements = {
-    'preamble': '\\usepackage[UTF8]{ctex}\n',
-}
 
 html_theme = "sphinx_rtd_theme"
 html_theme_options = {

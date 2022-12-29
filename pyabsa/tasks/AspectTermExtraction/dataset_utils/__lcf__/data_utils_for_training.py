@@ -8,9 +8,16 @@
 import tqdm
 
 from pyabsa import LabelPaddingOption
-from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__lcf__.apc_utils import configure_spacy_model
+from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__lcf__.apc_utils import (
+    configure_spacy_model,
+)
 from ...dataset_utils.__lcf__.atepc_utils import prepare_input_for_atepc
-from pyabsa.utils.pyabsa_utils import validate_example, check_and_fix_labels, check_and_fix_IOB_labels, fprint
+from pyabsa.utils.pyabsa_utils import (
+    validate_example,
+    check_and_fix_labels,
+    check_and_fix_IOB_labels,
+    fprint,
+)
 
 Labels = set()
 
@@ -18,7 +25,15 @@ Labels = set()
 class InputExample(object):
     """A single training_tutorials/test example for simple sequence classification."""
 
-    def __init__(self, guid, text_a, text_b=None, IOB_label=None, aspect_label=None, polarity=None):
+    def __init__(
+        self,
+        guid,
+        text_a,
+        text_b=None,
+        IOB_label=None,
+        aspect_label=None,
+        polarity=None,
+    ):
         """Constructs a InputExample.
 
         Args:
@@ -41,17 +56,19 @@ class InputExample(object):
 class InputFeatures(object):
     """A single set of features of raw_data."""
 
-    def __init__(self, input_ids_spc,
-                 input_mask,
-                 segment_ids,
-                 label_id,
-                 polarity=None,
-                 valid_ids=None,
-                 label_mask=None,
-                 tokens=None,
-                 lcf_cdm_vec=None,
-                 lcf_cdw_vec=None
-                 ):
+    def __init__(
+        self,
+        input_ids_spc,
+        input_mask,
+        segment_ids,
+        label_id,
+        polarity=None,
+        valid_ids=None,
+        label_mask=None,
+        tokens=None,
+        lcf_cdm_vec=None,
+        lcf_cdw_vec=None,
+    ):
         self.input_ids_spc = input_ids_spc
         self.input_mask = input_mask
         self.segment_ids = segment_ids
@@ -65,26 +82,28 @@ class InputFeatures(object):
 
 
 def readfile(filename):
-    '''
+    """
     read file
-    '''
-    with open(filename, 'r', encoding='utf-8') as f:
+    """
+    with open(filename, "r", encoding="utf-8") as f:
         lines = f.readlines()
     data = []
     sentence = []
     tag = []
     polarity = []
     for line in lines:
-        if len(line) == 0 or line.startswith('-DOCSTART') or line[0] == "\n":
+        if len(line) == 0 or line.startswith("-DOCSTART") or line[0] == "\n":
             if len(sentence) > 0:
                 data.append((sentence, tag, polarity))
                 sentence = []
                 tag = []
                 polarity = []
             continue
-        splits = line.strip().split(' ')
+        splits = line.strip().split(" ")
         if len(splits) != 3:
-            fprint('warning! ignore detected error line(s) in input file:{}'.format(line))
+            fprint(
+                "warning! ignore detected error line(s) in input file:{}".format(line)
+            )
             break
         sentence.append(splits[0])
         tag.append(splits[-2])
@@ -101,54 +120,62 @@ def readfile(filename):
             if len(Labels) > 3:
                 # for more IOB labels support, but can not split cases in some particular conditions, e.g., (B,I,E,O)
                 for p_idx in range(len(p) - 1):
-                    if (p[p_idx] != p[p_idx + 1] and p[p_idx] != str(LabelPaddingOption.SENTIMENT_PADDING)
-                        and p[p_idx + 1] != str(LabelPaddingOption.SENTIMENT_PADDING)) \
-                            or (p[p_idx] != str(LabelPaddingOption.SENTIMENT_PADDING) and p[p_idx + 1] == str(
-                        LabelPaddingOption.SENTIMENT_PADDING)):
-                        _p = p[:p_idx + 1] + polarity_padding[p_idx + 1:]
-                        p = polarity_padding[:p_idx + 1] + p[p_idx + 1:]
+                    if (
+                        p[p_idx] != p[p_idx + 1]
+                        and p[p_idx] != str(LabelPaddingOption.SENTIMENT_PADDING)
+                        and p[p_idx + 1] != str(LabelPaddingOption.SENTIMENT_PADDING)
+                    ) or (
+                        p[p_idx] != str(LabelPaddingOption.SENTIMENT_PADDING)
+                        and p[p_idx + 1] == str(LabelPaddingOption.SENTIMENT_PADDING)
+                    ):
+                        _p = p[: p_idx + 1] + polarity_padding[p_idx + 1 :]
+                        p = polarity_padding[: p_idx + 1] + p[p_idx + 1 :]
                         prepared_data.append((s, t, _p))
             else:
                 for t_idx in range(1, len(t)):
                     # for 3 IOB label (B, I, O)
-                    if p[t_idx - 1] != str(LabelPaddingOption.SENTIMENT_PADDING) and split_aspect(t[t_idx - 1],
-                                                                                                  t[t_idx]):
+                    if p[t_idx - 1] != str(
+                        LabelPaddingOption.SENTIMENT_PADDING
+                    ) and split_aspect(t[t_idx - 1], t[t_idx]):
                         _p = p[:t_idx] + polarity_padding[t_idx:]
                         p = polarity_padding[:t_idx] + p[t_idx:]
                         prepared_data.append((s, t, _p))
 
-                    if p[t_idx] != str(LabelPaddingOption.SENTIMENT_PADDING) and t_idx == len(t) - 1 and split_aspect(
-                            t[t_idx]):
-                        _p = p[:t_idx + 1] + polarity_padding[t_idx + 1:]
-                        p = polarity_padding[:t_idx + 1] + p[t_idx + 1:]
+                    if (
+                        p[t_idx] != str(LabelPaddingOption.SENTIMENT_PADDING)
+                        and t_idx == len(t) - 1
+                        and split_aspect(t[t_idx])
+                    ):
+                        _p = p[: t_idx + 1] + polarity_padding[t_idx + 1 :]
+                        p = polarity_padding[: t_idx + 1] + p[t_idx + 1 :]
                         prepared_data.append((s, t, _p))
 
     return prepared_data
 
 
 def split_aspect(tag1, tag2=None):
-    if tag1 == 'B-ASP' and tag2 == 'B-ASP':
+    if tag1 == "B-ASP" and tag2 == "B-ASP":
         return True
-    if tag1 == 'B-ASP' and tag2 == 'O':
+    if tag1 == "B-ASP" and tag2 == "O":
         return True
-    elif tag1 == 'I-ASP' and tag2 == 'O':
+    elif tag1 == "I-ASP" and tag2 == "O":
         return True
-    elif tag1 == 'I-ASP' and tag2 == 'B-ASP':
+    elif tag1 == "I-ASP" and tag2 == "B-ASP":
         return True
-    elif (tag1 == 'B-ASP' or tag1 == 'I-ASP') and not tag2:
+    elif (tag1 == "B-ASP" or tag1 == "I-ASP") and not tag2:
         return True
-    elif tag1 == 'O' and tag2 == 'I-ASP':
+    elif tag1 == "O" and tag2 == "I-ASP":
         # warnings.warn('Invalid annotation! Found I-ASP without B-ASP')
         return False
-    elif tag1 == 'O' and tag2 == 'O':
+    elif tag1 == "O" and tag2 == "O":
         return False
-    elif tag1 == 'O' and tag2 == 'B-ASP':
+    elif tag1 == "O" and tag2 == "B-ASP":
         return False
-    elif tag1 == 'O' and not tag2:
+    elif tag1 == "O" and not tag2:
         return False
-    elif tag1 == 'B-ASP' and tag2 == 'I-ASP':
+    elif tag1 == "B-ASP" and tag2 == "I-ASP":
         return False
-    elif tag1 == 'I-ASP' and tag2 == 'I-ASP':
+    elif tag1 == "I-ASP" and tag2 == "I-ASP":
         return False
     else:
         return False
@@ -184,26 +211,29 @@ class ATEPCProcessor(DataProcessor):
 
     def __init__(self, tokenizer):
         self.tokenizer = tokenizer
-        self.tokenizer.bos_token = tokenizer.bos_token if tokenizer.bos_token else '[CLS]'
-        self.tokenizer.eos_token = tokenizer.eos_token if tokenizer.eos_token else '[SEP]'
+        self.tokenizer.bos_token = (
+            tokenizer.bos_token if tokenizer.bos_token else "[CLS]"
+        )
+        self.tokenizer.eos_token = (
+            tokenizer.eos_token if tokenizer.eos_token else "[SEP]"
+        )
 
     def get_train_examples(self, data_dir, set_tag):
         """See base class."""
-        return self._create_examples(
-            self._read_tsv(data_dir), set_tag)
+        return self._create_examples(self._read_tsv(data_dir), set_tag)
 
     def get_valid_examples(self, data_dir, set_tag):
         """See base class."""
-        return self._create_examples(
-            self._read_tsv(data_dir), set_tag)
+        return self._create_examples(self._read_tsv(data_dir), set_tag)
 
     def get_test_examples(self, data_dir, set_tag):
         """See base class."""
-        return self._create_examples(
-            self._read_tsv(data_dir), set_tag)
+        return self._create_examples(self._read_tsv(data_dir), set_tag)
 
     def get_labels(self):
-        return sorted(list(Labels) + [self.tokenizer.bos_token, self.tokenizer.eos_token])
+        return sorted(
+            list(Labels) + [self.tokenizer.bos_token, self.tokenizer.eos_token]
+        )
 
     def _create_examples(self, lines, set_type):
         examples = []
@@ -222,8 +252,16 @@ class ATEPCProcessor(DataProcessor):
             text_a = sentence
             text_b = aspect
 
-            examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, IOB_label=tag,
-                                         aspect_label=aspect_tag, polarity=aspect_polarity))
+            examples.append(
+                InputExample(
+                    guid=guid,
+                    text_a=text_a,
+                    text_b=text_b,
+                    IOB_label=tag,
+                    aspect_label=aspect_tag,
+                    polarity=aspect_polarity,
+                )
+            )
 
         return examples
 
@@ -235,40 +273,54 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
 
     bos_token = tokenizer.bos_token
     eos_token = tokenizer.eos_token
-    label_map = {label: i for i, label in
-                 enumerate(sorted(list(Labels) + [tokenizer.bos_token, tokenizer.eos_token]), 1)}
+    label_map = {
+        label: i
+        for i, label in enumerate(
+            sorted(list(Labels) + [tokenizer.bos_token, tokenizer.eos_token]), 1
+        )
+    }
     opt.IOB_label_to_index = label_map
     features = []
     polarities_set = set()
-    for (ex_index, example) in enumerate(tqdm.tqdm(examples, desc='convert examples to features')):
+    for (ex_index, example) in enumerate(
+        tqdm.tqdm(examples, desc="convert examples to features")
+    ):
         text_tokens = example.text_a[:]
         aspect_tokens = example.text_b[:]
         IOB_label = example.IOB_label
         aspect_label = example.aspect_label
         polarity = example.polarity
-        if polarity != LabelPaddingOption.SENTIMENT_PADDING or int(
-                polarity) != LabelPaddingOption.SENTIMENT_PADDING:  # bad case handle in Chinese atepc_datasets
+        if (
+            polarity != LabelPaddingOption.SENTIMENT_PADDING
+            or int(polarity) != LabelPaddingOption.SENTIMENT_PADDING
+        ):  # bad case handle in Chinese atepc_datasets
             polarities_set.add(polarity)  # ignore samples without polarities
         tokens = []
         labels = []
         valid = []
         label_mask = []
-        enum_tokens = [bos_token] + text_tokens + [eos_token] + aspect_tokens + [eos_token]
+        enum_tokens = (
+            [bos_token] + text_tokens + [eos_token] + aspect_tokens + [eos_token]
+        )
         IOB_label = [bos_token] + IOB_label + [eos_token] + aspect_label + [eos_token]
 
-        aspect = ' '.join(example.text_b)
+        aspect = " ".join(example.text_b)
         try:
-            text_left, _, text_right = [s.strip() for s in ' '.join(example.text_a).partition(aspect)]
+            text_left, _, text_right = [
+                s.strip() for s in " ".join(example.text_a).partition(aspect)
+            ]
         except:
             continue
-        text_raw = text_left + ' ' + aspect + ' ' + text_right
+        text_raw = text_left + " " + aspect + " " + text_right
 
         if validate_example(text_raw, aspect, polarity, opt):
             continue
 
-        prepared_inputs = prepare_input_for_atepc(opt, tokenizer, text_left, text_right, aspect)
-        lcf_cdm_vec = prepared_inputs['lcf_cdm_vec']
-        lcf_cdw_vec = prepared_inputs['lcf_cdw_vec']
+        prepared_inputs = prepare_input_for_atepc(
+            opt, tokenizer, text_left, text_right, aspect
+        )
+        lcf_cdm_vec = prepared_inputs["lcf_cdm_vec"]
+        lcf_cdw_vec = prepared_inputs["lcf_cdw_vec"]
 
         for i, word in enumerate(enum_tokens):
             token = tokenizer.tokenize(word)
@@ -281,9 +333,9 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
                     valid.append(1)
                 else:
                     valid.append(0)
-        tokens = tokens[0:min(len(tokens), max_seq_len - 2)]
-        labels = labels[0:min(len(labels), max_seq_len - 2)]
-        valid = valid[0:min(len(valid), max_seq_len - 2)]
+        tokens = tokens[0 : min(len(tokens), max_seq_len - 2)]
+        labels = labels[0 : min(len(labels), max_seq_len - 2)]
+        valid = valid[0 : min(len(valid), max_seq_len - 2)]
         # segment_ids = [0] * len(example.text_a[:]) + [1] * (max_seq_len - len([0] * len(example.text_a[:])))
         # segment_ids = segment_ids[:max_seq_len]
 
@@ -315,18 +367,20 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
         assert len(label_mask) == max_seq_len
 
         features.append(
-            InputFeatures(input_ids_spc=input_ids_spc,
-                          input_mask=input_mask,
-                          segment_ids=segment_ids,
-                          label_id=label_ids,
-                          polarity=polarity,
-                          valid_ids=valid,
-                          label_mask=label_mask,
-                          tokens=example.text_a,
-                          lcf_cdm_vec=lcf_cdm_vec,
-                          lcf_cdw_vec=lcf_cdw_vec)
+            InputFeatures(
+                input_ids_spc=input_ids_spc,
+                input_mask=input_mask,
+                segment_ids=segment_ids,
+                label_id=label_ids,
+                polarity=polarity,
+                valid_ids=valid,
+                label_mask=label_mask,
+                tokens=example.text_a,
+                lcf_cdm_vec=lcf_cdm_vec,
+                lcf_cdw_vec=lcf_cdw_vec,
+            )
         )
-    check_and_fix_labels(polarities_set, 'polarity', features, opt)
+    check_and_fix_labels(polarities_set, "polarity", features, opt)
     check_and_fix_IOB_labels(label_map, opt)
     opt.output_dim = len(polarities_set)
 

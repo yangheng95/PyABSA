@@ -18,7 +18,6 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 
 class BERTProteinRDataset(Dataset):
-
     def __init__(self, config, tokenizer):
 
         self.tokenizer = tokenizer
@@ -43,38 +42,45 @@ class BERTProteinRDataset(Dataset):
     def process_data(self, samples, ignore_error=True):
         all_data = []
         if len(samples) > 100:
-            it = tqdm.tqdm(samples, desc='preparing text classification dataloader')
+            it = tqdm.tqdm(samples, desc="preparing text classification dataloader")
         else:
             it = samples
         for ex_id, text in enumerate(it):
             try:
                 # handle for empty lines in inference datasets
-                if text is None or '' == text.strip():
-                    raise RuntimeError('Invalid Input!')
-                if '$LABEL$' not in text:
-                    text = text + '$LABEL$'
+                if text is None or "" == text.strip():
+                    raise RuntimeError("Invalid Input!")
+                if "$LABEL$" not in text:
+                    text = text + "$LABEL$"
 
-                text, _, label = text.partition('$LABEL$')
-                seq, ph = text.split(',')
+                text, _, label = text.partition("$LABEL$")
+                seq, ph = text.split(",")
                 label = float(label.strip())
 
                 for x in range(len(seq) // (self.config.max_seq_len * 2) + 1):
-                    _seq = seq[x * (self.config.max_seq_len * 2):(x + 1) * (self.config.max_seq_len * 2)]
+                    _seq = seq[
+                        x
+                        * (self.config.max_seq_len * 2) : (x + 1)
+                        * (self.config.max_seq_len * 2)
+                    ]
                     protein_indices = self.tokenizer.text_to_sequence(_seq)
-                    protein_indices = pad_and_truncate(protein_indices, self.config.max_seq_len,
-                                                       value=self.tokenizer.pad_token_id)
+                    protein_indices = pad_and_truncate(
+                        protein_indices,
+                        self.config.max_seq_len,
+                        value=self.tokenizer.pad_token_id,
+                    )
                     data = {
-                        'ex_id': torch.tensor(ex_id, dtype=torch.long),
-                        'text_raw': seq,
-                        'text_indices': torch.tensor(protein_indices, dtype=torch.long),
-                        'label': torch.tensor(label, dtype=torch.float32),
+                        "ex_id": torch.tensor(ex_id, dtype=torch.long),
+                        "text_raw": seq,
+                        "text_indices": torch.tensor(protein_indices, dtype=torch.long),
+                        "label": torch.tensor(label, dtype=torch.float32),
                     }
 
                     all_data.append(data)
 
             except Exception as e:
                 if ignore_error:
-                    fprint('Ignore error while processing:', text, e)
+                    fprint("Ignore error while processing:", text, e)
                 else:
                     raise e
 

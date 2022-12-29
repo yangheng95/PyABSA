@@ -37,28 +37,37 @@ from ...utils.data_utils.dataset_manager import detect_dataset
 
 import warnings
 
-warnings.filterwarnings('once')
+warnings.filterwarnings("once")
 
 
 def init_config(config):
-    if not torch.cuda.device_count() > 1 and config.auto_device == DeviceTypeOption.ALL_CUDA:
-        fprint('Cuda devices count <= 1, so reset auto_device=True to auto specify device')
+    if (
+        not torch.cuda.device_count() > 1
+        and config.auto_device == DeviceTypeOption.ALL_CUDA
+    ):
+        fprint(
+            "Cuda devices count <= 1, so reset auto_device=True to auto specify device"
+        )
         config.auto_device = True
     set_device(config, config.auto_device)
 
-    config.model_name = config.model.__name__.lower() if not isinstance(config.model, list) else 'ensemble_model'
+    config.model_name = (
+        config.model.__name__.lower()
+        if not isinstance(config.model, list)
+        else "ensemble_model"
+    )
 
-    if config.get('pretrained_bert', None):
+    if config.get("pretrained_bert", None):
         try:
             pretrain_config = AutoConfig.from_pretrained(config.pretrained_bert)
             config.hidden_dim = pretrain_config.hidden_size
             config.embed_dim = pretrain_config.hidden_size
         except:
             pass
-    elif not config.get('hidden_dim', None) or not config.get('embed_dim', None):
-        if config.get('hidden_dim', None):
+    elif not config.get("hidden_dim", None) or not config.get("embed_dim", None):
+        if config.get("hidden_dim", None):
             config.embed_dim = config.hidden_dim
-        elif config.get('embed_dim', None):
+        elif config.get("embed_dim", None):
             config.hidden_dim = config.embed_dim
         else:
             config.hidden_dim = 768
@@ -67,45 +76,54 @@ def init_config(config):
     config.ABSADatasetsVersion = query_local_datasets_version()
     config.PyABSAVersion = PyABSAVersion
     config.TransformersVersion = transformers.__version__
-    config.TorchVersion = '{}+cuda{}'.format(torch.version.__version__, torch.version.cuda)
+    config.TorchVersion = "{}+cuda{}".format(
+        torch.version.__version__, torch.version.cuda
+    )
 
     if isinstance(config.dataset, DatasetItem):
         config.dataset_name = config.dataset.dataset_name
     elif isinstance(config.dataset, DatasetDict):
-        config.dataset_name = config.dataset['dataset_name']
+        config.dataset_name = config.dataset["dataset_name"]
     elif isinstance(config.dataset, str):
-        dataset = DatasetItem('custom_dataset', config.dataset)
+        dataset = DatasetItem("custom_dataset", config.dataset)
         config.dataset_name = dataset.dataset_name
 
-    if 'MV' not in config.args:
-        config.MV = MetricVisualizer(name=config.model.__name__ + '-' + config.dataset_name,
-                                     trial_tag='Model & Dataset',
-                                     trial_tag_list=[config.model.__name__ + '-' + config.dataset_name])
+    if "MV" not in config.args:
+        config.MV = MetricVisualizer(
+            name=config.model.__name__ + "-" + config.dataset_name,
+            trial_tag="Model & Dataset",
+            trial_tag_list=[config.model.__name__ + "-" + config.dataset_name],
+        )
 
     checkpoint_save_mode = config.checkpoint_save_mode
 
     config.save_mode = checkpoint_save_mode
     config_check(config)
-    config.logger = get_logger(os.getcwd(), log_name=config.model_name, log_type='trainer')
+    config.logger = get_logger(
+        os.getcwd(), log_name=config.model_name, log_type="trainer"
+    )
 
-    config.logger.info('PyABSA version: {}'.format(config.PyABSAVersion))
-    config.logger.info('Transformers version: {}'.format(config.TransformersVersion))
-    config.logger.info('Torch version: {}'.format(config.TorchVersion))
-    config.logger.info('Device: {}'.format(config.device_name))
+    config.logger.info("PyABSA version: {}".format(config.PyABSAVersion))
+    config.logger.info("Transformers version: {}".format(config.TransformersVersion))
+    config.logger.info("Torch version: {}".format(config.TorchVersion))
+    config.logger.info("Device: {}".format(config.device_name))
 
     return config
 
 
 class Trainer:
-    def __init__(self,
-                 config: ConfigManager = None,
-                 dataset: Union[DatasetItem, Path, str, DatasetDict] = None,
-                 from_checkpoint: Union[Path, str] = None,
-                 checkpoint_save_mode: Union[ModelSaveOption, int] = ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                 auto_device: Union[str, bool] = DeviceTypeOption.AUTO,
-                 path_to_save: Union[Path, str] = None,
-                 load_aug=False
-                 ):
+    def __init__(
+        self,
+        config: ConfigManager = None,
+        dataset: Union[DatasetItem, Path, str, DatasetDict] = None,
+        from_checkpoint: Union[Path, str] = None,
+        checkpoint_save_mode: Union[
+            ModelSaveOption, int
+        ] = ModelSaveOption.SAVE_MODEL_STATE_DICT,
+        auto_device: Union[str, bool] = DeviceTypeOption.AUTO,
+        path_to_save: Union[Path, str] = None,
+        load_aug=False,
+    ):
         """
         Init a trainer for trainer a APC, ATEPC, TC or TAD model, after trainer,
         you need to call load_trained_model() to get the trained model for inference.
@@ -152,21 +170,37 @@ class Trainer:
             self.config.dataset_dict = self.config.dataset
         else:
             # detect dataset
-            dataset_file = detect_dataset(self.config.dataset, task_code=self.config.task_code,
-                                          load_aug=self.config.load_aug, config=self.config)
+            dataset_file = detect_dataset(
+                self.config.dataset,
+                task_code=self.config.task_code,
+                load_aug=self.config.load_aug,
+                config=self.config,
+            )
             self.config.dataset_file = dataset_file
-        if self.config.checkpoint_save_mode or self.config.dataset_file['valid'] \
-                or (self.config.get('data_dict') and self.config.dataset_dict['test']):
+        if (
+            self.config.checkpoint_save_mode
+            or self.config.dataset_file["valid"]
+            or (self.config.get("data_dict") and self.config.dataset_dict["test"])
+        ):
             if self.config.path_to_save:
                 self.config.model_path_to_save = self.config.path_to_save
-            elif ((hasattr(self.config, 'dataset_file') and 'valid' in self.config.dataset_file) or
-                  (hasattr(self.config,
-                           'dataset_dict') and 'valid' in self.config.dataset_dict)) and not self.config.checkpoint_save_mode:
-                fprint('Using Validation set needs to save checkpoint, turn on checkpoint-saving ')
-                self.config.model_path_to_save = 'checkpoints'
+            elif (
+                (
+                    hasattr(self.config, "dataset_file")
+                    and "valid" in self.config.dataset_file
+                )
+                or (
+                    hasattr(self.config, "dataset_dict")
+                    and "valid" in self.config.dataset_dict
+                )
+            ) and not self.config.checkpoint_save_mode:
+                fprint(
+                    "Using Validation set needs to save checkpoint, turn on checkpoint-saving "
+                )
+                self.config.model_path_to_save = "checkpoints"
                 self.config.save_mode = 1
             else:
-                self.config.model_path_to_save = 'checkpoints'
+                self.config.model_path_to_save = "checkpoints"
         else:
             self.config.model_path_to_save = None
 
@@ -184,17 +218,19 @@ class Trainer:
                 model_path.append(self.training_instructor(self.config).run())
             else:
                 # always return the last trained model if you don't save trained model
-                model = self.inference_model_class(checkpoint=self.training_instructor(self.config).run())
+                model = self.inference_model_class(
+                    checkpoint=self.training_instructor(self.config).run()
+                )
         self.config.seed = seeds
 
         # remove logger
         while self.config.logger.handlers:
             self.config.logger.removeHandler(self.config.logger.handlers[0])
 
-        # load inference model
+        # set inference model load path
         if self.config.checkpoint_save_mode:
             if os.path.exists(max(model_path)):
-                self.inference_model = self.inference_model_class(max(model_path))
+                self.inference_model = max(model_path)
         else:
             self.inference_model = model
 
@@ -203,8 +239,15 @@ class Trainer:
         Load trained model for inference
         """
         if not self.inference_model:
-            fprint('No trained model found, this could happen while trainer only using trainer set.')
-        self.inference_model.to(self.config.device)
+            fprint(
+                "No trained model found, this could happen while trainer only using trainer set."
+            )
+        elif isinstance(self.inference_model, str):
+            self.inference_model = self.inference_model_class(
+                checkpoint=self.inference_model
+            )
+        else:
+            fprint("Trained model already loaded.")
         return self.inference_model
 
     def destroy(self):

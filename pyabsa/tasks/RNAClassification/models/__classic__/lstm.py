@@ -20,8 +20,14 @@ class LSTMLayer(nn.Module):
         self.config = config
         for i in range(self.config.num_lstm_layer):
             self.lstms.append(
-                DynamicLSTM(self.config.embed_dim, self.config.hidden_dim, num_layers=self.config.num_lstm_layer,
-                            batch_first=True, bidirectional=True))
+                DynamicLSTM(
+                    self.config.embed_dim,
+                    self.config.hidden_dim,
+                    num_layers=self.config.num_lstm_layer,
+                    batch_first=True,
+                    bidirectional=True,
+                )
+            )
 
     def forward(self, x, x_len):
         h, c = None, None
@@ -31,12 +37,14 @@ class LSTMLayer(nn.Module):
 
 
 class LSTM(nn.Module):
-    inputs = ['text_indices']
+    inputs = ["text_indices"]
 
     def __init__(self, embedding_matrix, config):
         super(LSTM, self).__init__()
         self.config = config
-        self.embed = nn.Embedding.from_pretrained(torch.tensor(embedding_matrix, dtype=torch.float))
+        self.embed = nn.Embedding.from_pretrained(
+            torch.tensor(embedding_matrix, dtype=torch.float)
+        )
         self.lstm = LSTMLayer(config)
         self.dense = nn.Linear(config.hidden_dim, config.output_dim)
 

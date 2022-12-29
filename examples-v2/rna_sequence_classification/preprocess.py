@@ -11,79 +11,109 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 def preprocess_rna():
     def load_file(file_path):
-        with open(file_path, 'r') as f:
+        with open(file_path, "r") as f:
             lines = f.readlines()
             return lines
 
-    positive_data = load_file('integrated_datasets/rnac_datasets/degrad/Degrad_XRN4_DL_1.tsv')
-    negative_data = load_file('integrated_datasets/rnac_datasets/degrad/Degrad_XRN4_DL_0.tsv')
+    positive_data = load_file(
+        "integrated_datasets/rnac_datasets/degrad/Degrad_XRN4_DL_1.tsv"
+    )
+    negative_data = load_file(
+        "integrated_datasets/rnac_datasets/degrad/Degrad_XRN4_DL_0.tsv"
+    )
     negative_data = negative_data[: len(negative_data) // 100]
 
     positive_rna_name_list = dict()
     negative_rna_name_list = dict()
     for line in positive_data:
-        if line.split('\t')[0].strip() not in positive_rna_name_list:
-            positive_rna_name_list[line.split('\t')[0].strip()] = [line.split('\t')[-1].strip()]
+        if line.split("\t")[0].strip() not in positive_rna_name_list:
+            positive_rna_name_list[line.split("\t")[0].strip()] = [
+                line.split("\t")[-1].strip()
+            ]
         else:
-            positive_rna_name_list[line.split('\t')[0].strip()].append(line.split('\t')[-1].strip())
+            positive_rna_name_list[line.split("\t")[0].strip()].append(
+                line.split("\t")[-1].strip()
+            )
 
     for line in negative_data:
-        if line.split('\t')[0].strip() not in negative_rna_name_list:
-            negative_rna_name_list[line.split('\t')[0].strip()] = [line.split('\t')[-1].strip()]
+        if line.split("\t")[0].strip() not in negative_rna_name_list:
+            negative_rna_name_list[line.split("\t")[0].strip()] = [
+                line.split("\t")[-1].strip()
+            ]
         else:
-            negative_rna_name_list[line.split('\t')[0].strip()].append(line.split('\t')[-1].strip())
+            negative_rna_name_list[line.split("\t")[0].strip()].append(
+                line.split("\t")[-1].strip()
+            )
 
-    positive_train_names = list(positive_rna_name_list.keys())[:int(len(positive_rna_name_list) * 0.8)]
+    positive_train_names = list(positive_rna_name_list.keys())[
+        : int(len(positive_rna_name_list) * 0.8)
+    ]
     positive_test_names = list(positive_rna_name_list.keys())[
-                          int(len(positive_rna_name_list) * 0.8):int(len(positive_rna_name_list) * 0.9)]
-    positive_valid_names = list(positive_rna_name_list.keys())[int(len(positive_rna_name_list) * 0.9):]
+        int(len(positive_rna_name_list) * 0.8) : int(len(positive_rna_name_list) * 0.9)
+    ]
+    positive_valid_names = list(positive_rna_name_list.keys())[
+        int(len(positive_rna_name_list) * 0.9) :
+    ]
 
-    negative_train_names = list(negative_rna_name_list.keys())[:int(len(negative_rna_name_list) * 0.8)]
+    negative_train_names = list(negative_rna_name_list.keys())[
+        : int(len(negative_rna_name_list) * 0.8)
+    ]
     negative_test_names = list(negative_rna_name_list.keys())[
-                          int(len(negative_rna_name_list) * 0.8):int(len(negative_rna_name_list) * 0.9)]
-    negative_valid_names = list(negative_rna_name_list.keys())[int(len(negative_rna_name_list) * 0.9):]
+        int(len(negative_rna_name_list) * 0.8) : int(len(negative_rna_name_list) * 0.9)
+    ]
+    negative_valid_names = list(negative_rna_name_list.keys())[
+        int(len(negative_rna_name_list) * 0.9) :
+    ]
 
-    with open('integrated_datasets/rnac_datasets/degrad/degrad.train.dat.rnac', 'w') as f:
+    with open(
+        "integrated_datasets/rnac_datasets/degrad/degrad.train.dat.rnac", "w"
+    ) as f:
         for data in positive_train_names + negative_train_names:
             if data in positive_train_names:
                 for seq in positive_rna_name_list[data]:
-                    f.write(seq + '$LABEL$1')
+                    f.write(seq + "$LABEL$1")
 
             if data in negative_train_names:
                 for seq in negative_rna_name_list[data]:
-                    f.write(seq + '$LABEL$0')
+                    f.write(seq + "$LABEL$0")
 
-    with open('integrated_datasets/rnac_datasets/degrad/degrad.test.dat.rnac', 'w') as f:
+    with open(
+        "integrated_datasets/rnac_datasets/degrad/degrad.test.dat.rnac", "w"
+    ) as f:
         for data in positive_test_names + negative_test_names:
             if data in positive_test_names:
                 for seq in positive_rna_name_list[data]:
-                    f.write(seq + '$LABEL$1')
+                    f.write(seq + "$LABEL$1")
 
             if data in negative_test_names:
                 for seq in negative_rna_name_list[data]:
-                    f.write(seq + '$LABEL$0')
+                    f.write(seq + "$LABEL$0")
 
-    with open('integrated_datasets/rnac_datasets/degrad/degrad.valid.dat.rnac', 'w') as f:
+    with open(
+        "integrated_datasets/rnac_datasets/degrad/degrad.valid.dat.rnac", "w"
+    ) as f:
         for data in positive_valid_names + negative_valid_names:
             if data in positive_valid_names:
                 for seq in positive_rna_name_list[data]:
-                    f.write(seq + '$LABEL$1')
+                    f.write(seq + "$LABEL$1")
 
             if data in negative_valid_names:
                 for seq in negative_rna_name_list[data]:
-                    f.write(seq + '$LABEL$0')
+                    f.write(seq + "$LABEL$0")
 
-    with open('integrated_datasets/rnac_datasets/degrad/degrad.test.dat.rnac.inference', 'w') as f:
+    with open(
+        "integrated_datasets/rnac_datasets/degrad/degrad.test.dat.rnac.inference", "w"
+    ) as f:
         for data in positive_test_names + negative_test_names:
             if data in positive_test_names:
                 for seq in positive_rna_name_list[data]:
-                    f.write(seq + '$LABEL$1')
+                    f.write(seq + "$LABEL$1")
 
             if data in negative_test_names:
                 for seq in negative_rna_name_list[data]:
-                    f.write(seq + '$LABEL$0')
+                    f.write(seq + "$LABEL$0")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     preprocess_rna()
-    fprint('Done!')
+    fprint("Done!")

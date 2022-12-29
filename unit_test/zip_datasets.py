@@ -18,21 +18,27 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 def cascade_zip_datasets():
     # iterate zip all datasets in the folder
-    datasets = findfile.find_dirs('integrated_datasets', 'datasets')
+    datasets = findfile.find_dirs("integrated_datasets", "datasets")
 
     for dataset in datasets:
-        if dataset in ['integrated_datasets', 'integrated_datasets.zip', ]:
+        if dataset in [
+            "integrated_datasets",
+            "integrated_datasets.zip",
+        ]:
             continue
-        for d in findfile.find_dirs(dataset, ''):
+        for d in findfile.find_dirs(dataset, ""):
             dataset_name = Path(d).name
 
             if dataset_name in [os.path.basename(dataset)]:
                 continue
 
-            fprint(f'Zip dataset: {dataset_name}')
+            fprint(f"Zip dataset: {dataset_name}")
 
-            zip_file = zipfile.ZipFile(f'integrated_datasets/{os.path.basename(dataset)}.{dataset_name}.zip'.lower(),
-                                       'w', zipfile.ZIP_DEFLATED)
+            zip_file = zipfile.ZipFile(
+                f"integrated_datasets/{os.path.basename(dataset)}.{dataset_name}.zip".lower(),
+                "w",
+                zipfile.ZIP_DEFLATED,
+            )
 
             for root, dirs, files in os.walk(d):
 
@@ -42,5 +48,5 @@ def cascade_zip_datasets():
             zip_file.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cascade_zip_datasets()

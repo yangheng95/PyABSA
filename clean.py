@@ -10,7 +10,7 @@ import os
 
 from findfile import rm_files, rm_dirs, rm_cwd_files, rm_cwd_dirs
 
-rm_dirs(os.getcwd(), or_key=['checkpoints'])
+rm_dirs(os.getcwd(), or_key=["checkpoints"])
 
 # rm_cwd_dirs(or_key=['__pycache__'])
 # rm_cwd_files(or_key=['pyabsa.egg-info'])

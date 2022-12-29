@@ -27,12 +27,10 @@ def test_tad_training():
     config.cross_validate_fold = -1
     config.data_num = 6
 
-    dataset = DatasetItem('SST2TextFooler')
+    dataset = DatasetItem("SST2TextFooler")
 
-    text_classifier = TAD.TADTrainer(config=config,
-                                     dataset=dataset,
-                                     checkpoint_save_mode=1,
-                                     auto_device=True
-                                     ).load_trained_model()
+    text_classifier = TAD.TADTrainer(
+        config=config, dataset=dataset, checkpoint_save_mode=1, auto_device=True
+    ).load_trained_model()
 
     text_classifier.batch_predict(dataset)

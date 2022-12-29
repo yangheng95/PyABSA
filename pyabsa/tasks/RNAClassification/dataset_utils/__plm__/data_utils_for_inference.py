@@ -19,8 +19,7 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 
 class BERTRNACInferenceDataset(Dataset):
-
-    def __init__(self, config, tokenizer, dataset_type='infer'):
+    def __init__(self, config, tokenizer, dataset_type="infer"):
         self.config = config
         self.tokenizer = tokenizer
         self.dataset_type = dataset_type
@@ -44,12 +43,12 @@ class BERTRNACInferenceDataset(Dataset):
     def process_data(self, samples, ignore_error=True):
         all_data = []
         if len(samples) > 100:
-            it = tqdm.tqdm(samples, desc='preparing text classification dataloader')
+            it = tqdm.tqdm(samples, desc="preparing text classification dataloader")
         else:
             it = samples
         for ex_id, text in enumerate(it):
             try:
-                text, _, label = text.strip().partition('$LABEL$')
+                text, _, label = text.strip().partition("$LABEL$")
                 # exon1, intron, exon2 = text.split(',')
                 # label = label.strip() if label else LabelPaddingOption.LABEL_PADDING
                 # exon1 = exon1.strip()
@@ -63,16 +62,16 @@ class BERTRNACInferenceDataset(Dataset):
                 # intron_indices = self.tokenizer.text_to_sequence(intron)
                 rna_indices = self.tokenizer.text_to_sequence(text)
                 data = {
-                    'ex_id': ex_id,
-                    'text_raw': text,
-                    'text_indices': rna_indices,
-                    'label': label,
+                    "ex_id": ex_id,
+                    "text_raw": text,
+                    "text_indices": rna_indices,
+                    "label": label,
                 }
                 all_data.append(data)
 
             except Exception as e:
                 if ignore_error:
-                    fprint('Ignore error while processing:', text)
+                    fprint("Ignore error while processing:", text)
                 else:
                     raise e
 

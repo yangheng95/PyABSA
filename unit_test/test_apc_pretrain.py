@@ -12,28 +12,29 @@ from pyabsa import DeviceTypeOption, ModelSaveOption
 
 import warnings
 
-warnings.filterwarnings('ignore')
+warnings.filterwarnings("ignore")
 
 #######################################################################################################
 #                                  This script is used for basic test                                 #
 #                         The configuration_class test are ignored due to computation limitation                   #
 #######################################################################################################
 
-atepc_examples = ['But the staff was so nice to us .',
-                  'But the staff was so horrible to us .',
-                  r'Not only was the food outstanding , but the little ` perks \' were great .',
-                  'It took half an hour to get our check , which was perfect since we could sit , have drinks and talk !',
-                  'It was pleasantly uncrowded , the service was delightful , the garden adorable , '
-                  'the food -LRB- from appetizers to entrees -RRB- was delectable .',
-                  'How pretentious and inappropriate for MJ Grill to claim that it provides power lunch and dinners !'
-                  ]
+atepc_examples = [
+    "But the staff was so nice to us .",
+    "But the staff was so horrible to us .",
+    r"Not only was the food outstanding , but the little ` perks \' were great .",
+    "It took half an hour to get our check , which was perfect since we could sit , have drinks and talk !",
+    "It was pleasantly uncrowded , the service was delightful , the garden adorable , "
+    "the food -LRB- from appetizers to entrees -RRB- was delectable .",
+    "How pretentious and inappropriate for MJ Grill to claim that it provides power lunch and dinners !",
+]
 
 apc_examples = [
-    'Strong build though which really adds to its [ASP]durability[ASP] .',  # $LABEL$ Positive
-    'Strong [ASP]build[ASP] though which really adds to its durability . $LABEL$ Positive',
-    'The [ASP]battery life[ASP] is excellent - 6-7 hours without charging . $LABEL$ Positive',
-    'I have had my computer for 2 weeks already and it [ASP]works[ASP] perfectly . $LABEL$ Positive',
-    'And I may be the only one but I am really liking [ASP]Windows 8[ASP] . $LABEL$ Positive',
+    "Strong build though which really adds to its [ASP]durability[ASP] .",  # $LABEL$ Positive
+    "Strong [ASP]build[ASP] though which really adds to its durability . $LABEL$ Positive",
+    "The [ASP]battery life[ASP] is excellent - 6-7 hours without charging . $LABEL$ Positive",
+    "I have had my computer for 2 weeks already and it [ASP]works[ASP] perfectly . $LABEL$ Positive",
+    "And I may be the only one but I am really liking [ASP]Windows 8[ASP] . $LABEL$ Positive",
 ]
 
 
@@ -43,7 +44,7 @@ def test_cross_validate():
     for dataset in [APC.APCDatasetList.Laptop14, APC.APCDatasetList.Phone]:
         for model in APC.APCModelList()[:1]:
             config = APC.APCConfigManager.get_apc_config_english()
-            config.lcf = 'cdm'
+            config.lcf = "cdm"
             config.model = model
             config.cache_dataset = True
             config.num_epoch = 1
@@ -53,14 +54,17 @@ def test_cross_validate():
             config.cross_valid_fold = 5
             config.data_num = 6
 
-            apc_trainer = APC.APCTrainer(config=config,
-                                         dataset=dataset,
-                                         checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                                         auto_device=DeviceTypeOption.ALL_CUDA
-                                         )
+            apc_trainer = APC.APCTrainer(
+                config=config,
+                dataset=dataset,
+                checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
+                auto_device=DeviceTypeOption.ALL_CUDA,
+            )
             sent_classifier = apc_trainer.load_trained_model()
             for ex in apc_examples:
-                result = sent_classifier.predict(ex, print_result=True, ignore_error=False)
+                result = sent_classifier.predict(
+                    ex, print_result=True, ignore_error=False
+                )
             apc_trainer.destroy()
             sent_classifier.destroy()
 
@@ -71,7 +75,7 @@ def test_auto_device():
     for dataset in [APC.APCDatasetList.Laptop14, APC.APCDatasetList.Phone]:
         for model in APC.APCModelList()[:1]:
             config = APC.APCConfigManager.get_apc_config_english()
-            config.lcf = 'cdm'
+            config.lcf = "cdm"
             config.model = model
             config.cache_dataset = True
             config.cache_dataset = False
@@ -81,13 +85,16 @@ def test_auto_device():
             config.log_step = -1
             config.data_num = 6
 
-            sent_classifier = APC.APCTrainer(config=config,
-                                             dataset=dataset,
-                                             checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                                             auto_device=DeviceTypeOption.AUTO
-                                             ).load_trained_model()
+            sent_classifier = APC.APCTrainer(
+                config=config,
+                dataset=dataset,
+                checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
+                auto_device=DeviceTypeOption.AUTO,
+            ).load_trained_model()
             for ex in apc_examples:
-                result = sent_classifier.predict(ex, print_result=True, ignore_error=False)
+                result = sent_classifier.predict(
+                    ex, print_result=True, ignore_error=False
+                )
 
             sent_classifier.destroy()
 
@@ -98,7 +105,7 @@ def test_lcf_apc_models():
     for dataset in [APC.APCDatasetList.Laptop14]:
         for model in APC.APCModelList():
             config = APC.APCConfigManager.get_apc_config_english()
-            config.lcf = 'cdm'
+            config.lcf = "cdm"
             config.model = model
             config.cache_dataset = True
             config.num_epoch = 1
@@ -107,14 +114,17 @@ def test_lcf_apc_models():
             config.log_step = -1
             config.data_num = 6
 
-            apc_trainer = APC.APCTrainer(config=config,
-                                         dataset=dataset,
-                                         checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                                         auto_device=DeviceTypeOption.ALL_CUDA
-                                         )
+            apc_trainer = APC.APCTrainer(
+                config=config,
+                dataset=dataset,
+                checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
+                auto_device=DeviceTypeOption.ALL_CUDA,
+            )
             sent_classifier = apc_trainer.load_trained_model()
             for ex in apc_examples:
-                result = sent_classifier.predict(ex, print_result=True, ignore_error=False)
+                result = sent_classifier.predict(
+                    ex, print_result=True, ignore_error=False
+                )
             apc_trainer.destroy()
             sent_classifier.destroy()
 
@@ -125,7 +135,7 @@ def test_save_models():
     for dataset in [APC.APCDatasetList.Laptop14, APC.APCDatasetList.Phone]:
         for model in APC.APCModelList()[:1]:
             config = APC.APCConfigManager.get_apc_config_english()
-            config.lcf = 'cdm'
+            config.lcf = "cdm"
             config.model = model
             config.cache_dataset = True
             config.num_epoch = 1
@@ -134,13 +144,16 @@ def test_save_models():
             config.log_step = -1
             config.data_num = 6
 
-            sent_classifier = APC.APCTrainer(config=config,
-                                             dataset=dataset,
-                                             checkpoint_save_mode=ModelSaveOption.SAVE_FULL_MODEL,
-                                             auto_device=DeviceTypeOption.ALL_CUDA
-                                             ).load_trained_model()
+            sent_classifier = APC.APCTrainer(
+                config=config,
+                dataset=dataset,
+                checkpoint_save_mode=ModelSaveOption.SAVE_FULL_MODEL,
+                auto_device=DeviceTypeOption.ALL_CUDA,
+            ).load_trained_model()
             for ex in apc_examples:
-                result = sent_classifier.predict(ex, print_result=True, ignore_error=False)
+                result = sent_classifier.predict(
+                    ex, print_result=True, ignore_error=False
+                )
 
             sent_classifier.destroy()
 
@@ -161,14 +174,17 @@ def test_bert_apc_models():
             config.log_step = -1
             config.data_num = 6
 
-            apc_trainer = APC.APCTrainer(config=config,
-                                         dataset=dataset,
-                                         checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                                         auto_device=DeviceTypeOption.ALL_CUDA
-                                         )
+            apc_trainer = APC.APCTrainer(
+                config=config,
+                dataset=dataset,
+                checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
+                auto_device=DeviceTypeOption.ALL_CUDA,
+            )
             sent_classifier = apc_trainer.load_trained_model()
             for ex in apc_examples:
-                result = sent_classifier.predict(ex, print_result=True, ignore_error=False)
+                result = sent_classifier.predict(
+                    ex, print_result=True, ignore_error=False
+                )
             apc_trainer.destroy()
             sent_classifier.destroy()
 
@@ -190,12 +206,15 @@ def test_glove_apc_models():
             config.log_step = -1
             config.data_num = 6
 
-            sent_classifier = APC.APCTrainer(config=config,
-                                             dataset=dataset,
-                                             checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                                             auto_device=DeviceTypeOption.ALL_CUDA
-                                             ).load_trained_model()
+            sent_classifier = APC.APCTrainer(
+                config=config,
+                dataset=dataset,
+                checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
+                auto_device=DeviceTypeOption.ALL_CUDA,
+            ).load_trained_model()
             for ex in apc_examples:
-                result = sent_classifier.predict(ex, print_result=True, ignore_error=False)
+                result = sent_classifier.predict(
+                    ex, print_result=True, ignore_error=False
+                )
 
             sent_classifier.destroy()

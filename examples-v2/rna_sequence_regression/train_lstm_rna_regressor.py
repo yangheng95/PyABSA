@@ -13,7 +13,7 @@ from pyabsa.utils.data_utils.dataset_item import DatasetItem
 
 config = RNAR.RNARConfigManager.get_rnar_config_glove()
 config.model = RNAR.GloVeRNARModelList.LSTM
-config.pretrained_bert = 'rna_decay_bpe_tokenizer'
+config.pretrained_bert = "rna_decay_bpe_tokenizer"
 config.num_epoch = 10
 config.evaluate_begin = 0
 config.max_seq_len = 1024
@@ -29,9 +29,7 @@ config.l2reg = 0.001
 config.do_lower_case = False
 config.save_last_ckpt_only = True
 
-dataset = DatasetItem('decay_rate')
-sent_classifier = RNAR.RNARTrainer(config=config,
-                                   dataset=dataset,
-                                   checkpoint_save_mode=1,
-                                   auto_device=True
-                                   ).load_trained_model()
+dataset = DatasetItem("decay_rate")
+sent_classifier = RNAR.RNARTrainer(
+    config=config, dataset=dataset, checkpoint_save_mode=1, auto_device=True
+).load_trained_model()

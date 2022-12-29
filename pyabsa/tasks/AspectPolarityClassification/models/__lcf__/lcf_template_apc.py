@@ -9,7 +9,7 @@ import torch.nn as nn
 
 
 class LCF_TEMPLATE_BERT(nn.Module):
-    inputs = ['text_indices', 'text_raw_bert_indices', 'lcf_vec']
+    inputs = ["text_indices", "text_raw_bert_indices", "lcf_vec"]
 
     def __init__(self, bert, config):
         super(LCF_TEMPLATE_BERT, self).__init__()
@@ -19,5 +19,7 @@ class LCF_TEMPLATE_BERT(nn.Module):
         self.dropout = nn.Dropout(config.dropout)
 
     def forward(self, inputs):
-        raise NotImplementedError('This is a template ATEPC model based on LCF, '
-                                  'please implement your model use this template.')
+        raise NotImplementedError(
+            "This is a template ATEPC model based on LCF, "
+            "please implement your model use this template."
+        )

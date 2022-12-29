@@ -13,7 +13,7 @@ from pyabsa.utils.data_utils.dataset_item import DatasetItem
 
 config = RNAC.RNACConfigManager.get_rnac_config_english()
 config.model = RNAC.BERTRNACModelList.BERT_MLP
-config.pretrained_bert = 'roberta-base'
+config.pretrained_bert = "roberta-base"
 config.num_epoch = 1
 config.evaluate_begin = 0
 config.max_seq_len = 10
@@ -32,15 +32,16 @@ config.log_step = -1
 # config.log_step = 10
 
 
-dataset = DatasetItem('sfe')
+dataset = DatasetItem("sfe")
 
 config.sigmoid_regression = False
 # dataset = DatasetItem('sfe')
 # config.sigmoid_regression = True
 
-sent_classifier = RNAC.RNACTrainer(config=config,
-                                   dataset=dataset,
-                                   # from_checkpoint='bert_decay_rate_r2_0.5378',
-                                   checkpoint_save_mode=1,
-                                   auto_device=True
-                                   ).load_trained_model()
+sent_classifier = RNAC.RNACTrainer(
+    config=config,
+    dataset=dataset,
+    # from_checkpoint='bert_decay_rate_r2_0.5378',
+    checkpoint_save_mode=1,
+    auto_device=True,
+).load_trained_model()

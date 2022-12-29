@@ -10,13 +10,17 @@ from pyabsa.networks.dynamic_rnn import DynamicLSTM
 
 
 class LSTM(nn.Module):
-    inputs = ['text_indices']
+    inputs = ["text_indices"]
 
     def __init__(self, embedding_matrix, config):
         super(LSTM, self).__init__()
         self.config = config
-        self.embed = nn.Embedding.from_pretrained(torch.tensor(embedding_matrix, dtype=torch.float))
-        self.lstm = DynamicLSTM(config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True)
+        self.embed = nn.Embedding.from_pretrained(
+            torch.tensor(embedding_matrix, dtype=torch.float)
+        )
+        self.lstm = DynamicLSTM(
+            config.embed_dim, config.hidden_dim, num_layers=1, batch_first=True
+        )
         self.dense = nn.Linear(config.hidden_dim, config.output_dim)
 
     def forward(self, inputs):

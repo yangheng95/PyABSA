@@ -19,7 +19,11 @@ class MultiHeadSelfAttention(nn.Module):
         super(MultiHeadSelfAttention, self).__init__()
         self.config = config
         self.config.hidden_size = self.config.hidden_dim
-        self.mhsa = Encoder(bert_config=bert_config, config=self.config, layer_num=self.config.num_mhsa_layer)
+        self.mhsa = Encoder(
+            bert_config=bert_config,
+            config=self.config,
+            layer_num=self.config.num_mhsa_layer,
+        )
         self.config = config
 
     def forward(self, x):
@@ -27,14 +31,16 @@ class MultiHeadSelfAttention(nn.Module):
 
 
 class MHSA(nn.Module):
-    inputs = ['text_indices']
+    inputs = ["text_indices"]
 
     def __init__(self, embedding_matrix, config):
         super(MHSA, self).__init__()
         self.config = config
-        self.bert_config = AutoConfig.from_pretrained('bert-base-uncased')
+        self.bert_config = AutoConfig.from_pretrained("bert-base-uncased")
         self.bert_config.hidden_size = self.config.hidden_dim
-        self.embed = nn.Embedding.from_pretrained(torch.tensor(embedding_matrix, dtype=torch.float))
+        self.embed = nn.Embedding.from_pretrained(
+            torch.tensor(embedding_matrix, dtype=torch.float)
+        )
         self.mhsa = MultiHeadSelfAttention(self.bert_config, self.config)
         self.pooler = BertPooler(self.bert_config)
 

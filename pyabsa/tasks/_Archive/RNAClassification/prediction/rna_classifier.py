@@ -30,105 +30,138 @@ class RNAClassifier(InferenceModel):
     task_code = TaskCodeOption.RNASequenceClassification
 
     def __init__(self, checkpoint=None, cal_perplexity=False, **kwargs):
-        '''
-            from_train_model: load inference model from trained model
-        '''
+        """
+        from_train_model: load inference model from trained model
+        """
 
         super().__init__(checkpoint, cal_perplexity, **kwargs)
 
         # load from a trainer
         if self.checkpoint and not isinstance(self.checkpoint, str):
-            fprint('Load text classifier from trainer')
+            fprint("Load text classifier from trainer")
             self.model = self.checkpoint[0]
             self.config = self.checkpoint[1]
             self.tokenizer = self.checkpoint[2]
         else:
             try:
-                if 'fine-tuned' in self.checkpoint:
+                if "fine-tuned" in self.checkpoint:
                     raise ValueError(
-                        'Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!')
-                fprint('Load text classifier from', self.checkpoint)
-                state_dict_path = find_file(self.checkpoint, key='.state_dict', exclude_key=['__MACOSX'])
-                model_path = find_file(self.checkpoint, key='.model', exclude_key=['__MACOSX'])
-                tokenizer_path = find_file(self.checkpoint, key='.tokenizer', exclude_key=['__MACOSX'])
-                config_path = find_file(self.checkpoint, key='.config', exclude_key=['__MACOSX'])
+                        "Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!"
+                    )
+                fprint("Load text classifier from", self.checkpoint)
+                state_dict_path = find_file(
+                    self.checkpoint, key=".state_dict", exclude_key=["__MACOSX"]
+                )
+                model_path = find_file(
+                    self.checkpoint, key=".model", exclude_key=["__MACOSX"]
+                )
+                tokenizer_path = find_file(
+                    self.checkpoint, key=".tokenizer", exclude_key=["__MACOSX"]
+                )
+                config_path = find_file(
+                    self.checkpoint, key=".config", exclude_key=["__MACOSX"]
+                )
 
-                fprint('config: {}'.format(config_path))
-                fprint('state_dict: {}'.format(state_dict_path))
-                fprint('model: {}'.format(model_path))
-                fprint('tokenizer: {}'.format(tokenizer_path))
+                fprint("config: {}".format(config_path))
+                fprint("state_dict: {}".format(state_dict_path))
+                fprint("model: {}".format(model_path))
+                fprint("tokenizer: {}".format(tokenizer_path))
 
-                with open(config_path, mode='rb') as f:
+                with open(config_path, mode="rb") as f:
                     self.config = pickle.load(f)
-                    self.config.auto_device = kwargs.get('auto_device', True)
+                    self.config.auto_device = kwargs.get("auto_device", True)
                     set_device(self.config, self.config.auto_device)
 
                 if state_dict_path or model_path:
                     if hasattr(BERTRNACModelList, self.config.model.__name__):
                         if state_dict_path:
-                            if kwargs.get('offline', False):
+                            if kwargs.get("offline", False):
                                 self.bert = AutoModel.from_pretrained(
-                                    find_cwd_dir(self.config.pretrained_bert.split('/')[-1]))
+                                    find_cwd_dir(
+                                        self.config.pretrained_bert.split("/")[-1]
+                                    )
+                                )
                             else:
-                                self.bert = AutoModel.from_pretrained(self.config.pretrained_bert)
+                                self.bert = AutoModel.from_pretrained(
+                                    self.config.pretrained_bert
+                                )
                             self.model = self.config.model(self.bert, self.config)
-                            self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
+                            self.model.load_state_dict(
+                                torch.load(state_dict_path, map_location="cpu")
+                            )
                         elif model_path:
-                            self.model = torch.load(model_path, map_location='cpu')
+                            self.model = torch.load(model_path, map_location="cpu")
 
                         try:
-                            self.tokenizer = PretrainedTokenizer(max_seq_len=self.config.max_seq_len,
-                                                                 config=self.config,
-                                                                 **kwargs)
+                            self.tokenizer = PretrainedTokenizer(
+                                max_seq_len=self.config.max_seq_len,
+                                config=self.config,
+                                **kwargs
+                            )
                         except ValueError:
                             if tokenizer_path:
-                                with open(tokenizer_path, mode='rb') as f:
+                                with open(tokenizer_path, mode="rb") as f:
                                     self.tokenizer = pickle.load(f)
                     else:
 
                         self.tokenizer = self.config.tokenizer
                         self.embedding_matrix = self.config.embedding_matrix
                         if model_path:
-                            self.model = torch.load(model_path, map_location='cpu')
+                            self.model = torch.load(model_path, map_location="cpu")
                         else:
-                            self.model = self.config.model(self.embedding_matrix, self.config).to(self.config.device)
-                            self.model.load_state_dict(torch.load(state_dict_path, map_location='cpu'))
+                            self.model = self.config.model(
+                                self.embedding_matrix, self.config
+                            ).to(self.config.device)
+                            self.model.load_state_dict(
+                                torch.load(state_dict_path, map_location="cpu")
+                            )
 
-                if kwargs.get('verbose', False):
-                    fprint('Config used in Training:')
+                if kwargs.get("verbose", False):
+                    fprint("Config used in Training:")
                     print_args(self.config)
 
             except Exception as e:
-                raise RuntimeError('Exception: {} Fail to load the model from {}! '.format(e, self.checkpoint))
+                raise RuntimeError(
+                    "Exception: {} Fail to load the model from {}! ".format(
+                        e, self.checkpoint
+                    )
+                )
 
-            if not hasattr(GloVeRNACModelList, self.config.model.__name__) \
-                    and not hasattr(BERTRNACModelList, self.config.model.__name__):
-                raise KeyError('The checkpoint you are loading is not from classifier model.')
+            if not hasattr(
+                GloVeRNACModelList, self.config.model.__name__
+            ) and not hasattr(BERTRNACModelList, self.config.model.__name__):
+                raise KeyError(
+                    "The checkpoint you are loading is not from classifier model."
+                )
 
         if hasattr(BERTRNACModelList, self.config.model.__name__):
-            self.dataset = BERTRNACInferenceDataset(config=self.config, tokenizer=self.tokenizer)
+            self.dataset = BERTRNACInferenceDataset(
+                config=self.config, tokenizer=self.tokenizer
+            )
 
         elif hasattr(GloVeRNACModelList, self.config.model.__name__):
-            self.dataset = GloVeRNACInferenceDataset(config=self.config, tokenizer=self.tokenizer)
+            self.dataset = GloVeRNACInferenceDataset(
+                config=self.config, tokenizer=self.tokenizer
+            )
 
         self.__post_init__()
 
     def to(self, device=None):
         self.config.device = device
         self.model.to(device)
-        if hasattr(self, 'MLM'):
+        if hasattr(self, "MLM"):
             self.MLM.to(self.config.device)
 
     def cpu(self):
-        self.config.device = 'cpu'
-        self.model.to('cpu')
-        if hasattr(self, 'MLM'):
-            self.MLM.to('cpu')
+        self.config.device = "cpu"
+        self.model.to("cpu")
+        if hasattr(self, "MLM"):
+            self.MLM.to("cpu")
 
-    def cuda(self, device='cuda:0'):
+    def cuda(self, device="cuda:0"):
         self.config.device = device
         self.model.to(device)
-        if hasattr(self, 'MLM'):
+        if hasattr(self, "MLM"):
             self.MLM.to(device)
 
     def _log_write_args(self):
@@ -140,54 +173,67 @@ class RNAClassifier(InferenceModel):
             else:
                 n_nontrainable_params += n_params
         fprint(
-            'n_trainable_params: {0}, n_nontrainable_params: {1}'.format(n_trainable_params, n_nontrainable_params))
+            "n_trainable_params: {0}, n_nontrainable_params: {1}".format(
+                n_trainable_params, n_nontrainable_params
+            )
+        )
         for arg in vars(self.config):
             if getattr(self.config, arg) is not None:
-                fprint('>>> {0}: {1}'.format(arg, getattr(self.config, arg)))
+                fprint(">>> {0}: {1}".format(arg, getattr(self.config, arg)))
 
-    def batch_predict(self,
-                      target_file=None,
-                      print_result=True,
-                      save_result=False,
-                      ignore_error=True,
-                      **kwargs
-                      ):
+    def batch_predict(
+        self,
+        target_file=None,
+        print_result=True,
+        save_result=False,
+        ignore_error=True,
+        **kwargs
+    ):
 
-        self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
+        self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
 
-        save_path = os.path.join(os.getcwd(),
-                                 '{}.{}.result.json'.format(self.config.task_name, self.config.model.__name__))
+        save_path = os.path.join(
+            os.getcwd(),
+            "{}.{}.result.json".format(
+                self.config.task_name, self.config.model.__name__
+            ),
+        )
 
-        target_file = detect_infer_dataset(target_file, task_code=TaskCodeOption.RNASequenceClassification)
+        target_file = detect_infer_dataset(
+            target_file, task_code=TaskCodeOption.RNASequenceClassification
+        )
         if not target_file:
-            raise FileNotFoundError('Can not find inference datasets!')
+            raise FileNotFoundError("Can not find inference datasets!")
 
         self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
-        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size,
-                                           pin_memory=True,
-                                           shuffle=False)
-        return self._run_prediction(save_path=save_path if save_result else None, print_result=print_result)
+        self.infer_dataloader = DataLoader(
+            dataset=self.dataset,
+            batch_size=self.config.eval_batch_size,
+            pin_memory=True,
+            shuffle=False,
+        )
+        return self._run_prediction(
+            save_path=save_path if save_result else None, print_result=print_result
+        )
 
-    def predict(self, text: str = None,
-                print_result=True,
-                ignore_error=True,
-                **kwargs
-                ):
+    def predict(self, text: str = None, print_result=True, ignore_error=True, **kwargs):
 
-        self.config.eval_batch_size = kwargs.get('eval_batch_size', 32)
+        self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
 
         if text:
             self.dataset.prepare_infer_sample(text, ignore_error=ignore_error)
         else:
-            raise RuntimeError('Please specify your datasets path!')
-        self.infer_dataloader = DataLoader(dataset=self.dataset, batch_size=self.config.eval_batch_size, shuffle=False)
+            raise RuntimeError("Please specify your datasets path!")
+        self.infer_dataloader = DataLoader(
+            dataset=self.dataset, batch_size=self.config.eval_batch_size, shuffle=False
+        )
         return self._run_prediction(print_result=print_result)[0]
 
     def _run_prediction(self, save_path=None, print_result=True):
 
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
 
-        correct = {True: 'Correct', False: 'Wrong'}
+        correct = {True: "Correct", False: "Wrong"}
         results = []
 
         with torch.no_grad():
@@ -198,14 +244,18 @@ class RNAClassifier(InferenceModel):
             t_targets_all, t_outputs_all = None, None
 
             if len(self.infer_dataloader.dataset) >= 100:
-                it = tqdm.tqdm(self.infer_dataloader, desc='run inference')
+                it = tqdm.tqdm(self.infer_dataloader, desc="run inference")
             else:
                 it = self.infer_dataloader
 
             pred_labels = []
             pre_ex_id = 0
             for _, sample in enumerate(it):
-                inputs = [sample[col].to(self.config.device) for col in self.config.inputs_cols if col != 'label']
+                inputs = [
+                    sample[col].to(self.config.device)
+                    for col in self.config.inputs_cols
+                    if col != "label"
+                ]
 
                 outputs = self.model(inputs)
                 sen_logits = outputs
@@ -213,124 +263,222 @@ class RNAClassifier(InferenceModel):
 
                 for i, i_probs in enumerate(t_probs):
                     label = self.config.index_to_label[int(i_probs.argmax(axis=-1))]
-                    if sample['label'][i] != LabelPaddingOption.LABEL_PADDING:
-                        real_label = sample['label'][i]
+                    if sample["label"][i] != LabelPaddingOption.LABEL_PADDING:
+                        real_label = sample["label"][i]
                     else:
-                        real_label = 'N.A.'
+                        real_label = "N.A."
                     if real_label != LabelPaddingOption.LABEL_PADDING:
                         n_labeled += 1
 
-                    text_raw = sample['text_raw'][i]
-                    ex_id = sample['ex_id'][i]
+                    text_raw = sample["text_raw"][i]
+                    ex_id = sample["ex_id"][i]
 
                     if self.cal_perplexity:
-                        ids = self.MLM_tokenizer(text_raw, truncation=True, padding='max_length',
-                                                 max_length=self.config.max_seq_len, return_tensors='pt')
-                        ids['labels'] = ids['input_ids'].clone()
+                        ids = self.MLM_tokenizer(
+                            text_raw,
+                            truncation=True,
+                            padding="max_length",
+                            max_length=self.config.max_seq_len,
+                            return_tensors="pt",
+                        )
+                        ids["labels"] = ids["input_ids"].clone()
                         ids = ids.to(self.config.device)
-                        loss = self.MLM(**ids)['loss']
-                        perplexity = float(torch.exp(loss / ids['input_ids'].size(1)))
+                        loss = self.MLM(**ids)["loss"]
+                        perplexity = float(torch.exp(loss / ids["input_ids"].size(1)))
                     else:
-                        perplexity = 'N.A.'
+                        perplexity = "N.A."
 
                     if ex_id == pre_ex_id:
                         pred_labels.append(label)
                     elif len(it) != 1:
-                        results.append({
-                            'ex_id': pre_ex_id,
-                            'text': text_raw,
-                            'label': max(pred_labels, key=pred_labels.count),
-                            'confidence': float(max(i_probs)),
-                            'probs': i_probs.cpu().numpy(),
-                            'ref_label': real_label,
-                            'ref_check': correct[label == real_label] if real_label != str(
-                                LabelPaddingOption.LABEL_PADDING) else '',
-                            'perplexity': perplexity,
-                        })
+                        results.append(
+                            {
+                                "ex_id": pre_ex_id,
+                                "text": text_raw,
+                                "label": max(pred_labels, key=pred_labels.count),
+                                "confidence": float(max(i_probs)),
+                                "probs": i_probs.cpu().numpy(),
+                                "ref_label": real_label,
+                                "ref_check": correct[label == real_label]
+                                if real_label != str(LabelPaddingOption.LABEL_PADDING)
+                                else "",
+                                "perplexity": perplexity,
+                            }
+                        )
                         n_total += 1
                         pre_ex_id = ex_id
                         pred_labels = [label]
 
-                        t_targets_all = torch.cat(
-                            (t_targets_all, torch.tensor([self.config.label_to_index[sample['label'][i]]]))) \
-                            if t_targets_all is not None else torch.tensor(
-                            [self.config.label_to_index[sample['label'][i]]])
-                        t_outputs_all = torch.cat((t_outputs_all, torch.tensor(
-                            [self.config.label_to_index[max(pred_labels, key=pred_labels.count)]]))) \
-                            if t_outputs_all is not None else torch.tensor(
-                            [self.config.label_to_index[max(pred_labels, key=pred_labels.count)]])
+                        t_targets_all = (
+                            torch.cat(
+                                (
+                                    t_targets_all,
+                                    torch.tensor(
+                                        [self.config.label_to_index[sample["label"][i]]]
+                                    ),
+                                )
+                            )
+                            if t_targets_all is not None
+                            else torch.tensor(
+                                [self.config.label_to_index[sample["label"][i]]]
+                            )
+                        )
+                        t_outputs_all = (
+                            torch.cat(
+                                (
+                                    t_outputs_all,
+                                    torch.tensor(
+                                        [
+                                            self.config.label_to_index[
+                                                max(pred_labels, key=pred_labels.count)
+                                            ]
+                                        ]
+                                    ),
+                                )
+                            )
+                            if t_outputs_all is not None
+                            else torch.tensor(
+                                [
+                                    self.config.label_to_index[
+                                        max(pred_labels, key=pred_labels.count)
+                                    ]
+                                ]
+                            )
+                        )
 
                 # fprint(pred_labels)
 
-                results.append({
-                    'ex_id': pre_ex_id,
-                    'text': text_raw,
-                    'label': max(pred_labels, key=pred_labels.count),
-                    'confidence': float(max(i_probs)),
-                    'probs': i_probs.cpu().numpy(),
-                    'ref_label': real_label,
-                    'ref_check': correct[label == real_label] if real_label != str(
-                        LabelPaddingOption.LABEL_PADDING) else '',
-                    'perplexity': perplexity,
-                })
+                results.append(
+                    {
+                        "ex_id": pre_ex_id,
+                        "text": text_raw,
+                        "label": max(pred_labels, key=pred_labels.count),
+                        "confidence": float(max(i_probs)),
+                        "probs": i_probs.cpu().numpy(),
+                        "ref_label": real_label,
+                        "ref_check": correct[label == real_label]
+                        if real_label != str(LabelPaddingOption.LABEL_PADDING)
+                        else "",
+                        "perplexity": perplexity,
+                    }
+                )
                 n_total += 1
                 pre_ex_id = ex_id
                 pred_labels = [label]
 
-                t_targets_all = torch.cat(
-                    (t_targets_all, torch.tensor([self.config.label_to_index[sample['label'][i]]]))) \
-                    if t_targets_all is not None else torch.tensor([self.config.label_to_index[sample['label'][i]]])
-                t_outputs_all = torch.cat((t_outputs_all, torch.tensor(
-                    [self.config.label_to_index[max(pred_labels, key=pred_labels.count)]]))) \
-                    if t_outputs_all is not None else torch.tensor(
-                    [self.config.label_to_index[max(pred_labels, key=pred_labels.count)]])
+                t_targets_all = (
+                    torch.cat(
+                        (
+                            t_targets_all,
+                            torch.tensor(
+                                [self.config.label_to_index[sample["label"][i]]]
+                            ),
+                        )
+                    )
+                    if t_targets_all is not None
+                    else torch.tensor([self.config.label_to_index[sample["label"][i]]])
+                )
+                t_outputs_all = (
+                    torch.cat(
+                        (
+                            t_outputs_all,
+                            torch.tensor(
+                                [
+                                    self.config.label_to_index[
+                                        max(pred_labels, key=pred_labels.count)
+                                    ]
+                                ]
+                            ),
+                        )
+                    )
+                    if t_outputs_all is not None
+                    else torch.tensor(
+                        [
+                            self.config.label_to_index[
+                                max(pred_labels, key=pred_labels.count)
+                            ]
+                        ]
+                    )
+                )
 
         try:
             if print_result:
                 for ex_id, result in enumerate(results):
-                    text_printing = result['text'][:]
-                    if result['ref_label'] != LabelPaddingOption.LABEL_PADDING:
-                        if result['label'] == result['ref_label']:
+                    text_printing = result["text"][:]
+                    if result["ref_label"] != LabelPaddingOption.LABEL_PADDING:
+                        if result["label"] == result["ref_label"]:
                             text_info = colored(
-                                '#{}\t -> <{}(ref:{} confidence:{})>\t'.format(result['ex_id'], result['label'],
-                                                                               result['ref_label'],
-                                                                               result['confidence']), 'green')
+                                "#{}\t -> <{}(ref:{} confidence:{})>\t".format(
+                                    result["ex_id"],
+                                    result["label"],
+                                    result["ref_label"],
+                                    result["confidence"],
+                                ),
+                                "green",
+                            )
                         else:
                             text_info = colored(
-                                '#{}\t -> <{}(ref:{}) confidence:{}>\t'.format(result['ex_id'], result['label'],
-                                                                               result['ref_label'],
-                                                                               result['confidence']), 'red')
+                                "#{}\t -> <{}(ref:{}) confidence:{}>\t".format(
+                                    result["ex_id"],
+                                    result["label"],
+                                    result["ref_label"],
+                                    result["confidence"],
+                                ),
+                                "red",
+                            )
                     else:
-                        text_info = '#{}\t -> {}\t'.format(result['ex_id'], result['label'])
+                        text_info = "#{}\t -> {}\t".format(
+                            result["ex_id"], result["label"]
+                        )
                     if self.cal_perplexity:
-                        text_printing += colored(' --> <perplexity:{}>\t'.format(result['perplexity']), 'yellow')
+                        text_printing += colored(
+                            " --> <perplexity:{}>\t".format(result["perplexity"]),
+                            "yellow",
+                        )
                     text_printing = text_info + text_printing
 
-                    fprint('Example :{}'.format(text_printing))
+                    fprint("Example :{}".format(text_printing))
             if save_path:
-                with open(save_path, 'w', encoding='utf8') as fout:
+                with open(save_path, "w", encoding="utf8") as fout:
                     json.dump(str(results), fout, ensure_ascii=False)
-                    fprint('inference result saved in: {}'.format(save_path))
+                    fprint("inference result saved in: {}".format(save_path))
         except Exception as e:
-            fprint('Can not save result: {}, Exception: {}'.format(text_raw, e))
+            fprint("Can not save result: {}, Exception: {}".format(text_raw, e))
 
         if len(results) > 1:
-            fprint('Total samples:{}'.format(n_total))
-            fprint('Labeled samples:{}'.format(n_labeled))
+            fprint("Total samples:{}".format(n_total))
+            fprint("Labeled samples:{}".format(n_labeled))
 
-            report = metrics.classification_report(t_targets_all, np.argmax(t_outputs_all, -1), digits=4,
-                                                   target_names=[self.config.index_to_label[x] for x in
-                                                                 self.config.index_to_label])
-            fprint('\n---------------------------- Classification Report ----------------------------\n')
+            report = metrics.classification_report(
+                t_targets_all,
+                np.argmax(t_outputs_all, -1),
+                digits=4,
+                target_names=[
+                    self.config.index_to_label[x] for x in self.config.index_to_label
+                ],
+            )
+            fprint(
+                "\n---------------------------- Classification Report ----------------------------\n"
+            )
             rprint(report)
-            fprint('\n---------------------------- Classification Report ----------------------------\n')
+            fprint(
+                "\n---------------------------- Classification Report ----------------------------\n"
+            )
 
-            report = metrics.confusion_matrix(t_targets_all, np.argmax(t_outputs_all, -1),
-                                              labels=[self.config.label_to_index[x]
-                                                      for x in self.config.label_to_index])
-            fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
+            report = metrics.confusion_matrix(
+                t_targets_all,
+                np.argmax(t_outputs_all, -1),
+                labels=[
+                    self.config.label_to_index[x] for x in self.config.label_to_index
+                ],
+            )
+            fprint(
+                "\n---------------------------- Confusion Matrix ----------------------------\n"
+            )
             rprint(report)
-            fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
+            fprint(
+                "\n---------------------------- Confusion Matrix ----------------------------\n"
+            )
 
         return results
 

@@ -1,6 +1,6 @@
 ﻿# -*- coding: utf-8 -*-
 # file: ensemble_prediction.py
-# time: 0:34 2022/12/15 
+# time: 0:34 2022/12/15
 # author: yangheng <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95
 # huggingface: https://huggingface.co/yangheng
@@ -14,11 +14,13 @@ from pyabsa.tasks.AspectPolarityClassification import SentimentClassifier
 
 
 class VoteEnsemblePredictor:
-    def __init__(self,
-                 predictors: [List, dict],
-                 weights: [List, dict] = None,
-                 numeric_agg='average',
-                 str_agg='max_vote'):
+    def __init__(
+        self,
+        predictors: [List, dict],
+        weights: [List, dict] = None,
+        numeric_agg="average",
+        str_agg="max_vote",
+    ):
         """
 
         :param predictors: list of checkpoints, you can pass initialized predictors or pass the checkpoints
@@ -29,18 +31,33 @@ class VoteEnsemblePredictor:
         :param str_agg: aggregation method for string data or other data, default is max
         """
         if weights is not None:
-            assert len(predictors) == len(weights), 'Checkpoints and weights should have the same length'
-            assert type(predictors) == type(weights), 'Checkpoints and weights should have the same type'
-        numeric_agg_methods = {'average': np.mean, 'mean': np.mean,
-                               'max': np.max, 'min': np.min, 'median': np.median,
-                               'mode': lambda x: max(set(x), key=x.count), 'sum': np.sum}
-        str_agg_methods = {'max_vote': lambda x: max(set(x), key=x.count),
-                           'min_vote': lambda x: min(set(x), key=x.count),
-                           'vote': lambda x: max(set(x), key=x.count),
-                           'mode': lambda x: max(set(x), key=x.count),
-                           }
-        assert numeric_agg in numeric_agg_methods, 'numeric_agg should be either: ' + str(numeric_agg_methods.keys())
-        assert str_agg in str_agg_methods, 'str_agg should be either max or vote' + str(str_agg_methods.keys())
+            assert len(predictors) == len(
+                weights
+            ), "Checkpoints and weights should have the same length"
+            assert type(predictors) == type(
+                weights
+            ), "Checkpoints and weights should have the same type"
+        numeric_agg_methods = {
+            "average": np.mean,
+            "mean": np.mean,
+            "max": np.max,
+            "min": np.min,
+            "median": np.median,
+            "mode": lambda x: max(set(x), key=x.count),
+            "sum": np.sum,
+        }
+        str_agg_methods = {
+            "max_vote": lambda x: max(set(x), key=x.count),
+            "min_vote": lambda x: min(set(x), key=x.count),
+            "vote": lambda x: max(set(x), key=x.count),
+            "mode": lambda x: max(set(x), key=x.count),
+        }
+        assert (
+            numeric_agg in numeric_agg_methods
+        ), "numeric_agg should be either: " + str(numeric_agg_methods.keys())
+        assert str_agg in str_agg_methods, "str_agg should be either max or vote" + str(
+            str_agg_methods.keys()
+        )
 
         self.numeric_agg = numeric_agg_methods[numeric_agg]
         self.str_agg = str_agg_methods[str_agg]
@@ -48,9 +65,13 @@ class VoteEnsemblePredictor:
         if isinstance(predictors, dict):
             self.checkpoints = list(predictors.keys())
             self.predictors = predictors
-            self.weights = list(weights.values()) if weights else [1] * len(self.checkpoints)
+            self.weights = (
+                list(weights.values()) if weights else [1] * len(self.checkpoints)
+            )
         else:
-            raise NotImplementedError('Only support dict type for checkpoints and weights')
+            raise NotImplementedError(
+                "Only support dict type for checkpoints and weights"
+            )
 
     def __ensemble(self, result: dict):
         if isinstance(result, dict):
@@ -75,7 +96,9 @@ class VoteEnsemblePredictor:
         if not isinstance(result, list):
             result = [result]
 
-        assert all(isinstance(x, (type(result[0]))) for x in result), 'all type of result should be the same'
+        assert all(
+            isinstance(x, (type(result[0]))) for x in result
+        ), "all type of result should be the same"
 
         if isinstance(result[0], list):
             for i, k in enumerate(result):
@@ -109,7 +132,9 @@ class VoteEnsemblePredictor:
     def predict(self, text, ignore_error=False, print_result=False):
         result = {}
         for ckpt, predictor in self.predictors.items():
-            raw_result = predictor.predict(text, ignore_error=ignore_error, print_result=print_result)
+            raw_result = predictor.predict(
+                text, ignore_error=ignore_error, print_result=print_result
+            )
             for key, value in raw_result.items():
                 if key not in result:
                     result[key] = []
@@ -117,14 +142,20 @@ class VoteEnsemblePredictor:
                     result[key].append(value)
         return self.__ensemble(result)
 
-
     def batch_predict(self, texts, ignore_error=False, print_result=False):
         batch_raw_results = []
         for ckpt, predictor in self.predictors.items():
             if isinstance(predictor, SentimentClassifier):
-                raw_results = predictor.predict(texts, ignore_error=ignore_error, print_result=print_result, merge_results=False)
+                raw_results = predictor.predict(
+                    texts,
+                    ignore_error=ignore_error,
+                    print_result=print_result,
+                    merge_results=False,
+                )
             else:
-                raw_results = predictor.predict(texts, ignore_error=ignore_error, print_result=print_result)
+                raw_results = predictor.predict(
+                    texts, ignore_error=ignore_error, print_result=print_result
+                )
             batch_raw_results.append(raw_results)
 
         batch_results = []

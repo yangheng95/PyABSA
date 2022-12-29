@@ -12,19 +12,24 @@ from transformers.models.bert.modeling_bert import BertPooler
 from pyabsa.networks.sa_encoder import Encoder
 
 
-def weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend_vec, depended_vec, config):
+def weight_distrubute_local(
+    bert_local_out, depend_weight, depended_weight, depend_vec, depended_vec, config
+):
     bert_local_out2 = torch.zeros_like(bert_local_out)
     depend_vec2 = torch.mul(depend_vec, depend_weight.unsqueeze(2))
     depended_vec2 = torch.mul(depended_vec, depended_weight.unsqueeze(2))
-    bert_local_out2 = bert_local_out2 + torch.mul(bert_local_out, depend_vec2) + torch.mul(bert_local_out,
-                                                                                           depended_vec2)
+    bert_local_out2 = (
+        bert_local_out2
+        + torch.mul(bert_local_out, depend_vec2)
+        + torch.mul(bert_local_out, depended_vec2)
+    )
     for j in range(depend_weight.size()[0]):
         bert_local_out2[j][0] = bert_local_out[j][0]
     return bert_local_out2
 
 
 class PointwiseFeedForward(nn.Module):
-    ''' A two-feed-forward-layer module '''
+    """A two-feed-forward-layer module"""
 
     def __init__(self, d_hid, d_inner_hid=None, d_out=None, dropout=0):
         super(PointwiseFeedForward, self).__init__()
@@ -45,7 +50,13 @@ class PointwiseFeedForward(nn.Module):
 
 
 class DLCF_DCA_BERT(nn.Module):
-    inputs = ['text_indices', 'text_raw_bert_indices', 'dlcf_vec', 'depend_vec', 'depended_vec']
+    inputs = [
+        "text_indices",
+        "text_raw_bert_indices",
+        "dlcf_vec",
+        "depend_vec",
+        "depended_vec",
+    ]
 
     def __init__(self, bert, config):
         super(DLCF_DCA_BERT, self).__init__()
@@ -58,7 +69,9 @@ class DLCF_DCA_BERT(nn.Module):
         self.dropout = nn.Dropout(config.dropout)
         self.bert_SA_ = Encoder(bert.config, config)
 
-        self.mean_pooling_double = PointwiseFeedForward(self.hidden * 2, self.hidden, self.hidden)
+        self.mean_pooling_double = PointwiseFeedForward(
+            self.hidden * 2, self.hidden, self.hidden
+        )
         self.bert_pooler = BertPooler(bert.config)
         self.dense = nn.Linear(self.hidden, config.output_dim)
 
@@ -69,11 +82,13 @@ class DLCF_DCA_BERT(nn.Module):
         for i in range(config.dca_layer):
             self.dca_sa.append(Encoder(bert.config, config))
             self.dca_pool.append(BertPooler(bert.config))
-            self.dca_lin.append(nn.Sequential(
-                nn.Linear(config.bert_dim, config.bert_dim * 2),
-                nn.GELU(),
-                nn.Linear(config.bert_dim * 2, 1),
-                nn.Sigmoid())
+            self.dca_lin.append(
+                nn.Sequential(
+                    nn.Linear(config.bert_dim, config.bert_dim * 2),
+                    nn.GELU(),
+                    nn.Linear(config.bert_dim * 2, 1),
+                    nn.Sigmoid(),
+                )
             )
 
     def weight_calculate(self, sa, pool, lin, d_w, ded_w, depend_out, depended_out):
@@ -97,10 +112,14 @@ class DLCF_DCA_BERT(nn.Module):
             depended_weight[i] = depended_weight[i].item() * ded_w[i].item()
             weight_sum = depend_weight[i].item() + depended_weight[i].item()
             if weight_sum != 0:
-                depend_weight[i] = (2 * depend_weight[i] / weight_sum) ** self.config.dca_p
+                depend_weight[i] = (
+                    2 * depend_weight[i] / weight_sum
+                ) ** self.config.dca_p
                 if depend_weight[i] > 2:
                     depend_weight[i] = 2
-                depended_weight[i] = (2 * depended_weight[i] / weight_sum) ** self.config.dca_p
+                depended_weight[i] = (
+                    2 * depended_weight[i] / weight_sum
+                ) ** self.config.dca_p
                 if depended_weight[i] > 2:
                     depended_weight[i] = 2
             else:
@@ -110,16 +129,18 @@ class DLCF_DCA_BERT(nn.Module):
 
     def forward(self, inputs):
         if self.config.use_bert_spc:
-            text_indices = inputs['text_indices']
+            text_indices = inputs["text_indices"]
         else:
-            text_indices = inputs['text_raw_bert_indices']
-        text_local_indices = inputs['text_raw_bert_indices']
-        lcf_matrix = inputs['dlcf_vec'].unsqueeze(2)
-        depend_vec = inputs['depend_vec'].unsqueeze(2)
-        depended_vec = inputs['depended_vec'].unsqueeze(2)
+            text_indices = inputs["text_raw_bert_indices"]
+        text_local_indices = inputs["text_raw_bert_indices"]
+        lcf_matrix = inputs["dlcf_vec"].unsqueeze(2)
+        depend_vec = inputs["depend_vec"].unsqueeze(2)
+        depended_vec = inputs["depended_vec"].unsqueeze(2)
 
-        global_context_features = self.bert4global(text_indices)['last_hidden_state']
-        local_context_features = self.bert4local(text_local_indices)['last_hidden_state']
+        global_context_features = self.bert4global(text_indices)["last_hidden_state"]
+        local_context_features = self.bert4local(text_local_indices)[
+            "last_hidden_state"
+        ]
 
         bert_local_out = torch.mul(local_context_features, lcf_matrix)
 
@@ -129,16 +150,27 @@ class DLCF_DCA_BERT(nn.Module):
         for i in range(self.config.dca_layer):
             depend_out = torch.mul(bert_local_out, depend_vec)
             depended_out = torch.mul(bert_local_out, depended_vec)
-            depend_weight, depended_weight = self.weight_calculate(self.dca_sa[i], self.dca_pool[i], self.dca_lin[i],
-                                                                   depend_weight, depended_weight, depend_out,
-                                                                   depended_out)
-            bert_local_out = weight_distrubute_local(bert_local_out, depend_weight, depended_weight, depend_vec,
-                                                     depended_vec,
-                                                     self.config)
+            depend_weight, depended_weight = self.weight_calculate(
+                self.dca_sa[i],
+                self.dca_pool[i],
+                self.dca_lin[i],
+                depend_weight,
+                depended_weight,
+                depend_out,
+                depended_out,
+            )
+            bert_local_out = weight_distrubute_local(
+                bert_local_out,
+                depend_weight,
+                depended_weight,
+                depend_vec,
+                depended_vec,
+                self.config,
+            )
 
         out_cat = torch.cat((bert_local_out, global_context_features), dim=-1)
         out_cat = self.mean_pooling_double(out_cat)
         out_cat = self.bert_SA_(out_cat)
         out_cat = self.bert_pooler(out_cat)
         dense_out = self.dense(out_cat)
-        return {'logits': dense_out, 'hidden_state': out_cat}
+        return {"logits": dense_out, "hidden_state": out_cat}

@@ -7,6 +7,7 @@
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
 
+
 class GloVeRNACModelList(list):
     from .__classic__.cnn import CNN
     from .__classic__.lstm import LSTM
@@ -20,12 +21,7 @@ class GloVeRNACModelList(list):
 
     def __init__(self):
         super(GloVeRNACModelList, self).__init__(
-            [
-                self.CNN,
-                self.LSTM,
-                self.Transformer,
-                self.MHSA
-            ]
+            [self.CNN, self.LSTM, self.Transformer, self.MHSA]
         )
 
 
@@ -35,8 +31,4 @@ class BERTRNACModelList(list):
     BERT_MLP = BERT_MLP
 
     def __init__(self):
-        super(BERTRNACModelList, self).__init__(
-            [
-                self.BERT_MLP
-            ]
-        )
+        super(BERTRNACModelList, self).__init__([self.BERT_MLP])

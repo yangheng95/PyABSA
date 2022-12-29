@@ -14,28 +14,42 @@ from termcolor import colored
 from pyabsa.utils.pyabsa_utils import fprint
 
 
-def auto_aspect_sentiment_classification_augmentation(config, dataset, device, **kwargs):
+def auto_aspect_sentiment_classification_augmentation(
+    config, dataset, device, **kwargs
+):
     fprint(
-        colored('Performing augmentation for aspect sentiment classification. This may take a long time', 'yellow'))
+        colored(
+            "Performing augmentation for aspect sentiment classification. This may take a long time",
+            "yellow",
+        )
+    )
 
-    fprint(colored('The augment tool is available at: {}'.format('https://github.com/yangheng95/BoostTextAugmentation'),
-                   'yellow'))
+    fprint(
+        colored(
+            "The augment tool is available at: {}".format(
+                "https://github.com/yangheng95/BoostTextAugmentation"
+            ),
+            "yellow",
+        )
+    )
     from pyabsa.tasks.AspectPolarityClassification import APCModelList
     from boost_aug import ABSCBoostAug
 
     config.model = APCModelList.FAST_LCF_BERT
 
-    augmentor = ABSCBoostAug(ROOT=os.getcwd(),
-                             BOOSTING_FOLD=kwargs.get('boosting_fold', 4),
-                             CLASSIFIER_TRAINING_NUM=kwargs.get('classifier_training_num', 1),
-                             AUGMENT_NUM_PER_CASE=kwargs.get('augment_num_per_case', 10),
-                             WINNER_NUM_PER_CASE=kwargs.get('winner_num_per_case', 5),
-                             device=device
-                             )
+    augmentor = ABSCBoostAug(
+        ROOT=os.getcwd(),
+        BOOSTING_FOLD=kwargs.get("boosting_fold", 4),
+        CLASSIFIER_TRAINING_NUM=kwargs.get("classifier_training_num", 1),
+        AUGMENT_NUM_PER_CASE=kwargs.get("augment_num_per_case", 10),
+        WINNER_NUM_PER_CASE=kwargs.get("winner_num_per_case", 5),
+        device=device,
+    )
 
-    augmentor.apc_boost_augment(config,  # BOOSTAUG
-                                dataset,
-                                train_after_aug=kwargs.get('train_after_aug', True),
-                                rewrite_cache=kwargs.get('rewrite_cache', True),
-                                )
+    augmentor.apc_boost_augment(
+        config,  # BOOSTAUG
+        dataset,
+        train_after_aug=kwargs.get("train_after_aug", True),
+        rewrite_cache=kwargs.get("rewrite_cache", True),
+    )
     sys.exit(0)

@@ -7,25 +7,20 @@
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
 
+
 class BERTTADModelList(list):
     from .__plm__.tad_bert import TADBERT
+
     TADBERT = TADBERT
 
     def __init__(self):
-        super(BERTTADModelList, self).__init__(
-            [
-                self.TADBERT
-            ]
-        )
+        super(BERTTADModelList, self).__init__([self.TADBERT])
 
 
 class GloVeTADModelList(list):
     from .__classic__.tad_lstm import TADLSTM
+
     TADLSTM = TADLSTM
 
     def __init__(self):
-        super(GloVeTADModelList, self).__init__(
-            [
-                self.TADLSTM
-            ]
-        )
+        super(GloVeTADModelList, self).__init__([self.TADLSTM])

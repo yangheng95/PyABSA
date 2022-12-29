@@ -18,7 +18,6 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 
 class BERTRNARDataset(Dataset):
-
     def __init__(self, config, tokenizer):
 
         self.tokenizer = tokenizer
@@ -43,19 +42,29 @@ class BERTRNARDataset(Dataset):
     def process_data(self, samples, ignore_error=True):
         all_data = []
         if len(samples) > 100:
-            it = tqdm.tqdm(samples, desc='preparing text classification dataloader')
+            it = tqdm.tqdm(samples, desc="preparing text classification dataloader")
         else:
             it = samples
         for ex_id, text in enumerate(it):
             try:
                 # handle for empty lines in inference datasets
-                if text is None or '' == text.strip():
-                    raise RuntimeError('Invalid Input!')
+                if text is None or "" == text.strip():
+                    raise RuntimeError("Invalid Input!")
 
-                line = text.strip().split('\t') if '\t' in text else text.strip().split(',')
+                line = (
+                    text.strip().split("\t")
+                    if "\t" in text
+                    else text.strip().split(",")
+                )
                 try:
-                    _, label, r1r2_label, r1r3_label, r2r3_label, seq = line[0], line[1], line[2], line[3], line[4], \
-                        line[5]
+                    _, label, r1r2_label, r1r3_label, r2r3_label, seq = (
+                        line[0],
+                        line[1],
+                        line[2],
+                        line[3],
+                        line[4],
+                        line[5],
+                    )
                     label = float(label.strip())
 
                     # r1r2_label = float(r1r2_label.strip())
@@ -64,14 +73,18 @@ class BERTRNARDataset(Dataset):
                     # if len(seq) > 2 * self.config.max_seq_len:
                     #     continue
                     for x in range(len(seq) // (self.config.max_seq_len * 2) + 1):
-                        _seq = seq[x * (self.config.max_seq_len * 2):(x + 1) * (self.config.max_seq_len * 2)]
+                        _seq = seq[
+                            x
+                            * (self.config.max_seq_len * 2) : (x + 1)
+                            * (self.config.max_seq_len * 2)
+                        ]
                         rna_indices = self.tokenizer.text_to_sequence(_seq)
 
                         data = {
-                            'ex_id': torch.tensor(ex_id, dtype=torch.long),
-                            'text_indices': torch.tensor(rna_indices, dtype=torch.long),
-                            'text_raw': seq,
-                            'label': torch.tensor(label, dtype=torch.float32),
+                            "ex_id": torch.tensor(ex_id, dtype=torch.long),
+                            "text_indices": torch.tensor(rna_indices, dtype=torch.long),
+                            "text_raw": seq,
+                            "label": torch.tensor(label, dtype=torch.float32),
                             # 'r1r2_label': torch.tensor(r1r2_label, dtype=torch.float32),
                             # 'r1r3_label': torch.tensor(r1r3_label, dtype=torch.float32),
                             # 'r2r3_label': torch.tensor(r2r3_label, dtype=torch.float32),
@@ -82,19 +95,28 @@ class BERTRNARDataset(Dataset):
                     exon1, intron, exon2, label = line[0], line[1], line[2], line[3]
                     label = float(label.strip())
                     seq = exon1 + intron + exon2
-                    exon1_ids = self.tokenizer.text_to_sequence(exon1, padding='do_not_pad')
-                    intron_ids = self.tokenizer.text_to_sequence(intron, padding='do_not_pad')
-                    exon2_ids = self.tokenizer.text_to_sequence(exon2, padding='do_not_pad')
+                    exon1_ids = self.tokenizer.text_to_sequence(
+                        exon1, padding="do_not_pad"
+                    )
+                    intron_ids = self.tokenizer.text_to_sequence(
+                        intron, padding="do_not_pad"
+                    )
+                    exon2_ids = self.tokenizer.text_to_sequence(
+                        exon2, padding="do_not_pad"
+                    )
 
                     rna_indices = exon1_ids + intron_ids + exon2_ids
-                    rna_indices = pad_and_truncate(rna_indices, self.config.max_seq_len,
-                                                   value=self.tokenizer.pad_token_id)
+                    rna_indices = pad_and_truncate(
+                        rna_indices,
+                        self.config.max_seq_len,
+                        value=self.tokenizer.pad_token_id,
+                    )
 
                     data = {
-                        'ex_id': torch.tensor(ex_id, dtype=torch.long),
-                        'text_indices': torch.tensor(rna_indices, dtype=torch.long),
-                        'text_raw': seq,
-                        'label': torch.tensor(label, dtype=torch.float32),
+                        "ex_id": torch.tensor(ex_id, dtype=torch.long),
+                        "text_indices": torch.tensor(rna_indices, dtype=torch.long),
+                        "text_raw": seq,
+                        "label": torch.tensor(label, dtype=torch.float32),
                         # 'r1r2_label': torch.tensor(r1r2_label, dtype=torch.float32),
                         # 'r1r3_label': torch.tensor(r1r3_label, dtype=torch.float32),
                         # 'r2r3_label': torch.tensor(r2r3_label, dtype=torch.float32),
@@ -104,7 +126,7 @@ class BERTRNARDataset(Dataset):
 
             except Exception as e:
                 if ignore_error:
-                    fprint('Ignore error while processing:', text, e)
+                    fprint("Ignore error while processing:", text, e)
                 else:
                     raise e
 

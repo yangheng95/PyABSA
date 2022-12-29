@@ -9,6 +9,8 @@
 
 from pyabsa import RNARegression as RNAC
 
-regressor = RNAC.RNARegressor('lstm_decay_rate_r2_0.0586')
+regressor = RNAC.RNARegressor("lstm_decay_rate_r2_0.0586")
 
-regressor.batch_predict('integrated_datasets/rnar_datasets/decay_rate/decay_rate.tsv.test.dat.inference')
+regressor.batch_predict(
+    "integrated_datasets/rnar_datasets/decay_rate/decay_rate.tsv.test.dat.inference"
+)

@@ -24,19 +24,21 @@ config.model = AspectPolarityClassification.BERTBaselineAPCModelList.TNet_LF_BER
 # chinese_sets = ABSADatasetList.Chinese
 chinese_sets = AspectPolarityClassification.APCDatasetList.Laptop14
 # chinese_sets = ABSADatasetList.MOOC
-sent_classifier = AspectPolarityClassification.APCTrainer(config=config,
-                                                          # set configuration_class=None to use default model
-                                                          dataset=chinese_sets,
-                                                          # train set and test set will be automatically detected
-                                                          checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                                                          auto_device=True  # automatic choose CUDA or CPU
-                                                          ).load_trained_model()
+sent_classifier = AspectPolarityClassification.APCTrainer(
+    config=config,
+    # set configuration_class=None to use default model
+    dataset=chinese_sets,
+    # train set and test set will be automatically detected
+    checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
+    auto_device=True,  # automatic choose CUDA or CPU
+).load_trained_model()
 
 from pyabsa import AspectPolarityClassification as APC
 
 inference_sets = APC.APCDatasetList.Laptop14
-results = sent_classifier.batch_predict(target_file=inference_sets,
-                                        print_result=True,
-                                        save_result=True,
-                                        ignore_error=False,
-                                        )
+results = sent_classifier.batch_predict(
+    target_file=inference_sets,
+    print_result=True,
+    save_result=True,
+    ignore_error=False,
+)

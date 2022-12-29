@@ -8,7 +8,11 @@
 # Copyright (C) 2022. All Rights Reserved.
 
 
-from pyabsa import download_all_available_datasets, download_dataset_by_name, TaskCodeOption
+from pyabsa import (
+    download_all_available_datasets,
+    download_dataset_by_name,
+    TaskCodeOption,
+)
 from pyabsa.tasks.AspectPolarityClassification import APCDatasetList
 
 
@@ -17,6 +21,7 @@ def test_download_all_available_dataset():
 
 
 def test_download_dataset_by_name():
-    download_dataset_by_name(TaskCodeOption.Aspect_Polarity_Classification,
-                             dataset_name=APCDatasetList.English
-                             )
+    download_dataset_by_name(
+        TaskCodeOption.Aspect_Polarity_Classification,
+        dataset_name=APCDatasetList.English,
+    )

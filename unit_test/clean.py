@@ -12,6 +12,8 @@ import findfile
 
 from pyabsa.utils.pyabsa_utils import fprint
 
-for f in findfile.find_cwd_files(or_key=['.zip', '.cache', '.mv', '.json', '.txt'], exclude_key='glove', recursive=1):
+for f in findfile.find_cwd_files(
+    or_key=[".zip", ".cache", ".mv", ".json", ".txt"], exclude_key="glove", recursive=1
+):
     os.remove(f)
-fprint('Cleaned all files in the current directory.')
+fprint("Cleaned all files in the current directory.")

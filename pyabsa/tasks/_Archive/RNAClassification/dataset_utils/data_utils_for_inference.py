@@ -19,8 +19,7 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 
 class BERTRNACInferenceDataset(Dataset):
-
-    def __init__(self, config, tokenizer, dataset_type='infer'):
+    def __init__(self, config, tokenizer, dataset_type="infer"):
         self.config = config
         self.tokenizer = tokenizer
         self.dataset_type = dataset_type
@@ -44,27 +43,34 @@ class BERTRNACInferenceDataset(Dataset):
     def process_data(self, samples, ignore_error=True):
         all_data = []
         if len(samples) > 100:
-            it = tqdm.tqdm(samples, desc='preparing text classification dataloader')
+            it = tqdm.tqdm(samples, desc="preparing text classification dataloader")
         else:
             it = samples
         for ex_id, text in enumerate(it):
             try:
-                text, _, label = text.strip().partition('$LABEL$')
-                rna, rna_type = text.strip().split(',')
-                label = label.strip().upper() if label else str(LabelPaddingOption.LABEL_PADDING)
+                text, _, label = text.strip().partition("$LABEL$")
+                rna, rna_type = text.strip().split(",")
+                label = (
+                    label.strip().upper()
+                    if label
+                    else str(LabelPaddingOption.LABEL_PADDING)
+                )
                 rna_type_indices = self.tokenizer.text_to_sequence(str(rna_type))
-                rna_indices = self.tokenizer.text_to_sequence(rna + ' ' + rna_type, padding=False)
+                rna_indices = self.tokenizer.text_to_sequence(
+                    rna + " " + rna_type, padding=False
+                )
                 data = {
-                    'ex_id': ex_id,
-                    'text_raw': rna,
-                    'text_indices': rna_indices,
-                    'rna_type': rna_type_indices,
-                    'label': label,
+                    "ex_id": ex_id,
+                    "text_raw": rna,
+                    "text_indices": rna_indices,
+                    "rna_type": rna_type_indices,
+                    "label": label,
                 }
                 all_data.append(data)
 
-                for _ in range(self.config.get('noise_instances', 1)):
+                for _ in range(self.config.get("noise_instances", 1)):
                     import numpy as np
+
                     _rna_indices = np.array(rna_indices.copy())
 
                     # noise_masks = np.abs(len(_rna_indices)//2-np.random.normal(loc=len(_rna_indices)//2, scale=self.config.max_seq_len//5, size=int(len(_rna_indices)*0.2)).astype(int))
@@ -77,22 +83,25 @@ class BERTRNACInferenceDataset(Dataset):
                     #     noise_masks if any(noise_masks) else [1] * len(_rna_indices))
                     # _rna_indices = _rna_indices.tolist()
 
-                    _rna_indices = pad_and_truncate(_rna_indices, self.config.max_seq_len,
-                                                    value=self.tokenizer.pad_token_id)
+                    _rna_indices = pad_and_truncate(
+                        _rna_indices,
+                        self.config.max_seq_len,
+                        value=self.tokenizer.pad_token_id,
+                    )
 
                     data = {
-                        'ex_id': ex_id,
-                        'text_raw': rna,
-                        'text_indices': _rna_indices,
-                        'rna_type': rna_type_indices,
-                        'label': label,
+                        "ex_id": ex_id,
+                        "text_raw": rna,
+                        "text_indices": _rna_indices,
+                        "rna_type": rna_type_indices,
+                        "label": label,
                     }
                     all_data.append(data)
 
                 self.data = all_data
             except Exception as e:
                 if ignore_error:
-                    fprint('Ignore error while processing:', text)
+                    fprint("Ignore error while processing:", text)
                 else:
                     raise e
 
