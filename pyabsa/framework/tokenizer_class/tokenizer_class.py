@@ -146,8 +146,11 @@ class PretrainedTokenizer:
         self.cls_token_id = self.tokenizer.cls_token_id
         self.sep_token_id = self.tokenizer.sep_token_id
         self.mask_token_id = self.tokenizer.mask_token_id
+        self.eos_token_id = self.tokenizer.eos_token_id
 
     def text_to_sequence(self, text, **kwargs):
+        if not kwargs.get("padding", None):
+            kwargs["padding"] = "do_not_pad"
         return self.tokenizer.encode(
             text,
             truncation=kwargs.pop("truncation", True),

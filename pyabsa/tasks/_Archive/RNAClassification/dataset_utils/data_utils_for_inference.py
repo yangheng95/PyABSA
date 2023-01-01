@@ -57,7 +57,7 @@ class BERTRNACInferenceDataset(Dataset):
                 )
                 rna_type_indices = self.tokenizer.text_to_sequence(str(rna_type))
                 rna_indices = self.tokenizer.text_to_sequence(
-                    rna + " " + rna_type, padding=False
+                    rna + " " + rna_type, padding="do_not_pad"
                 )
                 data = {
                     "ex_id": ex_id,
@@ -68,7 +68,7 @@ class BERTRNACInferenceDataset(Dataset):
                 }
                 all_data.append(data)
 
-                for _ in range(self.config.get("noise_instances", 1)):
+                for _ in range(self.config.get("noise_instance_num", 1)):
                     import numpy as np
 
                     _rna_indices = np.array(rna_indices.copy())

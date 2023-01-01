@@ -14,7 +14,7 @@ from pyabsa import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.utils.pyabsa_utils import fprint, check_and_fix_labels
-from ..cdd_utils import _prepare_corruptted_code_src, read_defect_examples
+from ..cdd_utils import read_defect_examples
 
 
 class BERTCDDInferenceDataset(Dataset):

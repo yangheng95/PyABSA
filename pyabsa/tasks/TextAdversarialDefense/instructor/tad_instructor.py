@@ -295,6 +295,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
 
         for epoch in range(self.config.num_epoch):
             patience -= 1
+            description = "Epoch:{} | Loss:{}".format(epoch, 0)
             iterator = tqdm(self.train_dataloaders[0])
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
@@ -495,13 +496,9 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                                     self.config, self.model, self.tokenizer, save_path
                                 )
 
-                        description = (
-                            "Epoch:{} | Loss:{:.4f} | Dev CLS ACC:{:.2f}(max:{:.2f}) Dev AdvDet ACC:{:.2f}(max:{:.2f})"
+                        postfix = (
+                            "Dev CLS ACC:{:.2f}(max:{:.2f}) Dev AdvDet ACC:{:.2f}(max:{:.2f})"
                             " Dev AdvCLS ACC:{:.2f}(max:{:.2f})".format(
-                                epoch,
-                                sen_loss.item()
-                                + adv_det_loss.item()
-                                + adv_train_loss.item(),
                                 test_label_acc * 100,
                                 max_label_fold_acc * 100,
                                 test_adv_det_acc * 100,
@@ -510,25 +507,21 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                                 max_adv_tr_fold_acc * 100,
                             )
                         )
-                    else:
-                        if (
-                            self.config.save_mode
-                            and epoch >= self.config.evaluate_begin
-                        ):
-                            save_model(
-                                self.config,
-                                self.model,
-                                self.tokenizer,
-                                save_path + "_{}/".format(loss.item()),
-                            )
-                        description = (
-                            "Epoch:{} | Loss: {} |No evaluation until epoch:{}".format(
-                                epoch, round(loss.item(), 8), self.config.evaluate_begin
-                            )
+                        iterator.set_postfix_str(postfix)
+                    if self.config.save_mode and epoch >= self.config.evaluate_begin:
+                        save_model(
+                            self.config,
+                            self.model,
+                            self.tokenizer,
+                            save_path + "_{}/".format(loss.item()),
                         )
+                else:
+                    description = "Epoch:{} | Loss: {}".format(
+                        epoch, round(loss.item(), 8)
+                    )
 
-                    iterator.set_description(description)
-                    iterator.refresh()
+                iterator.set_description(description)
+                iterator.refresh()
             if patience < 0:
                 break
 

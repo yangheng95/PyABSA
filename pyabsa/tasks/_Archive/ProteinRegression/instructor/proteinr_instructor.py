@@ -286,6 +286,7 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
             iterator = tqdm(self.train_dataloaders[0])
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
+                description = "Epoch:{} | Loss:{}".format(epoch, 0)
                 # switch model to train mode, clear gradient accumulators
                 self.model.train()
                 self.optimizer.zero_grad()
@@ -369,25 +370,20 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
                         description = "Epoch:{} | Loss:{:.4f} | Dev R2 Score:{:.4f}(max:{:.4f})".format(
                             epoch, loss.item(), test_r2, max_fold_r2
                         )
-                    else:
-                        if (
-                            self.config.save_mode
-                            and epoch >= self.config.evaluate_begin
-                        ):
-                            save_model(
-                                self.config,
-                                self.model,
-                                self.tokenizer,
-                                save_path + "_{}/".format(loss.item()),
-                            )
-                        description = (
-                            "Epoch:{} | Loss: {} |No evaluation until epoch:{}".format(
-                                epoch, round(loss.item(), 8), self.config.evaluate_begin
-                            )
+                    if self.config.save_mode and epoch >= self.config.evaluate_begin:
+                        save_model(
+                            self.config,
+                            self.model,
+                            self.tokenizer,
+                            save_path + "_{}/".format(loss.item()),
                         )
+                else:
+                    description = "Epoch:{} | Loss: {}".format(
+                        epoch, round(loss.item(), 8)
+                    )
 
-                    iterator.set_description(description)
-                    iterator.refresh()
+                iterator.set_description(description)
+                iterator.refresh()
             if patience < 0:
                 break
 
@@ -471,7 +467,7 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
             for epoch in range(self.config.num_epoch):
                 patience -= 1
                 iterator = tqdm(train_dataloader)
-                description = ""
+                description = "Epoch:{} | Loss:{}".format(epoch, 0)
                 for i_batch, sample_batched in enumerate(iterator):
                     global_step += 1
                     # switch model to train mode, clear gradient accumulators
@@ -557,15 +553,21 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
                             description = "Epoch:{} | Loss:{:.4f} | Dev R2 Score:{:.2f}(max:{:.2f})".format(
                                 epoch, loss.item(), test_r2, max_fold_r2
                             )
-                        else:
-                            description = (
-                                "Epoch:{} | Loss:{} | "
-                                "No evaluation until epoch:{}".format(
-                                    epoch,
-                                    round(loss.item(), 8),
-                                    self.config.evaluate_begin,
-                                )
+                        if (
+                            self.config.save_mode
+                            and epoch >= self.config.evaluate_begin
+                        ):
+                            save_model(
+                                self.config,
+                                self.model,
+                                self.tokenizer,
+                                save_path + "_{}/".format(loss.item()),
                             )
+                    else:
+                        description = "Epoch:{} | Loss:{} |".format(
+                            epoch,
+                            round(loss.item(), 8),
+                        )
 
                     iterator.set_description(description)
                     iterator.refresh()

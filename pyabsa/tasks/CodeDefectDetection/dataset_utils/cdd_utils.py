@@ -59,16 +59,11 @@ def _add_token(tokens: list, ids: list):
     return tokens
 
 
-def _prepare_corruptted_code_src(code_src):
+def _prepare_corrupt_code(code_src):
     # perform obfuscation
 
     # perform noising
-    # sum: 20%  switch: 5% replace 5% deletion 5% addition 5%
-
     code_tokens = code_src.split()
-    choice = random.choice("123")
-    switch_ids = random_indices(code_src, 0.01)
-    # code_tokens = _switch_token(code_tokens, switch_ids)
 
     replace_ids = random_indices(code_src, random.random() / 10)
     code_tokens = _replace_token(code_tokens, replace_ids)
@@ -95,6 +90,14 @@ def remove_comment(code_str):
         if "/*" and "*/" in lines[i]:
             line = line[: line.find("/*")] + line[line.find("*/") + 2 :]
         lines[i] = line
+    code_lines = "\\n".join(lines)
+    while "\\n\\n" in code_lines:
+        code_lines = code_lines.replace("\\n\\n", "\\n")
+    while "  " in code_lines:
+        code_lines = code_lines.replace("  ", " ")
+    while "\n\n" in code_lines:
+        code_lines = code_lines.replace("\n\n", "\n")
+    code_lines = code_lines.replace("\\n", "\n")
     return "\\n".join(lines)
 
 

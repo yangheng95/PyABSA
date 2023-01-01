@@ -296,7 +296,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
         for epoch in range(int(self.config.num_epoch)):
             nb_tr_examples, nb_tr_steps = 0, 0
             iterator = tqdm.tqdm(self.train_dataloader)
-            description = ""
+            description = "Epoch:{} | Loss:{}".format(epoch, 0)
             patience -= 1
             for step, batch in enumerate(iterator):
                 self.model.train()
@@ -471,22 +471,17 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                             current_ate_test_f1,
                             self.config.max_test_metrics["max_ate_test_f1"],
                         )
-                    else:
-                        if (
-                            self.config.save_mode
-                            and epoch >= self.config.evaluate_begin
-                        ):
-                            save_model(
-                                self.config,
-                                self.model,
-                                self.tokenizer,
-                                save_path + "_{}/".format(loss.item()),
-                            )
-                        description = (
-                            "Epoch:{} | Loss: {} | No evaluation until epoch:{}".format(
-                                epoch, round(loss.item(), 8), self.config.evaluate_begin
-                            )
+                    if self.config.save_mode and epoch >= self.config.evaluate_begin:
+                        save_model(
+                            self.config,
+                            self.model,
+                            self.tokenizer,
+                            save_path + "_{}/".format(loss.item()),
                         )
+                else:
+                    description = "Epoch:{} | Loss: {}".format(
+                        epoch, round(loss.item(), 8)
+                    )
 
                 iterator.set_description(description)
                 iterator.refresh()

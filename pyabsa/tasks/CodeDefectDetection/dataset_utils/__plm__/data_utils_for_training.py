@@ -6,11 +6,18 @@
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
+import random
 
 import tqdm
 
+from pyabsa.augmentation.aug_utils import (
+    contextual_ids_noise_instance,
+    contextual_code_noise_instance,
+)
+from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
+
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
-from ..cdd_utils import _prepare_corruptted_code_src, read_defect_examples
+from ..cdd_utils import read_defect_examples, _prepare_corrupt_code
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.utils.pyabsa_utils import check_and_fix_labels, fprint
 
@@ -55,8 +62,8 @@ class BERTCDDDataset(PyABSADataset):
             all_data.append(data)
 
             if self.dataset_type == "train":
-                for _ in range(self.config.corrupt_instance_num):
-                    corrupt_code_src = _prepare_corruptted_code_src(code_src)
+                for _ in range(self.config.noise_instance_num):
+                    corrupt_code_src = _prepare_corrupt_code(code_src)
                     corrupt_code_ids = self.tokenizer.text_to_sequence(
                         corrupt_code_src,
                         max_length=self.config.max_seq_len,

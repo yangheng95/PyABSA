@@ -59,7 +59,7 @@ class BERTRNACDataset(PyABSADataset):
             # rna_type = rna_type_dict[rna_type]
             rna_type = rna_type.upper()
             label = label.strip()
-            rna_indices = self.tokenizer.text_to_sequence(rna, padding=False)
+            rna_indices = self.tokenizer.text_to_sequence(rna, padding="do_not_pad")
             rna_type_indices = self.tokenizer.text_to_sequence(str(rna_type))
 
             data = {
@@ -75,7 +75,7 @@ class BERTRNACDataset(PyABSADataset):
             label_set.add(label)
             all_data.append(data)
 
-            for _ in range(self.config.get("noise_instances", 3)):
+            for _ in range(self.config.get("noise_instance_num", 3)):
                 import numpy as np
 
                 _rna_indices = np.array(rna_indices.copy())
