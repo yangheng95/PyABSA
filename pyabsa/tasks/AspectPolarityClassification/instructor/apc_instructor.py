@@ -210,7 +210,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                             max_fold_f1 * 100,
                         )
                         iterator.set_postfix_str(postfix)
-                    if self.config.save_mode and epoch >= self.config.evaluate_begin:
+                    elif self.config.save_mode and epoch >= self.config.evaluate_begin:
                         save_model(
                             self.config,
                             self.model,

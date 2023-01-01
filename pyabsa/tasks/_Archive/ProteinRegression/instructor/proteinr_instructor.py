@@ -370,7 +370,7 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
                         description = "Epoch:{} | Loss:{:.4f} | Dev R2 Score:{:.4f}(max:{:.4f})".format(
                             epoch, loss.item(), test_r2, max_fold_r2
                         )
-                    if self.config.save_mode and epoch >= self.config.evaluate_begin:
+                    elif self.config.save_mode and epoch >= self.config.evaluate_begin:
                         save_model(
                             self.config,
                             self.model,

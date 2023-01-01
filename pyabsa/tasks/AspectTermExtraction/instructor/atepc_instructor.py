@@ -471,7 +471,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                             current_ate_test_f1,
                             self.config.max_test_metrics["max_ate_test_f1"],
                         )
-                    if self.config.save_mode and epoch >= self.config.evaluate_begin:
+                    elif self.config.save_mode and epoch >= self.config.evaluate_begin:
                         save_model(
                             self.config,
                             self.model,
