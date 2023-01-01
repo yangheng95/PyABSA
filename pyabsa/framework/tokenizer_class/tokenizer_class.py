@@ -201,9 +201,7 @@ def build_embedding_matrix(config, tokenizer, cache_path=None):
 
         for word, i in tqdm.tqdm(
             tokenizer.word2idx.items(),
-            desc=colored(
-                "Building embedding_matrix {}".format(cache_path), "yellow"
-            ),
+            desc=colored("Building embedding_matrix {}".format(cache_path), "yellow"),
         ):
             vec = word_vec.get(word)
             if vec is not None:

@@ -42,7 +42,7 @@ _atepc_config_template = {
     "evaluate_begin": 0,
     "use_amp": False,
     "overwrite_cache": False,
-    'cross_validate_fold': -1,
+    "cross_validate_fold": -1,
 }
 
 _atepc_config_base = {
