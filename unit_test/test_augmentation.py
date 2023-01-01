@@ -24,7 +24,7 @@ def test_classification_augmentation():
     config.model = TC.BERTTCModelList.BERT_MLP
     config.num_epoch = 1
     config.evaluate_begin = 0
-    config.max_seq_len = 80
+    config.max_seq_len = 10
     config.dropout = 0.5
     config.seed = {42}
     config.log_step = -1
@@ -53,7 +53,7 @@ def test_aspect_sentiment_classification_augmentation():
             config.model = model
             config.pretrained_bert = "microsoft/deberta-v3-base"
             config.evaluate_begin = 5
-            config.max_seq_len = 80
+            config.max_seq_len = 10
             config.num_epoch = 30
             config.log_step = 10
             config.dropout = 0

@@ -168,7 +168,7 @@ def test_bert_apc_models():
             cuda.empty_cache()
             config.model = model
             config.cache_dataset = True
-            config.max_seq_len = 80
+            config.max_seq_len = 10
             config.num_epoch = 1
             config.evaluate_begin = 0
             config.log_step = -1
@@ -179,7 +179,7 @@ def test_bert_apc_models():
                 dataset=dataset,
                 checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
                 auto_device=DeviceTypeOption.ALL_CUDA,
-            )
+            ).load_trained_model()
             sent_classifier = apc_trainer.load_trained_model()
             for ex in apc_examples:
                 result = sent_classifier.predict(
@@ -201,7 +201,7 @@ def test_glove_apc_models():
             config.overwrite_cache = True
             config.num_epoch = 1
             config.patience = 20
-            config.max_seq_len = 80
+            config.max_seq_len = 10
             config.evaluate_begin = 0
             config.log_step = -1
             config.data_num = 6

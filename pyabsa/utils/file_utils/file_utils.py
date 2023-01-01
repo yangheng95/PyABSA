@@ -128,7 +128,7 @@ def prepare_glove840_embedding(glove_path, embedding_dim, config):
                         response.iter_content(chunk_size=1024 * 1024),
                         unit="MB",
                         total=int(response.headers["content-length"]) // 1024 // 1024,
-                        description=colored(
+                        desc=colored(
                             "Downloading GloVe-840B embedding", "yellow"
                         ),
                     ):

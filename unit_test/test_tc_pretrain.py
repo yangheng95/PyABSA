@@ -41,24 +41,23 @@ apc_examples = [
 def test_all_bert_models():
     from pyabsa import TextClassification as TC
 
-    for dataset in TC.TCDatasetList()[:1]:
-        for model in TC.BERTTCModelList():
-            cuda.empty_cache()
-            config = TC.TCConfigManager.get_tc_config_english()
-            config.model = model
-            config.num_epoch = 1
-            config.evaluate_begin = 0
-            config.log_step = -1
-            config.cache_dataset = True
-            config.data_num = 6
+    for model in TC.BERTTCModelList():
+        cuda.empty_cache()
+        config = TC.TCConfigManager.get_tc_config_english()
+        config.model = model
+        config.num_epoch = 1
+        config.evaluate_begin = 0
+        config.log_step = -1
+        config.cache_dataset = True
+        config.data_num = 6
 
-            text_classifier = TC.TCTrainer(
-                config=config,
-                dataset=dataset,
-                checkpoint_save_mode=1,
-                auto_device="allcuda",
-            ).load_trained_model()
-            text_classifier.predict("I love it very much!")
+        text_classifier = TC.TCTrainer(
+            config=config,
+            dataset=TC.TCDatasetList.SST2,
+            checkpoint_save_mode=1,
+            auto_device="allcuda",
+        ).load_trained_model()
+        text_classifier.predict("I love it very much!")
 
 
 def test_all_glove_models():
@@ -72,7 +71,7 @@ def test_all_glove_models():
             config.num_epoch = 10
             config.num_epoch = 100
             config.evaluate_begin = 2
-            config.max_seq_len = 80
+            config.max_seq_len = 10
             config.do_lower_case = True
             config.dropout = 0.5
             config.log_step = 5

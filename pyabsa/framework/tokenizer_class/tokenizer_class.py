@@ -201,7 +201,7 @@ def build_embedding_matrix(config, tokenizer, cache_path=None):
 
         for word, i in tqdm.tqdm(
             tokenizer.word2idx.items(),
-            description=colored(
+            desc=colored(
                 "Building embedding_matrix {}".format(cache_path), "yellow"
             ),
         ):
