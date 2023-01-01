@@ -147,7 +147,7 @@ class BaseTrainingInstructor:
             self.config.model_name, self.config.dataset_name, hash_tag
         )
         if (
-            not os.path.exists(cache_path) or self.config.overwrite_cache
+                not os.path.exists(cache_path) or self.config.overwrite_cache
         ) and self.config.cache_dataset:
             with open(cache_path, mode="wb") as f_cache:
                 self.config.logger.info("Save cache dataset to {}".format(cache_path))
@@ -165,9 +165,7 @@ class BaseTrainingInstructor:
             self.train_dataloaders = [self.train_dataloader]
 
         elif self.config.cross_validate_fold < 1:
-            train_sampler = RandomSampler(
-                self.train_set if not self.train_set else self.train_set
-            )
+            train_sampler = RandomSampler(self.train_set)
             self.train_dataloaders.append(
                 DataLoader(
                     dataset=self.train_set,
@@ -326,8 +324,8 @@ class BaseTrainingInstructor:
                     self.model = torch.load(model_path[0])
                 if state_dict_path:
                     if (
-                        torch.cuda.device_count() > 1
-                        and self.config.device == DeviceTypeOption.ALL_CUDA
+                            torch.cuda.device_count() > 1
+                            and self.config.device == DeviceTypeOption.ALL_CUDA
                     ):
                         self.model.module.load_state_dict(
                             torch.load(state_dict_path[0])

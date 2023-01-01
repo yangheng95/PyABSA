@@ -6,6 +6,8 @@
 # Copyright (C) 2021. All Rights Reserved.
 import random
 
+import autocuda
+
 from pyabsa.tasks.AspectPolarityClassification import APCDatasetList
 
 from pyabsa import AspectPolarityClassification as APC
@@ -33,7 +35,7 @@ def test_classification_augmentation():
 
     SST2 = TC.TCDatasetList.SST2
 
-    auto_classification_augmentation(config=config, dataset=SST2, device="cuda")
+    auto_classification_augmentation(config=config, dataset=SST2, device="cpu")
 
 
 def test_aspect_sentiment_classification_augmentation():
@@ -65,5 +67,9 @@ def test_aspect_sentiment_classification_augmentation():
             config.seed = [random.randint(0, 10000) for _ in range(1)]
 
             auto_aspect_sentiment_classification_augmentation(
-                config=config, dataset=dataset, device="cuda"
+                config=config, dataset=dataset, device=autocuda.auto_cuda()
             )
+
+if __name__ == '__main__':
+    test_classification_augmentation()
+    test_aspect_sentiment_classification_augmentation()

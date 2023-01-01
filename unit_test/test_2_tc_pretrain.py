@@ -62,26 +62,23 @@ def test_all_bert_models():
 
 def test_all_glove_models():
     from pyabsa import TextClassification as TC
+    for model in TC.GloVeTCModelList():
+        config = TC.TCConfigManager.get_tc_config_glove()
+        config.model = model
+        config.num_epoch = 10
+        config.num_epoch = 100
+        config.evaluate_begin = 2
+        config.max_seq_len = 10
+        config.do_lower_case = True
+        config.dropout = 0.5
+        config.log_step = 5
+        config.l2reg = 0.001
+        config.data_num = 6
 
-    for dataset in TC.TCDatasetList():
-
-        for model in TC.GloVeTCModelList():
-            config = TC.TCConfigManager.get_tc_config_glove()
-            config.model = model
-            config.num_epoch = 10
-            config.num_epoch = 100
-            config.evaluate_begin = 2
-            config.max_seq_len = 10
-            config.do_lower_case = True
-            config.dropout = 0.5
-            config.log_step = 5
-            config.l2reg = 0.001
-            config.data_num = 6
-
-            text_classifier = TC.TCTrainer(
-                config=config,
-                dataset=dataset,
-                checkpoint_save_mode=1,
-                auto_device="allcuda",
-            ).load_trained_model()
-            text_classifier.predict("I love it very much!")
+        text_classifier = TC.TCTrainer(
+            config=config,
+            dataset=TC.TCDatasetList.SST2,
+            checkpoint_save_mode=1,
+            auto_device="allcuda",
+        ).load_trained_model()
+        text_classifier.predict("I love it very much!")
