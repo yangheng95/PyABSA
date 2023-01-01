@@ -18,7 +18,7 @@ from transformers import AutoModel, AutoTokenizer
 
 from sklearn import metrics
 
-from pyabsa import TaskCodeOption, LabelPaddingOption
+from pyabsa import TaskCodeOption, LabelPaddingOption, DeviceTypeOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
 from ..dataset_utils.__classic__.data_utils_for_inference import GloVeProteinRDataset
 from ..dataset_utils.__plm__.data_utils_for_inference import BERTProteinRDataset
@@ -94,10 +94,14 @@ class ProteinRegressor(InferenceModel):
                                 )
                             self.model = self.config.model(self.bert, self.config)
                             self.model.load_state_dict(
-                                torch.load(state_dict_path, map_location="cpu")
+                                torch.load(
+                                    state_dict_path, map_location=DeviceTypeOption.CPU
+                                )
                             )
                         elif model_path:
-                            self.model = torch.load(model_path, map_location="cpu")
+                            self.model = torch.load(
+                                model_path, map_location=DeviceTypeOption.CPU
+                            )
 
                         try:
                             self.tokenizer = PretrainedTokenizer(
@@ -111,13 +115,17 @@ class ProteinRegressor(InferenceModel):
                         self.embedding_matrix = self.config.embedding_matrix
                         self.tokenizer = self.config.tokenizer
                         if model_path:
-                            self.model = torch.load(model_path, map_location="cpu")
+                            self.model = torch.load(
+                                model_path, map_location=DeviceTypeOption.CPU
+                            )
                         else:
                             self.model = self.config.model(
                                 self.embedding_matrix, self.config
                             ).to(self.config.device)
                             self.model.load_state_dict(
-                                torch.load(state_dict_path, map_location="cpu")
+                                torch.load(
+                                    state_dict_path, map_location=DeviceTypeOption.CPU
+                                )
                             )
 
                 if kwargs.get("verbose", False):
@@ -157,10 +165,10 @@ class ProteinRegressor(InferenceModel):
             self.MLM.to(self.config.device)
 
     def cpu(self):
-        self.config.device = "cpu"
-        self.model.to("cpu")
+        self.config.device = DeviceTypeOption.CPU
+        self.model.to(DeviceTypeOption.CPU)
         if hasattr(self, "MLM"):
-            self.MLM.to("cpu")
+            self.MLM.to(DeviceTypeOption.CPU)
 
     def cuda(self, device="cuda:0"):
         self.config.device = device

@@ -146,9 +146,9 @@ class Cabasc_BERT(nn.Module):
             v_s = v_s.unsqueeze(dim=1)
 
         """
-        # no multi-hop, but may be better. 
+        # no multi-hop, but may be better.
         # however, here is something totally different from what paper depits
-        for _ in range(self.config.hops):  
+        for _ in range(self.config.hops):
             #x = self.x_linear(x)
             v_ts, _ = self.attention(memory, v_a)
         """

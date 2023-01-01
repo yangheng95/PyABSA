@@ -177,7 +177,7 @@ def set_device(config, auto_device):
     elif isinstance(auto_device, str):
         device = auto_device
     elif isinstance(auto_device, bool):
-        device = auto_cuda() if auto_device else "cpu"
+        device = auto_cuda() if auto_device else DeviceTypeOption.CPU
     else:
         device = auto_cuda()
         try:
@@ -186,8 +186,8 @@ def set_device(config, auto_device):
             print(
                 colored("Device assignment error: {}, redirect to CPU".format(e), "red")
             )
-            device = "cpu"
-    if device != "cpu":
+            device = DeviceTypeOption.CPU
+    if device != DeviceTypeOption.CPU:
         device_name = auto_cuda_name()
     config.device = device
     config.device_name = device_name

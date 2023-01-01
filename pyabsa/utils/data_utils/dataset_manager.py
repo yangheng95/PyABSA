@@ -114,12 +114,10 @@ def detect_dataset(
                 )
             if not load_aug:
                 logger.info(
-                    "You can set load_aug=True in a trainer to augment your dataset (English only yet) and improve performance.".format(
-                        search_path
-                    )
+                    "You can set load_aug=True in a trainer to augment your dataset (English only yet) and improve performance."
                 )
                 logger.info(
-                    "Please use a new folder to perform new text augment if the former augment exited unexpectedly".format(
+                    "Please use a new folder to perform new text augment if the former augment in {} errored unexpectedly".format(
                         search_path
                     )
                 )
@@ -286,7 +284,8 @@ def detect_dataset(
         logger.info(
             "Please DO NOT mix datasets with different sentiment labels for trainer & inference !"
         )
-
+    for k, v in dataset_file.items():
+        dataset_file[k] = list(set(v))
     return dataset_file
 
 
@@ -409,7 +408,7 @@ def download_all_available_datasets(**kwargs):
                 )
         else:
             if logger:
-                logger.info("Datasets already exist, skip download".format(save_path))
+                logger.info("Datasets already exist in {}, skip download".format(save_path))
             else:
                 fprint("Datasets already exist in {}, skip download".format(save_path))
             return
@@ -482,7 +481,7 @@ def download_dataset_by_name(
             download_dataset_by_name(task_code=task_code, dataset_name=d, **kwargs)
 
     if logger:
-        logger.info("Start downloading".format(dataset_name))
+        logger.info("Start {} downloading".format(dataset_name))
     url = (
         PyABSAMaterialHostAddress
         + "resolve/main/integrated_datasets/{}_datasets.{}.zip".format(

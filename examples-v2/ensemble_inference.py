@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
     checkpoints = {
         ckpt: APC.SentimentClassifier(checkpoint=ckpt)
-        for ckpt in findfile.find_cwd_dirs(or_key=[f"laptop14_acc"])
+        for ckpt in findfile.find_cwd_dirs(or_key=["laptop14_acc"])
     }
 
     ensemble_predictor = VoteEnsemblePredictor(
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     for key, files in dataset_file_dict.items():
         text_classifiers = {}
 
-        fprint(f"Ensemble inference")
+        fprint("Ensemble inference")
         lines = []
         if isinstance(files, str):
             files = [files]

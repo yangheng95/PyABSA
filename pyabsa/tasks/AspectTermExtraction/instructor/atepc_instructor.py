@@ -625,7 +625,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                     )
                 ate_logits = torch.argmax(F.log_softmax(ate_logits, dim=2), dim=2)
                 ate_logits = ate_logits.detach().cpu().numpy()
-                label_ids = label_ids.to("cpu").numpy()
+                label_ids = label_ids.to(DeviceTypeOption.CPU).numpy()
                 for i, label in enumerate(label_ids):
                     temp_1 = []
                     temp_2 = []
@@ -739,7 +739,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                 weight_decay=self.config.l2reg,
             )
         self.config.device = torch.device(self.config.device)
-        if self.config.device.type == "cuda":
+        if self.config.device.type == DeviceTypeOption.CUDA:
             self.logger.info(
                 "cuda memory allocated:{}".format(
                     torch.cuda.memory_allocated(device=self.config.device)

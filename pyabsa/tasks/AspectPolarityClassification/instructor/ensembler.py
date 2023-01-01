@@ -280,9 +280,7 @@ class APCEnsembler(nn.Module):
                     )
 
             if load_dataset:
-                train_sampler = RandomSampler(
-                    self.train_set if not self.train_set else self.train_set
-                )
+                train_sampler = RandomSampler(self.train_set)
                 self.train_dataloader = DataLoader(
                     self.train_set,
                     batch_size=self.config.batch_size,
@@ -290,9 +288,7 @@ class APCEnsembler(nn.Module):
                     sampler=train_sampler,
                 )
                 if self.test_set:
-                    test_sampler = SequentialSampler(
-                        self.test_set if not self.test_set else self.test_set
-                    )
+                    test_sampler = SequentialSampler(self.test_set)
                     self.test_dataloader = DataLoader(
                         self.test_set,
                         batch_size=self.config.batch_size,
@@ -300,9 +296,7 @@ class APCEnsembler(nn.Module):
                         sampler=test_sampler,
                     )
                 if self.valid_set:
-                    valid_sampler = SequentialSampler(
-                        self.valid_set if not self.valid_set else self.valid_set
-                    )
+                    valid_sampler = SequentialSampler(self.valid_set)
                     self.valid_dataloader = DataLoader(
                         self.valid_set,
                         batch_size=self.config.batch_size,

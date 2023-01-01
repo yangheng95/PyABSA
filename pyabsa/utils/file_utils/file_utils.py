@@ -68,7 +68,6 @@ def prepare_glove840_embedding(glove_path, embedding_dim, config):
         return glove_path
 
     logger = config.logger
-    glove840_id = "1G-vd6W1oF9ByyJ-pzp9dcqKnr_plh4Em"
     if os.path.exists(glove_path) and os.path.isfile(glove_path):
         return glove_path
     else:
@@ -158,7 +157,7 @@ def unzip_checkpoint(zip_path):
         z.extractall(os.path.dirname(zip_path))
         fprint("Done.")
     except zipfile.BadZipfile:
-        fprint("Unzip failed".format(zip_path))
+        fprint("{}: Unzip failed".format(zip_path))
     return zip_path.replace(".zip", "")
 
 
@@ -206,9 +205,6 @@ def save_model(config, model, tokenizer, save_path, **kwargs):
             model_to_save = model_to_save.bert4global
         elif hasattr(model_to_save, "bert"):
             model_to_save = model_to_save.bert
-        else:
-            model_to_save = model_to_save
-            # raise RuntimeError('No pretrained model found to save')
 
         torch.save(model_to_save.state_dict(), output_model_file)
         model_to_save.config.to_json_file(output_config_file)

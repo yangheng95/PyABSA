@@ -10,7 +10,7 @@ import autocuda
 
 from pyabsa.tasks.AspectPolarityClassification import APCDatasetList
 
-from pyabsa import AspectPolarityClassification as APC
+from pyabsa import AspectPolarityClassification as APC, DeviceTypeOption
 from pyabsa.augmentation import auto_aspect_sentiment_classification_augmentation
 import warnings
 
@@ -35,7 +35,9 @@ def test_classification_augmentation():
 
     SST2 = TC.TCDatasetList.SST2
 
-    auto_classification_augmentation(config=config, dataset=SST2, device="cpu")
+    auto_classification_augmentation(
+        config=config, dataset=SST2, device=DeviceTypeOption.CPU
+    )
 
 
 def test_aspect_sentiment_classification_augmentation():
@@ -70,6 +72,7 @@ def test_aspect_sentiment_classification_augmentation():
                 config=config, dataset=dataset, device=autocuda.auto_cuda()
             )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     test_classification_augmentation()
     test_aspect_sentiment_classification_augmentation()

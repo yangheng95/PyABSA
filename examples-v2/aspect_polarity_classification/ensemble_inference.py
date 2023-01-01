@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
     checkpoints = {
         ckpt: APC.SentimentClassifier(checkpoint=ckpt)
-        for ckpt in findfile.find_cwd_dirs(or_key=[f"laptop14_acc"])
+        for ckpt in findfile.find_cwd_dirs(or_key=["laptop14_acc"])
     }
 
     ensemble_predictor = VoteEnsemblePredictor(

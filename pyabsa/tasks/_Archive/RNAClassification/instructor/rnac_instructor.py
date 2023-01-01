@@ -63,7 +63,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         torch.save(self.model.state_dict(), "./init_state_dict.bin")
 
         self.config.device = torch.device(self.config.device)
-        if self.config.device.type == "cuda":
+        if self.config.device.type == DeviceTypeOption.CUDA:
             self.logger.info(
                 "cuda memory allocated:{}".format(
                     torch.cuda.memory_allocated(device=self.config.device)
@@ -206,8 +206,6 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                                 )
 
                         postfix = "Dev Acc:{:.2f}(max:{:.2f}) Dev F1:{:.2f}(max:{:.2f})".format(
-                            epoch,
-                            loss.item(),
                             test_acc * 100,
                             max_fold_acc * 100,
                             f1 * 100,

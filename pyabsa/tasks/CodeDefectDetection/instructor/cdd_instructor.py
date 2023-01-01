@@ -83,7 +83,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
             torch.save(self.model.state_dict(), "./init_state_dict.bin")
 
         self.config.device = torch.device(self.config.device)
-        if self.config.device.type == "cuda":
+        if self.config.device.type == DeviceTypeOption.CUDA:
             self.logger.info(
                 "cuda memory allocated:{}".format(
                     torch.cuda.memory_allocated(device=self.config.device)

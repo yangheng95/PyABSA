@@ -62,6 +62,7 @@ def test_all_bert_models():
 
 def test_all_glove_models():
     from pyabsa import TextClassification as TC
+
     for model in TC.GloVeTCModelList():
         config = TC.TCConfigManager.get_tc_config_glove()
         config.model = model

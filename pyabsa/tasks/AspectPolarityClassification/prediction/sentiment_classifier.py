@@ -16,7 +16,7 @@ from termcolor import colored
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer
 
-from pyabsa import LabelPaddingOption, TaskCodeOption
+from pyabsa import LabelPaddingOption, TaskCodeOption, DeviceTypeOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
 from ..models.__plm__ import BERTBaselineAPCModelList
 from ..models.__classic__ import GloVeAPCModelList
@@ -83,10 +83,14 @@ class SentimentClassifier(InferenceModel):
                             self.config, load_dataset=False, **kwargs
                         )
                         self.model.load_state_dict(
-                            torch.load(state_dict_path, map_location="cpu")
+                            torch.load(
+                                state_dict_path, map_location=DeviceTypeOption.CPU
+                            )
                         )
                     elif model_path:
-                        self.model = torch.load(model_path, map_location="cpu")
+                        self.model = torch.load(
+                            model_path, map_location=DeviceTypeOption.CPU
+                        )
                     with open(tokenizer_path, mode="rb") as f:
                         if hasattr(APCModelList, self.config.model.__name__) or hasattr(
                             BERTBaselineAPCModelList, self.config.model.__name__

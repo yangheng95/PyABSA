@@ -11,12 +11,6 @@ __version__ = "2.0.23"
 
 from pyabsa.framework.flag_class import *
 
-from pyabsa.utils.check_utils.package_version_check import (
-    validate_pyabsa_version,
-    query_release_notes,
-    check_pyabsa_update,
-)
-
 from pyabsa.utils.data_utils.dataset_item import DatasetItem
 from pyabsa.utils.absa_utils.make_absa_dataset import make_ABSA_dataset
 from pyabsa.utils.absa_utils.absa_utils import (

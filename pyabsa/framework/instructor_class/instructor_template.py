@@ -147,7 +147,7 @@ class BaseTrainingInstructor:
             self.config.model_name, self.config.dataset_name, hash_tag
         )
         if (
-                not os.path.exists(cache_path) or self.config.overwrite_cache
+            not os.path.exists(cache_path) or self.config.overwrite_cache
         ) and self.config.cache_dataset:
             with open(cache_path, mode="wb") as f_cache:
                 self.config.logger.info("Save cache dataset to {}".format(cache_path))
@@ -246,15 +246,16 @@ class BaseTrainingInstructor:
             self.model.to(self.config.device)
 
         self.config.device = torch.device(self.config.device)
-        if self.config.device.type == "cuda":
+        if self.config.device.type == DeviceTypeOption.CUDA:
             self.logger.info(
                 "cuda memory allocated:{}".format(
                     torch.cuda.memory_allocated(device=self.config.device)
                 )
             )
-        self.config.logger.info(
-            "Model Architecture:\n {}".format(self.model.__repr__())
-        )
+        if self.config.get("verbose", True):
+            self.config.logger.info(
+                "Model Architecture:\n {}".format(self.model.__repr__())
+            )
         print_args(self.config, self.logger)
 
     def _train(self, criterion):
@@ -324,8 +325,8 @@ class BaseTrainingInstructor:
                     self.model = torch.load(model_path[0])
                 if state_dict_path:
                     if (
-                            torch.cuda.device_count() > 1
-                            and self.config.device == DeviceTypeOption.ALL_CUDA
+                        torch.cuda.device_count() > 1
+                        and self.config.device == DeviceTypeOption.ALL_CUDA
                     ):
                         self.model.module.load_state_dict(
                             torch.load(state_dict_path[0])

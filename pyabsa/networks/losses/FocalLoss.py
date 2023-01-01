@@ -13,7 +13,7 @@ import torch.nn.functional as F
 
 
 class FocalLoss(torch.nn.Module):
-    ## borrowed from Flair
+    # borrowed from Flair
     """
     Focal loss(https://arxiv.org/pdf/1708.02002.pdf)
     Shape:

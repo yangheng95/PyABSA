@@ -12,7 +12,7 @@ from typing import Union
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
 from torch import cuda
 
-from pyabsa import TaskCodeOption
+from pyabsa import TaskCodeOption, DeviceTypeOption
 from pyabsa.framework.checkpoint_class.checkpoint_template import CheckpointManager
 
 
@@ -44,10 +44,10 @@ class InferenceModel:
             self.MLM.to(self.config.device)
 
     def cpu(self):
-        self.config.device = "cpu"
-        self.model.to("cpu")
+        self.config.device = DeviceTypeOption.CPU
+        self.model.to(DeviceTypeOption.CPU)
         if hasattr(self, "MLM"):
-            self.MLM.to("cpu")
+            self.MLM.to(DeviceTypeOption.CPU)
 
     def cuda(self, device="cuda:0"):
         self.config.device = device

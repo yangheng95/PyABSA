@@ -23,7 +23,7 @@ from termcolor import colored
 from torch.utils.data import DataLoader, SequentialSampler, TensorDataset
 from transformers import AutoTokenizer, AutoModel
 
-from pyabsa import LabelPaddingOption, TaskCodeOption
+from pyabsa import LabelPaddingOption, TaskCodeOption, DeviceTypeOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
 from ..models import ATEPCModelList
 from ..dataset_utils.__lcf__.atepc_utils import (
@@ -87,10 +87,14 @@ class AspectExtractor(InferenceModel):
                     if state_dict_path:
                         self.model = self.config.model(None, self.config)
                         self.model.load_state_dict(
-                            torch.load(state_dict_path, map_location="cpu")
+                            torch.load(
+                                state_dict_path, map_location=DeviceTypeOption.CPU
+                            )
                         )
                     elif model_path:
-                        self.model = torch.load(model_path, map_location="cpu")
+                        self.model = torch.load(
+                            model_path, map_location=DeviceTypeOption.CPU
+                        )
                     with open(tokenizer_path, mode="rb") as f:
                         try:
                             if kwargs.get("offline", False):
@@ -147,10 +151,10 @@ class AspectExtractor(InferenceModel):
             self.MLM.to(self.config.device)
 
     def cpu(self):
-        self.config.device = "cpu"
-        self.model.to("cpu")
+        self.config.device = DeviceTypeOption.CPU
+        self.model.to(DeviceTypeOption.CPU)
         if hasattr(self, "MLM"):
-            self.MLM.to("cpu")
+            self.MLM.to(DeviceTypeOption.CPU)
 
     def cuda(self, device="cuda:0"):
         self.config.device = device
@@ -452,7 +456,7 @@ class AspectExtractor(InferenceModel):
                 )
             ate_logits = torch.argmax(F.log_softmax(ate_logits, dim=2), dim=2)
             ate_logits = ate_logits.detach().cpu().numpy()
-            label_ids = label_ids.to("cpu").numpy()
+            label_ids = label_ids.to(DeviceTypeOption.CPU).numpy()
             for i, i_ate_logits in enumerate(ate_logits):
                 pred_iobs = []
                 sentence_res.append(
