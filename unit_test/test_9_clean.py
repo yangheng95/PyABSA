@@ -9,6 +9,7 @@
 import os
 
 import findfile
+import shutil
 
 from pyabsa.utils.pyabsa_utils import fprint
 

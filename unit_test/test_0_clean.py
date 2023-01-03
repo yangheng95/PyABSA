@@ -12,6 +12,7 @@ import shutil
 import findfile
 
 from pyabsa.utils.pyabsa_utils import fprint
+import shutil
 
 
 def test_clean():
