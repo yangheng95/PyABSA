@@ -15,12 +15,12 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 def test_clean():
     if os.path.exists("integrated_datasets"):
-        os.remove("integrated_datasets")
+        shutil.rmtree("integrated_datasets")
     fprint("Start cleaning...")
     for f in findfile.find_cwd_files(
-        or_key=[".zip", ".cache", ".mv", ".json", ".txt"],
-        exclude_key="glove",
-        recursive=1,
+            or_key=[".zip", ".cache", ".mv", ".json", ".txt"],
+            exclude_key="glove",
+            recursive=1,
     ):
         os.remove(f)
     fprint("Cleaned all files in the current directory.")

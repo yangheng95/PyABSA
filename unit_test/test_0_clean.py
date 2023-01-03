@@ -7,6 +7,7 @@
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
 import os
+import shutil
 
 import findfile
 
@@ -15,7 +16,7 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 def test_clean():
     if os.path.exists("integrated_datasets"):
-        os.remove("integrated_datasets")
+        shutil.rmtree("integrated_datasets")
 
     fprint("Start cleaning...")
     for f in findfile.find_cwd_files(
