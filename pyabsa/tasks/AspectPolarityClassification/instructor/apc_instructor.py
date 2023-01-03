@@ -97,7 +97,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
             // self.config.batch_size
             * self.config.num_epoch,
         )
-        description = ""
+
         for epoch in range(self.config.num_epoch):
             # self.config.ETA_MV.add_metric(r'$\eta_{l}^{*}$'+str(self.config.seed), self.model.models[0].eta1.item())
             # self.config.ETA_MV.add_metric(r'$\eta_{r}^{*}$'+str(self.config.seed), self.model.models[0].eta2.item())

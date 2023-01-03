@@ -31,12 +31,11 @@ def test_classification_augmentation():
     config.seed = {42}
     config.log_step = -1
     config.l2reg = 0.00001
-    config.data_num = 6
 
     SST2 = TC.TCDatasetList.SST2
 
     auto_classification_augmentation(
-        config=config, dataset=SST2, device=autocuda.auto_cuda()
+        config=config, dataset="Custom", device=autocuda.auto_cuda()
     )
 
 
@@ -64,15 +63,14 @@ def test_aspect_sentiment_classification_augmentation():
             config.cache_dataset = False
             config.l2reg = 1e-8
             config.lsa = True
-            config.data_num = 6
 
             config.seed = [random.randint(0, 10000) for _ in range(1)]
 
             auto_aspect_sentiment_classification_augmentation(
-                config=config, dataset=dataset, device=autocuda.auto_cuda()
+                config=config, dataset=APC.APCDatasetList.Restaurant16, device=autocuda.auto_cuda()
             )
 
 
 if __name__ == "__main__":
-    test_classification_augmentation()
+    # test_classification_augmentation()
     test_aspect_sentiment_classification_augmentation()

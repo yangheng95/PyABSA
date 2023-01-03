@@ -35,7 +35,7 @@ class ABSADataset(PyABSADataset):
             self.config.dataset_file[self.dataset_type], config=self.config
         )
 
-        if len(lines) % 3 != 0:
+        if len(lines) % 3 != 0 or len(lines)==0:
             fprint(
                 colored(
                     "ERROR: one or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.",

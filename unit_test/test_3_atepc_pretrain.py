@@ -63,7 +63,7 @@ def test_chinese_atepc_models():
 
             trainer = ATEPC.ATEPCTrainer(
                 config=config,
-                dataset=dataset,
+                dataset="Custom",
                 checkpoint_save_mode=1,
                 auto_device=DeviceTypeOption.AUTO,
             )
@@ -82,40 +82,38 @@ def test_chinese_atepc_models():
 def test_all_ate_models():
     from pyabsa import AspectTermExtraction as ATEPC
 
-    # # for dataset in ABSADatasetList():
-    for dataset in ATEPC.ATEPCDatasetList()[:1]:
-        for model in ATEPC.ATEPCModelList()[1:2]:
-            config = ATEPC.ATEPCConfigManager.get_atepc_config_english()
-            cuda.empty_cache()
-            config.model = model
-            config.cache_dataset = True
-            config.num_epoch = 1
-            config.evaluate_begin = 0
-            config.max_seq_len = 10
-            config.log_step = -1
-            config.ate_loss_weight = 5
-            config.show_metric = -1
-            config.output_dim = 3
-            config.num_labels = 6
-            config.data_num = 6
-            config.cross_validate_fold = -1
+    for model in ATEPC.ATEPCModelList()[1:2]:
+        config = ATEPC.ATEPCConfigManager.get_atepc_config_english()
+        cuda.empty_cache()
+        config.model = model
+        config.cache_dataset = True
+        config.num_epoch = 1
+        config.evaluate_begin = 0
+        config.max_seq_len = 10
+        config.log_step = -1
+        config.ate_loss_weight = 5
+        config.show_metric = -1
+        config.output_dim = 3
+        config.num_labels = 6
+        config.data_num = 6
+        config.cross_validate_fold = -1
 
-            trainer = ATEPC.ATEPCTrainer(
-                config=config,
-                dataset=dataset,
-                checkpoint_save_mode=1,
-                auto_device=DeviceTypeOption.AUTO,
-            )
-            aspect_extractor = trainer.load_trained_model()
-            trainer.destroy()
+        trainer = ATEPC.ATEPCTrainer(
+            config=config,
+            dataset="Custom",
+            checkpoint_save_mode=1,
+            auto_device=DeviceTypeOption.AUTO,
+        )
+        aspect_extractor = trainer.load_trained_model()
+        trainer.destroy()
 
-            aspect_extractor.batch_predict(
-                target_file=ATEPC.ATEPCDatasetList.Phone,  #
-                save_result=True,
-                print_result=True,  # print the result
-                pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
-            )
-            aspect_extractor.destroy()
+        aspect_extractor.batch_predict(
+            target_file=ATEPC.ATEPCDatasetList.Phone,  #
+            save_result=True,
+            print_result=True,  # print the result
+            pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
+        )
+        aspect_extractor.destroy()
 
 
 if __name__ == "__main__":
