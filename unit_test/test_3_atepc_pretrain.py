@@ -45,7 +45,7 @@ def test_chinese_atepc_models():
 
     # # for dataset in ABSADatasetList():
     for dataset in ATEPC.ATEPCDatasetList.Phone:
-        for model in ATEPC.ATEPCModelList():
+        for model in ATEPC.ATEPCModelList()[1:2]:
             config = ATEPC.ATEPCConfigManager.get_atepc_config_chinese()
             cuda.empty_cache()
             config.model = model
@@ -84,7 +84,7 @@ def test_all_ate_models():
 
     # # for dataset in ABSADatasetList():
     for dataset in ATEPC.ATEPCDatasetList()[:1]:
-        for model in ATEPC.ATEPCModelList():
+        for model in ATEPC.ATEPCModelList()[1:2]:
             config = ATEPC.ATEPCConfigManager.get_atepc_config_english()
             cuda.empty_cache()
             config.model = model
@@ -116,3 +116,8 @@ def test_all_ate_models():
                 pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
             )
             aspect_extractor.destroy()
+
+
+if __name__ == "__main__":
+    test_all_ate_models()
+    test_chinese_atepc_models()

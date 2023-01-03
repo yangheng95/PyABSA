@@ -282,7 +282,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
 
         for epoch in range(self.config.num_epoch):
             patience -= 1
-            description = "Epoch:{} | Loss: {}".format(epoch, "nan")
+            description = "Epoch:{} | Loss: {}".format(epoch, 0)
             iterator = tqdm(self.train_dataloaders[0])
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1

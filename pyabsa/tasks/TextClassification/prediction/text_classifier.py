@@ -14,7 +14,7 @@ import tqdm
 from findfile import find_file, find_cwd_dir
 from termcolor import colored
 from torch.utils.data import DataLoader
-from transformers import AutoModel
+from transformers import AutoModel, AutoTokenizer
 
 from sklearn import metrics
 
@@ -104,12 +104,6 @@ class TextClassifier(InferenceModel):
                                 model_path, map_location=DeviceTypeOption.CPU
                             )
 
-                        try:
-                            self.tokenizer = PretrainedTokenizer(self.config, **kwargs)
-                        except ValueError:
-                            if tokenizer_path:
-                                with open(tokenizer_path, mode="rb") as f:
-                                    self.tokenizer = pickle.load(f)
                     else:
                         self.embedding_matrix = self.config.embedding_matrix
                         self.tokenizer = self.config.tokenizer
@@ -126,6 +120,8 @@ class TextClassifier(InferenceModel):
                                     state_dict_path, map_location=DeviceTypeOption.CPU
                                 )
                             )
+
+                self.tokenizer = self.config.tokenizer
 
                 if kwargs.get("verbose", False):
                     fprint("Config used in Training:")

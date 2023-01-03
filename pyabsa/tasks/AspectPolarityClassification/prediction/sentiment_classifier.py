@@ -91,30 +91,8 @@ class SentimentClassifier(InferenceModel):
                         self.model = torch.load(
                             model_path, map_location=DeviceTypeOption.CPU
                         )
-                    with open(tokenizer_path, mode="rb") as f:
-                        if hasattr(APCModelList, self.config.model.__name__) or hasattr(
-                            BERTBaselineAPCModelList, self.config.model.__name__
-                        ):
-                            try:
-                                if kwargs.get("offline", False):
-                                    self.tokenizer = AutoTokenizer.from_pretrained(
-                                        find_cwd_dir(
-                                            self.config.pretrained_bert.split("/")[-1]
-                                        ),
-                                        do_lower_case="uncased"
-                                        in self.config.pretrained_bert,
-                                    )
-                                else:
-                                    self.tokenizer = AutoTokenizer.from_pretrained(
-                                        self.config.pretrained_bert,
-                                        do_lower_case="uncased"
-                                        in self.config.pretrained_bert,
-                                    )
-                            except ValueError:
-                                self.tokenizer = pickle.load(f)
-                        elif hasattr(GloVeAPCModelList, self.config.model.__name__):
-                            self.embedding_matrix = self.config.embedding_matrix
-                            self.tokenizer = self.config.tokenizer
+
+                self.tokenizer = self.config.tokenizer
 
                 if kwargs.get("verbose", False):
                     fprint("Config used in Training:")
@@ -380,7 +358,7 @@ class SentimentClassifier(InferenceModel):
                         }
                     )
                     n_total += 1
-        if kwargs.get("merge_results", None):
+        if kwargs.get("merge_results", True):
             results = self.merge_results(results)
         try:
             if print_result:

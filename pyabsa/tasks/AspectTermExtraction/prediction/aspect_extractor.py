@@ -85,8 +85,18 @@ class AspectExtractor(InferenceModel):
 
                 if state_dict_path or model_path:
                     if state_dict_path:
-                        bert = AutoModel.from_pretrained(self.config.pretrained_bert)
-                        self.model = self.config.model(bert, self.config)
+                        if kwargs.get("offline", False):
+                            self.bert = AutoModel.from_pretrained(
+                                find_cwd_dir(
+                                    self.config.pretrained_bert.split("/")[-1]
+                                ),
+                            )
+                        else:
+                            self.bert = AutoModel.from_pretrained(
+                                self.config.pretrained_bert,
+                            )
+
+                        self.model = self.config.model(self.bert, self.config)
                         self.model.load_state_dict(
                             torch.load(
                                 state_dict_path, map_location=DeviceTypeOption.CPU

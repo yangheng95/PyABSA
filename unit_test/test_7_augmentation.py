@@ -36,7 +36,7 @@ def test_classification_augmentation():
     SST2 = TC.TCDatasetList.SST2
 
     auto_classification_augmentation(
-        config=config, dataset=SST2, device=DeviceTypeOption.CPU
+        config=config, dataset=SST2, device=DeviceTypeOption.AUTO
     )
 
 

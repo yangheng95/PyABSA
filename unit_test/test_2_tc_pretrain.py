@@ -85,3 +85,8 @@ def test_all_glove_models():
             auto_device=DeviceTypeOption.AUTO,
         ).load_trained_model()
         text_classifier.predict("I love it very much!")
+
+
+if __name__ == "__main__":
+    test_all_bert_models()
+    test_all_glove_models()

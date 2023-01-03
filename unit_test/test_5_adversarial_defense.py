@@ -25,7 +25,7 @@ def test_tad_training():
     config.seed = [2]
     config.l2reg = 1e-5
     config.cross_validate_fold = -1
-    config.data_num = 60
+    config.data_num = 600
 
     dataset = DatasetItem("SST2TextFooler")
 
@@ -34,3 +34,7 @@ def test_tad_training():
     ).load_trained_model()
 
     text_classifier.batch_predict(dataset)
+
+
+if __name__ == "__main__":
+    test_tad_training()

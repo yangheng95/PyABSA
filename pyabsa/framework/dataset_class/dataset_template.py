@@ -39,6 +39,7 @@ class PyABSADataset(Dataset):
                 self.config.dataset_file, dataset_type=dataset_type, **kwargs
             )
             self.data = self.covert_to_tensor(self.data)
+        self.data = self.data[: self.config.get("data_num", -1)]
         if self.config.get("verbose", True):
             self.config.logger.info(
                 "{} data examples:\n {}".format(dataset_type, self.data[:2])

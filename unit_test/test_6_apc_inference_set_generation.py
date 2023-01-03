@@ -13,9 +13,14 @@ from pyabsa.utils.absa_utils.absa_utils import (
 )
 
 
-# def test_apc_inference_set_generation():
-#     generate_inference_set_for_apc('integrated_datasets')
+def test_apc_inference_set_generation():
+    generate_inference_set_for_apc("integrated_datasets")
 
 
-# def test_apc_inference_set_conversion():
-#     convert_apc_set_to_atepc_set('integrated_datasets')
+def test_apc_inference_set_conversion():
+    convert_apc_set_to_atepc_set("integrated_datasets")
+
+
+if __name__ == "__main__":
+    test_apc_inference_set_generation()
+    test_apc_inference_set_conversion()

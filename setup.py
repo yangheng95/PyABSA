@@ -40,9 +40,9 @@ setup(
     license="MIT",
     install_requires=[
         "findfile>=1.7.10",
-        "autocuda>=0.14",
-        "metric-visualizer>=0.6.6",
-        "boostaug>=2.3.0",
+        "autocuda>=0.15",
+        "metric-visualizer>=0.7.0",
+        "boostaug>=2.3.1",
         "spacy",
         "networkx",
         "seqeval",

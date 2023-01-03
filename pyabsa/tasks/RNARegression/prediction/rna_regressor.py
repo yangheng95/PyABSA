@@ -128,6 +128,8 @@ class RNARegressor(InferenceModel):
                                 )
                             )
 
+                self.tokenizer = self.config.tokenizer
+
                 if kwargs.get("verbose", False):
                     fprint("Config used in Training:")
                     print_args(self.config)

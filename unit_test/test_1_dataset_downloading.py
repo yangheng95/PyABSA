@@ -17,10 +17,9 @@ from pyabsa import (
 from pyabsa.tasks.AspectPolarityClassification import APCDatasetList
 
 
-
 def test_download_dataset_by_name():
-    if os.path.exists('integrated_datasets'):
-        shutil.rmtree('integrated_datasets')
+    if os.path.exists("integrated_datasets"):
+        shutil.rmtree("integrated_datasets")
     download_dataset_by_name(
         TaskCodeOption.Aspect_Polarity_Classification,
         dataset_name=APCDatasetList.English,
@@ -28,6 +27,11 @@ def test_download_dataset_by_name():
 
 
 def test_download_all_available_dataset():
-    if os.path.exists('integrated_datasets'):
-        shutil.rmtree('integrated_datasets')
+    if os.path.exists("integrated_datasets"):
+        shutil.rmtree("integrated_datasets")
     download_all_available_datasets()
+
+
+if __name__ == "__main__":
+    test_download_dataset_by_name()
+    test_download_all_available_dataset()

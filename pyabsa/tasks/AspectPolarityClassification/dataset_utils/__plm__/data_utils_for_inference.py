@@ -5,15 +5,13 @@
 
 import numpy as np
 import tqdm
-from torch.utils.data import Dataset
 
 from pyabsa import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
-from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.utils.pyabsa_utils import validate_example, fprint
 from .classic_bert_apc_utils import prepare_input_for_apc, build_sentiment_window
 from .dependency_graph import dependency_adj_matrix, configure_spacy_model
-from ..__lcf__.data_utils_for_inference import parse_sample, ABSAInferenceDataset
+from ..__lcf__.data_utils_for_inference import ABSAInferenceDataset
 
 
 class BERTABSAInferenceDataset(ABSAInferenceDataset):
@@ -63,7 +61,7 @@ class BERTABSAInferenceDataset(ABSAInferenceDataset):
                     continue
 
                 prepared_inputs = prepare_input_for_apc(
-                    self.config, self.tokenizer.tokenizer, text_left, text_right, aspect
+                    self.config, self.tokenizer, text_left, text_right, aspect
                 )
 
                 aspect_position = prepared_inputs["aspect_position"]

@@ -38,7 +38,7 @@ class ClassicAPCModelList(list):
     def __init__(self):
         super(ClassicAPCModelList, self).__init__(
             [
-                # self.ASGCN,
+                self.ASGCN,
                 self.AOA,
                 self.ATAE_LSTM,
                 self.Cabasc,

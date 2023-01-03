@@ -85,8 +85,10 @@ def pad_syntax_based_srd(text, dep_dist, tokenizer, opt):
 
 
 def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
+    tokenizer = tokenizer.tokenizer
     if hasattr(opt, "dynamic_truncate") and opt.dynamic_truncate:
-        _max_seq_len = opt.max_seq_len - len(aspect.split(" "))
+        reserved_num = 3
+        _max_seq_len = opt.max_seq_len - len(aspect.split(" ")) - reserved_num
         text_left = text_left.split(" ")
         text_right = text_right.split(" ")
         if _max_seq_len < (len(text_left) + len(text_right)):
@@ -98,12 +100,10 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
         text_left = " ".join(text_left)
         text_right = " ".join(text_right)
 
-    # tokenizer.bos_token = tokenizer.bos_token if tokenizer.bos_token else '[CLS]'
-    # tokenizer.eos_token = tokenizer.eos_token if tokenizer.eos_token else '[SEP]'
-    # bos_token = tokenizer.bos_token
-    # eos_token = tokenizer.eos_token
-    bos_token = ""
-    eos_token = ""
+    tokenizer.bos_token = tokenizer.bos_token if tokenizer.bos_token else "[CLS]"
+    tokenizer.eos_token = tokenizer.eos_token if tokenizer.eos_token else "[SEP]"
+    bos_token = tokenizer.bos_token
+    eos_token = tokenizer.eos_token
 
     text_raw = text_left + " " + aspect + " " + text_right
     text_spc = (
@@ -115,7 +115,7 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
     )
     aspect_bert_indices = text_to_sequence(tokenizer, aspect, opt.max_seq_len)
 
-    aspect_begin = np.count_nonzero(tokenizer.tokenize(bos_token + " " + text_left))
+    aspect_begin = len(tokenizer.tokenize(bos_token + " " + text_left))
     aspect_position = set(
         range(aspect_begin, aspect_begin + np.count_nonzero(aspect_bert_indices))
     )

@@ -591,8 +591,8 @@ class TADTrainingInstructor(BaseTrainingInstructor):
     def _evaluate_acc_f1(self, test_dataloader):
         # switch model to evaluation mode
         self.model.eval()
-        n_label_test_correct, n_label_test_total = 0, 0
-        n_adv_det_test_correct, n_adv_det_test_total = 0, 0
+        n_label_test_correct, n_label_test_total = 1e-10, 1e-10
+        n_adv_det_test_correct, n_adv_det_test_total = 1e-10, 1e-10
         n_adv_tr_test_correct, n_adv_tr_test_total = 1e-10, 1e-10
         t_label_targets_all, t_label_outputs_all = None, None
         t_adv_det_targets_all, t_adv_det_outputs_all = None, None

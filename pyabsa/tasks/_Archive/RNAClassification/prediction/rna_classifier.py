@@ -95,19 +95,7 @@ class RNAClassifier(InferenceModel):
                             self.model = torch.load(
                                 model_path, map_location=DeviceTypeOption.CPU
                             )
-
-                        try:
-                            self.tokenizer = PretrainedTokenizer(
-                                max_seq_len=self.config.max_seq_len,
-                                config=self.config,
-                                **kwargs
-                            )
-                        except ValueError:
-                            if tokenizer_path:
-                                with open(tokenizer_path, mode="rb") as f:
-                                    self.tokenizer = pickle.load(f)
                     else:
-
                         self.tokenizer = self.config.tokenizer
                         self.embedding_matrix = self.config.embedding_matrix
                         if model_path:
@@ -123,6 +111,8 @@ class RNAClassifier(InferenceModel):
                                     state_dict_path, map_location=DeviceTypeOption.CPU
                                 )
                             )
+
+                self.tokenizer = self.config.tokenizer
 
                 if kwargs.get("verbose", False):
                     fprint("Config used in Training:")

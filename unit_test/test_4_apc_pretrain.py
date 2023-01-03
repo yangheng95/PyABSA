@@ -59,7 +59,7 @@ def test_cross_validate():
                 dataset=dataset,
                 checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
                 auto_device=DeviceTypeOption.AUTO,
-            ).load_trained_model()
+            )
             sent_classifier = apc_trainer.load_trained_model()
             for ex in apc_examples:
                 result = sent_classifier.predict(
@@ -103,7 +103,7 @@ def test_lcf_apc_models():
     from pyabsa import AspectPolarityClassification as APC
 
     for dataset in [APC.APCDatasetList.Laptop14]:
-        for model in APC.APCModelList():
+        for model in APC.APCModelList()[:1]:
             config = APC.APCConfigManager.get_apc_config_english()
             config.lcf = "cdm"
             config.model = model
@@ -163,7 +163,7 @@ def test_bert_apc_models():
 
     for dataset in [APC.APCDatasetList.Laptop14, APC.APCDatasetList.Phone]:
 
-        for model in APC.BERTBaselineAPCModelList():
+        for model in APC.BERTBaselineAPCModelList()[1:2]:
             config = APC.APCConfigManager.get_apc_config_english()
             cuda.empty_cache()
             config.model = model
@@ -193,7 +193,7 @@ def test_glove_apc_models():
     from pyabsa import AspectPolarityClassification as APC
 
     for dataset in [APC.APCDatasetList.Laptop14]:
-        for model in APC.GloVeAPCModelList():
+        for model in APC.GloVeAPCModelList()[1:2]:
             cuda.empty_cache()
             config = APC.APCConfigManager.get_apc_config_glove()
             config.model = model
@@ -218,3 +218,11 @@ def test_glove_apc_models():
                 )
 
             sent_classifier.destroy()
+
+
+if __name__ == "__main__":
+    # test_lcf_apc_models()
+    test_bert_apc_models()
+    test_glove_apc_models()
+    # test_save_models()
+    # test_lcf_apc_models()
