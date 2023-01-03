@@ -65,7 +65,7 @@ def test_chinese_atepc_models():
                 config=config,
                 dataset=dataset,
                 checkpoint_save_mode=1,
-                auto_device=DeviceTypeOption.ALL_CUDA,
+                auto_device=DeviceTypeOption.AUTO,
             )
             aspect_extractor = trainer.load_trained_model()
             trainer.destroy()
@@ -104,7 +104,7 @@ def test_all_ate_models():
                 config=config,
                 dataset=dataset,
                 checkpoint_save_mode=1,
-                auto_device=DeviceTypeOption.ALL_CUDA,
+                auto_device=DeviceTypeOption.AUTO,
             )
             aspect_extractor = trainer.load_trained_model()
             trainer.destroy()

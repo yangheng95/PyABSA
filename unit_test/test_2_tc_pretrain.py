@@ -12,6 +12,8 @@ from findfile import find_cwd_dir
 
 import warnings
 
+from pyabsa import DeviceTypeOption
+
 warnings.filterwarnings("ignore")
 
 #######################################################################################################
@@ -55,7 +57,7 @@ def test_all_bert_models():
             config=config,
             dataset=TC.TCDatasetList.SST2,
             checkpoint_save_mode=1,
-            auto_device="allcuda",
+            auto_device=DeviceTypeOption.AUTO,
         ).load_trained_model()
         text_classifier.predict("I love it very much!")
 
@@ -80,6 +82,6 @@ def test_all_glove_models():
             config=config,
             dataset=TC.TCDatasetList.SST2,
             checkpoint_save_mode=1,
-            auto_device="allcuda",
+            auto_device=DeviceTypeOption.AUTO,
         ).load_trained_model()
         text_classifier.predict("I love it very much!")

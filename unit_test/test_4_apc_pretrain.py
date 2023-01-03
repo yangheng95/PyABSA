@@ -58,7 +58,7 @@ def test_cross_validate():
                 config=config,
                 dataset=dataset,
                 checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                auto_device=DeviceTypeOption.ALL_CUDA,
+                auto_device=DeviceTypeOption.AUTO,
             )
             sent_classifier = apc_trainer.load_trained_model()
             for ex in apc_examples:
@@ -118,7 +118,7 @@ def test_lcf_apc_models():
                 config=config,
                 dataset=dataset,
                 checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                auto_device=DeviceTypeOption.ALL_CUDA,
+                auto_device=DeviceTypeOption.AUTO,
             )
             sent_classifier = apc_trainer.load_trained_model()
             for ex in apc_examples:
@@ -148,7 +148,7 @@ def test_save_models():
                 config=config,
                 dataset=dataset,
                 checkpoint_save_mode=ModelSaveOption.SAVE_FULL_MODEL,
-                auto_device=DeviceTypeOption.ALL_CUDA,
+                auto_device=DeviceTypeOption.AUTO,
             ).load_trained_model()
             for ex in apc_examples:
                 result = sent_classifier.predict(
@@ -178,7 +178,7 @@ def test_bert_apc_models():
                 config=config,
                 dataset=dataset,
                 checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                auto_device=DeviceTypeOption.ALL_CUDA,
+                auto_device=DeviceTypeOption.AUTO,
             )
             sent_classifier = apc_trainer.load_trained_model()
             for ex in apc_examples:
@@ -210,7 +210,7 @@ def test_glove_apc_models():
                 config=config,
                 dataset=dataset,
                 checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
-                auto_device=DeviceTypeOption.ALL_CUDA,
+                auto_device=DeviceTypeOption.AUTO,
             ).load_trained_model()
             for ex in apc_examples:
                 result = sent_classifier.predict(
