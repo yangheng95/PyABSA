@@ -42,7 +42,7 @@ setup(
         "findfile>=1.7.10",
         "autocuda>=0.15",
         "metric-visualizer>=0.7.0",
-        "boostaug>=2.3.1",
+        "boostaug>=2.3.2",
         "spacy",
         "networkx",
         "seqeval",

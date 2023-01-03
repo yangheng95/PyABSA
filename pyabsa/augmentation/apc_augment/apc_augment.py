@@ -52,4 +52,3 @@ def auto_aspect_sentiment_classification_augmentation(
         train_after_aug=kwargs.get("train_after_aug", True),
         rewrite_cache=kwargs.get("rewrite_cache", True),
     )
-    sys.exit(0)
