@@ -408,7 +408,9 @@ def download_all_available_datasets(**kwargs):
                 )
         else:
             if logger:
-                logger.info("Datasets already exist in {}, skip download".format(save_path))
+                logger.info(
+                    "Datasets already exist in {}, skip download".format(save_path)
+                )
             else:
                 fprint("Datasets already exist in {}, skip download".format(save_path))
             return

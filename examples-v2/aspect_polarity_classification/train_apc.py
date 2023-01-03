@@ -61,11 +61,12 @@ for dataset in [
             config.use_torch_compile = False
             config.seed = [random.randint(0, 10000) for _ in range(3)]
 
-            APC.APCTrainer(
+            trainer = APC.APCTrainer(
                 config=config,
                 dataset=dataset,
                 # from_checkpoint='english',
                 checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
                 # checkpoint_save_mode=ModelSaveOption.DO_NOT_SAVE_MODEL,
                 auto_device=DeviceTypeOption.AUTO,
-            ).destroy()
+            )
+            trainer.load_trained_model()

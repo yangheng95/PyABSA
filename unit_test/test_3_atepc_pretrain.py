@@ -71,7 +71,7 @@ def test_chinese_atepc_models():
             trainer.destroy()
 
             aspect_extractor.batch_predict(
-                inference_source=atepc_examples,  #
+                target_file=ATEPC.ATEPCDatasetList.Phone,  #
                 save_result=True,
                 print_result=True,  # print the result
                 pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
@@ -110,7 +110,7 @@ def test_all_ate_models():
             trainer.destroy()
 
             aspect_extractor.batch_predict(
-                inference_source=atepc_examples,  #
+                target_file=ATEPC.ATEPCDatasetList.Phone,  #
                 save_result=True,
                 print_result=True,  # print the result
                 pred_sentiment=True,  # Predict the sentiment of extracted aspect terms

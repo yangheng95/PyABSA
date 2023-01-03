@@ -85,7 +85,8 @@ class AspectExtractor(InferenceModel):
 
                 if state_dict_path or model_path:
                     if state_dict_path:
-                        self.model = self.config.model(None, self.config)
+                        bert = AutoModel.from_pretrained(self.config.pretrained_bert)
+                        self.model = self.config.model(bert, self.config)
                         self.model.load_state_dict(
                             torch.load(
                                 state_dict_path, map_location=DeviceTypeOption.CPU

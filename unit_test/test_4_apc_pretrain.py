@@ -59,7 +59,7 @@ def test_cross_validate():
                 dataset=dataset,
                 checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
                 auto_device=DeviceTypeOption.AUTO,
-            )
+            ).load_trained_model()
             sent_classifier = apc_trainer.load_trained_model()
             for ex in apc_examples:
                 result = sent_classifier.predict(
