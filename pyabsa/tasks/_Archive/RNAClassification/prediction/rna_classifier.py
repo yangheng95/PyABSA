@@ -23,7 +23,6 @@ from ..dataset_utils.data_utils_for_inference import GloVeRNACInferenceDataset
 from ..dataset_utils.data_utils_for_inference import BERTRNACInferenceDataset
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint, rprint
-from pyabsa.framework.tokenizer_class.tokenizer_class import PretrainedTokenizer
 
 
 class RNAClassifier(InferenceModel):

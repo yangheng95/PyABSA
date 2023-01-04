@@ -98,7 +98,10 @@ def remove_comment(code_str):
     while "\n\n" in code_lines:
         code_lines = code_lines.replace("\n\n", "\n")
     code_lines = code_lines.replace("\\n", "\n")
-    return "\\n".join(lines)
+    code_lines = code_lines.replace("\t", "")
+    code_lines = code_lines.replace("\r", "")
+    # code_lines = code_lines.replace('\n', '')
+    return code_lines
 
 
 def read_defect_examples(lines, data_num, remove_comments=True):

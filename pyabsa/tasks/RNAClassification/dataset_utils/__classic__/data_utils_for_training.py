@@ -7,7 +7,6 @@
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
 
-import torch
 import tqdm
 
 from pyabsa import LabelPaddingOption

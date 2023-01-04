@@ -76,9 +76,9 @@ def process_iob_tags(iob_tags: list) -> list:
     return iob_tags
 
 
-def prepare_input_for_atepc(opt, tokenizer, text_left, text_right, aspect):
-    if hasattr(opt, "dynamic_truncate") and opt.dynamic_truncate:
-        _max_seq_len = opt.max_seq_len - len(aspect.split())
+def prepare_input_for_atepc(config, tokenizer, text_left, text_right, aspect):
+    if hasattr(config, "dynamic_truncate") and config.dynamic_truncate:
+        _max_seq_len = config.max_seq_len - len(aspect.split())
         text_left = text_left.split(" ")
         text_right = text_right.split(" ")
         if _max_seq_len < len(text_left) + len(text_right):
@@ -110,17 +110,17 @@ def prepare_input_for_atepc(opt, tokenizer, text_left, text_right, aspect):
 
     aspect_begin = len(tokenizer.tokenize(bos_token + " " + text_left))
 
-    if "lcfs" in opt.model_name or opt.use_syntax_based_SRD:
-        syntactical_dist, _ = get_syntax_distance(text_raw, aspect, tokenizer, opt)
+    if "lcfs" in config.model_name or config.use_syntax_based_SRD:
+        syntactical_dist, _ = get_syntax_distance(text_raw, aspect, tokenizer, config)
     else:
         syntactical_dist = None
 
     lcf_cdm_vec = get_lca_ids_and_cdm_vec(
-        opt, text_indices, aspect_bert_indices, aspect_begin, syntactical_dist
+        config, text_indices, aspect_bert_indices, aspect_begin, syntactical_dist
     )
 
     lcf_cdw_vec = get_cdw_vec(
-        opt, text_indices, aspect_bert_indices, aspect_begin, syntactical_dist
+        config, text_indices, aspect_bert_indices, aspect_begin, syntactical_dist
     )
 
     inputs = {

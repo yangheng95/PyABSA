@@ -72,7 +72,7 @@ def syntax_distance_alignment(tokens, dist, max_seq_len, tokenizer):
 
 
 # Group distance to aspect of an original word to its corresponding subword token
-def pad_syntax_based_srd(text, dep_dist, tokenizer, opt):
+def pad_syntax_based_srd(text, dep_dist, tokenizer, config):
     sequence, distances = [], []
     for word, dist in zip(text, dep_dist):
         tokens = tokenizer.tokenize(word)
@@ -80,15 +80,15 @@ def pad_syntax_based_srd(text, dep_dist, tokenizer, opt):
             sequence.append(token)
             distances.append(dist)
     sequence = tokenizer.convert_tokens_to_ids(sequence)
-    sequence = pad_and_truncate(sequence, opt.max_seq_len)
-    dep_dist = pad_and_truncate(dep_dist, opt.max_seq_len, value=opt.max_seq_len)
+    sequence = pad_and_truncate(sequence, config.max_seq_len)
+    dep_dist = pad_and_truncate(dep_dist, config.max_seq_len, value=config.max_seq_len)
 
     return sequence, dep_dist
 
 
-def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
-    if hasattr(opt, "dynamic_truncate") and opt.dynamic_truncate:
-        _max_seq_len = opt.max_seq_len - len(aspect.split(" "))
+def prepare_input_for_apc(config, tokenizer, text_left, text_right, aspect):
+    if hasattr(config, "dynamic_truncate") and config.dynamic_truncate:
+        _max_seq_len = config.max_seq_len - len(aspect.split(" "))
         text_left = text_left.split(" ")
         text_right = text_right.split(" ")
         if _max_seq_len < (len(text_left) + len(text_right)):
@@ -111,19 +111,19 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
     text_spc = (
         bos_token + " " + text_raw + " " + eos_token + " " + aspect + " " + eos_token
     )
-    text_indices = text_to_sequence(tokenizer, text_spc, opt.max_seq_len)
+    text_indices = text_to_sequence(tokenizer, text_spc, config.max_seq_len)
     text_raw_bert_indices = text_to_sequence(
-        tokenizer, bos_token + " " + text_raw + " " + eos_token, opt.max_seq_len
+        tokenizer, bos_token + " " + text_raw + " " + eos_token, config.max_seq_len
     )
-    aspect_bert_indices = text_to_sequence(tokenizer, aspect, opt.max_seq_len)
+    aspect_bert_indices = text_to_sequence(tokenizer, aspect, config.max_seq_len)
 
     aspect_begin = len(tokenizer.tokenize(bos_token + " " + text_left))
     aspect_position = set(
         range(aspect_begin, aspect_begin + np.count_nonzero(aspect_bert_indices))
     )
 
-    # if 'lcfs' in opt.model_name or 'ssw_s' in opt.model_name or opt.use_syntax_based_SRD:
-    #     syntactical_dist, _ = get_syntax_distance(text_raw, aspect, tokenizer, opt)
+    # if 'lcfs' in config.model_name or 'ssw_s' in config.model_name or config.use_syntax_based_SRD:
+    #     syntactical_dist, _ = get_syntax_distance(text_raw, aspect, tokenizer, config)
     # else:
     #     syntactical_dist = None
 
@@ -142,11 +142,13 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
 
 def text_to_sequence(tokenizer, text, max_seq_len):
     return pad_and_truncate(
-        tokenizer.convert_tokens_to_ids(tokenizer.tokenize(text)), max_seq_len
+        tokenizer.convert_tokens_to_ids(tokenizer.tokenize(text)),
+        max_seq_len,
+        value=tokenizer.pad_token_id,
     )
 
 
-def get_syntax_distance(text_raw, aspect, tokenizer, opt):
+def get_syntax_distance(text_raw, aspect, tokenizer, config):
     # Find distance in dependency parsing tree
     if isinstance(text_raw, list):
         text_raw = " ".join(text_raw)
@@ -164,7 +166,7 @@ def get_syntax_distance(text_raw, aspect, tokenizer, opt):
             )
         )
 
-    if opt.model_name == "dlcf_dca_bert":
+    if config.model_name == "dlcf_dca_bert":
         dist.insert(0, 0)
         dist.append(0)
     else:
@@ -174,44 +176,44 @@ def get_syntax_distance(text_raw, aspect, tokenizer, opt):
     raw_tokens.append(tokenizer.eos_token)
 
     # the following two functions are both designed to calculate syntax-based distances
-    if opt.srd_alignment:
+    if config.srd_alignment:
         syntactical_dist = syntax_distance_alignment(
-            raw_tokens, dist, opt.max_seq_len, tokenizer
+            raw_tokens, dist, config.max_seq_len, tokenizer
         )
     else:
-        syntactical_dist = pad_syntax_based_srd(raw_tokens, dist, tokenizer, opt)[1]
+        syntactical_dist = pad_syntax_based_srd(raw_tokens, dist, tokenizer, config)[1]
     return syntactical_dist, max_dist
 
 
 def get_lca_ids_and_cdm_vec(
-    opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None
+    config, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None
 ):
-    SRD = opt.SRD
-    cdm_vec = np.zeros((opt.max_seq_len), dtype=np.int64)
+    SRD = config.SRD
+    cdm_vec = np.zeros((config.max_seq_len), dtype=np.int64)
     aspect_len = np.count_nonzero(aspect_indices)
     text_len = np.count_nonzero(bert_spc_indices) - np.count_nonzero(aspect_indices) - 1
     if syntactical_dist is not None:
-        for i in range(min(text_len, opt.max_seq_len)):
+        for i in range(min(text_len, config.max_seq_len)):
             if syntactical_dist[i] <= SRD:
                 cdm_vec[i] = 1
     else:
         local_context_begin = max(0, aspect_begin - SRD)
-        local_context_end = min(aspect_begin + aspect_len + SRD - 1, opt.max_seq_len)
-        for i in range(min(text_len, opt.max_seq_len)):
+        local_context_end = min(aspect_begin + aspect_len + SRD - 1, config.max_seq_len)
+        for i in range(min(text_len, config.max_seq_len)):
             if local_context_begin <= i <= local_context_end:
                 cdm_vec[i] = 1
     return cdm_vec
 
 
 def get_cdw_vec(
-    opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None
+    config, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None
 ):
-    SRD = opt.SRD
-    cdw_vec = np.zeros((opt.max_seq_len), dtype=np.float32)
+    SRD = config.SRD
+    cdw_vec = np.zeros((config.max_seq_len), dtype=np.float32)
     aspect_len = np.count_nonzero(aspect_indices)
     text_len = np.count_nonzero(bert_spc_indices) - np.count_nonzero(aspect_indices) - 1
     if syntactical_dist is not None:
-        for i in range(min(text_len, opt.max_seq_len)):
+        for i in range(min(text_len, config.max_seq_len)):
             if syntactical_dist[i] > SRD:
                 w = 1 - syntactical_dist[i] / text_len
                 cdw_vec[i] = w
@@ -219,8 +221,8 @@ def get_cdw_vec(
                 cdw_vec[i] = 1
     else:
         local_context_begin = max(0, aspect_begin - SRD)
-        local_context_end = min(aspect_begin + aspect_len + SRD - 1, opt.max_seq_len)
-        for i in range(min(text_len, opt.max_seq_len)):
+        local_context_end = min(aspect_begin + aspect_len + SRD - 1, config.max_seq_len)
+        for i in range(min(text_len, config.max_seq_len)):
             if i < local_context_begin:
                 w = 1 - (local_context_begin - i) / text_len
             elif local_context_begin <= i <= local_context_end:
@@ -236,10 +238,10 @@ def get_cdw_vec(
     return cdw_vec
 
 
-def build_spc_mask_vec(opt, text_ids):
-    spc_mask_vec = np.zeros((opt.max_seq_len, opt.hidden_dim), dtype=np.float32)
+def build_spc_mask_vec(config, text_ids):
+    spc_mask_vec = np.zeros((config.max_seq_len, config.hidden_dim), dtype=np.float32)
     for i in range(len(text_ids)):
-        spc_mask_vec[i] = np.ones((opt.hidden_dim), dtype=np.float32)
+        spc_mask_vec[i] = np.ones((config.hidden_dim), dtype=np.float32)
     return spc_mask_vec
 
 
@@ -342,27 +344,29 @@ def is_similar(s1, s2, tokenizer, similarity_threshold):
         return False
 
 
-def configure_spacy_model(opt):
-    if not hasattr(opt, "spacy_model"):
-        opt.spacy_model = "en_core_web_sm"
+def configure_spacy_model(config):
+    if not hasattr(config, "spacy_model"):
+        config.spacy_model = "en_core_web_sm"
     global nlp
     try:
-        nlp = spacy.load(opt.spacy_model)
+        nlp = spacy.load(config.spacy_model)
     except:
         fprint(
             "Can not load {} from spacy, try to download it in order to parse syntax tree:".format(
-                opt.spacy_model
+                config.spacy_model
             ),
             termcolor.colored(
-                "\npython -m spacy download {}".format(opt.spacy_model), "green"
+                "\npython -m spacy download {}".format(config.spacy_model), "green"
             ),
         )
         try:
-            os.system("python -m spacy download {}".format(opt.spacy_model))
-            nlp = spacy.load(opt.spacy_model)
+            os.system("python -m spacy download {}".format(config.spacy_model))
+            nlp = spacy.load(config.spacy_model)
         except:
             raise RuntimeError(
-                "Download failed, you can download {} manually.".format(opt.spacy_model)
+                "Download failed, you can download {} manually.".format(
+                    config.spacy_model
+                )
             )
     return nlp
 

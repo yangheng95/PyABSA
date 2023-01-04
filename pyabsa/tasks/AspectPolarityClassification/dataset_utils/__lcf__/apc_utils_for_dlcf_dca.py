@@ -17,9 +17,9 @@ from pyabsa.utils.pyabsa_utils import fprint
 from .apc_utils import text_to_sequence, get_syntax_distance
 
 
-def prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect):
-    if hasattr(opt, "dynamic_truncate") and opt.dynamic_truncate:
-        _max_seq_len = opt.max_seq_len - len(aspect.split(" "))
+def prepare_input_for_dlcf_dca(config, tokenizer, text_left, text_right, aspect):
+    if hasattr(config, "dynamic_truncate") and config.dynamic_truncate:
+        _max_seq_len = config.max_seq_len - len(aspect.split(" "))
         text_left = text_left.split(" ")
         text_right = text_right.split(" ")
         if _max_seq_len < (len(text_left) + len(text_right)):
@@ -34,12 +34,12 @@ def prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect):
         # test code
         text_left = " ".join(
             text_left.split(" ")[
-                int(-(opt.max_seq_len - len(aspect.split())) / 2) - 1 :
+                int(-(config.max_seq_len - len(aspect.split())) / 2) - 1 :
             ]
         )
         text_right = " ".join(
             text_right.split(" ")[
-                : int((opt.max_seq_len - len(aspect.split())) / 2) + 1
+                : int((config.max_seq_len - len(aspect.split())) / 2) + 1
             ]
         )
         bos_token = tokenizer.bos_token if tokenizer.bos_token else "[CLS]"
@@ -57,22 +57,22 @@ def prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect):
             + " "
             + eos_token
         )
-        text_indices = text_to_sequence(tokenizer, text_spc, opt.max_seq_len)
-        aspect_bert_indices = text_to_sequence(tokenizer, aspect, opt.max_seq_len)
+        text_indices = text_to_sequence(tokenizer, text_spc, config.max_seq_len)
+        aspect_bert_indices = text_to_sequence(tokenizer, aspect, config.max_seq_len)
 
         aspect_begin = len(tokenizer.tokenize(bos_token + " " + text_left))
 
-        # if 'dlcf' in opt.model_name or opt.use_syntax_based_SRD:
-        #     syntactical_dist, max_dist = get_syntax_distance(text_raw, aspect, tokenizer, opt)
+        # if 'dlcf' in config.model_name or config.use_syntax_based_SRD:
+        #     syntactical_dist, max_dist = get_syntax_distance(text_raw, aspect, tokenizer, config)
         # else:
         #     syntactical_dist = None
 
         syntactical_dist, max_dist = get_syntax_distance(
-            text_raw, aspect, tokenizer, opt
+            text_raw, aspect, tokenizer, config
         )
 
         dlcf_cdm_vec = get_dynamic_cdm_vec(
-            opt,
+            config,
             max_dist,
             text_indices,
             aspect_bert_indices,
@@ -80,7 +80,7 @@ def prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect):
             syntactical_dist=None,
         )
         dlcf_cdw_vec = get_dynamic_cdw_vec(
-            opt,
+            config,
             max_dist,
             text_indices,
             aspect_bert_indices,
@@ -89,7 +89,7 @@ def prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect):
         )
 
         dlcfs_cdm_vec = get_dynamic_cdm_vec(
-            opt,
+            config,
             max_dist,
             text_indices,
             aspect_bert_indices,
@@ -97,7 +97,7 @@ def prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect):
             syntactical_dist,
         )
         dlcfs_cdw_vec = get_dynamic_cdw_vec(
-            opt,
+            config,
             max_dist,
             text_indices,
             aspect_bert_indices,
@@ -105,7 +105,7 @@ def prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect):
             syntactical_dist,
         )
 
-        depend_vec, depended_vec = calculate_cluster(text_raw, aspect, opt)
+        depend_vec, depended_vec = calculate_cluster(text_raw, aspect, config)
 
         inputs = {
             "dlcf_cdm_vec": dlcf_cdm_vec,
@@ -119,20 +119,25 @@ def prepare_input_for_dlcf_dca(opt, tokenizer, text_left, text_right, aspect):
 
 
 def get_dynamic_cdw_vec(
-    opt, max_dist, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None
+    config,
+    max_dist,
+    bert_spc_indices,
+    aspect_indices,
+    aspect_begin,
+    syntactical_dist=None,
 ):
     # the function is used to set dynamic threshold and calculate cdm/cdw for DLCF_DCA_BERT
-    a = opt.dlcf_a
+    a = config.dlcf_a
     if max_dist > 0:
         dynamic_threshold = math.log(max_dist, a) + a - 1
     else:
         dynamic_threshold = 3
 
-    cdw_vec = np.zeros((opt.max_seq_len), dtype=np.float32)
+    cdw_vec = np.zeros((config.max_seq_len), dtype=np.float32)
     aspect_len = np.count_nonzero(aspect_indices)
     text_len = np.count_nonzero(bert_spc_indices) - np.count_nonzero(aspect_indices) - 1
     if syntactical_dist is not None:
-        for i in range(min(text_len, opt.max_seq_len)):
+        for i in range(min(text_len, config.max_seq_len)):
             if max_dist > 0:
                 if syntactical_dist[i] > dynamic_threshold:
                     w = 1 - syntactical_dist[i] / max_dist
@@ -144,9 +149,9 @@ def get_dynamic_cdw_vec(
     else:
         local_context_begin = max(0, aspect_begin - dynamic_threshold)
         local_context_end = min(
-            aspect_begin + aspect_len + dynamic_threshold - 1, opt.max_seq_len
+            aspect_begin + aspect_len + dynamic_threshold - 1, config.max_seq_len
         )
-        for i in range(min(text_len, opt.max_seq_len)):
+        for i in range(min(text_len, config.max_seq_len)):
             if i < local_context_begin:
                 w = 1 - (local_context_begin - i) / text_len
             elif local_context_begin <= i <= local_context_end:
@@ -162,59 +167,66 @@ def get_dynamic_cdw_vec(
 
 
 def get_dynamic_cdm_vec(
-    opt, max_dist, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None
+    config,
+    max_dist,
+    bert_spc_indices,
+    aspect_indices,
+    aspect_begin,
+    syntactical_dist=None,
 ):
     # the function is used to set dynamic threshold and calculate cdm/cdw for DLCF_DCA_BERT
-    a = opt.dlcf_a
+    a = config.dlcf_a
     if max_dist > 0:
         dynamic_threshold = math.log(max_dist, a) + a - 1
     else:
         dynamic_threshold = 3
 
-    cdm_vec = np.zeros((opt.max_seq_len), dtype=np.float32)
+    cdm_vec = np.zeros((config.max_seq_len), dtype=np.float32)
     aspect_len = np.count_nonzero(aspect_indices)
     text_len = np.count_nonzero(bert_spc_indices) - np.count_nonzero(aspect_indices) - 1
     if syntactical_dist is not None:
-        for i in range(min(text_len, opt.max_seq_len)):
+        for i in range(min(text_len, config.max_seq_len)):
             if syntactical_dist[i] <= dynamic_threshold:
                 cdm_vec[i] = 1
     else:
         local_context_begin = max(0, aspect_begin - dynamic_threshold)
         local_context_end = min(
-            aspect_begin + aspect_len + dynamic_threshold - 1, opt.max_seq_len
+            aspect_begin + aspect_len + dynamic_threshold - 1, config.max_seq_len
         )
-        for i in range(min(text_len, opt.max_seq_len)):
+        for i in range(min(text_len, config.max_seq_len)):
             if local_context_begin <= i <= local_context_end:
                 cdm_vec[i] = 1
     return cdm_vec
 
 
-def configure_dlcf_spacy_model(opt):
-    if not hasattr(opt, "spacy_model"):
-        opt.spacy_model = "en_core_web_sm"
+def configure_dlcf_spacy_model(config):
+    if not hasattr(config, "spacy_model"):
+        config.spacy_model = "en_core_web_sm"
     global nlp
     try:
-        nlp = spacy.load(opt.spacy_model)
+        nlp = spacy.load(config.spacy_model)
     except:
         fprint(
             "Can not load {} from spacy, try to download it in order to parse syntax tree:".format(
-                opt.spacy_model
+                config.spacy_model
             ),
             termcolor.colored(
-                "\npython -m spacy download {}".format(opt.spacy_model), "green"
+                "\npython -m spacy download {}".format(config.spacy_model), "green"
             ),
         )
         try:
-            os.system("python -m spacy download {}".format(opt.spacy_model))
-            nlp = spacy.load(opt.spacy_model)
+            os.system("python -m spacy download {}".format(config.spacy_model))
+            nlp = spacy.load(config.spacy_model)
         except:
             raise RuntimeError(
-                "Download failed, you can download {} manually.".format(opt.spacy_model)
+                "Download failed, you can download {} manually.".format(
+                    config.spacy_model
+                )
             )
     return nlp
 
 
-def calculate_cluster(sentence, aspect, opt):
+def calculate_cluster(sentence, aspect, config):
     terms = [a.lower() for a in aspect.split()]
 
     doc_list = []
@@ -286,15 +298,15 @@ def calculate_cluster(sentence, aspect, opt):
         if no_connect[i] in depended_ids:
             depended_ids.remove(no_connect[i])
 
-    depend_vec = np.zeros((opt.max_seq_len), dtype=np.float32)
-    depended_vec = np.zeros((opt.max_seq_len), dtype=np.float32)
+    depend_vec = np.zeros((config.max_seq_len), dtype=np.float32)
+    depended_vec = np.zeros((config.max_seq_len), dtype=np.float32)
 
     depended_vec[0] = 1
     depend_vec[0] = 1
     for i in range(len(depend_ids)):
-        if depend_ids[i] < (opt.max_seq_len - 1):
+        if depend_ids[i] < (config.max_seq_len - 1):
             depend_vec[depend_ids[i] + 1] = 1
     for i in range(len(depended_ids)):
-        if depended_ids[i] < (opt.max_seq_len - 1):
+        if depended_ids[i] < (config.max_seq_len - 1):
             depended_vec[depended_ids[i] + 1] = 1
     return depend_vec, depended_vec

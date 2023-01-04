@@ -25,12 +25,6 @@ from ..dataset_utils.__plm__.data_utils_for_inference import BERTProteinRDataset
 from ..models import BERTProteinRModelList, GloVeProteinRModelList
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint
-from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
-from pyabsa.framework.tokenizer_class.tokenizer_class import (
-    build_embedding_matrix,
-    Tokenizer,
-    PretrainedTokenizer,
-)
 
 
 class ProteinRegressor(InferenceModel):

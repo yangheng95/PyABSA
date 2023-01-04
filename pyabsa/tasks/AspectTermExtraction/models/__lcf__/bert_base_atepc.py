@@ -6,14 +6,11 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 
-import copy
-
 import numpy as np
 import torch
 import torch.nn as nn
 from torch.nn import CrossEntropyLoss
 from transformers.models.bert.modeling_bert import (
-    BertForTokenClassification,
     BertPooler,
 )
 

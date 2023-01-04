@@ -58,7 +58,9 @@ def load_dataset_from_file(fname, config):
                 )
             lines.append(line.strip())
         fin.close()
-    lines = lines[: config.get("data_num", len(lines))]
+    lines = lines[
+        : config.get("data_num", -1) if config.get("data_num", -1) > 0 else None
+    ]
     return lines
 
 

@@ -88,14 +88,16 @@ def detect_dataset(
                 except Exception as e:
                     if logger:
                         logger.error(
-                            "Fail to download dataset from https://github.com/yangheng95/ABSADatasets, please check your network connection"
+                            "Exception: {}. Fail to download dataset from".format(e)
+                            + " https://github.com/yangheng95/ABSADatasets,"
+                            + " please check your network connection."
                         )
-                        logger.info("Try to load {} dataset from Huggingface".format(d))
                     else:
                         fprint(
-                            "Fail to download dataset from https://github.com/yangheng95/ABSADatasets, please check your network connection"
+                            "Exception: {}. Fail to download dataset from".format(e)
+                            + " https://github.com/yangheng95/ABSADatasets,"
+                            + " please check your network connection."
                         )
-                        fprint("Try to load {} dataset from Huggingface".format(d))
                     download_dataset_by_name(logger, task_code, dataset_name=d)
 
             search_path = findfile.find_dir(
@@ -107,19 +109,19 @@ def detect_dataset(
             if not search_path:
                 raise ValueError(
                     "Cannot find dataset: {}, you may need to remove existing integrated_datasets and try again. "
-                    "Please note that if you are using keywords to let findfile search the dataset, you need to save your dataset(s)"
-                    "in integrated_datasets/{}/{} ".format(
+                    "Please note that if you are using keywords to let findfile search the dataset, "
+                    "you need to save your dataset(s) in integrated_datasets/{}/{} ".format(
                         d, "task_name", "dataset_name"
                     )
                 )
             if not load_aug:
                 logger.info(
-                    "You can set load_aug=True in a trainer to augment your dataset (English only yet) and improve performance."
+                    "You can set load_aug=True in a trainer to augment your dataset"
+                    " (English only yet) and improve performance."
                 )
                 logger.info(
-                    "Please use a new folder to perform new text augment if the former augment in {} errored unexpectedly".format(
-                        search_path
-                    )
+                    "Please use a new folder to perform new text augment if the former augment in"
+                    " {} errored unexpectedly".format(search_path)
                 )
             # Our data augment tool can automatically improve your dataset's performance 1-2% with additional computation budget
             # The project of data augment is on github: https://github.com/yangheng95/BoostAug

@@ -5,7 +5,6 @@
 import json
 import os
 import pickle
-import random
 from typing import Union
 
 import numpy as np
@@ -14,7 +13,7 @@ import tqdm
 from findfile import find_file, find_cwd_dir
 from termcolor import colored
 from torch.utils.data import DataLoader
-from transformers import AutoModel, AutoTokenizer
+from transformers import AutoModel
 
 from sklearn import metrics
 
@@ -25,10 +24,7 @@ from ..dataset_utils.__plm__.data_utils_for_inference import BERTRNARDataset
 from ..models import BERTRNARModelList, GloVeRNARModelList
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint
-from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
 from pyabsa.framework.tokenizer_class.tokenizer_class import (
-    build_embedding_matrix,
-    Tokenizer,
     PretrainedTokenizer,
 )
 

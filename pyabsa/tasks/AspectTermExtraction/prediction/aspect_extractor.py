@@ -13,7 +13,6 @@ from collections import OrderedDict
 from pathlib import Path
 from typing import Union, List
 
-import numpy as np
 import torch
 import torch.nn.functional as F
 import tqdm

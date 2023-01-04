@@ -9,7 +9,6 @@
 
 import numpy as np
 import tqdm
-from torch.utils.data import Dataset
 
 from pyabsa import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset

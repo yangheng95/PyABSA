@@ -40,9 +40,9 @@ class InputExample(object):
             guid: Unique id for the example.
             text_a: string. The untokenized text of the first sequence. For single
             sequence core, only this sequence must be specified.
-            text_b: (Optional) string. The untokenized text of the second sequence.
+            text_b: (configional) string. The untokenized text of the second sequence.
             Only must be specified for sequence pair core.
-            label: (Optional) string. The label of the example. This should be
+            label: (configional) string. The label of the example. This should be
             specified for train and dev examples, but not for test examples.
         """
         self.guid = guid
@@ -266,10 +266,10 @@ class ATEPCProcessor(DataProcessor):
         return examples
 
 
-def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
+def convert_examples_to_features(examples, max_seq_len, tokenizer, config=None):
     """Loads a raw_data file into a list of `InputBatch`s."""
 
-    configure_spacy_model(opt)
+    configure_spacy_model(config)
 
     bos_token = tokenizer.bos_token
     eos_token = tokenizer.eos_token
@@ -279,7 +279,7 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
             sorted(list(Labels) + [tokenizer.bos_token, tokenizer.eos_token]), 1
         )
     }
-    opt.IOB_label_to_index = label_map
+    config.IOB_label_to_index = label_map
     features = []
     polarities_set = set()
     for (ex_index, example) in enumerate(
@@ -313,11 +313,11 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
             continue
         text_raw = text_left + " " + aspect + " " + text_right
 
-        if validate_example(text_raw, aspect, polarity, opt):
+        if validate_example(text_raw, aspect, polarity, config):
             continue
 
         prepared_inputs = prepare_input_for_atepc(
-            opt, tokenizer, text_left, text_right, aspect
+            config, tokenizer, text_left, text_right, aspect
         )
         lcf_cdm_vec = prepared_inputs["lcf_cdm_vec"]
         lcf_cdw_vec = prepared_inputs["lcf_cdw_vec"]
@@ -380,8 +380,8 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, opt=None):
                 lcf_cdw_vec=lcf_cdw_vec,
             )
         )
-    check_and_fix_labels(polarities_set, "polarity", features, opt)
-    check_and_fix_IOB_labels(label_map, opt)
-    opt.output_dim = len(polarities_set)
+    check_and_fix_labels(polarities_set, "polarity", features, config)
+    check_and_fix_IOB_labels(label_map, config)
+    config.output_dim = len(polarities_set)
 
     return features

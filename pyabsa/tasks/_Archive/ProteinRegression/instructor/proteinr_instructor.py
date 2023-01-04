@@ -335,7 +335,7 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
                         if test_r2 > max_fold_r2:
 
                             if test_r2 > max_fold_r2:
-                                patience = self.config.patience
+                                patience = self.config.patience - 1
                                 max_fold_r2 = test_r2
 
                             if self.config.model_path_to_save:
@@ -384,7 +384,7 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
 
                 iterator.set_description(description)
                 iterator.refresh()
-            if patience < 0:
+            if patience == 0:
                 break
 
         if not self.valid_dataloader:
@@ -513,7 +513,7 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
                             if test_r2 > max_fold_r2:
 
                                 if test_r2 > max_fold_r2:
-                                    patience = self.config.patience
+                                    patience = self.config.patience - 1
                                     max_fold_r2 = test_r2
 
                                 if self.config.model_path_to_save:
@@ -571,7 +571,7 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
 
                     iterator.set_description(description)
                     iterator.refresh()
-                if patience < 0:
+                if patience == 0:
                     break
 
             max_fold_r2 = self._evaluate_r2(self.test_dataloader, criterion)

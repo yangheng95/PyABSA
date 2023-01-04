@@ -12,7 +12,8 @@ import torch
 from autocuda import auto_cuda, auto_cuda_name
 from termcolor import colored
 
-from pyabsa import __version__ as pyabsa_version, DeviceTypeOption
+from pyabsa import __version__ as pyabsa_version
+from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
 
 
 def save_args(config, save_path):
@@ -149,7 +150,7 @@ def check_and_fix_labels(label_set: set, label_name, all_data, config):
         # raise KeyError('Fail to fix the labels, the number of labels are not equal among all datasets!')
         config.index_to_label.update(index_to_label)
         config.label_to_index.update(label_to_index)
-    num_label = {l: 0 for l in label_set}
+    num_label = {label: 0 for label in label_set}
     num_label["Sum"] = len(all_data)
     for item in all_data:
         try:

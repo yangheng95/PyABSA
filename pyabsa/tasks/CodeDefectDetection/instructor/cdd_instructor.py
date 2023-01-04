@@ -24,7 +24,6 @@ from torch.utils.data import (
     SequentialSampler,
 )
 from tqdm import tqdm
-from transformers import AutoModel
 
 from pyabsa import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
@@ -341,12 +340,12 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                         if f1 > max_fold_f1:
 
                             if test_acc > max_fold_acc:
-                                patience = self.config.patience
+                                patience = self.config.patience - 1
                                 max_fold_acc = test_acc
 
                             if f1 > max_fold_f1:
                                 max_fold_f1 = f1
-                                patience = self.config.patience
+                                patience = self.config.patience - 1
 
                             if self.config.model_path_to_save:
                                 if not os.path.exists(self.config.model_path_to_save):
@@ -401,7 +400,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
 
                 iterator.set_description(description)
                 iterator.refresh()
-            if patience < 0:
+            if patience == 0:
                 break
 
         if not self.valid_dataloader:
@@ -539,12 +538,12 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                             if f1 > max_fold_f1:
 
                                 if test_acc > max_fold_acc:
-                                    patience = self.config.patience
+                                    patience = self.config.patience - 1
                                     max_fold_acc = test_acc
 
                                 if f1 > max_fold_f1:
                                     max_fold_f1 = f1
-                                    patience = self.config.patience
+                                    patience = self.config.patience - 1
 
                                 if self.config.model_path_to_save:
                                     if not os.path.exists(
@@ -607,7 +606,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
 
                     iterator.set_description(description)
                     iterator.refresh()
-                if patience < 0:
+                if patience == 0:
                     break
 
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)

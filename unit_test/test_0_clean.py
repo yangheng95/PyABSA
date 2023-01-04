@@ -11,7 +11,6 @@ import shutil
 
 import findfile
 
-from pyabsa.utils.pyabsa_utils import fprint
 import shutil
 
 
@@ -19,14 +18,17 @@ def test_clean():
     if os.path.exists("integrated_datasets"):
         shutil.rmtree("integrated_datasets")
 
-    fprint("Start cleaning...")
+    if os.path.exists("source_datasets.backup"):
+        shutil.rmtree("source_datasets.backup")
+
+    print("Start cleaning...")
     for f in findfile.find_cwd_files(
         or_key=[".zip", ".cache", ".mv", ".json", ".txt"],
         exclude_key="glove",
         recursive=1,
     ):
         os.remove(f)
-    fprint("Cleaned all files in the current directory.")
+    print("Cleaned all files in the current directory.")
 
 
 if __name__ == "__main__":

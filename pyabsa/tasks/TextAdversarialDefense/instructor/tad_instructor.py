@@ -393,27 +393,27 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                         ):
 
                             if test_label_acc > max_label_fold_acc:
-                                patience = self.config.patience
+                                patience = self.config.patience - 1
                                 max_label_fold_acc = test_label_acc
 
                             if test_label_f1 > max_label_fold_f1:
-                                patience = self.config.patience
+                                patience = self.config.patience - 1
                                 max_label_fold_f1 = test_label_f1
 
                             if test_adv_det_acc > max_adv_det_fold_acc:
-                                patience = self.config.patience
+                                patience = self.config.patience - 1
                                 max_adv_det_fold_acc = test_adv_det_acc
 
                             if test_adv_det_f1 > max_adv_det_fold_f1:
-                                patience = self.config.patience
+                                patience = self.config.patience - 1
                                 max_adv_det_fold_f1 = test_adv_det_f1
 
                             if test_adv_tr_acc > max_adv_tr_fold_acc:
-                                patience = self.config.patience
+                                patience = self.config.patience - 1
                                 max_adv_tr_fold_acc = test_adv_tr_acc
 
                             if test_adv_tr_f1 > max_adv_tr_fold_f1:
-                                patience = self.config.patience
+                                patience = self.config.patience - 1
                                 max_adv_tr_fold_f1 = test_adv_tr_f1
 
                             if self.config.model_path_to_save:
@@ -522,7 +522,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
 
                 iterator.set_description(description)
                 iterator.refresh()
-            if patience < 0:
+            if patience == 0:
                 break
 
         if not self.valid_dataloader:

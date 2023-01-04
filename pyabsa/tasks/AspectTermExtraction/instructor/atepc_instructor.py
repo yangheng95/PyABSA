@@ -6,10 +6,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 import os
-import pickle
-import re
 import time
-from hashlib import sha256
 
 import numpy
 import pandas
@@ -404,7 +401,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                             or ate_result
                             > self.config.max_test_metrics["max_ate_test_f1"]
                         ):
-                            patience = self.config.patience
+                            patience = self.config.patience - 1
                             if (
                                 apc_result["apc_test_acc"]
                                 > self.config.max_test_metrics["max_apc_test_acc"]
@@ -486,7 +483,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                 iterator.set_description(description)
                 iterator.refresh()
 
-            if patience < 0:
+            if patience == 0:
                 break
 
         apc_result, ate_result = self._evaluate_acc_f1(self.test_dataloader)

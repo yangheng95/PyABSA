@@ -330,12 +330,12 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                         if test_acc > max_fold_acc or f1 > max_fold_f1:
 
                             if test_acc > max_fold_acc:
-                                patience = self.config.patience
+                                patience = self.config.patience - 1
                                 max_fold_acc = test_acc
 
                             if f1 > max_fold_f1:
                                 max_fold_f1 = f1
-                                patience = self.config.patience
+                                patience = self.config.patience - 1
 
                             if self.config.model_path_to_save:
                                 if not os.path.exists(self.config.model_path_to_save):
@@ -390,7 +390,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
 
                 iterator.set_description(description)
                 iterator.refresh()
-            if patience < 0:
+            if patience == 0:
                 break
 
         if not self.valid_dataloader:
@@ -524,12 +524,12 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                             if test_acc > max_fold_acc or f1 > max_fold_f1:
 
                                 if test_acc > max_fold_acc:
-                                    patience = self.config.patience
+                                    patience = self.config.patience - 1
                                     max_fold_acc = test_acc
 
                                 if f1 > max_fold_f1:
                                     max_fold_f1 = f1
-                                    patience = self.config.patience
+                                    patience = self.config.patience - 1
 
                                 if self.config.model_path_to_save:
                                     if not os.path.exists(
@@ -592,7 +592,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
 
                     iterator.set_description(description)
                     iterator.refresh()
-                if patience < 0:
+                if patience == 0:
                     break
 
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)

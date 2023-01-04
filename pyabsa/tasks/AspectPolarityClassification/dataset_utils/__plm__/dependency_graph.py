@@ -21,27 +21,29 @@ class WhitespaceTokenizer(object):
         return Doc(self.vocab, words=words, spaces=spaces)
 
 
-def configure_spacy_model(opt):
-    if not hasattr(opt, "spacy_model"):
-        opt.spacy_model = "en_core_web_sm"
+def configure_spacy_model(config):
+    if not hasattr(config, "spacy_model"):
+        config.spacy_model = "en_core_web_sm"
     global nlp
     try:
-        nlp = spacy.load(opt.spacy_model)
+        nlp = spacy.load(config.spacy_model)
     except:
         fprint(
             "Can not load {} from spacy, try to download it in order to parse syntax tree:".format(
-                opt.spacy_model
+                config.spacy_model
             ),
             termcolor.colored(
-                "\npython -m spacy download {}".format(opt.spacy_model), "green"
+                "\npython -m spacy download {}".format(config.spacy_model), "green"
             ),
         )
         try:
-            os.system("python -m spacy download {}".format(opt.spacy_model))
-            nlp = spacy.load(opt.spacy_model)
+            os.system("python -m spacy download {}".format(config.spacy_model))
+            nlp = spacy.load(config.spacy_model)
         except:
             raise RuntimeError(
-                "Download failed, you can download {} manually.".format(opt.spacy_model)
+                "Download failed, you can download {} manually.".format(
+                    config.spacy_model
+                )
             )
 
     nlp.tokenizer = WhitespaceTokenizer(nlp.vocab)

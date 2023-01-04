@@ -26,7 +26,7 @@ def test_classification_augmentation():
     config.model = TC.BERTTCModelList.BERT_MLP
     config.num_epoch = 1
     config.evaluate_begin = 0
-    config.max_seq_len = 10
+    config.max_seq_len = 3
     config.dropout = 0.5
     config.seed = {42}
     config.log_step = -1
@@ -35,7 +35,7 @@ def test_classification_augmentation():
     SST2 = TC.TCDatasetList.SST2
 
     auto_classification_augmentation(
-        config=config, dataset="Custom", device=autocuda.auto_cuda()
+        config=config, dataset=SST2, device=autocuda.auto_cuda(), rewrite_cache=False
     )
 
 
@@ -55,9 +55,9 @@ def test_aspect_sentiment_classification_augmentation():
             config = APC.APCConfigManager.get_apc_config_english()
             config.model = model
             config.pretrained_bert = "microsoft/deberta-v3-base"
-            config.evaluate_begin = 5
+            config.evaluate_begin = 0
             config.max_seq_len = 10
-            config.num_epoch = 30
+            config.num_epoch = 1
             config.log_step = 10
             config.dropout = 0
             config.cache_dataset = False
@@ -67,10 +67,13 @@ def test_aspect_sentiment_classification_augmentation():
             config.seed = [random.randint(0, 10000) for _ in range(1)]
 
             auto_aspect_sentiment_classification_augmentation(
-                config=config, dataset=APC.APCDatasetList.Restaurant16, device=autocuda.auto_cuda()
+                config=config,
+                dataset=APC.APCDatasetList.Restaurant16,
+                device=autocuda.auto_cuda(),
+                rewrite_cache=False,
             )
 
 
 if __name__ == "__main__":
-    # test_classification_augmentation()
-    test_aspect_sentiment_classification_augmentation()
+    test_classification_augmentation()
+    # test_aspect_sentiment_classification_augmentation()

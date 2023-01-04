@@ -7,11 +7,8 @@
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
 
-import numpy as np
 import tqdm
-from findfile import find_dir, find_cwd_dir
 from torch.utils.data import Dataset
-from transformers import AutoTokenizer
 
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file

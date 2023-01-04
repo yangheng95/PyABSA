@@ -63,7 +63,7 @@ def test_chinese_atepc_models():
 
             trainer = ATEPC.ATEPCTrainer(
                 config=config,
-                dataset="Custom",
+                dataset=ATEPC.ATEPCDatasetList.Restaurant16,
                 checkpoint_save_mode=1,
                 auto_device=DeviceTypeOption.AUTO,
             )
@@ -100,7 +100,7 @@ def test_all_ate_models():
 
         trainer = ATEPC.ATEPCTrainer(
             config=config,
-            dataset="Custom",
+            dataset=ATEPC.ATEPCDatasetList.Restaurant16,
             checkpoint_save_mode=1,
             auto_device=DeviceTypeOption.AUTO,
         )

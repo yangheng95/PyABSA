@@ -17,6 +17,10 @@ from pyabsa.utils.pyabsa_utils import fprint
 def test_clean():
     if os.path.exists("integrated_datasets"):
         shutil.rmtree("integrated_datasets")
+
+    if os.path.exists("integrated_datasets.ignore"):
+        os.remove("integrated_datasets.ignore")
+
     fprint("Start cleaning...")
     for f in findfile.find_cwd_files(
         or_key=[".zip", ".cache", ".mv", ".json", ".txt"],

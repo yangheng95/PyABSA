@@ -10,12 +10,6 @@ import random
 
 import tqdm
 
-from pyabsa.augmentation.aug_utils import (
-    contextual_ids_noise_instance,
-    contextual_code_noise_instance,
-)
-from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
-
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from ..cdd_utils import read_defect_examples, _prepare_corrupt_code
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
