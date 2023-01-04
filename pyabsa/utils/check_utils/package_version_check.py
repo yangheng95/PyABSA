@@ -13,7 +13,7 @@ from termcolor import colored
 from update_checker import parse_version, UpdateChecker
 
 from pyabsa import __version__ as current_version
-from pyabsa.utils.exception_utils import time_out
+from pyabsa.utils.exception_utils.exception_utils import time_out
 from pyabsa.utils.pyabsa_utils import fprint
 
 

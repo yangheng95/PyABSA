@@ -13,7 +13,7 @@ import requests
 from findfile import find_cwd_file
 from termcolor import colored
 
-from pyabsa.utils.exception_utils import time_out
+from pyabsa.utils.exception_utils.exception_utils import time_out
 from pyabsa.utils.pyabsa_utils import fprint
 
 
