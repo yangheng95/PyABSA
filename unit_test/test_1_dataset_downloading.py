@@ -33,5 +33,5 @@ def test_download_all_available_dataset():
 
 
 if __name__ == "__main__":
-    test_download_dataset_by_name()
+    # test_download_dataset_by_name()
     test_download_all_available_dataset()

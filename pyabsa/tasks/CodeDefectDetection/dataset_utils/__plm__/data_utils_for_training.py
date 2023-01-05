@@ -24,19 +24,20 @@ class BERTCDDDataset(PyABSADataset):
         lines = load_dataset_from_file(
             self.config.dataset_file[self.dataset_type], config=self.config
         )
-        lines = read_defect_examples(
+        natural_examples = read_defect_examples(
             lines,
-            self.config.get("data_num", -1),
+            self.config.get("data_num", None),
             self.config.get("remove_comments", True),
+            tokenizer=self.tokenizer,
         )
+
         all_data = []
 
         label_set = set()
         c_label_set = set()
 
-        for ex_id, line in enumerate(tqdm.tqdm(lines, desc="preparing dataloader")):
+        for ex_id, line in enumerate(tqdm.tqdm(natural_examples, desc="preparing dataloader")):
             code_src, label = line.strip().split("$LABEL$")
-            # source_str = "{}: {}".format(args.task, example.source)
 
             code_ids = self.tokenizer.text_to_sequence(
                 code_src,
@@ -54,25 +55,30 @@ class BERTCDDDataset(PyABSADataset):
             label_set.add(label)
             c_label_set.add(0)
             all_data.append(data)
-
-            if self.dataset_type == "train":
-                for _ in range(self.config.noise_instance_num):
-                    corrupt_code_src = _prepare_corrupt_code(code_src)
-                    corrupt_code_ids = self.tokenizer.text_to_sequence(
-                        corrupt_code_src,
-                        max_length=self.config.max_seq_len,
-                        padding="max_length",
-                        truncation=True,
-                    )
-                    data = {
-                        "ex_id": ex_id,
-                        "source_ids": corrupt_code_ids,
-                        "label": "-100",
-                        "corrupt_label": 1,
-                    }
-                    label_set.add("-100")
-                    c_label_set.add(1)
-                    all_data.append(data)
+        if self.dataset_type == "train":
+            corrupt_examples = read_defect_examples(
+                lines,
+                self.config.get("data_num", None),
+                self.config.get("remove_comments", True),
+            )
+            for ex_id, line in enumerate(tqdm.tqdm(corrupt_examples, desc="preparing dataloader")):
+                code_src, label = line.strip().split("$LABEL$")
+                code_src = _prepare_corrupt_code(code_src)
+                corrupt_code_ids = self.tokenizer.text_to_sequence(
+                    code_src,
+                    max_length=self.config.max_seq_len,
+                    padding="max_length",
+                    truncation=True,
+                )
+                data = {
+                    "ex_id": ex_id,
+                    "source_ids": corrupt_code_ids,
+                    "label": "-100",
+                    "corrupt_label": 1,
+                }
+                label_set.add("-100")
+                c_label_set.add(1)
+                all_data.append(data)
 
         check_and_fix_labels(label_set, "label", all_data, self.config)
         self.config.output_dim = len(label_set)

@@ -42,7 +42,7 @@ class BERTCDDInferenceDataset(Dataset):
     def process_data(self, samples, ignore_error=True):
         samples = read_defect_examples(
             samples,
-            self.config.get("data_num", -1),
+            self.config.get("data_num", None),
             self.config.get("remove_comments", True),
         )
         all_data = []

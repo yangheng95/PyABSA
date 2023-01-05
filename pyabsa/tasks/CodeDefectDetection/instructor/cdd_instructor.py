@@ -165,7 +165,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
     def prepare_dataloader(self, train_set):
         if self.config.cross_validate_fold < 1:
             train_sampler = RandomSampler(
-                self.train_set if not self.train_set else self.train_set
+                self.train_set
             )
             self.train_dataloaders.append(
                 DataLoader(

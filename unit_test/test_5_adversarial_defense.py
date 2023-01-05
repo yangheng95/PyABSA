@@ -14,7 +14,7 @@ def test_tad_training():
     config = TAD.TADConfigManager.get_tad_config_english()
     config.model = TAD.BERTTADModelList.TADBERT
     config.num_epoch = 1
-    # config.pretrained_bert = 'bert-base-uncased'
+    config.pretrained_bert = 'bert-base-uncased'
     config.patience = 5
     config.evaluate_begin = 0
     config.max_seq_len = 10

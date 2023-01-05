@@ -32,10 +32,11 @@ def test_classification_augmentation():
     config.log_step = -1
     config.l2reg = 0.00001
 
-    SST2 = TC.TCDatasetList.SST2
 
     auto_classification_augmentation(
-        config=config, dataset=SST2, device=autocuda.auto_cuda(), rewrite_cache=False
+        config=config,
+        dataset='custom',
+        device=autocuda.auto_cuda(),
     )
 
 
@@ -70,7 +71,6 @@ def test_aspect_sentiment_classification_augmentation():
                 config=config,
                 dataset=APC.APCDatasetList.Restaurant16,
                 device=autocuda.auto_cuda(),
-                rewrite_cache=False,
             )
 
 
