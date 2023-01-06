@@ -10,6 +10,7 @@ import os
 import pickle
 import sys
 import zipfile
+from typing import Union, List
 
 import requests
 import torch
@@ -18,6 +19,18 @@ from findfile import find_files, find_cwd_file
 from termcolor import colored
 
 from pyabsa.utils.pyabsa_utils import save_args, fprint
+
+
+def remove_empty_line(files: Union[str, List[str]]):
+    if isinstance(files, str):
+        files = [files]
+    for file in files:
+        with open(file, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+        with open(file, "w", encoding="utf-8") as f:
+            for line in lines:
+                if line.strip():
+                    f.write(line)
 
 
 def save_json(dic, save_path):
@@ -42,6 +55,7 @@ def load_dataset_from_file(fname, config):
     lines = []
     if isinstance(fname, str):
         fname = [fname]
+
     for f in fname:
         if logger:
             logger.info("Load dataset from {}".format(f))
@@ -59,8 +73,8 @@ def load_dataset_from_file(fname, config):
             lines.append(line.strip())
         fin.close()
     lines = lines[
-        : config.get("data_num", -1) if config.get("data_num", -1) > 0 else None
-    ]
+            : config.get("data_num", -1) if config.get("data_num", -1) > 0 else None
+            ]
     return lines
 
 
@@ -77,9 +91,9 @@ def prepare_glove840_embedding(glove_path, embedding_dim, config):
         dir_path = os.getenv("$HOME") if os.getenv("$HOME") else os.getcwd()
 
         if find_files(
-            dir_path,
-            ["glove", "B", "d", ".txt", str(embedding_dim)],
-            exclude_key=".zip",
+                dir_path,
+                ["glove", "B", "d", ".txt", str(embedding_dim)],
+                exclude_key=".zip",
         ):
             embedding_files += find_files(
                 dir_path, ["glove", "B", ".txt", str(embedding_dim)], exclude_key=".zip"
@@ -126,10 +140,10 @@ def prepare_glove840_embedding(glove_path, embedding_dim, config):
                 )
                 with open(zip_glove_path, "wb") as f:
                     for chunk in tqdm.tqdm(
-                        response.iter_content(chunk_size=1024 * 1024),
-                        unit="MB",
-                        total=int(response.headers["content-length"]) // 1024 // 1024,
-                        desc=colored("Downloading GloVe-840B embedding", "yellow"),
+                            response.iter_content(chunk_size=1024 * 1024),
+                            unit="MB",
+                            total=int(response.headers["content-length"]) // 1024 // 1024,
+                            desc=colored("Downloading GloVe-840B embedding", "yellow"),
                     ):
                         f.write(chunk)
             except Exception as e:
@@ -166,9 +180,9 @@ def unzip_checkpoint(zip_path):
 def save_model(config, model, tokenizer, save_path, **kwargs):
     # Save a trained model, configuration and tokenizer
     if (
-        hasattr(model, "module")
-        or hasattr(model, "core")
-        or hasattr(model, "_orig_mod")
+            hasattr(model, "module")
+            or hasattr(model, "core")
+            or hasattr(model, "_orig_mod")
     ):
         # fprint("save model from data-parallel!")
         model_to_save = model.module

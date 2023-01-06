@@ -15,6 +15,9 @@ import shutil
 
 
 def test_clean():
+    if os.path.exists('checkpoints'):
+        shutil.rmtree('checkpoints')
+
     if os.path.exists("integrated_datasets"):
         shutil.rmtree("integrated_datasets")
 

@@ -55,7 +55,11 @@ class InferenceModel:
         if hasattr(self, "MLM"):
             self.MLM.to(device)
 
-    def __post_init__(self):
+    def __post_init__(self, **kwargs):
+
+        for k, v in kwargs.items():
+            self.config[k] = v
+
         self.config.label_to_index["-100"] = -100
         self.config.label_to_index[""] = -100
         self.config.index_to_label[-100] = ""

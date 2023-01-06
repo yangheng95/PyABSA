@@ -207,8 +207,8 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                     [x for i, x in enumerate(folds) if i != f_idx]
                 )
                 val_set = folds[f_idx]
-                train_sampler = RandomSampler(train_set if not train_set else train_set)
-                val_sampler = SequentialSampler(val_set if not val_set else val_set)
+                train_sampler = RandomSampler(train_set)
+                val_sampler = SequentialSampler(val_set)
                 self.train_dataloaders.append(
                     DataLoader(
                         dataset=train_set,
@@ -336,12 +336,11 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                         self.config.metrics_of_this_checkpoint["acc"] = test_acc
                         self.config.metrics_of_this_checkpoint["f1"] = f1
 
-                        # if test_acc > max_fold_acc or f1 > max_fold_f1:
-                        if f1 > max_fold_f1:
+                        if test_acc > max_fold_acc or f1 > max_fold_f1:
 
                             if test_acc > max_fold_acc:
-                                patience = self.config.patience - 1
                                 max_fold_acc = test_acc
+                                patience = self.config.patience - 1
 
                             if f1 > max_fold_f1:
                                 max_fold_f1 = f1
@@ -534,12 +533,11 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                             self.config.metrics_of_this_checkpoint["acc"] = test_acc
                             self.config.metrics_of_this_checkpoint["f1"] = f1
 
-                            # if test_acc > max_fold_acc or f1 > max_fold_f1:
-                            if f1 > max_fold_f1:
+                            if test_acc > max_fold_acc or f1 > max_fold_f1:
 
                                 if test_acc > max_fold_acc:
-                                    patience = self.config.patience - 1
                                     max_fold_acc = test_acc
+                                    patience = self.config.patience - 1
 
                                 if f1 > max_fold_f1:
                                     max_fold_f1 = f1

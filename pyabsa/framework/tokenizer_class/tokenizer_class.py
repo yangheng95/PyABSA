@@ -170,6 +170,18 @@ class PretrainedTokenizer:
     def convert_ids_to_tokens(self, ids, **kwargs):
         return self.tokenizer.convert_ids_to_tokens(ids, **kwargs)
 
+    def encode_plus(self, text, **kwargs):
+        return self.tokenizer.encode_plus(
+            text,
+            truncation=kwargs.pop("truncation", True),
+            padding=kwargs.pop("padding", "max_length"),
+            max_length=kwargs.pop("max_length", self.max_seq_len),
+            return_tensors=kwargs.pop("return_tensors", None),
+            **kwargs
+        )
+
+    def decode(self, sequence, **kwargs):
+        return self.tokenizer.decode(sequence, **kwargs)
 
 def build_embedding_matrix(config, tokenizer, cache_path=None):
     if not os.path.exists("run/{}".format(config.dataset_name)):

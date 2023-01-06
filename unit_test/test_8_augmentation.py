@@ -31,7 +31,7 @@ def test_classification_augmentation():
     config.seed = {42}
     config.log_step = -1
     config.l2reg = 0.00001
-
+    config.data_num = 100
 
     auto_classification_augmentation(
         config=config,
@@ -41,39 +41,27 @@ def test_classification_augmentation():
 
 
 def test_aspect_sentiment_classification_augmentation():
-    for dataset in [
-        APCDatasetList.Laptop14,
-        # APCDatasetList.Restaurant14,
-        # APCDatasetList.Restaurant15,
-        # APCDatasetList.Restaurant16,
-        # APCDatasetList.MAMS
-    ]:
-        for model in [
-            APC.APCModelList.FAST_LSA_T_V2,
-            # APC.APCModelList.FAST_LSA_S_V2,
-            # APC.APCModelList.BERT_SPC_V2
-        ]:
-            config = APC.APCConfigManager.get_apc_config_english()
-            config.model = model
-            config.pretrained_bert = "microsoft/deberta-v3-base"
-            config.evaluate_begin = 0
-            config.max_seq_len = 10
-            config.num_epoch = 1
-            config.log_step = 10
-            config.dropout = 0
-            config.cache_dataset = False
-            config.l2reg = 1e-8
-            config.lsa = True
+    config = APC.APCConfigManager.get_apc_config_english()
+    config.pretrained_bert = "microsoft/deberta-v3-base"
+    config.evaluate_begin = 0
+    config.max_seq_len = 10
+    config.num_epoch = 1
+    config.log_step = 10
+    config.dropout = 0
+    config.cache_dataset = False
+    config.l2reg = 1e-8
+    config.lsa = True
+    config.data_num = 30
 
-            config.seed = [random.randint(0, 10000) for _ in range(1)]
+    config.seed = [random.randint(0, 10000) for _ in range(1)]
 
-            auto_aspect_sentiment_classification_augmentation(
-                config=config,
-                dataset=APC.APCDatasetList.Restaurant16,
-                device=autocuda.auto_cuda(),
-            )
+    auto_aspect_sentiment_classification_augmentation(
+        config=config,
+        dataset=APC.APCDatasetList.Restaurant16,
+        device=autocuda.auto_cuda(),
+    )
 
 
 if __name__ == "__main__":
     test_classification_augmentation()
-    # test_aspect_sentiment_classification_augmentation()
+    test_aspect_sentiment_classification_augmentation()

@@ -129,7 +129,7 @@ class SentimentClassifier(InferenceModel):
             else:
                 raise KeyError("The checkpoint you are loading is not from APC model.")
 
-        self.__post_init__()
+        self.__post_init__(**kwargs)
 
     def batch_infer(
         self,

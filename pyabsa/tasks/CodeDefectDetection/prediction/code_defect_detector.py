@@ -143,7 +143,7 @@ class CodeDefectDetector(InferenceModel):
                 config=self.config, tokenizer=self.tokenizer
             )
 
-        self.__post_init__()
+        self.__post_init__(**kwargs)
 
     def to(self, device=None):
         self.config.device = device

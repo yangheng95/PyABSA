@@ -58,7 +58,7 @@ def test_chinese_atepc_models():
             config.show_metric = -1
             config.output_dim = 3
             config.num_labels = 6
-            config.data_num = 6
+            config.data_num = 60
             config.cross_validate_fold = -1
 
             trainer = ATEPC.ATEPCTrainer(
@@ -95,7 +95,7 @@ def test_all_ate_models():
         config.show_metric = -1
         config.output_dim = 3
         config.num_labels = 6
-        config.data_num = 6
+        config.data_num = 60
         config.cross_validate_fold = -1
 
         trainer = ATEPC.ATEPCTrainer(

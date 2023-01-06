@@ -38,9 +38,9 @@ class BERTCDDDataset(PyABSADataset):
 
         for ex_id, line in enumerate(tqdm.tqdm(natural_examples, desc="preparing dataloader")):
             code_src, label = line.strip().split("$LABEL$")
-
+            # print(len(self.tokenizer.tokenize(code_src.replace('\n', ''))))
             code_ids = self.tokenizer.text_to_sequence(
-                code_src,
+                code_src.replace("\n", ""),
                 max_length=self.config.max_seq_len,
                 padding="max_length",
                 truncation=True,
@@ -51,34 +51,35 @@ class BERTCDDDataset(PyABSADataset):
                 "label": label,
                 "corrupt_label": 0,
             }
-
             label_set.add(label)
             c_label_set.add(0)
             all_data.append(data)
+
         if self.dataset_type == "train":
             corrupt_examples = read_defect_examples(
                 lines,
                 self.config.get("data_num", None),
                 self.config.get("remove_comments", True),
             )
-            for ex_id, line in enumerate(tqdm.tqdm(corrupt_examples, desc="preparing dataloader")):
-                code_src, label = line.strip().split("$LABEL$")
-                code_src = _prepare_corrupt_code(code_src)
-                corrupt_code_ids = self.tokenizer.text_to_sequence(
-                    code_src,
-                    max_length=self.config.max_seq_len,
-                    padding="max_length",
-                    truncation=True,
-                )
-                data = {
-                    "ex_id": ex_id,
-                    "source_ids": corrupt_code_ids,
-                    "label": "-100",
-                    "corrupt_label": 1,
-                }
-                label_set.add("-100")
-                c_label_set.add(1)
-                all_data.append(data)
+            for _ in range(self.config.noise_instance_num):
+                for ex_id, line in enumerate(tqdm.tqdm(corrupt_examples, desc="preparing dataloader")):
+                    code_src, label = line.strip().split("$LABEL$")
+                    code_src = _prepare_corrupt_code(code_src)
+                    corrupt_code_ids = self.tokenizer.text_to_sequence(
+                        code_src.replace("\n", ""),
+                        max_length=self.config.max_seq_len,
+                        padding="max_length",
+                        truncation=True,
+                    )
+                    data = {
+                        "ex_id": ex_id,
+                        "source_ids": corrupt_code_ids,
+                        "label": "-100",
+                        "corrupt_label": 1,
+                    }
+                    label_set.add("-100")
+                    c_label_set.add(1)
+                    all_data.append(data)
 
         check_and_fix_labels(label_set, "label", all_data, self.config)
         self.config.output_dim = len(label_set)
