@@ -148,6 +148,14 @@ class PretrainedTokenizer:
         self.mask_token_id = self.tokenizer.mask_token_id
         self.eos_token_id = self.tokenizer.eos_token_id
 
+        self.pad_token = self.tokenizer.pad_token
+        self.unk_token = self.tokenizer.unk_token
+        self.cls_token = self.tokenizer.cls_token
+        self.sep_token = self.tokenizer.sep_token
+        self.mask_token = self.tokenizer.mask_token
+        self.eos_token = self.tokenizer.eos_token
+
+
     def text_to_sequence(self, text, **kwargs):
         return self.tokenizer.encode(
             text,
@@ -182,6 +190,7 @@ class PretrainedTokenizer:
 
     def decode(self, sequence, **kwargs):
         return self.tokenizer.decode(sequence, **kwargs)
+
 
 def build_embedding_matrix(config, tokenizer, cache_path=None):
     if not os.path.exists("run/{}".format(config.dataset_name)):

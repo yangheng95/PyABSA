@@ -384,4 +384,4 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, config=None):
     check_and_fix_IOB_labels(label_map, config)
     config.output_dim = len(polarities_set)
 
-    return features[:config.get("data_num", None)]
+    return features[: config.get("data_num", None)]

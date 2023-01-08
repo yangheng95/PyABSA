@@ -18,7 +18,8 @@ checkpoint_map = available_checkpoints(
 
 
 aspect_extractor = ATEPC.AspectExtractor(
-    "multilingual", auto_device=DeviceTypeOption.AUTO,
+    "multilingual",
+    auto_device=DeviceTypeOption.AUTO,
     data_num=100,
 )
 # aspect_extractor = ATEPC.AspectExtractor('english', auto_device=DeviceTypeOption.AUTO)

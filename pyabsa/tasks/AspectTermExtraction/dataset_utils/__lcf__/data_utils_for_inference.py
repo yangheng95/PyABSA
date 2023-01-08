@@ -245,7 +245,7 @@ def convert_ate_examples_to_features(
                 tokens=example.text_a,
             )
         )
-    return features[:config.get("data_num", None)]
+    return features[: config.get("data_num", None)]
 
 
 def convert_apc_examples_to_features(
@@ -367,4 +367,4 @@ def convert_apc_examples_to_features(
                 positions=positions,
             )
         )
-    return features[:config.get("data_num", None)]
+    return features[: config.get("data_num", None)]

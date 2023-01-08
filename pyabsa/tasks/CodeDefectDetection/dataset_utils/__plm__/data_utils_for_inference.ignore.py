@@ -8,6 +8,7 @@
 # Copyright (C) 2022. All Rights Reserved.
 
 import tqdm
+from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
 from torch.utils.data import Dataset
 
 from pyabsa import LabelPaddingOption
@@ -56,25 +57,34 @@ class BERTCDDInferenceDataset(Dataset):
                 if text is None or "" == text.strip():
                     raise RuntimeError("Invalid Input!")
 
-                code_src, _, label = text.strip().partition("$LABEL$")
-                # source_str = "{}: {}".format(args.task, example.source)
-
-                code_ids = self.tokenizer.text_to_sequence(
-                    code_src.replace("\n", ''),
-                    max_length=self.config.max_seq_len,
-                    padding="max_length",
-                    truncation=True,
+                code_src, label = text.strip().split("$LABEL$")
+                if "$FEATURE$" in code_src:
+                    code_src = code_src.split("$FEATURE$")[0]
+                code_ids = self.tokenizer.tokenizer.tokenize(
+                    code_src.replace("\n", ""),
                 )
-                try:
-                    label = int(label.strip())
-                except:
-                    label = LabelPaddingOption.LABEL_PADDING
+
+                # code_ids = self.tokenizer.text_to_sequence(
+                #     code_src.replace("\n", ""),
+                #     max_length=self.config.max_seq_len,
+                #     padding="max_length",
+                #     truncation=True,
+                # )
+                _code_ids = [self.tokenizer.cls_token] + code_ids[:self.config.max_seq_len - 2] + [
+                    self.tokenizer.sep_token]
+                _aux_ids = [self.tokenizer.cls_token] + code_ids[-self.config.max_seq_len + 2:] + [
+                    self.tokenizer.sep_token]
+                _code_ids = pad_and_truncate(_code_ids, self.config.max_seq_len, self.tokenizer.pad_token)
+                _aux_ids = pad_and_truncate(_aux_ids, self.config.max_seq_len, self.tokenizer.pad_token)
+                _code_ids = self.tokenizer.convert_tokens_to_ids(_code_ids)
+                _aux_ids = self.tokenizer.convert_tokens_to_ids(_aux_ids)
                 data = {
                     "ex_id": ex_id,
                     "code": code_src,
-                    "source_ids": code_ids,
-                    "label": label,
-                    "corrupt_label": LabelPaddingOption.LABEL_PADDING,
+                    "source_ids": _code_ids,
+                    "aux_ids": _aux_ids,
+                    "label": int(label.strip()),
+                    "corrupt_label": 0,
                 }
 
                 all_data.append(data)

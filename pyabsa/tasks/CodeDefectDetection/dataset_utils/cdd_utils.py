@@ -15,14 +15,15 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 
 class CodeLineIterator(list):
-
     def __init__(self, code, strip=True):
         self.code = code
-        self.lines = code.split('\n')
+        self.lines = code.split("\n")
         if strip:
-            self.lines = [line.strip() for line in self.lines if line.strip() != '']
+            self.lines = [line.strip() for line in self.lines if line.strip() != ""]
         else:
-            self.lines = [line.strip() + '\n' for line in self.lines if line.strip() != '']
+            self.lines = [
+                line.strip() + "\n" for line in self.lines if line.strip() != ""
+            ]
         super().__init__(self.lines)
 
     def __getitem__(self, item):
@@ -38,7 +39,8 @@ class CodeLineIterator(list):
         return len(self.lines)
 
     def __str__(self):
-        return '\n'.join(self.lines)
+        return "\n".join(self.lines)
+
 
 def random_indices(source, percentage):
     assert 0 <= percentage <= 1
@@ -112,24 +114,15 @@ def remove_comment(code_str, tokenizer=None):
     :param tokenizer: tokenizer if passed, will add <mask> token to the code
     """
     code = code_str
-    while "\\n\\n" in code:
-        code = code.replace("\\n\\n", "\\n")
-    while "\n\n" in code:
-        code = code.replace("\n\n", "\n")
-    while "  " in code:
-        code = code.replace("  ", " ")
-    code = code.replace("\\n", "\n")
-    code = code.replace("\t", "")
-    code = code.replace("\r", "")
-    # code = code.replace(" ", "")
-    # code = code.replace('\n', '')
 
-    block_comments = re.findall(r'/\*.*?\*/', code, re.DOTALL)
-    for comment in block_comments:
-        code = code.replace(comment, '')
-    line_comments = re.findall(r'//.*?\n', code)
-    for comment in line_comments:
-        code = code.replace(comment, '')
+    for s in re.findall(r"/\*.*?\*/", code, re.DOTALL):
+        code = code.replace(s, "")
+    for s in re.findall(r"//.*", code):
+        code = code.replace(s, "")
+    for s in re.findall(r"\n[\s]*\n", code, re.DOTALL):
+        code = code.replace(s, "\n")
+    for s in re.findall(r"\t[\s]*\t", code, re.DOTALL):
+        code = code.replace(s, "    ")
 
     if tokenizer:
         # add <mask> noise
@@ -137,22 +130,31 @@ def remove_comment(code_str, tokenizer=None):
         # line_ids = random.choices(range(len(code_lines)), k=len(code_lines) // random.randint(20, 50))
         line_ids = random.choices(range(len(code_lines)), k=0)
         for line_id in line_ids:
-            code_lines[line_id] = ''.join(
-                [tokenizer.tokenizer.mask_token for _ in range(len(tokenizer.tokenize(code_lines[line_id])))])
-        code = '\n'.join(code_lines)
+            code_lines[line_id] = "".join(
+                [
+                    tokenizer.tokenizer.mask_token
+                    for _ in range(len(tokenizer.tokenize(code_lines[line_id])))
+                ]
+            )
+        code = "\n".join(code_lines)
     return code
 
 
 def read_defect_examples(lines, data_num, remove_comments=True, tokenizer=None):
     """Read examples from filename."""
     examples = []
+    token_len_sum = 0
     for idx, line in enumerate(lines):
         try:
             js = json.loads(line)
             code = js["func"]
             if remove_comments:
                 code = remove_comment(code, tokenizer)
-            examples.append(code + "$LABEL$" + str(js["target"]))
+            if tokenizer:
+                token_len_sum += len(tokenizer.tokenize(code))
+            examples.append(
+                code + "$FEATURE$" + str(js["feature"]) + "$LABEL$" + str(js["target"])
+            )
         except Exception as e:
             try:
                 code = " ".join(s.strip() for s in line.split())
@@ -166,6 +168,8 @@ def read_defect_examples(lines, data_num, remove_comments=True, tokenizer=None):
 
         if idx + 1 == data_num:
             break
+    if tokenizer:
+        print("Average code length: ", token_len_sum / len(examples))
     return examples
 
 

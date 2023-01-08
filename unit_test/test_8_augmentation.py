@@ -35,7 +35,7 @@ def test_classification_augmentation():
 
     auto_classification_augmentation(
         config=config,
-        dataset='custom',
+        dataset="custom",
         device=autocuda.auto_cuda(),
     )
 
