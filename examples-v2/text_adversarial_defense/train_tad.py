@@ -23,7 +23,7 @@ def get_config():
     config.model = TAD.BERTTADModelList.TADBERT
     config.num_epoch = 5
     # config.pretrained_bert = 'bert-base-uncased'
-    config.patience = 5
+    config.patience = 3
     config.evaluate_begin = 0
     config.max_seq_len = 80
     config.log_step = -1

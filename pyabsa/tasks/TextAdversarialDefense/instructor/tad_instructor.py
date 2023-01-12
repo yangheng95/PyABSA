@@ -296,7 +296,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
         for epoch in range(self.config.num_epoch):
             patience -= 1
             description = "Epoch:{} | Loss:{}".format(epoch, 0)
-            iterator = tqdm(self.train_dataloaders[0])
+            iterator = tqdm(self.train_dataloaders[0], desc=description)
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
                 # switch model to train mode, clear gradient accumulators
@@ -516,27 +516,39 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                             save_path + "_{}/".format(loss.item()),
                         )
                 else:
-                    description = "Epoch:{} | Loss: {}".format(
-                        epoch, round(loss.item(), 8)
-                    )
-
+                    if self.config.get("loss_display", "smooth") == "smooth":
+                        description = "Epoch:{:>3d} | Smooth Loss: {:>.4f}".format(
+                            epoch, round(np.average(losses), 4)
+                        )
+                    else:
+                        description = "Epoch:{:>3d} | Batch Loss: {:>.4f}".format(
+                            epoch, round(loss.item(), 4)
+                        )
                 iterator.set_description(description)
                 iterator.refresh()
             if patience == 0:
                 break
 
         if not self.valid_dataloader:
-            self.config.MV.add_metric(
-                "Max-CLS-Acc w/o Valid Set", max_label_fold_acc * 100
+            self.config.MV.log_metric(
+                self.config.model_name,
+                "Max-CLS-Acc w/o Valid Set",
+                max_label_fold_acc * 100,
             )
-            self.config.MV.add_metric(
-                "Max-CLS-F1 w/o Valid Set", max_label_fold_f1 * 100
+            self.config.MV.log_metric(
+                self.config.model_name,
+                "Max-CLS-F1 w/o Valid Set",
+                max_label_fold_f1 * 100,
             )
-            self.config.MV.add_metric(
-                "Max-AdvDet-Acc w/o Valid Set", max_adv_det_fold_acc * 100
+            self.config.MV.log_metric(
+                self.config.model_name,
+                "Max-AdvDet-Acc w/o Valid Set",
+                max_adv_det_fold_acc * 100,
             )
-            self.config.MV.add_metric(
-                "Max-AdvDet-F1 w/o Valid Set", max_adv_det_fold_f1 * 100
+            self.config.MV.log_metric(
+                self.config.model_name,
+                "Max-AdvDet-F1 w/o Valid Set",
+                max_adv_det_fold_f1 * 100,
             )
         if self.valid_dataloader:
             fprint(
@@ -552,12 +564,60 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                 max_adv_tr_fold_f1,
             ) = self._evaluate_acc_f1(self.test_dataloader)
 
-            self.config.MV.add_metric("Max-CLS-Acc", max_label_fold_acc * 100)
-            self.config.MV.add_metric("Max-CLS-F1", max_label_fold_f1 * 100)
-            self.config.MV.add_metric("Max-AdvDet-Acc", max_adv_det_fold_acc * 100)
-            self.config.MV.add_metric("Max-AdvDet-F1", max_adv_det_fold_f1 * 100)
-            self.config.MV.add_metric("Max-AdvCLS-Acc", max_adv_tr_fold_acc * 100)
-            self.config.MV.add_metric("Max-AdvCLS-F1", max_adv_tr_fold_f1 * 100)
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-CLS-Acc",
+                max_label_fold_acc * 100,
+            )
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-CLS-F1",
+                max_label_fold_f1 * 100,
+            )
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-AdvDet-Acc",
+                max_adv_det_fold_acc * 100,
+            )
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-AdvDet-F1",
+                max_adv_det_fold_f1 * 100,
+            )
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-AdvCLS-Acc",
+                max_adv_tr_fold_acc * 100,
+            )
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-AdvCLS-F1",
+                max_adv_tr_fold_f1 * 100,
+            )
 
         self.config.logger.info(self.config.MV.summary(no_print=True))
 
@@ -695,7 +755,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
             t_label_targets_all.cpu(),
             torch.argmax(t_label_outputs_all.cpu(), -1),
             labels=list(range(self.config.class_dim)),
-            average="macro",
+            average=self.config.get("f1_average", "macro"),
         )
         if self.config.args.get("show_metric", False):
             fprint(
@@ -720,7 +780,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
             t_adv_det_targets_all.cpu(),
             torch.argmax(t_adv_det_outputs_all, -1).cpu(),
             labels=list(range(self.config.adv_det_dim)),
-            average="macro",
+            average=self.config.get("f1_average", "macro"),
         )
 
         adv_tr_test_acc = n_adv_tr_test_correct / n_adv_tr_test_total
@@ -728,7 +788,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
             t_adv_tr_targets_all.cpu(),
             torch.argmax(t_adv_tr_outputs_all, -1).cpu(),
             labels=list(range(self.config.class_dim)),
-            average="macro",
+            average=self.config.get("f1_average", "macro"),
         )
 
         return (

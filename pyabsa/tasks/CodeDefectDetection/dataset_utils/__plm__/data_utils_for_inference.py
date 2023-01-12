@@ -57,10 +57,11 @@ class BERTCDDInferenceDataset(Dataset):
                     raise RuntimeError("Invalid Input!")
 
                 code_src, _, label = text.strip().partition("$LABEL$")
+                if "$FEATURE$" in code_src:
+                    code_src, _, feature = code_src.partition("$FEATURE$")
                 # source_str = "{}: {}".format(args.task, example.source)
-
                 code_ids = self.tokenizer.text_to_sequence(
-                    code_src.replace("\n", ''),
+                    code_src,
                     max_length=self.config.max_seq_len,
                     padding="max_length",
                     truncation=True,

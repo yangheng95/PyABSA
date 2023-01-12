@@ -27,7 +27,7 @@ for i in range(10):
     config.num_lstm_layer = 1
     config.class_weights = [1, 1, 0.1]
     config.do_lower_case = False
-    config.seed = [random.randint(0, 10000) for _ in range(5)]
+    config.seed = [random.randint(0, 10000) for _ in range(3)]
     config.log_step = -1
     config.show_metric = True
     config.l2reg = 0.001

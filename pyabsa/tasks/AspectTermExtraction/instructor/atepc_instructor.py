@@ -9,6 +9,7 @@ import os
 import time
 
 import numpy
+import numpy as np
 import pandas
 import sklearn.metrics as metrics
 import torch
@@ -476,10 +477,14 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                             save_path + "_{}/".format(loss.item()),
                         )
                 else:
-                    description = "Epoch:{} | Loss: {}".format(
-                        epoch, round(loss.item(), 8)
-                    )
-
+                    if self.config.get("loss_display", "smooth") == "smooth":
+                        description = "Epoch:{:>3d} | Smooth Loss: {:>.4f}".format(
+                            epoch, round(np.average(losses), 4)
+                        )
+                    else:
+                        description = "Epoch:{:>3d} | Batch Loss: {:>.4f}".format(
+                            epoch, round(loss.item(), 4)
+                        )
                 iterator.set_description(description)
                 iterator.refresh()
 
@@ -489,20 +494,59 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
         apc_result, ate_result = self._evaluate_acc_f1(self.test_dataloader)
 
         if self.valid_set and self.test_set:
-            self.config.MV.add_metric("Test-APC-Acc", apc_result["apc_test_acc"])
-            self.config.MV.add_metric("Test-APC-F1", apc_result["apc_test_f1"])
-            self.config.MV.add_metric("Test-ATE-F1", ate_result)
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Test-APC-Acc",
+                apc_result["apc_test_acc"],
+            )
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Test-APC-F1",
+                apc_result["apc_test_f1"],
+            )
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Test-ATE-F1",
+                ate_result,
+            )
 
         else:
-            self.config.MV.add_metric(
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
                 "Max-APC-Test-Acc w/o Valid Set",
                 self.config.max_test_metrics["max_apc_test_acc"],
             )
-            self.config.MV.add_metric(
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
                 "Max-APC-Test-F1 w/o Valid Set",
                 self.config.max_test_metrics["max_apc_test_f1"],
             )
-            self.config.MV.add_metric(
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
                 "Max-ATE-Test-F1 w/o Valid Set",
                 self.config.max_test_metrics["max_ate_test_f1"],
             )
@@ -643,7 +687,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                 torch.argmax(test_apc_logits_all, -1).cpu(),
                 test_polarities_all.cpu(),
                 labels=list(range(self.config.output_dim)),
-                average="macro",
+                average=self.config.get("f1_average", "macro"),
             )
 
             test_acc = round(test_acc * 100, 2)

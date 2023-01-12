@@ -284,7 +284,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
         for epoch in range(self.config.num_epoch):
             patience -= 1
             description = "Epoch:{} | Loss:{}".format(epoch, 0)
-            iterator = tqdm(self.train_dataloaders[0])
+            iterator = tqdm(self.train_dataloaders[0], desc=description)
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
                 # switch model to train mode, clear gradient accumulators
@@ -384,18 +384,38 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                             save_path + "_{}/".format(loss.item()),
                         )
                 else:
-                    description = "Epoch:{} | Loss: {}".format(
-                        epoch, round(loss.item(), 8)
-                    )
-
+                    if self.config.get("loss_display", "smooth") == "smooth":
+                        description = "Epoch:{:>3d} | Smooth Loss: {:>.4f}".format(
+                            epoch, round(np.average(losses), 4)
+                        )
+                    else:
+                        description = "Epoch:{:>3d} | Batch Loss: {:>.4f}".format(
+                            epoch, round(loss.item(), 4)
+                        )
                 iterator.set_description(description)
                 iterator.refresh()
             if patience == 0:
                 break
 
         if not self.valid_dataloader:
-            self.config.MV.add_metric("Max-Test-Acc w/o Valid Set", max_fold_acc * 100)
-            self.config.MV.add_metric("Max-Test-F1 w/o Valid Set", max_fold_f1 * 100)
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-Test-Acc w/o Valid Set",
+                max_fold_acc * 100,
+            )
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-Test-F1 w/o Valid Set",
+                max_fold_f1 * 100,
+            )
 
         if self.valid_dataloader:
             fprint(
@@ -404,8 +424,24 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             self.reload_model(find_file(save_path, ".state_dict"))
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
 
-            self.config.MV.add_metric("Max-Test-Acc", max_fold_acc * 100)
-            self.config.MV.add_metric("Max-Test-F1", max_fold_f1 * 100)
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-Test-Acc",
+                max_fold_acc * 100,
+            )
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-Test-F1",
+                max_fold_f1 * 100,
+            )
 
         self.logger.info(self.config.MV.summary(no_print=True))
 
@@ -434,6 +470,8 @@ class TCTrainingInstructor(BaseTrainingInstructor):
 
         save_path_k_fold = ""
         max_fold_acc_k_fold = 0
+
+        losses = []
 
         self.config.metrics_of_this_checkpoint = {"acc": 0, "f1": 0}
         self.config.max_test_metrics = {"max_test_acc": 0, "max_test_f1": 0}
@@ -476,8 +514,8 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             )
             for epoch in range(self.config.num_epoch):
                 patience -= 1
-                iterator = tqdm(train_dataloader)
                 description = "Epoch:{} | Loss:{}".format(epoch, 0)
+                iterator = tqdm(train_dataloader, desc=description)
                 for i_batch, sample_batched in enumerate(iterator):
                     global_step += 1
                     # switch model to train mode, clear gradient accumulators
@@ -500,6 +538,8 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                         loss = outputs["loss"]
                     else:
                         loss = criterion(outputs, targets)
+
+                    losses.append(loss.item())
 
                     if self.config.use_amp and self.scaler:
                         self.scaler.scale(loss).backward()
@@ -586,9 +626,14 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                                 save_path + "_{}/".format(loss.item()),
                             )
                     else:
-                        description = "Epoch:{} | Loss:{} |".format(
-                            epoch, round(loss.item(), 8)
-                        )
+                        if self.config.get("loss_display", "smooth") == "smooth":
+                            description = "Epoch:{:>3d} | Smooth Loss: {:>.4f}".format(
+                                epoch, round(np.average(losses), 4)
+                            )
+                        else:
+                            description = "Epoch:{:>3d} | Batch Loss: {:>.4f}".format(
+                                epoch, round(loss.item(), 4)
+                            )
 
                     iterator.set_description(description)
                     iterator.refresh()
@@ -601,11 +646,15 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             fold_test_acc.append(max_fold_acc)
             fold_test_f1.append(max_fold_f1)
 
-            self.config.MV.add_metric(
-                "Fold{}-Max-Valid-Acc".format(f), max_fold_acc * 100
+            self.config.MV.log_metric(
+                self.config.model_name,
+                "Fold{}-Max-Valid-Acc".format(f),
+                max_fold_acc * 100,
             )
-            self.config.MV.add_metric(
-                "Fold{}-Max-Valid-F1".format(f), max_fold_f1 * 100
+            self.config.MV.log_metric(
+                self.config.model_name,
+                "Fold{}-Max-Valid-F1".format(f),
+                max_fold_f1 * 100,
             )
 
             self.logger.info(self.config.MV.summary(no_print=True))
@@ -615,8 +664,24 @@ class TCTrainingInstructor(BaseTrainingInstructor):
         max_test_acc = np.max(fold_test_acc)
         max_test_f1 = np.mean(fold_test_f1)
 
-        self.config.MV.add_metric("Max-Test-Acc", max_test_acc * 100)
-        self.config.MV.add_metric("Max-Test-F1", max_test_f1 * 100)
+        self.config.MV.log_metric(
+            self.config.model_name
+            + "-"
+            + self.config.dataset_name
+            + "-"
+            + self.config.pretrained_bert,
+            "Max-Test-Acc",
+            max_test_acc * 100,
+        )
+        self.config.MV.log_metric(
+            self.config.model_name
+            + "-"
+            + self.config.dataset_name
+            + "-"
+            + self.config.pretrained_bert,
+            "Max-Test-F1",
+            max_test_f1 * 100,
+        )
 
         if self.config.cross_validate_fold > 0:
             self.logger.info(self.config.MV.summary(no_print=True))
@@ -681,7 +746,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             t_targets_all.cpu(),
             torch.argmax(t_outputs_all.cpu(), -1),
             labels=list(range(self.config.output_dim)),
-            average="macro",
+            average=self.config.get("f1_average", "macro"),
         )
         if self.config.args.get("show_metric", False):
             report = metrics.classification_report(

@@ -26,7 +26,7 @@ class BERT_MLP2(nn.Module):
         "Salesforce/codet5-base": T5ForConditionalGeneration,
     }
     #
-    inputs = ["source_ids", "label", "corrupt_label"]
+    inputs = ["source_ids", "aux_ids", "label", "corrupt_label"]
 
     def __init__(self, bert, config):
         super(BERT_MLP2, self).__init__()
@@ -35,6 +35,10 @@ class BERT_MLP2(nn.Module):
             self.config.pretrained_bert, AutoModel
         ).from_pretrained(self.config.pretrained_bert)
         self.tokenizer = AutoTokenizer.from_pretrained(self.config.pretrained_bert)
+
+        self.linear = nn.Linear(2 * self.config.hidden_dim, self.config.hidden_dim)
+        self.dropout = nn.Dropout(self.config.dropout)
+
         self.classifier1 = nn.Linear(config.hidden_dim, 2)
         self.classifier2 = nn.Linear(config.hidden_dim, 2)
         if self.config.get("loss_fn", "CrossEntropyLoss") == "FocalLoss":
@@ -66,6 +70,7 @@ class BERT_MLP2(nn.Module):
             decoder_attention_mask=attention_mask,
             output_hidden_states=True,
         )
+
         hidden_states = outputs["decoder_hidden_states"][-1]
         eos_mask = source_ids.eq(self.encoder.config.eos_token_id)
 
@@ -92,7 +97,7 @@ class BERT_MLP2(nn.Module):
             raise ValueError("All examples must have the same number of <eos> tokens.")
         vec = hidden_states[eos_mask, :].view(
             hidden_states.size(0), -1, hidden_states.size(-1)
-        )[:, -1, :]
+        )[:, 0, :]
         return vec
 
     def get_roberta_vec(self, source_ids):
@@ -103,14 +108,18 @@ class BERT_MLP2(nn.Module):
         return vec
 
     def forward(self, inputs):
-        source_ids, labels, corrupt_labels = inputs
+        source_ids, aux_ids, labels, corrupt_labels = inputs
 
         if "t5" in self.config.pretrained_bert:
             vec = self.get_t5_vec(source_ids)
+
         elif "bart" in self.config.pretrained_bert:
-            vec = self.get_bart_vec(source_ids)
+            vec1 = self.get_bart_vec(source_ids)
+            vec2 = self.get_bart_vec(aux_ids)
+
         else:
-            vec = self.get_roberta_vec(source_ids)
+            vec1 = self.get_roberta_vec(source_ids)
+            vec2 = self.get_roberta_vec(aux_ids)
 
         logits1 = self.classifier1(vec)
         logits2 = self.classifier2(vec)
@@ -125,8 +134,6 @@ class BERT_MLP2(nn.Module):
             # loss_fct2 = FocalLoss()
 
             loss = loss_fct1(logits1, labels) + loss_fct2(logits2, corrupt_labels)
-            # loss = loss_fct1(logits1, labels)
-            # loss = loss_fct1(logits2, corrupt_labels)
             return {"loss": loss, "logits": prob, "c_logits": c_prob}
         else:
             return {"logits": prob, "c_logits": c_prob}

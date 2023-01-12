@@ -13,7 +13,7 @@ PyABSA Documentation
 .. toctree::
    :maxdepth: 6
    :caption: Quick-Start
-
+    Create (Annotate) Your Own Dataset <1_quick_start/annotate.md>
     Aspect-based Sentiment Classification <1_quick_start/absc.md>
     Aspect Term Extraction <1_quick_start/ate.md>
     Aspect Term Extraction and Sentiment Classification <1_quick_start/atesc.md>

@@ -135,7 +135,6 @@ class Tokenizer(object):
         ]
         return " ".join(words)
 
-
 class PretrainedTokenizer:
     def __init__(self, config, **kwargs):
         self.config = config
@@ -154,7 +153,6 @@ class PretrainedTokenizer:
         self.sep_token = self.tokenizer.sep_token
         self.mask_token = self.tokenizer.mask_token
         self.eos_token = self.tokenizer.eos_token
-
 
     def text_to_sequence(self, text, **kwargs):
         return self.tokenizer.encode(

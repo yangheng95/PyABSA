@@ -282,7 +282,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
         for epoch in range(self.config.num_epoch):
             patience -= 1
             description = "Epoch:{} | Loss:{}".format(epoch, 0)
-            iterator = tqdm(self.train_dataloaders[0])
+            iterator = tqdm(self.train_dataloaders[0], desc=description)
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
                 # switch model to train mode, clear gradient accumulators
@@ -391,9 +391,14 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                             save_path + "_{}/".format(loss.item()),
                         )
                 else:
-                    description = "Epoch:{} | Loss: {}".format(
-                        epoch, round(loss.item(), 8)
-                    )
+                    if self.config.get("loss_display", "smooth") == "smooth":
+                        description = "Epoch:{:>3d} | Smooth Loss: {:>.4f}".format(
+                            epoch, round(np.average(losses), 4)
+                        )
+                    else:
+                        description = "Epoch:{:>3d} | Batch Loss: {:>.4f}".format(
+                            epoch, round(loss.item(), 4)
+                        )
 
                 iterator.set_description(description)
                 iterator.refresh()
@@ -401,8 +406,24 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 break
 
         if not self.valid_dataloader:
-            self.config.MV.add_metric("Max-Test-Acc w/o Valid Set", max_fold_acc * 100)
-            self.config.MV.add_metric("Max-Test-F1 w/o Valid Set", max_fold_f1 * 100)
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-Test-Acc w/o Valid Set",
+                max_fold_acc * 100,
+            )
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-Test-F1 w/o Valid Set",
+                max_fold_f1 * 100,
+            )
 
         if self.valid_dataloader:
             fprint(
@@ -411,8 +432,24 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
             self.reload_model(find_file(save_path, ".state_dict"))
             max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
 
-            self.config.MV.add_metric("Max-Test-Acc", max_fold_acc * 100)
-            self.config.MV.add_metric("Max-Test-F1", max_fold_f1 * 100)
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-Test-Acc",
+                max_fold_acc * 100,
+            )
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-Test-F1",
+                max_fold_f1 * 100,
+            )
 
         self.logger.info(self.config.MV.summary(no_print=True))
 
@@ -444,6 +481,8 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
 
         self.config.metrics_of_this_checkpoint = {"acc": 0, "f1": 0}
         self.config.max_test_metrics = {"max_test_acc": 0, "max_test_f1": 0}
+
+        losses = []
 
         for f, (train_dataloader, valid_dataloader) in enumerate(
             zip(self.train_dataloaders, self.valid_dataloaders)
@@ -483,8 +522,8 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
             )
             for epoch in range(self.config.num_epoch):
                 patience -= 1
-                iterator = tqdm(train_dataloader)
                 description = "Epoch:{} | Loss:{}".format(epoch, 0)
+                iterator = tqdm(train_dataloader, desc=description)
                 for i_batch, sample_batched in enumerate(iterator):
                     global_step += 1
                     # switch model to train mode, clear gradient accumulators
@@ -509,6 +548,8 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                         loss = criterion(outputs, targets)
                     if self.config.auto_device == DeviceTypeOption.ALL_CUDA:
                         loss = loss.mean()
+
+                    losses.append(loss.item())
 
                     if self.config.use_amp and self.scaler:
                         self.scaler.scale(loss).backward()
@@ -596,9 +637,14 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                                 save_path + "_{}/".format(loss.item()),
                             )
                     else:
-                        description = "Epoch:{} | Loss:{} |".format(
-                            epoch, round(loss.item(), 8)
-                        )
+                        if self.config.get("loss_display", "smooth") == "smooth":
+                            description = "Epoch:{:>3d} | Smooth Loss: {:>.4f}".format(
+                                epoch, round(np.average(losses), 4)
+                            )
+                        else:
+                            description = "Epoch:{:>3d} | Batch Loss: {:>.4f}".format(
+                                epoch, round(loss.item(), 4)
+                            )
 
                     iterator.set_description(description)
                     iterator.refresh()
@@ -611,11 +657,15 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
             fold_test_acc.append(max_fold_acc)
             fold_test_f1.append(max_fold_f1)
 
-            self.config.MV.add_metric(
-                "Fold{}-Max-Valid-Acc".format(f), max_fold_acc * 100
+            self.config.MV.log_metric(
+                self.config.model_name,
+                "Fold{}-Max-Valid-Acc".format(f),
+                max_fold_acc * 100,
             )
-            self.config.MV.add_metric(
-                "Fold{}-Max-Valid-F1".format(f), max_fold_f1 * 100
+            self.config.MV.log_metric(
+                self.config.model_name,
+                "Fold{}-Max-Valid-F1".format(f),
+                max_fold_f1 * 100,
             )
 
             self.logger.info(self.config.MV.summary(no_print=True))
@@ -625,8 +675,24 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
         max_test_acc = np.max(fold_test_acc)
         max_test_f1 = np.mean(fold_test_f1)
 
-        self.config.MV.add_metric("Max-Test-Acc", max_test_acc * 100)
-        self.config.MV.add_metric("Max-Test-F1", max_test_f1 * 100)
+        self.config.MV.log_metric(
+            self.config.model_name
+            + "-"
+            + self.config.dataset_name
+            + "-"
+            + self.config.pretrained_bert,
+            "Max-Test-Acc",
+            max_test_acc * 100,
+        )
+        self.config.MV.log_metric(
+            self.config.model_name
+            + "-"
+            + self.config.dataset_name
+            + "-"
+            + self.config.pretrained_bert,
+            "Max-Test-F1",
+            max_test_f1 * 100,
+        )
 
         if self.config.cross_validate_fold > 0:
             self.logger.info(self.config.MV.summary(no_print=True))
@@ -710,7 +776,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
             t_targets_all.cpu(),
             torch.argmax(t_outputs_all.cpu(), -1),
             labels=list(range(self.config.output_dim)),
-            average="macro",
+            average=self.config.get("f1_average", "macro"),
         )
         if self.config.args.get("show_metric", False):
             report = metrics.classification_report(
@@ -731,24 +797,35 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 "\n---------------------------- Classification Report ----------------------------\n"
             )
 
-            report = metrics.confusion_matrix(
-                t_targets_all.cpu(),
-                torch.argmax(t_outputs_all.cpu(), -1),
-                labels=[
-                    self.config.label_to_index[x] for x in self.config.label_to_index
+            # report = metrics.confusion_matrix(
+            #     t_targets_all.cpu(),
+            #     torch.argmax(t_outputs_all.cpu(), -1),
+            #     labels=[
+            #         self.config.label_to_index[x] for x in self.config.label_to_index
+            #     ],
+            # )
+            # fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
+            # rprint(report)
+            # fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
+
+            report = metrics.classification_report(
+                t_c_targets_all.cpu(),
+                torch.argmax(t_c_outputs_all.cpu(), -1),
+                digits=4,
+                target_names=[
+                    self.config.index_to_label[x]
+                    for x in self.config.index_to_label
+                    if x != -100
                 ],
             )
-            # fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
-            # rprint(report)
-            # fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
-            #
-            # report = metrics.classification_report(t_c_targets_all.cpu(), torch.argmax(t_c_outputs_all.cpu(), -1), digits=4,
-            #                                        target_names=[self.config.index_to_label[x] for x in
-            #                                                      self.config.index_to_label])
-            # fprint('\n---------------------------- Corrupt Detection Report ----------------------------\n')
-            # rprint(report)
-            # fprint('\n---------------------------- Corrupt Detection Report ----------------------------\n')
-            #
+            fprint(
+                "\n---------------------------- Corrupt Detection Report ----------------------------\n"
+            )
+            rprint(report)
+            fprint(
+                "\n---------------------------- Corrupt Detection Report ----------------------------\n"
+            )
+
             # report = metrics.confusion_matrix(t_c_targets_all.cpu(), torch.argmax(t_c_outputs_all.cpu(), -1),
             #                                   labels=[self.config.label_to_index[x]
             #                                           for x in self.config.label_to_index])

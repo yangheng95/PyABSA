@@ -9,6 +9,7 @@
 import random
 
 import tqdm
+from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
 
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from ..cdd_utils import read_defect_examples, _prepare_corrupt_code
@@ -40,17 +41,17 @@ class BERTCDDDataset(PyABSADataset):
             tqdm.tqdm(natural_examples, desc="preparing dataloader")
         ):
             code_src, label = line.strip().split("$LABEL$")
-            if '$FEATURE$' in code_src:
+            if "$FEATURE$" in code_src:
                 code_src, feature = code_src.split("$FEATURE$")
             # print(len(self.tokenizer.tokenize(code_src.replace('\n', ''))))
             code_ids = self.tokenizer.text_to_sequence(
-                code_src.replace("\n", ""),
+                code_src,
                 max_length=self.config.max_seq_len,
                 padding="max_length",
                 truncation=True,
             )
             aux_ids = self.tokenizer.text_to_sequence(
-                feature.replace("\n", ""),
+                feature,
                 max_length=self.config.max_seq_len,
                 padding="max_length",
                 truncation=True,
@@ -77,17 +78,17 @@ class BERTCDDDataset(PyABSADataset):
                     tqdm.tqdm(corrupt_examples, desc="preparing dataloader")
                 ):
                     code_src, label = line.strip().split("$LABEL$")
-                    if '$FEATURE$' in code_src:
+                    if "$FEATURE$" in code_src:
                         code_src, feature = code_src.split("$FEATURE$")
                     code_src = _prepare_corrupt_code(code_src)
                     corrupt_code_ids = self.tokenizer.text_to_sequence(
-                        code_src.replace("\n", ""),
+                        code_src,
                         max_length=self.config.max_seq_len,
                         padding="max_length",
                         truncation=True,
                     )
                     aux_ids = self.tokenizer.text_to_sequence(
-                        feature.replace("\n", ""),
+                        feature,
                         max_length=self.config.max_seq_len,
                         padding="max_length",
                         truncation=True,

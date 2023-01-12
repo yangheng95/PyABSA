@@ -10,6 +10,7 @@ import shutil
 import time
 
 import numpy
+import numpy as np
 import torch
 import torch.nn as nn
 from findfile import find_file
@@ -283,10 +284,11 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
 
         for epoch in range(self.config.num_epoch):
             patience -= 1
-            iterator = tqdm(self.train_dataloaders[0])
+            description = "Epoch:{} | Loss:{}".format(epoch, 0)
+            iterator = tqdm(self.train_dataloaders[0], desc=description)
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
-                description = "Epoch:{} | Loss:{}".format(epoch, 0)
+
                 # switch model to train mode, clear gradient accumulators
                 self.model.train()
                 self.optimizer.zero_grad()
@@ -378,17 +380,29 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
                             save_path + "_{}/".format(loss.item()),
                         )
                 else:
-                    description = "Epoch:{} | Loss: {}".format(
-                        epoch, round(loss.item(), 8)
-                    )
-
+                    if self.config.get("loss_display", "smooth") == "smooth":
+                        description = "Epoch:{:>3d} | Smooth Loss: {:>.4f}".format(
+                            epoch, round(np.average(losses), 4)
+                        )
+                    else:
+                        description = "Epoch:{:>3d} | Batch Loss: {:>.4f}".format(
+                            epoch, round(loss.item(), 4)
+                        )
                 iterator.set_description(description)
                 iterator.refresh()
             if patience == 0:
                 break
 
         if not self.valid_dataloader:
-            self.config.MV.add_metric("Max-Test-R2-Score w/o Valid Set", max_fold_r2)
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-Test-R2-Score w/o Valid Set",
+                max_fold_r2,
+            )
 
         if self.valid_dataloader:
             fprint(
@@ -397,7 +411,15 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
             self.reload_model(find_file(save_path, ".state_dict"))
             max_fold_r2 = self._evaluate_r2(self.test_dataloader, criterion)
 
-            self.config.MV.add_metric("Max-Test-R2-Score", max_fold_r2)
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-Test-R2-Score",
+                max_fold_r2,
+            )
 
         self.logger.info(self.config.MV.summary(no_print=True))
 
@@ -425,6 +447,8 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
 
         save_path_k_fold = ""
         max_fold_r2_k_fold = 0
+
+        losses = []
 
         self.config.metrics_of_this_checkpoint = {"r2": 0}
         self.config.max_test_metrics = {"max_test_r2": 0}
@@ -466,8 +490,8 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
             )
             for epoch in range(self.config.num_epoch):
                 patience -= 1
-                iterator = tqdm(train_dataloader)
                 description = "Epoch:{} | Loss:{}".format(epoch, 0)
+                iterator = tqdm(train_dataloader, desc=description)
                 for i_batch, sample_batched in enumerate(iterator):
                     global_step += 1
                     # switch model to train mode, clear gradient accumulators
@@ -490,6 +514,8 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
                         loss = outputs["loss"]
                     else:
                         loss = criterion(outputs.view(-1), targets)
+
+                    losses.append(loss.item())
 
                     if self.config.use_amp and self.scaler:
                         self.scaler.scale(loss).backward()
@@ -564,10 +590,14 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
                                 save_path + "_{}/".format(loss.item()),
                             )
                     else:
-                        description = "Epoch:{} | Loss:{} |".format(
-                            epoch,
-                            round(loss.item(), 8),
-                        )
+                        if self.config.get("loss_display", "smooth") == "smooth":
+                            description = "Epoch:{:>3d} | Smooth Loss: {:>.4f}".format(
+                                epoch, round(np.average(losses), 4)
+                            )
+                        else:
+                            description = "Epoch:{:>3d} | Batch Loss: {:>.4f}".format(
+                                epoch, round(loss.item(), 4)
+                            )
 
                     iterator.set_description(description)
                     iterator.refresh()
@@ -579,8 +609,10 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
                 save_path_k_fold = save_path
             fold_test_r2.append(max_fold_r2)
 
-            self.config.MV.add_metric(
-                "Fold{}-Max-Valid-R2-Score".format(f), max_fold_r2
+            self.config.MV.log_metric(
+                self.config.model_name,
+                "Fold{}-Max-Valid-R2-Score".format(f),
+                max_fold_r2,
             )
 
             self.logger.info(self.config.MV.summary(no_print=True))
@@ -589,7 +621,15 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
 
         max_test_r2 = numpy.max(fold_test_r2)
 
-        self.config.MV.add_metric("Max-Test-R2-Score", max_test_r2)
+        self.config.MV.log_metric(
+            self.config.model_name
+            + "-"
+            + self.config.dataset_name
+            + "-"
+            + self.config.pretrained_bert,
+            "Max-Test-R2-Score",
+            max_test_r2,
+        )
 
         if self.config.cross_validate_fold > 0:
             self.logger.info(self.config.MV.summary(no_print=True))

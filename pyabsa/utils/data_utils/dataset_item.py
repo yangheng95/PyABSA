@@ -18,23 +18,29 @@ class DatasetItem(list):
         :param dataset_name: name of the dataset
         :param dataset_items: list of dataset names or file paths
         """
-        super().__init__()
-        if os.path.exists(dataset_name):
-            # fprint('Construct DatasetItem from {}, assign dataset_name={}'.format(dataset_name, os.path.basename(dataset_name)))
-            # Normalizing the dataset's name (or path) to not end with a '/' or '\'
-            while dataset_name and dataset_name[-1] in ["/", "\\"]:
-                dataset_name = dataset_name[:-1]
-
-        # Naming the dataset with the normalized folder name only
-        self.dataset_name = os.path.basename(dataset_name)
-
-        # Creating the list of items if it does not exist
-        if not dataset_items:
-            dataset_items = dataset_name
-
-        if not isinstance(dataset_items, list):
-            self.append(dataset_items)
-        else:
+        if isinstance(dataset_name, DatasetItem):
+            self.dataset_name = dataset_name.dataset_name
+            self.name = dataset_name.name
             for d in dataset_items:
                 self.append(d)
-        self.name = self.dataset_name
+        else:
+            super().__init__()
+            if os.path.exists(dataset_name):
+                # fprint('Construct DatasetItem from {}, assign dataset_name={}'.format(dataset_name, os.path.basename(dataset_name)))
+                # Normalizing the dataset's name (or path) to not end with a '/' or '\'
+                while dataset_name and dataset_name[-1] in ["/", "\\"]:
+                    dataset_name = dataset_name[:-1]
+
+            # Naming the dataset with the normalized folder name only
+            self.dataset_name = os.path.basename(dataset_name)
+
+            # Creating the list of items if it does not exist
+            if not dataset_items:
+                dataset_items = dataset_name
+
+            if not isinstance(dataset_items, list):
+                self.append(dataset_items)
+            else:
+                for d in dataset_items:
+                    self.append(d)
+            self.name = self.dataset_name

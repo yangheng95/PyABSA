@@ -39,9 +39,9 @@ setup(
     # Choose your license
     license="MIT",
     install_requires=[
-        "findfile>=1.7.10",
+        "findfile>=2.0.0",
         "autocuda>=0.15",
-        "metric-visualizer>=0.7.0",
+        "metric-visualizer>=0.7.4",
         "boostaug>=2.3.2",
         "spacy",
         "networkx",

@@ -102,7 +102,11 @@ def _prepare_corrupt_code(code_src):
     addition_ids = random_indices(code_src, random.random() / 10)
     code_tokens = _add_token(code_tokens, addition_ids)
 
-    corrupt_code_src = " ".join(code_tokens)
+    corrupt_code_src = "\n".join(code_tokens)
+
+    # code_lines = CodeLineIterator(code_src)
+    # random.shuffle(code_lines)
+    # corrupt_code_src = '\n'.join(code_lines)
 
     return corrupt_code_src
 
@@ -115,14 +119,20 @@ def remove_comment(code_str, tokenizer=None):
     """
     code = code_str
 
-    for s in re.findall(r"/\*.*?\*/", code, re.DOTALL):
+    for s in re.findall(r"/\*.*?\*/\n", code, re.DOTALL):
         code = code.replace(s, "")
-    for s in re.findall(r"//.*", code):
+    for s in re.findall(r"//.*\n", code):
         code = code.replace(s, "")
     for s in re.findall(r"\n[\s]*\n", code, re.DOTALL):
         code = code.replace(s, "\n")
-    for s in re.findall(r"\t[\s]*\t", code, re.DOTALL):
-        code = code.replace(s, "    ")
+    # for s in re.findall(r"\\n[\s]*\\n", code, re.DOTALL):
+    #     code = code.replace(s, "\n")
+    # for s in re.findall(r"\t", code, re.DOTALL):
+    #     code = code.replace(s, "    ")
+    # for s in re.findall(r"import.*;\n", code):
+    #     code = code.replace(s, "")
+    # for s in re.findall(r"package.*;\n", code):
+    #     code = code.replace(s, "")
 
     if tokenizer:
         # add <mask> noise
@@ -145,26 +155,15 @@ def read_defect_examples(lines, data_num, remove_comments=True, tokenizer=None):
     examples = []
     token_len_sum = 0
     for idx, line in enumerate(lines):
-        try:
-            js = json.loads(line)
-            code = js["func"]
-            if remove_comments:
-                code = remove_comment(code, tokenizer)
-            if tokenizer:
-                token_len_sum += len(tokenizer.tokenize(code))
-            examples.append(
-                code + "$FEATURE$" + str(js["feature"]) + "$LABEL$" + str(js["target"])
-            )
-        except Exception as e:
-            try:
-                code = " ".join(s.strip() for s in line.split())
-                if remove_comments:
-                    code = remove_comment(code, tokenizer)
-                examples.append(code)
-            except Exception as e:
-                print(e)
-                print(line)
-                continue
+        js = json.loads(line)
+        code = js["func"]
+        if remove_comments:
+            code = remove_comment(code, tokenizer)
+        if tokenizer:
+            token_len_sum += len(tokenizer.tokenize(code))
+        examples.append(
+            code + "$FEATURE$" + str(js["feature"]) + "$LABEL$" + str(js["target"])
+        )
 
         if idx + 1 == data_num:
             break
