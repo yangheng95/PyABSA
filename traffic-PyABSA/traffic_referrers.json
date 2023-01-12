@@ -1,38 +1,33 @@
 [
   {
     "referrer": "Google",
-    "count": 713,
-    "uniques": 88
+    "count": 759,
+    "uniques": 90
   },
   {
     "referrer": "github.com",
-    "count": 639,
-    "uniques": 88
+    "count": 684,
+    "uniques": 86
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 205,
-    "uniques": 66
+    "count": 231,
+    "uniques": 71
   },
   {
     "referrer": "huggingface.co",
-    "count": 81,
-    "uniques": 21
-  },
-  {
-    "referrer": "link.zhihu.com",
-    "count": 61,
-    "uniques": 6
+    "count": 82,
+    "uniques": 22
   },
   {
     "referrer": "youtube.com",
-    "count": 57,
-    "uniques": 15
+    "count": 66,
+    "uniques": 19
   },
   {
-    "referrer": "gradio-blocks-multilingual-aspect-based-sentim-c04f821.hf.space",
-    "count": 47,
-    "uniques": 18
+    "referrer": "link.zhihu.com",
+    "count": 62,
+    "uniques": 7
   },
   {
     "referrer": "statics.teams.cdn.office.net",
@@ -40,13 +35,18 @@
     "uniques": 4
   },
   {
-    "referrer": "cn.bing.com",
-    "count": 26,
-    "uniques": 4
+    "referrer": "gradio-blocks-multilingual-aspect-based-sentim-c04f821.hf.space",
+    "count": 35,
+    "uniques": 16
   },
   {
     "referrer": "pypi.org",
-    "count": 22,
-    "uniques": 7
+    "count": 30,
+    "uniques": 9
+  },
+  {
+    "referrer": "notebooks.githubusercontent.com",
+    "count": 27,
+    "uniques": 9
   }
 ]
