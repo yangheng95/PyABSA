@@ -251,18 +251,16 @@ def generate_adversarial_example(dataset, attack_recipe):
                 )
                 it.update()
             mv.log_metric(
-                self.config.model_name,
+                attack_name,
                 "Detection Accuracy",
                 det_acc_count / def_num * 100,
             )
             mv.log_metric(
-                self.config.model_name,
+                attack_name,
                 "Defense Accuracy",
                 def_acc_count / def_num * 100,
             )
-            mv.log_metric(
-                self.config.model_name, "Restored Accuracy", acc_count / all_num * 100
-            )
+            mv.log_metric(attack_name, "Restored Accuracy", acc_count / all_num * 100)
 
 
 if __name__ == "__main__":

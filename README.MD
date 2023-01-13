@@ -21,8 +21,6 @@
 and open-source tool for everyone, but please do not forget to attach the (informal or formal) author
 information and project address in your works, products and publications, etc.
 
-# | [Overview](./README.MD) | [Paper](https://arxiv.org/abs/2208.01368) | [HuggingfaceHub](https://huggingface.co/yangheng) | [ABDADatasets](readme/dataset_readme.md) | [ABSA Models](readme/model_readme.md) | [Colab Tutorials](readme/tutorial_readme.md) | [Troubleshooting(常见问题解决)](https://github.com/yangheng95/PyABSA/issues/189)
-
 ## Try our demos on Huggingface Space
 
 - [(Gradio) Aspect term extraction & sentiment classification](https://huggingface.co/spaces/Gradio-Blocks/Multilingual-Aspect-Based-Sentiment-Analysis) (
@@ -34,6 +32,91 @@ information and project address in your works, products and publications, etc.
 - [方面术语提取和情感分类](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC-Chinese) （中文, etc.）
 - [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC) （English,
   Chinese, etc.）
+
+## Installation
+
+### install via pip
+
+To use PyABSA, install the latest version from pip or source code:
+
+```bash
+pip install -U pyabsa
+```
+
+### install via source
+
+```bash
+git clone https://github.com/yangheng95/PyABSA --depth=1
+cd PyABSA 
+python setup.py install
+```
+
+## Quick-Start
+
+### Extract aspect terms and classify sentiments
+
+```python3
+from pyabsa import AspectTermExtraction as ATEPC, available_checkpoints
+
+# you can view all available checkpoints by calling available_checkpoints()
+checkpoint_map = available_checkpoints()
+
+aspect_extractor = ATEPC.AspectExtractor('multilingual',
+                                         auto_device=True,  # False means load model on CPU
+                                         cal_perplexity=True,
+                                         )
+
+# instance inference
+aspect_extractor.predict(['I love this movie, it is so great!'],
+                         save_result=True,
+                         print_result=True,  # print the result
+                         ignore_error=True,  # ignore the error when the model cannot predict the input
+                         )
+
+inference_source = ATEPC.ATEPCDatasetList.Restaurant16
+atepc_result = aspect_extractor.batch_predict(target_file=inference_source,  #
+                                              save_result=True,
+                                              print_result=True,  # print the result
+                                              pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
+                                              )
+
+print(atepc_result)
+
+
+```
+### Aspect-based sentiment analysis
+
+```python3
+from pyabsa import AspectPolarityClassification as APC, available_checkpoints
+
+# you can view all available checkpoints by calling available_checkpoints()
+checkpoint_map = available_checkpoints(show_ckpts=True)
+
+classifier = APC.SentimentClassifier('multilingual',
+                                     auto_device=True,  # False means load model on CPU
+                                     cal_perplexity=True,
+                                     )
+
+# instance inference
+classifier.predict(['I love this movie, it is so great!'],
+                   save_result=True,
+                   print_result=True,  # print the result
+                   ignore_error=True,  # ignore the error when the model cannot predict the input
+                   )
+
+inference_source = APC.APCDatasetList.Laptop14
+apc_result = classifier.batch_predict(target_file=inference_source,  #
+                                      save_result=True,
+                                      print_result=True,  # print the result
+                                      pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
+                                      )
+
+print(apc_result)
+
+```
+## Dataset Annotation and Model Training
+please refer to the documentation: [PyABSA Documentation](https://pyabsa.readthedocs.io/en/v2/).
+If you have any questions about the docs, please feel free to raise an issue. Also, you can join to improve the docs.
 
 ## Notice
 
@@ -68,108 +151,6 @@ Aspect sentiment polarity classification & Aspect term extraction models
 If you are looking for the original proposal of local context focus, here are some introduction at
 [here](https://github.com/yangheng95/PyABSA/tree/release/demos/documents).
 
-## Installation
-
-### install via pip
-
-To use PyABSA, install the latest version from pip or source code:
-
-```bash
-pip install -U pyabsa
-```
-
-### install via source
-
-```bash
-git clone https://github.com/yangheng95/PyABSA --depth=1
-cd PyABSA 
-python setup.py install
-```
-
-## Examples
-
-1. Train a model of aspect term extraction
-
-```python3
-import random
-
-from pyabsa import AspectTermExtraction as ATEPC
-
-config = ATEPC.ATEPCConfigManager.get_atepc_config_english()
-config.model = ATEPC.ATEPCModelList.FAST_LCF_ATEPC
-config.evaluate_begin = 0
-config.max_seq_len = 512
-config.pretrained_bert = 'yangheng/deberta-v3-base-absa'
-config.l2reg = 1e-8
-config.seed = random.randint(1, 100)
-config.use_bert_spc = True
-config.use_amp = False
-config.cache_dataset = False
-
-chinese_sets = ATEPC.ATEPCDatasetList.Multilingual
-
-aspect_extractor = ATEPC.ATEPCTrainer(config=config,
-                                      dataset=chinese_sets,
-                                      checkpoint_save_mode=1,
-                                      auto_device=True
-                                      ).load_trained_model()
-
-atepc_examples = ['But the staff was so nice to us .',
-                  'But the staff was so horrible to us .',
-                  r'Not only was the food outstanding , but the little ` perks \' were great .',
-                  'It took half an hour to get our check , which was perfect since we could sit , have drinks and talk !',
-                  'It was pleasantly uncrowded , the service was delightful , the garden adorable , '
-                  'the food -LRB- from appetizers to entrees -RRB- was delectable .',
-                  'How pretentious and inappropriate for MJ Grill to claim that it provides power lunch and dinners !'
-                  ]
-aspect_extractor.batch_predict(inference_source=atepc_examples,  #
-                               save_result=True,
-                               print_result=True,  # print the result
-                               pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
-                               )
-
-
-
-```
-
-2. Inference Example of aspect term extraction
-
-```python3
-from pyabsa import AspectTermExtraction as ATEPC
-
-# checkpoint_map = available_checkpoints(from_local=False)
-
-
-aspect_extractor = ATEPC.AspectExtractor('multilingual',
-                                         auto_device=True,  # False means load model on CPU
-                                         cal_perplexity=True,
-                                         )
-
-inference_source = ATEPC.ATEPCDatasetList.SemEval
-atepc_result = aspect_extractor.batch_predict(inference_source=inference_source,  #
-                                              save_result=True,
-                                              print_result=True,  # print the result
-                                              pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
-                                              )
-
-print(atepc_result)
-
-
-```
-
-3. Get available checkpoints from Google Drive
-
-PyABSA will check the latest available checkpoints before and load the latest checkpoint from Google Drive. To view
-available checkpoints, you can use the following code and load the checkpoint by name:
-
-```python3
-from pyabsa import available_checkpoints
-
-# The results of available_checkpoints() depend on the PyABSA version
-checkpoint_map = available_checkpoints()  # show available checkpoints of PyABSA of current version 
-```
-
-If you can not access to Google Drive, you can download our checkpoints and load the unzipped checkpoint manually.
 
 ## Contribution
 

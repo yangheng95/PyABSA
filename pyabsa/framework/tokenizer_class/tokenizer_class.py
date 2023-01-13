@@ -135,6 +135,7 @@ class Tokenizer(object):
         ]
         return " ".join(words)
 
+
 class PretrainedTokenizer:
     def __init__(self, config, **kwargs):
         self.config = config
