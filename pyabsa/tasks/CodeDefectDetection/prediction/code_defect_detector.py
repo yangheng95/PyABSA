@@ -304,6 +304,13 @@ class CodeDefectDetector(InferenceModel):
 
                 outputs = self.model(inputs)
                 logits, c_logits = outputs["logits"], outputs["c_logits"]
+
+                ex_ids = set(sample["ex_id"].tolist())
+                for ex_id in ex_ids:
+                    ex_index = sample["ex_id"] == ex_id
+                    sample["label"][ex_index] = sample["label"][ex_index].max()
+                    logits[ex_index] = logits[ex_index].max()
+
                 t_probs = torch.softmax(logits, dim=-1)
 
                 if t_targets_all is None:

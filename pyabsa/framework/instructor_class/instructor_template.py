@@ -32,6 +32,7 @@ from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
 
 import pytorch_warmup as warmup
 
+from pyabsa.framework.sampler_class.imblanced_sampler import ImbalancedDatasetSampler
 from pyabsa.utils.pyabsa_utils import print_args, fprint
 
 
@@ -159,13 +160,24 @@ class BaseTrainingInstructor:
         return None
 
     def _prepare_dataloader(self):
-        # remove dataset dict object used for dataset initialization
+
+        if self.config.get("train_sampler", "random") == "random":
+            train_sampler = RandomSampler(self.train_set)
+        elif self.config.get("train_sampler", "random") == "imbalanced":
+            train_sampler = ImbalancedDatasetSampler(self.train_set)
+        elif self.config.get("train_sampler", "sequential") == "sequential":
+            train_sampler = SequentialSampler(self.train_set)
+        else:
+            raise ValueError(
+                "train_sampler should be in [random, imbalanced, sequential]"
+            )
+
         if self.train_dataloader and self.valid_dataloader:
             self.valid_dataloaders = [self.valid_dataloader]
             self.train_dataloaders = [self.train_dataloader]
 
         elif self.config.cross_validate_fold < 1:
-            train_sampler = RandomSampler(self.train_set)
+
             self.train_dataloaders.append(
                 DataLoader(
                     dataset=self.train_set,
@@ -212,8 +224,8 @@ class BaseTrainingInstructor:
                     [x for i, x in enumerate(folds) if i != f_idx]
                 )
                 val_set = folds[f_idx]
-                train_sampler = RandomSampler(train_set if not train_set else train_set)
-                val_sampler = SequentialSampler(val_set if not val_set else val_set)
+                train_sampler = RandomSampler(train_set)
+                val_sampler = SequentialSampler(val_set)
                 self.train_dataloaders.append(
                     DataLoader(
                         dataset=train_set,

@@ -16,13 +16,6 @@ import torch.nn as nn
 from findfile import find_file
 from sklearn import metrics
 from torch import cuda
-from torch.utils.data import (
-    DataLoader,
-    random_split,
-    ConcatDataset,
-    RandomSampler,
-    SequentialSampler,
-)
 from tqdm import tqdm
 
 from pyabsa import DeviceTypeOption
@@ -31,7 +24,6 @@ from ..dataset_utils.__classic__.data_utils_for_training import GloVeCDDDataset
 from ..dataset_utils.__plm__.data_utils_for_training import BERTCDDDataset
 from ..models import GloVeCDDModelList, BERTCDDModelList
 
-import pytorch_warmup as warmup
 
 from pyabsa.utils.file_utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import init_optimizer, print_args, fprint, rprint
@@ -162,91 +154,12 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 torch.load(find_file(ckpt, or_key=[".bin", "state_dict"]))
             )
 
-    def prepare_dataloader(self, train_set):
-        if self.config.cross_validate_fold < 1:
-            train_sampler = RandomSampler(self.train_set)
-            self.train_dataloaders.append(
-                DataLoader(
-                    dataset=train_set,
-                    batch_size=self.config.batch_size,
-                    sampler=train_sampler,
-                    pin_memory=True,
-                )
-            )
-            if self.test_set:
-                self.test_dataloader = DataLoader(
-                    dataset=self.test_set,
-                    batch_size=self.config.batch_size,
-                    shuffle=False,
-                )
-
-            if self.valid_set:
-                self.valid_dataloader = DataLoader(
-                    dataset=self.valid_set,
-                    batch_size=self.config.batch_size,
-                    shuffle=False,
-                )
-        else:
-            split_dataset = train_set
-            len_per_fold = len(split_dataset) // self.config.cross_validate_fold + 1
-            folds = random_split(
-                split_dataset,
-                tuple(
-                    [len_per_fold] * (self.config.cross_validate_fold - 1)
-                    + [
-                        len(split_dataset)
-                        - len_per_fold * (self.config.cross_validate_fold - 1)
-                    ]
-                ),
-            )
-
-            for f_idx in range(self.config.cross_validate_fold):
-                train_set = ConcatDataset(
-                    [x for i, x in enumerate(folds) if i != f_idx]
-                )
-                val_set = folds[f_idx]
-                train_sampler = RandomSampler(train_set)
-                val_sampler = SequentialSampler(val_set)
-                self.train_dataloaders.append(
-                    DataLoader(
-                        dataset=train_set,
-                        batch_size=self.config.batch_size,
-                        sampler=train_sampler,
-                    )
-                )
-                self.valid_dataloaders.append(
-                    DataLoader(
-                        dataset=val_set,
-                        batch_size=self.config.batch_size,
-                        sampler=val_sampler,
-                    )
-                )
-                if self.test_set:
-                    self.test_dataloader = DataLoader(
-                        dataset=self.test_set,
-                        batch_size=self.config.batch_size,
-                        shuffle=False,
-                    )
-
-    def _train(self, criterion):
-        self.prepare_dataloader(self.train_set)
-
-        if self.config.warmup_step >= 0:
-            self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
-                self.optimizer,
-                T_max=len(self.train_dataloaders[0]) * self.config.num_epoch,
-            )
-            self.warmup_scheduler = warmup.UntunedLinearWarmup(self.optimizer)
-
-        if self.valid_dataloaders:
-            return self._k_fold_train_and_evaluate(criterion)
-        else:
-            return self._train_and_evaluate(criterion)
-
     def _train_and_evaluate(self, criterion):
+
         global_step = 0
         max_fold_acc = 0
         max_fold_f1 = 0
+        auc = 0
         save_path = "{0}/{1}_{2}".format(
             self.config.model_path_to_save,
             self.config.model_name,
@@ -327,9 +240,13 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                     if self.test_dataloader and epoch >= self.config.evaluate_begin:
 
                         if self.valid_dataloader:
-                            test_acc, f1 = self._evaluate_acc_f1(self.valid_dataloader)
+                            test_acc, f1, auc = self._evaluate_acc_f1(
+                                self.valid_dataloader
+                            )
                         else:
-                            test_acc, f1 = self._evaluate_acc_f1(self.test_dataloader)
+                            test_acc, f1, auc = self._evaluate_acc_f1(
+                                self.test_dataloader
+                            )
 
                         self.config.metrics_of_this_checkpoint["acc"] = test_acc
                         self.config.metrics_of_this_checkpoint["f1"] = f1
@@ -393,7 +310,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 else:
                     if self.config.get("loss_display", "smooth") == "smooth":
                         description = "Epoch:{:>3d} | Smooth Loss: {:>.4f}".format(
-                            epoch, round(np.average(losses), 4)
+                            epoch, round(np.nanmean(losses), 4)
                         )
                     else:
                         description = "Epoch:{:>3d} | Batch Loss: {:>.4f}".format(
@@ -424,13 +341,22 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 "Max-Test-F1 w/o Valid Set",
                 max_fold_f1 * 100,
             )
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-Test-AUC w/o Valid Set",
+                auc,
+            )
 
         if self.valid_dataloader:
             fprint(
                 "Loading best model: {} and evaluating on test set ".format(save_path)
             )
             self.reload_model(find_file(save_path, ".state_dict"))
-            max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
+            max_fold_acc, max_fold_f1, auc = self._evaluate_acc_f1(self.test_dataloader)
 
             self.config.MV.log_metric(
                 self.config.model_name
@@ -449,6 +375,15 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 + self.config.pretrained_bert,
                 "Max-Test-F1",
                 max_fold_f1 * 100,
+            )
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-Test-AUC",
+                auc * 100,
             )
 
         self.logger.info(self.config.MV.summary(no_print=True))
@@ -478,7 +413,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
 
         save_path_k_fold = ""
         max_fold_acc_k_fold = 0
-
+        auc = 0
         self.config.metrics_of_this_checkpoint = {"acc": 0, "f1": 0}
         self.config.max_test_metrics = {"max_test_acc": 0, "max_test_f1": 0}
 
@@ -567,7 +502,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                     if global_step % self.config.log_step == 0:
                         if self.test_dataloader and epoch >= self.config.evaluate_begin:
 
-                            test_acc, f1 = self._evaluate_acc_f1(valid_dataloader)
+                            test_acc, f1, auc = self._evaluate_acc_f1(valid_dataloader)
 
                             self.config.metrics_of_this_checkpoint["acc"] = test_acc
                             self.config.metrics_of_this_checkpoint["f1"] = f1
@@ -639,7 +574,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                     else:
                         if self.config.get("loss_display", "smooth") == "smooth":
                             description = "Epoch:{:>3d} | Smooth Loss: {:>.4f}".format(
-                                epoch, round(np.average(losses), 4)
+                                epoch, round(np.nanmean(losses), 4)
                             )
                         else:
                             description = "Epoch:{:>3d} | Batch Loss: {:>.4f}".format(
@@ -651,7 +586,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 if patience == 0:
                     break
 
-            max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
+            max_fold_acc, max_fold_f1, auc = self._evaluate_acc_f1(self.test_dataloader)
             if max_fold_acc > max_fold_acc_k_fold:
                 save_path_k_fold = save_path
             fold_test_acc.append(max_fold_acc)
@@ -666,6 +601,11 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 self.config.model_name,
                 "Fold{}-Max-Valid-F1".format(f),
                 max_fold_f1 * 100,
+            )
+            self.config.MV.log_metric(
+                self.config.model_name,
+                "Fold{}-Max-Valid-AUC".format(f),
+                auc * 100,
             )
 
             self.logger.info(self.config.MV.summary(no_print=True))
@@ -692,6 +632,15 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
             + self.config.pretrained_bert,
             "Max-Test-F1",
             max_test_f1 * 100,
+        )
+        self.config.MV.log_metric(
+            self.config.model_name
+            + "-"
+            + self.config.dataset_name
+            + "-"
+            + self.config.pretrained_bert,
+            "Max-Test-AUC",
+            auc,
         )
 
         if self.config.cross_validate_fold > 0:
@@ -745,6 +694,13 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 outputs = self.model(t_inputs)
                 t_logits = outputs["logits"]
                 t_c_logits = outputs["c_logits"]
+
+                ex_ids = set(t_sample_batched["ex_id"].tolist())
+                for ex_id in ex_ids:
+                    ex_index = t_sample_batched["ex_id"] == ex_id
+                    t_targets[ex_index] = t_targets[ex_index].max()
+                    t_logits[ex_index] = torch.mean(t_logits[ex_index], dim=0)
+
                 valid_index = t_targets != -100
                 t_targets = t_targets[valid_index]
                 t_logits = t_logits[valid_index]
@@ -777,6 +733,13 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
             torch.argmax(t_outputs_all.cpu(), -1),
             labels=list(range(self.config.output_dim)),
             average=self.config.get("f1_average", "macro"),
+        )
+        auc = metrics.roc_auc_score(
+            t_targets_all.cpu(),
+            torch.softmax(t_outputs_all.cpu(), -1)[:, 1],
+            labels=list(range(self.config.output_dim)),
+            average=self.config.get("auc_average", "macro"),
+            multi_class="ovo",
         )
         if self.config.args.get("show_metric", False):
             report = metrics.classification_report(
@@ -833,7 +796,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
             # rprint(report)
             # fprint('\n---------------------------- Corrupt Detection Confusion Matrix ----------------------------\n')
 
-        return test_acc, f1
+        return test_acc, f1, auc
 
     def run(self):
         # Loss and Optimizer

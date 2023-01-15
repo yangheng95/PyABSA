@@ -70,8 +70,6 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 )
             )
 
-        print_args(self.config, self.logger)
-
     def _cache_or_load_dataset(self):
         pass
 
@@ -222,7 +220,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 else:
                     if self.config.get("loss_display", "smooth") == "smooth":
                         description = "Epoch:{:>3d} | Smooth Loss: {:>.4f}".format(
-                            epoch, round(np.average(losses), 4)
+                            epoch, round(np.nanmean(losses), 4)
                         )
                     else:
                         description = "Epoch:{:>3d} | Batch Loss: {:>.4f}".format(
@@ -280,8 +278,6 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             )
 
         self.logger.info(self.config.MV.summary(no_print=True))
-
-        print_args(self.config, self.logger)
 
         if self.valid_dataloader or self.config.save_mode:
             del self.train_dataloaders
@@ -466,7 +462,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                     else:
                         if self.config.get("loss_display", "smooth") == "smooth":
                             description = "Epoch:{:>3d} | Smooth Loss: {:>.4f}".format(
-                                epoch, round(np.average(losses), 4)
+                                epoch, round(np.nanmean(losses), 4)
                             )
                         else:
                             description = "Epoch:{:>3d} | Batch Loss: {:>.4f}".format(
@@ -523,8 +519,6 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         if self.config.cross_validate_fold > 0:
             self.logger.info(self.config.MV.summary(no_print=True))
         # self.config.MV.summary()
-
-        print_args(self.config, self.logger)
 
         self._reload_model_state_dict(save_path_k_fold)
 

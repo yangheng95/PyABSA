@@ -74,6 +74,9 @@ class PyABSADataset(Dataset):
             "Please implement load_data_from_file() in your dataset class"
         )
 
+    def get_labels(self):
+        return [data["label"] for data in self.data]
+
     def __len__(self):
         return len(self.data)
 

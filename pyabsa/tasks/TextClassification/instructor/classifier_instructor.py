@@ -386,7 +386,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                 else:
                     if self.config.get("loss_display", "smooth") == "smooth":
                         description = "Epoch:{:>3d} | Smooth Loss: {:>.4f}".format(
-                            epoch, round(np.average(losses), 4)
+                            epoch, round(np.nanmean(losses), 4)
                         )
                     else:
                         description = "Epoch:{:>3d} | Batch Loss: {:>.4f}".format(
@@ -628,7 +628,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                     else:
                         if self.config.get("loss_display", "smooth") == "smooth":
                             description = "Epoch:{:>3d} | Smooth Loss: {:>.4f}".format(
-                                epoch, round(np.average(losses), 4)
+                                epoch, round(np.nanmean(losses), 4)
                             )
                         else:
                             description = "Epoch:{:>3d} | Batch Loss: {:>.4f}".format(

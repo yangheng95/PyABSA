@@ -44,28 +44,72 @@ class BERTCDDDataset(PyABSADataset):
             if "$FEATURE$" in code_src:
                 code_src, feature = code_src.split("$FEATURE$")
             # print(len(self.tokenizer.tokenize(code_src.replace('\n', ''))))
+
             code_ids = self.tokenizer.text_to_sequence(
                 code_src,
                 max_length=self.config.max_seq_len,
-                padding="max_length",
-                truncation=True,
+                padding="do_not_pad",
+                truncation=False,
             )
-            aux_ids = self.tokenizer.text_to_sequence(
-                feature,
-                max_length=self.config.max_seq_len,
-                padding="max_length",
-                truncation=True,
-            )
-            data = {
-                "ex_id": ex_id,
-                "source_ids": code_ids,
-                "aux_ids": aux_ids,
-                "label": label,
-                "corrupt_label": 0,
-            }
-            label_set.add(label)
-            c_label_set.add(0)
-            all_data.append(data)
+            code_ids = code_ids[1:-1]
+
+            # for x in range(len(code_ids) // ((self.config.max_seq_len - 2) // 2) + 1):
+            #     _code_ids = code_ids[x * (self.config.max_seq_len - 2) // 2:
+            #                          (x + 1) * (self.config.max_seq_len - 2) // 2 + (self.config.max_seq_len - 2) // 2]
+            #     print(x * (self.config.max_seq_len - 2) // 2)
+            #     print((x + 1) * (self.config.max_seq_len - 2) // 2 + (self.config.max_seq_len - 2) // 2)
+            for x in range(len(code_ids) // (self.config.max_seq_len - 2) + 1):
+                _code_ids = code_ids[
+                    x
+                    * (self.config.max_seq_len - 2) : (x + 1)
+                    * (self.config.max_seq_len - 2)
+                ]
+                _code_ids = pad_and_truncate(
+                    _code_ids,
+                    self.config.max_seq_len - 2,
+                    value=self.tokenizer.pad_token_id,
+                )
+                if _code_ids:
+                    all_data.append(
+                        {
+                            "ex_id": ex_id,
+                            # "text": code_src,
+                            "source_ids": [self.tokenizer.cls_token_id]
+                            + _code_ids
+                            + [self.tokenizer.eos_token_id],
+                            "label": label,
+                            "corrupt_label": 0,
+                        }
+                    )
+                    label_set.add(label)
+                    c_label_set.add(0)
+
+            if label == "1":
+                for _ in range(self.config.noise_instance_num):
+                    for x in range(len(code_ids) // (self.config.max_seq_len - 2) + 1):
+                        _code_ids = code_ids[
+                            x
+                            * (self.config.max_seq_len - 2) : (x + 1)
+                            * (self.config.max_seq_len - 2)
+                        ]
+                        _code_ids = pad_and_truncate(
+                            _code_ids,
+                            self.config.max_seq_len - 2,
+                            value=self.tokenizer.pad_token_id,
+                        )
+                        if _code_ids:
+                            all_data.append(
+                                {
+                                    "ex_id": ex_id,
+                                    # "text": code_src,
+                                    "source_ids": [self.tokenizer.cls_token_id]
+                                    + _code_ids
+                                    + [self.tokenizer.eos_token_id],
+                                    "label": label,
+                                    "corrupt_label": 0,
+                                }
+                            )
+                            label_set.add(label)
 
         if self.dataset_type == "train":
             corrupt_examples = read_defect_examples(
@@ -78,31 +122,45 @@ class BERTCDDDataset(PyABSADataset):
                     tqdm.tqdm(corrupt_examples, desc="preparing dataloader")
                 ):
                     code_src, label = line.strip().split("$LABEL$")
+                    if label == "0":
+                        continue
                     if "$FEATURE$" in code_src:
                         code_src, feature = code_src.split("$FEATURE$")
                     code_src = _prepare_corrupt_code(code_src)
                     corrupt_code_ids = self.tokenizer.text_to_sequence(
                         code_src,
                         max_length=self.config.max_seq_len,
-                        padding="max_length",
-                        truncation=True,
+                        padding="do_not_pad",
+                        truncation=False,
                     )
-                    aux_ids = self.tokenizer.text_to_sequence(
-                        feature,
-                        max_length=self.config.max_seq_len,
-                        padding="max_length",
-                        truncation=True,
-                    )
-                    data = {
-                        "ex_id": ex_id,
-                        "source_ids": corrupt_code_ids,
-                        "aux_ids": aux_ids,
-                        "label": "-100",
-                        "corrupt_label": 1,
-                    }
-                    label_set.add("-100")
-                    c_label_set.add(1)
-                    all_data.append(data)
+                    corrupt_code_ids = corrupt_code_ids[1:-1]
+                    for x in range(
+                        len(corrupt_code_ids) // (self.config.max_seq_len - 2) + 1
+                    ):
+                        _corrupt_code_ids = corrupt_code_ids[
+                            x
+                            * (self.config.max_seq_len - 2) : (x + 1)
+                            * (self.config.max_seq_len - 2)
+                        ]
+                        _corrupt_code_ids = pad_and_truncate(
+                            _corrupt_code_ids,
+                            self.config.max_seq_len - 2,
+                            value=self.tokenizer.pad_token_id,
+                        )
+                        if _corrupt_code_ids:
+                            all_data.append(
+                                {
+                                    "ex_id": ex_id,
+                                    # "text": code_src,
+                                    "source_ids": [self.tokenizer.cls_token_id]
+                                    + _corrupt_code_ids
+                                    + [self.tokenizer.eos_token_id],
+                                    "label": "-100",
+                                    "corrupt_label": 1,
+                                }
+                            )
+                            label_set.add("-100")
+                            c_label_set.add(1)
 
         check_and_fix_labels(label_set, "label", all_data, self.config)
         self.config.output_dim = len(label_set)

@@ -12,10 +12,10 @@ from findfile import rm_files, rm_dirs, rm_cwd_files, rm_cwd_dirs
 
 rm_dirs(os.getcwd(), or_key=["checkpoints"])
 
-# rm_cwd_dirs(or_key=['__pycache__'])
-# rm_cwd_files(or_key=['pyabsa.egg-info'])
-# rm_cwd_dirs(or_key=['pyabsa.egg-info'])
-# rm_cwd_dirs(or_key=['dist'])
-# rm_files(os.getcwd(), or_key=['.pyc'])
-#
-# rm_dirs(os.getcwd(), or_key=['integrated_datasets', 'checkpoints', 'logs'])
+rm_cwd_dirs(or_key=["__pycache__"])
+rm_cwd_files(or_key=["pyabsa.egg-info"])
+rm_cwd_dirs(or_key=["pyabsa.egg-info"])
+rm_cwd_dirs(or_key=["dist"])
+rm_files(os.getcwd(), or_key=[".pyc"])
+
+rm_dirs(os.getcwd(), or_key=["integrated_datasets", "checkpoints", "logs"])
