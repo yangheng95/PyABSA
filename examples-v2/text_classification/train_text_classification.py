@@ -10,11 +10,11 @@ from pyabsa import TextClassification as TC
 
 classification_config_english = TC.TCConfigManager.get_tc_config_english()
 classification_config_english.model = TC.BERTTCModelList.BERT_MLP
-classification_config_english.num_epoch = 1
+classification_config_english.num_epoch = 5
 classification_config_english.evaluate_begin = 0
 classification_config_english.max_seq_len = 80
 classification_config_english.dropout = 0.5
-classification_config_english.seed = {42}
+classification_config_english.seed = {42, 14, 5324}
 classification_config_english.log_step = -1
 classification_config_english.l2reg = 0.00001
 
@@ -23,6 +23,6 @@ sent_classifier = TC.TCTrainer(
     config=classification_config_english,
     dataset=SST2,
     checkpoint_save_mode=1,
-    load_aug=True,
+    load_aug=False,
     auto_device=True,
 ).load_trained_model()

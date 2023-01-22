@@ -26,7 +26,7 @@ from ..models import GloVeCDDModelList, BERTCDDModelList
 
 
 from pyabsa.utils.file_utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import init_optimizer, print_args, fprint, rprint
+from pyabsa.utils.pyabsa_utils import init_optimizer, fprint, rprint
 from pyabsa.framework.tokenizer_class.tokenizer_class import (
     PretrainedTokenizer,
     Tokenizer,
@@ -80,8 +80,6 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                     torch.cuda.memory_allocated(device=self.config.device)
                 )
             )
-
-        print_args(self.config, self.logger)
 
     def _cache_or_load_dataset(self):
         pass
@@ -175,8 +173,12 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
             "***** Running training for {} *****".format(self.config.task_name)
         )
         self.logger.info("Training set examples = %d", len(self.train_set))
+
+        if self.valid_set:
+            self.logger.info("Valid set examples = %d", len(self.valid_set))
         if self.test_set:
             self.logger.info("Test set examples = %d", len(self.test_set))
+
         self.logger.info("Batch size = %d", self.config.batch_size)
         self.logger.info(
             "Num steps = %d",
@@ -388,8 +390,6 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
 
         self.logger.info(self.config.MV.summary(no_print=True))
 
-        print_args(self.config, self.logger)
-
         if self.valid_dataloader or self.config.save_mode:
             del self.train_dataloaders
             del self.test_dataloader
@@ -434,8 +434,12 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 "***** Running training for {} *****".format(self.config.task_name)
             )
             self.logger.info("Training set examples = %d", len(self.train_set))
+
+            if self.valid_set:
+                self.logger.info("Valid set examples = %d", len(self.valid_set))
             if self.test_set:
                 self.logger.info("Test set examples = %d", len(self.test_set))
+
             self.logger.info("Batch size = %d", self.config.batch_size)
             self.logger.info(
                 "Num steps = %d",
@@ -647,8 +651,6 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
             self.logger.info(self.config.MV.summary(no_print=True))
         # self.config.MV.summary()
 
-        print_args(self.config, self.logger)
-
         self.reload_model(save_path_k_fold)
 
         if self.valid_dataloader or self.config.save_mode:
@@ -695,15 +697,39 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 t_logits = outputs["logits"]
                 t_c_logits = outputs["c_logits"]
 
-                ex_ids = set(t_sample_batched["ex_id"].tolist())
-                for ex_id in ex_ids:
-                    ex_index = t_sample_batched["ex_id"] == ex_id
-                    t_targets[ex_index] = t_targets[ex_index].max()
-                    t_logits[ex_index] = torch.mean(t_logits[ex_index], dim=0)
-
                 valid_index = t_targets != -100
                 t_targets = t_targets[valid_index]
                 t_logits = t_logits[valid_index]
+
+                _t_logits = torch.tensor([]).to(self.config.device).view(-1, 2)
+                _t_c_logits = torch.tensor([]).to(self.config.device).view(-1, 2)
+                _targets = torch.tensor([]).to(self.config.device).view(-1)
+                _t_c_targets = torch.tensor([]).to(self.config.device).view(-1)
+                ex_ids = sorted(set(t_sample_batched["ex_id"].tolist()))
+                for ex_id in ex_ids:
+                    ex_index = t_sample_batched["ex_id"] == ex_id
+                    _t_logits = torch.cat(
+                        (_t_logits, torch.mean(t_logits[ex_index], dim=0).unsqueeze(0)),
+                        dim=0,
+                    )
+                    _t_c_logits = torch.cat(
+                        (
+                            _t_c_logits,
+                            torch.mean(t_c_logits[ex_index], dim=0).unsqueeze(0),
+                        ),
+                        dim=0,
+                    )
+                    _targets = torch.cat(
+                        (_targets, t_targets[ex_index].max().unsqueeze(0)), dim=0
+                    )
+                    _t_c_targets = torch.cat(
+                        (_t_c_targets, t_c_targets[ex_index].max().unsqueeze(0)), dim=0
+                    )
+
+                t_logits = _t_logits
+                t_c_logits = _t_c_logits
+                t_targets = _targets
+                t_c_targets = _t_c_targets
 
                 n_test_correct += (torch.argmax(t_logits, -1) == t_targets).sum().item()
                 n_test_total += len(t_logits)

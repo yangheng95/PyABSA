@@ -23,7 +23,7 @@ from transformers import AutoModel, AutoTokenizer
 from pyabsa import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from pyabsa.utils.file_utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import init_optimizer, print_args, fprint, rprint
+from pyabsa.utils.pyabsa_utils import init_optimizer, fprint, rprint
 from ..dataset_utils.data_utils_for_training import GloVeRNACDataset
 from ..dataset_utils.data_utils_for_training import BERTRNACDataset
 from ..models import GloVeRNACModelList, BERTRNACModelList
@@ -92,6 +92,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             "***** Running training for {} *****".format(self.config.task_name)
         )
         self.logger.info("Training set examples = %d", len(self.train_set))
+        if self.valid_set:
+            self.logger.info("Valid set examples = %d", len(self.valid_set))
         if self.test_set:
             self.logger.info("Test set examples = %d", len(self.test_set))
         self.logger.info("Batch size = %d", self.config.batch_size)
@@ -323,6 +325,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 "***** Running training for {} *****".format(self.config.task_name)
             )
             self.logger.info("Training set examples = %d", len(self.train_set))
+            if self.valid_set:
+                self.logger.info("Valid set examples = %d", len(self.valid_set))
             if self.test_set:
                 self.logger.info("Test set examples = %d", len(self.test_set))
             self.logger.info("Batch size = %d", self.config.batch_size)

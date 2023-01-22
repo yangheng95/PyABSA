@@ -149,7 +149,8 @@ def download_checkpoint(task: str, language: str, checkpoint: dict):
     try:  # from Huggingface Space
 
         response = requests.get(huggingface_checkpoint_url, stream=True)
-
+        "https://huggingface.co/spaces/yangheng/PyABSA/raw/main/checkpoints/Code/bert_mlp_all_cpdp_acc_64.52_f1_64.48.zip"
+        "https://huggingface.co/spaces/yangheng/PyABSA/resolve/main/checkpoints/Code/CDD/bert_mlp_all_cpdp_acc_64.52_f1_64.48.zip"
         with open(save_path, "wb") as f:
             for chunk in tqdm.tqdm(
                 response.iter_content(chunk_size=1024 * 1024),

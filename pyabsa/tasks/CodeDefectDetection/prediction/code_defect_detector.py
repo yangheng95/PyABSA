@@ -289,8 +289,8 @@ class CodeDefectDetector(InferenceModel):
             n_correct = 0
             n_labeled = 0
             n_total = 0
-            t_targets_all, t_outputs_all = None, None
-            t_c_targets_all, t_c_outputs_all = None, None
+            targets_all, t_outputs_all = None, None
+            c_targets_all, t_c_outputs_all = None, None
 
             if len(self.infer_dataloader.dataset) >= 100:
                 it = tqdm.tqdm(self.infer_dataloader, desc="run inference")
@@ -301,37 +301,63 @@ class CodeDefectDetector(InferenceModel):
                     sample[col].to(self.config.device)
                     for col in self.config.inputs_cols
                 ]
-
+                targets = sample["label"].to(self.config.device)
+                c_targets = sample["corrupt_label"].to(self.config.device)
                 outputs = self.model(inputs)
                 logits, c_logits = outputs["logits"], outputs["c_logits"]
 
-                ex_ids = set(sample["ex_id"].tolist())
+                valid_index = targets != -100
+                targets = targets[valid_index]
+                logits = logits[valid_index]
+
+                _logits = torch.tensor([]).to(self.config.device).view(-1, 2)
+                _c_logits = torch.tensor([]).to(self.config.device).view(-1, 2)
+                _targets = torch.tensor([]).to(self.config.device).view(-1)
+                _c_targets = torch.tensor([]).to(self.config.device).view(-1)
+                ex_ids = sorted(set(sample["ex_id"].tolist()))
                 for ex_id in ex_ids:
                     ex_index = sample["ex_id"] == ex_id
-                    sample["label"][ex_index] = sample["label"][ex_index].max()
-                    logits[ex_index] = logits[ex_index].max()
+                    _logits = torch.cat(
+                        (_logits, torch.mean(logits[ex_index], dim=0).unsqueeze(0)),
+                        dim=0,
+                    )
+                    _c_logits = torch.cat(
+                        (_c_logits, torch.mean(c_logits[ex_index], dim=0).unsqueeze(0)),
+                        dim=0,
+                    )
+                    _targets = torch.cat(
+                        (_targets, targets[ex_index].max().unsqueeze(0)), dim=0
+                    )
+                    _c_targets = torch.cat(
+                        (_c_targets, c_targets[ex_index].max().unsqueeze(0)), dim=0
+                    )
+
+                logits = _logits
+                c_logits = _c_logits
+                targets = _targets
+                c_targets = _c_targets
 
                 t_probs = torch.softmax(logits, dim=-1)
 
-                if t_targets_all is None:
-                    t_targets_all = np.array(
+                if targets_all is None:
+                    targets_all = np.array(
                         [
                             self.config.label_to_index[x]
                             if x in self.config.label_to_index
                             else LabelPaddingOption.LABEL_PADDING
-                            for x in sample["label"]
+                            for x in targets
                         ]
                     )
                     t_outputs_all = np.array(logits.cpu()).astype(np.float32)
                 else:
-                    t_targets_all = np.concatenate(
+                    targets_all = np.concatenate(
                         (
-                            t_targets_all,
+                            targets_all,
                             [
                                 self.config.label_to_index[x]
                                 if x in self.config.label_to_index
                                 else LabelPaddingOption.LABEL_PADDING
-                                for x in sample["label"]
+                                for x in targets
                             ],
                         ),
                         axis=0,
@@ -340,13 +366,13 @@ class CodeDefectDetector(InferenceModel):
                         (t_outputs_all, np.array(logits.cpu()).astype(np.float32)),
                         axis=0,
                     )
-                if t_c_targets_all is None:
-                    t_c_targets_all = np.array(
+                if c_targets_all is None:
+                    c_targets_all = np.array(
                         [
                             self.config.label_to_index[x]
                             if x in self.config.label_to_index
                             else LabelPaddingOption.LABEL_PADDING
-                            for x in sample["corrupt_label"]
+                            for x in c_targets
                         ]
                     )
                     t_c_outputs_all = np.array(c_logits.cpu()).astype(np.float32)
@@ -356,10 +382,10 @@ class CodeDefectDetector(InferenceModel):
                     corrupt_label = self.config.index_to_label[
                         int(c_logits[i].argmax(axis=-1))
                     ]
-                    if sample["label"][i] != LabelPaddingOption.LABEL_PADDING:
+                    if targets[i] != LabelPaddingOption.LABEL_PADDING:
                         # model accepts an int label, so we can not pass the str label to the model.
                         # we need to convert the int label to str label.
-                        real_label = self.config.index_to_label[int(sample["label"][i])]
+                        real_label = self.config.index_to_label[int(targets[i])]
                     else:
                         real_label = "N.A."
                     if (
@@ -385,24 +411,24 @@ class CodeDefectDetector(InferenceModel):
                         perplexity = float(torch.exp(loss / ids["input_ids"].size(1)))
                     else:
                         perplexity = "N.A."
-
-                    results.append(
-                        {
-                            "ex_id": ex_id,
-                            "code": text_raw,
-                            "label": label,
-                            "confidence": float(max(i_probs)),
-                            "probs": i_probs.cpu().numpy(),
-                            "corrupt_label": corrupt_label,
-                            "corrupt_ref_label": sample["corrupt_label"][i],
-                            "corrupt_confidence": float(max(c_logits[i])),
-                            "ref_label": real_label,
-                            "ref_check": correct[label == real_label]
-                            if real_label != str(LabelPaddingOption.LABEL_PADDING)
-                            else "",
-                            "perplexity": perplexity,
-                        }
-                    )
+                    if not results or results[-1]["ex_id"] != ex_id:
+                        results.append(
+                            {
+                                "ex_id": ex_id,
+                                "code": text_raw,
+                                "label": label,
+                                "confidence": float(max(i_probs)),
+                                "probs": i_probs.cpu().numpy(),
+                                "corrupt_label": corrupt_label,
+                                "corrupt_ref_label": c_targets[i],
+                                "corrupt_confidence": float(max(c_logits[i])),
+                                "ref_label": real_label,
+                                "ref_check": correct[label == real_label]
+                                if real_label != str(LabelPaddingOption.LABEL_PADDING)
+                                else "",
+                                "perplexity": perplexity,
+                            }
+                        )
                     n_total += 1
 
         try:
@@ -454,7 +480,7 @@ class CodeDefectDetector(InferenceModel):
             fprint("Labeled samples:{}".format(n_labeled))
 
             report = metrics.classification_report(
-                t_targets_all,
+                targets_all,
                 np.argmax(t_outputs_all, -1),
                 digits=4,
                 target_names=[
@@ -469,21 +495,21 @@ class CodeDefectDetector(InferenceModel):
                 "\n---------------------------- Classification Report ----------------------------\n"
             )
 
-            # report = metrics.confusion_matrix(t_targets_all, np.argmax(t_outputs_all, -1),
+            # report = metrics.confusion_matrix(targets_all, np.argmax(t_outputs_all, -1),
             #                                   labels=[self.config.label_to_index[x]
             #                                           for x in self.config.label_to_index])
             # fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
             # rprint(report)
             # fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
             #
-            # report = metrics.classification_report(t_targets_all, np.argmax(t_outputs_all, -1), digits=4,
+            # report = metrics.classification_report(targets_all, np.argmax(t_outputs_all, -1), digits=4,
             #                                        target_names=[self.config.index_to_label[x] for x in
             #                                                      self.config.index_to_label])
             # fprint('\n---------------------------- Corrupt Detection Report ----------------------------\n')
             # rprint(report)
             # fprint('\n---------------------------- Corrupt Detection Report ----------------------------\n')
             #
-            # report = metrics.confusion_matrix(t_c_targets_all, np.argmax(t_c_outputs_all, -1),
+            # report = metrics.confusion_matrix(c_targets_all, np.argmax(t_c_outputs_all, -1),
             #                                   labels=[self.config.label_to_index[x]
             #                                           for x in self.config.label_to_index])
             # fprint('\n---------------------------- Corrupt Detection Confusion Matrix ----------------------------\n')

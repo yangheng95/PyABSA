@@ -22,7 +22,7 @@ from pyabsa import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from ..instructor.ensembler import APCEnsembler
 from pyabsa.utils.file_utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args, init_optimizer, fprint
+from pyabsa.utils.pyabsa_utils import init_optimizer, fprint
 
 
 class APCTrainingInstructor(BaseTrainingInstructor):
@@ -83,6 +83,8 @@ class APCTrainingInstructor(BaseTrainingInstructor):
             "***** Running training for {} *****".format(self.config.task_name)
         )
         self.logger.info("Training set examples = %d", len(self.train_set))
+        if self.valid_set:
+            self.logger.info("Valid set examples = %d", len(self.valid_set))
         if self.test_set:
             self.logger.info("Test set examples = %d", len(self.test_set))
         self.logger.info(
@@ -289,8 +291,6 @@ class APCTrainingInstructor(BaseTrainingInstructor):
         self.config.loss = losses[-1]
         # self.config.loss = np.average(losses)
 
-        print_args(self.config)
-
         if self.valid_dataloader or self.config.save_mode:
             del self.train_dataloaders
             del self.test_dataloader
@@ -335,6 +335,8 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                 "***** Running training for {} *****".format(self.config.task_name)
             )
             self.logger.info("Training set examples = %d", len(self.train_set))
+            if self.valid_set:
+                self.logger.info("Valid set examples = %d", len(self.valid_set))
             if self.test_set:
                 self.logger.info("Test set examples = %d", len(self.test_set))
             self.logger.info("Batch size = %d", self.config.batch_size)
@@ -553,8 +555,6 @@ class APCTrainingInstructor(BaseTrainingInstructor):
         )
         self.config.loss = losses[-1]
         # self.config.loss = np.average(losses)
-
-        print_args(self.config)
 
         if os.path.exists("./init_state_dict.bin"):
             os.remove("./init_state_dict.bin")

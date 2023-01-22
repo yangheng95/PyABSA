@@ -18,6 +18,8 @@ from hashlib import sha256
 import numpy
 import torch
 from findfile import find_file, find_files
+from termcolor import colored
+
 from pyabsa.framework.checkpoint_class.checkpoint_template import CheckpointManager
 from torch.utils.data import (
     DataLoader,
@@ -44,7 +46,12 @@ class BaseTrainingInstructor:
         if config.use_amp:
             try:
                 self.scaler = torch.cuda.amp.GradScaler()
-                fprint("Use AMP for trainer!")
+                fprint(
+                    colored(
+                        "Use torch.AMP for training! Please disable it if you encounter convergence problems.",
+                        "yellow",
+                    )
+                )
             except Exception:
                 self.scaler = None
         else:

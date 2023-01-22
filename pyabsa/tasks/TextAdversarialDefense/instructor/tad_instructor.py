@@ -34,7 +34,7 @@ from ..dataset_utils.__classic__.data_utils_for_training import GloVeTADDataset
 from ..dataset_utils.__plm__.data_utils_for_training import BERTTADDataset
 from ..models import BERTTADModelList, GloVeTADModelList
 from pyabsa.utils.file_utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import print_args, init_optimizer, fprint
+from pyabsa.utils.pyabsa_utils import init_optimizer, fprint
 from pyabsa.framework.tokenizer_class.tokenizer_class import (
     PretrainedTokenizer,
     Tokenizer,
@@ -82,8 +82,6 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                     torch.cuda.memory_allocated(device=self.config.device)
                 )
             )
-
-        print_args(self.config, self.config.logger)
 
     def _cache_or_load_dataset(self):
         pass
@@ -626,8 +624,6 @@ class TADTrainingInstructor(BaseTrainingInstructor):
         losses = list(np.hstack(df.rolling(rolling_intv, min_periods=1).mean().values))
         self.config.loss = losses[-1]
         # self.config.loss = np.average(losses)
-
-        print_args(self.config, self.config.logger)
 
         if self.valid_dataloader or self.config.save_mode:
             del self.train_dataloaders

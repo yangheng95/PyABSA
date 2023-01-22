@@ -52,64 +52,41 @@ class BERTCDDDataset(PyABSADataset):
                 truncation=False,
             )
             code_ids = code_ids[1:-1]
-
-            # for x in range(len(code_ids) // ((self.config.max_seq_len - 2) // 2) + 1):
-            #     _code_ids = code_ids[x * (self.config.max_seq_len - 2) // 2:
-            #                          (x + 1) * (self.config.max_seq_len - 2) // 2 + (self.config.max_seq_len - 2) // 2]
-            #     print(x * (self.config.max_seq_len - 2) // 2)
-            #     print((x + 1) * (self.config.max_seq_len - 2) // 2 + (self.config.max_seq_len - 2) // 2)
-            for x in range(len(code_ids) // (self.config.max_seq_len - 2) + 1):
-                _code_ids = code_ids[
-                    x
-                    * (self.config.max_seq_len - 2) : (x + 1)
-                    * (self.config.max_seq_len - 2)
-                ]
-                _code_ids = pad_and_truncate(
-                    _code_ids,
-                    self.config.max_seq_len - 2,
-                    value=self.tokenizer.pad_token_id,
-                )
-                if _code_ids:
-                    all_data.append(
-                        {
-                            "ex_id": ex_id,
-                            # "text": code_src,
-                            "source_ids": [self.tokenizer.cls_token_id]
-                            + _code_ids
-                            + [self.tokenizer.eos_token_id],
-                            "label": label,
-                            "corrupt_label": 0,
-                        }
+            if self.dataset_type == "train" and label == "1":
+                over_sample_num = self.config.get("over_sample_num", 2)
+            else:
+                over_sample_num = 1
+            for _ in range(over_sample_num):
+                # for x in range(len(code_ids) // ((self.config.max_seq_len - 2) // 2) + 1):
+                #     _code_ids = code_ids[x * (self.config.max_seq_len - 2) // 2:
+                #                          (x + 1) * (self.config.max_seq_len - 2) // 2 + (self.config.max_seq_len - 2) // 2]
+                #     print(x * (self.config.max_seq_len - 2) // 2)
+                #     print((x + 1) * (self.config.max_seq_len - 2) // 2 + (self.config.max_seq_len - 2) // 2)
+                for x in range(len(code_ids) // (self.config.max_seq_len - 2) + 1):
+                    _code_ids = code_ids[
+                        x
+                        * (self.config.max_seq_len - 2) : (x + 1)
+                        * (self.config.max_seq_len - 2)
+                    ]
+                    _code_ids = pad_and_truncate(
+                        _code_ids,
+                        self.config.max_seq_len - 2,
+                        value=self.tokenizer.pad_token_id,
                     )
-                    label_set.add(label)
-                    c_label_set.add(0)
-
-            if label == "1":
-                for _ in range(self.config.noise_instance_num):
-                    for x in range(len(code_ids) // (self.config.max_seq_len - 2) + 1):
-                        _code_ids = code_ids[
-                            x
-                            * (self.config.max_seq_len - 2) : (x + 1)
-                            * (self.config.max_seq_len - 2)
-                        ]
-                        _code_ids = pad_and_truncate(
-                            _code_ids,
-                            self.config.max_seq_len - 2,
-                            value=self.tokenizer.pad_token_id,
+                    if _code_ids:
+                        all_data.append(
+                            {
+                                "ex_id": ex_id,
+                                # "code": code_src,
+                                "source_ids": [self.tokenizer.cls_token_id]
+                                + _code_ids
+                                + [self.tokenizer.eos_token_id],
+                                "label": label,
+                                "corrupt_label": 0,
+                            }
                         )
-                        if _code_ids:
-                            all_data.append(
-                                {
-                                    "ex_id": ex_id,
-                                    # "text": code_src,
-                                    "source_ids": [self.tokenizer.cls_token_id]
-                                    + _code_ids
-                                    + [self.tokenizer.eos_token_id],
-                                    "label": label,
-                                    "corrupt_label": 0,
-                                }
-                            )
-                            label_set.add(label)
+                        label_set.add(label)
+                        c_label_set.add(0)
 
         if self.dataset_type == "train":
             corrupt_examples = read_defect_examples(
@@ -117,6 +94,7 @@ class BERTCDDDataset(PyABSADataset):
                 self.config.get("data_num", None),
                 self.config.get("remove_comments", True),
             )
+
             for _ in range(self.config.noise_instance_num):
                 for ex_id, line in enumerate(
                     tqdm.tqdm(corrupt_examples, desc="preparing dataloader")
@@ -151,7 +129,7 @@ class BERTCDDDataset(PyABSADataset):
                             all_data.append(
                                 {
                                     "ex_id": ex_id,
-                                    # "text": code_src,
+                                    # "code": code_src,
                                     "source_ids": [self.tokenizer.cls_token_id]
                                     + _corrupt_code_ids
                                     + [self.tokenizer.eos_token_id],

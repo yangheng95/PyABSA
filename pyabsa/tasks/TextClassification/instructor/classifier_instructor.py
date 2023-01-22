@@ -35,7 +35,7 @@ from ..models import GloVeTCModelList, BERTTCModelList
 import pytorch_warmup as warmup
 
 from pyabsa.utils.file_utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import init_optimizer, print_args, fprint, rprint
+from pyabsa.utils.pyabsa_utils import init_optimizer, fprint, rprint
 from pyabsa.framework.tokenizer_class.tokenizer_class import (
     PretrainedTokenizer,
     Tokenizer,
@@ -89,8 +89,6 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                     torch.cuda.memory_allocated(device=self.config.device)
                 )
             )
-
-        print_args(self.config, self.logger)
 
     def _cache_or_load_dataset(self):
         pass
@@ -264,6 +262,8 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             "***** Running training for {} *****".format(self.config.task_name)
         )
         self.logger.info("Training set examples = %d", len(self.train_set))
+        if self.valid_set:
+            self.logger.info("Valid set examples = %d", len(self.valid_set))
         if self.test_set:
             self.logger.info("Test set examples = %d", len(self.test_set))
         self.logger.info("Batch size = %d", self.config.batch_size)
@@ -445,8 +445,6 @@ class TCTrainingInstructor(BaseTrainingInstructor):
 
         self.logger.info(self.config.MV.summary(no_print=True))
 
-        print_args(self.config, self.logger)
-
         if self.valid_dataloader or self.config.save_mode:
             del self.train_dataloaders
             del self.test_dataloader
@@ -491,6 +489,8 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                 "***** Running training for {} *****".format(self.config.task_name)
             )
             self.logger.info("Training set examples = %d", len(self.train_set))
+            if self.valid_set:
+                self.logger.info("Valid set examples = %d", len(self.valid_set))
             if self.test_set:
                 self.logger.info("Test set examples = %d", len(self.test_set))
             self.logger.info("Batch size = %d", self.config.batch_size)
@@ -686,8 +686,6 @@ class TCTrainingInstructor(BaseTrainingInstructor):
         if self.config.cross_validate_fold > 0:
             self.logger.info(self.config.MV.summary(no_print=True))
         # self.config.MV.summary()
-
-        print_args(self.config, self.logger)
 
         self.reload_model(save_path_k_fold)
 

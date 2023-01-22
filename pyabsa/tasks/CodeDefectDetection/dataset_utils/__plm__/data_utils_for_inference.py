@@ -12,6 +12,7 @@ from torch.utils.data import Dataset
 
 from pyabsa import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
+from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.utils.pyabsa_utils import fprint
 from ..cdd_utils import read_defect_examples
@@ -44,6 +45,7 @@ class BERTCDDInferenceDataset(Dataset):
             samples,
             self.config.get("data_num", None),
             self.config.get("remove_comments", True),
+            # tokenizer=self.tokenizer,
         )
         all_data = []
         if len(samples) > 100:
@@ -57,28 +59,47 @@ class BERTCDDInferenceDataset(Dataset):
                     raise RuntimeError("Invalid Input!")
 
                 code_src, _, label = text.strip().partition("$LABEL$")
-                if "$FEATURE$" in code_src:
-                    code_src, _, feature = code_src.partition("$FEATURE$")
-                # source_str = "{}: {}".format(args.task, example.source)
                 code_ids = self.tokenizer.text_to_sequence(
                     code_src,
                     max_length=self.config.max_seq_len,
-                    padding="max_length",
-                    truncation=True,
+                    padding="do_not_pad",
+                    truncation=False,
                 )
-                try:
-                    label = int(label.strip())
-                except:
-                    label = LabelPaddingOption.LABEL_PADDING
-                data = {
-                    "ex_id": ex_id,
-                    "code": code_src,
-                    "source_ids": code_ids,
-                    "label": label,
-                    "corrupt_label": LabelPaddingOption.LABEL_PADDING,
-                }
+                code_ids = code_ids[1:-1]
 
-                all_data.append(data)
+                try:
+                    label = self.config.label_to_index[label.strip()]
+                except Exception as e:
+                    print(e)
+                    label = LabelPaddingOption.LABEL_PADDING
+                # for x in range(len(code_ids) // ((self.config.max_seq_len - 2) // 2) + 1):
+                #     _code_ids = code_ids[x * (self.config.max_seq_len - 2) // 2:
+                #                          (x + 1) * (self.config.max_seq_len - 2) // 2 + (self.config.max_seq_len - 2) // 2]
+                #     print(x * (self.config.max_seq_len - 2) // 2)
+                #     print((x + 1) * (self.config.max_seq_len - 2) // 2 + (self.config.max_seq_len - 2) // 2)
+                for x in range(len(code_ids) // (self.config.max_seq_len - 2) + 1):
+                    _code_ids = code_ids[
+                        x
+                        * (self.config.max_seq_len - 2) : (x + 1)
+                        * (self.config.max_seq_len - 2)
+                    ]
+                    _code_ids = pad_and_truncate(
+                        _code_ids,
+                        self.config.max_seq_len - 2,
+                        value=self.tokenizer.pad_token_id,
+                    )
+                    if _code_ids:
+                        all_data.append(
+                            {
+                                "ex_id": ex_id,
+                                "code": code_src,
+                                "source_ids": [self.tokenizer.cls_token_id]
+                                + _code_ids
+                                + [self.tokenizer.eos_token_id],
+                                "label": label,
+                                "corrupt_label": 0,
+                            }
+                        )
 
             except Exception as e:
                 if ignore_error:
