@@ -451,9 +451,9 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                         current_apc_test_f1 = apc_result["apc_test_f1"]
                         current_ate_test_f1 = round(ate_result, 2)
 
-                        description = "Epoch:{} | ".format(epoch)
+                        description = "Epoch:{:>3d}| ".format(epoch)
 
-                        description += "loss_apc:{:.4f} | loss_ate:{:.4f} |".format(
+                        description += "loss_apc:{:>.4f} | loss_ate:{:>.4f} |".format(
                             loss_apc.item(), loss_ate.item()
                         )
 
@@ -700,7 +700,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                         torch.argmax(test_polarities_all, -1).cpu(),
                         target_names=[
                             self.config.index_to_label[x]
-                            for x in self.config.index_to_label
+                            for x in sorted(self.config.index_to_label.keys())
                         ],
                     )
                     fprint(

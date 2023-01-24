@@ -6,6 +6,7 @@
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
+
 from pyabsa.utils.data_utils.dataset_item import DatasetItem
 
 
@@ -55,9 +56,11 @@ class APCDatasetList(list):
     # https://www.kaggle.com/datasets/cf7394cb629b099cf94f3c3ba87e1d37da7bfb173926206247cd651db7a8da07
     Kaggle = DatasetItem("Kaggle", "129.Kaggle")
 
+    Chinese_Chen = DatasetItem('Chinese_Chen', ['130.Chinese_Chen'])
+
     # assembled dataset
     Chinese = DatasetItem(
-        "Chinese", ["107.Phone", "103.Camera", "106.Notebook", "104.Car", "105.MOOC"]
+        "Chinese", ["107.Phone", "103.Camera", "106.Notebook", "104.Car", "105.MOOC", '130.Chinese_Chen']
     )
     Binary_Polarity_Chinese = DatasetItem(
         "Chinese", ["107.Phone", "103.Camera", "106.Notebook", "104.Car"]
@@ -113,6 +116,7 @@ class APCDatasetList(list):
             "129.Kaggle",
             "120.SemEval2016Task5",
             "121.MOOC_En",
+            '130.Chinese_Chen'
         ],
     )
 

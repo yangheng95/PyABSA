@@ -626,7 +626,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                     torch.argmax(t_outputs_all.cpu(), -1),
                     target_names=[
                         self.config.index_to_label[x]
-                        for x in self.config.index_to_label
+                        for x in sorted(self.config.index_to_label.keys())
                     ],
                 )
             )

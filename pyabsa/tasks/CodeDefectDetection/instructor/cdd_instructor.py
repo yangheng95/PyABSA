@@ -774,7 +774,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 digits=4,
                 target_names=[
                     self.config.index_to_label[x]
-                    for x in self.config.index_to_label
+                    for x in sorted(self.config.index_to_label.keys())
                     if x != -100
                 ],
             )
@@ -803,7 +803,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 digits=4,
                 target_names=[
                     self.config.index_to_label[x]
-                    for x in self.config.index_to_label
+                    for x in sorted(self.config.index_to_label.keys())
                     if x != -100
                 ],
             )

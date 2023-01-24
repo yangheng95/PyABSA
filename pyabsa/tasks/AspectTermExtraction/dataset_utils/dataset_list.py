@@ -14,7 +14,6 @@ class ATEPCDatasetList(list):
     ATEPCDatasetList is a list of datasets for aspect term extraction and polarity classification task.
     The datasets are collected from different sources, you can use the id to locate the dataset.
     """
-
     Laptop14 = DatasetItem("Laptop14", "113.Laptop14")
     Restaurant14 = DatasetItem("Restaurant14", "114.Restaurant14")
 
@@ -55,9 +54,11 @@ class ATEPCDatasetList(list):
     # https://www.kaggle.com/datasets/cf7394cb629b099cf94f3c3ba87e1d37da7bfb173926206247cd651db7a8da07
     Kaggle = DatasetItem("Kaggle", "129.Kaggle")
 
+    Chinese_Chen = DatasetItem('Chinese_Chen', ['130.Chinese_Chen'])
+
     # assembled dataset
     Chinese = DatasetItem(
-        "Chinese", ["107.Phone", "103.Camera", "106.Notebook", "104.Car", "105.MOOC"]
+        "Chinese", ["107.Phone", "103.Camera", "106.Notebook", "104.Car", "105.MOOC", '130.Chinese_Chen']
     )
     Binary_Polarity_Chinese = DatasetItem(
         "Chinese", ["107.Phone", "103.Camera", "106.Notebook", "104.Car"]
@@ -113,45 +114,9 @@ class ATEPCDatasetList(list):
             "129.Kaggle",
             "120.SemEval2016Task5",
             "121.MOOC_En",
+            '130.Chinese_Chen'
         ],
     )
 
     def __init__(self):
-        super(ATEPCDatasetList, self).__init__(
-            [
-                self.Laptop14,
-                self.Restaurant14,
-                self.ARTS_Laptop14,
-                self.ARTS_Restaurant14,
-                self.Restaurant15,
-                self.Restaurant16,
-                self.ACL_Twitter,
-                self.MAMS,
-                self.Television,
-                self.TShirt,
-                self.Yelp,
-                self.Phone,
-                self.Car,
-                self.Notebook,
-                self.Camera,
-                self.Shampoo,
-                self.MOOC,
-                self.MOOC_En,
-                self.Kaggle,
-                self.Chinese,
-                self.Binary_Polarity_Chinese,
-                self.Triple_Polarity_Chinese,
-                self.SemEval2016Task5,
-                self.Arabic_SemEval2016Task5,
-                self.Dutch_SemEval2016Task5,
-                self.Spanish_SemEval2016Task5,
-                self.Turkish_SemEval2016Task5,
-                self.Russian_SemEval2016Task5,
-                self.French_SemEval2016Task5,
-                self.English_SemEval2016Task5,
-                self.English,
-                self.SemEval,
-                self.Restaurant,
-                self.Multilingual,
-            ]
-        )
+        super(APCDatasetList, self).__init__(self.__class__.__dict__.values())

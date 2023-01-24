@@ -589,7 +589,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 torch.argmax(t_outputs_all.cpu(), -1),
                 digits=4,
                 target_names=[
-                    self.config.index_to_label[x] for x in self.config.index_to_label
+                    self.config.index_to_label[x] for x in sorted(self.config.index_to_label.keys())
                 ],
             )
             fprint(

@@ -434,7 +434,7 @@ class SentimentClassifier(InferenceModel):
                     digits=4,
                     target_names=[
                         self.config.index_to_label[x]
-                        for x in self.config.index_to_label
+                        for x in sorted(self.config.index_to_label.keys())
                     ],
                 )
                 fprint(
@@ -450,7 +450,7 @@ class SentimentClassifier(InferenceModel):
                     np.argmax(t_outputs_all, -1),
                     labels=[
                         self.config.label_to_index[x]
-                        for x in self.config.label_to_index
+                        for x in sorted(self.config.index_to_label.keys())
                     ],
                 )
                 fprint(
