@@ -119,4 +119,4 @@ class ATEPCDatasetList(list):
     )
 
     def __init__(self):
-        super(APCDatasetList, self).__init__(self.__class__.__dict__.values())
+        super(ATEPCDatasetList, self).__init__(self.__class__.__dict__.values())
