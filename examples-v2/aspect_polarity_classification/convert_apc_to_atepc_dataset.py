@@ -9,5 +9,5 @@
 
 from pyabsa import convert_apc_set_to_atepc_set
 
-if __name__ == '__main__':
-    convert_apc_set_to_atepc_set('Chinese_Chen')
+if __name__ == "__main__":
+    convert_apc_set_to_atepc_set("Chinese_Chen")

@@ -434,7 +434,8 @@ class TextClassifier(InferenceModel):
                 np.argmax(t_outputs_all, -1),
                 digits=4,
                 target_names=[
-                    self.config.index_to_label[x] for x in sorted(self.config.index_to_label.keys())
+                    self.config.index_to_label[x]
+                    for x in sorted(self.config.index_to_label.keys())
                 ],
             )
             fprint(

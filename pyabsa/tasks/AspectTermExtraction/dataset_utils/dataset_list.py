@@ -14,6 +14,7 @@ class ATEPCDatasetList(list):
     ATEPCDatasetList is a list of datasets for aspect term extraction and polarity classification task.
     The datasets are collected from different sources, you can use the id to locate the dataset.
     """
+
     Laptop14 = DatasetItem("Laptop14", "113.Laptop14")
     Restaurant14 = DatasetItem("Restaurant14", "114.Restaurant14")
 
@@ -54,11 +55,19 @@ class ATEPCDatasetList(list):
     # https://www.kaggle.com/datasets/cf7394cb629b099cf94f3c3ba87e1d37da7bfb173926206247cd651db7a8da07
     Kaggle = DatasetItem("Kaggle", "129.Kaggle")
 
-    Chinese_Chen = DatasetItem('Chinese_Chen', ['130.Chinese_Chen'])
+    Chinese_Chen = DatasetItem("Chinese_Chen", ["130.Chinese_Chen"])
 
     # assembled dataset
     Chinese = DatasetItem(
-        "Chinese", ["107.Phone", "103.Camera", "106.Notebook", "104.Car", "105.MOOC", '130.Chinese_Chen']
+        "Chinese",
+        [
+            "107.Phone",
+            "103.Camera",
+            "106.Notebook",
+            "104.Car",
+            "105.MOOC",
+            "130.Chinese_Chen",
+        ],
     )
     Binary_Polarity_Chinese = DatasetItem(
         "Chinese", ["107.Phone", "103.Camera", "106.Notebook", "104.Car"]
@@ -114,7 +123,7 @@ class ATEPCDatasetList(list):
             "129.Kaggle",
             "120.SemEval2016Task5",
             "121.MOOC_En",
-            '130.Chinese_Chen'
+            "130.Chinese_Chen",
         ],
     )
 
