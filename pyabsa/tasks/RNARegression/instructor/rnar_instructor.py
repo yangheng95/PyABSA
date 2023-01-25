@@ -573,7 +573,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                                         save_path,
                                     )
 
-                            description = "Epoch:{} | Loss:{:.4f} | Dev R2 Score:{:.2f}(max:{:.2f})".format(
+                            description = "Epoch:{} | Loss:{:.4f} | Dev R2 Score:{:>.2f}(max:{:>.2f})".format(
                                 epoch, loss.item(), test_r2, max_fold_r2
                             )
                         if (

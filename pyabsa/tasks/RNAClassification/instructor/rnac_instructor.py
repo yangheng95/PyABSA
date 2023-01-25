@@ -203,7 +203,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                                     self.config, self.model, self.tokenizer, save_path
                                 )
 
-                        postfix = "Dev Acc:{:.2f}(max:{:.2f}) Dev F1:{:.2f}(max:{:.2f})".format(
+                        postfix = "Dev Acc:{:>.2f}(max:{:>.2f}) Dev F1:{:>.2f}(max:{:>.2f})".format(
                             test_acc * 100,
                             max_fold_acc * 100,
                             f1 * 100,
@@ -444,7 +444,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                                         save_path,
                                     )
 
-                            postfix = "Dev Acc:{:.2f}(max:{:.2f}) Dev F1:{:.2f}(max:{:.2f})".format(
+                            postfix = "Dev Acc:{:>.2f}(max:{:>.2f}) Dev F1:{:>.2f}(max:{:>.2f})".format(
                                 test_acc * 100,
                                 max_fold_acc * 100,
                                 f1 * 100,

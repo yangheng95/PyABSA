@@ -495,8 +495,8 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                                 )
 
                         postfix = (
-                            "Dev CLS ACC:{:.2f}(max:{:.2f}) Dev AdvDet ACC:{:.2f}(max:{:.2f})"
-                            " Dev AdvCLS ACC:{:.2f}(max:{:.2f})".format(
+                            "Dev CLS ACC:{:>.2f}(max:{:>.2f}) Dev AdvDet ACC:{:>.2f}(max:{:>.2f})"
+                            " Dev AdvCLS ACC:{:>.2f}(max:{:>.2f})".format(
                                 test_label_acc * 100,
                                 max_label_fold_acc * 100,
                                 test_adv_det_acc * 100,

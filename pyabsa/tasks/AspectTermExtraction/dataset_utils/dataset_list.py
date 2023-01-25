@@ -128,4 +128,42 @@ class ATEPCDatasetList(list):
     )
 
     def __init__(self):
-        super(ATEPCDatasetList, self).__init__(self.__class__.__dict__.values())
+        super(ATEPCDatasetList, self).__init__(
+            [
+                self.Laptop14,
+                self.Restaurant14,
+                self.ARTS_Laptop14,
+                self.ARTS_Restaurant14,
+                self.Restaurant15,
+                self.Restaurant16,
+                self.ACL_Twitter,
+                self.MAMS,
+                self.Television,
+                self.TShirt,
+                self.Yelp,
+                self.Phone,
+                self.Car,
+                self.Notebook,
+                self.Camera,
+                self.Shampoo,
+                self.MOOC,
+                self.MOOC_En,
+                self.Kaggle,
+                self.Chinese_Chen,
+                self.Chinese,
+                self.Binary_Polarity_Chinese,
+                self.Triple_Polarity_Chinese,
+                self.SemEval2016Task5,
+                self.Arabic_SemEval2016Task5,
+                self.Dutch_SemEval2016Task5,
+                self.Spanish_SemEval2016Task5,
+                self.Turkish_SemEval2016Task5,
+                self.Russian_SemEval2016Task5,
+                self.French_SemEval2016Task5,
+                self.English_SemEval2016Task5,
+                self.English,
+                self.SemEval,
+                self.Restaurant,
+                self.Multilingual,
+            ]
+        )

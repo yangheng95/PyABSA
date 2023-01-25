@@ -456,19 +456,20 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                         description += "loss_apc:{:>.4f} | loss_ate:{:>.4f} |".format(
                             loss_apc.item(), loss_ate.item()
                         )
-
-                        description += (
-                            " APC_ACC: {}(max:{}) | APC_F1: {}(max:{}) | ".format(
+                        postfix = (
+                            " APC_ACC: {:>.2f}(max:{:>.2f}) | APC_F1: {:>.2f}(max:{:>.2f}) | ".format(
                                 current_apc_test_acc,
                                 self.config.max_test_metrics["max_apc_test_acc"],
                                 current_apc_test_f1,
                                 self.config.max_test_metrics["max_apc_test_f1"],
                             )
                         )
-                        description += "ATE_F1: {}(max:{})".format(
+                        postfix += "ATE_F1: {:>.2f}(max:{:>.2f})".format(
                             current_ate_test_f1,
                             self.config.max_test_metrics["max_ate_test_f1"],
                         )
+                        iterator.set_postfix_str(postfix)
+
                     elif self.config.save_mode and epoch >= self.config.evaluate_begin:
                         save_model(
                             self.config,
