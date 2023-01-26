@@ -151,7 +151,24 @@ Aspect sentiment polarity classification & Aspect term extraction models
 If you are looking for the original proposal of local context focus, here are some introduction at
 [here](https://github.com/yangheng95/PyABSA/tree/release/demos/documents).
 
-
+## Citation
+```bibtex
+@article{YangL22,
+  author    = {Heng Yang and
+               Ke Li},
+  title     = {PyABSA: Open Framework for Aspect-based Sentiment Analysis},
+  journal   = {CoRR},
+  volume    = {abs/2208.01368},
+  year      = {2022},
+  url       = {https://doi.org/10.48550/arXiv.2208.01368},
+  doi       = {10.48550/arXiv.2208.01368},
+  eprinttype = {arXiv},
+  eprint    = {2208.01368},
+  timestamp = {Tue, 08 Nov 2022 21:46:32 +0100},
+  biburl    = {https://dblp.org/rec/journals/corr/abs-2208-01368.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+```
 ## Contribution
 
 This repository is developed and maintained by HENG YANG ([yangheng95@GitHub](https://github.com/yangheng95)),
