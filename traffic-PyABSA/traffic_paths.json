@@ -2,61 +2,61 @@
   {
     "path": "/yangheng95/PyABSA",
     "title": "yangheng95/PyABSA: Sentiment Analysis, Text Classification, Text Augmentation...",
-    "count": 693,
-    "uniques": 295
+    "count": 703,
+    "uniques": 291
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2/pyabsa",
     "title": "PyABSA/pyabsa at v2 · yangheng95/PyABSA · GitHub",
-    "count": 119,
-    "uniques": 61
+    "count": 137,
+    "uniques": 68
   },
   {
     "path": "/yangheng95/PyABSA/tree/release",
     "title": "yangheng95/PyABSA at release",
-    "count": 99,
+    "count": 93,
     "uniques": 55
   },
   {
     "path": "/yangheng95/PyABSA/blob/release/demos/aspect_polarity_classification/run_fast_lsa_deberta_large.py",
     "title": "PyABSA/run_fast_lsa_deberta_large.py at release · yangheng95/PyABSA · GitHub",
-    "count": 62,
-    "uniques": 45
-  },
-  {
-    "path": "/yangheng95/PyABSA/tree/v2/examples-v2",
-    "title": "PyABSA/examples-v2 at v2 · yangheng95/PyABSA · GitHub",
-    "count": 58,
-    "uniques": 37
+    "count": 71,
+    "uniques": 52
   },
   {
     "path": "/yangheng95/PyABSA/issues",
     "title": "Issues · yangheng95/PyABSA · GitHub",
-    "count": 55,
-    "uniques": 29
+    "count": 63,
+    "uniques": 31
   },
   {
-    "path": "/yangheng95/PyABSA/tree/release/demos/aspect_polarity_classification",
-    "title": "PyABSA/demos/aspect_polarity_classification at release · yangheng95/PyABSA · ...",
-    "count": 45,
-    "uniques": 29
-  },
-  {
-    "path": "/yangheng95/PyABSA/tree/release/demos",
-    "title": "PyABSA/demos at release · yangheng95/PyABSA · GitHub",
-    "count": 39,
-    "uniques": 20
+    "path": "/yangheng95/PyABSA/tree/v2/examples-v2",
+    "title": "PyABSA/examples-v2 at v2 · yangheng95/PyABSA · GitHub",
+    "count": 52,
+    "uniques": 34
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2/pyabsa/tasks",
     "title": "PyABSA/pyabsa/tasks at v2 · yangheng95/PyABSA · GitHub",
-    "count": 35,
-    "uniques": 20
+    "count": 44,
+    "uniques": 23
+  },
+  {
+    "path": "/yangheng95/PyABSA/tree/release/demos/aspect_polarity_classification",
+    "title": "PyABSA/demos/aspect_polarity_classification at release · yangheng95/PyABSA · ...",
+    "count": 40,
+    "uniques": 29
   },
   {
     "path": "/yangheng95/PyABSA/tree/release/demos/aspect_term_extraction",
     "title": "PyABSA/demos/aspect_term_extraction at release · yangheng95/PyABSA · GitHub",
-    "count": 34,
+    "count": 33,
     "uniques": 23
+  },
+  {
+    "path": "/yangheng95/PyABSA/search",
+    "title": "Search · model · GitHub",
+    "count": 33,
+    "uniques": 8
   }
 ]
