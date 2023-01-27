@@ -45,6 +45,11 @@ def test_classification_augmentation():
         config=config,
         dataset=TC.TCDatasetList.SST2,
         device=autocuda.auto_cuda(),
+        boosting_fold=2,
+        classifier_training_num=1,
+        augment_num_per_case=2,
+        winner_num_per_case=1,
+        augment_backend="SynonymAug",
     )
 
 
@@ -72,6 +77,11 @@ def test_aspect_sentiment_classification_augmentation():
         config=config,
         dataset=APC.APCDatasetList.Restaurant16,
         device=autocuda.auto_cuda(),
+        boosting_fold=2,
+        classifier_training_num=1,
+        augment_num_per_case=2,
+        winner_num_per_case=1,
+        augment_backend="SynonymAug",
     )
 
 

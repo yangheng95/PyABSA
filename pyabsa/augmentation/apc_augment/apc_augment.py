@@ -14,6 +14,17 @@ from termcolor import colored
 from pyabsa.utils.pyabsa_utils import fprint
 
 
+class AugmentBackend:
+    EDA = "EDA"
+    ContextualWordEmbsAug = "ContextualWordEmbsAug"
+    RandomWordAug = "RandomWordAug"
+    AntonymAug = "AntonymAug"
+    SynonymAug = "SynonymAug"
+    SplitAug = "SplitAug"
+    BackTranslationAug = "BackTranslationAug"
+    SpellingAug = "SpellingAug"
+
+
 def auto_aspect_sentiment_classification_augmentation(
     config, dataset, device, **kwargs
 ):
@@ -43,6 +54,7 @@ def auto_aspect_sentiment_classification_augmentation(
         CLASSIFIER_TRAINING_NUM=kwargs.get("classifier_training_num", 1),
         AUGMENT_NUM_PER_CASE=kwargs.get("augment_num_per_case", 10),
         WINNER_NUM_PER_CASE=kwargs.get("winner_num_per_case", 5),
+        AUGMENT_BACKEND=kwargs.get("augment_backend", AugmentBackend.EDA),
         device=device,
     )
 
