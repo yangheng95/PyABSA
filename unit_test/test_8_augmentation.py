@@ -39,16 +39,20 @@ def test_classification_augmentation():
     config.seed = {42}
     config.log_step = -1
     config.l2reg = 0.00001
-    config.data_num = 20
+    # config.data_num = 20
 
     auto_classification_augmentation(
         config=config,
         dataset=TC.TCDatasetList.SST2,
         device=autocuda.auto_cuda(),
-        boosting_fold=2,
+        # boosting_fold=2,
+        # classifier_training_num=1,
+        # augment_num_per_case=2,
+        # winner_num_per_case=1,
+        boosting_fold=4,
         classifier_training_num=1,
-        augment_num_per_case=2,
-        winner_num_per_case=1,
+        augment_num_per_case=10,
+        winner_num_per_case=5,
         augment_backend="SynonymAug",
     )
 
@@ -77,10 +81,14 @@ def test_aspect_sentiment_classification_augmentation():
         config=config,
         dataset=APC.APCDatasetList.Restaurant16,
         device=autocuda.auto_cuda(),
-        boosting_fold=2,
+        # boosting_fold=2,
+        # classifier_training_num=1,
+        # augment_num_per_case=2,
+        # winner_num_per_case=1,
+        boosting_fold=4,
         classifier_training_num=1,
-        augment_num_per_case=2,
-        winner_num_per_case=1,
+        augment_num_per_case=10,
+        winner_num_per_case=5,
         augment_backend="SynonymAug",
     )
 

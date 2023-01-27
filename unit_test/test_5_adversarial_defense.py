@@ -25,7 +25,7 @@ def test_tad_training():
     config.seed = [2]
     config.l2reg = 1e-5
     config.cross_validate_fold = -1
-    config.data_num = 600
+    config.data_num = 900
 
     dataset = DatasetItem("SST2TextFooler")
 
