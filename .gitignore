@@ -33,6 +33,9 @@ tests/
 # special project files
 JIC/
 CPDP/
+
+*.sh
+
 # Embedding
 glove.840B.300d.txt
 glove.42B.300d.txt
