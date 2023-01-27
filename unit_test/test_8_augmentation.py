@@ -22,8 +22,14 @@ warnings.filterwarnings("ignore")
 
 
 def test_classification_augmentation():
+
+    if os.path.exists("integrated_datasets"):
+        shutil.rmtree("integrated_datasets")
+    download_all_available_datasets()
+
     config = TC.TCConfigManager.get_tc_config_english()
     config.model = TC.BERTTCModelList.BERT_MLP
+    config.pretrained_bert = "bert-base-uncased"
     config.num_epoch = 1
     config.evaluate_begin = 0
     config.max_seq_len = 3
@@ -31,18 +37,23 @@ def test_classification_augmentation():
     config.seed = {42}
     config.log_step = -1
     config.l2reg = 0.00001
-    config.data_num = 100
+    config.data_num = 20
 
     auto_classification_augmentation(
         config=config,
-        dataset="custom",
+        dataset=TC.TCDatasetList.SST2,
         device=autocuda.auto_cuda(),
     )
 
 
 def test_aspect_sentiment_classification_augmentation():
+
+    if os.path.exists("integrated_datasets"):
+        shutil.rmtree("integrated_datasets")
+    download_all_available_datasets()
+
     config = APC.APCConfigManager.get_apc_config_english()
-    config.pretrained_bert = "microsoft/deberta-v3-base"
+    config.pretrained_bert = "bert-base-uncased"
     config.evaluate_begin = 0
     config.max_seq_len = 10
     config.num_epoch = 1

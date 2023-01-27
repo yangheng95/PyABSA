@@ -456,13 +456,11 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                         description += "loss_apc:{:>.4f} | loss_ate:{:>.4f} |".format(
                             loss_apc.item(), loss_ate.item()
                         )
-                        postfix = (
-                            " APC_ACC: {:>.2f}(max:{:>.2f}) | APC_F1: {:>.2f}(max:{:>.2f}) | ".format(
-                                current_apc_test_acc,
-                                self.config.max_test_metrics["max_apc_test_acc"],
-                                current_apc_test_f1,
-                                self.config.max_test_metrics["max_apc_test_f1"],
-                            )
+                        postfix = " APC_ACC: {:>.2f}(max:{:>.2f}) | APC_F1: {:>.2f}(max:{:>.2f}) | ".format(
+                            current_apc_test_acc,
+                            self.config.max_test_metrics["max_apc_test_acc"],
+                            current_apc_test_f1,
+                            self.config.max_test_metrics["max_apc_test_f1"],
                         )
                         postfix += "ATE_F1: {:>.2f}(max:{:>.2f})".format(
                             current_ate_test_f1,
