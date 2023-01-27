@@ -51,6 +51,7 @@ def make_ABSA_dataset(dataset_name_or_path, checkpoint="english"):
         aspect_extractor = AspectExtractor(checkpoint=checkpoint)
     else:
         fprint('No files found! Please make sure your dataset names end with ".ignore"')
+    fprint("Start processing dataset: " + colored(dataset_name_or_path, "green"))
     for f in fs:
 
         with open(f, mode="r", encoding="utf8") as f_in:
@@ -64,6 +65,21 @@ def make_ABSA_dataset(dataset_name_or_path, checkpoint="english"):
             ) as f_atepc_out:
 
                 for result in results:
+
+                    for aspect, position, sentiment in zip(
+                        result["aspect"], result["position"], result["sentiment"]
+                    ):
+                        f_apc_out.write(
+                            " ".join(
+                                result["tokens"][: position[0]]
+                                + ["$T$"]
+                                + result["tokens"][position[-1] :]
+                            )
+                            + "\n"
+                        )
+                        f_apc_out.write("{}\n".format(aspect))
+                        f_apc_out.write("{}\n".format(sentiment))
+
                     for j, pos in enumerate(result["position"]):
                         for i, (token, IOB) in enumerate(
                             zip(result["tokens"], result["IOB"])
@@ -88,11 +104,6 @@ def make_ABSA_dataset(dataset_name_or_path, checkpoint="english"):
                                     + "\n"
                                 )
                         f_atepc_out.write("\n")
-
-                    for aspect, sentiment in zip(result["aspect"], result["sentiment"]):
-                        f_apc_out.write(" ".join(result["tokens"]) + "\n")
-                        f_apc_out.write("{}\n".format(aspect))
-                        f_apc_out.write("{}\n".format(sentiment))
 
     fprint("APC and ATEPC Datasets built for {}!".format(" ".join(fs)))
     fprint(

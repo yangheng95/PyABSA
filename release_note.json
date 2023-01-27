@@ -1,4 +1,7 @@
 ﻿{
+  "2.0.25": {
+    "1": "Fix make_ABSA_dataset() bug"
+  },
   "2.0.24": {
     "1": "Add a Chinese ABSA dataset (alias 130.Chinese_Chen) from https://github.com/GeneZC/StructBias"
   },
