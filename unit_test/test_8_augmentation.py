@@ -16,7 +16,7 @@ import warnings
 
 from pyabsa.augmentation import auto_classification_augmentation
 
-from pyabsa import TextClassification as TC
+from pyabsa import TextClassification as TC, download_all_available_datasets
 import os
 import shutil
 
