@@ -57,6 +57,11 @@ class BERTCDDDataset(PyABSADataset):
             else:
                 over_sample_num = 1
             if self.config.get("sliding_window", False):
+                code_ids = pad_and_truncate(
+                    code_ids,
+                    self.config.max_seq_len - 2,
+                    value=self.tokenizer.pad_token_id,
+                )
                 all_data.append(
                     {
                         "ex_id": ex_id,
