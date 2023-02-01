@@ -117,22 +117,30 @@ def remove_comment(code_str, tokenizer=None):
     :param code_str: code string
     :param tokenizer: tokenizer if passed, will add <mask> token to the code
     """
+
     code = code_str
+
+    # # Regular expression pattern to match single-line comments
+    # single_line_comment_pattern = r"(?m)//.*$"
+    #
+    # # Regular expression pattern to match multi-line comments
+    # multi_line_comment_pattern = r"(?s)/\*.*?\*/"
+    #
+    # # Replace single-line and multi-line comments with an empty string
+    # no_comments = re.sub(single_line_comment_pattern, "", code)
+    # no_comments = re.sub(multi_line_comment_pattern, "", no_comments)
+    # for s in re.findall(r"\n[\s]*\n", no_comments, re.DOTALL):
+    #     no_comments = no_comments.replace(s, "\n")
+    # return no_comments
 
     for s in re.findall(r"/\*.*?\*/\n", code, re.DOTALL):
         code = code.replace(s, "")
     for s in re.findall(r"//.*\n", code):
         code = code.replace(s, "")
+    for s in re.findall(r"/\n", code):
+        code = code.replace(s, "")
     for s in re.findall(r"\n[\s]*\n", code, re.DOTALL):
         code = code.replace(s, "\n")
-    # for s in re.findall(r"\\n[\s]*\\n", code, re.DOTALL):
-    #     code = code.replace(s, "\n")
-    # for s in re.findall(r"\t", code, re.DOTALL):
-    #     code = code.replace(s, "    ")
-    # for s in re.findall(r"import.*;\n", code):
-    #     code = code.replace(s, "")
-    # for s in re.findall(r"package.*;\n", code):
-    #     code = code.replace(s, "")
 
     if tokenizer:
         # add <mask> noise

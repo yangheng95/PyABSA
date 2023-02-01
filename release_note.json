@@ -1,4 +1,7 @@
 ﻿{
+  "2.0.27(26)": {
+    "1": "Minor fixes and improvements"
+  },
   "2.0.25": {
     "1": "Fix make_ABSA_dataset() bug"
   },

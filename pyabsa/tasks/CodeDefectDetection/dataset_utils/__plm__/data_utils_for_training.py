@@ -53,10 +53,10 @@ class BERTCDDDataset(PyABSADataset):
             )
             code_ids = code_ids[1:-1]
             if self.dataset_type == "train" and label == "1":
-                over_sample_num = self.config.get("over_sample_num", 2)
+                over_sampling = self.config.get("over_sampling", 2)
             else:
-                over_sample_num = 1
-            if self.config.get("sliding_window", False):
+                over_sampling = 1
+            if not self.config.get("sliding_window", False):
                 code_ids = pad_and_truncate(
                     code_ids,
                     self.config.max_seq_len - 2,
@@ -76,7 +76,7 @@ class BERTCDDDataset(PyABSADataset):
                 label_set.add(label)
                 c_label_set.add(0)
             else:
-                for _ in range(over_sample_num):
+                for _ in range(over_sampling):
                     # for x in range(len(code_ids) // ((self.config.max_seq_len - 2) // 2) + 1):
                     #     _code_ids = code_ids[x * (self.config.max_seq_len - 2) // 2:
                     #                          (x + 1) * (self.config.max_seq_len - 2) // 2 + (self.config.max_seq_len - 2) // 2]
