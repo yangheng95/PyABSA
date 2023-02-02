@@ -41,7 +41,7 @@ setup(
     install_requires=[
         "findfile>=2.0.0",
         "autocuda>=0.16",
-        "metric-visualizer>=0.8.7.2",
+        "metric-visualizer>=0.8.7.3",
         "boostaug>=2.3.5",
         "spacy",
         "networkx",
