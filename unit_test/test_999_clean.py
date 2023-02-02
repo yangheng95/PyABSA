@@ -22,10 +22,10 @@ def test_clean():
         shutil.rmtree("integrated_datasets")
 
     if os.path.exists("integrated_datasets.ignore"):
-        os.remove("integrated_datasets.ignore")
+        shutil.rmtree("integrated_datasets.ignore")
 
     if os.path.exists("source_datasets.backup"):
-        os.remove("source_datasets.backup")
+        shutil.rmtree("source_datasets.backup")
 
     fprint("Start cleaning...")
     for f in findfile.find_cwd_files(
