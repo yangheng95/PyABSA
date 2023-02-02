@@ -24,6 +24,9 @@ def test_clean():
     if os.path.exists("integrated_datasets.ignore"):
         os.remove("integrated_datasets.ignore")
 
+    if os.path.exists("source_datasets.backup"):
+        os.remove("source_datasets.backup")
+
     fprint("Start cleaning...")
     for f in findfile.find_cwd_files(
         or_key=[".zip", ".cache", ".mv", ".json", ".txt"],
