@@ -116,6 +116,7 @@ class TADTextClassifier(InferenceModel):
 
         super().__init__(checkpoint, cal_perplexity, **kwargs)
 
+        self.infer_dataloader = None
         self.cal_perplexity = cal_perplexity
         # load from a trainer
         if self.checkpoint and not isinstance(self.checkpoint, str):
@@ -365,9 +366,9 @@ class TADTextClassifier(InferenceModel):
         else:
             raise RuntimeError("Please specify your datasets path!")
         if isinstance(text, str):
-            return self._run_prediction(print_result=print_result)[0]
+            return self._run_prediction(print_result=print_result, defense=defense)[0]
         else:
-            return self._run_prediction(print_result=print_result)
+            return self._run_prediction(print_result=print_result, defense=defense)
 
     def _run_prediction(self, save_path=None, print_result=True, defense=None):
 

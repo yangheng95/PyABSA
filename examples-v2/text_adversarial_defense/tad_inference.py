@@ -14,12 +14,13 @@ os.environ["PYTHONIOENCODING"] = "UTF8"
 
 dataset = "SST2TextFooler"
 inference_sets = DatasetItem(
-    dataset, findfile.find_cwd_files([dataset, ".org", ".inference"])
+    dataset, findfile.find_cwd_files([dataset, ".adv", ".inference"])
 )
 
 text_classifier = TAD.TADTextClassifier(
     "tadbert_SST2",
     auto_device=True,  # Use CUDA if available
+    # defense=None,
 )
 
 # inference_sets = DatasetItem(dataset)
@@ -28,4 +29,5 @@ results = text_classifier.batch_predict(
     print_result=False,
     save_result=False,
     ignore_error=False,
+    defense="pwws",
 )

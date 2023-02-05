@@ -14,18 +14,50 @@ cwd = Path(__file__).parent
 long_description = (cwd / "README.md").read_text(encoding="utf8")
 
 extras = {}
-# extras = [
-#     'git+https://github.com/yangheng95/TextAttack',
-#     'tensorflow',
-#     'tensorflow_hub',
-#     'gensim',
-# ]
+# Packages required for installing docs.
+extras["docs"] = [
+    "recommonmark",
+    "nbsphinx",
+    "sphinx-autobuild",
+    "sphinx-rtd-theme",
+    "sphinx-markdown-tables",
+    "sphinx-copybutton",
+]
+# Packages required for formatting code & running tests.
+extras["test"] = [
+    "black==20.8b1",
+    "docformatter",
+    "isort==5.6.4",
+    "flake8",
+    "pytest",
+    "pytest-xdist",
+]
+
+extras["tensorflow"] = [
+    "tensorflow==2.9.1",
+    "tensorflow_hub",
+    "tensorflow_text>=2",
+    "tensorboardX",
+    "tensorflow-estimator==2.9.0",
+]
+
+extras["optional"] = [
+    "sentence_transformers==2.2.0",
+    r"textattack@git+https://github.com/yangheng95/TextAttack",
+    "tensorflow",
+    "tensorflow_hub",
+]
+
+# For developers, install development tools along with all optional dependencies.
+extras["dev"] = (
+    extras["docs"] + extras["test"] + extras["tensorflow"] + extras["optional"]
+)
 
 setup(
     name=__name__,
     version=__version__,
     description="This tool provides the state-of-the-art models for aspect term extraction (ATE), "
-    "aspect polarity classification (APC), and text classification (TC).",
+                "aspect polarity classification (APC), and text classification (TC).",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/yangheng95/PyABSA",
@@ -41,7 +73,7 @@ setup(
     install_requires=[
         "findfile>=2.0.0",
         "autocuda>=0.16",
-        "metric-visualizer>=0.8.7.3",
+        "metric-visualizer>=0.8.7.4",
         "boostaug>=2.3.5",
         "spacy",
         "networkx",
