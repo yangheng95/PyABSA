@@ -10,13 +10,9 @@
 
 class BERTCDDModelList(list):
     from .__plm__.bert import BERT_MLP
-    from .__plm__.bert2 import BERT_MLP2
 
     BERT_MLP = BERT_MLP
     BERT = BERT_MLP
-
-    BERT_MLP2 = BERT_MLP2
-    BERT2 = BERT_MLP2
 
     def __init__(self):
         super(BERTCDDModelList, self).__init__([self.BERT_MLP])
