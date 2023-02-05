@@ -43,7 +43,6 @@ extras["tensorflow"] = [
 
 extras["optional"] = [
     "sentence_transformers==2.2.0",
-    r"textattack@git+https://github.com/yangheng95/TextAttack",
     "tensorflow",
     "tensorflow_hub",
 ]
