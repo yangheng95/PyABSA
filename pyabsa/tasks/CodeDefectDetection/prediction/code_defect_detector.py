@@ -29,7 +29,6 @@ class CodeDefectDetector(InferenceModel):
     task_code = TaskCodeOption.CodeDefectDetection
 
     def __init__(self, checkpoint=None, cal_perplexity=False, **kwargs):
-
         """
         from_train_model: load inference model from trained model
         """
@@ -188,7 +187,6 @@ class CodeDefectDetector(InferenceModel):
         ignore_error=True,
         **kwargs
     ):
-
         return self.batch_predict(
             target_file=target_file,
             print_result=print_result,
@@ -257,7 +255,6 @@ class CodeDefectDetector(InferenceModel):
         ignore_error=True,
         **kwargs
     ):
-
         """
         Predict from a labelence or a list of labelences.
         param: text: the labelence or a list of labelence to be predicted.
@@ -279,7 +276,6 @@ class CodeDefectDetector(InferenceModel):
             return self._run_prediction(print_result=print_result)
 
     def _run_prediction(self, save_path=None, print_result=True):
-
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
 
         correct = {True: "Correct", False: "Wrong"}

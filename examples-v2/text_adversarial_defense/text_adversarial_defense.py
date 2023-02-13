@@ -38,6 +38,7 @@ try:
 except:
     download_all_available_datasets()
 
+
 class ModelWrapper(HuggingFaceModelWrapper):
     def __init__(self, model):
         self.model = model  # pipeline = pipeline
@@ -151,7 +152,6 @@ def get_sst2_example():
         data = []
         label_set = set()
         for data_file in dataset_file[dat_type]:
-
             with open(data_file, mode="r", encoding="utf8") as fin:
                 lines = fin.readlines()
                 for line in lines:
@@ -195,7 +195,6 @@ def get_agnews_example():
         data = []
         label_set = set()
         for data_file in dataset_file[dat_type]:
-
             with open(data_file, mode="r", encoding="utf8") as fin:
                 lines = fin.readlines()
                 for line in lines:
@@ -240,7 +239,6 @@ def get_amazon_example():
         data = []
         label_set = set()
         for data_file in dataset_file[dat_type]:
-
             with open(data_file, mode="r", encoding="utf8") as fin:
                 lines = fin.readlines()
                 for line in lines:
@@ -285,7 +283,6 @@ def get_imdb_example():
         data = []
         label_set = set()
         for data_file in dataset_file[dat_type]:
-
             with open(data_file, mode="r", encoding="utf8") as fin:
                 lines = fin.readlines()
                 for line in lines:
@@ -313,7 +310,6 @@ def generate_adversarial_example(dataset, attacker, text=None, label=None):
         "tad-{}{}".format(dataset.lower(), attacker.lower())
     ].attacker.simple_attack(text, int(label))
     if isinstance(attack_result, SuccessfulAttackResult):
-
         if (
             attack_result.perturbed_result.output
             != attack_result.original_result.ground_truth_output

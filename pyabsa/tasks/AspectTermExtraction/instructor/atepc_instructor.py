@@ -42,7 +42,6 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
         self._init_misc()
 
     def _load_dataset_and_prepare_dataloader(self):
-
         self.tokenizer = AutoTokenizer.from_pretrained(
             self.config.pretrained_bert,
             do_lower_case="uncased" in self.config.pretrained_bert,

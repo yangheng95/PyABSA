@@ -167,7 +167,6 @@ class BaseTrainingInstructor:
         return None
 
     def _prepare_dataloader(self):
-
         if self.config.get("train_sampler", "random") == "random":
             train_sampler = RandomSampler(self.train_set)
         elif self.config.get("train_sampler", "random") == "imbalanced":
@@ -184,7 +183,6 @@ class BaseTrainingInstructor:
             self.train_dataloaders = [self.train_dataloader]
 
         elif self.config.cross_validate_fold < 1:
-
             self.train_dataloaders.append(
                 DataLoader(
                     dataset=self.train_set,
@@ -278,7 +276,6 @@ class BaseTrainingInstructor:
         print_args(self.config, self.logger)
 
     def _train(self, criterion):
-
         self._prepare_env()
         self._prepare_dataloader()
 

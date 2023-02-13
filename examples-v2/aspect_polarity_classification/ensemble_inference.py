@@ -55,7 +55,6 @@ def ensemble_performance(dataset, print_result=False):
 
 
 if __name__ == "__main__":
-
     # Training the models before ensemble inference, take Laptop14 as an example
 
     # for dataset in [

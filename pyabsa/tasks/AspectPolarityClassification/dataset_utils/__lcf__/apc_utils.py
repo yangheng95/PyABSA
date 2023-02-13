@@ -320,7 +320,6 @@ def copy_side_aspect(direct, target, source, examples, input_demands):
         source["side_ex_ids"] = copy.deepcopy({source["ex_id"]})
 
     if target["polarity"] == source["polarity"]:
-
         target["side_ex_ids"] |= source["side_ex_ids"]
         source["side_ex_ids"] |= target["side_ex_ids"]
         target["cluster_ids"] |= source["cluster_ids"]

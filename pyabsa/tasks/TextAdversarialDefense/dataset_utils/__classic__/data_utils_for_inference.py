@@ -18,7 +18,6 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 class GloVeTADInferenceDataset(Dataset):
     def __init__(self, config, tokenizer):
-
         self.tokenizer = tokenizer
         self.config = config
         self.data = []
@@ -30,7 +29,6 @@ class GloVeTADInferenceDataset(Dataset):
         self.process_data(self.parse_sample(text), ignore_error=ignore_error)
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
-
         lines = load_dataset_from_file(infer_file, config=self.config)
         samples = []
         for sample in lines:

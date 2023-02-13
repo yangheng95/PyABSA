@@ -124,7 +124,6 @@ def validate_example(text: str, aspect: str, polarity: str, config):
 def check_and_fix_labels(label_set: set, label_name, all_data, config):
     # update output_dim, init model behind execution of this function!
     if "-100" in label_set:
-
         label_to_index = {
             origin_label: int(idx) - 1 if origin_label != "-100" else -100
             for origin_label, idx in zip(sorted(label_set), range(len(label_set)))

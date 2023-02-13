@@ -8,9 +8,9 @@
 # Copyright (C) 2021. All Rights Reserved.
 import findfile
 
-for f in findfile.find_cwd_files(['integrated_datasets'], exclude_key=['apc', 'atepc']):
-    with open(f, 'r', encoding='utf-8') as fin:
+for f in findfile.find_cwd_files(["integrated_datasets"], exclude_key=["apc", "atepc"]):
+    with open(f, "r", encoding="utf-8") as fin:
         lines = fin.readlines()
-    with open(f, 'w', encoding='utf-8') as fout:
+    with open(f, "w", encoding="utf-8") as fout:
         for line in lines:
-            fout.write(line.replace('!ref!', '$LABEL$'))
+            fout.write(line.replace("!ref!", "$LABEL$"))

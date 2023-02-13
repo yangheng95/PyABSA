@@ -8,11 +8,16 @@
 # Copyright (C) 2021. All Rights Reserved.
 import os
 import shutil
-from pyabsa import download_all_available_datasets, AspectTermExtraction as ATEPC, TaskCodeOption
+from pyabsa import (
+    download_all_available_datasets,
+    AspectTermExtraction as ATEPC,
+    TaskCodeOption,
+)
+
 
 def test_multilingual_inference():
-    if os.path.exists('checkpoints'):
-        shutil.rmtree('checkpoints')
+    if os.path.exists("checkpoints"):
+        shutil.rmtree("checkpoints")
 
     if os.path.exists("integrated_datasets"):
         shutil.rmtree("integrated_datasets")
@@ -21,32 +26,32 @@ def test_multilingual_inference():
         shutil.rmtree("source_datasets.backup")
 
     download_all_available_datasets()
-    aspect_extractor = ATEPC.AspectExtractor('Multilingual')
+    aspect_extractor = ATEPC.AspectExtractor("Multilingual")
     examples = [
-        'The food is good',
-        'The food is bad',
-        'The food is not good',
-        'The food is not bad'
+        "The food is good",
+        "The food is bad",
+        "The food is not good",
+        "The food is not bad",
     ]
     expected_results = [
-        {'aspect': ['food'], 'sentiment': ['Positive']},
-        {'aspect': ['food'], 'sentiment': ['Negative']},
-        {'aspect': ['food'], 'sentiment': ['Negative']},
-        {'aspect': ['food'], 'sentiment': ['Neutral']}
+        {"aspect": ["food"], "sentiment": ["Positive"]},
+        {"aspect": ["food"], "sentiment": ["Negative"]},
+        {"aspect": ["food"], "sentiment": ["Negative"]},
+        {"aspect": ["food"], "sentiment": ["Neutral"]},
     ]
     count = 0
     for i, example in enumerate(examples):
         result = aspect_extractor.predict(example, pred_sentiment=True)
-        if result['aspect'] != expected_results[i]['aspect']:
+        if result["aspect"] != expected_results[i]["aspect"]:
             count += 1
-        if result['sentiment'] != expected_results[i]['sentiment']:
+        if result["sentiment"] != expected_results[i]["sentiment"]:
             count += 1
     assert count <= 0
 
 
 def test_english_inference():
-    if os.path.exists('checkpoints'):
-        shutil.rmtree('checkpoints')
+    if os.path.exists("checkpoints"):
+        shutil.rmtree("checkpoints")
 
     if os.path.exists("integrated_datasets"):
         shutil.rmtree("integrated_datasets")
@@ -55,25 +60,25 @@ def test_english_inference():
         shutil.rmtree("source_datasets.backup")
 
     download_all_available_datasets()
-    aspect_extractor = ATEPC.AspectExtractor('English')
+    aspect_extractor = ATEPC.AspectExtractor("English")
     examples = [
-        'The food is good',
-        'The food is bad',
-        'The food is not good',
-        'The food is not bad'
+        "The food is good",
+        "The food is bad",
+        "The food is not good",
+        "The food is not bad",
     ]
     expected_results = [
-        {'aspect': ['food'], 'sentiment': ['Positive']},
-        {'aspect': ['food'], 'sentiment': ['Negative']},
-        {'aspect': ['food'], 'sentiment': ['Negative']},
-        {'aspect': ['food'], 'sentiment': ['Neutral']}
+        {"aspect": ["food"], "sentiment": ["Positive"]},
+        {"aspect": ["food"], "sentiment": ["Negative"]},
+        {"aspect": ["food"], "sentiment": ["Negative"]},
+        {"aspect": ["food"], "sentiment": ["Neutral"]},
     ]
     count = 0
     for i, example in enumerate(examples):
         result = aspect_extractor.predict(example, pred_sentiment=True)
-        if result['aspect'] != expected_results[i]['aspect']:
+        if result["aspect"] != expected_results[i]["aspect"]:
             count += 1
-        if result['sentiment'] != expected_results[i]['sentiment']:
+        if result["sentiment"] != expected_results[i]["sentiment"]:
             count += 1
 
     assert count <= 0
@@ -112,7 +117,7 @@ def test_english_inference():
 #     assert count <= 2
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_multilingual_inference()
     test_english_inference()
     # test_chinese_inference()

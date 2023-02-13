@@ -112,7 +112,6 @@ def readfile(filename):
     f.close()
     prepared_data = []
     for s, t, p in data:
-
         if len(s) > 0:
             # prepare the atepc dataset, refer to https://github.com/yangheng95/PyABSA/issues/78
             polarity_padding = [str(LabelPaddingOption.SENTIMENT_PADDING)] * len(t)
@@ -282,7 +281,7 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, config=None):
     config.IOB_label_to_index = label_map
     features = []
     polarities_set = set()
-    for (ex_index, example) in enumerate(
+    for ex_index, example in enumerate(
         tqdm.tqdm(examples, desc="convert examples to features")
     ):
         text_tokens = example.text_a[:]

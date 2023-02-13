@@ -56,7 +56,6 @@ class InferenceModel:
             self.MLM.to(device)
 
     def __post_init__(self, **kwargs):
-
         for k, v in kwargs.items():
             self.config[k] = v
 
@@ -89,7 +88,6 @@ class InferenceModel:
         raise NotImplementedError("Please implement batch_infer() in your subclass!")
 
     def predict(self, **kwargs):
-
         """
         Predict from a sentence or a list of sentences.
         param: text: the sentence or a list of sentence to be predicted.

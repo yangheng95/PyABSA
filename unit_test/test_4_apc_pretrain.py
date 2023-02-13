@@ -162,7 +162,6 @@ def test_bert_apc_models():
     from pyabsa import AspectPolarityClassification as APC
 
     for dataset in [APC.APCDatasetList.Laptop14, APC.APCDatasetList.Phone]:
-
         for model in APC.BERTBaselineAPCModelList()[1:2]:
             config = APC.APCConfigManager.get_apc_config_english()
             cuda.empty_cache()

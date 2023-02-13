@@ -186,7 +186,6 @@ class RNAClassifier(InferenceModel):
         ignore_error=True,
         **kwargs
     ):
-
         self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
 
         save_path = os.path.join(
@@ -214,7 +213,6 @@ class RNAClassifier(InferenceModel):
         )
 
     def predict(self, text: str = None, print_result=True, ignore_error=True, **kwargs):
-
         self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
 
         if text:
@@ -227,7 +225,6 @@ class RNAClassifier(InferenceModel):
         return self._run_prediction(print_result=print_result)[0]
 
     def _run_prediction(self, save_path=None, print_result=True):
-
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
 
         correct = {True: "Correct", False: "Wrong"}

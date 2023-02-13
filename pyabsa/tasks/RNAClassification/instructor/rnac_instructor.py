@@ -152,7 +152,6 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 # evaluate if test set is available
                 if global_step % self.config.log_step == 0:
                     if self.test_dataloader and epoch >= self.config.evaluate_begin:
-
                         if self.valid_dataloader:
                             test_acc, f1 = self._evaluate_acc_f1(self.valid_dataloader)
                         else:
@@ -162,7 +161,6 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                         self.config.metrics_of_this_checkpoint["f1"] = f1
 
                         if test_acc > max_fold_acc or f1 > max_fold_f1:
-
                             if test_acc > max_fold_acc:
                                 patience = self.config.patience - 1
                                 max_fold_acc = test_acc
@@ -288,7 +286,6 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             time.sleep(3)
             return save_path
         else:
-
             del self.train_dataloaders
             del self.test_dataloader
             del self.valid_dataloader
@@ -392,13 +389,11 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                             self.valid_dataloader
                             and epoch >= self.config.evaluate_begin
                         ):
-
                             test_acc, f1 = self._evaluate_acc_f1(valid_dataloader)
 
                             self.config.metrics_of_this_checkpoint["acc"] = test_acc
                             self.config.metrics_of_this_checkpoint["f1"] = f1
                             if test_acc > max_fold_acc or f1 > max_fold_f1:
-
                                 if test_acc > max_fold_acc:
                                     patience = self.config.patience - 1
                                     max_fold_acc = test_acc
@@ -542,7 +537,6 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         t_targets_all, t_outputs_all = None, None
         with torch.no_grad():
             for t_batch, t_sample_batched in enumerate(test_dataloader):
-
                 t_inputs = [
                     t_sample_batched[col].to(self.config.device)
                     for col in self.config.inputs_cols

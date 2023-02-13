@@ -56,14 +56,18 @@ extras["optional"] = [
 
 # For developers, install development tools along with all optional dependencies.
 extras["dev"] = (
-    extras["docs"] + extras["test"] + extras["tensorflow"] + extras["optional"] + extras["deploy"]
+    extras["docs"]
+    + extras["test"]
+    + extras["tensorflow"]
+    + extras["optional"]
+    + extras["deploy"]
 )
 
 setup(
     name=__name__,
     version=__version__,
     description="This tool provides the state-of-the-art models for aspect term extraction (ATE), "
-                "aspect polarity classification (APC), and text classification (TC).",
+    "aspect polarity classification (APC), and text classification (TC).",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/yangheng95/PyABSA",

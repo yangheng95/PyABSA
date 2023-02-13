@@ -20,7 +20,6 @@ from ..cdd_utils import read_defect_examples
 
 class BERTCDDInferenceDataset(Dataset):
     def __init__(self, config, tokenizer):
-
         self.tokenizer = tokenizer
         self.config = config
         self.data = []
@@ -32,7 +31,6 @@ class BERTCDDInferenceDataset(Dataset):
         self.process_data(self.parse_sample(text), ignore_error=ignore_error)
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
-
         lines = load_dataset_from_file(infer_file, config=self.config)
         samples = []
         for sample in lines:
@@ -82,8 +80,8 @@ class BERTCDDInferenceDataset(Dataset):
                             "ex_id": ex_id,
                             "code": code_src,
                             "source_ids": [self.tokenizer.cls_token_id]
-                                          + code_ids
-                                          + [self.tokenizer.eos_token_id],
+                            + code_ids
+                            + [self.tokenizer.eos_token_id],
                             "label": self.config.label_to_index[label],
                             "corrupt_label": 0,
                         }
@@ -91,8 +89,10 @@ class BERTCDDInferenceDataset(Dataset):
                 else:
                     for x in range(len(code_ids) // (self.config.max_seq_len - 2) + 1):
                         _code_ids = code_ids[
-                                    x * (self.config.max_seq_len - 2): (x + 1) * (self.config.max_seq_len - 2)
-                                    ]
+                            x
+                            * (self.config.max_seq_len - 2) : (x + 1)
+                            * (self.config.max_seq_len - 2)
+                        ]
                         _code_ids = pad_and_truncate(
                             _code_ids,
                             self.config.max_seq_len - 2,
@@ -104,8 +104,8 @@ class BERTCDDInferenceDataset(Dataset):
                                     "ex_id": ex_id,
                                     "code": code_src,
                                     "source_ids": [self.tokenizer.cls_token_id]
-                                                  + _code_ids
-                                                  + [self.tokenizer.eos_token_id],
+                                    + _code_ids
+                                    + [self.tokenizer.eos_token_id],
                                     "label": self.config.label_to_index[label],
                                     "corrupt_label": 0,
                                 }

@@ -252,7 +252,6 @@ def adversarial_attack_detection_and_defense(dataset, attack_recipe):
 
 
 if __name__ == "__main__":
-
     attack_name = "BAE"
     # attack_name = 'PWWS'
     # attack_name = 'TextFooler'

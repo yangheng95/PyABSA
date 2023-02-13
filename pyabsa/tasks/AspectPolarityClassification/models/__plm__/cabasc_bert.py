@@ -48,7 +48,6 @@ class Cabasc_BERT(nn.Module):
         self.mlp_r = nn.Linear(config.hidden_dim, 1)
 
     def context_attention(self, x_l, x_r, memory, memory_len, aspect_len):
-
         # Context representation
         left_len, right_len = torch.sum(x_l != 0, dim=-1), torch.sum(x_r != 0, dim=-1)
         x_l, x_r = (

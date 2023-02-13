@@ -7,52 +7,82 @@
 # google scholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa import download_all_available_datasets, AspectPolarityClassification as APC, TaskCodeOption
+from pyabsa import (
+    download_all_available_datasets,
+    AspectPolarityClassification as APC,
+    TaskCodeOption,
+)
 
 import os
 import shutil
 
 
 def test_multilingual_inference():
-    if os.path.exists('checkpoints'):
-        shutil.rmtree('checkpoints')
+    if os.path.exists("checkpoints"):
+        shutil.rmtree("checkpoints")
 
     download_all_available_datasets()
-    classifier = APC.SentimentClassifier('multilingual')
-    assert classifier.predict('The [B-ASP]food[E-ASP] is good', pred_sentiment=True)['sentiment'] == ['Positive']
-    assert classifier.predict('The [B-ASP]food[E-ASP] is bad', pred_sentiment=True)['sentiment'] == ['Negative']
-    assert classifier.predict('The [B-ASP]food[E-ASP] is not good', pred_sentiment=True)['sentiment'] == ['Negative']
-    assert classifier.predict('The [B-ASP]food[E-ASP] is not bad', pred_sentiment=True)['sentiment'] == ['Neutral']
+    classifier = APC.SentimentClassifier("multilingual")
+    assert classifier.predict("The [B-ASP]food[E-ASP] is good", pred_sentiment=True)[
+        "sentiment"
+    ] == ["Positive"]
+    assert classifier.predict("The [B-ASP]food[E-ASP] is bad", pred_sentiment=True)[
+        "sentiment"
+    ] == ["Negative"]
+    assert classifier.predict(
+        "The [B-ASP]food[E-ASP] is not good", pred_sentiment=True
+    )["sentiment"] == ["Negative"]
+    assert classifier.predict("The [B-ASP]food[E-ASP] is not bad", pred_sentiment=True)[
+        "sentiment"
+    ] == ["Neutral"]
     # assert classifier.predict('The food is good', pred_sentiment=True)['sentiment'] == ['Positive']
 
-    assert classifier.predict('La [B-ASP]comida[E-ASP] es buena', pred_sentiment=True)['sentiment'] == ['Positive']
-    assert classifier.predict('La [B-ASP]comida[E-ASP] es mala', pred_sentiment=True)['sentiment'] == ['Negative']
+    assert classifier.predict("La [B-ASP]comida[E-ASP] es buena", pred_sentiment=True)[
+        "sentiment"
+    ] == ["Positive"]
+    assert classifier.predict("La [B-ASP]comida[E-ASP] es mala", pred_sentiment=True)[
+        "sentiment"
+    ] == ["Negative"]
 
 
 def test_en_inference():
-    if os.path.exists('checkpoints'):
-        shutil.rmtree('checkpoints')
+    if os.path.exists("checkpoints"):
+        shutil.rmtree("checkpoints")
 
     download_all_available_datasets()
-    classifier = APC.SentimentClassifier('english')
-    assert classifier.predict('The [B-ASP]food[E-ASP] is good', pred_sentiment=True)['sentiment'] == ['Positive']
-    assert classifier.predict('The [B-ASP]food[E-ASP] is bad', pred_sentiment=True)['sentiment'] == ['Negative']
-    assert classifier.predict('The [B-ASP]food[E-ASP] is not good', pred_sentiment=True)['sentiment'] == ['Negative']
+    classifier = APC.SentimentClassifier("english")
+    assert classifier.predict("The [B-ASP]food[E-ASP] is good", pred_sentiment=True)[
+        "sentiment"
+    ] == ["Positive"]
+    assert classifier.predict("The [B-ASP]food[E-ASP] is bad", pred_sentiment=True)[
+        "sentiment"
+    ] == ["Negative"]
+    assert classifier.predict(
+        "The [B-ASP]food[E-ASP] is not good", pred_sentiment=True
+    )["sentiment"] == ["Negative"]
 
 
 def test_chinese_inference():
-    if os.path.exists('checkpoints'):
-        shutil.rmtree('checkpoints')
+    if os.path.exists("checkpoints"):
+        shutil.rmtree("checkpoints")
 
     download_all_available_datasets()
-    classifier = APC.SentimentClassifier('chinese')
-    assert classifier.predict('[B-ASP]食物[E-ASP]很好', pred_sentiment=True)['sentiment'] == ['Positive']
-    assert classifier.predict('[B-ASP]食物[E-ASP]很差', pred_sentiment=True)['sentiment'] == ['Negative']
-    assert classifier.predict('[B-ASP]食物[E-ASP]不好', pred_sentiment=True)['sentiment'] == ['Negative']
-    assert classifier.predict('[B-ASP]食物[E-ASP]不差', pred_sentiment=True)['sentiment'] == ['Positive']
+    classifier = APC.SentimentClassifier("chinese")
+    assert classifier.predict("[B-ASP]食物[E-ASP]很好", pred_sentiment=True)[
+        "sentiment"
+    ] == ["Positive"]
+    assert classifier.predict("[B-ASP]食物[E-ASP]很差", pred_sentiment=True)[
+        "sentiment"
+    ] == ["Negative"]
+    assert classifier.predict("[B-ASP]食物[E-ASP]不好", pred_sentiment=True)[
+        "sentiment"
+    ] == ["Negative"]
+    assert classifier.predict("[B-ASP]食物[E-ASP]不差", pred_sentiment=True)[
+        "sentiment"
+    ] == ["Positive"]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_multilingual_inference()
     test_en_inference()
     test_chinese_inference()
