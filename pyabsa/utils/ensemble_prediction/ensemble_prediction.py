@@ -36,6 +36,9 @@ class VoteEnsemblePredictor:
             assert type(predictors) == type(
                 weights
             ), "Checkpoints and weights should have the same type"
+
+        assert len(predictors) > 0, "Checkpoints should not be empty"
+
         numeric_agg_methods = {
             "average": np.mean,
             "mean": np.mean,

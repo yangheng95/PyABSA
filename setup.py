@@ -25,31 +25,38 @@ extras["docs"] = [
 ]
 # Packages required for formatting code & running tests.
 extras["test"] = [
-    "black==20.8b1",
     "docformatter",
-    "isort==5.6.4",
+    "isort",
     "flake8",
     "pytest",
     "pytest-xdist",
 ]
 
+extras["deploy"] = [
+    "twine",
+    "wheel",
+    "setuptools",
+    "gradio",
+]
+
+
 extras["tensorflow"] = [
-    "tensorflow==2.9.1",
+    "tensorflow",
     "tensorflow_hub",
-    "tensorflow_text>=2",
+    "tensorflow_text",
     "tensorboardX",
-    "tensorflow-estimator==2.9.0",
+    "tensorflow-estimator",
 ]
 
 extras["optional"] = [
-    "sentence_transformers==2.2.0",
+    "sentence_transformers",
     "tensorflow",
     "tensorflow_hub",
 ]
 
 # For developers, install development tools along with all optional dependencies.
 extras["dev"] = (
-    extras["docs"] + extras["test"] + extras["tensorflow"] + extras["optional"]
+    extras["docs"] + extras["test"] + extras["tensorflow"] + extras["optional"] + extras["deploy"]
 )
 
 setup(
@@ -72,7 +79,7 @@ setup(
     install_requires=[
         "findfile>=2.0.0",
         "autocuda>=0.16",
-        "metric-visualizer>=0.8.7.4",
+        "metric-visualizer>=0.8.8",
         "boostaug>=2.3.5",
         "spacy",
         "networkx",
