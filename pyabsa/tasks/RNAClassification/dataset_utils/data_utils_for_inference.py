@@ -36,7 +36,6 @@ class RNACInferenceDataset(Dataset):
             self.process_data(examples, ignore_error=ignore_error)
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
-
         lines = load_dataset_from_file(infer_file, config=self.config)
         samples = []
         for sample in lines:

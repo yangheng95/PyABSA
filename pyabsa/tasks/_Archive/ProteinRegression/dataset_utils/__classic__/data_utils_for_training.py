@@ -29,7 +29,6 @@ class GloVeProteinRDataset(PyABSADataset):
         for ex_id, i in enumerate(
             tqdm.tqdm(range(len(lines)), desc="preparing dataloader")
         ):
-
             text, _, label = lines[i].partition("$LABEL$")
             seq, ph = text.split(",")
             label = float(label.strip())

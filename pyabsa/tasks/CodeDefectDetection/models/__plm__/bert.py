@@ -121,12 +121,10 @@ class BERT_MLP(nn.Module):
             loss_fct1 = nn.CrossEntropyLoss()
             loss_fct2 = nn.CrossEntropyLoss()
 
-            # loss_fct1 = FocalLoss()
-            # loss_fct2 = FocalLoss()
-
-            loss = loss_fct1(logits1, labels) + loss_fct2(logits2, corrupt_labels)
-            # loss = loss_fct1(logits1, labels)
-            # loss = loss_fct1(logits2, corrupt_labels)
+            if not self.config.get("sliding_window", False):
+                loss = loss_fct1(logits1, labels) + loss_fct2(logits2, corrupt_labels)
+            else:
+                loss = loss_fct1(logits1, labels)
             return {"loss": loss, "logits": prob, "c_logits": c_prob}
         else:
             return {"logits": prob, "c_logits": c_prob}

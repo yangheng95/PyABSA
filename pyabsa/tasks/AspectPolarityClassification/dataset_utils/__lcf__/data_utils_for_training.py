@@ -162,7 +162,6 @@ class ABSADataset(PyABSADataset):
             input_demands=self.config.inputs_cols,
         )
         for data in all_data:
-
             cluster_ids = []
             for pad_idx in range(self.config.max_seq_len):
                 if pad_idx in data["cluster_ids"]:

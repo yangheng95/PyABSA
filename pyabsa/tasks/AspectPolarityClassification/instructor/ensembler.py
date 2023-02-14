@@ -71,7 +71,6 @@ class APCEnsembler(nn.Module):
         self.valid_dataloader = None
 
         for i in range(len(models)):
-
             config_str = re.sub(
                 r"<.*?>",
                 "",

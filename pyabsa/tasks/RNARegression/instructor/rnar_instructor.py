@@ -45,7 +45,6 @@ from pyabsa.framework.tokenizer_class.tokenizer_class import (
 
 class RNARTrainingInstructor(BaseTrainingInstructor):
     def _init_misc(self):
-
         # use DataParallel for trainer if device count larger than 1
         if self.config.auto_device == DeviceTypeOption.ALL_CUDA:
             self.model.to(self.config.device)
@@ -148,7 +147,6 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
         self.save_cache_dataset()
 
     def __init__(self, config):
-
         super().__init__(config)
 
         self._load_dataset_and_prepare_dataloader()
@@ -323,7 +321,6 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                 # evaluate if test set is available
                 if global_step % self.config.log_step == 0:
                     if self.test_dataloader and epoch >= self.config.evaluate_begin:
-
                         if self.valid_dataloader:
                             test_r2 = self._evaluate_r2(
                                 self.valid_dataloader, criterion
@@ -334,7 +331,6 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                         self.config.metrics_of_this_checkpoint["r2"] = test_r2
 
                         if test_r2 > max_fold_r2:
-
                             if test_r2 > max_fold_r2:
                                 patience = self.config.patience - 1
                                 max_fold_r2 = test_r2
@@ -431,7 +427,6 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
             time.sleep(3)
             return save_path
         else:
-
             del self.train_dataloaders
             del self.test_dataloader
             del self.valid_dataloader
@@ -529,12 +524,10 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                     # evaluate if test set is available
                     if global_step % self.config.log_step == 0:
                         if self.test_dataloader and epoch >= self.config.evaluate_begin:
-
                             test_r2 = self._evaluate_r2(valid_dataloader, criterion)
 
                             self.config.metrics_of_this_checkpoint["r2"] = test_r2
                             if test_r2 > max_fold_r2:
-
                                 if test_r2 > max_fold_r2:
                                     patience = self.config.patience - 1
                                     max_fold_r2 = test_r2

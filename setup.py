@@ -14,12 +14,54 @@ cwd = Path(__file__).parent
 long_description = (cwd / "README.md").read_text(encoding="utf8")
 
 extras = {}
-# extras = [
-#     'git+https://github.com/yangheng95/TextAttack',
-#     'tensorflow',
-#     'tensorflow_hub',
-#     'gensim',
-# ]
+# Packages required for installing docs.
+extras["docs"] = [
+    "recommonmark",
+    "nbsphinx",
+    "sphinx-autobuild",
+    "sphinx-rtd-theme",
+    "sphinx-markdown-tables",
+    "sphinx-copybutton",
+]
+# Packages required for formatting code & running tests.
+extras["test"] = [
+    "docformatter",
+    "isort",
+    "flake8",
+    "pytest",
+    "pytest-xdist",
+]
+
+extras["deploy"] = [
+    "twine",
+    "wheel",
+    "setuptools",
+    "gradio",
+]
+
+
+extras["tensorflow"] = [
+    "tensorflow",
+    "tensorflow_hub",
+    "tensorflow_text",
+    "tensorboardX",
+    "tensorflow-estimator",
+]
+
+extras["optional"] = [
+    "sentence_transformers",
+    "tensorflow",
+    "tensorflow_hub",
+]
+
+# For developers, install development tools along with all optional dependencies.
+extras["dev"] = (
+    extras["docs"]
+    + extras["test"]
+    + extras["tensorflow"]
+    + extras["optional"]
+    + extras["deploy"]
+)
 
 setup(
     name=__name__,
@@ -41,7 +83,7 @@ setup(
     install_requires=[
         "findfile>=2.0.0",
         "autocuda>=0.16",
-        "metric-visualizer>=0.8.7.3",
+        "metric-visualizer>=0.8.8",
         "boostaug>=2.3.5",
         "spacy",
         "networkx",

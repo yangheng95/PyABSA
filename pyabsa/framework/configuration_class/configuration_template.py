@@ -41,7 +41,6 @@ class ConfigManager(Namespace):
             return value
 
         except Exception as e:
-
             return super().__getattribute__(arg_name)
 
     def __setattr__(self, arg_name, value):

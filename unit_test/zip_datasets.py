@@ -41,7 +41,6 @@ def cascade_zip_datasets():
             )
 
             for root, dirs, files in os.walk(d):
-
                 for file in files:
                     zip_file.write(os.path.join(root, file).lower())
 

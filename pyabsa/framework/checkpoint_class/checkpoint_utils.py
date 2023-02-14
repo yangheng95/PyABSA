@@ -147,7 +147,6 @@ def download_checkpoint(task: str, language: str, checkpoint: dict):
     save_path = os.path.join(dest_path, checkpoint["Checkpoint File"])
 
     try:  # from Huggingface Space
-
         response = requests.get(huggingface_checkpoint_url, stream=True)
         "https://huggingface.co/spaces/yangheng/PyABSA/raw/main/checkpoints/Code/bert_mlp_all_cpdp_acc_64.52_f1_64.48.zip"
         "https://huggingface.co/spaces/yangheng/PyABSA/resolve/main/checkpoints/Code/CDD/bert_mlp_all_cpdp_acc_64.52_f1_64.48.zip"

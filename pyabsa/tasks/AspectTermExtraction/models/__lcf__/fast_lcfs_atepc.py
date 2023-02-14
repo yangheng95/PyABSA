@@ -95,7 +95,6 @@ class FAST_LCFS_ATEPC(nn.Module):
         ate_logits = self.classifier(global_context_out)
 
         if lcf_cdm_vec is not None or lcf_cdw_vec is not None:
-
             if "cdm" in self.config.lcf:
                 cdm_context_out = torch.mul(global_context_out, lcf_cdm_vec)
                 cdm_context_out = self.SA1(cdm_context_out)

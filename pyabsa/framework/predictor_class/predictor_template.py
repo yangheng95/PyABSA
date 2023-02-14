@@ -272,7 +272,6 @@ class Predictor(InferenceModel):
         """merge APC results have the same input text"""
         final_res = []
         for result in results:
-
             if final_res and "".join(final_res[-1]["text"].split()) == "".join(
                 result["text"].split()
             ):
@@ -300,7 +299,6 @@ class Predictor(InferenceModel):
         return final_res
 
     def _run_prediction(self, save_path=None, print_result=True):
-
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
 
         correct = {True: "Correct", False: "Wrong"}

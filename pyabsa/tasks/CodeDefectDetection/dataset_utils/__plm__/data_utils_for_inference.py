@@ -20,7 +20,6 @@ from ..cdd_utils import read_defect_examples
 
 class BERTCDDInferenceDataset(Dataset):
     def __init__(self, config, tokenizer):
-
         self.tokenizer = tokenizer
         self.config = config
         self.data = []
@@ -32,7 +31,6 @@ class BERTCDDInferenceDataset(Dataset):
         self.process_data(self.parse_sample(text), ignore_error=ignore_error)
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
-
         lines = load_dataset_from_file(infer_file, config=self.config)
         samples = []
         for sample in lines:
@@ -59,6 +57,10 @@ class BERTCDDInferenceDataset(Dataset):
                     raise RuntimeError("Invalid Input!")
 
                 code_src, _, label = text.strip().partition("$LABEL$")
+                if "$FEATURE$" in code_src:
+                    code_src, feature = code_src.split("$FEATURE$")
+                # print(len(self.tokenizer.tokenize(code_src.replace('\n', ''))))
+
                 code_ids = self.tokenizer.text_to_sequence(
                     code_src,
                     max_length=self.config.max_seq_len,
@@ -67,39 +69,47 @@ class BERTCDDInferenceDataset(Dataset):
                 )
                 code_ids = code_ids[1:-1]
 
-                try:
-                    label = self.config.label_to_index[label.strip()]
-                except Exception as e:
-                    print(e)
-                    label = LabelPaddingOption.LABEL_PADDING
-                # for x in range(len(code_ids) // ((self.config.max_seq_len - 2) // 2) + 1):
-                #     _code_ids = code_ids[x * (self.config.max_seq_len - 2) // 2:
-                #                          (x + 1) * (self.config.max_seq_len - 2) // 2 + (self.config.max_seq_len - 2) // 2]
-                #     print(x * (self.config.max_seq_len - 2) // 2)
-                #     print((x + 1) * (self.config.max_seq_len - 2) // 2 + (self.config.max_seq_len - 2) // 2)
-                for x in range(len(code_ids) // (self.config.max_seq_len - 2) + 1):
-                    _code_ids = code_ids[
-                        x
-                        * (self.config.max_seq_len - 2) : (x + 1)
-                        * (self.config.max_seq_len - 2)
-                    ]
-                    _code_ids = pad_and_truncate(
-                        _code_ids,
+                if not self.config.get("sliding_window", False):
+                    code_ids = pad_and_truncate(
+                        code_ids,
                         self.config.max_seq_len - 2,
                         value=self.tokenizer.pad_token_id,
                     )
-                    if _code_ids:
-                        all_data.append(
-                            {
-                                "ex_id": ex_id,
-                                "code": code_src,
-                                "source_ids": [self.tokenizer.cls_token_id]
-                                + _code_ids
-                                + [self.tokenizer.eos_token_id],
-                                "label": label,
-                                "corrupt_label": 0,
-                            }
+                    all_data.append(
+                        {
+                            "ex_id": ex_id,
+                            "code": code_src,
+                            "source_ids": [self.tokenizer.cls_token_id]
+                            + code_ids
+                            + [self.tokenizer.eos_token_id],
+                            "label": self.config.label_to_index[label],
+                            "corrupt_label": 0,
+                        }
+                    )
+                else:
+                    for x in range(len(code_ids) // (self.config.max_seq_len - 2) + 1):
+                        _code_ids = code_ids[
+                            x
+                            * (self.config.max_seq_len - 2) : (x + 1)
+                            * (self.config.max_seq_len - 2)
+                        ]
+                        _code_ids = pad_and_truncate(
+                            _code_ids,
+                            self.config.max_seq_len - 2,
+                            value=self.tokenizer.pad_token_id,
                         )
+                        if _code_ids:
+                            all_data.append(
+                                {
+                                    "ex_id": ex_id,
+                                    "code": code_src,
+                                    "source_ids": [self.tokenizer.cls_token_id]
+                                    + _code_ids
+                                    + [self.tokenizer.eos_token_id],
+                                    "label": self.config.label_to_index[label],
+                                    "corrupt_label": 0,
+                                }
+                            )
 
             except Exception as e:
                 if ignore_error:

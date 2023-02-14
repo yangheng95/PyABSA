@@ -67,7 +67,6 @@ class LCFS_ATEPC(nn.Module):
         lcf_cdm_vec=None,
         lcf_cdw_vec=None,
     ):
-
         lcf_cdm_vec = lcf_cdm_vec.unsqueeze(2) if lcf_cdm_vec is not None else None
         lcf_cdw_vec = lcf_cdw_vec.unsqueeze(2) if lcf_cdw_vec is not None else None
         if self.config.use_bert_spc:

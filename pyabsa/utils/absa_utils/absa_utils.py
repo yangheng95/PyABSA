@@ -155,7 +155,6 @@ def assemble_aspects(fname, use_tokenizer=False):
     samples = []
     aspects_in_one_sentence = []
     for i in range(0, len(lines), 3):
-
         lines[i] = lines[i].replace("$T$", " $T$ ").replace("  ", " ")
 
         if len(aspects_in_one_sentence) == 0:

@@ -169,10 +169,12 @@ def read_defect_examples(lines, data_num, remove_comments=True, tokenizer=None):
             code = remove_comment(code, tokenizer)
         if tokenizer:
             token_len_sum += len(tokenizer.tokenize(code))
-        examples.append(
-            code + "$FEATURE$" + str(js["feature"]) + "$LABEL$" + str(js["target"])
-        )
-
+        try:
+            examples.append(
+                code + "$FEATURE$" + str(js["feature"]) + "$LABEL$" + str(js["target"])
+            )
+        except KeyError:
+            examples.append(code + "$LABEL$" + str(js["target"]))
         if idx + 1 == data_num:
             break
     if tokenizer:

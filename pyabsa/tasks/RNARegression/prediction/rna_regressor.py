@@ -238,7 +238,6 @@ class RNARegressor(InferenceModel):
         ignore_error=True,
         **kwargs
     ):
-
         """
         Predict from a sentence or a list of sentences.
         param: text: the sentence or a list of sentence to be predicted.
@@ -260,7 +259,6 @@ class RNARegressor(InferenceModel):
             return self._run_prediction(print_result=print_result)
 
     def _run_prediction(self, save_path=None, print_result=True):
-
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
 
         correct = {True: "Correct", False: "Wrong"}

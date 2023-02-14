@@ -66,7 +66,6 @@ def simple_split_text(text):
 
 def process_iob_tags(iob_tags: list) -> list:
     for i in range(len(iob_tags) - 1):
-
         if iob_tags[i] == "O" and "ASP" in iob_tags[i + 1]:
             iob_tags[i + 1] = "B-ASP"
 

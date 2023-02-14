@@ -43,7 +43,6 @@ class AspectExtractor(InferenceModel):
     task_code = TaskCodeOption.Aspect_Term_Extraction_and_Classification
 
     def __init__(self, checkpoint=None, **kwargs):
-
         # load from a trainer
         super().__init__(checkpoint, task_code=self.task_code, **kwargs)
 
@@ -241,7 +240,6 @@ class AspectExtractor(InferenceModel):
         pred_sentiment=True,
         **kwargs
     ):
-
         return self.batch_predict(
             inference_source, save_result, print_result, pred_sentiment, **kwargs
         )
@@ -501,7 +499,6 @@ class AspectExtractor(InferenceModel):
                 example_id = i_batch * self.config.eval_batch_size + i
                 pred_iobs = process_iob_tags(pred_iobs)
                 for idx in range(1, len(polarity)):
-
                     if polarity[idx - 1] != str(
                         LabelPaddingOption.SENTIMENT_PADDING
                     ) and split_aspect(pred_iobs[idx - 1], pred_iobs[idx]):
@@ -535,7 +532,6 @@ class AspectExtractor(InferenceModel):
         return extraction_res, sentence_res
 
     def _run_prediction(self, examples):
-
         res = []  # sentiment classification result
         # ate example id map to apc example id
         example_id_map = dict([(apc_id, ex[3]) for apc_id, ex in enumerate(examples)])

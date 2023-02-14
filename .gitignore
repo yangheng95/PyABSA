@@ -30,6 +30,7 @@ experiments/
 tests/
 *.result.json
 .idea/
+dev/
 # special project files
 JIC/
 CPDP/

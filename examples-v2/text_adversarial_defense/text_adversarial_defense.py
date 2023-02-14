@@ -17,7 +17,7 @@ import nltk
 import pandas as pd
 from findfile import find_files
 
-from pyabsa import TADCheckpointManager
+from pyabsa import TADCheckpointManager, download_all_available_datasets
 from textattack import Attacker
 from textattack.attack_recipes import (
     BAEGarg2019,
@@ -32,8 +32,11 @@ from textattack.attack_results import SuccessfulAttackResult
 from textattack.datasets import Dataset
 from textattack.models.wrappers import HuggingFaceModelWrapper
 
-z = zipfile.ZipFile("checkpoints.zip", "r")
-z.extractall(os.getcwd())
+try:
+    z = zipfile.ZipFile("checkpoints.zip", "r")
+    z.extractall(os.getcwd())
+except:
+    download_all_available_datasets()
 
 
 class ModelWrapper(HuggingFaceModelWrapper):
@@ -100,7 +103,7 @@ attack_recipes = {
 }
 
 for attacker in ["pwws", "bae", "textfooler"]:
-    for dataset in ["agnews10k", "amazon", "sst2", "imdb"]:
+    for dataset in ["agnews10k", "amazon", "sst2"]:
         if "tad-{}".format(dataset) not in tad_classifiers:
             tad_classifiers[
                 "tad-{}".format(dataset)
@@ -137,7 +140,7 @@ def get_sst2_example():
     dataset_file = {"train": [], "test": [], "valid": []}
     dataset = "sst2"
     search_path = "./"
-    task = "text_defense"
+    task = "tc_datasets"
     dataset_file["test"] += find_files(
         search_path,
         [dataset, "test", task],
@@ -149,7 +152,6 @@ def get_sst2_example():
         data = []
         label_set = set()
         for data_file in dataset_file[dat_type]:
-
             with open(data_file, mode="r", encoding="utf8") as fin:
                 lines = fin.readlines()
                 for line in lines:
@@ -182,7 +184,7 @@ def get_agnews_example():
     dataset_file = {"train": [], "test": [], "valid": []}
     dataset = "agnews"
     search_path = "./"
-    task = "text_defense"
+    task = "tc_datasets"
     dataset_file["test"] += find_files(
         search_path,
         [dataset, "test", task],
@@ -193,7 +195,6 @@ def get_agnews_example():
         data = []
         label_set = set()
         for data_file in dataset_file[dat_type]:
-
             with open(data_file, mode="r", encoding="utf8") as fin:
                 lines = fin.readlines()
                 for line in lines:
@@ -226,7 +227,7 @@ def get_amazon_example():
     dataset_file = {"train": [], "test": [], "valid": []}
     dataset = "amazon"
     search_path = "./"
-    task = "text_defense"
+    task = "tc_datasets"
     dataset_file["test"] += find_files(
         search_path,
         [dataset, "test", task],
@@ -238,7 +239,6 @@ def get_amazon_example():
         data = []
         label_set = set()
         for data_file in dataset_file[dat_type]:
-
             with open(data_file, mode="r", encoding="utf8") as fin:
                 lines = fin.readlines()
                 for line in lines:
@@ -271,7 +271,7 @@ def get_imdb_example():
     dataset_file = {"train": [], "test": [], "valid": []}
     dataset = "imdb"
     search_path = "./"
-    task = "text_defense"
+    task = "tc_datasets"
     dataset_file["test"] += find_files(
         search_path,
         [dataset, "test", task],
@@ -283,7 +283,6 @@ def get_imdb_example():
         data = []
         label_set = set()
         for data_file in dataset_file[dat_type]:
-
             with open(data_file, mode="r", encoding="utf8") as fin:
                 lines = fin.readlines()
                 for line in lines:
@@ -311,7 +310,6 @@ def generate_adversarial_example(dataset, attacker, text=None, label=None):
         "tad-{}{}".format(dataset.lower(), attacker.lower())
     ].attacker.simple_attack(text, int(label))
     if isinstance(attack_result, SuccessfulAttackResult):
-
         if (
             attack_result.perturbed_result.output
             != attack_result.original_result.ground_truth_output
@@ -367,7 +365,7 @@ with demo:
     with gr.Row():
         with gr.Column():
             input_dataset = gr.Radio(
-                choices=["SST2", "AGNews10K", "Amazon", "IMDB"],
+                choices=["SST2", "AGNews10K", "Amazon"],
                 value="SST2",
                 label="Dataset",
             )

@@ -146,14 +146,22 @@ class PretrainedTokenizer:
         self.cls_token_id = self.tokenizer.cls_token_id
         self.sep_token_id = self.tokenizer.sep_token_id
         self.mask_token_id = self.tokenizer.mask_token_id
-        self.eos_token_id = self.tokenizer.eos_token_id
+        self.eos_token_id = (
+            self.tokenizer.eos_token_id
+            if self.tokenizer.eos_token_id
+            else self.tokenizer.sep_token_id
+        )
 
         self.pad_token = self.tokenizer.pad_token
         self.unk_token = self.tokenizer.unk_token
         self.cls_token = self.tokenizer.cls_token
         self.sep_token = self.tokenizer.sep_token
         self.mask_token = self.tokenizer.mask_token
-        self.eos_token = self.tokenizer.eos_token
+        self.eos_token = (
+            self.tokenizer.eos_token
+            if self.tokenizer.eos_token
+            else self.tokenizer.sep_token
+        )
 
     def text_to_sequence(self, text, **kwargs):
         return self.tokenizer.encode(

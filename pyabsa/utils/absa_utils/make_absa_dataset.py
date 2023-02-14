@@ -53,7 +53,6 @@ def make_ABSA_dataset(dataset_name_or_path, checkpoint="english"):
         fprint('No files found! Please make sure your dataset names end with ".ignore"')
     fprint("Start processing dataset: " + colored(dataset_name_or_path, "green"))
     for f in fs:
-
         with open(f, mode="r", encoding="utf8") as f_in:
             lines = f_in.readlines()
         results = aspect_extractor.batch_predict(lines)
@@ -63,9 +62,7 @@ def make_ABSA_dataset(dataset_name_or_path, checkpoint="english"):
             with open(
                 f.replace(".ignore", "") + ".atepc", mode="w", encoding="utf-8"
             ) as f_atepc_out:
-
                 for result in results:
-
                     for aspect, position, sentiment in zip(
                         result["aspect"], result["position"], result["sentiment"]
                     ):

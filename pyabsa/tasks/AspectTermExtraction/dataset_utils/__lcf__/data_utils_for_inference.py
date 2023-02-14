@@ -174,7 +174,7 @@ def convert_ate_examples_to_features(
         it = tqdm.tqdm(examples, desc="preparing apc inference dataloader")
     else:
         it = examples
-    for (ex_index, example) in enumerate(it):
+    for ex_index, example in enumerate(it):
         text_tokens = example.text_a[:]
         aspect_tokens = example.text_b[:]
         IOB_label = example.IOB_label
@@ -264,7 +264,7 @@ def convert_apc_examples_to_features(
         it = tqdm.tqdm(examples, desc="preparing apc inference dataloader")
     else:
         it = examples
-    for (ex_index, example) in enumerate(it):
+    for ex_index, example in enumerate(it):
         text_tokens = example.text_a[:]
         aspect_tokens = example.text_b[:]
         IOB_label = example.IOB_label

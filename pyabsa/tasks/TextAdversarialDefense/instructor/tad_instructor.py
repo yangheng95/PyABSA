@@ -44,7 +44,6 @@ from pyabsa.framework.tokenizer_class.tokenizer_class import (
 
 class TADTrainingInstructor(BaseTrainingInstructor):
     def _init_misc(self):
-
         random.seed(self.config.seed)
         np.random.seed(self.config.seed)
         torch.manual_seed(self.config.seed)
@@ -87,7 +86,6 @@ class TADTrainingInstructor(BaseTrainingInstructor):
         pass
 
     def _load_dataset_and_prepare_dataloader(self):
-
         cache_path = self.load_cache_dataset()
         # init BERT-based model and dataset
         if hasattr(BERTTADModelList, self.config.model.__name__):
@@ -148,7 +146,6 @@ class TADTrainingInstructor(BaseTrainingInstructor):
         self.save_cache_dataset()
 
     def __init__(self, config):
-
         super().__init__(config)
 
         self._load_dataset_and_prepare_dataloader()
@@ -342,7 +339,6 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                 # evaluate if test set is available
                 if global_step % self.config.log_step == 0:
                     if self.test_dataloader and epoch >= self.config.evaluate_begin:
-
                         if self.valid_dataloader:
                             (
                                 test_label_acc,
@@ -389,7 +385,6 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                             or test_adv_tr_acc > max_adv_tr_fold_acc
                             or test_adv_tr_f1 > max_adv_tr_fold_f1
                         ):
-
                             if test_label_acc > max_label_fold_acc:
                                 patience = self.config.patience - 1
                                 max_label_fold_acc = test_label_acc
@@ -655,7 +650,6 @@ class TADTrainingInstructor(BaseTrainingInstructor):
         t_adv_tr_targets_all, t_adv_tr_outputs_all = None, None
         with torch.no_grad():
             for t_batch, t_sample_batched in enumerate(test_dataloader):
-
                 t_inputs = [
                     t_sample_batched[col].to(self.config.device)
                     for col in self.config.inputs_cols

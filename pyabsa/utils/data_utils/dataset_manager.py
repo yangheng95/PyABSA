@@ -73,7 +73,6 @@ def detect_dataset(
     d = ""
     for d in dataset_name_or_path:
         if not os.path.exists(d):
-
             if os.path.exists("integrated_datasets"):
                 logger.info("Searching dataset {} in local disk".format(d))
             else:
@@ -310,7 +309,6 @@ def detect_infer_dataset(
         dataset_name_or_path = DatasetItem(dataset_name_or_path)
     for d in dataset_name_or_path:
         if not os.path.exists(d):
-
             if os.path.exists("integrated_datasets"):
                 if logger:
                     logger.info("Try to load {} dataset from local disk".format(d))

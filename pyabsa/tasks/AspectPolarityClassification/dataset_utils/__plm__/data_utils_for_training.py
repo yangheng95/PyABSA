@@ -28,7 +28,6 @@ class BERTBaselineABSADataset(PyABSADataset):
         pass
 
     def load_data_from_file(self, dataset_file, **kwargs):
-
         configure_spacy_model(self.config)
 
         lines = load_dataset_from_file(
@@ -172,7 +171,6 @@ class BERTBaselineABSADataset(PyABSADataset):
             input_demands=self.config.inputs_cols,
         )
         for data in all_data:
-
             cluster_ids = []
             for pad_idx in range(self.config.max_seq_len):
                 if pad_idx in data["cluster_ids"]:

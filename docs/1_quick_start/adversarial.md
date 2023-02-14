@@ -27,7 +27,7 @@ import nltk
 import pandas as pd
 from findfile import find_files
 
-from pyabsa import TADCheckpointManager
+from pyabsa import TADCheckpointManager, download_all_available_datasets
 from textattack import Attacker
 from textattack.attack_recipes import BAEGarg2019, PWWSRen2019, TextFoolerJin2019, PSOZang2020, IGAWang2019, \
     GeneticAlgorithmAlzantot2018, DeepWordBugGao2018
@@ -35,9 +35,11 @@ from textattack.attack_results import SuccessfulAttackResult
 from textattack.datasets import Dataset
 from textattack.models.wrappers import HuggingFaceModelWrapper
 
-z = zipfile.ZipFile('checkpoints.zip', 'r')
-z.extractall(os.getcwd())
-
+try:
+    z = zipfile.ZipFile('checkpoints.zip', 'r')
+    z.extractall(os.getcwd())
+except:
+    download_all_available_datasets()
 
 class ModelWrapper(HuggingFaceModelWrapper):
     def __init__(self, model):
@@ -215,7 +217,7 @@ def get_imdb_example():
     dataset_file = {'train': [], 'test': [], 'valid': []}
     dataset = 'imdb'
     search_path = './'
-    task = 'text_defense'
+    task = 'tad_datasets'
     dataset_file['test'] += find_files(search_path, [dataset, 'test', task],
                                        exclude_key=['.adv', '.org', '.defense', '.inference',
                                                     'train.'] + filter_key_words)

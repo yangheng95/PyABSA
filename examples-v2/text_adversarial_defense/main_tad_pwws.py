@@ -264,7 +264,6 @@ def generate_adversarial_example(dataset, attack_recipe):
 
 
 if __name__ == "__main__":
-
     # attack_name = 'BAE'
     attack_name = "PWWS"
     # attack_name = 'TextFooler'

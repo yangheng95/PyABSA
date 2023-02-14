@@ -30,7 +30,6 @@ def ensemble_predict(rna_classifiers: dict, rna, print_result=False):
 
 
 if __name__ == "__main__":
-
     # ckpts = findfile.find_cwd_dirs(or_key=['lstm_degrad', 'bert_mlp_degrad'])
     ckpts = findfile.find_cwd_dirs(or_key=["bert_mlp_degrad"])
     # ckpts = findfile.find_cwd_dirs(or_key=['lstm_degrad'])
