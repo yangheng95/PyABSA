@@ -432,7 +432,7 @@ class SentimentClassifier(InferenceModel):
                     digits=4,
                     target_names=[
                         self.config.index_to_label[x]
-                        for x in sorted(self.config.index_to_label.keys())
+                        for x in sorted(self.config.index_to_label.keys())[1:]
                     ],
                 )
                 fprint(
@@ -444,12 +444,9 @@ class SentimentClassifier(InferenceModel):
                 )
 
                 report = metrics.confusion_matrix(
-                    t_targets_all,
-                    np.argmax(t_outputs_all, -1),
-                    labels=[
-                        self.config.label_to_index[x]
-                        for x in sorted(self.config.index_to_label.keys())
-                    ],
+                    y_true=t_targets_all,
+                    y_pred=np.argmax(t_outputs_all, -1),
+                    labels=[x for x in sorted(self.config.index_to_label.keys())[1:]],
                 )
                 fprint(
                     "\n---------------------------- Confusion Matrix ----------------------------\n"
@@ -460,7 +457,10 @@ class SentimentClassifier(InferenceModel):
                 )
 
             except Exception as e:
-                fprint("Can not print classification report: {}".format(e))
+                fprint(
+                    "Classification report is not available because your examples does not contain all classes"
+                    "or have not reference labels. Exception: {}".format(e)
+                )
 
         return results
 

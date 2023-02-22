@@ -54,7 +54,8 @@ def parse_sample(text):
                 samples.append(sample.replace("[TEMP]", "[ASP]"))
             else:
                 fprint(
-                    f"Warning: aspect number {len(aspects)} not equal to reference sentiment number {len(ref_sent)}, text: {_text}"
+                    f"Warning: reference sentiment does not exist or its number {len(ref_sent)} "
+                    f"is not equal to aspect number {len(aspects)}, text: {_text}"
                 )
                 samples.append(sample.replace("[TEMP]", "[ASP]"))
 

@@ -12,15 +12,14 @@ from pyabsa import (
 from pyabsa import TaskCodeOption
 
 checkpoint_map = available_checkpoints(
-    TaskCodeOption.Aspect_Term_Extraction_and_Classification, show_ckpts=True
+    TaskCodeOption.Aspect_Polarity_Classification, show_ckpts=True
 )
 # checkpoint_map = available_checkpoints()
 
 
 aspect_extractor = ATEPC.AspectExtractor(
     "multilingual",
-    auto_device=DeviceTypeOption.AUTO,
-    # data_num=100,
+    data_num=100,
 )
 # aspect_extractor = ATEPC.AspectExtractor('english', auto_device=DeviceTypeOption.AUTO)
 # aspect_extractor = ATEPC.AspectExtractor('chinese', auto_device=DeviceTypeOption.AUTO)

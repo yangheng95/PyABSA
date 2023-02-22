@@ -15,25 +15,30 @@ sent_classifier = APC.SentimentClassifier("multilingual")
 # sent_classifier = APC.SentimentClassifier('english')
 # sent_classifier = APC.SentimentClassifier('chinese')
 
-sent_classifier.predict(
-    "When I got home, there was a message on the machine because the owner realized that our [B-ASP]waitress[E-ASP] forgot to charge us for our wine. $LABEL$ Negative"
-)
+examples = [
+    "The [B-ASP]food[E-ASP] was good, but the [B-ASP]service[E-ASP] was terrible. $LABEL$ Positive, Negative",
+    "The [B-ASP]food[E-ASP] was terrible, but the [B-ASP]service[E-ASP] was good. $LABEL$ Negative, Positive",
+    "The [B-ASP]food[E-ASP] was so-so, and the [B-ASP]service[E-ASP] was terrible. $LABEL$ Neutral, Negative",
+]
 
-sent_classifier.predict(
-    [
-        "The [B-ASP]food[E-ASP] was good, but the [B-ASP]service[E-ASP] was terrible. $LABEL$ Positive, Negative",
-        "The [B-ASP]food[E-ASP] was terrible, but the [B-ASP]service[E-ASP] was good. $LABEL$ Negative, Positive",
-    ]
-)
+for ex in examples:
+    sent_classifier.predict(
+        text=ex,
+        print_result=True,
+        ignore_error=True,  # ignore an invalid example, if it is False, invalid examples will raise Exceptions
+        eval_batch_size=32,
+    )
 
-inference_sets = APC.APCDatasetList.Restaurant14
+sent_classifier.predict(examples)
 
-results = sent_classifier.batch_predict(
-    target_file=inference_sets,
-    print_result=True,
-    save_result=True,
-    ignore_error=False,
-    eval_batch_size=32,
-)
-
-sent_classifier.destroy()
+# inference_sets = APC.APCDatasetList.Restaurant14
+#
+# results = sent_classifier.batch_predict(
+#     target_file=inference_sets,
+#     print_result=True,
+#     save_result=True,
+#     ignore_error=False,
+#     eval_batch_size=32,
+# )
+#
+# sent_classifier.destroy()

@@ -13,6 +13,7 @@ from collections import OrderedDict
 from pathlib import Path
 from typing import Union, List
 
+import numpy as np
 import torch
 import torch.nn.functional as F
 import tqdm
@@ -650,7 +651,7 @@ class AspectExtractor(InferenceModel):
                     result["sentence"] = " ".join(all_tokens[apc_id])
                     result["tokens"] = all_tokens[apc_id]
                     result["probs"] = probs
-                    result["confidence"] = max(probs)
+                    result["confidence"] = round(max(probs), 4)
                     result["aspect"] = all_aspects[apc_id]
                     result["pos_ids"] = all_positions[apc_id]
                     result["sentiment"] = sent
