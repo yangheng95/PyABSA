@@ -280,6 +280,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
             # shutil.rmtree(save_path)
 
         self.logger.info(self.config.MV.summary(no_print=True))
+        self.logger.info(self.config.MV.raw_summary(no_print=True))
 
         rolling_intv = 5
         df = pandas.DataFrame(losses)
@@ -515,6 +516,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
             )
 
             self.logger.info(self.config.MV.summary(no_print=True))
+            self.logger.info(self.config.MV.raw_summary(no_print=True))
 
             self._reload_model_state_dict(save_path_k_fold)
 
@@ -541,6 +543,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
         )
 
         self.logger.info(self.config.MV.summary(no_print=True))
+        self.logger.info(self.config.MV.raw_summary(no_print=True))
         self._reload_model_state_dict(save_path_k_fold)
 
         rolling_intv = 5
