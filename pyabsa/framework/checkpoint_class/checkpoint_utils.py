@@ -24,9 +24,15 @@ from pyabsa.utils.pyabsa_utils import fprint
 def parse_checkpoint_info(t_checkpoint_map, task_code, show_ckpts=False):
     fprint(
         "*" * 10,
+        # colored(
+        #     "Available {} model checkpoints for Version:{} (this version)".format(
+        #         task_code, current_version
+        #     ),
+        #     "green",
+        # ),
         colored(
-            "Available {} model checkpoints for Version:{} (this version)".format(
-                task_code, current_version
+            "Available E2E ABSA model checkpoints for Version:{} (this version)".format(
+                current_version
             ),
             "green",
         ),
@@ -54,7 +60,8 @@ def parse_checkpoint_info(t_checkpoint_map, task_code, show_ckpts=False):
                 fprint("-" * 100)
                 fprint("Checkpoint Name: {}".format(checkpoint_name))
                 for key in checkpoint:
-                    fprint("{}: {}".format(key, checkpoint[key]))
+                    if key != "id":
+                        fprint("{}: {}".format(key, checkpoint[key]))
                 fprint("-" * 100)
     return t_checkpoint_map
 
