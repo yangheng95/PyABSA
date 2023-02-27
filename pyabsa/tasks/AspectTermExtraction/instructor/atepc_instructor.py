@@ -550,7 +550,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
             )
 
         self.logger.info(self.config.MV.summary(no_print=True))
-        self.logger.info(self.config.MV.raw_summary(no_print=True))
+        # self.logger.info(self.config.MV.short_summary(no_print=True))
 
         rolling_intv = 5
         df = pandas.DataFrame(losses)

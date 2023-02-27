@@ -14,7 +14,9 @@ import os
 class DatasetItem(list):
     def __init__(self, dataset_name, dataset_items=None):
         """
-        DatasetItem is used to construct a dataset for PyABSA. Each dataset has a name, you can merge multiple datasets into one dataset by "dataset_items"
+        DatasetItem is used to construct a dataset for PyABSA. Each dataset has a name,
+            you can merge multiple datasets into one dataset by "dataset_items". If dataset_name is a list,
+            the dataset_name will be set to "Unnamed_Dataset" and the dataset_items will be set to dataset_name.
         :param dataset_name: name of the dataset
         :param dataset_items: list of dataset names or file paths
         """
@@ -25,6 +27,9 @@ class DatasetItem(list):
                 self.append(d)
         else:
             super().__init__()
+            if isinstance(dataset_name, list):
+                dataset_items = dataset_name
+                dataset_name = 'Unnamed_Dataset'
             if os.path.exists(dataset_name):
                 # fprint('Construct DatasetItem from {}, assign dataset_name={}'.format(dataset_name, os.path.basename(dataset_name)))
                 # Normalizing the dataset's name (or path) to not end with a '/' or '\'

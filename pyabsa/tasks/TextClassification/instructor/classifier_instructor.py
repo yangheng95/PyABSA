@@ -441,7 +441,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             )
 
         self.logger.info(self.config.MV.summary(no_print=True))
-        self.logger.info(self.config.MV.raw_summary(no_print=True))
+        # self.logger.info(self.config.MV.short_summary(no_print=True))
 
         if self.valid_dataloader or self.config.save_mode:
             del self.train_dataloaders
@@ -651,7 +651,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                 max_fold_f1 * 100,
             )
 
-            self.logger.info(self.config.MV.summary(no_print=True))
+            # self.logger.info(self.config.MV.summary(no_print=True))
             self.logger.info(self.config.MV.raw_summary(no_print=True))
             if os.path.exists("./init_state_dict.bin"):
                 self.reload_model()
@@ -679,7 +679,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
         )
 
         if self.config.cross_validate_fold > 0:
-            self.logger.info(self.config.MV.summary(no_print=True))
+            # self.logger.info(self.config.MV.summary(no_print=True))
             self.logger.info(self.config.MV.raw_summary(no_print=True))
         # self.config.MV.summary()
 
