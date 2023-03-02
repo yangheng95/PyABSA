@@ -60,7 +60,8 @@ class CheckpointManager:
         """
         download the checkpoint and return the path of the downloaded checkpoint
 
-        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive. This param is for someone wants to load a checkpoint not registered in PyABSA
+        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive.
+            This param is for someone wants to load a checkpoint not registered in PyABSA
         :return:
         """
 

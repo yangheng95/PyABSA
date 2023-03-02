@@ -29,7 +29,7 @@ class DatasetItem(list):
             super().__init__()
             if isinstance(dataset_name, list):
                 dataset_items = dataset_name
-                dataset_name = 'Unnamed_Dataset'
+                dataset_name = "Unnamed_Dataset"
             if os.path.exists(dataset_name):
                 # fprint('Construct DatasetItem from {}, assign dataset_name={}'.format(dataset_name, os.path.basename(dataset_name)))
                 # Normalizing the dataset's name (or path) to not end with a '/' or '\'

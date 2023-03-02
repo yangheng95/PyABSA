@@ -11,7 +11,8 @@ from pyabsa import AspectPolarityClassification as APC
 
 # sent_classifier = APC.SentimentClassifier('fast_lcf_bert_Multilingual_acc_82.66_f1_82.06.zip')
 # sent_classifier = APC.SentimentClassifier('multilingual', auto_device=False)
-sent_classifier = APC.SentimentClassifier("multilingual")
+
+sent_classifier = APC.SentimentClassifier("multilingual", max_seq_len=512)
 # sent_classifier = APC.SentimentClassifier('english')
 # sent_classifier = APC.SentimentClassifier('chinese')
 

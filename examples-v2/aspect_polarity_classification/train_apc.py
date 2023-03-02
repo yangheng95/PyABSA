@@ -12,22 +12,25 @@ import random
 from pyabsa import (
     AspectPolarityClassification as APC,
     ModelSaveOption,
-    DeviceTypeOption, DatasetItem,
+    DeviceTypeOption,
+    DatasetItem,
 )
 
 models = [
-        APC.APCModelList.FAST_LSA_T_V2,
-        APC.APCModelList.FAST_LSA_S_V2,
-        APC.APCModelList.BERT_SPC_V2,
-    ]
+    APC.APCModelList.FAST_LSA_T_V2,
+    APC.APCModelList.FAST_LSA_S_V2,
+    APC.APCModelList.BERT_SPC_V2,
+]
 
-datasets = DatasetItem([
-    APC.APCDatasetList.Laptop14,
-    APC.APCDatasetList.Restaurant14,
-    APC.APCDatasetList.Restaurant15,
-    APC.APCDatasetList.Restaurant16,
-    APC.APCDatasetList.MAMS
-])
+datasets = DatasetItem(
+    [
+        APC.APCDatasetList.Laptop14,
+        APC.APCDatasetList.Restaurant14,
+        APC.APCDatasetList.Restaurant15,
+        APC.APCDatasetList.Restaurant16,
+        APC.APCDatasetList.MAMS,
+    ]
+)
 
 for dataset in [
     APC.APCDatasetList.Laptop14,
