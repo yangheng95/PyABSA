@@ -22,13 +22,20 @@ from pyabsa.framework.checkpoint_class.checkpoint_utils import (
 from pyabsa.utils.file_utils.file_utils import unzip_checkpoint
 from pyabsa.utils.pyabsa_utils import fprint
 
+from pyabsa.tasks.AspectPolarityClassification import SentimentClassifier
+from pyabsa.tasks.AspectTermExtraction import AspectExtractor
+from pyabsa.tasks.TextAdversarialDefense import TADTextClassifier
+from pyabsa.tasks.RNAClassification import RNAClassifier
+from pyabsa.tasks.RNARegression import RNARegressor
+from pyabsa.tasks.TextClassification import TextClassifier
+
 
 class CheckpointManager:
     def parse_checkpoint(
         self,
         checkpoint: Union[str, Path] = None,
         task_code: str = TaskCodeOption.Aspect_Polarity_Classification,
-    ) -> Path:
+    ) -> str:
         """
         Parse a given checkpoint file path or name and returns the path of the checkpoint directory.
 
@@ -64,7 +71,7 @@ class CheckpointManager:
 
     def _get_remote_checkpoint(
         self, checkpoint: str = "multilingual", task_code: str = None
-    ) -> Path:
+    ) -> str:
         """
         Downloads a checkpoint file and returns the path of the downloaded checkpoint.
 
@@ -134,7 +141,6 @@ class APCCheckpointManager(CheckpointManager):
             sentiment_classifier = APCCheckpointManager.get_sentiment_classifier()
 
         """
-        from pyabsa.tasks.AspectPolarityClassification import SentimentClassifier
 
         return SentimentClassifier(
             CheckpointManager().parse_checkpoint(
@@ -166,7 +172,6 @@ class ATEPCCheckpointManager(CheckpointManager):
         :param kwargs: Additional keyword arguments to be passed to the function.
         :return: An AspectExtractor object initialized with the given checkpoint.
         """
-        from pyabsa.tasks.AspectTermExtraction import AspectExtractor
 
         return AspectExtractor(
             CheckpointManager().parse_checkpoint(
@@ -199,7 +204,6 @@ class TADCheckpointManager(CheckpointManager):
         Returns:
             TADTextClassifier: A TADTextClassifier object initialized with the given checkpoint.
         """
-        from pyabsa.tasks.TextAdversarialDefense import TADTextClassifier
 
         return TADTextClassifier(
             CheckpointManager().parse_checkpoint(
@@ -236,7 +240,6 @@ class RNACCheckpointManager(CheckpointManager):
         Raises:
             ValueError: If the provided checkpoint is not found.
         """
-        from pyabsa.tasks.RNAClassification import RNAClassifier
 
         return RNAClassifier(
             CheckpointManager().parse_checkpoint(
@@ -273,8 +276,6 @@ class RNARCheckpointManager(CheckpointManager):
         :rtype: RNARegressor
         """
 
-        from pyabsa.tasks.RNARegression import RNARegressor
-
         return RNARegressor(
             CheckpointManager().parse_checkpoint(
                 checkpoint, TaskCodeOption.RNASequenceRegression
@@ -309,8 +310,6 @@ class TCCheckpointManager(CheckpointManager):
         Returns:
             TextClassifier: A TextClassifier instance loaded with the specified checkpoint.
         """
-
-        from pyabsa.tasks.TextClassification import TextClassifier
 
         return TextClassifier(
             CheckpointManager().parse_checkpoint(

@@ -9,6 +9,7 @@
 import json
 import os
 from distutils.version import StrictVersion
+from typing import Union, Dict, Any
 
 import requests
 import tqdm
