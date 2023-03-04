@@ -346,7 +346,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 + "-"
                 + self.config.pretrained_bert,
                 "Max-Test-AUC w/o Valid Set",
-                auc,
+                auc * 100,
             )
 
         if self.valid_dataloader:
@@ -639,7 +639,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
             + "-"
             + self.config.pretrained_bert,
             "Max-Test-AUC",
-            auc,
+            auc * 100,
         )
 
         if self.config.cross_validate_fold > 0:

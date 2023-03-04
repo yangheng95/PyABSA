@@ -13,7 +13,7 @@ from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__lcf__.apc_utils i
 )
 from ...dataset_utils.__lcf__.atepc_utils import prepare_input_for_atepc
 from pyabsa.utils.pyabsa_utils import (
-    validate_example,
+    validate_absa_example,
     check_and_fix_labels,
     check_and_fix_IOB_labels,
     fprint,
@@ -312,7 +312,7 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, config=None):
             continue
         text_raw = text_left + " " + aspect + " " + text_right
 
-        if validate_example(text_raw, aspect, polarity, config):
+        if validate_absa_example(text_raw, aspect, polarity, config):
             continue
 
         prepared_inputs = prepare_input_for_atepc(

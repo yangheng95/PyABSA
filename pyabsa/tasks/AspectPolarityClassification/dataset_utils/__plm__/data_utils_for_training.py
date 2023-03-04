@@ -20,7 +20,11 @@ from ...dataset_utils.__plm__.dependency_graph import (
     prepare_dependency_graph,
 )
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
-from pyabsa.utils.pyabsa_utils import check_and_fix_labels, validate_example, fprint
+from pyabsa.utils.pyabsa_utils import (
+    check_and_fix_labels,
+    validate_absa_example,
+    fprint,
+)
 
 
 class BERTBaselineABSADataset(PyABSADataset):
@@ -72,7 +76,7 @@ class BERTBaselineABSADataset(PyABSADataset):
             polarity = lines[i + 2].strip()
             # polarity = int(polarity)
 
-            if validate_example(text_raw, aspect, polarity, self.config):
+            if validate_absa_example(text_raw, aspect, polarity, self.config):
                 continue
 
             prepared_inputs = prepare_input_for_apc(

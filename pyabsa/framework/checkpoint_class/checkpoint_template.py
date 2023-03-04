@@ -30,12 +30,20 @@ class CheckpointManager:
         task_code: str = TaskCodeOption.Aspect_Polarity_Classification,
     ) -> Path:
         """
+        Parse a given checkpoint file path or name and returns the path of the checkpoint directory.
 
-        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive
-            This param is for someone wants to load a checkpoint not registered in PyABSA
-        :param task_code: task code, e.g. apc, atepc, tad, rnac_datasets, rnar, tc, etc.
+        Args:
+            checkpoint (Union[str, Path], optional): Zipped checkpoint name, checkpoint path, or checkpoint name queried from Google Drive. Defaults to None.
+            task_code (str, optional): Task code, e.g. apc, atepc, tad, rnac_datasets, rnar, tc, etc. Defaults to TaskCodeOption.Aspect_Polarity_Classification.
 
-        :return:
+        Returns:
+            Path: The path of the checkpoint directory.
+
+        Example:
+            ```
+            manager = CheckpointManager()
+            checkpoint_path = manager.parse_checkpoint("checkpoint.zip", "apc")
+            ```
         """
         if isinstance(checkpoint, str) or isinstance(checkpoint, Path):
             if os.path.exists(checkpoint):
@@ -58,13 +66,24 @@ class CheckpointManager:
         self, checkpoint: str = "multilingual", task_code: str = None
     ) -> Path:
         """
-        download the checkpoint and return the path of the downloaded checkpoint
+        Downloads a checkpoint file and returns the path of the downloaded checkpoint.
 
-        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried from Google Drive.
-            This param is for someone wants to load a checkpoint not registered in PyABSA
-        :return:
+        Args:
+            checkpoint (str, optional): Zipped checkpoint name, checkpoint path, or checkpoint name queried from Google Drive. Defaults to "multilingual".
+            task_code (str, optional): Task code, e.g. apc, atepc, tad, rnac_datasets, rnar, tc, etc. Defaults to None.
+
+        Returns:
+            Path: The path of the downloaded checkpoint.
+
+        Raises:
+            SystemExit: If the given checkpoint file is not found.
+
+        Example:
+            ```
+            manager = CheckpointManager()
+            checkpoint_path = manager._get_remote_checkpoint("multilingual", "apc")
+            ```
         """
-
         available_checkpoint_by_task = available_checkpoints(task_code)
         if checkpoint.lower() in [
             k.lower() for k in available_checkpoint_by_task.keys()
@@ -89,14 +108,31 @@ class CheckpointManager:
 
 class APCCheckpointManager(CheckpointManager):
     def __init__(self):
+        """
+        Initializes an instance of the APCCheckpointManager class.
+        """
         super(APCCheckpointManager, self).__init__()
 
     @staticmethod
-    def get_sentiment_classifier(checkpoint: Union[str, Path] = None, **kwargs):
+    def get_sentiment_classifier(
+        checkpoint: Union[str, Path] = None, **kwargs
+    ) -> "SentimentClassifier":
         """
-        This interface is used for compatibility with previous APIs
+        Returns a pre-trained aspect sentiment classification model.
 
-        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried
+        Args:
+            checkpoint (Union[str, Path], optional): A string specifying the path to a checkpoint or the name of a
+                checkpoint registered in PyABSA. If `None`, the default checkpoint is used.
+            **kwargs: Additional keyword arguments.
+
+        Returns:
+            SentimentClassifier: A pre-trained aspect sentiment classification model.
+
+        Example:
+            from pyabsa import APCCheckpointManager
+
+            sentiment_classifier = APCCheckpointManager.get_sentiment_classifier()
+
         """
         from pyabsa.tasks.AspectPolarityClassification import SentimentClassifier
 
@@ -108,15 +144,27 @@ class APCCheckpointManager(CheckpointManager):
 
 
 class ATEPCCheckpointManager(CheckpointManager):
+    """
+    This class manages the checkpoints for Aspect Term Extraction and Polarity Classification.
+    """
+
     def __init__(self):
+        """
+        Initializes an instance of the ATEPCCheckpointManager class.
+        """
         super(ATEPCCheckpointManager, self).__init__()
 
     @staticmethod
-    def get_aspect_extractor(checkpoint: Union[str, Path] = None, **kwargs):
+    def get_aspect_extractor(
+        checkpoint: Union[str, Path] = None, **kwargs
+    ) -> "AspectExtractor":
         """
-        This interface is used for compatibility with previous APIs
+        Get an AspectExtractor object initialized with the given checkpoint for Aspect Term Extraction and Polarity Classification.
 
-        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried
+        :param checkpoint: A string or Path object indicating the path to the checkpoint or a zip file containing the checkpoint.
+            If the checkpoint is not registered in PyABSA, it should be the name of the checkpoint queried from Google Drive.
+        :param kwargs: Additional keyword arguments to be passed to the function.
+        :return: An AspectExtractor object initialized with the given checkpoint.
         """
         from pyabsa.tasks.AspectTermExtraction import AspectExtractor
 
@@ -128,15 +176,28 @@ class ATEPCCheckpointManager(CheckpointManager):
 
 
 class TADCheckpointManager(CheckpointManager):
+    """
+    This class manages the checkpoints for text adversarial defense.
+    """
+
     def __init__(self):
+        """
+        Initializes an instance of the TADCheckpointManager class.
+        """
         super(TADCheckpointManager, self).__init__()
 
-    @staticmethod
-    def get_tad_text_classifier(checkpoint: Union[str, Path] = None, **kwargs):
+    def get_tad_text_classifier(
+        checkpoint: Union[str, Path] = None, **kwargs
+    ) -> "TADTextClassifier":
         """
-        This interface is used for compatibility with previous APIs
+        Return a TADTextClassifier object initialized with the specified checkpoint.
 
-        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried
+        Args:
+            checkpoint (Union[str, Path], optional): The path to the checkpoint, the name of the zipped checkpoint, or
+                the name of the checkpoint queried from Google Drive. Defaults to None.
+
+        Returns:
+            TADTextClassifier: A TADTextClassifier object initialized with the given checkpoint.
         """
         from pyabsa.tasks.TextAdversarialDefense import TADTextClassifier
 
@@ -148,15 +209,32 @@ class TADCheckpointManager(CheckpointManager):
 
 
 class RNACCheckpointManager(CheckpointManager):
+    """
+    This class manages the checkpoints for RNA sequence classification.
+    """
+
     def __init__(self):
+        """
+        Initializes an instance of the RNACCheckpointManager class.
+        """
         super(RNACCheckpointManager, self).__init__()
 
     @staticmethod
-    def get_rna_classifier(checkpoint: Union[str, Path] = None, **kwargs):
+    def get_rna_classifier(
+        checkpoint: Union[str, Path] = None, **kwargs
+    ) -> "RNAClassifier":
         """
-        This interface is used for compatibility with previous APIs
+        This method returns an instance of the RNAClassifier class with a parsed checkpoint for RNA sequence classification.
 
-        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried
+        Args:
+            checkpoint (Union[str, Path], optional): The name of the zipped checkpoint or the path to the checkpoint file. If not provided, the default checkpoint will be used. Defaults to None.
+            **kwargs: Additional keyword arguments.
+
+        Returns:
+            RNAClassifier: An instance of the RNAClassifier class with a parsed checkpoint for RNA sequence classification.
+
+        Raises:
+            ValueError: If the provided checkpoint is not found.
         """
         from pyabsa.tasks.RNAClassification import RNAClassifier
 
@@ -168,16 +246,33 @@ class RNACCheckpointManager(CheckpointManager):
 
 
 class RNARCheckpointManager(CheckpointManager):
+    """
+    This class manages the checkpoints for RNA sequence regression.
+    """
+
     def __init__(self):
+        """
+        Initializes an instance of the RNARCheckpointManager class.
+        """
         super(RNARCheckpointManager, self).__init__()
 
     @staticmethod
-    def get_rna_regressor(checkpoint: Union[str, Path] = None, **kwargs):
+    def get_rna_regressor(
+        checkpoint: Union[str, Path] = None, **kwargs
+    ) -> "RNARegressor":
         """
-        This interface is used for compatibility with previous APIs
+        Loads a pre-trained checkpoint for RNA sequence regression and returns an instance of the RNARegressor class
+        that is ready to make predictions.
 
-        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried
+        :param checkpoint: (Optional) The name of a zipped checkpoint file, the path to a checkpoint file, or the name of
+            a checkpoint file that can be found in Google Drive. If `checkpoint` is not provided, the default checkpoint
+            for RNA sequence regression will be loaded.
+        :type checkpoint: Union[str, Path]
+
+        :return: An instance of the RNARegressor class that has been initialized with the specified checkpoint file.
+        :rtype: RNARegressor
         """
+
         from pyabsa.tasks.RNARegression import RNARegressor
 
         return RNARegressor(
@@ -188,16 +283,33 @@ class RNARCheckpointManager(CheckpointManager):
 
 
 class TCCheckpointManager(CheckpointManager):
+    """
+    This class manages the checkpoints for text classification.
+    """
+
     def __init__(self):
+        """
+        Initializes an instance of the TCCheckpointManager class.
+        """
         super(TCCheckpointManager, self).__init__()
 
     @staticmethod
-    def get_text_classifier(checkpoint: Union[str, Path] = None, **kwargs):
+    def get_text_classifier(
+        checkpoint: Union[str, Path] = None, **kwargs
+    ) -> "TextClassifier":
         """
-        This interface is used for compatibility with previous APIs
+        Returns a TextClassifier instance loaded with a pre-trained checkpoint for text classification.
 
-        :param checkpoint: zipped checkpoint name, or checkpoint path or checkpoint name queried
+        Args:
+            checkpoint (Union[str, Path], optional): The name of a zipped checkpoint file, a path to a checkpoint file,
+                or the name of a checkpoint registered in PyABSA. If None, the latest version of the default checkpoint
+                will be used. Defaults to None.
+            **kwargs: Additional keyword arguments. Not used in this method.
+
+        Returns:
+            TextClassifier: A TextClassifier instance loaded with the specified checkpoint.
         """
+
         from pyabsa.tasks.TextClassification import TextClassifier
 
         return TextClassifier(

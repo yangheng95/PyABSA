@@ -143,24 +143,6 @@ class RNAClassifier(InferenceModel):
 
         self.__post_init__(**kwargs)
 
-    def to(self, device=None):
-        self.config.device = device
-        self.model.to(device)
-        if hasattr(self, "MLM"):
-            self.MLM.to(self.config.device)
-
-    def cpu(self):
-        self.config.device = DeviceTypeOption.CPU
-        self.model.to(DeviceTypeOption.CPU)
-        if hasattr(self, "MLM"):
-            self.MLM.to(DeviceTypeOption.CPU)
-
-    def cuda(self, device="cuda:0"):
-        self.config.device = device
-        self.model.to(device)
-        if hasattr(self, "MLM"):
-            self.MLM.to(device)
-
     def _log_write_args(self):
         n_trainable_params, n_nontrainable_params = 0, 0
         for p in self.model.parameters():
@@ -186,8 +168,23 @@ class RNAClassifier(InferenceModel):
         ignore_error=True,
         **kwargs
     ):
+        """
+        Runs inference on a batch of data.
+
+        Args:
+            - target_file: str or Path. Path to the target file.
+            - print_result: bool. Whether to print the result.
+            - save_result: bool. Whether to save the result.
+            - ignore_error: bool. Whether to ignore errors.
+            - kwargs: dict. Additional keyword arguments.
+
+        Returns:
+            - result: list. List of predictions.
+        """
+        # Set batch size for inference.
         self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
 
+        # Set the save path for the result file.
         save_path = os.path.join(
             os.getcwd(),
             "{}.{}.result.json".format(
@@ -195,33 +192,55 @@ class RNAClassifier(InferenceModel):
             ),
         )
 
+        # Detect and prepare the dataset for inference.
         target_file = detect_infer_dataset(
             target_file, task_code=TaskCodeOption.RNASequenceClassification
         )
         if not target_file:
             raise FileNotFoundError("Can not find inference datasets!")
-
         self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
+
+        # Create a data loader for inference.
         self.infer_dataloader = DataLoader(
             dataset=self.dataset,
             batch_size=self.config.eval_batch_size,
             pin_memory=True,
             shuffle=False,
         )
+
+        # Run the prediction and return the result.
         return self._run_prediction(
             save_path=save_path if save_result else None, print_result=print_result
         )
 
     def predict(self, text: str = None, print_result=True, ignore_error=True, **kwargs):
+        """
+        Runs inference on a single sample.
+
+        Args:
+            - text: str. The text to predict.
+            - print_result: bool. Whether to print the result.
+            - ignore_error: bool. Whether to ignore errors.
+            - kwargs: dict. Additional keyword arguments.
+
+        Returns:
+            - result: list. List of predictions.
+        """
+        # Set batch size for inference.
         self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
 
+        # Detect and prepare the sample for inference.
         if text:
             self.dataset.prepare_infer_sample(text, ignore_error=ignore_error)
         else:
             raise RuntimeError("Please specify your datasets path!")
+
+        # Create a data loader for inference.
         self.infer_dataloader = DataLoader(
             dataset=self.dataset, batch_size=self.config.eval_batch_size, shuffle=False
         )
+
+        # Run the prediction and return the result.
         return self._run_prediction(print_result=print_result)[0]
 
     def _run_prediction(self, save_path=None, print_result=True):
@@ -479,3 +498,7 @@ class RNAClassifier(InferenceModel):
 
     def clear_input_samples(self):
         self.dataset.all_data = []
+
+
+class Predictor(RNAClassifier):
+    pass

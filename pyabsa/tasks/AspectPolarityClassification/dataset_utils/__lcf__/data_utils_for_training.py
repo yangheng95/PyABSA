@@ -21,7 +21,7 @@ from .apc_utils_for_dlcf_dca import (
     prepare_input_for_dlcf_dca,
     configure_dlcf_spacy_model,
 )
-from pyabsa.utils.pyabsa_utils import validate_example
+from pyabsa.utils.pyabsa_utils import validate_absa_example
 
 
 class ABSADataset(PyABSADataset):
@@ -82,7 +82,7 @@ class ABSADataset(PyABSADataset):
             lcfs_cdm_vec = prepared_inputs["lcfs_cdm_vec"]
             lcfs_vec = prepared_inputs["lcfs_vec"]
 
-            if validate_example(text_raw, aspect, polarity, self.config):
+            if validate_absa_example(text_raw, aspect, polarity, self.config):
                 continue
 
             if (

@@ -12,7 +12,7 @@ import tqdm
 
 from pyabsa import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
-from pyabsa.utils.pyabsa_utils import validate_example, fprint
+from pyabsa.utils.pyabsa_utils import validate_absa_example, fprint
 from .classic_glove_apc_utils import build_sentiment_window
 from .dependency_graph import dependency_adj_matrix, configure_spacy_model
 from ..__lcf__.data_utils_for_inference import ABSAInferenceDataset
@@ -62,7 +62,10 @@ class GloVeABSAInferenceDataset(ABSAInferenceDataset):
                 aspect = aspect.lower().strip()
                 text = text_left + " " + aspect + " " + text_right
 
-                if validate_example(text, aspect, polarity, self.config) or not aspect:
+                if (
+                    validate_absa_example(text, aspect, polarity, self.config)
+                    or not aspect
+                ):
                     continue
 
                 text_indices = self.tokenizer.text_to_sequence(
@@ -117,7 +120,7 @@ class GloVeABSAInferenceDataset(ABSAInferenceDataset):
                 )
                 if len(aspect_position) < 1:
                     raise RuntimeError("Invalid Input: {}".format(text))
-                validate_example(text, aspect, polarity, config=self.config)
+                validate_absa_example(text, aspect, polarity, config=self.config)
 
                 data = {
                     "ex_id": ex_id,

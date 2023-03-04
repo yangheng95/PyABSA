@@ -154,24 +154,6 @@ class AspectExtractor(InferenceModel):
 
         self.__post_init__(**kwargs)
 
-    def to(self, device=None):
-        self.config.device = device
-        self.model.to(device)
-        if hasattr(self, "MLM"):
-            self.MLM.to(self.config.device)
-
-    def cpu(self):
-        self.config.device = DeviceTypeOption.CPU
-        self.model.to(DeviceTypeOption.CPU)
-        if hasattr(self, "MLM"):
-            self.MLM.to(DeviceTypeOption.CPU)
-
-    def cuda(self, device="cuda:0"):
-        self.config.device = device
-        self.model.to(device)
-        if hasattr(self, "MLM"):
-            self.MLM.to(device)
-
     def merge_result(self, sentence_res, results):
         """merge ate sentence result and apc results, and restore to original sentence order
         Args:
@@ -241,6 +223,20 @@ class AspectExtractor(InferenceModel):
         pred_sentiment=True,
         **kwargs
     ):
+        """
+        Extract aspects and their corresponding polarities from a list of input files.
+
+        Args:
+            self: An instance of the model class.
+            inference_source: A list of file paths, or a directory containing files to be processed.
+            save_result (bool): Whether to save the output to a file. Default is True.
+            print_result (bool): Whether to print the output to the console. Default is True.
+            pred_sentiment (bool): Whether to predict the sentiment of each aspect. Default is True.
+            **kwargs: Additional keyword arguments to be passed to the `batch_predict` method.
+
+        Returns:
+            The predicted aspects and their corresponding polarities.
+        """
         return self.batch_predict(
             inference_source, save_result, print_result, pred_sentiment, **kwargs
         )
@@ -659,3 +655,7 @@ class AspectExtractor(InferenceModel):
                     res.append(result)
 
         return res
+
+
+class Predictor(AspectExtractor):
+    pass

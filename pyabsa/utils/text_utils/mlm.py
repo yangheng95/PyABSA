@@ -16,6 +16,16 @@ from transformers import AutoTokenizer
 
 
 def get_mlm_and_tokenizer(model, config):
+    """
+    Returns a masked language model (MLM) and a tokenizer for the specified model and config.
+
+    Args:
+        model: The BERT-like model to use.
+        config: The configuration object to use.
+
+    Returns:
+        A tuple containing the MLM and the tokenizer.
+    """
     base_model = None
     for child in model.children():
         if hasattr(child, "base_model"):
@@ -32,4 +42,5 @@ def get_mlm_and_tokenizer(model, config):
     else:
         MLM = BertForMaskedLM(pretrained_config)
         MLM.bert = base_model
+
     return MLM, AutoTokenizer.from_pretrained(config.pretrained_bert)

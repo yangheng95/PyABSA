@@ -22,6 +22,10 @@ from pyabsa.utils.pyabsa_utils import save_args, fprint
 
 
 def remove_empty_line(files: Union[str, List[str]]):
+    """
+    Remove empty lines from the input files.
+    """
+    # Convert a single file path to a list of length 1 for convenience
     if isinstance(files, str):
         files = [files]
     for file in files:
@@ -34,23 +38,47 @@ def remove_empty_line(files: Union[str, List[str]]):
 
 
 def save_json(dic, save_path):
+    """
+    Save a Python dictionary to a JSON file.
+    """
+    # Convert a string representation of a dictionary to a dictionary
     if isinstance(dic, str):
         dic = eval(dic)
     with open(save_path, "w", encoding="utf-8") as f:
-        # f.write(str(dict))
+        # Write the dictionary to the file
         str_ = json.dumps(dic, ensure_ascii=False)
         f.write(str_)
 
 
 def load_json(save_path):
+    """
+    Load a JSON file and return a Python dictionary.
+    """
     with open(save_path, "r", encoding="utf-8") as f:
+        # Read the file and parse the JSON string to a dictionary
         data = f.readline().strip()
-        fprint(type(data), data)
+        fprint(
+            type(data), data
+        )  # 'fprint' function is not defined, may need to be defined
         dic = json.loads(data)
     return dic
 
 
 def load_dataset_from_file(fname, config):
+    """
+    Loads a dataset from one or multiple files.
+
+    Args:
+        fname (str or List[str]): The name of the file(s) containing the dataset.
+        config (dict): The configuration dictionary containing the logger (optional) and the maximum number of data to load (optional).
+
+    Returns:
+        A list of strings containing the loaded dataset.
+
+    Raises:
+        ValueError: If an empty line is found in the dataset.
+
+    """
     logger = config.get("logger", None)
     lines = []
     if isinstance(fname, str):
@@ -77,6 +105,14 @@ def load_dataset_from_file(fname, config):
 
 
 def prepare_glove840_embedding(glove_path, embedding_dim, config):
+    """
+    Check if the provided GloVe embedding exists, if not, search for a similar file in the current directory, or download
+    the 840B GloVe embedding. If none of the above exists, raise an error.
+    :param glove_path: str, path to the GloVe embedding
+    :param embedding_dim: int, the dimension of the embedding
+    :param config: dict, configuration dictionary
+    :return: str, the path to the GloVe embedding
+    """
     if config.get("glove_or_word2vec_path", None):
         glove_path = config.glove_or_word2vec_path
         return glove_path
@@ -162,53 +198,83 @@ def prepare_glove840_embedding(glove_path, embedding_dim, config):
 
 
 def unzip_checkpoint(zip_path):
+    """
+    Unzip a checkpoint file in zip format.
+
+    Args:
+        zip_path (str): path to the zip file.
+
+    Returns:
+        str: path to the unzipped checkpoint directory.
+
+    """
     try:
-        fprint("Find zipped checkpoint: {}, unzipping".format(zip_path))
+        # Inform the user that the checkpoint file is being unzipped
+        print("Find zipped checkpoint: {}, unzipping".format(zip_path))
         sys.stdout.flush()
+
+        # Create a directory with the same name as the zip file to store the unzipped checkpoint files
         if not os.path.exists(zip_path):
             os.makedirs(zip_path.replace(".zip", ""))
+
+        # Extract the contents of the zip file to the created directory
         z = zipfile.ZipFile(zip_path, "r")
         z.extractall(os.path.dirname(zip_path))
-        fprint("Done.")
+
+        # Inform the user that the unzipping is done
+        print("Done.")
     except zipfile.BadZipfile:
-        fprint("{}: Unzip failed".format(zip_path))
+        # If the zip file is corrupted, inform the user that the unzipping has failed
+        print("{}: Unzip failed".format(zip_path))
+
+    # Return the path to the unzipped checkpoint directory
     return zip_path.replace(".zip", "")
 
 
 def save_model(config, model, tokenizer, save_path, **kwargs):
-    # Save a trained model, configuration and tokenizer
+    """
+    Save a trained model, configuration, and tokenizer to the specified path.
+
+    Args:
+        config (Config): Configuration for the model.
+        model (nn.Module): The trained model.
+        tokenizer: Tokenizer used by the model.
+        save_path (str): The path where to save the model, config, and tokenizer.
+        **kwargs: Additional keyword arguments.
+    """
     if (
         hasattr(model, "module")
         or hasattr(model, "core")
         or hasattr(model, "_orig_mod")
     ):
-        # fprint("save model from data-parallel!")
         model_to_save = model.module
     else:
-        # fprint("save a single cuda model!")
         model_to_save = model
+    # Check the specified save mode.
     if config.save_mode == 1 or config.save_mode == 2:
+        # Create save_path directory if it doesn't exist.
         if not os.path.exists(save_path):
             os.makedirs(save_path)
+        # Save the configuration and tokenizer to the save_path directory.
         f_config = open(save_path + config.model_name + ".config", mode="wb")
         f_tokenizer = open(save_path + config.model_name + ".tokenizer", mode="wb")
         pickle.dump(config, f_config)
         pickle.dump(tokenizer, f_tokenizer)
         f_config.close()
         f_tokenizer.close()
+        # Save the arguments used to create the configuration.
         save_args(config, save_path + config.model_name + ".args.txt")
+        # Save the model state dict or the entire model depending on the save mode.
         if config.save_mode == 1:
             torch.save(
                 model_to_save.state_dict(),
                 save_path + config.model_name + ".state_dict",
-            )  # save the state dict
+            )
         elif config.save_mode == 2:
-            torch.save(
-                model.cpu(), save_path + config.model_name + ".model"
-            )  # save the state dict
+            torch.save(model.cpu(), save_path + config.model_name + ".model")
 
     elif config.save_mode == 3:
-        # save the fine-tuned bert model
+        # Save the fine-tuned BERT model.
         model_output_dir = save_path + "fine-tuned-pretrained-model"
         if not os.path.exists(model_output_dir):
             os.makedirs(model_output_dir)

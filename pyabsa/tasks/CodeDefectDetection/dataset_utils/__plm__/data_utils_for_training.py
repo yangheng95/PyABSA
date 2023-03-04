@@ -80,7 +80,7 @@ class BERTCDDDataset(PyABSADataset):
                 self.config.get("remove_comments", True),
             )
 
-            for _ in range(self.config.noise_instance_num):
+            for _ in range(self.config.get("noise_instance_num", 0)):
                 for ex_id, line in enumerate(
                     tqdm.tqdm(
                         corrupt_examples,

@@ -23,14 +23,17 @@ def generate_inference_set_for_apc(dataset_path):
     """
     Generate inference set for APC dataset. This function only works for APC datasets located in integrated_datasets.
     """
+    # Print a message for the user to ensure that the dataset is located in integrated_datasets
     fprint(
         "To ensure your generation is successful, make sure your dataset is located in integrated_datasets."
     )
+    # If dataset_path is a DatasetItem object, get the dataset_name attribute
     if isinstance(dataset_path, DatasetItem):
         dataset_name = dataset_path.dataset_name
     else:
         dataset_name = dataset_path
 
+    # Find the train, valid, and test datasets for the specified dataset_name
     train_datasets = findfile.find_cwd_files(
         [
             "dataset",
@@ -58,59 +61,95 @@ def generate_inference_set_for_apc(dataset_path):
         ],
         exclude_key=[".inference", "readme"],
     )
+    # Loop through each dataset file and generate an inference set for each one
     for file in train_datasets + valid_datasets + test_datasets:
         try:
+            # Open the dataset file and read the lines
             fin = open(file, "r", newline="\n", encoding="utf-8")
             lines = fin.readlines()
+            # Loop through each line in the file and check for empty lines
             for i, line in enumerate(lines):
                 if not line.strip():
                     raise ValueError(
                         "empty line: #{}, previous line: {}".format(i, lines[i - 1])
                     )
             fin.close()
+            # Create the path to save the inference set
             path_to_save = file + ".inference"
+            # Open the output file and write the converted lines to it
             fout = open(
                 path_to_save, "w", encoding="utf-8", newline="\n", errors="ignore"
             )
 
             for i in range(0, len(lines), 3):
+                # Replace the aspect term with [B-ASP] and [E-ASP] tags
                 sample = (
                     lines[i]
                     .strip()
                     .replace("$T$", "[B-ASP]{}[E-ASP]".format(lines[i + 1].strip()))
                 )
+                # Write the sample and label to the output file
                 fout.write(sample + " $LABEL$ " + lines[i + 2].strip() + "\n")
             fout.close()
+            # Print the path to the saved inference set
             fprint("save in: {}".format(path_to_save))
         except:
             fprint("Unprocessed file:", file)
+    # Print a message to indicate that the inference set generation has finished
     fprint("Inference set generation finished")
 
 
-def is_similar(s1, s2):
-    count = 0.0
-    for token in s1.split(" "):
-        if token in s2:
-            count += 1
-    if count / len(s1.split(" ")) >= 0.8 and count / len(s2.split(" ")) >= 0.8:
-        return True
-    else:
-        return False
+def is_similar(s1: str, s2: str) -> bool:
+    """
+    Determines if two strings are similar based on the number of common tokens they share.
+    :param s1: string 1
+    :param s2: string 2
+    :return: True if strings are similar, False otherwise
+    """
+    # Split the strings into sets of tokens
+    tokens1 = set(s1.split())
+    tokens2 = set(s2.split())
+
+    # Compute the intersection of the sets to get common tokens
+    common_tokens = tokens1.intersection(tokens2)
+
+    # Compute the similarity as the ratio of common tokens to the maximum length of the two sets
+    similarity = len(common_tokens) / max(len(tokens1), len(tokens2))
+
+    # Return True if the similarity is greater than or equal to 0.8, False otherwise
+    return similarity >= 0.8
 
 
 def assemble_aspects(fname, use_tokenizer=False):
+    """
+    Preprocesses the input file, groups sentences with similar aspects, and generates samples with the corresponding aspect labels and polarities.
+
+    :param fname: The filename to be preprocessed
+    :type fname: str
+    :param use_tokenizer: Whether to use a tokenizer, defaults to False
+    :type use_tokenizer: bool, optional
+    :return: A list of samples
+    :rtype: list
+    """
+    # Import tokenizer from transformers library if `use_tokenizer` is True
     if use_tokenizer:
         from transformers import AutoTokenizer
 
         tokenizer = AutoTokenizer.from_pretrained("microsoft/deberta-v3-base")
+
+    # Open and read the input file
     fin = open(fname, "r", encoding="utf-8", newline="\n", errors="ignore")
     lines = fin.readlines()
+    fin.close()
+
+    # Raise an error if an empty line is found
     for i, line in enumerate(lines):
         if not line.strip():
             raise ValueError(
                 "empty line: #{}, previous line: {}".format(i, lines[i - 1])
             )
-    fin.close()
+
+    # Preprocess the data by replacing tokens and splitting the text into tokens
     for i in range(len(lines)):
         if i % 3 == 0 or i % 3 == 1:
             if use_tokenizer:
@@ -128,13 +167,13 @@ def assemble_aspects(fname, use_tokenizer=False):
         else:
             lines[i] = lines[i].strip()
 
+    # Group sentences with similar aspects and generate samples with the corresponding aspect labels and polarities
     def unify_same_samples(same_samples):
         text = same_samples[0][0].replace("$T$", same_samples[0][1])
         polarities = [LabelPaddingOption.SENTIMENT_PADDING] * len(text.split())
         tags = ["O"] * len(text.split())
         samples = []
         for sample in same_samples:
-            # fprint(sample)
             polarities_tmp = copy.deepcopy(polarities)
 
             try:
@@ -172,6 +211,11 @@ def assemble_aspects(fname, use_tokenizer=False):
 
 
 def split_aspects(sentence):
+    """
+    Splits a sentence into multiple aspects, each with its own context and polarity.
+    :param sentence: input sentence with multiple aspects
+    :return: list of tuples containing single aspect with its context and polarity
+    """
     single_aspect_with_contex = []
 
     aspect_num = len(sentence[1].split("|"))
@@ -194,6 +238,12 @@ def split_aspects(sentence):
 
 
 def convert_atepc(fname, use_tokenizer):
+    """
+    Converts the input file to the Aspect Term Extraction and Polarity Classification (ATEPC) format.
+    :param fname: filename
+    :param use_tokenizer: whether to use a tokenizer
+    """
+
     fprint("coverting {} to {}.atepc".format(fname, fname))
     dist_fname = fname.replace("apc_datasets", "atepc_datasets")
 
@@ -222,6 +272,11 @@ def convert_atepc(fname, use_tokenizer):
 
 
 def convert_apc_set_to_atepc_set(path, use_tokenizer=False):
+    """
+    Converts APC dataset to ATEPC dataset.
+    :param path: path to the dataset
+    :param use_tokenizer: whether to use a tokenizer
+    """
     fprint(
         'To ensure your conversion is successful, make sure the dataset name contain "apc" and "dataset" string '
     )
@@ -254,8 +309,13 @@ def convert_apc_set_to_atepc_set(path, use_tokenizer=False):
     fprint("finished")
 
 
-# 将数据集中的aspect切割出来
 def refactor_chinese_dataset(fname, train_fname, test_fname):
+    """
+    Refactors the Chinese dataset by splitting it into train and test sets and converting it into the ATEPC format.
+    :param fname: the name of the dataset file
+    :param train_fname: the name of the output train file
+    :param test_fname: the name of the output test file
+    """
     lines = []
     samples = assemble_aspects(fname)
     positive = 0
@@ -312,6 +372,10 @@ def refactor_chinese_dataset(fname, train_fname, test_fname):
 
 
 def detect_error_in_dataset(dataset):
+    """
+    Detects errors in a given dataset by checking if the sentences with similar aspects have different lengths.
+    :param dataset: dataset file name
+    """
     f = open(dataset, "r", encoding="utf8")
     lines = f.readlines()
     for i in range(0, len(lines), 3):

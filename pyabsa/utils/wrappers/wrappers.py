@@ -9,7 +9,13 @@
 
 
 from multiprocessing import Process, Pipe
-from eventlet import spawn, sleep
+
+try:
+    from eventlet import spawn, sleep
+except Exception as e:
+    from time import sleep
+
+    print("eventlet not install, please install eventlet first")
 from functools import wraps
 
 import traceback

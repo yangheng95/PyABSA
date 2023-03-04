@@ -76,7 +76,7 @@ class BERTCDDInferenceDataset(Dataset):
                             "ex_id": ex_id,
                             "code": code_src,
                             "source_ids": ids,
-                            "label": label,
+                            "label": self.config.label_to_index[label],
                             "corrupt_label": 0,
                         }
                     )
@@ -122,10 +122,10 @@ class BERTCDDInferenceDataset(Dataset):
             #     print((x + 1) * (self.config.max_seq_len - 2) // 2 + (self.config.max_seq_len - 2) // 2)
             for x in range(len(code_ids) // (self.config.max_seq_len - 2) + 1):
                 _code_ids = code_ids[
-                            x
-                            * (self.config.max_seq_len - 2): (x + 1)
-                                                             * (self.config.max_seq_len - 2)
-                            ]
+                    x
+                    * (self.config.max_seq_len - 2) : (x + 1)
+                    * (self.config.max_seq_len - 2)
+                ]
                 _code_ids = pad_and_truncate(
                     _code_ids,
                     self.config.max_seq_len - 2,
@@ -140,6 +140,7 @@ class BERTCDDInferenceDataset(Dataset):
                 if all_code_ids[-1].count(self.tokenizer.eos_token_id) != 1:
                     raise ValueError("last token id is not eos token id")
             return all_code_ids
+
     def __getitem__(self, index):
         return self.data[index]
 

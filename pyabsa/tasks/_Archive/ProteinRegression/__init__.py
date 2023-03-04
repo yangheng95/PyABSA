@@ -15,4 +15,4 @@ from .dataset_utils.dataset_list import (
     ProteinRDatasetList,
     ProteinRegressionDatasetList,
 )
-from .prediction.protein_regressor import ProteinRegressor
+from .prediction.protein_regressor import ProteinRegressor, Predictor

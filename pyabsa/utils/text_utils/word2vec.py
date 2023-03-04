@@ -15,45 +15,58 @@ from transformers import AutoTokenizer
 
 from pyabsa.utils.pyabsa_utils import fprint
 
-
 # from gensim.models.word2vec import LineSentence
+
+import os
+import time
+from typing import List
+from transformers import AutoTokenizer
+from gensim.models import Word2Vec
 
 
 def train_word2vec(
-    corpus_files: list = None,
-    save_path="word2vec",
-    vector_dim=300,
-    window=5,
-    min_count=1000,
-    skip_gram=1,
-    num_workers=None,
-    epochs=10,
-    pre_tokenizer=None,
+    corpus_files: List[str] = None,  # a list of file paths for the input corpus
+    save_path: str = "word2vec",  # the directory where the model and vectors will be saved
+    vector_dim: int = 300,  # the dimension of the resulting word vectors
+    window: int = 5,  # the size of the window used for context
+    min_count: int = 1000,  # the minimum count of a word for it to be included in the model
+    skip_gram: int = 1,  # whether to use skip-gram (1) or CBOW (0) algorithm
+    num_workers: int = None,  # the number of worker threads to use (default: CPU count - 1)
+    epochs: int = 10,  # the number of iterations over the corpus
+    pre_tokenizer: str = None,  # the name of a tokenizer to use for preprocessing (optional)
     **kwargs
 ):
     """
-    LineSentence(inp)：格式简单：一句话=一行; 单词已经过预处理并被空格分隔。
-    size：是每个词的向量维度；
-    window：是词向量训练时的上下文扫描窗口大小，窗口为5就是考虑前5个词和后5个词；
-    min-count：设置最低频率，默认是5，如果一个词语在文档中出现的次数小于5，那么就会丢弃；
-    workers：是训练的进程数（需要更精准的解释，请指正），默认是当前运行机器的处理器核数。这些参数先记住就可以了。
-    sg ({0, 1}, optional) – 模型的训练算法: 1: skip-gram; 0: CBOW
-    alpha (float, optional) – 初始学习率
-    iter (int, optional) – 迭代次数，默认为5
+    Train a Word2Vec model on a given corpus and save the resulting model and vectors to disk.
+
+    Args:
+    - corpus_files: a list of file paths for the input corpus
+    - save_path: the directory where the model and vectors will be saved
+    - vector_dim: the dimension of the resulting word vectors
+    - window: the size of the window used for context
+    - min_count: the minimum count of a word for it to be included in the model
+    - skip_gram: whether to use skip-gram (1) or CBOW (0) algorithm
+    - num_workers: the number of worker threads to use (default: CPU count - 1)
+    - epochs: the number of iterations over the corpus
+    - pre_tokenizer: the name of a tokenizer to use for preprocessing (optional)
     """
-    from gensim.models import Word2Vec  # please install gensim first
 
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
     in_corpus = []
+
     if not corpus_files:
+        # if corpus_files not specified, find all .txt files in the current working directory
         corpus_files = find_cwd_files(".txt", exclude_key=["word2vec", "ignore"])
     elif isinstance(corpus_files, str):
+        # if only one file path is specified, convert it to a list
         corpus_files = [corpus_files]
     else:
+        # ensure that corpus_files is a list
         assert isinstance(corpus_files, list)
 
+    # load the input corpus
     fprint("Start loading corpus files:", corpus_files)
     if isinstance(pre_tokenizer, str):
         pre_tokenizer = AutoTokenizer.from_pretrained(pre_tokenizer)
@@ -66,6 +79,7 @@ def train_word2vec(
                     res = line.strip().split()
                 in_corpus.append(res)
 
+    # train the Word2Vec model
     fprint("Start training word2vec model")
     start = time.time()
     model = Word2Vec(

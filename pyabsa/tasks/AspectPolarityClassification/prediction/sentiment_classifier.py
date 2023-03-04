@@ -140,7 +140,16 @@ class SentimentClassifier(InferenceModel):
         **kwargs
     ):
         """
-        Old version of batch_predict, will be deprecated in the future
+        A deprecated version of batch_predict method.
+
+        Args:
+            target_file (str): the path to the target file for inference
+            print_result (bool): whether to print the result
+            save_result (bool): whether to save the result
+            ignore_error (bool): whether to ignore the error
+
+        Returns:
+            result (dict): a dictionary of the results
         """
         return self.batch_predict(
             target_file=target_file,
@@ -152,7 +161,15 @@ class SentimentClassifier(InferenceModel):
 
     def infer(self, text: str = None, print_result=True, ignore_error=True, **kwargs):
         """
-        Old version of predict, will be deprecated in the future
+        A deprecated version of the predict method.
+
+        Args:
+            text (str): the text to predict
+            print_result (bool): whether to print the result
+            ignore_error (bool): whether to ignore the error
+
+        Returns:
+            result (dict): a dictionary of the results
         """
         return self.predict(
             text=text, print_result=print_result, ignore_error=ignore_error, **kwargs
@@ -230,10 +247,14 @@ class SentimentClassifier(InferenceModel):
     def merge_results(self, results):
         """merge APC results have the same input text"""
         final_res = []
+        # Loop through each result in the list of results
         for result in results:
+            # Check if the final_res list is not empty and if the previous result has the same input text as the current result
             if final_res and "".join(final_res[-1]["text"].split()) == "".join(
                 result["text"].split()
             ):
+                # If the input texts match, append the aspect, sentiment, confidence, probabilities, reference sentiment,
+                # reference check, and perplexity to the corresponding lists in the previous result
                 final_res[-1]["aspect"].append(result["aspect"])
                 final_res[-1]["sentiment"].append(result["sentiment"])
                 final_res[-1]["confidence"].append(result["confidence"])
@@ -242,6 +263,8 @@ class SentimentClassifier(InferenceModel):
                 final_res[-1]["ref_check"].append(result["ref_check"])
                 final_res[-1]["perplexity"] = result["perplexity"]
             else:
+                # If the input texts don't match, create a new dictionary with the input text, aspect, sentiment,
+                # confidence, probabilities, reference sentiment, reference check, and perplexity as separate lists
                 final_res.append(
                     {
                         "text": result["text"].replace("  ", " "),
@@ -466,3 +489,7 @@ class SentimentClassifier(InferenceModel):
 
     def clear_input_samples(self):
         self.dataset.all_data = []
+
+
+class Predictor(SentimentClassifier):
+    pass

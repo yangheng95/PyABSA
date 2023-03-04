@@ -21,13 +21,13 @@ class VoteEnsemblePredictor:
         str_agg="max_vote",
     ):
         """
+        Initialize the VoteEnsemblePredictor.
 
-        :param predictors: list of checkpoints, you can pass initialized predictors or pass the checkpoints
-        e.g., checkpoints = [checkpoint1:predictor1, checkpoint2:predictor2， checkpoint3:predictor3 ...]
-        :param weights: list of weights
-        e.g., weights = [checkpoint1:weight1, checkpoint2:weight2， checkpoint3:weight3 ...]
-        :param numeric_agg: aggregation method for numeric data, default is average
-        :param str_agg: aggregation method for string data or other data, default is max
+        :param predictors: A list of checkpoints, or a dictionary of initialized predictors.
+        :param weights: A list of weights for each predictor, or a dictionary of weights for each predictor.
+        :param numeric_agg: The aggregation method for numeric data. Options are 'average', 'mean', 'max', 'min',
+                            'median', 'mode', and 'sum'.
+        :param str_agg: The aggregation method for string data. Options are 'max_vote', 'min_vote', 'vote', and 'mode'.
         """
         if weights is not None:
             assert len(predictors) == len(
@@ -76,6 +76,12 @@ class VoteEnsemblePredictor:
             )
 
     def __ensemble(self, result: dict):
+        """
+        Aggregate prediction results by calling the appropriate aggregation method.
+
+        :param result: a dictionary containing the prediction results
+        :return: the aggregated prediction result
+        """
         if isinstance(result, dict):
             return self.__dict_aggregate(result)
         elif isinstance(result, list):
@@ -84,6 +90,12 @@ class VoteEnsemblePredictor:
             return result
 
     def __dict_aggregate(self, result: dict):
+        """
+        Recursively aggregate a dictionary of prediction results.
+
+        :param result: a dictionary containing the prediction results
+        :return: the aggregated prediction result
+        """
         ensemble_result = {}
         for k, v in result.items():
             if isinstance(result[k], list):
@@ -132,19 +144,46 @@ class VoteEnsemblePredictor:
         return new_result
 
     def predict(self, text, ignore_error=False, print_result=False):
+        """
+        Predicts on a single text and returns the ensemble result.
+
+        :param text: The text to perform prediction on
+        :type text: str
+        :param ignore_error: Whether to ignore any errors that occur during prediction, defaults to False
+        :type ignore_error: bool
+        :param print_result: Whether to print the prediction result, defaults to False
+        :type print_result: bool
+        :return: The ensemble prediction result
+        :rtype: dict
+        """
+        # Initialize an empty dictionary to store the prediction result
         result = {}
+        # Loop through each checkpoint and predictor in the ensemble
         for ckpt, predictor in self.predictors.items():
+            # Perform prediction on the text using the predictor
             raw_result = predictor.predict(
                 text, ignore_error=ignore_error, print_result=print_result
             )
+            # For each key-value pair in the raw result dictionary
             for key, value in raw_result.items():
+                # If the key is not already in the result dictionary
                 if key not in result:
+                    # Initialize an empty list for the key
                     result[key] = []
+                # Append the value to the list the number of times specified by the corresponding weight
                 for _ in range(self.weights[self.checkpoints.index(ckpt)]):
                     result[key].append(value)
+        # Return the ensemble result by aggregating the values in the result dictionary
         return self.__ensemble(result)
 
     def batch_predict(self, texts, ignore_error=False, print_result=False):
+        """
+        Predicts on a batch of texts using the ensemble of predictors.
+        :param texts: a list of strings to predict on.
+        :param ignore_error: boolean indicating whether to ignore errors or raise exceptions when prediction fails.
+        :param print_result: boolean indicating whether to print the raw results for each predictor.
+        :return: a list of dictionaries, each dictionary containing the aggregated results of the corresponding text in the input list.
+        """
         batch_raw_results = []
         for ckpt, predictor in self.predictors.items():
             if isinstance(predictor, SentimentClassifier):

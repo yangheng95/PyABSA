@@ -21,13 +21,15 @@ class InferenceModel:
 
     def __init__(self, checkpoint: Union[str, object] = None, config=None, **kwargs):
         """
+        Initializes an instance of the InferenceModel class, used for performing inference on a trained model.
+
         :param checkpoint: checkpoint path or checkpoint object
-        :param kwargs:
-
+        :param config: configuration object
+        :param kwargs: additional keyword arguments
         """
-
         self.cal_perplexity = kwargs.get("cal_perplexity", False)
 
+        # parse the provided checkpoint to obtain the checkpoint path and configuration
         self.checkpoint = CheckpointManager().parse_checkpoint(
             checkpoint, task_code=self.task_code
         )
@@ -38,34 +40,51 @@ class InferenceModel:
         self.dataset = None
 
     def to(self, device=None):
+        """
+        Sets the device on which the model will perform inference.
+
+        :param device: the device to use for inference
+        """
         self.config.device = device
         self.model.to(device)
         if hasattr(self, "MLM") and self.MLM is not None:
             self.MLM.to(self.config.device)
 
     def cpu(self):
+        """
+        Sets the device to CPU for performing inference.
+        """
         self.config.device = DeviceTypeOption.CPU
         self.model.to(DeviceTypeOption.CPU)
         if hasattr(self, "MLM"):
             self.MLM.to(DeviceTypeOption.CPU)
 
     def cuda(self, device="cuda:0"):
+        """
+        Sets the device to CUDA for performing inference.
+
+        :param device: the CUDA device to use for inference
+        """
         self.config.device = device
         self.model.to(device)
         if hasattr(self, "MLM"):
             self.MLM.to(device)
 
     def __post_init__(self, **kwargs):
+        """
+        Initializes the InferenceModel instance after its properties have been set.
+        """
         for k, v in kwargs.items():
             self.config[k] = v
 
+        # set default values for label indices
         self.config.label_to_index["-100"] = -100
         self.config.label_to_index[""] = -100
         self.config.index_to_label[-100] = ""
 
         self.infer_dataloader = None
-        self.config.initializer = self.config.initializer
 
+        # calculate perplexity if required
         if self.cal_perplexity:
             try:
                 self.MLM, self.MLM_tokenizer = get_mlm_and_tokenizer(
@@ -98,9 +117,20 @@ class InferenceModel:
         raise NotImplementedError("Please implement infer() in your subclass!")
 
     def _run_prediction(self, **kwargs):
-        raise NotImplementedError("Please implement _infer() in your subclass!")
+        """
+        This method should be implemented in the subclass for running predictions using the trained model.
+
+        :param kwargs: additional keyword arguments
+        :return: predicted labels or other prediction outputs
+        """
+        raise NotImplementedError(
+            "Please implement _run_prediction() in your subclass!"
+        )
 
     def destroy(self):
+        """
+        Deletes the model from memory and empties the CUDA cache.
+        """
         del self.model
         cuda.empty_cache()
         time.sleep(3)
