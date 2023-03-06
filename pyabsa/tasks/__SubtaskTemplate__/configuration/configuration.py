@@ -260,10 +260,6 @@ class APCConfigManager(ConfigManager):
                 _apc_config_chinese.update(newitem)
             elif configType == "multilingual":
                 _apc_config_multilingual.update(newitem)
-            elif configType == "glove":
-                _apc_config_glove.update(newitem)
-            elif configType == "bert_baseline":
-                _apc_config_bert_baseline.update(newitem)
             else:
                 raise ValueError(
                     "Wrong value of configuration_class type supplied, please use one from following type: template, base, english, chinese, multilingual, glove, bert_baseline"
@@ -324,14 +320,4 @@ class APCConfigManager(ConfigManager):
     @staticmethod
     def get_apc_config_multilingual():
         _apc_config_template.update(_apc_config_multilingual)
-        return APCConfigManager(copy.deepcopy(_apc_config_template))
-
-    @staticmethod
-    def get_apc_config_glove():
-        _apc_config_template.update(_apc_config_glove)
-        return APCConfigManager(copy.deepcopy(_apc_config_template))
-
-    @staticmethod
-    def get_apc_config_bert_baseline():
-        _apc_config_template.update(_apc_config_bert_baseline)
         return APCConfigManager(copy.deepcopy(_apc_config_template))
