@@ -7,7 +7,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 __name__ = "pyabsa"
-__version__ = "2.0.29"
+__version__ = "2.1.0"
 
 from pyabsa.framework.flag_class import *
 
@@ -42,6 +42,7 @@ from pyabsa.framework.dataset_class.dataset_dict_class import DatasetDict
 from pyabsa.tasks import (
     AspectPolarityClassification,
     AspectTermExtraction,
+    AspectSentimentTripletExtraction,
     TextClassification,
     TextAdversarialDefense,
     RNAClassification,
@@ -52,6 +53,7 @@ from pyabsa.tasks import (
 from pyabsa.framework.checkpoint_class.checkpoint_template import (
     APCCheckpointManager,
     ATEPCCheckpointManager,
+    ASTECheckpointManager,
     TCCheckpointManager,
     TADCheckpointManager,
     RNACCheckpointManager,

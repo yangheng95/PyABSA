@@ -14,57 +14,13 @@ import tqdm
 from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__lcf__.apc_utils import (
     configure_spacy_model,
 )
-from pyabsa.tasks.AspectSentimentTripletExtraction.dataset_utils.aste_utils import (
+from ..dataset_utils.aste_utils import (
     VocabHelp,
     Instance,
 )
 
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.utils.pyabsa_utils import fprint
-
-
-def generate_tags(tokens, start, end, scheme):
-    # print('Generating tags for tokens: ', tokens)
-    if scheme == "BIO":
-        tags = ["O"] * len(tokens)
-        tags[start] = "B"
-        for i in range(start + 1, end + 1):
-            tags[i] = "I"
-        return " ".join([f"{token}\\{tag}" for token, tag in zip(tokens, tags)])
-    elif scheme == "IOB2":
-        tags = ["O"] * len(tokens)
-        tags[start] = "B"
-        for i in range(start + 1, end + 1):
-            tags[i] = "I"
-        if end < len(tokens) - 1 and tags[end + 1] == "I":
-            tags[end] = "B"
-        return " ".join([f"{token}\\{tag}" for token, tag in zip(tokens, tags)])
-    else:
-        raise ValueError(f"Invalid tagging scheme '{scheme}'.")
-
-
-def load_tokens(data):
-    tokens = []
-    deprel = []
-    postag = []
-    postag_ca = []
-
-    max_len = 0
-    sentence = data["sentence"].split()
-    tokens.extend(sentence)
-    deprel.extend(data["deprel"])
-    postag_ca.extend(data["postag"])
-    # postag.extend(d['postag'])
-    n = len(data["postag"])
-    tmp_pos = []
-    for i in range(n):
-        for j in range(n):
-            tup = tuple(sorted([data["postag"][i], data["postag"][j]]))
-            tmp_pos.append(tup)
-    postag.extend(tmp_pos)
-
-    max_len = max(len(sentence), max_len)
-    return tokens, deprel, postag, postag_ca, max_len
 
 
 class ASTEInferenceDataset:
@@ -102,12 +58,10 @@ class ASTEInferenceDataset:
         if isinstance(text, str):
             text = [text]
         _data = []
-        for example in text:
-            if not example.count("####"):
-                example = example.strip() + "####[]"
-            _data.append(self.process_data([example], ignore_error))
-
-        self.data = _data
+        for i in range(len(text)):
+            if not text[i].count("####"):
+                text[i] = text[i].strip() + "####[]"
+        self.process_data(text, ignore_error)
 
     def prepare_infer_dataset(self, target_file, ignore_error=True):
         examples = load_dataset_from_file(target_file, self.config)
@@ -115,20 +69,21 @@ class ASTEInferenceDataset:
         for i in range(len(examples)):
             if not examples[i].count("####"):
                 examples[i] = examples[i].strip() + "####[]"
-        _data.append(self.process_data(examples, ignore_error))
-
-        self.data = _data
+        self.process_data(examples, ignore_error)
 
     def load_data_from_dict(self, data_dict, **kwargs):
         pass
 
     def process_data(self, samples, ignore_error=True):
-        prepared_data = None
         sentence = ""
-
+        self.data = []
+        if len(samples) > 1:
+            it = tqdm.tqdm(samples, desc="preparing dataloader")
+        else:
+            it = samples
         # record polarities type to update output_dim
         label_set = set()
-        for ex_id in tqdm.tqdm(range(0, len(samples)), desc="preparing dataloader"):
+        for ex_id, sample in enumerate(it):
             try:
                 if samples[ex_id].count("####"):
                     sentence, annotations = samples[ex_id].split("####")
@@ -144,14 +99,17 @@ class ASTEInferenceDataset:
                 annotations = eval(annotations)
 
                 prepared_data = self.get_syntax_annotation(sentence, annotations)
-                prepared_data["id"] = ex_id
                 tokens, deprel, postag, postag_ca, max_len = load_tokens(prepared_data)
                 self.all_tokens.extend(tokens)
                 self.all_deprel.extend(deprel)
                 self.all_postag.extend(postag)
                 self.all_postag_ca.extend(postag_ca)
                 self.all_max_len.append(max_len)
-                label_set.add(annotation[-1] for annotation in annotations)
+                prepared_data["id"] = ex_id
+                for annotation in annotations:
+                    label_set.add(annotation[-1])
+
+                self.data.append(prepared_data)
 
             except Exception as e:
                 if ignore_error:
@@ -166,8 +124,6 @@ class ASTEInferenceDataset:
                             sentence, e
                         )
                     )
-
-        return prepared_data
 
     def __init__(self, config, tokenizer, dataset_type="train"):
         self.data = None
@@ -186,21 +142,24 @@ class ASTEInferenceDataset:
         return len(self.data)
 
     def convert_examples_to_features(self):
-        self.get_vocabs()
         _data = []
-        for data in tqdm.tqdm(self.data, desc="converting data to features"):
+        if len(self.data) > 1:
+            it = tqdm.tqdm(self.data, desc="converting data to features")
+        else:
+            it = self.data
+        for data in it:
             try:
                 feat = Instance(
                     self.tokenizer,
                     data,
-                    self.post_vocab,
-                    self.deprel_vocab,
-                    self.postag_vocab,
-                    self.syn_post_vocab,
+                    self.config.post_vocab,
+                    self.config.deprel_vocab,
+                    self.config.postag_vocab,
+                    self.config.syn_post_vocab,
                     self.config,
                 )
                 _data.append(feat)
-            except Exception as e:
+            except IndexError as e:
                 fprint(
                     "Processing error for: {}. Exception: {}".format(
                         data["sentence"], e
@@ -300,42 +259,46 @@ class ASTEInferenceDataset:
 
         return postags, heads, deprels
 
-    def get_vocabs(self):
-        if (
-            self.syn_post_vocab is None
-            and self.postag_vocab is None
-            and self.deprel_vocab is None
-            and self.syn_post_vocab is None
-            and self.token_vocab is None
-        ):
-            token_counter = Counter(self.all_tokens)
-            deprel_counter = Counter(self.all_deprel)
-            postag_counter = Counter(self.all_postag)
-            postag_ca_counter = Counter(self.all_postag_ca)
-            # deprel_counter['ROOT'] = 1
-            deprel_counter["self"] = 1
 
-            max_len = max(self.all_max_len)
-            # post_counter = Counter(list(range(-max_len, max_len)))
-            post_counter = Counter(list(range(0, max_len)))
-            syn_post_counter = Counter(list(range(0, 5)))
+def generate_tags(tokens, start, end, scheme):
+    # print('Generating tags for tokens: ', tokens)
+    if scheme == "BIO":
+        tags = ["O"] * len(tokens)
+        tags[start] = "B"
+        for i in range(start + 1, end + 1):
+            tags[i] = "I"
+        return " ".join([f"{token}\\{tag}" for token, tag in zip(tokens, tags)])
+    elif scheme == "IOB2":
+        tags = ["O"] * len(tokens)
+        tags[start] = "B"
+        for i in range(start + 1, end + 1):
+            tags[i] = "I"
+        if end < len(tokens) - 1 and tags[end + 1] == "I":
+            tags[end] = "B"
+        return " ".join([f"{token}\\{tag}" for token, tag in zip(tokens, tags)])
+    else:
+        raise ValueError(f"Invalid tagging scheme '{scheme}'.")
 
-            # build vocab
-            print("building vocab...")
-            token_vocab = VocabHelp(token_counter, specials=["<pad>", "<unk>"])
-            post_vocab = VocabHelp(post_counter, specials=["<pad>", "<unk>"])
-            deprel_vocab = VocabHelp(deprel_counter, specials=["<pad>", "<unk>"])
-            postag_vocab = VocabHelp(postag_counter, specials=["<pad>", "<unk>"])
-            syn_post_vocab = VocabHelp(syn_post_counter, specials=["<pad>", "<unk>"])
-            # print("token_vocab: {}, post_vocab: {}, syn_post_vocab: {}, deprel_vocab: {}, postag_vocab: {}".format(
-            #     len(token_vocab), len(post_vocab), len(syn_post_vocab), len(deprel_vocab), len(postag_vocab)))
 
-            self.token_vocab = token_vocab
-            self.post_vocab = post_vocab
-            self.deprel_vocab = deprel_vocab
-            self.postag_vocab = postag_vocab
-            self.syn_post_vocab = syn_post_vocab
-            self.config.post_size = len(post_vocab)
-            self.config.deprel_size = len(deprel_vocab)
-            self.config.postag_size = len(postag_vocab)
-            self.config.synpost_size = len(syn_post_vocab)
+def load_tokens(data):
+    tokens = []
+    deprel = []
+    postag = []
+    postag_ca = []
+
+    max_len = 0
+    sentence = data["sentence"].split()
+    tokens.extend(sentence)
+    deprel.extend(data["deprel"])
+    postag_ca.extend(data["postag"])
+    # postag.extend(d['postag'])
+    n = len(data["postag"])
+    tmp_pos = []
+    for i in range(n):
+        for j in range(n):
+            tup = tuple(sorted([data["postag"][i], data["postag"][j]]))
+            tmp_pos.append(tup)
+    postag.extend(tmp_pos)
+
+    max_len = max(len(sentence), max_len)
+    return tokens, deprel, postag, postag_ca, max_len

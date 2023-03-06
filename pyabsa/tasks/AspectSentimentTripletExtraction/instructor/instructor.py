@@ -20,7 +20,7 @@ from pyabsa.tasks.AspectSentimentTripletExtraction.dataset_utils.aste_utils impo
     DataIterator,
     Metric,
 )
-from pyabsa.utils.pyabsa_utils import fprint, init_optimizer
+from pyabsa.utils.pyabsa_utils import fprint, init_optimizer, print_args
 
 from pyabsa.utils.file_utils.file_utils import save_model
 
@@ -80,6 +80,8 @@ class ASTETrainingInstructor(BaseTrainingInstructor):
         self._load_dataset_and_prepare_dataloader()
 
         self._init_misc()
+
+        print_args(self.config)
 
     def _prepare_dataloader(self):
         """
@@ -204,7 +206,7 @@ class ASTETrainingInstructor(BaseTrainingInstructor):
         weight = (
             torch.tensor([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0])
             .float()
-            .cuda()
+            .to(self.config.device)
         )
 
         for epoch in range(self.config.num_epoch):

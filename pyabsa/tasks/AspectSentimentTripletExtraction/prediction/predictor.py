@@ -9,21 +9,24 @@ from typing import Union
 import torch
 from findfile import find_file
 
-from ..dataset_utils.data_utils_for_inference import ASTEInferenceDataset
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from torch import nn
 from tqdm import tqdm
 
 from pyabsa import DeviceTypeOption
-from pyabsa.tasks.AspectSentimentTripletExtraction.dataset_utils.aste_utils import (
-    DataIterator,
-    Metric,
-)
+
 from pyabsa.utils.pyabsa_utils import fprint, set_device, print_args
 
 from pyabsa.framework.flag_class import TaskCodeOption
 
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
+from pyabsa.tasks.AspectSentimentTripletExtraction.dataset_utils.data_utils_for_inference import (
+    ASTEInferenceDataset,
+)
+from pyabsa.tasks.AspectSentimentTripletExtraction.dataset_utils.aste_utils import (
+    DataIterator,
+    Metric,
+)
 
 
 class AspectSentimentTripletExtractor(InferenceModel):
@@ -169,7 +172,7 @@ class AspectSentimentTripletExtractor(InferenceModel):
         )
 
         target_file = detect_infer_dataset(
-            target_file, task_code=TaskCodeOption.Aspect_Polarity_Classification
+            target_file, task_code=TaskCodeOption.Aspect_Sentiment_Triplet_Extraction
         )
         if not target_file:
             raise FileNotFoundError("Can not find inference datasets!")
@@ -212,19 +215,10 @@ class AspectSentimentTripletExtractor(InferenceModel):
                 self.dataset.convert_examples_to_features(), self.config
             )
             if len(self.dataset) > 1:
-                it = tqdm(
-                    data_loader, desc="Predicting", disable=not self.config.verbose
-                )
-            for i in enumerate(data_loader):
+                it = tqdm(data_loader, desc="Predicting")
+            else:
                 it = data_loader
             for i, batch in enumerate(it):
-                all_ids = []
-                all_sentences = []
-                all_preds = []
-                all_labels = []
-                all_lengths = []
-                all_sens_lengths = []
-                all_token_ranges = []
                 (
                     sentence_ids,
                     sentences,
@@ -254,29 +248,45 @@ class AspectSentimentTripletExtractor(InferenceModel):
                 preds = self.model(inputs)[-1]
                 preds = nn.functional.softmax(preds, dim=-1)
                 preds = torch.argmax(preds, dim=3)
-                all_preds.extend(preds)
-                all_labels.extend(tags)
-                all_lengths.extend(lengths)
-                all_sens_lengths.extend(sens_lens)
-                all_token_ranges.extend(token_ranges)
-                all_ids.extend(sentence_ids)
-                all_sentences.extend(sentences)
+
                 metric = Metric(
                     self.config,
-                    all_preds,
-                    all_labels,
-                    all_lengths,
-                    all_sens_lengths,
-                    all_token_ranges,
+                    preds,
+                    tags,
+                    lengths,
+                    sens_lens,
+                    token_ranges,
                 )
-                results = metric.parse_triplet()
 
-                new_result = {"sentence_id": "", "sentence": "", "Triplets": []}
+                new_result = {
+                    "sentence_id": "",
+                    "sentence": "",
+                    "Triplets": [],
+                    "True Triplets": [],
+                }
+
+                try:
+                    results = metric.parse_triplet(golden=True)
+                    for j, triplets in enumerate(results[0]):
+                        for k, triplet in enumerate(triplets):
+                            asp_head, asp_tail, opn_head, opn_tail, polarity = triplet
+                            triplet = {
+                                "Aspect": " ".join(
+                                    sentences[j].split()[asp_head : asp_tail + 1]
+                                ),
+                                "Opinion": " ".join(
+                                    sentences[j].split()[opn_head : opn_tail + 1]
+                                ),
+                                "Polarity": self.config.index_to_label[polarity],
+                            }
+                            new_result["True Triplets"].append(triplet)
+                        all_results.append(new_result)
+                except Exception as e:
+                    results = metric.parse_triplet(golden=False)
+
                 # Print results
                 for j, triplets in enumerate(results[1]):
-                    fprint("Sentence ID:", sentence_ids[j])
                     new_result["sentence_id"] = sentence_ids[j]
-                    fprint("Sentence:", sentences[j])
                     new_result["sentence"] = sentences[j]
 
                     for k, triplet in enumerate(triplets):
@@ -291,9 +301,10 @@ class AspectSentimentTripletExtractor(InferenceModel):
                             "Polarity": self.config.index_to_label[polarity],
                         }
                         new_result["Triplets"].append(triplet)
-                        fprint(triplet)
-
                     all_results.append(new_result)
+
+            for result in all_results:
+                fprint(result)
 
             return all_results
 

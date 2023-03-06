@@ -6,12 +6,15 @@
 # huggingface: https://huggingface.co/yangheng
 # google scholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # Copyright (C) 2021. All Rights Reserved.
+import json
 
 import math
 import pickle
 
 import torch
 from collections import OrderedDict, defaultdict
+
+from sklearn import metrics
 from transformers import BertTokenizer
 
 label = ["N", "B-A", "I-A", "A", "B-O", "I-O", "O", "Negative", "Neutral", "Positive"]
@@ -577,33 +580,41 @@ class Metric:
         )
         return precision, recall, f1
 
-    def parse_triplet(self):
+    def parse_triplet(self, golden=True):
         all_golden_tuples = []
         all_predicted_tuples = []
-        assert len(self.predictions) == len(self.goldens)
-        golden_set = set()
         for i in range(self.data_num):
-            golden_aspect_spans = get_aspects(
-                self.goldens[i], self.sen_lengths[i], self.tokens_ranges[i], self.config
-            )
-            golden_opinion_spans = get_opinions(
-                self.goldens[i], self.sen_lengths[i], self.tokens_ranges[i], self.config
-            )
-            if self.config.task == "pair":
-                golden_tuples = self.find_pair(
+            if golden:
+                assert len(self.predictions) == len(self.goldens)
+                golden_aspect_spans = get_aspects(
                     self.goldens[i],
-                    golden_aspect_spans,
-                    golden_opinion_spans,
+                    self.sen_lengths[i],
                     self.tokens_ranges[i],
+                    self.config,
                 )
-            elif self.config.task == "triplet":
-                golden_tuples = self.find_triplet(
+                golden_opinion_spans = get_opinions(
                     self.goldens[i],
-                    golden_aspect_spans,
-                    golden_opinion_spans,
+                    self.sen_lengths[i],
                     self.tokens_ranges[i],
+                    self.config,
                 )
-            all_golden_tuples.append(golden_tuples)
+                if self.config.task == "pair":
+                    golden_tuples = self.find_pair(
+                        self.goldens[i],
+                        golden_aspect_spans,
+                        golden_opinion_spans,
+                        self.tokens_ranges[i],
+                    )
+                elif self.config.task == "triplet":
+                    golden_tuples = self.find_triplet(
+                        self.goldens[i],
+                        golden_aspect_spans,
+                        golden_opinion_spans,
+                        self.tokens_ranges[i],
+                    )
+                else:
+                    raise ValueError("Unknown task type: {}".format(self.config.task))
+                all_golden_tuples.append(golden_tuples)
 
             predicted_aspect_spans = get_aspects(
                 self.predictions[i],
@@ -631,6 +642,8 @@ class Metric:
                     predicted_opinion_spans,
                     self.tokens_ranges[i],
                 )
+            else:
+                raise ValueError("task must be pair or triplet")
             all_predicted_tuples.append(predicted_tuples)
         return all_golden_tuples, all_predicted_tuples
 

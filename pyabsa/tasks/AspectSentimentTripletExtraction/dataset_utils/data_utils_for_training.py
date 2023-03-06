@@ -70,13 +70,6 @@ def load_tokens(data):
 
 
 class ASTEDataset(PyABSADataset):
-    syn_post_vocab = None
-    postag_vocab = None
-    deprel_vocab = None
-    post_vocab = None
-    syn_post_vocab = None
-    token_vocab = None
-
     all_tokens = []
     all_deprel = []
     all_postag = []
@@ -160,10 +153,10 @@ class ASTEDataset(PyABSADataset):
                 feat = Instance(
                     self.tokenizer,
                     data,
-                    self.post_vocab,
-                    self.deprel_vocab,
-                    self.postag_vocab,
-                    self.syn_post_vocab,
+                    self.config.post_vocab,
+                    self.config.deprel_vocab,
+                    self.config.postag_vocab,
+                    self.config.syn_post_vocab,
                     self.config,
                 )
                 _data.append(feat)
@@ -268,11 +261,11 @@ class ASTEDataset(PyABSADataset):
 
     def get_vocabs(self):
         if (
-            self.syn_post_vocab is None
-            and self.postag_vocab is None
-            and self.deprel_vocab is None
-            and self.syn_post_vocab is None
-            and self.token_vocab is None
+            self.config.get("syn_post_vocab") is None
+            and self.config.get("postag_vocab") is None
+            and self.config.get("deprel_vocab") is None
+            and self.config.get("syn_post_vocab") is None
+            and self.config.get("token_vocab") is None
         ):
             token_counter = Counter(self.all_tokens)
             deprel_counter = Counter(self.all_deprel)
@@ -296,11 +289,11 @@ class ASTEDataset(PyABSADataset):
             # print("token_vocab: {}, post_vocab: {}, syn_post_vocab: {}, deprel_vocab: {}, postag_vocab: {}".format(
             #     len(token_vocab), len(post_vocab), len(syn_post_vocab), len(deprel_vocab), len(postag_vocab)))
 
-            self.token_vocab = token_vocab
-            self.post_vocab = post_vocab
-            self.deprel_vocab = deprel_vocab
-            self.postag_vocab = postag_vocab
-            self.syn_post_vocab = syn_post_vocab
+            self.config.token_vocab = token_vocab
+            self.config.post_vocab = post_vocab
+            self.config.deprel_vocab = deprel_vocab
+            self.config.postag_vocab = postag_vocab
+            self.config.syn_post_vocab = syn_post_vocab
             self.config.post_size = len(post_vocab)
             self.config.deprel_size = len(deprel_vocab)
             self.config.postag_size = len(postag_vocab)

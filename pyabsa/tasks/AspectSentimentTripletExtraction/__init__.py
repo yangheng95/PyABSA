@@ -7,7 +7,7 @@
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
 
-# for Aspect-based Sentiment Classification
+# for Aspect-sentiment-triplet-extraction
 from .trainer.trainer import ASTETrainer
 from .configuration.configuration import ASTEConfigManager
 from .models import ASTEModelList

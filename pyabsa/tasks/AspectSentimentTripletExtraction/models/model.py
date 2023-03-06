@@ -4,6 +4,12 @@ import torch.nn as nn
 import torch.nn.functional as F
 from transformers import AutoModel, AutoTokenizer
 
+# Redistributed under the Apache License, Version 2.0 (the "License");
+# Thanks for the authors who contributed to the great opensource work
+# Original code from:
+# https://github.com/CCChenhao997/EMCGCN-ASTE
+# https://github.com/NJUNLP/GTS
+
 
 class LayerNorm(nn.Module):
     "Construct a layernorm module (See citation for details)."
@@ -129,6 +135,7 @@ class Biaffine(nn.Module):
 
 
 class EMCGCN(torch.nn.Module):
+    # Input names
     inputs = [
         "tokens",
         "masks",
@@ -141,10 +148,14 @@ class EMCGCN(torch.nn.Module):
     def __init__(self, config):
         super(EMCGCN, self).__init__()
         self.config = config
+        # Pretrained BERT model
         self.bert = AutoModel.from_pretrained(config.pretrained_bert)
+        # Tokenizer
         self.tokenizer = AutoTokenizer.from_pretrained(config.pretrained_bert)
+        # Dropout layer
         self.dropout_output = torch.nn.Dropout(config.emb_dropout)
 
+        # Embedding layers
         self.post_emb = torch.nn.Embedding(
             config.get("post_size"), config.output_dim, padding_idx=0
         )
@@ -158,18 +169,19 @@ class EMCGCN(torch.nn.Module):
             config.get("synpost_size"), config.output_dim, padding_idx=0
         )
 
+        # Biaffine layer
         self.triplet_biaffine = Biaffine(
             config, config.gcn_dim, config.gcn_dim, config.output_dim, bias=(True, True)
         )
+
+        # Fully-connected layers
         self.ap_fc = nn.Linear(config.hidden_dim, config.gcn_dim)
         self.op_fc = nn.Linear(config.hidden_dim, config.gcn_dim)
-
         self.dense = nn.Linear(config.hidden_dim, config.gcn_dim)
+
+        # Graph convolutional layers
         self.num_layers = config.num_layers
         self.gcn_layers = nn.ModuleList()
-
-        self.layernorm = LayerNorm(config.hidden_dim)
-
         for i in range(self.num_layers):
             self.gcn_layers.append(
                 GraphConvLayer(
@@ -181,10 +193,11 @@ class EMCGCN(torch.nn.Module):
                 )
             )
 
-    def forward(
-        self,
-        inputs,
-    ):
+        # Layer normalization
+        self.layernorm = LayerNorm(config.hidden_dim)
+
+    def forward(self, inputs):
+        # Unpack inputs
         token_ids = inputs["token_ids"]
         masks = inputs["masks"]
         word_pair_position = inputs["word_pair_position"]
@@ -192,25 +205,28 @@ class EMCGCN(torch.nn.Module):
         word_pair_pos = inputs["word_pair_pos"]
         word_pair_synpost = inputs["word_pair_synpost"]
 
+        # BERT features
         bert_feature = self.bert(token_ids, masks)["last_hidden_state"]
         bert_feature = self.dropout_output(bert_feature)
 
+        # Mask for padded tokens
         batch, seq = masks.shape
         tensor_masks = masks.unsqueeze(1).expand(batch, seq, seq).unsqueeze(-1)
 
-        # * multi-feature
+        # Embedding layers
         word_pair_post_emb = self.post_emb(word_pair_position)
         word_pair_deprel_emb = self.deprel_emb(word_pair_deprel)
         word_pair_postag_emb = self.postag_emb(word_pair_pos)
         word_pair_synpost_emb = self.synpost_emb(word_pair_synpost)
 
-        # BiAffine
+        # BiAffine layer
         ap_node = F.relu(self.ap_fc(bert_feature))
         op_node = F.relu(self.op_fc(bert_feature))
         biaffine_edge = self.triplet_biaffine(ap_node, op_node)
         gcn_input = F.relu(self.dense(bert_feature))
         gcn_outputs = gcn_input
 
+        # Initialize weight probability list
         weight_prob_list = [
             biaffine_edge,
             word_pair_post_emb,
@@ -219,6 +235,7 @@ class EMCGCN(torch.nn.Module):
             word_pair_synpost_emb,
         ]
 
+        # Apply softmax to weight probabilities and mask padded tokens
         biaffine_edge_softmax = F.softmax(biaffine_edge, dim=-1) * tensor_masks
         word_pair_post_emb_softmax = (
             F.softmax(word_pair_post_emb, dim=-1) * tensor_masks
@@ -233,6 +250,7 @@ class EMCGCN(torch.nn.Module):
             F.softmax(word_pair_synpost_emb, dim=-1) * tensor_masks
         )
 
+        # Create identity matrix for self-loop connections
         self_loop = []
         for _ in range(batch):
             self_loop.append(torch.eye(seq))
@@ -244,6 +262,7 @@ class EMCGCN(torch.nn.Module):
             * tensor_masks.permute(0, 3, 1, 2).contiguous()
         )
 
+        # Concatenate weight probabilities
         weight_prob = torch.cat(
             [
                 biaffine_edge,
@@ -265,10 +284,11 @@ class EMCGCN(torch.nn.Module):
             dim=-1,
         )
 
+        # Apply graph convolutional layers
         for _layer in range(self.num_layers):
             gcn_outputs, weight_prob = self.gcn_layers[_layer](
                 weight_prob_softmax, weight_prob, gcn_outputs, self_loop
-            )  # [batch, seq, dim]
+            )
             weight_prob_list.append(weight_prob)
 
         return weight_prob_list

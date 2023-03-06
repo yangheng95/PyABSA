@@ -23,9 +23,9 @@ information and project address in your works, products and publications, etc.
 
 ## Try our demos on Huggingface Space
 
+- **[Aspect sentiment triplet extraction](https://huggingface.co/spaces/yangheng/PyABSA) (English) New feature**
 - [(Gradio) Aspect term extraction & sentiment classification](https://huggingface.co/spaces/Gradio-Blocks/Multilingual-Aspect-Based-Sentiment-Analysis) (
-  English,
-  Chinese, Arabic, Dutch, French, Russian, Spanish, Turkish, etc.)
+  English, Chinese, Arabic, Dutch, French, Russian, Spanish, Turkish, etc.)
 - [(Prototype) Aspect term extraction & sentiment classification](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) (
   English,
   Chinese, Arabic, Dutch, French, Russian, Spanish, Turkish, etc.)

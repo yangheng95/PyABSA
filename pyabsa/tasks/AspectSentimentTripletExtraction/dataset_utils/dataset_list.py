@@ -16,13 +16,17 @@ class ASTEDatasetList(list):
     The datasets are collected from different sources, you can use the id to locate the dataset.
     """
 
-    Laptop14 = DatasetItem("Laptop14", "113.Laptop14")
-    Restaurant14 = DatasetItem("Restaurant14", "114.Restaurant14")
+    Laptop14 = DatasetItem("Laptop14", "401.Laptop14")
+    Restaurant14 = DatasetItem("Restaurant14", "402.Restaurant14")
 
-    Restaurant15 = DatasetItem("Restaurant15", "115.Restaurant15")
-    Restaurant16 = DatasetItem("Restaurant16", "116.Restaurant16")
+    Restaurant15 = DatasetItem("Restaurant15", "403.Restaurant15")
+    Restaurant16 = DatasetItem("Restaurant16", "404.Restaurant16")
 
-    Chinese_Zhang = DatasetItem("Chinese_Zhang", ["130.Chinese_Zhang"])
+    SemEval = DatasetItem("SemEval", "400.SemEval")
+
+    Chinese_Zhang = DatasetItem("Chinese_Zhang", ["405.Chinese_Zhang"])
+
+    Multilingual = DatasetItem("Multilingual", ["ASTE"])
 
     def __init__(self):
         super(ASTEDatasetList, self).__init__(
@@ -31,5 +35,8 @@ class ASTEDatasetList(list):
                 self.Restaurant14,
                 self.Restaurant15,
                 self.Restaurant16,
+                self.SemEval,
+                self.Chinese_Zhang,
+                self.Multilingual,
             ]
         )

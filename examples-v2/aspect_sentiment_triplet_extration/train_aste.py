@@ -15,21 +15,27 @@ from pyabsa import (
     DatasetItem,
 )
 
-import pyabsa.tasks.AspectSentimentTripletExtraction as ASTE
+from pyabsa import AspectSentimentTripletExtraction as ASTE
 
 config = ASTE.ASTEConfigManager.get_aste_config_english()
-config.max_seq_len = 80
+config.max_seq_len = 200
 config.log_step = -1
-config.num_epoch = 1
+config.pretrained_bert = "microsoft/deberta-v3-base"
+config.num_epoch = 100
+config.learning_rate = 2e-5
+config.cache_dataset = False
+config.use_amp = True
 
-dataset = "Laptop14"
+# dataset = "Laptop14"
+# dataset = "aste"
+dataset = "semeval"
 trainer = ASTE.ASTETrainer(
     config=config,
     dataset=dataset,
     # from_checkpoint='english',
     checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
     # checkpoint_save_mode=ModelSaveOption.DO_NOT_SAVE_MODEL,
-    auto_device=DeviceTypeOption.AUTO,
+    auto_device=True,
 )
 triplet_extractor = trainer.load_trained_model()
 
