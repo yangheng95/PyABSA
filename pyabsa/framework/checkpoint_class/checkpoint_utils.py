@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: checkpoint_utils.py
 # time: 02/11/2022 21:39
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
@@ -9,6 +9,7 @@
 import json
 import os
 from distutils.version import StrictVersion
+from typing import Union, Dict, Any
 
 import requests
 import tqdm
@@ -22,6 +23,14 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 
 def parse_checkpoint_info(t_checkpoint_map, task_code, show_ckpts=False):
+    """
+    Prints available model checkpoints for a given task and version.
+
+    :param t_checkpoint_map: A dictionary of checkpoint information.
+    :param task_code: A string representing the task code (e.g. apc, atepc, tad, rnac_datasets, rnar, tc, etc.).
+    :param show_ckpts: A boolean flag indicating whether to show checkpoint information.
+    :return: A dictionary of checkpoint information.
+    """
     fprint(
         "*" * 10,
         colored(
@@ -54,20 +63,29 @@ def parse_checkpoint_info(t_checkpoint_map, task_code, show_ckpts=False):
                 fprint("-" * 100)
                 fprint("Checkpoint Name: {}".format(checkpoint_name))
                 for key in checkpoint:
-                    fprint("{}: {}".format(key, checkpoint[key]))
+                    if key != "id":
+                        fprint("{}: {}".format(key, checkpoint[key]))
                 fprint("-" * 100)
     return t_checkpoint_map
 
 
-def available_checkpoints(task_code: TaskCodeOption = None, show_ckpts=False):
+def available_checkpoints(
+    task_code: TaskCodeOption = None, show_ckpts: bool = False
+) -> Union[Dict[str, Any], Dict[str, Dict[str, Any]]]:
     """
-    :param task_code: see TaskCodeOption, e.g.
+    Retrieves the available checkpoints for a given task.
+
+    :param task_code: The code of the task. It should be one of the constants in TaskCodeOption, e.g. TaskCodeOption.Aspect_Polarity_Classification.
+        see TaskCodeOption:
         from pyabsa import TaskCodeOption
         TaskCodeOption.Aspect_Polarity_Classification
         TaskCodeOption.Aspect_Term_Extraction_and_Classification
         TaskCodeOption.Sentiment_Analysis
         TaskCodeOption.Text_Classification
         TaskCodeOption.Text_Adversarial_Defense
+    :param show_ckpts: A flag indicating whether to show detailed information about the checkpoints.
+    :return: A dictionary with the available checkpoints for the specified task. If no task code is provided, a dictionary with all available checkpoints is returned.
+    :param task_code:
     :param show_ckpts: show all checkpoints
     """
     if task_code is None:
@@ -108,7 +126,20 @@ def available_checkpoints(task_code: TaskCodeOption = None, show_ckpts=False):
     return t_checkpoint_map if task_code else checkpoint_map
 
 
-def download_checkpoint(task: str, language: str, checkpoint: dict):
+def download_checkpoint(task: str, language: str, checkpoint: dict) -> str:
+    """
+    Download a pretrained checkpoint for a given task and language.
+    The download_checkpoint() function downloads a checkpoint from a given URL using the requests library. It saves the downloaded checkpoint to a temporary directory with a name that corresponds to the task and language. If the checkpoint has already been downloaded and saved in the temporary directory, the function simply returns the directory path.
+    The function then unzips the downloaded checkpoint file, removes the zip file and returns the directory path of the unzipped checkpoint. If the download is unsuccessful, a ConnectionError is raised.
+
+    :param task: A string representing the task to download the checkpoint for (e.g. "sentiment_analysis").
+    :param language: A string representing the language to download the checkpoint for (e.g. "english").
+    :param checkpoint: A dictionary containing the information about the checkpoint to download.
+
+    :return: A string representing the path to the downloaded checkpoint.
+
+    """
+
     fprint(
         colored(
             "Notice: The pretrained model are used for testing, "

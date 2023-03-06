@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: extract_aspects.py
 # time: 2021/5/27 0027
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 from pyabsa import (
@@ -12,15 +12,14 @@ from pyabsa import (
 from pyabsa import TaskCodeOption
 
 checkpoint_map = available_checkpoints(
-    TaskCodeOption.Aspect_Term_Extraction_and_Classification, show_ckpts=True
+    TaskCodeOption.Aspect_Polarity_Classification, show_ckpts=True
 )
 # checkpoint_map = available_checkpoints()
 
 
 aspect_extractor = ATEPC.AspectExtractor(
     "multilingual",
-    auto_device=DeviceTypeOption.AUTO,
-    # data_num=100,
+    data_num=100,
 )
 # aspect_extractor = ATEPC.AspectExtractor('english', auto_device=DeviceTypeOption.AUTO)
 # aspect_extractor = ATEPC.AspectExtractor('chinese', auto_device=DeviceTypeOption.AUTO)

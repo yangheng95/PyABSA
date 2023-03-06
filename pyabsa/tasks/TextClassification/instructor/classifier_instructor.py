@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: classifier_instructor.py
 # time: 2021/4/22 0022
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
@@ -16,13 +16,7 @@ import torch.nn as nn
 from findfile import find_file
 from sklearn import metrics
 from torch import cuda
-from torch.utils.data import (
-    DataLoader,
-    random_split,
-    ConcatDataset,
-    RandomSampler,
-    SequentialSampler,
-)
+
 from tqdm import tqdm
 from transformers import AutoModel
 
@@ -90,16 +84,13 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                 )
             )
 
-    def _cache_or_load_dataset(self):
-        pass
-
     def _load_dataset_and_prepare_dataloader(self):
         cache_path = self.load_cache_dataset()
 
         # init BERT-based model and dataset
         if hasattr(BERTTCModelList, self.config.model.__name__):
             self.tokenizer = PretrainedTokenizer(self.config)
-            if cache_path is None or self.config.overwrite_cache:
+            if not os.path.exists(cache_path) or self.config.overwrite_cache:
                 self.train_set = BERTTCDataset(
                     self.config, self.tokenizer, dataset_type="train"
                 )
@@ -159,76 +150,8 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                 torch.load(find_file(ckpt, or_key=[".bin", "state_dict"]))
             )
 
-    def prepare_dataloader(self, train_set):
-        if self.config.cross_validate_fold < 1:
-            train_sampler = RandomSampler(
-                self.train_set if not self.train_set else self.train_set
-            )
-            self.train_dataloaders.append(
-                DataLoader(
-                    dataset=train_set,
-                    batch_size=self.config.batch_size,
-                    sampler=train_sampler,
-                    pin_memory=True,
-                )
-            )
-            if self.test_set:
-                self.test_dataloader = DataLoader(
-                    dataset=self.test_set,
-                    batch_size=self.config.batch_size,
-                    shuffle=False,
-                )
-
-            if self.valid_set:
-                self.valid_dataloader = DataLoader(
-                    dataset=self.valid_set,
-                    batch_size=self.config.batch_size,
-                    shuffle=False,
-                )
-        else:
-            split_dataset = train_set
-            len_per_fold = len(split_dataset) // self.config.cross_validate_fold + 1
-            folds = random_split(
-                split_dataset,
-                tuple(
-                    [len_per_fold] * (self.config.cross_validate_fold - 1)
-                    + [
-                        len(split_dataset)
-                        - len_per_fold * (self.config.cross_validate_fold - 1)
-                    ]
-                ),
-            )
-
-            for f_idx in range(self.config.cross_validate_fold):
-                train_set = ConcatDataset(
-                    [x for i, x in enumerate(folds) if i != f_idx]
-                )
-                val_set = folds[f_idx]
-                train_sampler = RandomSampler(train_set if not train_set else train_set)
-                val_sampler = SequentialSampler(val_set if not val_set else val_set)
-                self.train_dataloaders.append(
-                    DataLoader(
-                        dataset=train_set,
-                        batch_size=self.config.batch_size,
-                        sampler=train_sampler,
-                    )
-                )
-                self.valid_dataloaders.append(
-                    DataLoader(
-                        dataset=val_set,
-                        batch_size=self.config.batch_size,
-                        sampler=val_sampler,
-                    )
-                )
-                if self.test_set:
-                    self.test_dataloader = DataLoader(
-                        dataset=self.test_set,
-                        batch_size=self.config.batch_size,
-                        shuffle=False,
-                    )
-
     def _train(self, criterion):
-        self.prepare_dataloader(self.train_set)
+        self._prepare_dataloader()
 
         if self.config.warmup_step >= 0:
             self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
@@ -237,7 +160,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             )
             self.warmup_scheduler = warmup.UntunedLinearWarmup(self.optimizer)
 
-        if self.valid_dataloaders:
+        if len(self.valid_dataloaders) > 1:
             return self._k_fold_train_and_evaluate(criterion)
         else:
             return self._train_and_evaluate(criterion)
@@ -441,6 +364,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             )
 
         self.logger.info(self.config.MV.summary(no_print=True))
+        # self.logger.info(self.config.MV.short_summary(no_print=True))
 
         if self.valid_dataloader or self.config.save_mode:
             del self.train_dataloaders
@@ -650,7 +574,8 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                 max_fold_f1 * 100,
             )
 
-            self.logger.info(self.config.MV.summary(no_print=True))
+            # self.logger.info(self.config.MV.summary(no_print=True))
+            self.logger.info(self.config.MV.raw_summary(no_print=True))
             if os.path.exists("./init_state_dict.bin"):
                 self.reload_model()
 
@@ -677,7 +602,8 @@ class TCTrainingInstructor(BaseTrainingInstructor):
         )
 
         if self.config.cross_validate_fold > 0:
-            self.logger.info(self.config.MV.summary(no_print=True))
+            # self.logger.info(self.config.MV.summary(no_print=True))
+            self.logger.info(self.config.MV.raw_summary(no_print=True))
         # self.config.MV.summary()
 
         self.reload_model(save_path_k_fold)

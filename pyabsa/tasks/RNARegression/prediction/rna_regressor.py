@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # file: rna_regressor.py
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # Copyright (C) 2020. All Rights Reserved.
 import json
 import os
@@ -32,7 +32,7 @@ from pyabsa.framework.tokenizer_class.tokenizer_class import (
 class RNARegressor(InferenceModel):
     task_code = TaskCodeOption.RNASequenceRegression
 
-    def __init__(self, checkpoint=None, cal_perplexity=False, **kwargs):
+    def __init__(self, checkpoint=None, **kwargs):
         """
         from_train_model: load inference model from trained model
         """
@@ -153,24 +153,6 @@ class RNARegressor(InferenceModel):
             )
 
         self.__post_init__(**kwargs)
-
-    def to(self, device=None):
-        self.config.device = device
-        self.model.to(device)
-        if hasattr(self, "MLM"):
-            self.MLM.to(self.config.device)
-
-    def cpu(self):
-        self.config.device = DeviceTypeOption.CPU
-        self.model.to(DeviceTypeOption.CPU)
-        if hasattr(self, "MLM"):
-            self.MLM.to(DeviceTypeOption.CPU)
-
-    def cuda(self, device="cuda:0"):
-        self.config.device = device
-        self.model.to(device)
-        if hasattr(self, "MLM"):
-            self.MLM.to(device)
 
     def _log_write_args(self):
         n_trainable_params, n_nontrainable_params = 0, 0
@@ -433,3 +415,7 @@ class RNARegressor(InferenceModel):
 
     def clear_input_samples(self):
         self.dataset.all_data = []
+
+
+class Predictor(RNARegressor):
+    pass

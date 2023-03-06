@@ -13,6 +13,17 @@ today = time.strftime("%Y%m%d %H%M%S", time.localtime(time.time()))
 
 
 def get_logger(log_path, log_name="", log_type="training_log"):
+    """
+    Create a logger object with file handler and console handler.
+
+    Args:
+        log_path (str): The root directory of the log files.
+        log_name (str): The name of the logger.
+        log_type (str): The type of the logger.
+
+    Returns:
+        logger: A configured logger object.
+    """
     if not log_path:
         log_dir = os.path.join(log_path, "logs")
     else:
@@ -24,24 +35,24 @@ def get_logger(log_path, log_name="", log_type="training_log"):
     log_path = os.path.join(full_path, "{}.log".format(log_type))
     logger = logging.getLogger(log_name)
     if not logger.handlers:
-        # 指定logger输出格式
+        # Specify logger output format.
         formatter = logging.Formatter("%(asctime)s %(levelname)s: %(message)s")
 
-        # 文件日志
+        # File handler.
         file_handler = logging.FileHandler(log_path, encoding="utf8")
-        file_handler.setFormatter(formatter)  # 可以通过setFormatter指定输出格式
+        file_handler.setFormatter(formatter)
         file_handler.setLevel(logging.INFO)
 
-        # 控制台日志
+        # Console handler.
         console_handler = logging.StreamHandler(sys.stdout)
-        console_handler.formatter = formatter  # 也可以直接给formatter赋值
+        console_handler.formatter = formatter
         console_handler.setLevel(logging.INFO)
 
-        # 为logger添加的日志处理器
+        # Add handlers to logger.
         logger.addHandler(file_handler)
         logger.addHandler(console_handler)
 
-        # 指定日志的最低输出级别，默认为WARN级别
+        # Set logger output level.
         logger.setLevel(logging.INFO)
 
     return logger

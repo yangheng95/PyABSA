@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: test_train_atepc.py
 # time: 2021/5/26 0026
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
@@ -549,8 +549,8 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                 self.config.max_test_metrics["max_ate_test_f1"],
             )
 
-        self.config.MV.summary(no_print=True)
         self.logger.info(self.config.MV.summary(no_print=True))
+        # self.logger.info(self.config.MV.short_summary(no_print=True))
 
         rolling_intv = 5
         df = pandas.DataFrame(losses)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # file: rna_classifier.py
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # Copyright (C) 2020. All Rights Reserved.
 import json
 import os
@@ -142,24 +142,6 @@ class RNAClassifier(InferenceModel):
             )
 
         self.__post_init__(**kwargs)
-
-    def to(self, device=None):
-        self.config.device = device
-        self.model.to(device)
-        if hasattr(self, "MLM"):
-            self.MLM.to(self.config.device)
-
-    def cpu(self):
-        self.config.device = DeviceTypeOption.CPU
-        self.model.to(DeviceTypeOption.CPU)
-        if hasattr(self, "MLM"):
-            self.MLM.to(DeviceTypeOption.CPU)
-
-    def cuda(self, device="cuda:0"):
-        self.config.device = device
-        self.model.to(device)
-        if hasattr(self, "MLM"):
-            self.MLM.to(device)
 
     def _log_write_args(self):
         n_trainable_params, n_nontrainable_params = 0, 0
@@ -430,3 +412,7 @@ class RNAClassifier(InferenceModel):
 
     def clear_input_samples(self):
         self.dataset.all_data = []
+
+
+class Predictor(RNAClassifier):
+    pass

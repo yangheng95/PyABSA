@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # file: text_classifier.py
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # Copyright (C) 2020. All Rights Reserved.
 import json
 import os
@@ -226,24 +226,6 @@ class TADTextClassifier(InferenceModel):
 
         self.__post_init__(**kwargs)
 
-    def to(self, device=None):
-        self.config.device = device
-        self.model.to(device)
-        if hasattr(self, "MLM"):
-            self.MLM.to(self.config.device)
-
-    def cpu(self):
-        self.config.device = DeviceTypeOption.CPU
-        self.model.to(DeviceTypeOption.CPU)
-        if hasattr(self, "MLM"):
-            self.MLM.to(DeviceTypeOption.CPU)
-
-    def cuda(self, device="cuda:0"):
-        self.config.device = device
-        self.model.to(device)
-        if hasattr(self, "MLM"):
-            self.MLM.to(device)
-
     def _log_write_args(self):
         n_trainable_params, n_nontrainable_params = 0, 0
         for p in self.model.parameters():
@@ -270,6 +252,14 @@ class TADTextClassifier(InferenceModel):
         defense: str = None,
         **kwargs
     ):
+        """
+        Batch prediction on an input file.
+        :param target_file: the path of the input file
+        :param print_result: whether to print the prediction results to the console
+        :param save_result: whether to save the prediction results to a file
+        :param ignore_error: whether to ignore errors during inference
+        :param defense: adversarial defense technique to use during inference
+        """
         return self.batch_predict(
             target_file=target_file,
             print_result=print_result,
@@ -287,6 +277,13 @@ class TADTextClassifier(InferenceModel):
         defense: str = None,
         **kwargs
     ):
+        """
+        Perform prediction on a single text or a list of texts.
+        :param text: the text(s) to perform prediction on
+        :param print_result: whether to print the prediction results to the console
+        :param ignore_error: whether to ignore errors during inference
+        :param defense: adversarial defense technique to use during inference
+        """
         return self.predict(
             text=text,
             print_result=print_result,
@@ -615,3 +612,7 @@ class TADTextClassifier(InferenceModel):
 
     def clear_input_samples(self):
         self.dataset.all_data = []
+
+
+class Predictor(TADTextClassifier):
+    pass

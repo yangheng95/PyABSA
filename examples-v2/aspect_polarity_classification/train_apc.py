@@ -1,31 +1,42 @@
 # -*- coding: utf-8 -*-
 # file: trainer.py
 # time: 2021/5/26 0026
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-import random
-
-from pyabsa.tasks.AspectPolarityClassification import APCDatasetList
 
 ########################################################################################################################
 #                    train and evaluate on your own apc_datasets (need train and test apc_datasets)                    #
 ########################################################################################################################
-
+import random
 from pyabsa import (
     AspectPolarityClassification as APC,
     ModelSaveOption,
     DeviceTypeOption,
+    DatasetItem,
 )
-import warnings
 
-warnings.filterwarnings("ignore")
+models = [
+    APC.APCModelList.FAST_LSA_T_V2,
+    APC.APCModelList.FAST_LSA_S_V2,
+    APC.APCModelList.BERT_SPC_V2,
+]
+
+datasets = DatasetItem(
+    [
+        APC.APCDatasetList.Laptop14,
+        APC.APCDatasetList.Restaurant14,
+        APC.APCDatasetList.Restaurant15,
+        APC.APCDatasetList.Restaurant16,
+        APC.APCDatasetList.MAMS,
+    ]
+)
 
 for dataset in [
-    APCDatasetList.Laptop14,
-    APCDatasetList.Restaurant14,
-    APCDatasetList.Restaurant15,
-    APCDatasetList.Restaurant16,
+    APC.APCDatasetList.Laptop14,
+    APC.APCDatasetList.Restaurant14,
+    APC.APCDatasetList.Restaurant15,
+    APC.APCDatasetList.Restaurant16,
     # APCDatasetList.MAMS
 ]:
     for model in [

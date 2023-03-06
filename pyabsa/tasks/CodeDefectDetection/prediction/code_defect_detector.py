@@ -33,7 +33,7 @@ class CodeDefectDetector(InferenceModel):
         from_train_model: load inference model from trained model
         """
 
-        super().__init__(checkpoint, cal_perplexity, task_code=self.task_code, **kwargs)
+        super().__init__(checkpoint, task_code=self.task_code, **kwargs)
 
         # load from a trainer
         if self.checkpoint and not isinstance(self.checkpoint, str):
@@ -144,24 +144,6 @@ class CodeDefectDetector(InferenceModel):
 
         self.__post_init__(**kwargs)
 
-    def to(self, device=None):
-        self.config.device = device
-        self.model.to(device)
-        if hasattr(self, "MLM"):
-            self.MLM.to(self.config.device)
-
-    def cpu(self):
-        self.config.device = DeviceTypeOption.CPU
-        self.model.to(DeviceTypeOption.CPU)
-        if hasattr(self, "MLM"):
-            self.MLM.to(DeviceTypeOption.CPU)
-
-    def cuda(self, device="cuda:0"):
-        self.config.device = device
-        self.model.to(device)
-        if hasattr(self, "MLM"):
-            self.MLM.to(device)
-
     def _log_write_args(self):
         n_trainable_params, n_nontrainable_params = 0, 0
         for p in self.model.parameters():
@@ -181,12 +163,25 @@ class CodeDefectDetector(InferenceModel):
 
     def batch_infer(
         self,
-        target_file=None,
-        print_result=True,
-        save_result=False,
-        ignore_error=True,
-        **kwargs
+        target_file=None,  # A file containing text inputs to perform inference on
+        print_result=True,  # Whether to print the result of each prediction
+        save_result=False,  # Whether to save the result of each prediction
+        ignore_error=True,  # Whether to ignore errors encountered during inference
+        **kwargs  # Additional keyword arguments to be passed to batch_predict method
     ):
+        """
+        Perform batch inference on a given target file.
+
+        Args:
+        - target_file: A file containing text inputs to perform inference on
+        - print_result: Whether to print the result of each prediction
+        - save_result: Whether to save the result of each prediction
+        - ignore_error: Whether to ignore errors encountered during inference
+        - **kwargs: Additional keyword arguments to be passed to batch_predict method
+
+        Returns:
+        - A list of prediction results
+        """
         return self.batch_predict(
             target_file=target_file,
             print_result=print_result,
@@ -197,11 +192,23 @@ class CodeDefectDetector(InferenceModel):
 
     def infer(
         self,
-        text: Union[str, list] = None,
-        print_result=True,
-        ignore_error=True,
-        **kwargs
+        text: Union[str, list] = None,  # The text inputs to perform inference on
+        print_result=True,  # Whether to print the result of each prediction
+        ignore_error=True,  # Whether to ignore errors encountered during inference
+        **kwargs  # Additional keyword arguments to be passed to predict method
     ):
+        """
+        Perform inference on a given text input.
+
+        Args:
+        - text: The text inputs to perform inference on
+        - print_result: Whether to print the result of each prediction
+        - ignore_error: Whether to ignore errors encountered during inference
+        - **kwargs: Additional keyword arguments to be passed to predict method
+
+        Returns:
+        - A list of prediction results
+        """
         return self.predict(
             text=text, print_result=print_result, ignore_error=ignore_error, **kwargs
         )
@@ -492,27 +499,56 @@ class CodeDefectDetector(InferenceModel):
                 "\n---------------------------- Classification Report ----------------------------\n"
             )
 
-            # report = metrics.confusion_matrix(targets_all, np.argmax(t_outputs_all, -1),
-            #                                   labels=[self.config.label_to_index[x]
-            #                                           for x in self.config.label_to_index])
-            # fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
-            # rprint(report)
-            # fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
-            #
-            # report = metrics.classification_report(targets_all, np.argmax(t_outputs_all, -1), digits=4,
-            #                                        target_names=[self.config.index_to_label[x] for x in
-            #                                                      self.config.index_to_label])
-            # fprint('\n---------------------------- Corrupt Detection Report ----------------------------\n')
-            # rprint(report)
-            # fprint('\n---------------------------- Corrupt Detection Report ----------------------------\n')
-            #
-            # report = metrics.confusion_matrix(c_targets_all, np.argmax(t_c_outputs_all, -1),
-            #                                   labels=[self.config.label_to_index[x]
-            #                                           for x in self.config.label_to_index])
-            # fprint('\n---------------------------- Corrupt Detection Confusion Matrix ----------------------------\n')
-            # rprint(report)
-            # fprint('\n---------------------------- Corrupt Detection Confusion Matrix ----------------------------\n')
+            report = metrics.confusion_matrix(
+                targets_all,
+                np.argmax(t_outputs_all, -1),
+                labels=[
+                    self.config.label_to_index[x] for x in self.config.label_to_index
+                ],
+            )
+            fprint(
+                "\n---------------------------- Confusion Matrix ----------------------------\n"
+            )
+            rprint(report)
+            fprint(
+                "\n---------------------------- Confusion Matrix ----------------------------\n"
+            )
+
+            report = metrics.classification_report(
+                targets_all,
+                np.argmax(t_outputs_all, -1),
+                digits=4,
+                target_names=[
+                    self.config.index_to_label[x] for x in self.config.index_to_label
+                ],
+            )
+            fprint(
+                "\n---------------------------- Corrupt Detection Report ----------------------------\n"
+            )
+            rprint(report)
+            fprint(
+                "\n---------------------------- Corrupt Detection Report ----------------------------\n"
+            )
+
+            report = metrics.confusion_matrix(
+                c_targets_all,
+                np.argmax(t_c_outputs_all, -1),
+                labels=[
+                    self.config.label_to_index[x] for x in self.config.label_to_index
+                ],
+            )
+            fprint(
+                "\n---------------------------- Corrupt Detection Confusion Matrix ----------------------------\n"
+            )
+            rprint(report)
+            fprint(
+                "\n---------------------------- Corrupt Detection Confusion Matrix ----------------------------\n"
+            )
         return results
 
     def clear_input_samples(self):
         self.dataset.all_data = []
+
+
+class Predictor(CodeDefectDetector):
+    pass

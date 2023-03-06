@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: data_utils_for_training.py
 # time: 02/11/2022 15:39
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
@@ -18,7 +18,11 @@ from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from .classic_glove_apc_utils import build_sentiment_window
 from .dependency_graph import prepare_dependency_graph, configure_spacy_model
-from pyabsa.utils.pyabsa_utils import check_and_fix_labels, validate_example, fprint
+from pyabsa.utils.pyabsa_utils import (
+    check_and_fix_labels,
+    validate_absa_example,
+    fprint,
+)
 
 
 class GloVeABSADataset(PyABSADataset):
@@ -71,7 +75,7 @@ class GloVeABSADataset(PyABSADataset):
             polarity = lines[i + 2].strip()
             # polarity = int(polarity)
 
-            if validate_example(text_raw, aspect, polarity, self.config):
+            if validate_absa_example(text_raw, aspect, polarity, self.config):
                 continue
 
             text_indices = self.tokenizer.text_to_sequence(

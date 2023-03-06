@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: trainer.py
 # time: 2021/5/26 0026
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 import random

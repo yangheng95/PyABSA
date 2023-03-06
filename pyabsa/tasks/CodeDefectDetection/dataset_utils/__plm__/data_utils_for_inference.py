@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: data_utils_for_inference.py
 # time: 02/11/2022 15:39
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
@@ -67,49 +67,19 @@ class BERTCDDInferenceDataset(Dataset):
                     padding="do_not_pad",
                     truncation=False,
                 )
-                code_ids = code_ids[1:-1]
-
-                if not self.config.get("sliding_window", False):
-                    code_ids = pad_and_truncate(
-                        code_ids,
-                        self.config.max_seq_len - 2,
-                        value=self.tokenizer.pad_token_id,
-                    )
+                code_ids = self.prepare_token_ids(
+                    code_ids, self.config.get("sliding_window", False)
+                )
+                for ids in code_ids:
                     all_data.append(
                         {
                             "ex_id": ex_id,
                             "code": code_src,
-                            "source_ids": [self.tokenizer.cls_token_id]
-                            + code_ids
-                            + [self.tokenizer.eos_token_id],
+                            "source_ids": ids,
                             "label": self.config.label_to_index[label],
                             "corrupt_label": 0,
                         }
                     )
-                else:
-                    for x in range(len(code_ids) // (self.config.max_seq_len - 2) + 1):
-                        _code_ids = code_ids[
-                            x
-                            * (self.config.max_seq_len - 2) : (x + 1)
-                            * (self.config.max_seq_len - 2)
-                        ]
-                        _code_ids = pad_and_truncate(
-                            _code_ids,
-                            self.config.max_seq_len - 2,
-                            value=self.tokenizer.pad_token_id,
-                        )
-                        if _code_ids:
-                            all_data.append(
-                                {
-                                    "ex_id": ex_id,
-                                    "code": code_src,
-                                    "source_ids": [self.tokenizer.cls_token_id]
-                                    + _code_ids
-                                    + [self.tokenizer.eos_token_id],
-                                    "label": self.config.label_to_index[label],
-                                    "corrupt_label": 0,
-                                }
-                            )
 
             except Exception as e:
                 if ignore_error:
@@ -122,6 +92,54 @@ class BERTCDDInferenceDataset(Dataset):
         self.data = PyABSADataset.covert_to_tensor(self.data)
 
         return self.data
+
+    def prepare_token_ids(self, code_ids, sliding_window=False):
+        all_code_ids = []
+        code_ids = code_ids[1:-1]
+        if sliding_window is False:
+            code_ids = pad_and_truncate(
+                code_ids,
+                self.config.max_seq_len - 2,
+                value=self.tokenizer.pad_token_id,
+            )
+            all_code_ids.append(
+                [self.tokenizer.cls_token_id] + code_ids + [self.tokenizer.eos_token_id]
+            )
+            if all_code_ids[-1].count(self.tokenizer.eos_token_id) != 1:
+                raise ValueError("last token id is not eos token id")
+            return all_code_ids
+
+        else:
+            code_ids = pad_and_truncate(
+                code_ids,
+                self.config.max_seq_len - 2,
+                value=self.tokenizer.pad_token_id,
+            )
+            # for x in range(len(code_ids) // ((self.config.max_seq_len - 2) // 2) + 1):
+            #     _code_ids = code_ids[x * (self.config.max_seq_len - 2) // 2:
+            #                          (x + 1) * (self.config.max_seq_len - 2) // 2 + (self.config.max_seq_len - 2) // 2]
+            #     print(x * (self.config.max_seq_len - 2) // 2)
+            #     print((x + 1) * (self.config.max_seq_len - 2) // 2 + (self.config.max_seq_len - 2) // 2)
+            for x in range(len(code_ids) // (self.config.max_seq_len - 2) + 1):
+                _code_ids = code_ids[
+                    x
+                    * (self.config.max_seq_len - 2) : (x + 1)
+                    * (self.config.max_seq_len - 2)
+                ]
+                _code_ids = pad_and_truncate(
+                    _code_ids,
+                    self.config.max_seq_len - 2,
+                    value=self.tokenizer.pad_token_id,
+                )
+                if _code_ids:
+                    all_code_ids.append(
+                        [self.tokenizer.cls_token_id]
+                        + _code_ids
+                        + [self.tokenizer.eos_token_id]
+                    )
+                if all_code_ids[-1].count(self.tokenizer.eos_token_id) != 1:
+                    raise ValueError("last token id is not eos token id")
+            return all_code_ids
 
     def __getitem__(self, index):
         return self.data[index]

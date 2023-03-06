@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # file: text_classifier.py
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # Copyright (C) 2020. All Rights Reserved.
 import json
 import os
@@ -34,7 +34,7 @@ class TextClassifier(InferenceModel):
         from_train_model: load inference model from trained model
         """
 
-        super().__init__(checkpoint, cal_perplexity, task_code=self.task_code, **kwargs)
+        super().__init__(checkpoint, task_code=self.task_code, **kwargs)
 
         # load from a trainer
         if self.checkpoint and not isinstance(self.checkpoint, str):
@@ -145,24 +145,6 @@ class TextClassifier(InferenceModel):
 
         self.__post_init__(**kwargs)
 
-    def to(self, device=None):
-        self.config.device = device
-        self.model.to(device)
-        if hasattr(self, "MLM"):
-            self.MLM.to(self.config.device)
-
-    def cpu(self):
-        self.config.device = DeviceTypeOption.CPU
-        self.model.to(DeviceTypeOption.CPU)
-        if hasattr(self, "MLM"):
-            self.MLM.to(DeviceTypeOption.CPU)
-
-    def cuda(self, device="cuda:0"):
-        self.config.device = device
-        self.model.to(device)
-        if hasattr(self, "MLM"):
-            self.MLM.to(device)
-
     def _log_write_args(self):
         n_trainable_params, n_nontrainable_params = 0, 0
         for p in self.model.parameters():
@@ -186,13 +168,25 @@ class TextClassifier(InferenceModel):
         print_result=True,
         save_result=False,
         ignore_error=True,
+        defense: str = None,
         **kwargs
     ):
+        """
+        Batch predicts the sentiment of a target file using the model.
+        :param target_file: The path to the target file.
+        :param print_result: Whether to print the result.
+        :param save_result: Whether to save the result.
+        :param ignore_error: Whether to ignore errors and continue.
+        :param defense: The adversarial defense to apply to the input text.
+        :param **kwargs: Additional keyword arguments.
+        :return: The predicted sentiment labels.
+        """
         return self.batch_predict(
             target_file=target_file,
             print_result=print_result,
             save_result=save_result,
             ignore_error=ignore_error,
+            defense=defense,
             **kwargs
         )
 
@@ -201,10 +195,24 @@ class TextClassifier(InferenceModel):
         text: Union[str, list] = None,
         print_result=True,
         ignore_error=True,
+        defense: str = None,
         **kwargs
     ):
+        """
+        Predicts the sentiment of a text using the model.
+        :param text: The input text.
+        :param print_result: Whether to print the result.
+        :param ignore_error: Whether to ignore errors and continue.
+        :param defense: The adversarial defense to apply to the input text.
+        :param **kwargs: Additional keyword arguments.
+        :return: The predicted sentiment labels.
+        """
         return self.predict(
-            text=text, print_result=print_result, ignore_error=ignore_error, **kwargs
+            text=text,
+            print_result=print_result,
+            ignore_error=ignore_error,
+            defense=defense,
+            **kwargs
         )
 
     def batch_predict(
@@ -461,3 +469,7 @@ class TextClassifier(InferenceModel):
 
     def clear_input_samples(self):
         self.dataset.all_data = []
+
+
+class Predictor(TextClassifier):
+    pass

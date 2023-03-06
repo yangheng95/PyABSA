@@ -1,7 +1,7 @@
 ﻿# -*- coding: utf-8 -*-
 # file: wrappers.py
 # time: 17:58 2023/1/7
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # huggingface: https://huggingface.co/yangheng
 # google scholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
@@ -9,7 +9,13 @@
 
 
 from multiprocessing import Process, Pipe
-from eventlet import spawn, sleep
+
+try:
+    from eventlet import spawn, sleep
+except Exception as e:
+    from time import sleep
+
+    print("eventlet not install, please install eventlet first")
 from functools import wraps
 
 import traceback

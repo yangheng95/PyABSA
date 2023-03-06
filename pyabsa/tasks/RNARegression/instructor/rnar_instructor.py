@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: classifier_instructor.py
 # time: 2021/4/22 0022
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
@@ -88,7 +88,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
         # init BERT-based model and dataset
         if hasattr(BERTRNARModelList, self.config.model.__name__):
             self.tokenizer = PretrainedTokenizer(self.config)
-            if cache_path is None or self.config.overwrite_cache:
+            if not os.path.exists(cache_path) or self.config.overwrite_cache:
                 self.train_set = BERTRNARDataset(
                     self.config, self.tokenizer, dataset_type="train"
                 )
@@ -237,7 +237,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
             )
             self.warmup_scheduler = warmup.UntunedLinearWarmup(self.optimizer)
 
-        if self.valid_dataloaders:
+        if len(self.valid_dataloaders) > 1:
             return self._k_fold_train_and_evaluate(criterion)
         else:
             return self._train_and_evaluate(criterion)
@@ -417,6 +417,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
             )
 
         self.logger.info(self.config.MV.summary(no_print=True))
+        # self.logger.info(self.config.MV.short_summary(no_print=True))
 
         if self.valid_dataloader or self.config.save_mode:
             del self.train_dataloaders
@@ -605,7 +606,8 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                 max_fold_r2,
             )
 
-            self.logger.info(self.config.MV.summary(no_print=True))
+            # self.logger.info(self.config.MV.summary(no_print=True))
+            self.logger.info(self.config.MV.raw_summary(no_print=True))
             if os.path.exists("./init_state_dict.bin"):
                 self.reload_model()
 
@@ -622,7 +624,8 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
         )
 
         if self.config.cross_validate_fold > 0:
-            self.logger.info(self.config.MV.summary(no_print=True))
+            # self.logger.info(self.config.MV.summary(no_print=True))
+            self.logger.info(self.config.MV.raw_summary(no_print=True))
         # self.config.MV.summary()
 
         self.reload_model(save_path_k_fold)

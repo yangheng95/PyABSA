@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: data_utils_for_inference.py
 # time: 02/11/2022 15:39
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
@@ -12,7 +12,7 @@ import tqdm
 
 from pyabsa import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
-from pyabsa.utils.pyabsa_utils import validate_example, fprint
+from pyabsa.utils.pyabsa_utils import validate_absa_example, fprint
 from .classic_glove_apc_utils import build_sentiment_window
 from .dependency_graph import dependency_adj_matrix, configure_spacy_model
 from ..__lcf__.data_utils_for_inference import ABSAInferenceDataset
@@ -62,7 +62,10 @@ class GloVeABSAInferenceDataset(ABSAInferenceDataset):
                 aspect = aspect.lower().strip()
                 text = text_left + " " + aspect + " " + text_right
 
-                if validate_example(text, aspect, polarity, self.config) or not aspect:
+                if (
+                    validate_absa_example(text, aspect, polarity, self.config)
+                    or not aspect
+                ):
                     continue
 
                 text_indices = self.tokenizer.text_to_sequence(
@@ -117,7 +120,7 @@ class GloVeABSAInferenceDataset(ABSAInferenceDataset):
                 )
                 if len(aspect_position) < 1:
                     raise RuntimeError("Invalid Input: {}".format(text))
-                validate_example(text, aspect, polarity, config=self.config)
+                validate_absa_example(text, aspect, polarity, config=self.config)
 
                 data = {
                     "ex_id": ex_id,

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # file: protein_regressor.py
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # Copyright (C) 2020. All Rights Reserved.
 import json
 import os
@@ -30,7 +30,7 @@ from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint
 class ProteinRegressor(InferenceModel):
     task_code = TaskCodeOption.ProteinSequenceRegression
 
-    def __init__(self, checkpoint=None, cal_perplexity=False, **kwargs):
+    def __init__(self, checkpoint=None, **kwargs):
         """
         from_train_model: load inference model from trained model
         """
@@ -146,24 +146,6 @@ class ProteinRegressor(InferenceModel):
 
         self.__post_init__(**kwargs)
 
-    def to(self, device=None):
-        self.config.device = device
-        self.model.to(device)
-        if hasattr(self, "MLM"):
-            self.MLM.to(self.config.device)
-
-    def cpu(self):
-        self.config.device = DeviceTypeOption.CPU
-        self.model.to(DeviceTypeOption.CPU)
-        if hasattr(self, "MLM"):
-            self.MLM.to(DeviceTypeOption.CPU)
-
-    def cuda(self, device="cuda:0"):
-        self.config.device = device
-        self.model.to(device)
-        if hasattr(self, "MLM"):
-            self.MLM.to(device)
-
     def _log_write_args(self):
         n_trainable_params, n_nontrainable_params = 0, 0
         for p in self.model.parameters():
@@ -191,11 +173,12 @@ class ProteinRegressor(InferenceModel):
     ):
         """
         Predict from a file of sentences.
-        param: target_file: the file path of the sentences to be predicted.
-        param: print_result: whether to print the result.
-        param: save_result: whether to save the result.
-        param: ignore_error: whether to ignore the error when predicting.
-        param: kwargs: other parameters.
+        :param target_file: the file path of the sentences to be predicted.
+        :param print_result: whether to print the result.
+        :param save_result: whether to save the result.
+        :param ignore_error: whether to ignore the error when predicting.
+        :param kwargs: other parameters.
+        :return: prediction result.
         """
         self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
 
@@ -206,12 +189,14 @@ class ProteinRegressor(InferenceModel):
             ),
         )
 
+        # Detect the type of inference dataset
         target_file = detect_infer_dataset(
             target_file, task_code=TaskCodeOption.ProteinSequenceRegression
         )
         if not target_file:
             raise FileNotFoundError("Can not find inference datasets!")
 
+        # Prepare inference dataset
         self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
         self.infer_dataloader = DataLoader(
             dataset=self.dataset,
@@ -219,6 +204,7 @@ class ProteinRegressor(InferenceModel):
             pin_memory=True,
             shuffle=False,
         )
+
         return self._run_prediction(
             save_path=save_path if save_result else None, print_result=print_result
         )
@@ -232,22 +218,28 @@ class ProteinRegressor(InferenceModel):
     ):
         """
         Predict from a sentence or a list of sentences.
-        param: text: the sentence or a list of sentence to be predicted.
-        param: print_result: whether to print the result.
-        param: ignore_error: whether to ignore the error when predicting.
-        param: kwargs: other parameters.
+        :param text: the sentence or a list of sentence to be predicted.
+        :param print_result: whether to print the result.
+        :param ignore_error: whether to ignore the error when predicting.
+        :param kwargs: other parameters.
+        :return: prediction result.
         """
         self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
         self.infer_dataloader = DataLoader(
             dataset=self.dataset, batch_size=self.config.eval_batch_size, shuffle=False
         )
+
         if text:
+            # Prepare inference sample
             self.dataset.prepare_infer_sample(text, ignore_error=ignore_error)
         else:
             raise RuntimeError("Please specify your datasets path!")
+
         if isinstance(text, str):
+            # Run prediction for a single sentence
             return self._run_prediction(print_result=print_result)[0]
         else:
+            # Run prediction for a list of sentences
             return self._run_prediction(print_result=print_result)
 
     def _run_prediction(self, save_path=None, print_result=True):
@@ -425,3 +417,7 @@ class ProteinRegressor(InferenceModel):
 
     def clear_input_samples(self):
         self.dataset.all_data = []
+
+
+class Predictor(ProteinRegressor):
+    pass

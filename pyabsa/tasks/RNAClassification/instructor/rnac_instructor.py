@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: rnac_instructor.py
 # time: 03/11/2022 19:46
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
@@ -276,6 +276,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             )
 
         self.logger.info(self.config.MV.summary(no_print=True))
+        # self.logger.info(self.config.MV.short_summary(no_print=True))
 
         if self.valid_dataloader or self.config.save_mode:
             del self.train_dataloaders
@@ -488,7 +489,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 max_fold_f1 * 100,
             )
 
-            self.logger.info(self.config.MV.summary(no_print=True))
+            # self.logger.info(self.config.MV.summary(no_print=True))
+            self.logger.info(self.config.MV.raw_summary(no_print=True))
             self._reload_model_state_dict("./init_state_dict.bin")
 
         max_test_acc = np.max(fold_test_acc)
@@ -502,7 +504,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         )
 
         if self.config.cross_validate_fold > 0:
-            self.logger.info(self.config.MV.summary(no_print=True))
+            # self.logger.info(self.config.MV.summary(no_print=True))
+            self.logger.info(self.config.MV.raw_summary(no_print=True))
         # self.config.MV.summary()
 
         self._reload_model_state_dict(save_path_k_fold)
@@ -605,7 +608,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         # init BERT-based model and dataset
         if hasattr(BERTRNACModelList, self.config.model.__name__):
             self.tokenizer = PretrainedTokenizer(self.config)
-            if cache_path is None or self.config.overwrite_cache:
+            if not os.path.exists(cache_path) or self.config.overwrite_cache:
                 self.train_set = BERTRNACDataset(
                     self.config, self.tokenizer, dataset_type="train"
                 )

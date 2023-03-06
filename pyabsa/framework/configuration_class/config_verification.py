@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: config_verification.py
 # time: 02/11/2022 17:05
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
@@ -14,6 +14,29 @@ one_shot_messages = set()
 
 
 def config_check(args):
+    """
+    Check the validity of the training configuration arguments.
+
+    The config_check function performs a set of assertion checks on the arguments passed to it. The function checks for the validity of the following arguments:
+        SRD: The span range difference parameter, which should be a non-negative integer.
+        lcf: The local context focus parameter, which should be one of "cdw", "cdm", or "fusion".
+        window: The window parameter, which should be one of "l", "r", or "lr".
+        eta: The learning rate parameter, which should be either -1 or a float between 0 and 1.
+        similarity_threshold: The similarity threshold parameter, which should be a float between 0 and 1.
+        evaluate_begin: The evaluation starting epoch, which should be a non-negative integer less than num_epoch.
+        cross_validate_fold: The number of cross-validation folds, which should be either -1 or a positive integer greater than 1 and less than or equal to 10.
+        dlcf_a: The LCF activation rate parameter, which should be greater than 1.
+        dca_p: The dropout probability parameter, which should be greater than or equal to 1.
+        dca_layer: The number of layers for the DCA model, which should be a positive integer.
+        ensemble_mode: The mode for ensembling models, which should be one of "cat" or "mean".
+        optimizer: The optimizer for training, which should be one of "adam", "radam", "nadam", or "sparseadam".
+        use_amp: The automatic mixed precision parameter, which should be either True or False.
+        patience: The number of epochs to wait before early stopping, which should be a positive integer greater than 0.
+
+    :param args: A dictionary containing the training configuration arguments.
+
+
+    """
     try:
         if "SRD" in args:
             assert args["SRD"] >= 0
@@ -68,7 +91,6 @@ def config_check(args):
                     )
         if "use_amp" in args:
             assert args["use_amp"] in {True, False}
-
         if "patience" in args:
             assert args["patience"] > 0
 

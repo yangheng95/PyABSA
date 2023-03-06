@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # file: ssw_s.py
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # Copyright (C) 2021. All Rights Reserved.
 
 import torch

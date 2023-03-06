@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # file: sentiment_classifier.py
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # Copyright (C) 2020. All Rights Reserved.
 import json
 import os
@@ -10,11 +10,10 @@ from typing import Union
 import numpy as np
 import torch
 import tqdm
-from findfile import find_file, find_cwd_dir
+from findfile import find_file
 from sklearn import metrics
 from termcolor import colored
 from torch.utils.data import DataLoader
-from transformers import AutoTokenizer
 
 from pyabsa import LabelPaddingOption, TaskCodeOption, DeviceTypeOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
@@ -32,12 +31,10 @@ from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint, rprint
 
 
 class SentimentClassifier(InferenceModel):
-    def __init__(self, checkpoint=None, cal_perplexity=False, **kwargs):
-        """
-        from_train_model: load inference model from trained model
-        """
+    task_code = TaskCodeOption.Aspect_Polarity_Classification
 
-        super().__init__(checkpoint, cal_perplexity, task_code=self.task_code, **kwargs)
+    def __init__(self, checkpoint=None, **kwargs):
+        super().__init__(checkpoint, task_code=self.task_code, **kwargs)
 
         # load from a trainer
         if self.checkpoint and not isinstance(self.checkpoint, str):
@@ -140,7 +137,16 @@ class SentimentClassifier(InferenceModel):
         **kwargs
     ):
         """
-        Old version of batch_predict, will be deprecated in the future
+        A deprecated version of batch_predict method.
+
+        Args:
+            target_file (str): the path to the target file for inference
+            print_result (bool): whether to print the result
+            save_result (bool): whether to save the result
+            ignore_error (bool): whether to ignore the error
+
+        Returns:
+            result (dict): a dictionary of the results
         """
         return self.batch_predict(
             target_file=target_file,
@@ -152,7 +158,15 @@ class SentimentClassifier(InferenceModel):
 
     def infer(self, text: str = None, print_result=True, ignore_error=True, **kwargs):
         """
-        Old version of predict, will be deprecated in the future
+        A deprecated version of the predict method.
+
+        Args:
+            text (str): the text to predict
+            print_result (bool): whether to print the result
+            ignore_error (bool): whether to ignore the error
+
+        Returns:
+            result (dict): a dictionary of the results
         """
         return self.predict(
             text=text, print_result=print_result, ignore_error=ignore_error, **kwargs
@@ -230,10 +244,14 @@ class SentimentClassifier(InferenceModel):
     def merge_results(self, results):
         """merge APC results have the same input text"""
         final_res = []
+        # Loop through each result in the list of results
         for result in results:
+            # Check if the final_res list is not empty and if the previous result has the same input text as the current result
             if final_res and "".join(final_res[-1]["text"].split()) == "".join(
                 result["text"].split()
             ):
+                # If the input texts match, append the aspect, sentiment, confidence, probabilities, reference sentiment,
+                # reference check, and perplexity to the corresponding lists in the previous result
                 final_res[-1]["aspect"].append(result["aspect"])
                 final_res[-1]["sentiment"].append(result["sentiment"])
                 final_res[-1]["confidence"].append(result["confidence"])
@@ -242,6 +260,8 @@ class SentimentClassifier(InferenceModel):
                 final_res[-1]["ref_check"].append(result["ref_check"])
                 final_res[-1]["perplexity"] = result["perplexity"]
             else:
+                # If the input texts don't match, create a new dictionary with the input text, aspect, sentiment,
+                # confidence, probabilities, reference sentiment, reference check, and perplexity as separate lists
                 final_res.append(
                     {
                         "text": result["text"].replace("  ", " "),
@@ -432,7 +452,7 @@ class SentimentClassifier(InferenceModel):
                     digits=4,
                     target_names=[
                         self.config.index_to_label[x]
-                        for x in sorted(self.config.index_to_label.keys())
+                        for x in sorted(self.config.index_to_label.keys())[1:]
                     ],
                 )
                 fprint(
@@ -444,12 +464,9 @@ class SentimentClassifier(InferenceModel):
                 )
 
                 report = metrics.confusion_matrix(
-                    t_targets_all,
-                    np.argmax(t_outputs_all, -1),
-                    labels=[
-                        self.config.label_to_index[x]
-                        for x in sorted(self.config.index_to_label.keys())
-                    ],
+                    y_true=t_targets_all,
+                    y_pred=np.argmax(t_outputs_all, -1),
+                    labels=[x for x in sorted(self.config.index_to_label.keys())[1:]],
                 )
                 fprint(
                     "\n---------------------------- Confusion Matrix ----------------------------\n"
@@ -460,9 +477,16 @@ class SentimentClassifier(InferenceModel):
                 )
 
             except Exception as e:
-                fprint("Can not print classification report: {}".format(e))
+                fprint(
+                    "Classification report is not available because your examples does not contain all classes"
+                    "or have not reference labels. Exception: {}".format(e)
+                )
 
         return results
 
     def clear_input_samples(self):
         self.dataset.all_data = []
+
+
+class Predictor(SentimentClassifier):
+    pass

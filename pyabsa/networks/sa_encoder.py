@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: sa_encoder.py
 # time: 2021/6/6 0006
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 import math
@@ -177,6 +177,13 @@ class BertSelfAttention(nn.Module):
 
 class Encoder(nn.Module):
     def __init__(self, bert_config, config, layer_num=1):
+        """
+        Initializes a sequence encoder using self-attention mechanism.
+
+        :param bert_config: Configuration of a BERT model
+        :param config: Custom configuration
+        :param layer_num: Number of self-attention layers to use
+        """
         super(Encoder, self).__init__()
         self.bert_config = bert_config
         self.config = config
@@ -186,6 +193,12 @@ class Encoder(nn.Module):
         self.tanh = torch.nn.Tanh()
 
     def forward(self, x):
+        """
+        Encodes a sequence using self-attention mechanism.
+
+        :param x: Input tensor of size (batch_size, seq_len, hidden_size)
+        :return: Encoded tensor of the same size as the input tensor
+        """
         for i, enc in enumerate(self.encoder):
             x = self.tanh(enc(x)[0])
         return x
@@ -193,12 +206,24 @@ class Encoder(nn.Module):
 
 class SelfAttention(nn.Module):
     def __init__(self, bert_config, config):
+        """
+        Initializes a self-attention layer.
+
+        :param bert_config: Configuration of a BERT model
+        :param config: Custom configuration
+        """
         super(SelfAttention, self).__init__()
         self.bert_config = bert_config
         self.config = config
         self.SA = BertSelfAttention(bert_config)
 
     def forward(self, inputs):
+        """
+        Computes the context-aware representation of each token in the sequence using self-attention mechanism.
+
+        :param inputs: Input tensor of size (batch_size, seq_len, hidden_size)
+        :return: Encoded tensor of the same size as the input tensor
+        """
         zero_vec = np.zeros((inputs.size(0), 1, 1, self.config.max_seq_len))
         zero_tensor = torch.tensor(zero_vec).float().to(inputs.device)
         SA_out = self.SA(inputs, zero_tensor)

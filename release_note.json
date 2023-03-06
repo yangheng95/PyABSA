@@ -1,4 +1,7 @@
 ﻿{
+  "2.1.0": {
+    "1": "Intial support for aspect sentiment triplet extraction (ASTE) task"
+  },
   "2.0.28": {
     "1": "Minor fixes and improvements"
   },

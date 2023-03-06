@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: dataset_manager.py
 # time: 2021/6/8 0008
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
@@ -58,11 +58,22 @@ def detect_dataset(
 ):
     """
     Detect dataset from dataset_path, you need to specify the task type, which can be TaskCodeOption.Aspect_Polarity_Classification, 'atepc' or 'tc', etc.
-    :param dataset_name_or_path: dataset name or path
-    :param task_code: task type, which can be TaskCodeOption.Aspect_Polarity_Classification, 'atepc' or 'tc', etc.
-    :param load_aug: load augmented dataset
-    :param config: config
+
+    :param dataset_name_or_path: str or DatasetItem
+        The name or path of the dataset.
+    :param task_code: str or TaskCodeOption
+        The task type, such as "apc" for aspect-polarity classification or "tc" for text classification.
+    :param load_aug: bool, default False
+        Whether to load the augmented dataset.
+    :param config: Config, optional
+        The configuration object.
+    :param kwargs: dict
+        Additional keyword arguments.
+
+    :return: dict
+        A dictionary containing file paths for the train, test, and validation sets.
     """
+
     logger = config.logger if config else kwargs.get("logger", None)
     check_datasets_version(logger=logger)
     if not isinstance(dataset_name_or_path, DatasetItem):
