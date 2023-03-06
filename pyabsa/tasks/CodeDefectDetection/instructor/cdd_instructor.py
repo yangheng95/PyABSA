@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: classifier_instructor.py
 # time: 2021/4/22 0022
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
@@ -48,7 +48,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
         torch.manual_seed(self.config.seed)
         torch.cuda.manual_seed(self.config.seed)
 
-        self.config.inputs_cols = self.model.inputs
+        self.config.inputs = self.model.inputs
 
         self.config.device = torch.device(self.config.device)
 
@@ -90,7 +90,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
         # init BERT-based model and dataset
         if hasattr(BERTCDDModelList, self.config.model.__name__):
             self.tokenizer = PretrainedTokenizer(self.config)
-            if cache_path is None or self.config.overwrite_cache:
+            if not os.path.exists(cache_path) or self.config.overwrite_cache:
                 self.train_set = BERTCDDDataset(
                     self.config, self.tokenizer, dataset_type="train"
                 )
@@ -203,7 +203,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 self.optimizer.zero_grad()
                 inputs = [
                     sample_batched[col].to(self.config.device)
-                    for col in self.config.inputs_cols
+                    for col in self.config.inputs
                 ]
                 if self.config.use_amp:
                     with torch.cuda.amp.autocast():
@@ -466,7 +466,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                     self.optimizer.zero_grad()
                     inputs = [
                         sample_batched[col].to(self.config.device)
-                        for col in self.config.inputs_cols
+                        for col in self.config.inputs
                     ]
                     with torch.cuda.amp.autocast():
                         if self.config.use_amp:
@@ -683,7 +683,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
             for t_batch, t_sample_batched in enumerate(test_dataloader):
                 t_inputs = [
                     t_sample_batched[col].to(self.config.device)
-                    for col in self.config.inputs_cols
+                    for col in self.config.inputs
                 ]
                 t_targets = t_sample_batched["label"].to(self.config.device)
                 t_c_targets = t_sample_batched["corrupt_label"].to(self.config.device)

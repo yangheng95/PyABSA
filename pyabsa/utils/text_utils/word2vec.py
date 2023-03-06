@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: word2vec.py
 # time: 02/11/2022 15:41
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
@@ -21,7 +21,6 @@ import os
 import time
 from typing import List
 from transformers import AutoTokenizer
-from gensim.models import Word2Vec
 
 
 def train_word2vec(
@@ -50,6 +49,7 @@ def train_word2vec(
     - epochs: the number of iterations over the corpus
     - pre_tokenizer: the name of a tokenizer to use for preprocessing (optional)
     """
+    from gensim.models import Word2Vec
 
     if not os.path.exists(save_path):
         os.makedirs(save_path)

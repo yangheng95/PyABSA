@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: tokenizer_class.py
 # time: 03/11/2022 21:44
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
@@ -291,6 +291,26 @@ class PretrainedTokenizer:
             **kwargs: Additional arguments to be passed to the tokenizer.
         """
         return self.tokenizer.encode_plus(
+            text,
+            truncation=kwargs.pop("truncation", True),
+            padding=kwargs.pop("padding", "max_length"),
+            max_length=kwargs.pop("max_length", self.max_seq_len),
+            return_tensors=kwargs.pop("return_tensors", None),
+            **kwargs
+        )
+
+    def encode(self, text, **kwargs):
+        """
+        Encodes the given text into a sequence of token IDs.
+
+        Args:
+            text (str): Text to be encoded.
+            **kwargs: Additional arguments to be passed to the tokenizer.
+
+        Returns:
+            torch.Tensor: Encoded sequence of token IDs.
+        """
+        return self.tokenizer.encode(
             text,
             truncation=kwargs.pop("truncation", True),
             padding=kwargs.pop("padding", "max_length"),

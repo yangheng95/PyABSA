@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: instructor_template.py
 # time: 03/11/2022 13:21
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
@@ -20,7 +20,6 @@ import torch
 from findfile import find_file, find_files
 from termcolor import colored
 
-from pyabsa.framework.checkpoint_class.checkpoint_template import CheckpointManager
 from torch.utils.data import (
     DataLoader,
     random_split,
@@ -161,27 +160,33 @@ class BaseTrainingInstructor:
                     _config.args_call_count.update(self.config.args_call_count)
                 return cache_path
 
-        return None
+        return cache_path
 
-    def save_cache_dataset(self, **kwargs):
+    def save_cache_dataset(self, cache_path=None, **kwargs):
         """
         Save the dataset to cache for faster loading in the future.
         :param kwargs: Additional arguments for saving the dataset cache.
+        :param cache_path: The path to the cache file.
         :return: The path to the saved cache file.
         """
-        config_str = re.sub(
-            r"<.*?>",
-            "",
-            str(
-                sorted(
-                    [str(self.config.args[k]) for k in self.config.args if k != "seed"]
-                )
-            ),
-        )
-        hash_tag = sha256(config_str.encode()).hexdigest()
-        cache_path = "{}.{}.dataset.{}.cache".format(
-            self.config.model_name, self.config.dataset_name, hash_tag
-        )
+        if cache_path is None:
+            config_str = re.sub(
+                r"<.*?>",
+                "",
+                str(
+                    sorted(
+                        [
+                            str(self.config.args[k])
+                            for k in self.config.args
+                            if k != "seed"
+                        ]
+                    )
+                ),
+            )
+            hash_tag = sha256(config_str.encode()).hexdigest()
+            cache_path = "{}.{}.dataset.{}.cache".format(
+                self.config.model_name, self.config.dataset_name, hash_tag
+            )
         if (
             not os.path.exists(cache_path) or self.config.overwrite_cache
         ) and self.config.cache_dataset:
@@ -464,6 +469,8 @@ class BaseTrainingInstructor:
 
 
 def get_resume_checkpoint(config):
+    from pyabsa.framework.checkpoint_class.checkpoint_template import CheckpointManager
+
     # Extract the path to the checkpoint from the config object
     ckpt = config.from_checkpoint
     if config.from_checkpoint:

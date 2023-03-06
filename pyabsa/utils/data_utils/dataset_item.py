@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: dataset_item.py
 # time: 02/11/2022 18:56
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
@@ -12,7 +12,7 @@ import os
 # To replace the class defined in https://github.com/yangheng95/PyABSA/blob/release/pyabsa/functional/dataset/dataset_manager.py#L18,
 # so that the inference script works on a custom dataset.
 class DatasetItem(list):
-    def init(self, dataset_name, dataset_items=None):
+    def __init__(self, dataset_name, dataset_items=None):
         """
         Initializes a DatasetItem object with the given dataset_name and dataset_items.
         DatasetItem is used to construct a dataset for PyABSA. Each dataset has a name,
@@ -22,7 +22,7 @@ class DatasetItem(list):
         :param dataset_name: The name of the dataset. Can be a string or a list of strings.
         :param dataset_items: The list of dataset names or file paths. Default is None.
         """
-
+        self.name = None
         # If the dataset_name is a DatasetItem object, copy its attributes to this object
         if isinstance(dataset_name, DatasetItem):
             self.dataset_name = dataset_name.dataset_name

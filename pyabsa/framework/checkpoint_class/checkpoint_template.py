@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: checkpoint_template.py
 # time: 2021/6/11 0011
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
@@ -28,6 +28,9 @@ from pyabsa.tasks.TextAdversarialDefense import TADTextClassifier
 from pyabsa.tasks.RNAClassification import RNAClassifier
 from pyabsa.tasks.RNARegression import RNARegressor
 from pyabsa.tasks.TextClassification import TextClassifier
+from pyabsa.tasks.AspectSentimentTripletExtraction import (
+    AspectSentimentTripletExtractor,
+)
 
 
 class CheckpointManager:
@@ -110,6 +113,36 @@ class CheckpointManager:
             task=task_code,
             language=checkpoint.lower(),
             checkpoint=available_checkpoint_by_task[checkpoint.lower()],
+        )
+
+
+class ASTECheckpointManager(CheckpointManager):
+    """
+    This class manages the checkpoints for Aspect Sentiment Term Extraction.
+    """
+
+    def __init__(self):
+        """
+        Initializes an instance of the ASTECheckpointManager class.
+        """
+        super(ASTECheckpointManager, self).__init__()
+
+    @staticmethod
+    def get_aspect_sentiment_triplet_extractor(
+        checkpoint: Union[str, Path] = None, **kwargs
+    ) -> "AspectSentimentTripletExtractor":
+        """
+        Get an AspectExtractor object initialized with the given checkpoint for Aspect Sentiment Term Extraction.
+
+        :param checkpoint: A string or Path object indicating the path to the checkpoint or a zip file containing the checkpoint.
+            If the checkpoint is not registered in PyABSA, it should be the name of the checkpoint queried from Google Drive.
+        :param kwargs: Additional keyword arguments to be passed to the AspectExtractor constructor.
+        :return: An AspectExtractor object initialized with the given checkpoint.
+        """
+        return AspectSentimentTripletExtractor(
+            CheckpointManager().parse_checkpoint(
+                checkpoint, TaskCodeOption.Aspect_Sentiment_Triplet_Extraction
+            )
         )
 
 

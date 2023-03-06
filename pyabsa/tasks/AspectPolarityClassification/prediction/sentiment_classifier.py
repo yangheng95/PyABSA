@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # file: sentiment_classifier.py
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # Copyright (C) 2020. All Rights Reserved.
 import json
 import os
@@ -10,11 +10,10 @@ from typing import Union
 import numpy as np
 import torch
 import tqdm
-from findfile import find_file, find_cwd_dir
+from findfile import find_file
 from sklearn import metrics
 from termcolor import colored
 from torch.utils.data import DataLoader
-from transformers import AutoTokenizer
 
 from pyabsa import LabelPaddingOption, TaskCodeOption, DeviceTypeOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
@@ -32,12 +31,10 @@ from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint, rprint
 
 
 class SentimentClassifier(InferenceModel):
-    def __init__(self, checkpoint=None, cal_perplexity=False, **kwargs):
-        """
-        from_train_model: load inference model from trained model
-        """
+    task_code = TaskCodeOption.Aspect_Polarity_Classification
 
-        super().__init__(checkpoint, cal_perplexity, task_code=self.task_code, **kwargs)
+    def __init__(self, checkpoint=None, **kwargs):
+        super().__init__(checkpoint, task_code=self.task_code, **kwargs)
 
         # load from a trainer
         if self.checkpoint and not isinstance(self.checkpoint, str):

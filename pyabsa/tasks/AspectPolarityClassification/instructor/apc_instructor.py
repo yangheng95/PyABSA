@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: apc_instructor.py
 # time: 2021/4/22 0022
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
@@ -154,7 +154,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                 # evaluate if test set is available
                 if global_step % self.config.log_step == 0:
                     if self.test_dataloader and epoch >= self.config.evaluate_begin:
-                        if self.valid_dataloaders:
+                        if len(self.valid_dataloaders) > 1:
                             test_acc, f1 = self._evaluate_acc_f1(
                                 self.valid_dataloaders[0]
                             )
@@ -252,7 +252,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                 max_fold_f1 * 100,
             )
 
-        if self.valid_dataloaders:
+        if len(self.valid_dataloaders) > 1:
             fprint(
                 "Loading best model: {} and evaluating on test set ".format(save_path)
             )

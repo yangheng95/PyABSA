@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # file: lca_bert.py
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # Copyright (C) 2020. All Rights Reserved.
 
 import copy

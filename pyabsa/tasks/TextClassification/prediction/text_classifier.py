@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # file: text_classifier.py
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # Copyright (C) 2020. All Rights Reserved.
 import json
 import os
@@ -34,7 +34,7 @@ class TextClassifier(InferenceModel):
         from_train_model: load inference model from trained model
         """
 
-        super().__init__(checkpoint, cal_perplexity, task_code=self.task_code, **kwargs)
+        super().__init__(checkpoint, task_code=self.task_code, **kwargs)
 
         # load from a trainer
         if self.checkpoint and not isinstance(self.checkpoint, str):

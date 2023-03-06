@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: rnac_instructor.py
 # time: 03/11/2022 19:46
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
@@ -608,7 +608,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         # init BERT-based model and dataset
         if hasattr(BERTRNACModelList, self.config.model.__name__):
             self.tokenizer = PretrainedTokenizer(self.config)
-            if cache_path is None or self.config.overwrite_cache:
+            if not os.path.exists(cache_path) or self.config.overwrite_cache:
                 self.train_set = BERTRNACDataset(
                     self.config, self.tokenizer, dataset_type="train"
                 )

@@ -33,7 +33,7 @@ class CodeDefectDetector(InferenceModel):
         from_train_model: load inference model from trained model
         """
 
-        super().__init__(checkpoint, cal_perplexity, task_code=self.task_code, **kwargs)
+        super().__init__(checkpoint, task_code=self.task_code, **kwargs)
 
         # load from a trainer
         if self.checkpoint and not isinstance(self.checkpoint, str):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: prediction_class.py
 # time: 03/11/2022 13:22
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
@@ -13,11 +13,10 @@ from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
 from torch import cuda
 
 from pyabsa import TaskCodeOption, DeviceTypeOption
-from pyabsa.framework.checkpoint_class.checkpoint_template import CheckpointManager
 
 
 class InferenceModel:
-    task_code = TaskCodeOption.Aspect_Polarity_Classification
+    task_code = None
 
     def __init__(self, checkpoint: Union[str, object] = None, config=None, **kwargs):
         """
@@ -27,6 +26,10 @@ class InferenceModel:
         :param config: configuration object
         :param kwargs: additional keyword arguments
         """
+        from pyabsa.framework.checkpoint_class.checkpoint_template import (
+            CheckpointManager,
+        )
+
         self.cal_perplexity = kwargs.get("cal_perplexity", False)
 
         # parse the provided checkpoint to obtain the checkpoint path and configuration

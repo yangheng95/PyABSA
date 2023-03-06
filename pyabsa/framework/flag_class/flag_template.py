@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: flag_template.py
 # time: 02/11/2022 17:13
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
@@ -16,13 +16,15 @@ class TaskNameOption(dict):
     code2name = {
         "apc": "Aspect-based Sentiment Classification",
         "atepc": "Aspect Term Extraction and Polarity Classification",
+        "aste": "Aspect Sentiment Triple Extraction",
         "tc": "Text Classification",
         "text_classification": "Text Classification",
         "tad": "Text Adversarial Defense",
-        "rnac_datasets": "RNA Sequence Classification",
+        "rnac": "RNA Sequence Classification",
         "rnar": "RNA Sequence Regression",
         "APC": "Aspect-based Sentiment Classification",
         "ATEPC": "Aspect Term Extraction and Polarity Classification",
+        "ASTE": "Aspect Sentiment Triple Extraction",
         "TC": "Text Classification",
         "TAD": "Text Adversarial Defense",
         "RNAC": "RNA Sequence Classification",
@@ -50,6 +52,7 @@ class TaskCodeOption:
 
     Aspect_Polarity_Classification = "APC"
     Aspect_Term_Extraction_and_Classification = "ATEPC"
+    Aspect_Sentiment_Triplet_Extraction = "ASTE"
     Sentiment_Analysis = "TC"
     Text_Classification = "TC"
     Text_Adversarial_Defense = "TAD"
@@ -87,9 +90,6 @@ class ProxyAddressOption:
     CN_GITHUB_MIRROR = "https://gitee.com/"
 
 
-PyABSAMaterialHostAddress = "https://huggingface.co/spaces/yangheng/PyABSA/"
-
-
 class DeviceTypeOption:
     """
     A class that defines device type options.
@@ -99,3 +99,6 @@ class DeviceTypeOption:
     CPU = "cpu"
     CUDA = "cuda"
     ALL_CUDA = "allcuda"
+
+
+PyABSAMaterialHostAddress = "https://huggingface.co/spaces/yangheng/PyABSA/"

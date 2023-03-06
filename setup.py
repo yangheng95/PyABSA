@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: setup.py
 # time: 2021/4/22 0022
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
@@ -83,7 +83,7 @@ setup(
     install_requires=[
         "findfile>=2.0.0",
         "autocuda>=0.16",
-        "metric-visualizer>=0.9.3",
+        "metric-visualizer>=0.9.6",
         "boostaug>=2.3.5",
         "spacy",
         "networkx",

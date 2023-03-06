@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: trainer.py
 # time: 02/11/2022 21:15
-# author: yangheng <hy345@exeter.ac.uk>
+# author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
@@ -12,12 +12,9 @@ import time
 from pathlib import Path
 from typing import Union
 
-import findfile
 import torch
 import transformers
-from findfile import find_files
 from metric_visualizer import MetricVisualizer
-from pyabsa.framework.checkpoint_class.checkpoint_template import CheckpointManager
 from torch import cuda
 from transformers import AutoConfig
 
