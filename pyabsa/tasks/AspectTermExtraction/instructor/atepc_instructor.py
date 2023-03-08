@@ -49,7 +49,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
 
         processor = ATEPCProcessor(self.tokenizer)
         cache_path = self.load_cache_dataset()
-        if cache_path is None:
+        if not os.path.exists(cache_path):
             self.train_examples = processor.get_train_examples(
                 self.config.dataset_file["train"], "train"
             )
@@ -243,7 +243,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
         self.config.sep_indices = self.tokenizer.sep_token_id
         self.bert_base_model.config.num_labels = self.config.num_labels
 
-        self.save_cache_dataset()
+        self.save_cache_dataset(cache_path)
 
         self.model = self.config.model(self.bert_base_model, config=self.config)
 
