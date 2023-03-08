@@ -17,36 +17,40 @@ from pyabsa import (
 
 from pyabsa import AspectSentimentTripletExtraction as ASTE
 
-config = ASTE.ASTEConfigManager.get_aste_config_english()
-config.max_seq_len = 200
-config.log_step = -1
-config.pretrained_bert = "microsoft/mdeberta-v3-base"
-# config.pretrained_bert = "microsoft/deberta-v3-base"
-config.num_epoch = 100
-config.learning_rate = 2e-5
-config.cache_dataset = False
-config.use_amp = True
-config.spacy_model = "en_core_web_sm"
 
-# dataset = "Laptop14"
-dataset = "aste"
-# dataset = "semeval"
-# dataset = "chinese"
-trainer = ASTE.ASTETrainer(
-    config=config,
-    dataset=dataset,
-    # from_checkpoint='english',
-    checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
-    # checkpoint_save_mode=ModelSaveOption.DO_NOT_SAVE_MODEL,
-    auto_device=True,
-)
-triplet_extractor = trainer.load_trained_model()
+if __name__ == "__main__":
+    config = ASTE.ASTEConfigManager.get_aste_config_english()
+    config.max_seq_len = 120
+    config.log_step = -1
+    # config.pretrained_bert = "microsoft/mdeberta-v3-base"
+    # config.pretrained_bert = "microsoft/deberta-v3-base"
+    config.pretrained_bert = "bert-base-chinese"
+    config.num_epoch = 100
+    config.learning_rate = 2e-5
+    # config.cache_dataset = False
+    config.use_amp = True
+    config.cache_dataset = True
+    config.spacy_model = "zh_core_web_sm"
 
-examples = [
-    "I love this laptop, it is very good.",
-    "I hate this laptop, it is very bad.",
-    "I like this laptop, it is very good.",
-    "I dislike this laptop, it is very bad.",
-]
-for example in examples:
-    triplet_extractor.predict("I love this laptop, it is very good.")
+    # dataset = "Laptop14"
+    # dataset = "aste"
+    # dataset = "semeval"
+    dataset = "chinese"
+    trainer = ASTE.ASTETrainer(
+        config=config,
+        dataset=dataset,
+        # from_checkpoint='english',
+        checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
+        # checkpoint_save_mode=ModelSaveOption.DO_NOT_SAVE_MODEL,
+        auto_device=True,
+    )
+    triplet_extractor = trainer.load_trained_model()
+
+    examples = [
+        "I love this laptop, it is very good.",
+        "I hate this laptop, it is very bad.",
+        "I like this laptop, it is very good.",
+        "I dislike this laptop, it is very bad.",
+    ]
+    for example in examples:
+        triplet_extractor.predict("I love this laptop, it is very good.")

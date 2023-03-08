@@ -308,7 +308,7 @@ class AspectSentimentTripletExtractor(InferenceModel):
                     all_results.append(new_result)
 
             for result in all_results:
-                fprint(result)
+                fprint("Batch: {}".format(i), result)
 
             return all_results
 

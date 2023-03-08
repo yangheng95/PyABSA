@@ -162,7 +162,7 @@ class ASTEInferenceDataset:
                     self.config,
                 )
                 _data.append(feat)
-            except IndexError as e:
+            except Exception as e:
                 fprint(
                     "Processing error for: {}. Exception: {}".format(
                         data["sentence"], e

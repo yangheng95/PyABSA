@@ -4,16 +4,14 @@
 # author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-import json
-import re
+import os
 from collections import Counter, OrderedDict
+from multiprocessing import Pool
 
-import numpy as np
 import tqdm
 from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__lcf__.apc_utils import (
     configure_spacy_model,
 )
-from termcolor import colored
 
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.tasks.AspectSentimentTripletExtraction.dataset_utils.aste_utils import (
@@ -22,7 +20,7 @@ from pyabsa.tasks.AspectSentimentTripletExtraction.dataset_utils.aste_utils impo
     load_tokens,
 )
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
-from pyabsa.utils.pyabsa_utils import check_and_fix_labels, fprint
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 def generate_tags(tokens, start, end, scheme):
