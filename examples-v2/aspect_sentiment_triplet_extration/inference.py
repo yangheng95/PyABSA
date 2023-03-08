@@ -30,5 +30,6 @@ triplet_extractor.batch_predict(
     target_file=target_file,
     batch_size=32,
     ignore_error=True,
+    save_result=True,
     auto_device=True,
 )

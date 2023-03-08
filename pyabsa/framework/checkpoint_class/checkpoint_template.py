@@ -56,11 +56,20 @@ class CheckpointManager:
             ```
         """
         if isinstance(checkpoint, str) or isinstance(checkpoint, Path):
+            # directly load checkpoint from local path
             if os.path.exists(checkpoint):
                 checkpoint_config = find_file(checkpoint, and_key=[".config"])
+            elif find_file(os.getcwd(), [checkpoint, task_code, ".config"]):
+                # load checkpoint from current working directory with task specified
+                checkpoint_config = find_file(
+                    os.getcwd(), [checkpoint, task_code, ".config"]
+                )
             else:
+                # load checkpoint from current working directory without task specified
                 checkpoint_config = find_file(os.getcwd(), [checkpoint, ".config"])
+
             if checkpoint_config:
+                # locate the checkpoint directory
                 checkpoint = os.path.dirname(checkpoint_config)
             elif isinstance(checkpoint, str) and checkpoint.endswith(".zip"):
                 checkpoint = unzip_checkpoint(
