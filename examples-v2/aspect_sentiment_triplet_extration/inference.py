@@ -10,7 +10,7 @@
 from pyabsa import AspectSentimentTripletExtraction as ASTE
 
 # Load the model
-triplet_extractor = ASTE.AspectSentimentTripletExtractor("74.01")
+triplet_extractor = ASTE.AspectSentimentTripletExtractor("english")
 
 # # Predict
 examples = [

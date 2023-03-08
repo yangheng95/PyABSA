@@ -20,15 +20,18 @@ from pyabsa import AspectSentimentTripletExtraction as ASTE
 config = ASTE.ASTEConfigManager.get_aste_config_english()
 config.max_seq_len = 200
 config.log_step = -1
-config.pretrained_bert = "microsoft/deberta-v3-base"
+config.pretrained_bert = "microsoft/mdeberta-v3-base"
+# config.pretrained_bert = "microsoft/deberta-v3-base"
 config.num_epoch = 100
 config.learning_rate = 2e-5
 config.cache_dataset = False
 config.use_amp = True
+config.spacy_model = "en_core_web_sm"
 
 # dataset = "Laptop14"
-# dataset = "aste"
-dataset = "semeval"
+dataset = "aste"
+# dataset = "semeval"
+# dataset = "chinese"
 trainer = ASTE.ASTETrainer(
     config=config,
     dataset=dataset,

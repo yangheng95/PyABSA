@@ -7,7 +7,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 __name__ = "pyabsa"
-__version__ = "2.1.1"
+__version__ = "2.1.2a0"
 
 from pyabsa.framework.flag_class import *
 
@@ -60,6 +60,9 @@ from pyabsa.framework.checkpoint_class.checkpoint_template import (
     RNARCheckpointManager,
 )
 from pyabsa.tasks.AspectPolarityClassification import APCDatasetList
+
+# Borrowed from https://github.com/acheong08/ChatGPT
+from pyabsa.utils.chatgpt.chatgpt import Chatbot, ChatbotCLI
 
 ABSADatasetList = APCDatasetList
 # for compatibility of v1.x
