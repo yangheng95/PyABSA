@@ -38,7 +38,7 @@ class CheckpointManager:
         self,
         checkpoint: Union[str, Path] = None,
         task_code: str = TaskCodeOption.Aspect_Polarity_Classification,
-    ) -> str:
+    ) -> Union[str, Path]:
         """
         Parse a given checkpoint file path or name and returns the path of the checkpoint directory.
 
@@ -58,8 +58,16 @@ class CheckpointManager:
         if isinstance(checkpoint, str) or isinstance(checkpoint, Path):
             # directly load checkpoint from local path
             if os.path.exists(checkpoint):
-                checkpoint_config = find_file(checkpoint, and_key=[".config"])
-            elif find_file(os.getcwd(), [checkpoint, task_code, ".config"]):
+                return checkpoint
+
+            try:
+                self._get_remote_checkpoint(checkpoint, task_code)
+            except Exception as e:
+                fprint(
+                    "No checkpoint found in Model Hub for task: {}".format(checkpoint)
+                )
+
+            if find_file(os.getcwd(), [checkpoint, task_code, ".config"]):
                 # load checkpoint from current working directory with task specified
                 checkpoint_config = find_file(
                     os.getcwd(), [checkpoint, task_code, ".config"]
@@ -77,8 +85,7 @@ class CheckpointManager:
                     if os.path.exists(checkpoint)
                     else find_file(os.getcwd(), checkpoint)
                 )
-            else:
-                checkpoint = self._get_remote_checkpoint(checkpoint, task_code)
+
         return checkpoint
 
     def _get_remote_checkpoint(
@@ -117,7 +124,6 @@ class CheckpointManager:
                     "red",
                 )
             )
-            sys.exit(-1)
         return download_checkpoint(
             task=task_code,
             language=checkpoint.lower(),
