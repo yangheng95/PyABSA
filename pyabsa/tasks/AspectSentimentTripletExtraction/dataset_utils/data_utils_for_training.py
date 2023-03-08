@@ -4,16 +4,14 @@
 # author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-import json
-import re
+import os
 from collections import Counter, OrderedDict
+from multiprocessing import Pool
 
-import numpy as np
 import tqdm
 from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__lcf__.apc_utils import (
     configure_spacy_model,
 )
-from termcolor import colored
 
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.tasks.AspectSentimentTripletExtraction.dataset_utils.aste_utils import (
@@ -22,7 +20,7 @@ from pyabsa.tasks.AspectSentimentTripletExtraction.dataset_utils.aste_utils impo
     load_tokens,
 )
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
-from pyabsa.utils.pyabsa_utils import check_and_fix_labels, fprint
+from pyabsa.utils.pyabsa_utils import fprint
 
 
 def generate_tags(tokens, start, end, scheme):
@@ -106,30 +104,42 @@ class ASTEDataset(PyABSADataset):
         label_set = set()
 
         for ex_id in tqdm.tqdm(range(0, len(lines)), desc="preparing dataloader"):
-            if lines[ex_id].count("####"):
-                sentence, annotations = lines[ex_id].split("####")
-            elif lines[ex_id].count("$LABEL$"):
-                sentence, annotations = lines[ex_id].split("$LABEL$")
-            else:
-                raise ValueError(
-                    "Invalid annotations format, please check your dataset file."
-                )
+            try:
+                if lines[ex_id].count("####"):
+                    sentence, annotations = lines[ex_id].split("####")
+                elif lines[ex_id].count("$LABEL$"):
+                    sentence, annotations = lines[ex_id].split("$LABEL$")
+                else:
+                    raise ValueError(
+                        "Invalid annotations format, please check your dataset file."
+                    )
 
-            sentence = sentence.strip()
-            annotations = annotations.strip()
-            annotations = eval(annotations)
+                sentence = sentence.strip()
+                annotations = annotations.strip()
+                annotations = eval(annotations)
 
-            prepared_data = self.get_syntax_annotation(sentence, annotations)
-            prepared_data["id"] = ex_id
-            tokens, deprel, postag, postag_ca, max_len = load_tokens(prepared_data)
-            self.all_tokens.extend(tokens)
-            self.all_deprel.extend(deprel)
-            self.all_postag.extend(postag)
-            self.all_postag_ca.extend(postag_ca)
-            self.all_max_len.append(max_len)
-            label_set.add(annotation[-1] for annotation in annotations)
-            all_data.append(prepared_data)
+                sentence = sentence.replace(" - ", " placeholder ").replace("-", " ")
 
+                try:
+                    prepared_data = self.get_syntax_annotation(sentence, annotations)
+                except Exception as e:
+                    print(sentence)
+                    print(lines[ex_id])
+                    print(annotations)
+                    continue
+                prepared_data["id"] = ex_id
+                tokens, deprel, postag, postag_ca, max_len = load_tokens(prepared_data)
+                self.all_tokens.extend(tokens)
+                self.all_deprel.extend(deprel)
+                self.all_postag.extend(postag)
+                self.all_postag_ca.extend(postag_ca)
+                self.all_max_len.append(max_len)
+                label_set.add(annotation[-1] for annotation in annotations)
+                prepared_data["sentence"] = sentence.replace("placeholder", "-")
+                all_data.append(prepared_data)
+            except Exception as e:
+                print(e)
+                continue
         self.data = all_data
 
     def __init__(self, config, tokenizer, dataset_type="train"):
@@ -244,12 +254,12 @@ class ASTEDataset(PyABSADataset):
     def get_dependencies(self, tokens):
         # Replace special characters in tokens with placeholders
         placeholder_tokens = []
-        for token in tokens:
-            if re.search(r"[^\w\s]", token):
-                placeholder = f"__{token}__"
-                placeholder_tokens.append(placeholder)
-            else:
-                placeholder_tokens.append(token)
+        # for token in tokens:
+        #     if re.search(r"[^\w\s]", token):
+        #         placeholder = f"__{token}__"
+        #         placeholder_tokens.append(placeholder)
+        #     else:
+        #         placeholder_tokens.append(token)
 
         # Get part-of-speech tags and dependencies using spaCy
         doc = self.nlp(" ".join(tokens))

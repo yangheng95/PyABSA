@@ -25,7 +25,7 @@ def check_emergency_notification():
 
     try:  # from Huggingface Space
         response = requests.get(url, stream=True)
-        save_path = "emergency_notification.txt"
+        save_path = "notification.txt"
         with open(save_path, "wb") as f:
             for chunk in response.iter_content(chunk_size=1024):
                 f.write(chunk)

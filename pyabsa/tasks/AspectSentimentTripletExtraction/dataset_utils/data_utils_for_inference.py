@@ -98,6 +98,7 @@ class ASTEInferenceDataset:
                 annotations = annotations.strip()
                 annotations = eval(annotations)
 
+                sentence = sentence.replace(" - ", " placeholder ").replace("-", " ")
                 prepared_data = self.get_syntax_annotation(sentence, annotations)
                 tokens, deprel, postag, postag_ca, max_len = load_tokens(prepared_data)
                 self.all_tokens.extend(tokens)
@@ -106,6 +107,8 @@ class ASTEInferenceDataset:
                 self.all_postag_ca.extend(postag_ca)
                 self.all_max_len.append(max_len)
                 prepared_data["id"] = ex_id
+                prepared_data["sentence"] = sentence.replace("placeholder", "-")
+
                 for annotation in annotations:
                     label_set.add(annotation[-1])
 
@@ -159,7 +162,7 @@ class ASTEInferenceDataset:
                     self.config,
                 )
                 _data.append(feat)
-            except IndexError as e:
+            except Exception as e:
                 fprint(
                     "Processing error for: {}. Exception: {}".format(
                         data["sentence"], e
