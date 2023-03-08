@@ -142,7 +142,7 @@ class TCTrainingInstructor(BaseTrainingInstructor):
             self.config.embedding_matrix = self.embedding_matrix
 
         self.config.tokenizer = self.tokenizer
-        self.save_cache_dataset()
+        self.save_cache_dataset(cache_path)
 
     def reload_model(self, ckpt="./init_state_dict.bin"):
         if os.path.exists(ckpt):

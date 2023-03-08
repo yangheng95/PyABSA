@@ -144,7 +144,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
             self.config.embedding_matrix = self.embedding_matrix
 
         self.config.tokenizer = self.tokenizer
-        self.save_cache_dataset()
+        self.save_cache_dataset(cache_path)
 
     def __init__(self, config):
         super().__init__(config)

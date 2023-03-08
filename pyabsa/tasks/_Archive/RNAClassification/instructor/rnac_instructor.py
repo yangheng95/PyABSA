@@ -675,7 +675,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 self.config.device
             )
 
-        self.save_cache_dataset()
+        self.save_cache_dataset(cache_path)
 
     def run(self):
         # Loss and Optimizer
