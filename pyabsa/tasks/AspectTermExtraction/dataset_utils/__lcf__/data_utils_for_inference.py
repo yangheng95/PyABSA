@@ -171,7 +171,7 @@ def convert_ate_examples_to_features(
     label_map = {label: i for i, label in enumerate(label_list, 1)}
     features = []
     if len(examples) > 100:
-        it = tqdm.tqdm(examples, desc="preparing apc inference dataloader")
+        it = tqdm.tqdm(examples, desc="preparing ate inference dataloader")
     else:
         it = examples
     for ex_index, example in enumerate(it):
