@@ -10,8 +10,8 @@
 from pyabsa import AspectSentimentTripletExtraction as ASTE
 
 # Load the model
-# triplet_extractor = ASTE.AspectSentimentTripletExtractor("english")
-triplet_extractor = ASTE.AspectSentimentTripletExtractor("multilingual")
+triplet_extractor = ASTE.AspectSentimentTripletExtractor("english")
+# triplet_extractor = ASTE.AspectSentimentTripletExtractor("multilingual")
 
 # # Predict
 examples = [
@@ -24,7 +24,8 @@ for example in examples:
     triplet_extractor.predict(example)
 
 # Batch predict
-target_file = "ASTE"
+# target_file = "ASTE"
+target_file = ASTE.ASTEDatasetList.Laptop14
 
 triplet_extractor.batch_predict(
     target_file=target_file,

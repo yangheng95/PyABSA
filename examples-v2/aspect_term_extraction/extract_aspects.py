@@ -19,12 +19,11 @@ checkpoint_map = available_checkpoints(
 
 aspect_extractor = ATEPC.AspectExtractor(
     "multilingual",
-    data_num=100,
 )
 # aspect_extractor = ATEPC.AspectExtractor('english', auto_device=DeviceTypeOption.AUTO)
 # aspect_extractor = ATEPC.AspectExtractor('chinese', auto_device=DeviceTypeOption.AUTO)
 
-inference_source = ATEPC.ATEPCDatasetList.Laptop14
+inference_source = ATEPC.ATEPCDatasetList.Multilingual
 atepc_result = aspect_extractor.batch_predict(
     inference_source,  #
     save_result=False,
