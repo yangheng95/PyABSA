@@ -12,6 +12,7 @@ import sys
 import zipfile
 from typing import Union, List
 
+import numpy as np
 import requests
 import torch
 import tqdm
@@ -19,6 +20,196 @@ from findfile import find_files, find_cwd_file
 from termcolor import colored
 
 from pyabsa.utils.pyabsa_utils import save_args, fprint
+
+
+def meta_load(path, **kwargs):
+    """
+    Load data from a file, which can be plain text, json file, Excel file,
+     pickle file, numpy file, torch file, pandas file, etc.
+     File types: txt, json, pickle, npy, pkl, pt, torch, csv, xlsx, xls
+
+    Args:
+        path (str): The path to the file.
+        kwargs: Other arguments for the corresponding load function.
+
+    Returns:
+        The loaded data.
+    """
+    # Ascii file
+    if path.endswith(".txt"):
+        return load_txt(path, **kwargs)
+    # JSON file
+    elif path.endswith(".json"):
+        return load_json(path, **kwargs)
+    elif path.endswith(".jsonl"):
+        return load_jsonl(path, **kwargs)
+
+    # Binary file
+    elif path.endswith(".pickle") or path.endswith(".pkl"):
+        return load_pickle(path, **kwargs)
+    elif path.endswith(".npy"):
+        return load_npy(path, **kwargs)
+    elif path.endswith(".pt") or path.endswith(".torch"):
+        return load_torch(path, **kwargs)
+    elif path.endswith(".csv"):
+        return load_csv(path, **kwargs)
+    elif path.endswith(".xlsx") or path.endswith(".xls"):
+        return load_excel(path, **kwargs)
+    else:
+        raise ValueError("Unsupported file type: {}".format(path))
+
+
+def meta_save(data, path, **kwargs):
+    """
+    Save data to a pickle file, which can be plain text, json file, Excel file,
+     pickle file, numpy file, torch file, pandas file, etc.
+     File types: txt, json, pickle, npy, pkl, pt, torch, csv, xlsx, xls
+
+    Args:
+        data: The data to be saved.
+        path (str): The path to the file.
+        kwargs: Other arguments for the corresponding save function.
+    """
+
+    # Ascii file
+    if path.endswith(".txt"):
+        save_txt(data, path, **kwargs)
+    # JSON file
+    elif path.endswith(".json"):
+        save_json(data, path, **kwargs)
+    elif path.endswith(".jsonl"):
+        save_jsonl(data, path, **kwargs)
+
+    # Binary file
+    elif path.endswith(".pickle") or path.endswith(".pkl"):
+        save_pickle(data, path, **kwargs)
+    elif path.endswith(".npy"):
+        save_npy(data, path, **kwargs)
+    elif path.endswith(".pt") or path.endswith(".torch"):
+        save_torch(data, path, **kwargs)
+    elif path.endswith(".csv"):
+        save_csv(data, path, **kwargs)
+    elif path.endswith(".xlsx") or path.endswith(".xls"):
+        save_excel(data, path, **kwargs)
+    else:
+        raise ValueError("Unsupported file type: {}".format(path))
+
+
+def save_jsonl(data, file_path, **kwargs):
+    """
+    Save data to a jsonl file.
+    """
+    with open(file_path, "w", encoding="utf-8") as f:
+        for line in data:
+            f.write(json.dumps(line) + "\n")
+
+
+def save_txt(data, file_path, **kwargs):
+    """
+    Save data to a plain text file.
+    """
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(data)
+
+
+def save_json(data, file_path, **kwargs):
+    """
+    Save data to a json file.
+    """
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, **kwargs)
+
+
+def save_excel(data, file_path, **kwargs):
+    """
+    Save data to an Excel file.
+    """
+    import pandas as pd
+
+    data.to_excel(file_path, **kwargs)
+
+
+def save_csv(data, file_path, **kwargs):
+    """
+    Save data to a csv file.
+    """
+    import pandas as pd
+
+    data.to_csv(file_path, **kwargs)
+
+
+def save_npy(data, file_path, **kwargs):
+    """
+    Save data to a numpy file.
+    """
+    np.save(file_path, data, **kwargs)
+
+
+def save_torch(data, file_path, **kwargs):
+    """
+    Save data to a torch file.
+    """
+    with open(file_path, "wb") as f:
+        torch.save(data, f, **kwargs)
+
+
+def save_pickle(data, file_path, **kwargs):
+    """
+    Save data to a pickle file.
+    """
+    with open(file_path, "wb") as f:
+        pickle.dump(data, f, **kwargs)
+
+
+def load_excel(file_path, **kwargs):
+    """
+    Load an Excel file and return the data.
+    """
+    import pandas as pd
+
+    return pd.read_excel(file_path, **kwargs)
+
+
+def load_csv(file_path, **kwargs):
+    """
+    Load a csv file and return the data.
+    """
+    import pandas as pd
+
+    return pd.read_csv(file_path, **kwargs)
+
+
+def load_npy(file_path, **kwargs):
+    """
+    Load a numpy file and return the data.
+    """
+    return np.load(file_path, **kwargs)
+
+
+def load_torch(file_path, **kwargs):
+    """
+    Load a torch file and return the data.
+    """
+    with open(file_path, "rb") as f:
+        return torch.load(f, **kwargs)
+
+
+def load_pickle(file_path, **kwargs):
+    """
+    Load a pickle file and return the data.
+    """
+    with open(file_path, "rb") as f:
+        data = pickle.load(f)
+    return data
+
+
+def load_txt(file_path):
+    """
+    Load a plain text file and return a list of strings.
+    """
+    with open(file_path, "r", encoding="utf-8") as f:
+        lines = [line.strip() for line in f.readlines()]
+    return lines
 
 
 def remove_empty_line(files: Union[str, List[str]]):
@@ -50,11 +241,11 @@ def save_json(dic, save_path):
         f.write(str_)
 
 
-def load_json(save_path):
+def load_json(file_path, **kwargs):
     """
     Load a JSON file and return a Python dictionary.
     """
-    with open(save_path, "r", encoding="utf-8") as f:
+    with open(file_path, "r", encoding="utf-8") as f:
         # Read the file and parse the JSON string to a dictionary
         data = f.readline().strip()
         fprint(
@@ -62,6 +253,17 @@ def load_json(save_path):
         )  # 'fprint' function is not defined, may need to be defined
         dic = json.loads(data)
     return dic
+
+
+def load_jsonl(file_path, **kwargs):
+    """
+    Load a JSONL file and return a list of Python dictionaries.
+    """
+    with open(file_path, "r", encoding="utf-8") as f:
+        # Read the file and parse the JSON string to a dictionary
+        lines = f.readlines()
+        dic_list = [json.loads(line.strip()) for line in lines]
+    return dic_list
 
 
 def load_dataset_from_file(fname, config):
