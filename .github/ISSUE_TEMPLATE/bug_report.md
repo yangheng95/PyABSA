@@ -1,19 +1,23 @@
 ---
-name: Bug report about: Create a report to help us improve title: "[Bug Report] "
-labels: bug assignees: ''
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: bug
+assignees: ''
 
 ---
 
-**Bug Description**
+**Version**
+See the console output for PyABSA, Torch, Transformers Version
 
-**Example Script Name**
-Which script you are using from examples?
+**Describe the bug**
+A clear and concise description of what the bug is.
 
-**Model**
-Which model are you using?
+**Code To Reproduce**
+Paste buggy code here
 
-**Dataset**
-Which dataset are you using?
+**Expected behavior**
+A clear and concise description of what you expected to happen.
 
-**Whole Stack Trace**
-Please past the error trace to help us locate the error
+**Screenshots**
+If applicable, add screenshots to help explain your problem.
