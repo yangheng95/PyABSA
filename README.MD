@@ -15,8 +15,6 @@
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/back-to-reality-leveraging-pattern-driven/aspect-based-sentiment-analysis-on-semeval)](https://paperswithcode.com/sota/aspect-based-sentiment-analysis-on-semeval?p=back-to-reality-leveraging-pattern-driven)
 
-# Note: If you need to find the v1.x version, please visit [release](https://github.com/yangheng95/PyABSA/tree/release). The final release of v1.x is [v1.16.27](https://github.com/yangheng95/PyABSA/tree/release)
-
 **Hi, there!** Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks. PyABSA is a free
 and open-source tool for everyone, but please do not forget to attach the (informal or formal) author
 information and project address in your works, products and publications, etc.
@@ -32,6 +30,9 @@ information and project address in your works, products and publications, etc.
 - [方面术语提取和情感分类](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC-Chinese) （中文, etc.）
 - [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC) （English,
   Chinese, etc.）
+
+## Usage Examples
+We have prepared many examples for different tasks. Please refer to [Examples](./examples-v2) for more usage examples.
 
 ## Installation
 

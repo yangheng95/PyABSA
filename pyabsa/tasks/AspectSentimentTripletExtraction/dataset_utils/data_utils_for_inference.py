@@ -163,7 +163,7 @@ class ASTEInferenceDataset:
                 )
                 _data.append(feat)
             except IndexError as e:
-                if kwargs.get('ignore_error', True):
+                if kwargs.get("ignore_error", True):
                     fprint(
                         "Ignore error while processing: {} Error info:{}".format(
                             data["sentence"], e

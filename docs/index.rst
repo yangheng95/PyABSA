@@ -29,15 +29,19 @@ PyABSA Documentation
 
 .. toctree::
    :maxdepth: 6
-   :caption: Model Inference
+   :caption: Deploy Demo
 
-    Please wait for the update
+    Aspect-based Sentiment Classification <3_inference/APC_flask_demo.ipynb>
+    Aspect Sentiment Triplet Extraction <3_inference/ASTE_flask_demo.ipynb>
+    Aspect Term Extraction and Sentiment Classification <3_inference/ATEPC_flask_demo.ipynb>
 
 .. toctree::
    :maxdepth: 6
    :caption: Model Training
 
-    Please wait for the update
+    Aspect-based Sentiment Classification <4_training/absc.md>
+    Aspect Term Extraction <4_training/ate.md>
+    Aspect Term Extraction and Sentiment Classification <4_training/atesc.md>
 
 
 .. toctree::
@@ -53,8 +57,8 @@ PyABSA Documentation
 
     Metrics Visualization <6_tutorials/metrics_visualization.md>
     Aspect-based Sentiment Classification <6_tutorials/Aspect_Sentiment_Classification.ipynb>
-    Aspect Term Extraction <6_tutorials/Aspect_Term_Extraction.ipynb>
-    Aspect_Sentiment_Triplet_Extraction <6_tutorials/Aspect_Sentiment_Triplet_Extraction.ipynb>
+    Aspect Term Extraction and Sentiment Classification <6_tutorials/Aspect_Term_Extraction.ipynb>
+    Aspect Sentiment Triplet Extraction <6_tutorials/Aspect_Sentiment_Triplet_Extraction.ipynb>
 
 .. toctree::
    :maxdepth: 6
