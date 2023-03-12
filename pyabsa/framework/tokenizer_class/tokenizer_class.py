@@ -111,7 +111,6 @@ class Tokenizer(object):
         else:
             raise ValueError("Text must be a string or a list of strings.")
 
-
     def text_to_sequence(
         self, text: Union[str, List[str]], padding="max_length", **kwargs
     ):

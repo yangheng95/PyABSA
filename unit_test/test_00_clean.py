@@ -27,7 +27,6 @@ def test_clean():
     if os.path.exists("run"):
         shutil.rmtree("run")
 
-
     print("Start cleaning...")
     for f in findfile.find_cwd_files(
         or_key=[".zip", ".cache", ".mv", ".json", ".txt"],

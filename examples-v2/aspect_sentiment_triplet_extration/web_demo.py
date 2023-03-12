@@ -117,7 +117,6 @@ demo = gr.Blocks()
 
 with demo:
     with gr.Row():
-
         with gr.Column():
             gr.Markdown("# <p align='center'>Aspect Sentiment Triplet Extraction !</p>")
 
@@ -131,7 +130,9 @@ with demo:
                         "You can find code and dataset at [ASTE examples](https://github.com/yangheng95/PyABSA/tree/v2/examples-v2/aspect_sentiment_triplet_extration)"
                     )
                     aste_dataset_ids = gr.Radio(
-                        choices=[dataset.name for dataset in ASTE.ASTEDatasetList()[:-1]],
+                        choices=[
+                            dataset.name for dataset in ASTE.ASTEDatasetList()[:-1]
+                        ],
                         value="Restaurant14",
                         label="Datasets",
                     )
@@ -144,7 +145,11 @@ with demo:
                     aste_inference_button.click(
                         fn=perform_aste_inference,
                         inputs=[aste_input_sentence, aste_dataset_ids],
-                        outputs=[aste_output_pred_df, aste_output_true_df, aste_output_text],
+                        outputs=[
+                            aste_output_pred_df,
+                            aste_output_true_df,
+                            aste_output_text,
+                        ],
                     )
 
         with gr.Column():
@@ -161,7 +166,9 @@ with demo:
                         "You can find the datasets at [github.com/yangheng95/ABSADatasets](https://github.com/yangheng95/ABSADatasets/tree/v1.2/datasets/text_classification)"
                     )
                     atepc_dataset_ids = gr.Radio(
-                        choices=[dataset.name for dataset in ATEPC.ATEPCDatasetList()[:-1]],
+                        choices=[
+                            dataset.name for dataset in ATEPC.ATEPCDatasetList()[:-1]
+                        ],
                         value="Laptop14",
                         label="Datasets",
                     )
