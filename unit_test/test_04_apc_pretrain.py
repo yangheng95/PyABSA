@@ -221,7 +221,7 @@ def test_glove_apc_models():
 
 if __name__ == "__main__":
     # test_lcf_apc_models()
-    test_bert_apc_models()
+    # test_bert_apc_models()
     test_glove_apc_models()
     # test_save_models()
     # test_lcf_apc_models()

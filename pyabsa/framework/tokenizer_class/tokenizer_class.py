@@ -105,6 +105,12 @@ class Tokenizer(object):
                     self.word2idx[word] = self.idx
                     self.idx2word[self.idx] = word
                     self.idx += 1
+        elif isinstance(text, list):
+            for t in text:
+                self.fit_on_text(t)
+        else:
+            raise ValueError("Text must be a string or a list of strings.")
+
 
     def text_to_sequence(
         self, text: Union[str, List[str]], padding="max_length", **kwargs

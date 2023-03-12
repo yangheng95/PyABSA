@@ -23,6 +23,7 @@ _tc_config_template = {
     "cache_dataset": True,
     "warmup_step": -1,
     "show_metric": False,
+    "pretrained_bert": "",
     "max_seq_len": 80,
     "dropout": 0,
     "l2reg": 0.000001,

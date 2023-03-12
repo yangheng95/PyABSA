@@ -27,6 +27,9 @@ def test_clean():
     if os.path.exists("source_datasets.backup"):
         shutil.rmtree("source_datasets.backup")
 
+    if os.path.exists("run"):
+        shutil.rmtree("run")
+
     fprint("Start cleaning...")
     for f in findfile.find_cwd_files(
         or_key=[".zip", ".cache", ".mv", ".json", ".txt"],

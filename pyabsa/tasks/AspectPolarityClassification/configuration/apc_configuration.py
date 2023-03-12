@@ -56,6 +56,7 @@ _apc_config_template = {
     "use_amp": False,
     "overwrite_cache": False,
     # split train and test datasets into 5 folds and repeat 3 trainer
+    "pretrained_bert": "",
 }
 
 _apc_config_base = {
