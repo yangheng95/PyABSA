@@ -88,5 +88,5 @@ def test_all_glove_models():
 
 
 if __name__ == "__main__":
-    test_all_bert_models()
+    # test_all_bert_models()
     test_all_glove_models()
