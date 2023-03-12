@@ -54,6 +54,7 @@ PyABSA Documentation
     Metrics Visualization <6_tutorials/metrics_visualization.md>
     Aspect-based Sentiment Classification <6_tutorials/Aspect_Sentiment_Classification.ipynb>
     Aspect Term Extraction <6_tutorials/Aspect_Term_Extraction.ipynb>
+    Aspect_Sentiment_Triplet_Extraction <6_tutorials/Aspect_Sentiment_Triplet_Extraction.ipynb>
 
 .. toctree::
    :maxdepth: 6
