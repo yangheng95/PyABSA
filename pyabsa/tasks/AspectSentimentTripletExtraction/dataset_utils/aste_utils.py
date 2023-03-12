@@ -117,7 +117,7 @@ class Instance(object):
             )
             self.token_range.append([token_start, token_end - 1])
             token_start = token_end
-        assert self.length == self.token_range[-1][-1] + 2
+        assert self.length == self.token_range[-1][-1] + 2, "length error"
 
         self.aspect_tags[self.length :] = -1
         self.aspect_tags[0] = -1

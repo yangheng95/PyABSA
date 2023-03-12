@@ -55,6 +55,10 @@ class ATEPCDatasetList(list):
     # https://www.kaggle.com/datasets/cf7394cb629b099cf94f3c3ba87e1d37da7bfb173926206247cd651db7a8da07
     Kaggle = DatasetItem("Kaggle", "129.Kaggle")
 
+    # source: https://www.kaggle.com/datasets/ankurzing/aspect-based-sentiment-analysis-for-financial-news
+    # processed by gr116@github
+    FinNews = DatasetItem("FinNews", "133.FinNews")
+
     Chinese_Zhang = DatasetItem("Chinese_Zhang", ["130.Chinese_Zhang"])
 
     # assembled dataset

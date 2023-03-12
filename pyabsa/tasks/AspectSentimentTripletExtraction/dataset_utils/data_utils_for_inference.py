@@ -144,7 +144,7 @@ class ASTEInferenceDataset:
     def __len__(self):
         return len(self.data)
 
-    def convert_examples_to_features(self):
+    def convert_examples_to_features(self, **kwargs):
         _data = []
         if len(self.data) > 1:
             it = tqdm.tqdm(self.data, desc="converting data to features")
@@ -162,12 +162,19 @@ class ASTEInferenceDataset:
                     self.config,
                 )
                 _data.append(feat)
-            except Exception as e:
-                fprint(
-                    "Processing error for: {}. Exception: {}".format(
-                        data["sentence"], e
+            except IndexError as e:
+                if kwargs.get('ignore_error', True):
+                    fprint(
+                        "Ignore error while processing: {} Error info:{}".format(
+                            data["sentence"], e
+                        )
                     )
-                )
+                else:
+                    raise RuntimeError(
+                        "Ignore error while processing: {} Catch Exception: {}, use ignore_error=True to remove error samples.".format(
+                            data["sentence"], e
+                        )
+                    )
         self.data = _data
         return self.data
 
@@ -183,11 +190,13 @@ class ASTEInferenceDataset:
 
         # Tokenize sentence
         # tokens = re.findall(r'\w+|[^\w\s]', sentence)
-        tokens = sentence.split()
+        # tokens = sentence.split()
+        tokens = [token.text for token in self.nlp(sentence)]
         postags, heads, deprels = self.get_dependencies(tokens)
 
         # Generate triples
         triples = []
+
         for i, aspect_span in enumerate(aspect_spans):
             for j, opinion_span in enumerate(opinion_spans):
                 if aspect_span == opinion_span:

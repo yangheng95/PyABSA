@@ -1,4 +1,7 @@
 ﻿{
+  "2.1.6": {
+    "1": "Add a new dataset (alias FinNews) from https://github.com/yangheng95/ABSADatasets/pull/43"
+  },
   "2.1.5": {
     "1": "Fix for cache dataset bug"
   },
