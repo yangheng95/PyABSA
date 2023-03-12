@@ -1,6 +1,9 @@
-name: pyabsa
+﻿name: pyabsa
 channels:
   - defaults
+  - nvidia
+  - pytorch
 dependencies:
-  - python=3.7
-  - cudatoolkit
+  - python=3.9
+  - pytorch-cuda
+  - pytorch

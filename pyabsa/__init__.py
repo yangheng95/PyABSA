@@ -63,12 +63,6 @@ from pyabsa.tasks.AspectPolarityClassification import APCDatasetList
 
 from pyabsa.utils.file_utils.file_utils import meta_load, meta_save
 
-try:
-    # Borrowed from https://github.com/acheong08/ChatGPT
-    from pyabsa.utils.chatgpt.chatgpt import Chatbot, ChatbotCLI
-except ImportError:
-    pass
-
 ABSADatasetList = APCDatasetList
 # for compatibility of v1.x
 

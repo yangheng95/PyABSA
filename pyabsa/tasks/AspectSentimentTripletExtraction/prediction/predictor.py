@@ -4,6 +4,7 @@
 # Copyright (C) 2020. All Rights Reserved.
 import os
 import pickle
+import string
 from typing import Union
 
 import torch
@@ -283,8 +284,10 @@ class AspectSentimentTripletExtractor(InferenceModel):
                                 ),
                                 "Polarity": self.config.index_to_label[polarity],
                             }
+
                             new_result["True Triplets"].append(triplet)
-                        all_results.append(new_result)
+
+                    all_results.append(new_result)
                 except Exception as e:
                     results = metric.parse_triplet(golden=False)
 
@@ -304,7 +307,12 @@ class AspectSentimentTripletExtractor(InferenceModel):
                             ),
                             "Polarity": self.config.index_to_label[polarity],
                         }
+
+                        if triplet["Aspect"] in string.punctuation:
+                            triplet["Aspect"] = " "
+
                         new_result["Triplets"].append(triplet)
+
                     all_results.append(new_result)
 
             for result in all_results:
