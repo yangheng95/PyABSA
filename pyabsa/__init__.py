@@ -7,7 +7,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 __name__ = "pyabsa"
-__version__ = "2.1.7"
+__version__ = "2.1.7.1"
 
 from pyabsa.framework.flag_class import *
 
@@ -62,6 +62,8 @@ from pyabsa.framework.checkpoint_class.checkpoint_template import (
 from pyabsa.tasks.AspectPolarityClassification import APCDatasetList
 
 from pyabsa.utils.file_utils.file_utils import meta_load, meta_save
+
+from pyabsa.utils.cache_utils.cache_utils import clean
 
 ABSADatasetList = APCDatasetList
 # for compatibility of v1.x

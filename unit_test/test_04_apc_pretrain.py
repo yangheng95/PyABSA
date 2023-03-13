@@ -8,7 +8,7 @@ import shutil
 
 from torch import cuda
 
-from pyabsa import DeviceTypeOption, ModelSaveOption
+from pyabsa import DeviceTypeOption, ModelSaveOption, clean
 
 import warnings
 
@@ -220,6 +220,7 @@ def test_glove_apc_models():
 
 
 if __name__ == "__main__":
+    clean()
     # test_lcf_apc_models()
     # test_bert_apc_models()
     test_glove_apc_models()

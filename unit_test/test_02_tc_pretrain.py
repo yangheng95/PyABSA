@@ -5,14 +5,13 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 import shutil
-
 from torch import cuda
 
 from findfile import find_cwd_dir
 
 import warnings
 
-from pyabsa import DeviceTypeOption
+from pyabsa import DeviceTypeOption, clean
 
 warnings.filterwarnings("ignore")
 
@@ -88,5 +87,6 @@ def test_all_glove_models():
 
 
 if __name__ == "__main__":
-    test_all_bert_models()
+    clean()
+    # test_all_bert_models()
     test_all_glove_models()
