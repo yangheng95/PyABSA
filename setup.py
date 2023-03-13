@@ -74,7 +74,7 @@ setup(
     # Author details
     author="Yang, Heng",
     author_email="hy345@exeter.ac.uk",
-    python_requires=">=3.7",
+    python_requires=">=3.8",
     packages=find_packages(),
     include_package_data=True,
     exclude_package_date={"": [".gitignore"]},

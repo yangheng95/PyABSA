@@ -27,9 +27,9 @@ def clean():
 
     print("Start cleaning...")
     for f in findfile.find_cwd_files(
-            or_key=[".zip", ".cache", ".mv", ".json", ".txt"],
-            exclude_key="glove",
-            recursive=1,
+        or_key=[".zip", ".cache", ".mv", ".json", ".txt"],
+        exclude_key="glove",
+        recursive=1,
     ):
         os.remove(f)
 
