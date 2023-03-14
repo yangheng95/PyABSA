@@ -40,13 +40,14 @@ class ABSAGenerator:
     Now complete the following example-
     input: """
 
-    def __init__(self, checkpoint=None):
+    def __init__(self, checkpoint=None, device=None):
         try:
             checkpoint_path = CheckpointManager().parse_checkpoint(checkpoint, "ACOS")
         except Exception as e:
             print(e)
+            checkpoint_path = checkpoint
 
-        self.model = T5Generator(checkpoint_path)
+        self.model = T5Generator(checkpoint_path, device=device)
 
     def predict(self, text_or_path):
         if isinstance(text_or_path, list):
