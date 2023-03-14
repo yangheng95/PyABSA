@@ -1,4 +1,7 @@
 ﻿{
+  "2.1.8": {
+    "1": "Add initial support for Aspect Category Opinion Sentiment Extraction (ACOS) task"
+  },
   "2.1.7": {
     "1": "Fix a bug in the glove tokenizer"
   },

@@ -56,7 +56,7 @@ def meta_load(path, **kwargs):
     elif path.endswith(".xlsx") or path.endswith(".xls"):
         return load_excel(path, **kwargs)
     else:
-        raise ValueError("Unsupported file type: {}".format(path))
+        return load_txt(path, **kwargs)
 
 
 def meta_save(data, path, **kwargs):
@@ -92,7 +92,7 @@ def meta_save(data, path, **kwargs):
     elif path.endswith(".xlsx") or path.endswith(".xls"):
         save_excel(data, path, **kwargs)
     else:
-        raise ValueError("Unsupported file type: {}".format(path))
+        return save_txt(path, **kwargs)
 
 
 def save_jsonl(data, file_path, **kwargs):

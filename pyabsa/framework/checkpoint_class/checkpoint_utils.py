@@ -93,13 +93,13 @@ def available_checkpoints(
     try:  # from huggingface space
         checkpoint_url = PyABSAMaterialHostAddress + "raw/main/checkpoints-v2.0.json"
         response = requests.get(checkpoint_url)
-        with open("./checkpoints-v2.0.json", "w") as f:
+        with open("./checkpoints.json", "w") as f:
             json.dump(response.json(), f)
     except Exception as e:
         fprint(
             "Fail to download checkpoints info from huggingface space, try to download from local"
         )
-    with open("./checkpoints-v2.0.json", "r", encoding="utf8") as f:
+    with open("./checkpoints.json", "r", encoding="utf8") as f:
         checkpoint_map = json.load(f)
 
     t_checkpoint_map = {}
