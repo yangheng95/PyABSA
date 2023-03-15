@@ -30,10 +30,10 @@ class ACOSDatasetList(list):
         super(ACOSDatasetList, self).__init__(
             [
                 self.Laptop14,
-                self.Restaurant14,
-                self.Restaurant15,
+                # self.Restaurant14,
+                # self.Restaurant15,
                 self.Restaurant16,
-                self.Chinese_Zhang,
-                self.Synthetic,
+                # self.Chinese_Zhang,
+                # self.Synthetic,
             ]
         )

@@ -13,32 +13,14 @@ from pyabsa.framework.checkpoint_class.checkpoint_template import CheckpointMana
 import pyabsa
 
 from .utils import T5Generator
+from .instructions import InstructionsHandler
 
 
 class ABSAGenerator:
-    # Definition: The output will be the aspects, opinions, sentiment polarities
-    # and aspect categories (both implicit and explicit). In cases where there are no aspects (or aspects, opinions,
-    # and aspect categories) the output should be NULL.
-    # prompt = """
-    #         Example #1
-    #         input: I charge it at night and skip taking the cord with me because of the good battery life.
-    #         output: aspect:battery life|opinion:good|sentiment:positive|category:POWER_SUPPLY#GENERAL, aspect:cord|opinion:NULL|sentiment:positive|category:POWER_SUPPLY#GENERAL
-    #         Example #2
-    #         input: Great food, good size menu, great service.
-    #         output: aspect:food|opinion:great|sentiment:positive|category:RESTAURANT#GENERAL, aspect:menu|opinion:good size|sentiment:positive|category:RESTAURANT#GENERAL, aspect:service|opinion:great|sentiment:positive|category:RESTAURANT#GENERAL
-    #         Now complete the following example-
-    #         input: """
-    prompt = """Definition: The output will be the aspects, opinions, sentiment polarities
-    and aspect categories (both implicit and explicit). In cases where there are no aspects (or aspects, opinions,
-    and aspect categories) the output should be NULL.
-    Positive example 1-
-    input: I charge it at night and skip taking the cord with me because of the good battery life.
-    output: aspect:battery life|opinion:good|sentiment:positive|category:POWER_SUPPLY#GENERAL, aspect:cord|opinion:NULL|sentiment:positive|category:POWER_SUPPLY#GENERAL
-    Positive example 2-
-    input: Great food, good size menu, great service and an unpretensious setting.
-    output: aspect:food|opinion:great|sentiment:positive|category:RESTAURANT#GENERAL, aspect:menu|opinion:good size|sentiment:positive|category:RESTAURANT#GENERAL, aspect:service|opinion:great|sentiment:positive|category:RESTAURANT#GENERAL, aspect:setting|opinion:unpretensious|sentiment:positive|category:RESTAURANT#GENERAL
-    Now complete the following example-
-    input: """
+    instruct_handler = InstructionsHandler()
+    instruct_handler.load_instruction_set1()
+    prompt = instruct_handler.multitask["bos_instruct3"]
+    eos_prompt = instruct_handler.multitask["eos_instruct"]
 
     def __init__(self, checkpoint=None, device=None):
         try:
@@ -53,18 +35,85 @@ class ABSAGenerator:
         if isinstance(text_or_path, list):
             results = []
             for i, t in enumerate(text_or_path):
-                text_or_path[i] = self.prompt + t + "\n        \noutput:"
-                results.append(self.model.predict(text_or_path))
+                text_or_path[i] = self.prompt + t + self.eos_prompt
+                outputs = self.model.predict(text_or_path[i])
+                data = {}
+                try:
+                    data["aspect"] = outputs[0].split("|")
+                except Exception as e:
+                    data["aspect"] = [""]
+
+                try:
+                    data["opinion"] = outputs[1].split("|")
+                except Exception as e:
+                    data["opinion"] = [""]
+
+                try:
+                    data["polarity"] = outputs[2].split("|")
+                except Exception as e:
+                    data["polarity"] = [""]
+
+                try:
+                    data["category"] = outputs[3].split("|")
+                except Exception as e:
+                    data["category"] = [""]
+
+                results.append(data)
             return results
         elif isinstance(text_or_path, str):
-            example = self.prompt + text_or_path + "\n        \noutput:"
-            return self.model.predict(example)
+            example = self.prompt + text_or_path + self.eos_prompt
+            outputs = self.model.predict(example)
+            outputs, _, _ = outputs[0].partition("<EndOfAnswer>")
+            outputs = outputs.strip().split(",")
+            data = {}
+            try:
+                data["aspect"] = outputs[0].split("|")
+            except Exception as e:
+                data["aspect"] = ""
+
+            try:
+                data["opinion"] = outputs[1].split("|")
+            except Exception as e:
+                data["opinion"] = ""
+
+            try:
+                data["polarity"] = outputs[2].split("|")
+            except Exception as e:
+                data["polarity"] = ""
+
+            try:
+                data["category"] = outputs[3].split("|")
+            except Exception as e:
+                data["category"] = ""
+
+            return data
         elif os.path.exists(text_or_path):
             lines = pyabsa.meta_load(text_or_path)
             results = []
             for line in lines:
-                example = self.prompt + line.split("\t")[0] + "\n        \noutput:"
-                results.append(self.model.predict(example))
+                example = self.prompt + line.split("\t")[0] + self.eos_prompt
+                outputs = self.model.predict(example)
+                data = {}
+                try:
+                    data["aspect"] = outputs[0].split("|")
+                except Exception as e:
+                    data["aspect"] = ""
+
+                try:
+                    data["opinion"] = outputs[1].split("|")
+                except Exception as e:
+                    data["opinion"] = ""
+
+                try:
+                    data["polarity"] = outputs[2].split("|")
+                except Exception as e:
+                    data["polarity"] = ""
+
+                try:
+                    data["category"] = outputs[3].split("|")
+                except Exception as e:
+                    data["category"] = ""
+                results.append(data)
             return results
 
 
