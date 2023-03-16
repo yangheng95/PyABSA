@@ -1,4 +1,6 @@
+import autocuda
 import torch
+from pyabsa.framework.checkpoint_class.checkpoint_template import CheckpointManager
 from torch.utils.data import DataLoader
 from torch.nn.utils.rnn import pad_sequence
 from tqdm import tqdm
@@ -22,11 +24,16 @@ from .instruction import (
 
 
 class T5Generator:
-    def __init__(self, model_checkpoint):
-        self.tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
-        self.model = AutoModelForSeq2SeqLM.from_pretrained(model_checkpoint)
+    def __init__(self, checkpoint):
+        try:
+            checkpoint = CheckpointManager().parse_checkpoint(checkpoint, "ACOS")
+        except Exception as e:
+            print(e)
+
+        self.tokenizer = AutoTokenizer.from_pretrained(checkpoint)
+        self.model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
         self.data_collator = DataCollatorForSeq2Seq(self.tokenizer)
-        self.device = "cuda" if torch.has_cuda else ("mps" if torch.has_mps else "cpu")
+        self.device = autocuda.auto_cuda()
         self.model.to(self.device)
 
     def tokenize_function_inputs(self, sample):
