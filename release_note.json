@@ -1,4 +1,7 @@
 ﻿{
+  "2.1.10": {
+    "1": "Improve Instruction-based Aspect Category Opinion Sentiment Extraction (ACOS) task, see the demo at https://huggingface.co/spaces/yangheng/PyABSA"
+  },
   "2.1.8(2.1.9)": {
     "1": "Add initial support for Aspect Category Opinion Sentiment Extraction (ACOS) task"
   },

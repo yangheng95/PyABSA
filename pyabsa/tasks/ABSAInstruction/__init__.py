@@ -7,5 +7,5 @@
 # google scholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
 # Copyright (C) 2019-2023. All Rights Reserved.
 
-from .inference import ABSAGenerator
+from .model import ABSAGenerator
 from .dataset_list import ACOSDatasetList

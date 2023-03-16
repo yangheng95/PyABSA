@@ -1,8 +1,24 @@
+# -*- coding: utf-8 -*-
+# file: data_utils.py
+# time: 15/03/2023
+# author: yangheng <hy345@exeter.ac.uk>
+# github: https://github.com/yangheng95
+# huggingface: https://huggingface.co/yangheng
+# google scholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
+# Copyright (C) 2021. All Rights Reserved.
+
 import json
 
 import findfile
-from datasets import Dataset
-from datasets.dataset_dict import DatasetDict
+import pandas as pd
+from datasets import DatasetDict, Dataset
+
+from .instruction import (
+    ATEInstruction,
+    CategoryInstruction,
+    OpinionInstruction,
+    APCInstruction,
+)
 
 
 class DatasetLoader:
@@ -22,64 +38,57 @@ class DatasetLoader:
             self.train_df_ood = train_df_ood
         self.test_df_ood = test_df_ood
 
-    def reconstruct_strings(self, df, col):
-        """
-        Reconstruct strings to dictionaries when loading csv/xlsx files.
-        """
-        reconstructed_col = []
-        for text in df[col]:
-            if text != "[]" and isinstance(text, str):
-                text = (
-                    text.replace("[", "")
-                    .replace("]", "")
-                    .replace("{", "")
-                    .replace("}", "")
-                    .split(", '")
-                )
-                req_list = []
-                for idx, pair in enumerate(text):
-                    if idx % 2 == 0:
-                        reconstructed_dict = {}
-                        reconstructed_dict[
-                            pair.split(":")[0].replace("'", "")
-                        ] = pair.split(":")[1].replace("'", "")
-                    else:
-                        reconstructed_dict[
-                            pair.split(":")[0].replace("'", "")
-                        ] = pair.split(":")[1].replace("'", "")
-                        req_list.append(reconstructed_dict)
-            else:
-                req_list = text
-            reconstructed_col.append(req_list)
-        df[col] = reconstructed_col
-        return df
-
-    def create_data_for_multitask(self, df, bos_instruction="", eos_instruction=""):
+    def prepare_instruction_dataloader(self, df):
         """
         Prepare the data in the input format required.
         """
+        ate_instructor = ATEInstruction()
+        apc_instructor = APCInstruction()
+        op_instructor = OpinionInstruction()
+        cat_instructor = CategoryInstruction()
+        alldata = []
+        for i, data in df.iterrows():
+            aspects = ", ".join([label["aspect"] for label in data["labels"]])
+            opinions = ", ".join(
+                [
+                    "{}:{}".format(label["aspect"], label["opinion"])
+                    for label in data["labels"]
+                ]
+            )
+            polarities = ", ".join(
+                [
+                    "{}:{}".format(label["aspect"], label["polarity"])
+                    for label in data["labels"]
+                ]
+            )
+            categories = ", ".join(
+                [
+                    "{}:{}".format(label["aspect"], label["category"])
+                    for label in data["labels"]
+                ]
+            )
+            alldata.append(
+                {"text": ate_instructor.prepare_input(data["text"]), "labels": aspects}
+            )
+            alldata.append(
+                {
+                    "text": apc_instructor.prepare_input(data["text"]),
+                    "labels": polarities,
+                }
+            )
+            alldata.append(
+                {"text": op_instructor.prepare_input(data["text"]), "labels": opinions}
+            )
+            alldata.append(
+                {
+                    "text": cat_instructor.prepare_input(data["text"]),
+                    "labels": categories,
+                }
+            )
+        alldata = pd.DataFrame(alldata)
+        return alldata
 
-        if df is None:
-            return
-
-        for text, data in df.iterrows():
-            _labels = []
-            for label in data["labels"]:
-                _label = []
-                for key in label:  # Path: data_prep.py
-                    # if key != 'category':
-                    #     _label.append(key + ':' + label[key])
-                    _label.append(key + ":" + label[key])
-                    # _label.append(label[key])
-                _label = "|".join(_label)
-                _labels.append(_label)
-            df.at[text, "labels"] = ", ".join(_labels)
-
-        df["text"] = df["text"].apply(lambda x: bos_instruction + x + eos_instruction)
-        print(df.head(5))
-        return df
-
-    def set_data_for_training_semeval(self, tokenize_function):
+    def create_datasets(self, tokenize_function):
         """
         Create the training and test dataset as huggingface datasets format.
         """
@@ -138,7 +147,7 @@ class DatasetLoader:
 def read_json(data_path, data_type="train"):
     data = []
 
-    files = findfile.find_files(data_path, [data_type, ".jsonl"])
+    files = findfile.find_files(data_path, [data_type, ".jsonl"], exclude_key=[".txt"])
     for f in files:
         with open(f, "r", encoding="utf8") as fin:
             for line in fin:
