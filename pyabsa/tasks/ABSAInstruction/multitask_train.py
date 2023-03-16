@@ -11,12 +11,11 @@ import warnings
 
 import findfile
 
+warnings.filterwarnings("ignore")
 import pandas as pd
 
 from .model import T5Generator, T5Classifier
 from .data_utils import DatasetLoader, read_json
-
-warnings.filterwarnings("ignore")
 
 task_name = "multitask"
 experiment_name = "instruction"
@@ -40,6 +39,9 @@ id_train_file_path = "./integrated_datasets/acos_datasets/"
 id_test_file_path = "./integrated_datasets/acos_datasets"
 # id_train_file_path = './integrated_datasets/acos_datasets/501.Laptop14'
 # id_test_file_path = './integrated_datasets/acos_datasets/501.Laptop14'
+# id_train_file_path = './integrated_datasets/acos_datasets/504.Restaurant16'
+# id_test_file_path = './integrated_datasets/acos_datasets/504.Restaurant16'
+
 
 id_tr_df = read_json(id_train_file_path, "train")
 id_te_df = read_json(id_test_file_path, "test")
@@ -74,7 +76,7 @@ training_args = {
     "learning_rate": 5e-5,
     "per_device_train_batch_size": 16,
     "per_device_eval_batch_size": 16,
-    "num_train_epochs": 30,
+    "num_train_epochs": 6,
     "weight_decay": 0.01,
     "warmup_ratio": 0.1,
     "load_best_model_at_end": True,

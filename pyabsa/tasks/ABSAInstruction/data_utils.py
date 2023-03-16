@@ -48,43 +48,57 @@ class DatasetLoader:
         cat_instructor = CategoryInstruction()
         alldata = []
         for i, data in df.iterrows():
-            aspects = ", ".join([label["aspect"] for label in data["labels"]])
+            _aspects = [label["aspect"] for label in data["labels"]]
+            aspects = []
+            for asp in _aspects:
+                if asp.strip() not in aspects:
+                    aspects.append(asp.strip())
+            aspects = ", ".join(aspects)
+            alldata.append(
+                {"text": ate_instructor.prepare_input(data["text"]), "labels": aspects}
+            )
+
             opinions = ", ".join(
                 [
                     "{}:{}".format(label["aspect"], label["opinion"])
                     for label in data["labels"]
                 ]
             )
+            alldata.append(
+                {
+                    "text": op_instructor.prepare_input(data["text"], aspects),
+                    "labels": opinions,
+                }
+            )
+
             polarities = ", ".join(
                 [
                     "{}:{}".format(label["aspect"], label["polarity"])
                     for label in data["labels"]
                 ]
             )
+            alldata.append(
+                {
+                    "text": apc_instructor.prepare_input(data["text"], aspects),
+                    "labels": polarities,
+                }
+            )
+
             categories = ", ".join(
                 [
-                    "{}:{}".format(label["aspect"], label["category"])
+                    "{}:{}".format(
+                        label["aspect"], label["category"].replace("NULL", "")
+                    )
                     for label in data["labels"]
                 ]
             )
             alldata.append(
-                {"text": ate_instructor.prepare_input(data["text"]), "labels": aspects}
-            )
-            alldata.append(
                 {
-                    "text": apc_instructor.prepare_input(data["text"]),
-                    "labels": polarities,
-                }
-            )
-            alldata.append(
-                {"text": op_instructor.prepare_input(data["text"]), "labels": opinions}
-            )
-            alldata.append(
-                {
-                    "text": cat_instructor.prepare_input(data["text"]),
+                    "text": cat_instructor.prepare_input(data["text"], aspects),
                     "labels": categories,
                 }
             )
+            # print(alldata[-1]['labels'])
         alldata = pd.DataFrame(alldata)
         return alldata
 

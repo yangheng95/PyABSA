@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 # file: dataset_list.py
 # time: 02/11/2022 19:35
 # author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
@@ -30,8 +30,8 @@ class ACOSDatasetList(list):
         super(ACOSDatasetList, self).__init__(
             [
                 self.Laptop14,
-                # self.Restaurant14,
-                # self.Restaurant15,
+                self.Restaurant14,
+                self.Restaurant15,
                 self.Restaurant16,
                 # self.Chinese_Zhang,
                 # self.Synthetic,

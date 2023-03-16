@@ -98,9 +98,7 @@ class T5Generator:
 
         # APC inference
         inputs = self.tokenizer(
-            apc_instructor.prepare_input(
-                text + "\nThe aspects are: " + ate_outputs + "\n"
-            ),
+            apc_instructor.prepare_input(text, ate_outputs),
             truncation=True,
             return_tensors="pt",
         ).to(self.device)
@@ -112,9 +110,7 @@ class T5Generator:
 
         # Opinion inference
         inputs = self.tokenizer(
-            op_instructor.prepare_input(
-                text + "\nThe aspects are: " + ate_outputs + "\n"
-            ),
+            op_instructor.prepare_input(text, ate_outputs),
             truncation=True,
             return_tensors="pt",
         ).to(self.device)
@@ -126,9 +122,7 @@ class T5Generator:
 
         # Category inference
         inputs = self.tokenizer(
-            cat_instructor.prepare_input(
-                text + "\nThe aspects are: " + ate_outputs + "\n"
-            ),
+            cat_instructor.prepare_input(text, ate_outputs),
             truncation=True,
             return_tensors="pt",
         ).to(self.device)
@@ -139,7 +133,7 @@ class T5Generator:
         result["category"] = [cat.strip() for cat in cat_outputs.split(",")]
         ensemble_result = {
             "text": text,
-            "Quadruple": [
+            "Quadruples": [
                 {
                     "Aspect": asp,
                     "Sentiment": sent.partition(":")[2],
@@ -219,19 +213,32 @@ class T5Generator:
         for gt, pred in zip(y_true, y_pred):
             print(gt)
             print(pred)
+
             gt_list = gt.split(", ")
             pred_list = pred.split(", ")
-            print(gt_list)
-            print(pred_list)
             total_pred += len(pred_list)
             total_gt += len(gt_list)
             for gt_val in gt_list:
                 for pred_val in pred_list:
+                    gt_val = gt_val.replace(" ", "")
+                    pred_val = pred_val.replace(" ", "")
                     if pred_val.strip().lower() == gt_val.strip().lower():
                         tp += 1
         p = tp / total_pred
         r = tp / total_gt
         return {"precision": p, "recall": r, "f1": 2 * p * r / (p + r)}
+
+    # def get_classic_metrics(self, y_true, y_pred):
+    #
+    #     tp = 1e-6
+    #     for gt, pred in zip(y_true, y_pred):
+    #         print(gt)
+    #         print(pred)
+    #         if pred.strip().lower() == gt.strip().lower():
+    #             tp += 1
+    #     p = tp / len(y_true)
+    #     r = tp / len(y_true)
+    #     return {"precision": p, "recall": r, "f1": 2 * p * r / (p + r)}
 
     def get_metrics(self, y_true, y_pred):
         total_pred = 1e-6

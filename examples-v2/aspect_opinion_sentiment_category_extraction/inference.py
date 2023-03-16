@@ -17,4 +17,5 @@ if __name__ == "__main__":
     ]
 
     for example in example:
-        generator.predict(example)
+        result = generator.predict(example)
+        print(result)

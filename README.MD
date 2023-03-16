@@ -1,4 +1,4 @@
-# PyABSA - Open Framework for Aspect-based Sentiment Analysis
+# [PyABSA - Open Framework for Aspect-based Sentiment Analysis](https://arxiv.org/pdf/2208.01368)
 
 ![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg)
 [![PyPI](https://img.shields.io/pypi/v/pyabsa)](https://pypi.org/project/pyabsa/)
@@ -21,6 +21,9 @@ information and project address in your works, products and publications, etc.
 
 ## Try our demos on Huggingface Space
 
+Apart from the [paper](https://arxiv.org/pdf/2208.01368), there are two new features in PyABSA: Aspect sentiment triplet extraction and Aspect quadruple extraction.
+We have deployed the demos on Huggingface Space, you can try them online.
+- **[Aspect sentiment quadruple extraction](https://huggingface.co/spaces/yangheng/PyABSA) (English) New feature**
 - **[Aspect sentiment triplet extraction](https://huggingface.co/spaces/yangheng/PyABSA) (English) New feature**
 - [(Gradio) Aspect term extraction & sentiment classification](https://huggingface.co/spaces/Gradio-Blocks/Multilingual-Aspect-Based-Sentiment-Analysis) (
   English, Chinese, Arabic, Dutch, French, Russian, Spanish, Turkish, etc.)
