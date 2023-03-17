@@ -21,7 +21,7 @@ from .instruction import (
 )
 
 
-class DatasetLoader:
+class InstructDatasetLoader:
     def __init__(
         self,
         train_df_id,

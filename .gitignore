@@ -27,6 +27,7 @@ __pycache__/
 *$py.class
 *.pyc
 experiments/
+checkpoints/
 tests/
 *.result.json
 .idea/
