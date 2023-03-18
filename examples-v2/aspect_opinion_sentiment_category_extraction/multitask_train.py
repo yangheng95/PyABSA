@@ -11,6 +11,7 @@ import warnings
 
 import findfile
 from pyabsa import ABSAInstruction as absa_instruction
+
 warnings.filterwarnings("ignore")
 import pandas as pd
 
@@ -18,10 +19,10 @@ import pandas as pd
 task_name = "multitask"
 experiment_name = "instruction"
 # model_checkpoint = 'allenai/tk-instruct-base-def-pos'
-model_checkpoint = "kevinscaria/ate_tk-instruct-base-def-pos-neg-neut-combined"
+# model_checkpoint = "kevinscaria/ate_tk-instruct-base-def-pos-neg-neut-combined"
 # model_checkpoint = 'allenai/tk-instruct-large-def-pos'
 # model_checkpoint = 'allenai/tk-instruct-3b-def-pos'
-# model_checkpoint = 'google/mt5-base'
+model_checkpoint = "google/flan-t5-base"
 
 print("Experiment Name: ", experiment_name)
 model_out_path = "checkpoints"
@@ -33,12 +34,12 @@ print("Model output path: ", model_out_path)
 # Load the data
 # id_train_file_path = './integrated_datasets'
 # id_test_file_path = './integrated_datasets'
-# id_train_file_path = "./integrated_datasets/acos_datasets/"
-# id_test_file_path = "./integrated_datasets/acos_datasets"
-id_train_file_path = './integrated_datasets/acos_datasets/501.Laptop14'
-id_test_file_path = './integrated_datasets/acos_datasets/501.Laptop14'
-# id_train_file_path = './integrated_datasets/acos_datasets/504.Restaurant16'
-# id_test_file_path = './integrated_datasets/acos_datasets/504.Restaurant16'
+id_train_file_path = "./integrated_datasets/acos_datasets/"
+id_test_file_path = "./integrated_datasets/acos_datasets"
+# id_train_file_path = './integrated_datasets/acos_datasets/501.Laptop14'
+# id_test_file_path = './integrated_datasets/acos_datasets/501.Laptop14'
+# id_train_file_path = './integrated_datasets/acos_datasets/502.Restaurant14'
+# id_test_file_path = './integrated_datasets/acos_datasets/502.Restaurant14'
 
 
 id_tr_df = absa_instruction.data_utils.read_json(id_train_file_path, "train")
@@ -72,9 +73,9 @@ training_args = {
     "evaluation_strategy": "epoch",
     "save_strategy": "epoch",
     "learning_rate": 5e-5,
-    "per_device_train_batch_size": 4,
+    "per_device_train_batch_size": 16,
     "per_device_eval_batch_size": 16,
-    "num_train_epochs": 6,
+    "num_train_epochs": 3,
     "weight_decay": 0.01,
     "warmup_ratio": 0.1,
     "load_best_model_at_end": True,
