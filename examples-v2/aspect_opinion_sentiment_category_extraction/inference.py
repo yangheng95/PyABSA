@@ -10,7 +10,9 @@
 from pyabsa import ABSAInstruction
 
 if __name__ == "__main__":
-    generator = ABSAInstruction.ABSAGenerator("multilingual")
+    generator = ABSAInstruction.ABSAGenerator(
+        "checkpoints/multitask/googleflan-t5-base-instruction/checkpoint-2745"
+    )
     example = [
         "The food is good, but the service is bad.",
         "The laptop is good, but the battery life is bad.",

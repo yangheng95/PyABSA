@@ -1,4 +1,5 @@
 import autocuda
+import sklearn
 import torch
 from pyabsa.framework.checkpoint_class.checkpoint_template import CheckpointManager
 from torch.utils.data import DataLoader
@@ -32,6 +33,7 @@ class T5Generator:
 
         self.tokenizer = AutoTokenizer.from_pretrained(checkpoint)
         self.model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
+        self.model.config.max_length = 128
         self.data_collator = DataCollatorForSeq2Seq(self.tokenizer)
         self.device = autocuda.auto_cuda()
         self.model.to(self.device)
@@ -94,7 +96,7 @@ class T5Generator:
         ate_outputs = self.tokenizer.batch_decode(
             ate_outputs, skip_special_tokens=True
         )[0]
-        result["aspect"] = [asp.strip() for asp in ate_outputs.split(",")]
+        result["aspect"] = [asp.strip() for asp in ate_outputs.split("|")]
 
         # APC inference
         inputs = self.tokenizer(
@@ -106,7 +108,7 @@ class T5Generator:
         apc_outputs = self.tokenizer.batch_decode(
             apc_outputs, skip_special_tokens=True
         )[0]
-        result["sentiment"] = [sent.strip() for sent in apc_outputs.split(",")]
+        result["sentiment"] = [sent.strip() for sent in apc_outputs.split("|")]
 
         # Opinion inference
         inputs = self.tokenizer(
@@ -118,7 +120,7 @@ class T5Generator:
         op_outputs = self.tokenizer.batch_decode(op_outputs, skip_special_tokens=True)[
             0
         ]
-        result["opinion"] = [op.strip() for op in op_outputs.split(",")]
+        result["opinion"] = [op.strip() for op in op_outputs.split("|")]
 
         # Category inference
         inputs = self.tokenizer(
@@ -130,7 +132,7 @@ class T5Generator:
         cat_outputs = self.tokenizer.batch_decode(
             cat_outputs, skip_special_tokens=True
         )[0]
-        result["category"] = [cat.strip() for cat in cat_outputs.split(",")]
+        result["category"] = [cat.strip() for cat in cat_outputs.split("|")]
         ensemble_result = {
             "text": text,
             "Quadruples": [
@@ -207,26 +209,43 @@ class T5Generator:
         return aspect_p, aspect_r, aspect_f1
 
     def get_classic_metrics(self, y_true, y_pred):
-        total_pred = 0
-        total_gt = 0
-        tp = 1e-6
+        valid_gts = []
+        valid_preds = []
         for gt, pred in zip(y_true, y_pred):
-            print(gt)
-            print(pred)
-
-            gt_list = gt.split(", ")
-            pred_list = pred.split(", ")
-            total_pred += len(pred_list)
-            total_gt += len(gt_list)
-            for gt_val in gt_list:
+            gt_list = gt.split("|")
+            pred_list = pred.split("|")
+            while gt_list:
+                gt_val = gt_list[-1].strip().lower()
                 for pred_val in pred_list:
-                    gt_val = gt_val.replace(" ", "")
-                    pred_val = pred_val.replace(" ", "")
-                    if pred_val.strip().lower() == gt_val.strip().lower():
-                        tp += 1
-        p = tp / total_pred
-        r = tp / total_gt
-        return {"precision": p, "recall": r, "f1": 2 * p * r / (p + r)}
+                    pred_val = pred_val.strip().lower()
+                    gt_key, _, gt_label = gt_val.partition(":")
+                    pred_key, _, pred_label = pred_val.partition(":")
+                    if gt_key.startswith(pred_key):
+                        if gt_label:
+                            valid_gts.append(gt_label)
+                        else:
+                            break
+                        if pred_label:
+                            valid_preds.append(pred_label)
+                        else:
+                            valid_preds.append("")
+                        break
+
+                gt_list.pop()
+
+        report = sklearn.metrics.classification_report(valid_gts, valid_preds)
+        print(report)
+        accuracy = sklearn.metrics.accuracy_score(valid_gts, valid_preds)
+        precision = precision_score(valid_gts, valid_preds, average="macro")
+        recall = recall_score(valid_gts, valid_preds, average="macro")
+        f1 = f1_score(valid_gts, valid_preds, average="macro")
+
+        return {
+            "accuracy": accuracy,
+            "precision": precision,
+            "recall": recall,
+            "f1": f1,
+        }
 
     # def get_classic_metrics(self, y_true, y_pred):
     #
