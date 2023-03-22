@@ -208,7 +208,15 @@ class AspectSentimentTripletExtractor(InferenceModel):
         else:
             raise RuntimeError("Please specify your datasets path!")
         if isinstance(text, str):
-            return self._run_prediction(print_result=print_result, **kwargs)[0]
+            try:
+                return self._run_prediction(print_result=print_result, **kwargs)[0]
+            except Exception as e:
+                return {
+                    "text": text,
+                    "Triplets": "[]",
+                    "error": str(e),
+                    "error_type": "RuntimeError",
+                }
         else:
             return self._run_prediction(print_result=print_result, **kwargs)
 

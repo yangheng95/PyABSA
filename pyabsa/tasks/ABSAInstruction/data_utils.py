@@ -48,7 +48,7 @@ class InstructDatasetLoader:
         cat_instructor = CategoryInstruction()
         alldata = []
         for i, data in df.iterrows():
-            _aspects = ["aspect:" + label["aspect"] for label in data["labels"]]
+            _aspects = [label["aspect"] for label in data["labels"]]
             aspects = []
             for asp in _aspects:
                 if asp.strip() not in aspects:
@@ -84,30 +84,30 @@ class InstructDatasetLoader:
                 {"text": ate_instructor.prepare_input(data["text"]), "labels": aspects}
             )
 
-            # APC task
-            alldata.append(
-                {
-                    "text": apc_instructor.prepare_input(data["text"], aspects),
-                    "labels": polarities,
-                }
-            )
+            # # APC task
+            # alldata.append(
+            #     {
+            #         "text": apc_instructor.prepare_input(data["text"], aspects),
+            #         "labels": polarities,
+            #     }
+            # )
 
-            # Opinion task
-            alldata.append(
-                {
-                    "text": op_instructor.prepare_input(data["text"], aspects),
-                    "labels": opinions,
-                }
-            )
-
-            # Category task
-            if "NULL" not in categories:
-                alldata.append(
-                    {
-                        "text": cat_instructor.prepare_input(data["text"], aspects),
-                        "labels": categories,
-                    }
-                )
+            # # Opinion task
+            # alldata.append(
+            #     {
+            #         "text": op_instructor.prepare_input(data["text"], aspects),
+            #         "labels": opinions,
+            #     }
+            # )
+            #
+            # # Category task
+            # if "NULL" not in categories:
+            #     alldata.append(
+            #         {
+            #             "text": cat_instructor.prepare_input(data["text"], aspects),
+            #             "labels": categories,
+            #         }
+            #     )
 
         alldata = pd.DataFrame(alldata)
         return alldata
