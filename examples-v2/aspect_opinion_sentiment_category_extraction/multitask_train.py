@@ -38,8 +38,8 @@ id_train_file_path = "./integrated_datasets/acos_datasets/"
 id_test_file_path = "./integrated_datasets/acos_datasets"
 # id_train_file_path = './integrated_datasets/acos_datasets/501.Laptop14'
 # id_test_file_path = './integrated_datasets/acos_datasets/501.Laptop14'
-# id_train_file_path = './integrated_datasets/acos_datasets/502.Restaurant14'
-# id_test_file_path = './integrated_datasets/acos_datasets/502.Restaurant14'
+id_train_file_path = "./integrated_datasets/acos_datasets/502.Restaurant14"
+id_test_file_path = "./integrated_datasets/acos_datasets/502.Restaurant14"
 
 
 id_tr_df = absa_instruction.data_utils.read_json(id_train_file_path, "train")
@@ -73,9 +73,9 @@ training_args = {
     "evaluation_strategy": "epoch",
     "save_strategy": "epoch",
     "learning_rate": 5e-5,
-    "per_device_train_batch_size": 16,
+    "per_device_train_batch_size": 6,
     "per_device_eval_batch_size": 16,
-    "num_train_epochs": 3,
+    "num_train_epochs": 6,
     "weight_decay": 0.01,
     "warmup_ratio": 0.1,
     "load_best_model_at_end": True,

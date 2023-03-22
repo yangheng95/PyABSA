@@ -264,7 +264,10 @@ class SentimentClassifier(InferenceModel):
                 # confidence, probabilities, reference sentiment, reference check, and perplexity as separate lists
                 final_res.append(
                     {
-                        "text": result["text"].replace("  ", " "),
+                        "text": result["text"]
+                        .replace("Global Sentiment", "")
+                        .replace("  ", " ")
+                        .strip(),
                         "aspect": [result["aspect"]],
                         "sentiment": [result["sentiment"]],
                         "confidence": [result["confidence"]],

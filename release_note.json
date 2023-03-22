@@ -1,5 +1,8 @@
 ﻿{
-  "2.1.10": {
+  "2.2.0": {
+    "1": "Improve Instruction-based Aspect Category Opinion Sentiment Extraction (ACOS) task, see the demo at https://huggingface.co/spaces/yangheng/PyABSA"
+  },
+  "2.1.10(11,12)": {
     "1": "Improve Instruction-based Aspect Category Opinion Sentiment Extraction (ACOS) task, see the demo at https://huggingface.co/spaces/yangheng/PyABSA"
   },
   "2.1.8(2.1.9)": {
