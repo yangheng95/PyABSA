@@ -1,19 +1,13 @@
 # [PyABSA - Open Framework for Aspect-based Sentiment Analysis](https://arxiv.org/pdf/2208.01368)
 
-![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg)
+![PyPI - Python Version](https://img.shields.io/badge/python-3.8-gold.svg)
 [![PyPI](https://img.shields.io/pypi/v/pyabsa)](https://pypi.org/project/pyabsa/)
 [![Downloads](https://pepy.tech/badge/pyabsa)](https://pepy.tech/project/pyabsa)
 [![Downloads](https://pepy.tech/badge/pyabsa/month)](https://pepy.tech/project/pyabsa)
-![License](https://img.shields.io/pypi/l/pyabsa?logo=PyABSA)
-[![Documentation Status](https://readthedocs.org/projects/pyabsa/badge/?version=v2)](https://pyabsa.readthedocs.io/en/v2/?badge=v2)
-
-
-[![total views](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_views.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
-[![total views per week](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_views_per_week.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
 [![total clones](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_clones.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
-[![total clones per week](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_clones_per_week.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
+![License](https://img.shields.io/pypi/l/pyabsa?logo=PyABSA)
+[![Documentation Status](https://readthedocs.org/projects/pyabsa/badge/?version=v2)](https://pyabsa.readthedocs.io/en/latest/)
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/back-to-reality-leveraging-pattern-driven/aspect-based-sentiment-analysis-on-semeval)](https://paperswithcode.com/sota/aspect-based-sentiment-analysis-on-semeval?p=back-to-reality-leveraging-pattern-driven)
 
 **Hi, there!** Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks. PyABSA is a free
 and open-source tool for everyone, but please do not forget to attach the (informal or formal) author
@@ -30,7 +24,6 @@ We have deployed the demos on Huggingface Space, you can try them online.
 - [(Prototype) Aspect term extraction & sentiment classification](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) (
   English,
   Chinese, Arabic, Dutch, French, Russian, Spanish, Turkish, etc.)
-- [方面术语提取和情感分类](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC-Chinese) （中文, etc.）
 - [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC) （English,
   Chinese, etc.）
 
@@ -38,6 +31,19 @@ We have deployed the demos on Huggingface Space, you can try them online.
 We have prepared many examples for different tasks. Please refer to [Examples](./examples-v2) for more usage examples.
 
 ## Installation
+
+### Install Anaconda (Optional)
+Install [Anaconda](https://www.anaconda.com/products/individual) if you do not have it.
+
+### Create a new environment (Optional)
+```bash
+conda create -n pyabsa python=3.8
+conda activate pyabsa
+```
+
+### Install Pytorch
+Install Pytorch following the [official instructions](https://pytorch.org/get-started/locally/). 
+You need to select your environment, operating system, package, Python version, and CUDA version.
 
 ### install via pip
 
