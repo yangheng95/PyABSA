@@ -11,7 +11,7 @@ from pyabsa import ABSAInstruction
 
 if __name__ == "__main__":
     generator = ABSAInstruction.ABSAGenerator(
-        "checkpoints/multitask/googleflan-t5-base-instruction/checkpoint-2745"
+        "checkpoints/multitask/googleflan-t5-base-instruction/checkpoint-7316"
     )
     example = [
         "The food is good, but the service is bad.",
