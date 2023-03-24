@@ -9,10 +9,6 @@
 [![Documentation Status](https://readthedocs.org/projects/pyabsa/badge/?version=v2)](https://pyabsa.readthedocs.io/en/latest/)
 
 
-**Hi, there!** Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks. PyABSA is a free
-and open-source tool for everyone, but please do not forget to attach the (informal or formal) author
-information and project address in your works, products and publications, etc.
-
 ## Try our demos on Huggingface Space
 
 Apart from the [paper](https://arxiv.org/pdf/2208.01368), there are two new features in PyABSA: Aspect sentiment triplet extraction and Aspect quadruple extraction.
@@ -166,7 +162,7 @@ If you are looking for the original proposal of local context focus, here are so
 @article{YangL22,
   author    = {Heng Yang and
                Ke Li},
-  title     = {PyABSA: Open Framework for Aspect-based Sentiment Analysis},
+  title     = {A Modularized Framework for Reproducible Aspect-based Sentiment Analysis},
   journal   = {CoRR},
   volume    = {abs/2208.01368},
   year      = {2022},
