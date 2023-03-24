@@ -3,13 +3,20 @@
 
 cff-version: 1.2.0
 title: >-
-  PyABSA - Open Framework for Aspect-based Sentiment
-  Analysis
+  PyABSA: A Modularized Framework for Reproducible Aspect-based Sentiment Analysis
 message: 'https://github.com/yangheng95/PyABSA'
-type: software
+type: paper
 authors:
   - given-names: HENG
     name-particle: YANG
+    eprinttype: arXiv
+    eprint: 2208.01368
+    journal: CoRR
+    volume: abs/2208.01368
+    year: 2022
+    url: 'https://doi.org/10.48550/arXiv.2208.01368'
+    doi: 10.48550/arXiv.2208.01368
     email: hy345@exeter.ac.uk
     affiliation: University of Exeter
     orcid: 'https://orcid.org/0000-0002-6831-196X'
+    bibsource: 'https://dblp.org/rec/journals/corr/abs-2208-01368.bib'
