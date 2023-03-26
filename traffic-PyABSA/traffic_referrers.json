@@ -1,52 +1,52 @@
 [
   {
     "referrer": "github.com",
-    "count": 963,
-    "uniques": 202
+    "count": 1018,
+    "uniques": 208
   },
   {
     "referrer": "Google",
-    "count": 925,
-    "uniques": 227
+    "count": 982,
+    "uniques": 236
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 324,
-    "uniques": 70
+    "count": 353,
+    "uniques": 71
   },
   {
     "referrer": "pyabsa.readthedocs.io",
-    "count": 280,
-    "uniques": 21
+    "count": 282,
+    "uniques": 23
   },
   {
     "referrer": "huggingface.co",
-    "count": 253,
-    "uniques": 53
-  },
-  {
-    "referrer": "yangheng-pyabsa.hf.space",
-    "count": 152,
-    "uniques": 37
+    "count": 256,
+    "uniques": 54
   },
   {
     "referrer": "cn.bing.com",
-    "count": 152,
-    "uniques": 7
+    "count": 153,
+    "uniques": 8
   },
   {
     "referrer": "colab.research.google.com",
-    "count": 117,
+    "count": 152,
     "uniques": 13
   },
   {
-    "referrer": "youtube.com",
-    "count": 97,
-    "uniques": 30
+    "referrer": "yangheng-pyabsa.hf.space",
+    "count": 150,
+    "uniques": 37
   },
   {
-    "referrer": "link.zhihu.com",
-    "count": 73,
-    "uniques": 17
+    "referrer": "youtube.com",
+    "count": 94,
+    "uniques": 29
+  },
+  {
+    "referrer": "gradio-blocks-multilingual-aspect-based-sentim-c04f821.hf.space",
+    "count": 65,
+    "uniques": 18
   }
 ]
