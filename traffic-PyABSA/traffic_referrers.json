@@ -1,52 +1,52 @@
 [
   {
     "referrer": "github.com",
-    "count": 1015,
-    "uniques": 187
+    "count": 1054,
+    "uniques": 176
   },
   {
     "referrer": "Google",
-    "count": 965,
+    "count": 1005,
     "uniques": 203
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 325,
-    "uniques": 60
+    "count": 343,
+    "uniques": 63
   },
   {
     "referrer": "pyabsa.readthedocs.io",
-    "count": 264,
+    "count": 272,
     "uniques": 24
   },
   {
     "referrer": "huggingface.co",
-    "count": 200,
-    "uniques": 45
+    "count": 226,
+    "uniques": 44
   },
   {
     "referrer": "yangheng-pyabsa.hf.space",
-    "count": 164,
-    "uniques": 23
+    "count": 163,
+    "uniques": 22
   },
   {
     "referrer": "cn.bing.com",
-    "count": 149,
-    "uniques": 7
-  },
-  {
-    "referrer": "colab.research.google.com",
-    "count": 87,
-    "uniques": 7
+    "count": 147,
+    "uniques": 8
   },
   {
     "referrer": "youtube.com",
-    "count": 83,
-    "uniques": 28
+    "count": 93,
+    "uniques": 29
+  },
+  {
+    "referrer": "colab.research.google.com",
+    "count": 86,
+    "uniques": 6
   },
   {
     "referrer": "yangheng-multilingual-aspect-based-sentim-6aa230e.hf.space",
-    "count": 72,
-    "uniques": 17
+    "count": 65,
+    "uniques": 15
   }
 ]
