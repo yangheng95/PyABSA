@@ -528,13 +528,15 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                                         except:
                                             # logger.info('Can not remove sub-optimal trained model:', save_path)
                                             pass
-                                    save_path = "{0}/{1}_{2}_{3}_acc_{4}_f1_{5}/".format(
-                                        self.config.model_path_to_save,
-                                        self.config.model_name,
-                                        self.config.dataset_name,
-                                        self.config.pretrained_bert,
-                                        round(test_acc * 100, 2),
-                                        round(f1 * 100, 2),
+                                    save_path = (
+                                        "{0}/{1}_{2}_{3}_acc_{4}_f1_{5}/".format(
+                                            self.config.model_path_to_save,
+                                            self.config.model_name,
+                                            self.config.dataset_name,
+                                            self.config.pretrained_bert,
+                                            round(test_acc * 100, 2),
+                                            round(f1 * 100, 2),
+                                        )
                                     )
 
                                     if (

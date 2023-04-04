@@ -79,37 +79,41 @@ def detect_dataset(
     logger = config.logger if config else kwargs.get("logger", None)
     check_datasets_version(logger=logger)
 
-    if (isinstance(dataset_name_or_path, str) or isinstance(dataset_name_or_path, Path)) and os.path.exists(dataset_name_or_path):
+    if (
+        isinstance(dataset_name_or_path, str) or isinstance(dataset_name_or_path, Path)
+    ) and os.path.exists(dataset_name_or_path):
         fprint("Loading dataset from local path: " + str(dataset_name_or_path))
-        fprint("Make sure the dataset file names are in the correct format, e.g., train.txt, test.txt, valid.txt")
+        fprint(
+            "Make sure the dataset file names are in the correct format, e.g., train.txt, test.txt, valid.txt"
+        )
 
         dataset_file["train"] += findfile.find_files(
             dataset_name_or_path,
             ["train"],
             exclude_key=[".inference", "test.", "valid."]
-                        + filter_key_words
-                        + [".ignore"],
+            + filter_key_words
+            + [".ignore"],
         )
         dataset_file["test"] += findfile.find_files(
             dataset_name_or_path,
             ["test"],
             exclude_key=[".inference", "train.", "valid."]
-                        + filter_key_words
-                        + [".ignore"],
+            + filter_key_words
+            + [".ignore"],
         )
         dataset_file["valid"] += findfile.find_files(
             dataset_name_or_path,
             ["valid"],
             exclude_key=[".inference", "train.", "test."]
-                        + filter_key_words
-                        + [".ignore"],
+            + filter_key_words
+            + [".ignore"],
         )
         dataset_file["valid"] += findfile.find_files(
             dataset_name_or_path,
             ["dev"],
             exclude_key=[".inference", "train.", "test."]
-                        + filter_key_words
-                        + [".ignore"],
+            + filter_key_words
+            + [".ignore"],
         )
 
     if not isinstance(dataset_name_or_path, DatasetItem):
@@ -347,7 +351,9 @@ def detect_infer_dataset(
     """
     logger = kwargs.get("logger", None)
     dataset_file = []
-    if (isinstance(dataset_name_or_path, str) or isinstance(dataset_name_or_path, Path)) and os.path.isfile(dataset_name_or_path):
+    if (
+        isinstance(dataset_name_or_path, str) or isinstance(dataset_name_or_path, Path)
+    ) and os.path.isfile(dataset_name_or_path):
         dataset_file.append(dataset_name_or_path)
         return dataset_file
 

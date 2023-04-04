@@ -308,8 +308,7 @@ class CodeDefectDetector(InferenceModel):
                 except Exception as e:
                     # bug fix for typo in config
                     inputs = [
-                        sample[col].to(self.config.device)
-                        for col in self.config.inputs
+                        sample[col].to(self.config.device) for col in self.config.inputs
                     ]
                 targets = sample["label"].to(self.config.device)
                 c_targets = sample["corrupt_label"].to(self.config.device)
