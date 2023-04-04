@@ -48,7 +48,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
         torch.manual_seed(self.config.seed)
         torch.cuda.manual_seed(self.config.seed)
 
-        self.config.inputs = self.model.inputs
+        self.config.inputs_cols = self.model.inputs_cols
 
         self.config.device = torch.device(self.config.device)
 
@@ -203,7 +203,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 self.optimizer.zero_grad()
                 inputs = [
                     sample_batched[col].to(self.config.device)
-                    for col in self.config.inputs
+                    for col in self.config.inputs_cols
                 ]
                 if self.config.use_amp:
                     with torch.cuda.amp.autocast():
@@ -269,10 +269,11 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                                     except:
                                         # logger.info('Can not remove sub-optimal trained model:', save_path)
                                         pass
-                                save_path = "{0}/{1}_{2}_acc_{3}_f1_{4}/".format(
+                                save_path = "{0}/{1}_{2}_{3}_acc_{4}_f1_{5}/".format(
                                     self.config.model_path_to_save,
                                     self.config.model_name,
                                     self.config.dataset_name,
+                                    self.config.pretrained_bert,
                                     round(test_acc * 100, 2),
                                     round(f1 * 100, 2),
                                 )
@@ -466,7 +467,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                     self.optimizer.zero_grad()
                     inputs = [
                         sample_batched[col].to(self.config.device)
-                        for col in self.config.inputs
+                        for col in self.config.inputs_cols
                     ]
                     with torch.cuda.amp.autocast():
                         if self.config.use_amp:
@@ -527,10 +528,11 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                                         except:
                                             # logger.info('Can not remove sub-optimal trained model:', save_path)
                                             pass
-                                    save_path = "{0}/{1}_{2}_acc_{3}_f1_{4}/".format(
+                                    save_path = "{0}/{1}_{2}_{3}_acc_{4}_f1_{5}/".format(
                                         self.config.model_path_to_save,
                                         self.config.model_name,
                                         self.config.dataset_name,
+                                        self.config.pretrained_bert,
                                         round(test_acc * 100, 2),
                                         round(f1 * 100, 2),
                                     )
@@ -683,7 +685,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
             for t_batch, t_sample_batched in enumerate(test_dataloader):
                 t_inputs = [
                     t_sample_batched[col].to(self.config.device)
-                    for col in self.config.inputs
+                    for col in self.config.inputs_cols
                 ]
                 t_targets = t_sample_batched["label"].to(self.config.device)
                 t_c_targets = t_sample_batched["corrupt_label"].to(self.config.device)
@@ -760,7 +762,6 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
             torch.softmax(t_outputs_all.cpu(), -1)[:, 1],
             labels=list(range(self.config.output_dim)),
             average=self.config.get("auc_average", "macro"),
-            multi_class="ovo",
         )
         if self.config.args.get("show_metric", False):
             report = metrics.classification_report(
