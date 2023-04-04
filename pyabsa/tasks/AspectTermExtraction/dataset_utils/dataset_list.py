@@ -30,6 +30,9 @@ class ATEPCDatasetList(list):
 
     MAMS = DatasetItem("MAMS", "109.MAMS")
 
+    # Student Reviews
+    University = DatasetItem("University", "133.University")
+    
     # @R Mukherjee et al.
     Television = DatasetItem("Television", "117.Television")
     TShirt = DatasetItem("TShirt", "118.TShirt")
@@ -169,5 +172,6 @@ class ATEPCDatasetList(list):
                 self.SemEval,
                 self.Restaurant,
                 self.Multilingual,
+                self.University,
             ]
         )
