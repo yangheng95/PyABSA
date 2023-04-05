@@ -1,52 +1,52 @@
 [
   {
     "referrer": "Google",
-    "count": 1050,
-    "uniques": 219
+    "count": 1036,
+    "uniques": 217
   },
   {
     "referrer": "github.com",
-    "count": 875,
-    "uniques": 160
+    "count": 815,
+    "uniques": 156
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 419,
-    "uniques": 59
-  },
-  {
-    "referrer": "pyabsa.readthedocs.io",
-    "count": 145,
-    "uniques": 22
+    "count": 360,
+    "uniques": 56
   },
   {
     "referrer": "huggingface.co",
-    "count": 141,
-    "uniques": 34
+    "count": 144,
+    "uniques": 32
   },
   {
-    "referrer": "yangheng-pyabsa.hf.space",
-    "count": 110,
-    "uniques": 20
-  },
-  {
-    "referrer": "yangheng-multilingual-aspect-based-sentim-6aa230e.hf.space",
-    "count": 77,
-    "uniques": 17
-  },
-  {
-    "referrer": "youtube.com",
-    "count": 58,
+    "referrer": "pyabsa.readthedocs.io",
+    "count": 113,
     "uniques": 23
   },
   {
-    "referrer": "link.zhihu.com",
-    "count": 58,
-    "uniques": 13
+    "referrer": "yangheng-pyabsa.hf.space",
+    "count": 108,
+    "uniques": 19
+  },
+  {
+    "referrer": "yangheng-multilingual-aspect-based-sentim-6aa230e.hf.space",
+    "count": 79,
+    "uniques": 18
+  },
+  {
+    "referrer": "colab.research.google.com",
+    "count": 62,
+    "uniques": 3
   },
   {
     "referrer": "deref-web.de",
-    "count": 56,
+    "count": 57,
     "uniques": 1
+  },
+  {
+    "referrer": "youtube.com",
+    "count": 54,
+    "uniques": 20
   }
 ]
