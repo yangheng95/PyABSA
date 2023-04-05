@@ -62,3 +62,6 @@ class DatasetItem(list):
 
             # Set the name attribute to the dataset_name
             self.name = self.dataset_name
+
+    def __str__(self):
+        return self.name

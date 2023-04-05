@@ -1,4 +1,7 @@
 ﻿{
+  "2.2.2": {
+    "1": "Dataset loading improvements, now you can pass a list of dataset names to the trainer, and the trainer will load all the datasets in the list. If you pass a existing dir/folder path to trainers, the trainer will only load the dataset files in the folder, otherwise, the trainer will regard the dataset argument as a keyword to search/download the dataset files tin current working dir"
+  },
   "2.2.1": {
     "1": "If you pass a existing dir/folder path to trainers, the trainer will only load the dataset files in the folder, otherwise, the trainer will regard the dataset argument as a keyword to search/download the dataset files tin current working dir"
   },
