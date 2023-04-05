@@ -26,7 +26,7 @@ class BERT_MLP(nn.Module):
         "Salesforce/codet5-base": T5ForConditionalGeneration,
     }
     #
-    inputs = ["source_ids", "label", "corrupt_label"]
+    inputs_cols = ["source_ids", "label", "corrupt_label"]
 
     def __init__(self, bert, config):
         super(BERT_MLP, self).__init__()

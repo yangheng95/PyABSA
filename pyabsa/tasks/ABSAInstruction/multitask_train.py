@@ -9,8 +9,6 @@
 import os
 import warnings
 
-import findfile
-
 warnings.filterwarnings("ignore")
 import pandas as pd
 

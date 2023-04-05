@@ -10,6 +10,7 @@ import shutil
 import tempfile
 import time
 import zipfile
+from pathlib import Path
 from typing import Union
 
 import git
@@ -49,86 +50,228 @@ filter_key_words = [
 ]
 
 
-def detect_dataset(
+def _detect_dataset_from_exact_path(
     dataset_name_or_path,
     task_code: TaskCodeOption = None,
     load_aug=False,
     config=None,
     **kwargs
 ):
-    """
-    Detect dataset from dataset_path, you need to specify the task type, which can be TaskCodeOption.Aspect_Polarity_Classification, 'atepc' or 'tc', etc.
-
-    :param dataset_name_or_path: str or DatasetItem
-        The name or path of the dataset.
-    :param task_code: str or TaskCodeOption
-        The task type, such as "apc" for aspect-polarity classification or "tc" for text classification.
-    :param load_aug: bool, default False
-        Whether to load the augmented dataset.
-    :param config: Config, optional
-        The configuration object.
-    :param kwargs: dict
-        Additional keyword arguments.
-
-    :return: dict
-        A dictionary containing file paths for the train, test, and validation sets.
-    """
-
-    logger = config.logger if config else kwargs.get("logger", None)
-    check_datasets_version(logger=logger)
-    if not isinstance(dataset_name_or_path, DatasetItem):
-        dataset_name_or_path = DatasetItem(dataset_name_or_path)
+    logger = kwargs.get("logger", None)
     dataset_file = {"train": [], "test": [], "valid": []}
 
-    search_path = ""
-    d = ""
+    logger.info("Detecting dataset from exact path: %s" % dataset_name_or_path)
+
+    dataset_file["train"] += findfile.find_files(
+        dataset_name_or_path,
+        ["train", task_code],
+        exclude_key=[".inference", "test.", "valid."] + filter_key_words + [".ignore"],
+    )
+    dataset_file["test"] += findfile.find_files(
+        dataset_name_or_path,
+        ["test", task_code],
+        exclude_key=[".inference", "train.", "valid."] + filter_key_words + [".ignore"],
+    )
+    dataset_file["valid"] += findfile.find_files(
+        dataset_name_or_path,
+        ["valid", task_code],
+        exclude_key=[".inference", "train.", "test."] + filter_key_words + [".ignore"],
+    )
+    dataset_file["valid"] += findfile.find_files(
+        dataset_name_or_path,
+        ["dev", task_code],
+        exclude_key=[".inference", "train.", "test."] + filter_key_words + [".ignore"],
+    )
+
+    logger.info(
+        "Make sure the dataset file names are in the correct format, e.g., train.txt.{}, test.txt.{}, valid.txt.{}".format(
+            task_code, task_code, task_code
+        ).lower()
+    )
+
+    return dataset_file
+
+
+def _detect_dataset_from_local_search(
+    dataset_name_or_path,
+    task_code: TaskCodeOption = None,
+    load_aug=False,
+    config=None,
+    **kwargs
+):
+    logger = kwargs.get("logger", None)
+    dataset_file = {"train": [], "test": [], "valid": []}
+
+    if not isinstance(dataset_name_or_path, DatasetItem):
+        dataset_name_or_path = DatasetItem(dataset_name_or_path)
+
     for d in dataset_name_or_path:
         if not os.path.exists(d):
-            if os.path.exists("integrated_datasets"):
-                logger.info("Searching dataset {} in local disk".format(d))
-            else:
-                logger.info(
-                    "Searching dataset {} in https://github.com/yangheng95/ABSADatasets".format(
-                        d
-                    )
-                )
-
-                try:
-                    download_all_available_datasets(logger=logger)
-                except Exception as e:
-                    if logger:
-                        logger.error(
-                            "Exception: {}. Fail to download dataset from".format(e)
-                            + " https://github.com/yangheng95/ABSADatasets,"
-                            + " please check your network connection."
-                        )
-                    else:
-                        fprint(
-                            "Exception: {}. Fail to download dataset from".format(e)
-                            + " https://github.com/yangheng95/ABSADatasets,"
-                            + " please check your network connection."
-                        )
-                    download_dataset_by_name(logger, task_code, dataset_name=d)
-
             search_path = findfile.find_dir(
                 os.getcwd(),
-                [d, task_code, "dataset"],
+                [d, task_code],
                 exclude_key=["infer", "test."] + filter_key_words,
                 disable_alert=False,
             )
-            if not search_path:
-                raise ValueError(
-                    "Cannot find dataset: {}, you may need to remove existing integrated_datasets and try again. "
-                    "Please note that if you are using keywords to let findfile search the dataset, "
-                    "you need to save your dataset(s) in integrated_datasets/{}/{} ".format(
-                        d, "task_name", "dataset_name"
-                    )
-                )
+
             if not load_aug:
                 logger.info(
                     "You can set load_aug=True in a trainer to augment your dataset"
                     " (English only yet) and improve performance."
                 )
+            else:
+                logger.info(
+                    "Please use a new folder to perform new text augment if the former augment in"
+                    " {} errored unexpectedly".format(search_path)
+                )
+            # Our data augment tool can automatically improve your dataset's performance 1-2% with additional computation budget
+            # The project of data augment is on github: https://github.com/yangheng95/BoostAug
+            # share your dataset at https://github.com/yangheng95/ABSADatasets, all the copyrights belong to the owner according to the licence
+
+            # For pretraining checkpoints, we use all dataset set as trainer set
+            if load_aug:
+                dataset_file["train"] += findfile.find_files(
+                    search_path,
+                    [d, "train", task_code],
+                    exclude_key=[".inference", "test.", "valid."] + filter_key_words,
+                )
+                dataset_file["test"] += findfile.find_files(
+                    search_path,
+                    [d, "test", task_code],
+                    exclude_key=[".inference", "train.", "valid."] + filter_key_words,
+                )
+                dataset_file["valid"] += findfile.find_files(
+                    search_path,
+                    [d, "valid", task_code],
+                    exclude_key=[".inference", "train.", "test."] + filter_key_words,
+                )
+                dataset_file["valid"] += findfile.find_files(
+                    search_path,
+                    [d, "dev", task_code],
+                    exclude_key=[".inference", "train.", "test."] + filter_key_words,
+                )
+
+                if not any(["augment" in x for x in dataset_file["train"]]):
+                    from pyabsa.utils.absa_utils.absa_utils import (
+                        convert_apc_set_to_atepc_set,
+                    )
+
+                    if task_code == TaskCodeOption.Aspect_Polarity_Classification:
+                        auto_aspect_sentiment_classification_augmentation(
+                            config=config,
+                            dataset=dataset_name_or_path,
+                            device=config.device,
+                            **kwargs
+                        )
+                        convert_apc_set_to_atepc_set(dataset_name_or_path)
+                    elif task_code == TaskCodeOption.Text_Classification:
+                        auto_classification_augmentation(
+                            config=config,
+                            dataset=dataset_name_or_path,
+                            device=config.device,
+                            **kwargs
+                        )
+                    else:
+                        raise ValueError(
+                            "Task {} is not supported for auto-augment".format(
+                                task_code
+                            )
+                        )
+            else:
+                dataset_file["train"] += findfile.find_files(
+                    search_path,
+                    [d, "train", task_code],
+                    exclude_key=[".inference", "test.", "valid."]
+                    + filter_key_words
+                    + [".ignore"],
+                )
+                dataset_file["test"] += findfile.find_files(
+                    search_path,
+                    [d, "test", task_code],
+                    exclude_key=[".inference", "train.", "valid."]
+                    + filter_key_words
+                    + [".ignore"],
+                )
+                dataset_file["valid"] += findfile.find_files(
+                    search_path,
+                    [d, "valid", task_code],
+                    exclude_key=[".inference", "train.", "test."]
+                    + filter_key_words
+                    + [".ignore"],
+                )
+                dataset_file["valid"] += findfile.find_files(
+                    search_path,
+                    [d, "dev", task_code],
+                    exclude_key=[".inference", "train.", "test."]
+                    + filter_key_words
+                    + [".ignore"],
+                )
+            if d and search_path and os.path.isdir(d) and os.path.isdir(search_path):
+                fprint(
+                    "No train set found from: {}, detected files: {}".format(
+                        dataset_name_or_path,
+                        ", ".join(os.listdir(d) + os.listdir(search_path)),
+                    )
+                )
+        else:
+            if "train" in d:
+                dataset_file["train"].append(d)
+            elif "test" in d:
+                dataset_file["test"].append(d)
+            elif "valid" in d:
+                dataset_file["valid"].append(d)
+            elif "dev" in d:
+                dataset_file["valid"].append(d)
+
+    return dataset_file
+
+
+def _detect_dataset_from_remote_search(
+    dataset_name_or_path,
+    task_code: TaskCodeOption = None,
+    load_aug=False,
+    config=None,
+    **kwargs
+):
+    logger = kwargs.get("logger", None)
+    check_datasets_version(logger=logger)
+
+    try:
+        download_all_available_datasets(logger=logger)
+    except Exception as e:
+        if logger:
+            logger.error(
+                "Exception: {}. Fail to download dataset from".format(e)
+                + " https://github.com/yangheng95/ABSADatasets,"
+                + " please check your network connection."
+            )
+        else:
+            fprint(
+                "Exception: {}. Fail to download dataset from".format(e)
+                + " https://github.com/yangheng95/ABSADatasets,"
+                + " please check your network connection."
+            )
+
+    dataset_file = {"train": [], "test": [], "valid": []}
+
+    if not isinstance(dataset_name_or_path, DatasetItem):
+        dataset_name_or_path = DatasetItem(dataset_name_or_path)
+
+    for d in dataset_name_or_path:
+        if not os.path.exists(d):
+            search_path = findfile.find_dir(
+                os.getcwd(),
+                [d, task_code],
+                exclude_key=["infer", "test."] + filter_key_words,
+                disable_alert=False,
+            )
+
+            if not load_aug:
+                logger.info(
+                    "You can set load_aug=True in a trainer to augment your dataset"
+                    " (English only yet) and improve performance."
+                )
+            else:
                 logger.info(
                     "Please use a new folder to perform new text augment if the former augment in"
                     " {} errored unexpectedly".format(search_path)
@@ -216,56 +359,86 @@ def detect_dataset(
                     + [".ignore"],
                 )
 
+            if d and search_path and os.path.isdir(d) and os.path.isdir(search_path):
+                fprint(
+                    "No train set found from: {}, detected files: {}".format(
+                        dataset_name_or_path,
+                        ", ".join(os.listdir(d) + os.listdir(search_path)),
+                    )
+                )
         else:
-            fprint(
-                "Try to load {} dataset from local disk".format(dataset_name_or_path)
+            if "train" in d:
+                dataset_file["train"].append(d)
+            elif "test" in d:
+                dataset_file["test"].append(d)
+            elif "valid" in d:
+                dataset_file["valid"].append(d)
+            elif "dev" in d:
+                dataset_file["valid"].append(d)
+
+    return dataset_file
+
+
+def detect_dataset(
+    dataset_name_or_path,
+    task_code: TaskCodeOption = None,
+    load_aug=False,
+    config=None,
+    **kwargs
+):
+    """
+    Detect dataset from dataset_path, you need to specify the task type, which can be TaskCodeOption.Aspect_Polarity_Classification, 'atepc' or 'tc', etc.
+
+    :param dataset_name_or_path: str or DatasetItem
+        The name or path of the dataset.
+    :param task_code: str or TaskCodeOption
+        The task type, such as "apc" for aspect-polarity classification or "tc" for text classification.
+    :param load_aug: bool, default False
+        Whether to load the augmented dataset.
+    :param config: Config, optional
+        The configuration object.
+    :param kwargs: dict
+        Additional keyword arguments.
+
+    :return: dict
+        A dictionary containing file paths for the train, test, and validation sets.
+    """
+
+    logger = config.logger if config else kwargs.get("logger", None)
+
+    if (
+        isinstance(dataset_name_or_path, str) or isinstance(dataset_name_or_path, Path)
+    ) and os.path.exists(dataset_name_or_path):
+        logger.info(
+            dataset_name_or_path.__str__()
+            + " in the trainer is a exact path, will detect dataset from this path"
+        )
+        dataset_file = _detect_dataset_from_exact_path(
+            dataset_name_or_path, task_code, load_aug, config, logger=logger, **kwargs
+        )
+    else:
+        logger.info(
+            dataset_name_or_path.__str__()
+            + " in the trainer is not a exact path, will search dataset in current working directory"
+        )
+        dataset_file = _detect_dataset_from_local_search(
+            dataset_name_or_path, task_code, load_aug, config, logger=logger, **kwargs
+        )
+
+        if len(dataset_file["train"]) == 0:
+            logger.info(
+                "No "
+                + dataset_name_or_path.__str__()
+                + " found in current working directory, will search dataset from https://github.com/yangheng95/ABSADatasets"
             )
-            if load_aug:
-                dataset_file["train"] += findfile.find_files(
-                    d,
-                    ["train", task_code],
-                    exclude_key=[".inference", "test.", "valid."] + filter_key_words,
-                )
-                dataset_file["test"] += findfile.find_files(
-                    d,
-                    ["test", task_code],
-                    exclude_key=[".inference", "train.", "valid."] + filter_key_words,
-                )
-                dataset_file["valid"] += findfile.find_files(
-                    d,
-                    ["valid", task_code],
-                    exclude_key=[".inference", "train."] + filter_key_words,
-                )
-                dataset_file["valid"] += findfile.find_files(
-                    d,
-                    ["dev", task_code],
-                    exclude_key=[".inference", "train."] + filter_key_words,
-                )
-            else:
-                dataset_file["train"] += findfile.find_cwd_files(
-                    [d, "train", task_code],
-                    exclude_key=[".inference", "test.", "valid."]
-                    + filter_key_words
-                    + [".ignore"],
-                )
-                dataset_file["test"] += findfile.find_cwd_files(
-                    [d, "test", task_code],
-                    exclude_key=[".inference", "train.", "valid."]
-                    + filter_key_words
-                    + [".ignore"],
-                )
-                dataset_file["valid"] += findfile.find_cwd_files(
-                    [d, "dev", task_code],
-                    exclude_key=[".inference", "train.", "test."]
-                    + filter_key_words
-                    + [".ignore"],
-                )
-                dataset_file["valid"] += findfile.find_cwd_files(
-                    [d, "valid", task_code],
-                    exclude_key=[".inference", "train.", "test."]
-                    + filter_key_words
-                    + [".ignore"],
-                )
+            dataset_file = _detect_dataset_from_remote_search(
+                dataset_name_or_path,
+                task_code,
+                load_aug,
+                config,
+                logger=logger,
+                **kwargs
+            )
 
     # # if we need train a checkpoint using as much data as possible, we can merge train, valid and test set as trainer sets
     # dataset_file['train'] = dataset_file['train'] + dataset_file['test'] + dataset_file['valid']
@@ -273,15 +446,8 @@ def detect_dataset(
     # dataset_file['valid'] = []
 
     if len(dataset_file["train"]) == 0:
-        if os.path.isdir(d) or os.path.isdir(search_path):
-            fprint(
-                "No train set found from: {}, detected files: {}".format(
-                    dataset_name_or_path,
-                    ", ".join(os.listdir(d) + os.listdir(search_path)),
-                )
-            )
         raise RuntimeError(
-            'Fail to locate dataset: {}. Your dataset should be in "datasets" folder end withs ".apc" or ".atepc" or "tc". If the error persists, '
+            'Fail to locate dataset: {}. Your dataset file names should contain task code, e.g., ".apc" or ".atepc" or "tc". '
             "you may need rename your dataset according to {}".format(
                 dataset_name_or_path,
                 "https://github.com/yangheng95/ABSADatasets#important-rename-your-dataset-filename-before-use-it-in-pyabsa",
@@ -312,7 +478,9 @@ def detect_infer_dataset(
     """
     logger = kwargs.get("logger", None)
     dataset_file = []
-    if isinstance(dataset_name_or_path, str) and os.path.isfile(dataset_name_or_path):
+    if (
+        isinstance(dataset_name_or_path, str) or isinstance(dataset_name_or_path, Path)
+    ) and os.path.isfile(dataset_name_or_path):
         dataset_file.append(dataset_name_or_path)
         return dataset_file
 
@@ -357,7 +525,7 @@ def detect_infer_dataset(
 
             search_path = findfile.find_dir(
                 os.getcwd(),
-                [d, task_code, "dataset"],
+                [d, task_code],
                 exclude_key=filter_key_words,
                 disable_alert=False,
             )

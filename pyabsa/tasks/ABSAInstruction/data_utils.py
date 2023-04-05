@@ -11,7 +11,6 @@ import json
 
 import findfile
 import pandas as pd
-from datasets import DatasetDict, Dataset
 
 from .instruction import (
     ATEInstruction,
@@ -84,35 +83,37 @@ class InstructDatasetLoader:
                 {"text": ate_instructor.prepare_input(data["text"]), "labels": aspects}
             )
 
-            # # APC task
-            # alldata.append(
-            #     {
-            #         "text": apc_instructor.prepare_input(data["text"], aspects),
-            #         "labels": polarities,
-            #     }
-            # )
+            # APC task
+            alldata.append(
+                {
+                    "text": apc_instructor.prepare_input(data["text"], aspects),
+                    "labels": polarities,
+                }
+            )
 
-            # # Opinion task
-            # alldata.append(
-            #     {
-            #         "text": op_instructor.prepare_input(data["text"], aspects),
-            #         "labels": opinions,
-            #     }
-            # )
-            #
-            # # Category task
-            # if "NULL" not in categories:
-            #     alldata.append(
-            #         {
-            #             "text": cat_instructor.prepare_input(data["text"], aspects),
-            #             "labels": categories,
-            #         }
-            #     )
+            # Opinion task
+            alldata.append(
+                {
+                    "text": op_instructor.prepare_input(data["text"], aspects),
+                    "labels": opinions,
+                }
+            )
+
+            # Category task
+            if "NULL" not in categories:
+                alldata.append(
+                    {
+                        "text": cat_instructor.prepare_input(data["text"], aspects),
+                        "labels": categories,
+                    }
+                )
 
         alldata = pd.DataFrame(alldata)
         return alldata
 
     def create_datasets(self, tokenize_function):
+        from datasets import DatasetDict, Dataset
+
         """
         Create the training and test dataset as huggingface datasets format.
         """

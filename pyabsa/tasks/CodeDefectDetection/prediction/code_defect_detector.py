@@ -47,7 +47,7 @@ class CodeDefectDetector(InferenceModel):
                     raise ValueError(
                         "Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!"
                     )
-                fprint("Load text classifier from", self.checkpoint)
+                fprint("Load code defect detector from", self.checkpoint)
                 state_dict_path = find_file(
                     self.checkpoint, key=".state_dict", exclude_key=["__MACOSX"]
                 )
@@ -300,10 +300,16 @@ class CodeDefectDetector(InferenceModel):
             else:
                 it = self.infer_dataloader
             for _, sample in enumerate(it):
-                inputs = [
-                    sample[col].to(self.config.device)
-                    for col in self.config.inputs_cols
-                ]
+                try:
+                    inputs = [
+                        sample[col].to(self.config.device)
+                        for col in self.config.inputs_cols
+                    ]
+                except Exception as e:
+                    # bug fix for typo in config
+                    inputs = [
+                        sample[col].to(self.config.device) for col in self.config.inputs
+                    ]
                 targets = sample["label"].to(self.config.device)
                 c_targets = sample["corrupt_label"].to(self.config.device)
                 outputs = self.model(inputs)
