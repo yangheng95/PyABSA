@@ -7,8 +7,11 @@ assignees: ''
 
 ---
 
-**Version (Required)**
+**PyABSA Version (Required)**
 See the console output for PyABSA, Torch, Transformers Version
+
+**ABSADataset Version (Required if you use integrated datasets)**
+See the console output for ABSADataset Version
 
 **Code To Reproduce (Required)**
 Paste buggy code here
