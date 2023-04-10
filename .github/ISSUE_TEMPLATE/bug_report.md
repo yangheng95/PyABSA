@@ -7,14 +7,17 @@ assignees: ''
 
 ---
 
-**Version**
+**Version (Required)**
 See the console output for PyABSA, Torch, Transformers Version
+
+**Code To Reproduce (Required)**
+Paste buggy code here
+
+**Full Console Output (Required)**
+The full console output instead of a snippet or a screen shot
 
 **Describe the bug**
 A clear and concise description of what the bug is.
-
-**Code To Reproduce**
-Paste buggy code here
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
