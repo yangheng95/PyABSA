@@ -76,9 +76,9 @@ def make_ABSA_dataset(dataset_name_or_path, checkpoint="english"):
                     ):
                         f_apc_out.write(
                             " ".join(
-                                result["tokens"][: position[0] - 1]
+                                result["tokens"][: position[0]]
                                 + ["$T$"]
-                                + result["tokens"][position[-1] :]
+                                + result["tokens"][position[-1] + 1 :]
                             )
                             + "\n"
                         )
