@@ -57,8 +57,9 @@ for dataset in [
             config.evaluate_begin = 0
             config.max_seq_len = 80
             config.num_epoch = 30
-            config.log_step = 5
-            # config.log_step = -1
+            # config.log_step = 5
+            config.log_step = -1
+            config.patience = 1
             config.dropout = 0.5
             config.eta = -1
             config.eta_lr = 0.001
