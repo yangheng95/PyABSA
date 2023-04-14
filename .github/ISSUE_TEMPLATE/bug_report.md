@@ -6,7 +6,7 @@ labels:
 assignees: ''
 
 ---
-## This is a part-time project and I am very busy in my own work, so if you cannot provide as REQUIRED information as you can, I may have no time to solve your problem. 
+## I am very busy in my own work, so if you cannot provide REQUIRED information, I may have no time to solve your problem. 
 
 ### PyABSA Version (Required)
 See the console output for PyABSA, Torch, Transformers Version
@@ -14,10 +14,10 @@ See the console output for PyABSA, Torch, Transformers Version
 ### ABSADataset Version (Required if you use integrated datasets)
 See the console output for ABSADataset Version
 
-### Code To Reproduce (Required)**
+### Code To Reproduce (Required)
 Paste buggy code here, **text-only, no screen shots here
 
-### Full Console Output (Required)**
+### Full Console Output (Required)
 The full console output, **text-only, no screen shots here
 
 ### Describe the bug
