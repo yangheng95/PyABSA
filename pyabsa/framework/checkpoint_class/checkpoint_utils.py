@@ -51,7 +51,7 @@ def parse_checkpoint_info(t_checkpoint_map, task_code, show_ckpts=False):
         if "-" in c_version:
             min_ver, _, max_ver = c_version.partition("-")
         elif "+" in c_version:
-            min_ver, _, max_ver = c_version.partition("-")
+            min_ver, _, max_ver = c_version.partition("+")
         else:
             min_ver = c_version
             max_ver = ""
@@ -121,6 +121,8 @@ def available_checkpoints(
                     if task_code.upper() in checkpoint_map[c_version]
                     else {}
                 )
+                if t_checkpoint_map:
+                    break
                 parse_checkpoint_info(t_checkpoint_map, task_code, show_ckpts)
 
     return t_checkpoint_map if task_code else checkpoint_map

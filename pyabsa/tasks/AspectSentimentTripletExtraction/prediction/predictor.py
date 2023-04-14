@@ -100,7 +100,7 @@ class AspectSentimentTripletExtractor(InferenceModel):
                     "Fail to load the model from {}! "
                     "Please make sure the version of checkpoint and PyABSA are compatible."
                     " Try to remove he checkpoint and download again"
-                    " \nException: {} ".format(e, checkpoint)
+                    " \nException: {} ".format(checkpoint, e)
                 )
 
         self.dataset = ASTEInferenceDataset(self.config, self.tokenizer)

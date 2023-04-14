@@ -649,7 +649,7 @@ class AspectExtractor(InferenceModel):
                     result["probs"] = probs
                     result["confidence"] = round(max(probs), 4)
                     result["aspect"] = all_aspects[apc_id]
-                    result["pos_ids"] = all_positions[apc_id]
+                    result["pos_ids"] = [x - 1 for x in all_positions[apc_id]]
                     result["sentiment"] = sent
                     result["example_id"] = example_id_map[apc_id]
                     res.append(result)
