@@ -23,18 +23,26 @@ from pyabsa.utils.pyabsa_utils import fprint
 
 def make_ABSA_dataset(dataset_name_or_path, checkpoint="english"):
     """
-    Make APC and ATEPC datasets for PyABSA, using aspect extractor from PyABSA to automatically build datasets. This method WILL NOT give you the best performance but is quite fast and labor-free.
-    The names of dataset files to be processed should end with '.raw.ignore'. The files will be processed and saved to the same directory. The files will be overwritten if they already exist.
+    Make APC and ATEPC datasets for PyABSA, using aspect extractor from PyABSA to automatically build datasets.
+    This method will not give you the best performance but is quite fast and labor-free.
+    The names of dataset files to be processed should end with '.raw.ignore'.
+    The files will be processed and saved to the same directory. The files will be overwritten if they already exist.
     The data in the dataset files will be plain text row by row.
 
     For obtaining the best performance, you should use DPT tool in ABSADatasets to manually annotate the dataset files,
-    which can be found in the following link:  https://github.com/yangheng95/ABSADatasets/tree/v1.2/DPT . This tool should be downloaded and run on a browser.
+    which can be found in the following link: https://github.com/yangheng95/ABSADatasets/tree/v2.0/DPT.
+    This tool should be downloaded and run on a browser, and is much more time-consuming.
 
-    is much more time-consuming.
-    :param dataset_name_or_path: The name of the dataset to be processed. If the name is a directory, all files in the directory will be processed. If it is a file, only the file will be processed.
-    If it is a directory name, I use the findfile to find all files in the directory.
-    :param checkpoint: Which checkpoint to use. Basically, You can select from {'multilingual', 'english', 'chinese'}, Default is 'english'.
-    :return:
+    Args:
+        dataset_name_or_path (str): The name of the dataset to be processed.
+            If the name is a directory, all files in the directory will be processed.
+            If it is a file, only the file will be processed.
+            If it is a directory name, use findfile to find all files in the directory.
+        checkpoint (str, optional): Which checkpoint to use.
+            You can select from {'multilingual', 'english', 'chinese'}. Default is 'english'.
+
+    Returns:
+        None
     """
 
     if os.path.isdir(dataset_name_or_path):
@@ -68,7 +76,7 @@ def make_ABSA_dataset(dataset_name_or_path, checkpoint="english"):
                     ):
                         f_apc_out.write(
                             " ".join(
-                                result["tokens"][: position[0]]
+                                result["tokens"][: position[0] - 1]
                                 + ["$T$"]
                                 + result["tokens"][position[-1] :]
                             )
