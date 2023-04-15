@@ -1,23 +1,30 @@
 ---
-name: Bug report
+name: Code doesn't work or Bug report
 about: Create a report to help us improve
 title: ''
-labels: bug
+labels: 
 assignees: ''
 
 ---
+## I am very busy in my own work, so if you cannot provide REQUIRED information, I may have no time to solve your problem. 
 
-**Version**
+### PyABSA Version (Required)
 See the console output for PyABSA, Torch, Transformers Version
 
-**Describe the bug**
+### ABSADataset Version (Required if you use integrated datasets)
+See the console output for ABSADataset Version
+
+### Code To Reproduce (Required)
+Paste buggy code here, **text-only, no screen shots here
+
+### Full Console Output (Required)
+The full console output, **text-only, no screen shots here
+
+### Describe the bug
 A clear and concise description of what the bug is.
 
-**Code To Reproduce**
-Paste buggy code here
-
-**Expected behavior**
+### Expected behavior
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+### Screenshots
+In addition to REQUIRED text-information, you can add screenshots to help explain your problem.
