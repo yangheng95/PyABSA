@@ -9,7 +9,12 @@
 
 from typing import Union
 
-from pyabsa import DeviceTypeOption, ModelSaveOption, TaskCodeOption, TaskNameOption
+from pyabsa.framework.flag_class import (
+    DeviceTypeOption,
+    ModelSaveOption,
+    TaskCodeOption,
+    TaskNameOption,
+)
 from ..configuration.atepc_configuration import ATEPCConfigManager
 from ..prediction.aspect_extractor import AspectExtractor
 from ..instructor.atepc_instructor import ATEPCTrainingInstructor

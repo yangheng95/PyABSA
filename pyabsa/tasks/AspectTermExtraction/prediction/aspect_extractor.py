@@ -23,7 +23,11 @@ from termcolor import colored
 from torch.utils.data import DataLoader, SequentialSampler, TensorDataset
 from transformers import AutoTokenizer, AutoModel
 
-from pyabsa import LabelPaddingOption, TaskCodeOption, DeviceTypeOption
+from pyabsa.framework.flag_class.flag_template import (
+    LabelPaddingOption,
+    TaskCodeOption,
+    DeviceTypeOption,
+)
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
 from ..models import ATEPCModelList
 from ..dataset_utils.__lcf__.atepc_utils import (

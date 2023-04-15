@@ -21,7 +21,7 @@ from torch import cuda
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler, TensorDataset
 from transformers import AutoTokenizer, AutoModel
 
-from pyabsa import DeviceTypeOption
+from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from ..dataset_utils.__lcf__.data_utils_for_training import (
     ATEPCProcessor,

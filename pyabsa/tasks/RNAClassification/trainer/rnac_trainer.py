@@ -9,7 +9,12 @@
 
 from typing import Union
 
-from pyabsa import DeviceTypeOption, ModelSaveOption, TaskCodeOption, TaskNameOption
+from pyabsa.framework.flag_class.flag_template import (
+    DeviceTypeOption,
+    ModelSaveOption,
+    TaskCodeOption,
+    TaskNameOption,
+)
 from pyabsa.framework.trainer_class.trainer_template import Trainer
 from ..configuration.rnac_configuration import RNACConfigManager
 from ..prediction.rna_classifier import RNAClassifier

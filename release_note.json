@@ -1,4 +1,7 @@
 ﻿{
+  "2.3.1": {
+    "1": "No changes"
+  },
   "2.3.0": {
     "1": "Important changes: The positions of aspects in ATEPC now start from 0"
   },

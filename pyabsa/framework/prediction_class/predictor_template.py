@@ -12,7 +12,7 @@ from typing import Union
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
 from torch import cuda
 
-from pyabsa import TaskCodeOption, DeviceTypeOption
+from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
 
 
 class InferenceModel:

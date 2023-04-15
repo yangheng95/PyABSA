@@ -10,7 +10,7 @@
 import numpy as np
 import tqdm
 
-from pyabsa import LabelPaddingOption
+from pyabsa.framework.flag_class.flag_template import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.pyabsa_utils import validate_absa_example, fprint
 from .classic_glove_apc_utils import build_sentiment_window
