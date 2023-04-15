@@ -28,7 +28,7 @@ from transformers import AutoModel
 
 import pytorch_warmup as warmup
 
-from pyabsa import DeviceTypeOption
+from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from ..dataset_utils.__classic__.data_utils_for_training import GloVeTADDataset
 from ..dataset_utils.__plm__.data_utils_for_training import BERTTADDataset

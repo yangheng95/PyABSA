@@ -9,7 +9,7 @@
 
 from typing import Union
 
-from pyabsa import DeviceTypeOption
+from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
 
 

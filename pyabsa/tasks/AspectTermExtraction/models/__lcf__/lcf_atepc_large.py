@@ -16,7 +16,7 @@ from transformers.models.bert.modeling_bert import (
     BertPooler,
 )
 
-from pyabsa import LabelPaddingOption
+from pyabsa.framework.flag_class.flag_template import LabelPaddingOption
 from pyabsa.networks.sa_encoder import Encoder
 
 

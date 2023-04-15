@@ -11,7 +11,7 @@ import os
 
 import findfile
 
-from pyabsa import LabelPaddingOption, TaskCodeOption
+from pyabsa.framework.flag_class.flag_template import LabelPaddingOption, TaskCodeOption
 from pyabsa.tasks.AspectTermExtraction.dataset_utils.__lcf__.atepc_utils import (
     simple_split_text,
 )

@@ -14,7 +14,7 @@ from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from torch import nn
 from tqdm import tqdm
 
-from pyabsa import DeviceTypeOption
+from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
 
 from pyabsa.utils.pyabsa_utils import fprint, set_device, print_args
 

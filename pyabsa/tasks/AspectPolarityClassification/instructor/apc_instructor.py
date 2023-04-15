@@ -18,7 +18,7 @@ from sklearn import metrics
 from torch import cuda
 from tqdm import tqdm
 
-from pyabsa import DeviceTypeOption
+from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from ..instructor.ensembler import APCEnsembler
 from pyabsa.utils.file_utils.file_utils import save_model

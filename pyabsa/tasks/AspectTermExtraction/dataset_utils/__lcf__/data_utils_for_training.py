@@ -7,7 +7,7 @@
 
 import tqdm
 
-from pyabsa import LabelPaddingOption
+from pyabsa.framework.flag_class.flag_template import LabelPaddingOption
 from pyabsa.tasks.AspectPolarityClassification.dataset_utils.__lcf__.apc_utils import (
     configure_spacy_model,
 )

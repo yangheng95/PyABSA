@@ -26,7 +26,7 @@ from torch.utils.data import (
 from tqdm import tqdm
 from transformers import AutoModel, AutoTokenizer
 
-from pyabsa import DeviceTypeOption
+from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from pyabsa.networks.losses.R2Loss import R2Loss
 from pyabsa.utils.file_utils.file_utils import save_model

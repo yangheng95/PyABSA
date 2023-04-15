@@ -13,7 +13,7 @@ import findfile
 
 from termcolor import colored
 
-from pyabsa import LabelPaddingOption
+from pyabsa.framework.flag_class.flag_template import LabelPaddingOption
 
 from pyabsa.tasks.AspectTermExtraction.prediction.aspect_extractor import (
     AspectExtractor,

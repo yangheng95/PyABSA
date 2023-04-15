@@ -7,7 +7,14 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 __name__ = "pyabsa"
-__version__ = "2.3.0"
+__version__ = "2.3.1"
+
+
+from pyabsa.utils.notification_utils.notification_utils import (
+    check_emergency_notification,
+)
+
+check_emergency_notification()
 
 from pyabsa.framework.flag_class import *
 
@@ -23,16 +30,6 @@ from pyabsa.utils.data_utils.dataset_manager import (
 )
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 
-from pyabsa.utils.check_utils.package_version_check import (
-    validate_pyabsa_version,
-    query_release_notes,
-    check_pyabsa_update,
-    check_package_version,
-)
-
-from pyabsa.utils.notification_utils.notification_utils import (
-    check_emergency_notification,
-)
 
 from pyabsa.framework.checkpoint_class.checkpoint_utils import (
     available_checkpoints,
@@ -69,6 +66,11 @@ from pyabsa.utils.cache_utils.cache_utils import clean
 ABSADatasetList = APCDatasetList
 # for compatibility of v1.x
 
-validate_pyabsa_version()
+from pyabsa.utils.check_utils.package_version_check import (
+    validate_pyabsa_version,
+    query_release_notes,
+    check_pyabsa_update,
+    check_package_version,
+)
 
-check_emergency_notification()
+validate_pyabsa_version()
