@@ -1,38 +1,38 @@
 [
   {
     "referrer": "Google",
-    "count": 869,
-    "uniques": 155
+    "count": 882,
+    "uniques": 154
   },
   {
     "referrer": "github.com",
-    "count": 611,
-    "uniques": 127
+    "count": 802,
+    "uniques": 129
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 422,
-    "uniques": 74
+    "count": 478,
+    "uniques": 77
   },
   {
     "referrer": "huggingface.co",
     "count": 376,
-    "uniques": 54
-  },
-  {
-    "referrer": "yangheng-pyabsa.hf.space",
-    "count": 279,
-    "uniques": 21
+    "uniques": 51
   },
   {
     "referrer": "yangheng-multilingual-aspect-based-sentiment-analysis.hf.space",
-    "count": 180,
-    "uniques": 16
+    "count": 294,
+    "uniques": 20
   },
   {
     "referrer": "pyabsa.readthedocs.io",
-    "count": 163,
+    "count": 159,
     "uniques": 10
+  },
+  {
+    "referrer": "youtube.com",
+    "count": 136,
+    "uniques": 15
   },
   {
     "referrer": "link.zhihu.com",
@@ -40,13 +40,13 @@
     "uniques": 13
   },
   {
-    "referrer": "youtube.com",
-    "count": 86,
-    "uniques": 15
+    "referrer": "yangheng-pyabsa.hf.space",
+    "count": 128,
+    "uniques": 17
   },
   {
-    "referrer": "notebooks.githubusercontent.com",
-    "count": 62,
-    "uniques": 9
+    "referrer": "you.com",
+    "count": 92,
+    "uniques": 1
   }
 ]
