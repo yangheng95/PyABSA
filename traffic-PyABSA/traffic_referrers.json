@@ -1,32 +1,27 @@
 [
   {
     "referrer": "github.com",
-    "count": 1142,
-    "uniques": 137
+    "count": 1075,
+    "uniques": 129
   },
   {
     "referrer": "Google",
-    "count": 922,
-    "uniques": 146
-  },
-  {
-    "referrer": "huggingface.co",
-    "count": 316,
-    "uniques": 44
+    "count": 909,
+    "uniques": 135
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 311,
-    "uniques": 60
+    "count": 305,
+    "uniques": 53
   },
   {
-    "referrer": "pyabsa.readthedocs.io",
-    "count": 258,
-    "uniques": 18
+    "referrer": "huggingface.co",
+    "count": 283,
+    "uniques": 37
   },
   {
     "referrer": "yangheng-multilingual-aspect-based-sentiment-analysis.hf.space",
-    "count": 199,
+    "count": 211,
     "uniques": 25
   },
   {
@@ -35,14 +30,19 @@
     "uniques": 20
   },
   {
+    "referrer": "pyabsa.readthedocs.io",
+    "count": 156,
+    "uniques": 18
+  },
+  {
     "referrer": "yangheng-pyabsa.hf.space",
-    "count": 123,
-    "uniques": 15
+    "count": 109,
+    "uniques": 13
   },
   {
     "referrer": "colab.research.google.com",
-    "count": 88,
-    "uniques": 18
+    "count": 87,
+    "uniques": 17
   },
   {
     "referrer": "you.com",
