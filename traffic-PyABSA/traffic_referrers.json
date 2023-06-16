@@ -1,43 +1,43 @@
 [
   {
     "referrer": "Google",
-    "count": 1095,
-    "uniques": 123
+    "count": 1161,
+    "uniques": 130
   },
   {
     "referrer": "github.com",
-    "count": 725,
-    "uniques": 87
+    "count": 730,
+    "uniques": 92
   },
   {
     "referrer": "pyabsa.readthedocs.io",
-    "count": 332,
-    "uniques": 19
+    "count": 342,
+    "uniques": 18
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 252,
-    "uniques": 54
+    "count": 215,
+    "uniques": 53
   },
   {
     "referrer": "huggingface.co",
-    "count": 138,
-    "uniques": 37
-  },
-  {
-    "referrer": "notebooks.githubusercontent.com",
-    "count": 87,
-    "uniques": 13
-  },
-  {
-    "referrer": "yangheng-multilingual-aspect-based-sentiment-analysis.hf.space",
-    "count": 77,
-    "uniques": 14
+    "count": 128,
+    "uniques": 39
   },
   {
     "referrer": "pypi.org",
-    "count": 67,
-    "uniques": 7
+    "count": 91,
+    "uniques": 10
+  },
+  {
+    "referrer": "notebooks.githubusercontent.com",
+    "count": 84,
+    "uniques": 11
+  },
+  {
+    "referrer": "yangheng-multilingual-aspect-based-sentiment-analysis.hf.space",
+    "count": 66,
+    "uniques": 14
   },
   {
     "referrer": "link.zhihu.com",
@@ -46,7 +46,7 @@
   },
   {
     "referrer": "colab.research.google.com",
-    "count": 45,
-    "uniques": 12
+    "count": 42,
+    "uniques": 9
   }
 ]
