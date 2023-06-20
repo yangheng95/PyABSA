@@ -479,30 +479,48 @@ class TADTextClassifier(InferenceModel):
                                 self.sent_attacker = init_attacker(
                                     self, defense.lower()
                                 )
-                            if result["is_adv_label"] == "1":
-                                res = self.sent_attacker.attacker.simple_attack(
-                                    text_raw, int(result["label"])
-                                )
-                                new_infer_res = self.predict(
-                                    res.perturbed_result.attacked_text.text,
-                                    print_result=False,
-                                )
-                                result["perturbed_label"] = result["label"]
-                                result["label"] = new_infer_res["label"]
-                                result["probs"] = new_infer_res["probs"]
-                                result["ref_label_check"] = (
-                                    correct[int(result["label"]) == ref_label]
-                                    if ref_label != -100
-                                    else ""
-                                )
-                                result[
-                                    "restored_text"
-                                ] = res.perturbed_result.attacked_text.text
-                                result["is_fixed"] = True
-                            else:
-                                result["restored_text"] = ""
-                                result["is_fixed"] = False
-
+                            # if result["is_adv_label"] == "1":
+                            #     res = self.sent_attacker.attacker.simple_attack(
+                            #         text_raw, int(result["label"])
+                            #     )
+                            #     new_infer_res = self.predict(
+                            #         res.perturbed_result.attacked_text.text,
+                            #         print_result=False,
+                            #     )
+                            #     result["perturbed_label"] = result["label"]
+                            #     result["label"] = new_infer_res["label"]
+                            #     result["probs"] = new_infer_res["probs"]
+                            #     result["ref_label_check"] = (
+                            #         correct[int(result["label"]) == ref_label]
+                            #         if ref_label != -100
+                            #         else ""
+                            #     )
+                            #     result[
+                            #         "restored_text"
+                            #     ] = res.perturbed_result.attacked_text.text
+                            #     result["is_fixed"] = True
+                            # else:
+                            #     result["restored_text"] = ""
+                            #     result["is_fixed"] = False
+                            res = self.sent_attacker.attacker.simple_attack(
+                                text_raw, int(result["label"])
+                            )
+                            new_infer_res = self.predict(
+                                res.perturbed_result.attacked_text.text,
+                                print_result=False,
+                            )
+                            result["perturbed_label"] = result["label"]
+                            result["label"] = new_infer_res["label"]
+                            result["probs"] = new_infer_res["probs"]
+                            result["ref_label_check"] = (
+                                correct[int(result["label"]) == ref_label]
+                                if ref_label != -100
+                                else ""
+                            )
+                            result[
+                                "restored_text"
+                            ] = res.perturbed_result.attacked_text.text
+                            result["is_fixed"] = True
                         except Exception as e:
                             fprint(
                                 "Error:{}, try install TextAttack and tensorflow_text after 10 seconds".format(

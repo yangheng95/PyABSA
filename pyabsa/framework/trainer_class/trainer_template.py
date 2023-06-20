@@ -203,7 +203,7 @@ class Trainer:
         if (
             self.config.checkpoint_save_mode
             or self.config.dataset_file["valid"]
-            or (self.config.get("data_dict") and self.config.dataset_dict["test"])
+            or (self.config.get("data_dict" and self.config.dataset_dict["test"]))
         ):
             if self.config.path_to_save:
                 self.config.model_path_to_save = self.config.path_to_save

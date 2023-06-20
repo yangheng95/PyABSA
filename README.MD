@@ -4,7 +4,6 @@
 [![PyPI](https://img.shields.io/pypi/v/pyabsa)](https://pypi.org/project/pyabsa/)
 [![Downloads](https://pepy.tech/badge/pyabsa)](https://pepy.tech/project/pyabsa)
 [![Downloads](https://pepy.tech/badge/pyabsa/month)](https://pepy.tech/project/pyabsa)
-[![total clones](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_clones.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
 ![License](https://img.shields.io/pypi/l/pyabsa?logo=PyABSA)
 [![Documentation Status](https://readthedocs.org/projects/pyabsa/badge/?version=v2)](https://pyabsa.readthedocs.io/en/latest/)
 

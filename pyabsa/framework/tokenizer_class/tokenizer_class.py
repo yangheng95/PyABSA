@@ -208,16 +208,6 @@ class PretrainedTokenizer:
         )
 
     def text_to_sequence(self, text, **kwargs):
-        return self.tokenizer.encode(
-            text,
-            truncation=kwargs.pop("truncation", True),
-            padding=kwargs.pop("padding", "max_length"),
-            max_length=kwargs.pop("max_length", self.max_seq_len),
-            return_tensors=kwargs.pop("return_tensors", None),
-            **kwargs
-        )
-
-    def text_to_sequence(self, text, **kwargs):
         """
         Encodes the given text into a sequence of token IDs.
 

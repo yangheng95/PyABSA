@@ -53,12 +53,15 @@ class BERTRNACDataset(PyABSADataset):
             tqdm.tqdm(range(len(lines)), desc="preparing dataloader")
         ):
             text, _, label = lines[i].strip().partition("$LABEL$")
-            rna, rna_type = text.strip().split(",")
+            # rna, rna_type = text.strip().split(",")
             # rna_type = rna_type_dict[rna_type]
-            rna_type = rna_type.upper()
+            # rna_type = rna_type.upper()
             label = label.strip()
-            rna_indices = self.tokenizer.text_to_sequence(rna, padding="do_not_pad")
-            rna_type_indices = self.tokenizer.text_to_sequence(str(rna_type))
+            # tokens = self.tokenizer.tokenizer.tokenize(text)
+            tokens = list(text)[50:150]
+            rna_indices = self.tokenizer.tokenizer.convert_tokens_to_ids(tokens)
+            # rna_indices = self.tokenizer.text_to_sequence(rna, padding="do_not_pad")
+            # rna_type_indices = self.tokenizer.text_to_sequence(str(rna_type))
 
             data = {
                 "ex_id": ex_id,
@@ -67,7 +70,7 @@ class BERTRNACDataset(PyABSADataset):
                     self.config.max_seq_len,
                     value=self.tokenizer.pad_token_id,
                 ),
-                "rna_type": rna_type_indices,
+                # "rna_type": rna_type_indices,
                 "label": label,
             }
             label_set.add(label)
@@ -106,7 +109,7 @@ class BERTRNACDataset(PyABSADataset):
                 data = {
                     "ex_id": ex_id,
                     "text_indices": _rna_indices,
-                    "rna_type": rna_type_indices,
+                    # "rna_type": rna_type_indices,
                     "label": label,
                 }
                 label_set.add(label)

@@ -12,7 +12,8 @@ from transformers.models.bert.modeling_bert import BertPooler
 
 
 class BERT_MLP(nn.Module):
-    inputs = ["text_indices", "rna_type"]
+    # inputs = ["text_indices", "rna_type"]
+    inputs = ["text_indices"]
 
     def __init__(self, bert, config):
         super(BERT_MLP, self).__init__()
@@ -32,7 +33,7 @@ class BERT_MLP(nn.Module):
 
     def forward(self, inputs):
         text_raw_indices = inputs[0]
-        rna_type = inputs[1]
+        # rna_type = inputs[1]
 
         # rna_type_ids = self.bert(rna_type)['last_hidden_state']
         # last_hidden_state = self.bert(text_raw_indices)['last_hidden_state']

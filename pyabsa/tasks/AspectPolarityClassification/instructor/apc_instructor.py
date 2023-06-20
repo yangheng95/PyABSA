@@ -252,7 +252,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                 max_fold_f1 * 100,
             )
 
-        if len(self.valid_dataloaders) > 1:
+        elif len(self.valid_dataloaders) > 1:
             fprint(
                 "Loading best model: {} and evaluating on test set ".format(save_path)
             )
@@ -278,7 +278,31 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                 max_fold_f1 * 100,
             )
             # shutil.rmtree(save_path)
+        else:
+            fprint(
+                "Loading best model: {} and evaluating on test set ".format(save_path)
+            )
+            max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
 
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-Test-Acc",
+                max_fold_acc * 100,
+            )
+            self.config.MV.log_metric(
+                self.config.model_name
+                + "-"
+                + self.config.dataset_name
+                + "-"
+                + self.config.pretrained_bert,
+                "Max-Test-F1",
+                max_fold_f1 * 100,
+            )
+            # shutil.rmtree(save_path)
         self.logger.info(self.config.MV.summary(no_print=True))
         # self.logger.info(self.config.MV.short_summary(no_print=True))
 

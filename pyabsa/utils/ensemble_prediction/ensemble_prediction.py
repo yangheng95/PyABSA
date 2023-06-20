@@ -9,7 +9,6 @@
 from typing import List
 
 import numpy as np
-from pyabsa.tasks.AspectPolarityClassification import SentimentClassifier
 
 
 class VoteEnsemblePredictor:
@@ -29,6 +28,10 @@ class VoteEnsemblePredictor:
                             'median', 'mode', and 'sum'.
         :param str_agg: The aggregation method for string data. Options are 'max_vote', 'min_vote', 'vote', and 'mode'.
         """
+        from pyabsa.tasks._Archive.RNAClassification import RNAClassifier
+        from pyabsa.tasks.TextClassification import TextClassifier
+        from pyabsa.tasks.AspectPolarityClassification import SentimentClassifier
+
         if weights is not None:
             assert len(predictors) == len(
                 weights
@@ -65,15 +68,31 @@ class VoteEnsemblePredictor:
         self.str_agg = str_agg_methods[str_agg]
 
         if isinstance(predictors, dict):
-            self.checkpoints = list(predictors.keys())
             self.predictors = predictors
-            self.weights = (
-                list(weights.values()) if weights else [1] * len(self.checkpoints)
-            )
-        else:
-            raise NotImplementedError(
-                "Only support dict type for checkpoints and weights"
-            )
+            self.weights = list(weights.values()) if weights else [1] * len(predictors)
+        elif isinstance(predictors, list):
+            self.weights = weights if weights else [1] * len(predictors)
+
+            try:
+                self.predictors = {
+                    ckpt: SentimentClassifier(checkpoint=ckpt) for ckpt in predictors
+                }
+            except Exception as e:
+                pass
+
+            try:
+                self.predictors = {
+                    ckpt: TextClassifier(checkpoint=ckpt) for ckpt in predictors
+                }
+            except Exception as e:
+                pass
+
+            try:
+                self.predictors = {
+                    ckpt: RNAClassifier(checkpoint=ckpt) for ckpt in predictors
+                }
+            except Exception as e:
+                pass
 
     def __ensemble(self, result: dict):
         """
@@ -171,7 +190,7 @@ class VoteEnsemblePredictor:
                     # Initialize an empty list for the key
                     result[key] = []
                 # Append the value to the list the number of times specified by the corresponding weight
-                for _ in range(self.weights[self.checkpoints.index(ckpt)]):
+                for _ in range(self.weights[list(self.predictors.keys()).index(ckpt)]):
                     result[key].append(value)
         # Return the ensemble result by aggregating the values in the result dictionary
         return self.__ensemble(result)
@@ -186,6 +205,8 @@ class VoteEnsemblePredictor:
         """
         batch_raw_results = []
         for ckpt, predictor in self.predictors.items():
+            from pyabsa.tasks.AspectPolarityClassification import SentimentClassifier
+
             if isinstance(predictor, SentimentClassifier):
                 raw_results = predictor.predict(
                     texts,

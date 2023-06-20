@@ -33,7 +33,7 @@ def auto_aspect_sentiment_classification_augmentation(
     classifier_training_num: int = 1,
     augment_num_per_case: int = 10,
     winner_num_per_case: int = 5,
-    augment_backend: str = "eda",
+    augment_backend: str = "EDA",
     train_after_aug: bool = True,
     rewrite_cache: bool = True,
 ) -> None:

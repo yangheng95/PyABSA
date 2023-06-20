@@ -21,6 +21,7 @@ from textattack.attack_recipes import (
     IGAWang2019,
     GeneticAlgorithmAlzantot2018,
     DeepWordBugGao2018,
+    MorpheusTan2020,
 )
 from textattack.attack_results import SuccessfulAttackResult
 from textattack.datasets import Dataset
@@ -252,7 +253,9 @@ def adversarial_attack_detection_and_defense(dataset, attack_recipe):
 
 
 if __name__ == "__main__":
-    attack_name = "BAE"
+    attack_name = "morpheus"
+
+    # attack_name = "BAE"
     # attack_name = 'PWWS'
     # attack_name = 'TextFooler'
 
@@ -261,7 +264,7 @@ if __name__ == "__main__":
     # attack_name = 'WordBug'
     datasets = [
         # 'SST2',
-        "Amazon",
+        "amazon",
         # 'agnews10k',
     ]
     from pyabsa import TextAdversarialDefense as TAD
@@ -269,9 +272,9 @@ if __name__ == "__main__":
     for dataset in datasets:
         tad_classifier = TAD.TADTextClassifier(
             # f'TAD-{dataset}{attack_name}',
-            # f'TAD-{dataset}',
+            f"TAD-{dataset}",
             # f'tadbert_{dataset}{attack_name}',
-            f"tadbert_{dataset}",
+            # f"tadbert_{dataset}",
             # auto_device=autocuda.auto_cuda()
             auto_device="cuda:0",
         )
@@ -283,6 +286,7 @@ if __name__ == "__main__":
             "iga": IGAWang2019,
             "GA": GeneticAlgorithmAlzantot2018,
             "wordbugger": DeepWordBugGao2018,
+            "morpheus": MorpheusTan2020,
         }
         mv = MetricVisualizer(name="main_tad_bae")
         for _ in range(1):

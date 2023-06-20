@@ -33,7 +33,7 @@ chinese_sets = ATEPC.ATEPCDatasetList.Multilingual
 
 aspect_extractor = ATEPC.ATEPCTrainer(
     config=config,
-    from_checkpoint="",
+    # from_checkpoint="",   # not necessary for most situations
     dataset=chinese_sets,
     checkpoint_save_mode=1,
     auto_device=True,

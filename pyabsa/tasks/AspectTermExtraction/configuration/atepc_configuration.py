@@ -136,7 +136,7 @@ _atepc_config_multilingual = {
     "model": LCF_ATEPC,
     "optimizer": "adamw",
     "learning_rate": 0.00002,
-    "pretrained_bert": "bert-base-multilingual-uncased",
+    "pretrained_bert": "microsoft/deberta-v3-base",
     "use_bert_spc": True,
     "cache_dataset": True,
     "warmup_step": -1,
