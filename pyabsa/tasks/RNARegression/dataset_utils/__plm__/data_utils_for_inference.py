@@ -90,20 +90,12 @@ class BERTRNARDataset(Dataset):
                         all_data.append(data)
 
                 except Exception as e:
-                    exon1, intron, exon2, label = line[0], line[1], line[2], line[3]
-                    label = float(label.strip())
-                    seq = exon1 + intron + exon2
-                    exon1_ids = self.tokenizer.text_to_sequence(
-                        exon1, padding="do_not_pad"
-                    )
-                    intron_ids = self.tokenizer.text_to_sequence(
-                        intron, padding="do_not_pad"
-                    )
-                    exon2_ids = self.tokenizer.text_to_sequence(
-                        exon2, padding="do_not_pad"
-                    )
+                    rna_seq, _, label = text.strip().partition("$LABEL$")
 
-                    rna_indices = exon1_ids + intron_ids + exon2_ids
+                    label = float(label.strip())
+                    rna_indices = self.tokenizer.text_to_sequence(
+                        rna_seq, padding="do_not_pad"
+                    )
                     rna_indices = pad_and_truncate(
                         rna_indices,
                         self.config.max_seq_len,

@@ -100,7 +100,9 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                 )
 
             try:
-                self.bert = AutoModel.from_pretrained(self.config.pretrained_bert)
+                self.bert = AutoModel.from_pretrained(
+                    self.config.pretrained_bert, ignore_mismatched_sizes=True
+                )
             except ValueError as e:
                 fprint("Init pretrained model failed, exception: {}".format(e))
 
@@ -227,20 +229,20 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                         shuffle=False,
                     )
 
-    def _train(self, criterion):
-        self._prepare_dataloader()
-
-        if self.config.warmup_step >= 0:
-            self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
-                self.optimizer,
-                T_max=len(self.train_dataloaders[0]) * self.config.num_epoch,
-            )
-            self.warmup_scheduler = warmup.UntunedLinearWarmup(self.optimizer)
-
-        if len(self.valid_dataloaders) > 1:
-            return self._k_fold_train_and_evaluate(criterion)
-        else:
-            return self._train_and_evaluate(criterion)
+    # def _train(self, criterion):
+    #     self._prepare_dataloader()
+    #
+    #     if self.config.warmup_step >= 0:
+    #         self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+    #             self.optimizer,
+    #             T_max=len(self.train_dataloaders[0]) * self.config.num_epoch,
+    #         )
+    #         self.warmup_scheduler = warmup.UntunedLinearWarmup(self.optimizer)
+    #
+    #     if len(self.valid_dataloaders) > 1:
+    #         return self._k_fold_train_and_evaluate(criterion)
+    #     else:
+    #         return self._train_and_evaluate(criterion)
 
     def _train_and_evaluate(self, criterion):
         global_step = 0
@@ -304,6 +306,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                     loss = outputs["r2"]
                 else:
                     loss = criterion(outputs.view(-1), targets)
+                    print(outputs.view(-1))
 
                 losses.append(loss.item())
                 if self.config.use_amp and self.scaler:
@@ -673,6 +676,16 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                 all_targets = torch.cat((all_targets, t_targets), 0)
 
         r2 = metrics.r2_score(t_targets.cpu().numpy(), sen_outputs.cpu().numpy())
+
+        from scipy.stats import spearmanr
+
+        # 使用scipy库计算斯皮尔曼相关系数
+        correlation, p_value = spearmanr(
+            t_targets.cpu().numpy(), sen_outputs.cpu().numpy()
+        )
+        print("斯皮尔曼相关系数:", correlation)
+        print("p_value:", p_value)
+
         return r2
 
     def run(self):

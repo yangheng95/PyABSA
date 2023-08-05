@@ -94,7 +94,7 @@ setup(
         "pytorch_warmup",
         "termcolor",
         "gitpython",  # need git installed in your OS
-        "transformers>=4.18.0",
+        "transformers<=4.29.0",
         "torch>=1.0.0",
         "sentencepiece",
         "protobuf<4.0.0",

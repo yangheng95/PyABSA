@@ -23,19 +23,19 @@ if __name__ == "__main__":
     config.max_seq_len = 120
     config.log_step = -1
     # config.pretrained_bert = "microsoft/mdeberta-v3-base"
-    # config.pretrained_bert = "microsoft/deberta-v3-base"
-    config.pretrained_bert = "bert-base-chinese"
+    config.pretrained_bert = "microsoft/deberta-v3-base"
+    # config.pretrained_bert = "bert-base-chinese"
     config.num_epoch = 100
-    config.learning_rate = 2e-5
+    config.learning_rate = 5e-5
     # config.cache_dataset = False
     config.use_amp = True
     config.cache_dataset = True
-    config.spacy_model = "zh_core_web_sm"
+    # config.spacy_model = "zh_core_web_sm"
 
-    # dataset = "Laptop14"
+    dataset = "Laptop14"
     # dataset = "aste"
     # dataset = "semeval"
-    dataset = "chinese"
+    # dataset = "chinese"
     trainer = ASTE.ASTETrainer(
         config=config,
         dataset=dataset,

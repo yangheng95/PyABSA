@@ -48,64 +48,58 @@ class SentimentClassifier(InferenceModel):
             self.tokenizer = self.checkpoint[2]
         else:
             # load from a model path
-            try:
-                if "fine-tuned" in self.checkpoint:
-                    raise ValueError(
-                        "Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!"
+            # try:
+            if "fine-tuned" in self.checkpoint:
+                raise ValueError(
+                    "Do not support to directly load a fine-tuned model, please load a .state_dict or .model instead!"
+                )
+            fprint("Load sentiment classifier from", self.checkpoint)
+
+            state_dict_path = find_file(
+                self.checkpoint, ".state_dict", exclude_key=["__MACOSX"]
+            )
+            model_path = find_file(self.checkpoint, ".model", exclude_key=["__MACOSX"])
+            tokenizer_path = find_file(
+                self.checkpoint, ".tokenizer", exclude_key=["__MACOSX"]
+            )
+            config_path = find_file(
+                self.checkpoint, ".config", exclude_key=["__MACOSX"]
+            )
+
+            fprint("config: {}".format(config_path))
+            fprint("state_dict: {}".format(state_dict_path))
+            fprint("model: {}".format(model_path))
+            fprint("tokenizer: {}".format(tokenizer_path))
+
+            with open(config_path, mode="rb") as f:
+                self.config = pickle.load(f)
+                self.config.auto_device = kwargs.get("auto_device", True)
+                set_device(self.config, self.config.auto_device)
+
+            if state_dict_path or model_path:
+                if state_dict_path:
+                    self.model = APCEnsembler(self.config, load_dataset=False, **kwargs)
+                    self.model.load_state_dict(
+                        torch.load(state_dict_path, map_location=DeviceTypeOption.CPU)
                     )
-                fprint("Load sentiment classifier from", self.checkpoint)
+                elif model_path:
+                    self.model = torch.load(
+                        model_path, map_location=DeviceTypeOption.CPU
+                    )
 
-                state_dict_path = find_file(
-                    self.checkpoint, ".state_dict", exclude_key=["__MACOSX"]
-                )
-                model_path = find_file(
-                    self.checkpoint, ".model", exclude_key=["__MACOSX"]
-                )
-                tokenizer_path = find_file(
-                    self.checkpoint, ".tokenizer", exclude_key=["__MACOSX"]
-                )
-                config_path = find_file(
-                    self.checkpoint, ".config", exclude_key=["__MACOSX"]
-                )
+            self.tokenizer = self.config.tokenizer
 
-                fprint("config: {}".format(config_path))
-                fprint("state_dict: {}".format(state_dict_path))
-                fprint("model: {}".format(model_path))
-                fprint("tokenizer: {}".format(tokenizer_path))
+            if kwargs.get("verbose", False):
+                fprint("Config used in Training:")
+                print_args(self.config)
 
-                with open(config_path, mode="rb") as f:
-                    self.config = pickle.load(f)
-                    self.config.auto_device = kwargs.get("auto_device", True)
-                    set_device(self.config, self.config.auto_device)
-
-                if state_dict_path or model_path:
-                    if state_dict_path:
-                        self.model = APCEnsembler(
-                            self.config, load_dataset=False, **kwargs
-                        )
-                        self.model.load_state_dict(
-                            torch.load(
-                                state_dict_path, map_location=DeviceTypeOption.CPU
-                            )
-                        )
-                    elif model_path:
-                        self.model = torch.load(
-                            model_path, map_location=DeviceTypeOption.CPU
-                        )
-
-                self.tokenizer = self.config.tokenizer
-
-                if kwargs.get("verbose", False):
-                    fprint("Config used in Training:")
-                    print_args(self.config)
-
-            except Exception as e:
-                raise RuntimeError(
-                    "Fail to load the model from {}! "
-                    "Please make sure the version of checkpoint and PyABSA are compatible."
-                    " Try to remove he checkpoint and download again"
-                    " \nException: {} ".format(checkpoint, e)
-                )
+        # except Exception as e:
+        #     raise RuntimeError(
+        #         "Fail to load the model from {}! "
+        #         "Please make sure the version of checkpoint and PyABSA are compatible."
+        #         " Try to remove he checkpoint and download again"
+        #         " \nException: {} ".format(checkpoint, e)
+        #     )
 
         if isinstance(self.config.model, list):
             if hasattr(APCModelList, self.config.model[0].__name__):
