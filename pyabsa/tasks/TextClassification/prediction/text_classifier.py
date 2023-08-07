@@ -89,7 +89,8 @@ class TextClassifier(InferenceModel):
                             self.model.load_state_dict(
                                 torch.load(
                                     state_dict_path, map_location=DeviceTypeOption.CPU
-                                )
+                                ),
+                                strict=False,
                             )
                         elif model_path:
                             self.model = torch.load(
