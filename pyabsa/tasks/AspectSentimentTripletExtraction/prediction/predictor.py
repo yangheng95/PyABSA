@@ -83,8 +83,8 @@ class AspectSentimentTripletExtractor(InferenceModel):
                             torch.load(
                                 state_dict_path,
                                 map_location=torch.device("cpu"),
-                                strict=False,
-                            )
+                            ),
+                            strict=False,
                         )
                     elif model_path:
                         self.model = torch.load(

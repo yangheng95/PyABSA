@@ -56,9 +56,9 @@ class BERTRNACDataset(PyABSADataset):
             # rna, rna_type = text.strip().split(",")
             # rna_type = rna_type_dict[rna_type]
             # rna_type = rna_type.upper()
-            label = label.strip()
+            # label = label.strip()
             # tokens = self.tokenizer.tokenizer.tokenize(text)
-            tokens = list(text)[50:150]
+            tokens = list(text)
             rna_indices = self.tokenizer.tokenizer.convert_tokens_to_ids(tokens)
             # rna_indices = self.tokenizer.text_to_sequence(rna, padding="do_not_pad")
             # rna_type_indices = self.tokenizer.text_to_sequence(str(rna_type))
