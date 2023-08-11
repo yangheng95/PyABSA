@@ -1,4 +1,10 @@
 ﻿{
+  "2.3.3": {
+    "1": "Fix ASGCN-BERT"
+  },
+  "2.3.2.x": {
+    "1": "Fix checkpoint loading bug for transformers > 4.30.0"
+  },
   "2.3.1": {
     "1": "No changes"
   },

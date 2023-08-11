@@ -60,6 +60,7 @@ class ASGCN_BERT_Unit(nn.Module):
         text_len = text_len.cpu().numpy()
         aspect_len = aspect_len.cpu().numpy()
         weight = [[] for i in range(batch_size)]
+        min_len = torch.inf
         for i in range(batch_size):
             context_len = text_len[i] - aspect_len[i]
             for j in range(aspect_double_idx[i, 0]):
@@ -70,6 +71,8 @@ class ASGCN_BERT_Unit(nn.Module):
                 weight[i].append(1 - (j - aspect_double_idx[i, 1]) / context_len)
             for j in range(text_len[i], seq_len):
                 weight[i].append(0)
+            min_len = len(weight[i]) if len(weight[i]) < min_len else min_len
+        weight = [w[:seq_len] for w in weight]
         weight = (
             torch.tensor(weight, dtype=torch.float).unsqueeze(2).to(self.config.device)
         )
@@ -79,6 +82,7 @@ class ASGCN_BERT_Unit(nn.Module):
         batch_size, seq_len = x.shape[0], x.shape[1]
         aspect_double_idx = aspect_double_idx.cpu().numpy()
         mask = [[] for i in range(batch_size)]
+        min_len = torch.inf
         for i in range(batch_size):
             for j in range(aspect_double_idx[i, 0]):
                 mask[i].append(0)
@@ -86,6 +90,7 @@ class ASGCN_BERT_Unit(nn.Module):
                 mask[i].append(1)
             for j in range(aspect_double_idx[i, 1] + 1, seq_len):
                 mask[i].append(0)
+        mask = [m[:seq_len] for m in mask]
         mask = torch.tensor(mask, dtype=torch.float).unsqueeze(2).to(self.config.device)
         return mask * x
 
