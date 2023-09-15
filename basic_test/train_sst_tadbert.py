@@ -12,10 +12,16 @@ import findfile
 
 # Transfer Experiments and Multitask Experiments
 
-from pyabsa import TCTrainer, TADConfigManager, TCDatasetList, BERTTADModelList, TADTrainer
+from pyabsa import (
+    TCTrainer,
+    TADConfigManager,
+    TCDatasetList,
+    BERTTADModelList,
+    TADTrainer,
+)
 from pyabsa.functional.dataset.dataset_manager import AdvTCDatasetList, DatasetItem
 
-warnings.filterwarnings('ignore')
+warnings.filterwarnings("ignore")
 seeds = [random.randint(1, 10000) for _ in range(1)]
 
 
@@ -23,7 +29,7 @@ def get_config():
     config = TADConfigManager.get_tad_config_english()
     config.model = BERTTADModelList.TADBERT
     config.num_epoch = 1
-    config.pretrained_bert = 'bert-base-uncased'
+    config.pretrained_bert = "bert-base-uncased"
     config.patience = 5
     config.evaluate_begin = 0
     config.max_seq_len = 80
@@ -43,12 +49,10 @@ def get_config():
 #                              checkpoint_save_mode=1,
 #                              auto_device=True
 #                              ).load_trained_model()
-dataset = DatasetItem('SST2BAE')
-text_classifier = TADTrainer(config=get_config(),
-                             dataset=dataset,
-                             checkpoint_save_mode=1,
-                             auto_device=True
-                             ).load_trained_model()
+dataset = DatasetItem("SST2BAE")
+text_classifier = TADTrainer(
+    config=get_config(), dataset=dataset, checkpoint_save_mode=1, auto_device=True
+).load_trained_model()
 # dataset = DatasetItem('SST2PWWS')
 # text_classifier = TADTrainer(config=get_config(),
 #                              dataset=dataset,

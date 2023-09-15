@@ -16,30 +16,32 @@ import termcolor
 LABEL_PADDING = -999
 
 
-def pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating='post', value=0):
+def pad_and_truncate(
+    sequence, maxlen, dtype="int64", padding="post", truncating="post", value=0
+):
     x = (np.ones(maxlen) * value).astype(dtype)
-    if truncating == 'pre':
+    if truncating == "pre":
         trunc = sequence[-maxlen:]
     else:
         trunc = sequence[:maxlen]
     trunc = np.asarray(trunc, dtype=dtype)
-    if padding == 'post':
-        x[:len(trunc)] = trunc
+    if padding == "post":
+        x[: len(trunc)] = trunc
     else:
-        x[-len(trunc):] = trunc
+        x[-len(trunc) :] = trunc
     return x
 
 
 def syntax_distance_alignment(tokens, dist, max_seq_len, tokenizer):
     text = tokens[:]
     dep_dist = dist[:]
-    bert_tokens = tokenizer.tokenize(' '.join(text))
+    bert_tokens = tokenizer.tokenize(" ".join(text))
     _bert_tokens = bert_tokens[:]
     align_dist = []
     if bert_tokens != text:
         while text or bert_tokens:
             try:
-                if text[0] == ' ' or text[0] == '\xa0':  # bad case handle
+                if text[0] == " " or text[0] == "\xa0":  # bad case handle
                     text = text[1:]
                     dep_dist = dep_dist[1:]
                 elif text[0] == bert_tokens[0]:
@@ -64,14 +66,16 @@ def syntax_distance_alignment(tokens, dist, max_seq_len, tokenizer):
 
                     text = text[1:]
                     dep_dist = dep_dist[1:]
-                    bert_tokens = bert_tokens[len(tmp_tokens):]
+                    bert_tokens = bert_tokens[len(tmp_tokens) :]
                 else:
                     text = text[1:]
                     bert_tokens = bert_tokens[1:]
                     align_dist.append(dep_dist[0])
                     dep_dist = dep_dist[1:]
             except:
-                align_dist = pad_and_truncate(align_dist, max_seq_len, value=max_seq_len)
+                align_dist = pad_and_truncate(
+                    align_dist, max_seq_len, value=max_seq_len
+                )
                 return align_dist
     else:
         align_dist = dep_dist
@@ -101,8 +105,8 @@ def load_apc_datasets(fname):
         fname = [fname]
 
     for f in fname:
-        print('loading: {}'.format(f))
-        fin = open(f, 'r', encoding='utf-8')
+        print("loading: {}".format(f))
+        fin = open(f, "r", encoding="utf-8")
         _lines_ = fin.readlines()
         lines.extend(_lines_)
         fin.close()
@@ -110,34 +114,40 @@ def load_apc_datasets(fname):
 
 
 def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
-    if hasattr(opt, 'dynamic_truncate') and opt.dynamic_truncate:
-        _max_seq_len = opt.max_seq_len - len(aspect.split(' '))
-        text_left = text_left.split(' ')
-        text_right = text_right.split(' ')
+    if hasattr(opt, "dynamic_truncate") and opt.dynamic_truncate:
+        _max_seq_len = opt.max_seq_len - len(aspect.split(" "))
+        text_left = text_left.split(" ")
+        text_right = text_right.split(" ")
         if _max_seq_len < (len(text_left) + len(text_right)):
             cut_len = len(text_left) + len(text_right) - _max_seq_len
             if len(text_left) > len(text_right):
                 text_left = text_left[cut_len:]
             else:
-                text_right = text_right[:len(text_right) - cut_len]
-        text_left = ' '.join(text_left)
-        text_right = ' '.join(text_right)
+                text_right = text_right[: len(text_right) - cut_len]
+        text_left = " ".join(text_left)
+        text_right = " ".join(text_right)
 
     # tokenizer.bos_token = tokenizer.bos_token if tokenizer.bos_token else '[CLS]'
     # tokenizer.eos_token = tokenizer.eos_token if tokenizer.eos_token else '[SEP]'
     # bos_token = tokenizer.bos_token
     # eos_token = tokenizer.eos_token
-    bos_token = ''
-    eos_token = ''
+    bos_token = ""
+    eos_token = ""
 
-    text_raw = text_left + ' ' + aspect + ' ' + text_right
-    text_spc = bos_token + ' ' + text_raw + ' ' + eos_token + ' ' + aspect + ' ' + eos_token
+    text_raw = text_left + " " + aspect + " " + text_right
+    text_spc = (
+        bos_token + " " + text_raw + " " + eos_token + " " + aspect + " " + eos_token
+    )
     text_bert_indices = text_to_sequence(tokenizer, text_spc, opt.max_seq_len)
-    text_raw_bert_indices = text_to_sequence(tokenizer, bos_token + ' ' + text_raw + ' ' + eos_token, opt.max_seq_len)
+    text_raw_bert_indices = text_to_sequence(
+        tokenizer, bos_token + " " + text_raw + " " + eos_token, opt.max_seq_len
+    )
     aspect_bert_indices = text_to_sequence(tokenizer, aspect, opt.max_seq_len)
 
-    aspect_begin = len(tokenizer.tokenize(bos_token + ' ' + text_left))
-    aspect_position = set(range(aspect_begin, aspect_begin + np.count_nonzero(aspect_bert_indices)))
+    aspect_begin = len(tokenizer.tokenize(bos_token + " " + text_left))
+    aspect_position = set(
+        range(aspect_begin, aspect_begin + np.count_nonzero(aspect_bert_indices))
+    )
 
     # if 'lcfs' in opt.model_name or 'ssw_s' in opt.model_name or opt.use_syntax_based_SRD:
     #     syntactical_dist, _ = get_syntax_distance(text_raw, aspect, tokenizer, opt)
@@ -145,37 +155,43 @@ def prepare_input_for_apc(opt, tokenizer, text_left, text_right, aspect):
     #     syntactical_dist = None
 
     inputs = {
-        'text_raw': text_raw,
-        'text_spc': text_spc,
-        'aspect': aspect,
-        'aspect_position': aspect_position,
-        'text_indices': text_bert_indices,
-        'text_raw_indices': text_raw_bert_indices,
-        'aspect_indices': aspect_bert_indices,
+        "text_raw": text_raw,
+        "text_spc": text_spc,
+        "aspect": aspect,
+        "aspect_position": aspect_position,
+        "text_indices": text_bert_indices,
+        "text_raw_indices": text_raw_bert_indices,
+        "aspect_indices": aspect_bert_indices,
     }
 
     return inputs
 
 
 def text_to_sequence(tokenizer, text, max_seq_len):
-    return pad_and_truncate(tokenizer.convert_tokens_to_ids(tokenizer.tokenize(text)), max_seq_len)
+    return pad_and_truncate(
+        tokenizer.convert_tokens_to_ids(tokenizer.tokenize(text)), max_seq_len
+    )
 
 
 def get_syntax_distance(text_raw, aspect, tokenizer, opt):
     # Find distance in dependency parsing tree
     if isinstance(text_raw, list):
-        text_raw = ' '.join(text_raw)
+        text_raw = " ".join(text_raw)
 
     if isinstance(aspect, list):
-        aspect = ' '.join(aspect)
+        aspect = " ".join(aspect)
 
     try:
         raw_tokens, dist, max_dist = calculate_dep_dist(text_raw, aspect)
     except Exception as e:
-        print('Text: {} Aspect: {}'.format(text_raw, aspect))
-        raise RuntimeError('Ignore failure in calculate the syntax based SRD: {}, maybe the aspect is None'.format(e))
+        print("Text: {} Aspect: {}".format(text_raw, aspect))
+        raise RuntimeError(
+            "Ignore failure in calculate the syntax based SRD: {}, maybe the aspect is None".format(
+                e
+            )
+        )
 
-    if opt.model_name == 'dlcf_dca_bert':
+    if opt.model_name == "dlcf_dca_bert":
         dist.insert(0, 0)
         dist.append(0)
     else:
@@ -186,13 +202,17 @@ def get_syntax_distance(text_raw, aspect, tokenizer, opt):
 
     # the following two functions are both designed to calculate syntax-based distances
     if opt.srd_alignment:
-        syntactical_dist = syntax_distance_alignment(raw_tokens, dist, opt.max_seq_len, tokenizer)
+        syntactical_dist = syntax_distance_alignment(
+            raw_tokens, dist, opt.max_seq_len, tokenizer
+        )
     else:
         syntactical_dist = pad_syntax_based_srd(raw_tokens, dist, tokenizer, opt)[1]
     return syntactical_dist, max_dist
 
 
-def get_lca_ids_and_cdm_vec(opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None):
+def get_lca_ids_and_cdm_vec(
+    opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None
+):
     SRD = opt.SRD
     cdm_vec = np.zeros((opt.max_seq_len), dtype=np.int64)
     aspect_len = np.count_nonzero(aspect_indices)
@@ -210,7 +230,9 @@ def get_lca_ids_and_cdm_vec(opt, bert_spc_indices, aspect_indices, aspect_begin,
     return cdm_vec
 
 
-def get_cdw_vec(opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None):
+def get_cdw_vec(
+    opt, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None
+):
     SRD = opt.SRD
     cdw_vec = np.zeros((opt.max_seq_len), dtype=np.float32)
     aspect_len = np.count_nonzero(aspect_indices)
@@ -248,48 +270,66 @@ def build_spc_mask_vec(opt, text_ids):
     return spc_mask_vec
 
 
-def build_sentiment_window(examples, tokenizer, similarity_threshold, input_demands=None):
-    copy_side_aspect('left', examples[0], examples[0], examples, input_demands)
+def build_sentiment_window(
+    examples, tokenizer, similarity_threshold, input_demands=None
+):
+    copy_side_aspect("left", examples[0], examples[0], examples, input_demands)
     for idx in range(1, len(examples)):
-        if is_similar(examples[idx - 1]['text_indices'],
-                      examples[idx]['text_indices'],
-                      tokenizer=None,
-                      similarity_threshold=similarity_threshold):
-            copy_side_aspect('right', examples[idx - 1], examples[idx], examples, input_demands)
-            copy_side_aspect('left', examples[idx], examples[idx - 1], examples, input_demands)
+        if is_similar(
+            examples[idx - 1]["text_indices"],
+            examples[idx]["text_indices"],
+            tokenizer=None,
+            similarity_threshold=similarity_threshold,
+        ):
+            copy_side_aspect(
+                "right", examples[idx - 1], examples[idx], examples, input_demands
+            )
+            copy_side_aspect(
+                "left", examples[idx], examples[idx - 1], examples, input_demands
+            )
         else:
-            copy_side_aspect('right', examples[idx - 1], examples[idx - 1], examples, input_demands)
-            copy_side_aspect('left', examples[idx], examples[idx], examples, input_demands)
-    copy_side_aspect('right', examples[-1], examples[-1], examples, input_demands)
+            copy_side_aspect(
+                "right", examples[idx - 1], examples[idx - 1], examples, input_demands
+            )
+            copy_side_aspect(
+                "left", examples[idx], examples[idx], examples, input_demands
+            )
+    copy_side_aspect("right", examples[-1], examples[-1], examples, input_demands)
     return examples
 
 
 def copy_side_aspect(direct, target, source, examples, input_demands):
-    if 'cluster_ids' not in target:
-        target['cluster_ids'] = copy.deepcopy(target['aspect_position'])
-        target['side_ex_ids'] = copy.deepcopy(set([target['ex_id']]))
-    if 'cluster_ids' not in source:
-        source['cluster_ids'] = copy.deepcopy(source['aspect_position'])
-        source['side_ex_ids'] = copy.deepcopy(set([source['ex_id']]))
+    if "cluster_ids" not in target:
+        target["cluster_ids"] = copy.deepcopy(target["aspect_position"])
+        target["side_ex_ids"] = copy.deepcopy(set([target["ex_id"]]))
+    if "cluster_ids" not in source:
+        source["cluster_ids"] = copy.deepcopy(source["aspect_position"])
+        source["side_ex_ids"] = copy.deepcopy(set([source["ex_id"]]))
 
-    if target['polarity'] == source['polarity']:
+    if target["polarity"] == source["polarity"]:
+        target["side_ex_ids"] |= source["side_ex_ids"]
+        source["side_ex_ids"] |= target["side_ex_ids"]
+        target["cluster_ids"] |= source["cluster_ids"]
+        source["cluster_ids"] |= target["cluster_ids"]
 
-        target['side_ex_ids'] |= source['side_ex_ids']
-        source['side_ex_ids'] |= target['side_ex_ids']
-        target['cluster_ids'] |= source['cluster_ids']
-        source['cluster_ids'] |= target['cluster_ids']
-
-        for ex_id in target['side_ex_ids']:
-            examples[ex_id]['cluster_ids'] |= source['cluster_ids']
-            examples[ex_id]['side_ex_ids'] |= target['side_ex_ids']
+        for ex_id in target["side_ex_ids"]:
+            examples[ex_id]["cluster_ids"] |= source["cluster_ids"]
+            examples[ex_id]["side_ex_ids"] |= target["side_ex_ids"]
 
     for data_item in input_demands:
-        if 'right_right_' in data_item or 'left_left_' in data_item:
-            data_item = data_item.replace('right_right_', 'right_', 1).replace('left_left_', 'left_', 1)
-        elif data_item.startswith('right_') or data_item.startswith('left_'):
+        if "right_right_" in data_item or "left_left_" in data_item:
+            data_item = data_item.replace("right_right_", "right_", 1).replace(
+                "left_left_", "left_", 1
+            )
+        elif data_item.startswith("right_") or data_item.startswith("left_"):
             continue
-        target[direct + '_' + data_item] = source[data_item]
-    target[direct + '_dist'] = int(abs(np.average(list(source['aspect_position'])) - np.average(list(target['aspect_position']))))
+        target[direct + "_" + data_item] = source[data_item]
+    target[direct + "_dist"] = int(
+        abs(
+            np.average(list(source["aspect_position"]))
+            - np.average(list(target["aspect_position"]))
+        )
+    )
     # target[direct + '_dist'] = 0 if id(source['lcf_vec']) == id(target['lcf_vec']) else 1
 
 
@@ -301,7 +341,7 @@ def is_similar(s1, s2, tokenizer, similarity_threshold):
         return False
     if abs(np.count_nonzero(s1) - np.count_nonzero(s2)) > 5:
         return False
-    count = 0.
+    count = 0.0
     s1 = list(s1)
     s2 = list(s2)
     len1 = len(s1)
@@ -319,19 +359,27 @@ def is_similar(s1, s2, tokenizer, similarity_threshold):
 
 
 def configure_spacy_model(opt):
-    if not hasattr(opt, 'spacy_model'):
-        opt.spacy_model = 'en_core_web_sm'
+    if not hasattr(opt, "spacy_model"):
+        opt.spacy_model = "en_core_web_sm"
     global nlp
     try:
         nlp = spacy.load(opt.spacy_model)
     except:
-        print('Can not load {} from spacy, try to download it in order to parse syntax tree:'.format(opt.spacy_model),
-              termcolor.colored('\npython -m spacy download {}'.format(opt.spacy_model), 'green'))
+        print(
+            "Can not load {} from spacy, try to download it in order to parse syntax tree:".format(
+                opt.spacy_model
+            ),
+            termcolor.colored(
+                "\npython -m spacy download {}".format(opt.spacy_model), "green"
+            ),
+        )
         try:
-            os.system('python -m spacy download {}'.format(opt.spacy_model))
+            os.system("python -m spacy download {}".format(opt.spacy_model))
             nlp = spacy.load(opt.spacy_model)
         except:
-            raise RuntimeError('Download failed, you can download {} manually.'.format(opt.spacy_model))
+            raise RuntimeError(
+                "Download failed, you can download {} manually.".format(opt.spacy_model)
+            )
     return nlp
 
 
@@ -340,7 +388,9 @@ def calculate_dep_dist(sentence, aspect):
     try:
         doc = nlp(sentence)
     except NameError as e:
-        raise RuntimeError('Fail to load nlp model, maybe you forget to download en_core_web_sm')
+        raise RuntimeError(
+            "Fail to load nlp model, maybe you forget to download en_core_web_sm"
+        )
     # Load spacy's dependency tree into a networkx graph
     edges = []
     cnt = 0
@@ -352,21 +402,25 @@ def calculate_dep_dist(sentence, aspect):
             cnt += 1
 
         for child in token.children:
-            edges.append(('{}_{}'.format(token.lower_, token.i),
-                          '{}_{}'.format(child.lower_, child.i)))
+            edges.append(
+                (
+                    "{}_{}".format(token.lower_, token.i),
+                    "{}_{}".format(child.lower_, child.i),
+                )
+            )
 
     graph = nx.Graph(edges)
 
     dist = [0.0] * len(doc)
-    text = [''] * len(doc)
+    text = [""] * len(doc)
     max_dist_temp = []
     for i, word in enumerate(doc):
-        source = '{}_{}'.format(word.lower_, word.i)
+        source = "{}_{}".format(word.lower_, word.i)
         sum = 0
         flag = 1
         max_dist = 0
         for term_id, term in zip(term_ids, terms):
-            target = '{}_{}'.format(term, term_id)
+            target = "{}_{}".format(term, term_id)
             try:
                 sum += nx.shortest_path_length(graph, source=source, target=target)
             except:

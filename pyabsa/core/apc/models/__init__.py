@@ -104,17 +104,19 @@ class GloVeAPCModelList(list):
     ASGCN = pyabsa.core.apc.classic.__glove__.models.ASGCN
 
     def __init__(self):
-        model_list = [self.LSTM,
-                      self.IAN,
-                      self.MemNet,
-                      self.RAM,
-                      self.TD_LSTM,
-                      self.TC_LSTM,
-                      self.Cabasc,
-                      self.ATAE_LSTM,
-                      self.TNet_LF,
-                      self.AOA,
-                      self.MGAN]
+        model_list = [
+            self.LSTM,
+            self.IAN,
+            self.MemNet,
+            self.RAM,
+            self.TD_LSTM,
+            self.TC_LSTM,
+            self.Cabasc,
+            self.ATAE_LSTM,
+            self.TNet_LF,
+            self.AOA,
+            self.MGAN,
+        ]
         super().__init__(model_list)
 
 
@@ -145,6 +147,6 @@ class BERTBaselineAPCModelList(list):
             self.TNet_LF_BERT,
             self.AOA_BERT,
             self.MGAN_BERT,
-            self.ASGCN_BERT
+            self.ASGCN_BERT,
         ]
         super().__init__(model_list)

@@ -10,7 +10,7 @@ from pyabsa import APCCheckpointManager, ABSADatasetList, available_checkpoints
 
 checkpoint_map = available_checkpoints(from_local=False)
 
-sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='chinese')
+sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint="chinese")
 # sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='checkpoint')
 
 # # 由于BERT采用单字分词，中文是否用空格分割不影响BERT的表现。欢迎贡献中文或其它语言数据集
@@ -19,9 +19,10 @@ sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='chin
 
 infer_set = ABSADatasetList.Chinese
 
-results = sent_classifier.batch_infer(target_file=infer_set,
-                                      print_result=True,
-                                      save_result=True,
-                                      ignore_error=True,
-                                      )
+results = sent_classifier.batch_infer(
+    target_file=infer_set,
+    print_result=True,
+    save_result=True,
+    ignore_error=True,
+)
 # print(results)

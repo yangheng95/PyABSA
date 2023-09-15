@@ -8,7 +8,7 @@ from transformers.models.bert.modeling_bert import BertPooler
 
 
 class BERT_BASE(nn.Module):
-    inputs = ['text_bert_indices']
+    inputs = ["text_bert_indices"]
 
     def __init__(self, bert, opt):
         super(BERT_BASE, self).__init__()
@@ -19,9 +19,9 @@ class BERT_BASE(nn.Module):
         self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
 
     def forward(self, inputs):
-        text_bert_indices = inputs['text_bert_indices']
-        text_features = self.bert(text_bert_indices)['last_hidden_state']
+        text_bert_indices = inputs["text_bert_indices"]
+        text_features = self.bert(text_bert_indices)["last_hidden_state"]
         pooled_output = self.pooler(text_features)
         pooled_output = self.dropout(pooled_output)
         logits = self.dense(pooled_output)
-        return {'logits': logits, 'hidden_state': pooled_output}
+        return {"logits": logits, "hidden_state": pooled_output}

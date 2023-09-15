@@ -14,6 +14,7 @@ from pyabsa.functional import ATEPCConfigManager, Trainer, ABSADatasetList
 
 config = ATEPCConfigManager.get_atepc_config_multilingual()
 multilingual = ABSADatasetList.Multilingual
-aspect_extractor = Trainer(config=config,
-                           dataset=multilingual,
-                           ).load_trained_model()
+aspect_extractor = Trainer(
+    config=config,
+    dataset=multilingual,
+).load_trained_model()

@@ -9,8 +9,18 @@ import torch.nn as nn
 
 
 class DynamicLSTM(nn.Module):
-    def __init__(self, input_size, hidden_size, num_layers=1, bias=True, batch_first=True, dropout=0,
-                 bidirectional=False, only_use_last_hidden_state=False, rnn_type='LSTM'):
+    def __init__(
+        self,
+        input_size,
+        hidden_size,
+        num_layers=1,
+        bias=True,
+        batch_first=True,
+        dropout=0,
+        bidirectional=False,
+        only_use_last_hidden_state=False,
+        rnn_type="LSTM",
+    ):
         """
         LSTM which can hold variable length sequence, use like TensorFlow's RNN(input, length...).
 
@@ -34,18 +44,36 @@ class DynamicLSTM(nn.Module):
         self.only_use_last_hidden_state = only_use_last_hidden_state
         self.rnn_type = rnn_type
 
-        if self.rnn_type == 'LSTM':
+        if self.rnn_type == "LSTM":
             self.RNN = nn.LSTM(
-                input_size=input_size, hidden_size=hidden_size, num_layers=num_layers,
-                bias=bias, batch_first=batch_first, dropout=dropout, bidirectional=bidirectional)
-        elif self.rnn_type == 'GRU':
+                input_size=input_size,
+                hidden_size=hidden_size,
+                num_layers=num_layers,
+                bias=bias,
+                batch_first=batch_first,
+                dropout=dropout,
+                bidirectional=bidirectional,
+            )
+        elif self.rnn_type == "GRU":
             self.RNN = nn.GRU(
-                input_size=input_size, hidden_size=hidden_size, num_layers=num_layers,
-                bias=bias, batch_first=batch_first, dropout=dropout, bidirectional=bidirectional)
-        elif self.rnn_type == 'RNN':
+                input_size=input_size,
+                hidden_size=hidden_size,
+                num_layers=num_layers,
+                bias=bias,
+                batch_first=batch_first,
+                dropout=dropout,
+                bidirectional=bidirectional,
+            )
+        elif self.rnn_type == "RNN":
             self.RNN = nn.RNN(
-                input_size=input_size, hidden_size=hidden_size, num_layers=num_layers,
-                bias=bias, batch_first=batch_first, dropout=dropout, bidirectional=bidirectional)
+                input_size=input_size,
+                hidden_size=hidden_size,
+                num_layers=num_layers,
+                bias=bias,
+                batch_first=batch_first,
+                dropout=dropout,
+                bidirectional=bidirectional,
+            )
 
     def forward(self, x, x_len):
         """
@@ -61,30 +89,36 @@ class DynamicLSTM(nn.Module):
         x_len = x_len[x_sort_idx]
         x = x[x_sort_idx]
         """pack"""
-        x_emb_p = torch.nn.utils.rnn.pack_padded_sequence(x, lengths=x_len.cpu(), batch_first=self.batch_first)
+        x_emb_p = torch.nn.utils.rnn.pack_padded_sequence(
+            x, lengths=x_len.cpu(), batch_first=self.batch_first
+        )
 
         # process using the selected RNN
-        if self.rnn_type == 'LSTM':
+        if self.rnn_type == "LSTM":
             out_pack, (ht, ct) = self.RNN(x_emb_p, None)
         else:
             out_pack, ht = self.RNN(x_emb_p, None)
             ct = None
         """unsort: h"""
         ht = torch.transpose(ht, 0, 1)[
-            x_unsort_idx]  # (num_layers * num_directions, batch, hidden_size) -> (batch, ...)
+            x_unsort_idx
+        ]  # (num_layers * num_directions, batch, hidden_size) -> (batch, ...)
         ht = torch.transpose(ht, 0, 1)
 
         if self.only_use_last_hidden_state:
             return ht
         else:
             """unpack: out"""
-            out = torch.nn.utils.rnn.pad_packed_sequence(out_pack, batch_first=self.batch_first)  # (sequence, lengths)
+            out = torch.nn.utils.rnn.pad_packed_sequence(
+                out_pack, batch_first=self.batch_first
+            )  # (sequence, lengths)
             out = out[0]  #
             out = out[x_unsort_idx]
             """unsort: out c"""
-            if self.rnn_type == 'LSTM':
+            if self.rnn_type == "LSTM":
                 ct = torch.transpose(ct, 0, 1)[
-                    x_unsort_idx]  # (num_layers * num_directions, batch, hidden_size) -> (batch, ...)
+                    x_unsort_idx
+                ]  # (num_layers * num_directions, batch, hidden_size) -> (batch, ...)
                 ct = torch.transpose(ct, 0, 1)
 
             return out, (ht, ct)

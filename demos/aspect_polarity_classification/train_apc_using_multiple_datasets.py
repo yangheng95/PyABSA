@@ -37,8 +37,9 @@ from pyabsa.functional import APCModelList
 
 
 semeval = ABSADatasetList.SemEval
-sent_classifier = Trainer(config=APCConfigManager.get_apc_config_english(),
-                          dataset=semeval,
-                          checkpoint_save_mode=1,
-                          auto_device=True
-                          ).load_trained_model()
+sent_classifier = Trainer(
+    config=APCConfigManager.get_apc_config_english(),
+    dataset=semeval,
+    checkpoint_save_mode=1,
+    auto_device=True,
+).load_trained_model()

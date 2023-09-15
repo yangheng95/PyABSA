@@ -6,5 +6,5 @@
 # Copyright (C) 2021. All Rights Reserved.
 import json
 
-res = json.load(open('atepc_inference.result.json'))
+res = json.load(open("atepc_inference.result.json"))
 print(res)

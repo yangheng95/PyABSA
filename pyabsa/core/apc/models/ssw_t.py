@@ -22,7 +22,16 @@ from pyabsa.network.sa_encoder import Encoder
 
 
 class SSW_T(nn.Module):
-    inputs = ['text_bert_indices', 'spc_mask_vec', 'lcf_vec', 'left_lcf_vec', 'right_lcf_vec', 'polarity', 'left_dist', 'right_dist']
+    inputs = [
+        "text_bert_indices",
+        "spc_mask_vec",
+        "lcf_vec",
+        "left_lcf_vec",
+        "right_lcf_vec",
+        "polarity",
+        "left_dist",
+        "right_dist",
+    ]
 
     def __init__(self, bert, opt):
         super(SSW_T, self).__init__()
@@ -51,17 +60,21 @@ class SSW_T(nn.Module):
         self.sent_dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
 
     def forward(self, inputs):
-        text_bert_indices = inputs['text_bert_indices']
-        spc_mask_vec = inputs['spc_mask_vec']
-        lcf_matrix = inputs['lcf_vec'].unsqueeze(2)
-        left_lcf_matrix = inputs['left_lcf_vec'].unsqueeze(2)
-        right_lcf_matrix = inputs['right_lcf_vec'].unsqueeze(2)
-        polarity = inputs['polarity'] if 'polarity' in inputs else None
-        left_dist = self.dist_embed(inputs['left_dist'].unsqueeze(1))
-        right_dist = self.dist_embed(inputs['right_dist'].unsqueeze(1))
+        text_bert_indices = inputs["text_bert_indices"]
+        spc_mask_vec = inputs["spc_mask_vec"]
+        lcf_matrix = inputs["lcf_vec"].unsqueeze(2)
+        left_lcf_matrix = inputs["left_lcf_vec"].unsqueeze(2)
+        right_lcf_matrix = inputs["right_lcf_vec"].unsqueeze(2)
+        polarity = inputs["polarity"] if "polarity" in inputs else None
+        left_dist = self.dist_embed(inputs["left_dist"].unsqueeze(1))
+        right_dist = self.dist_embed(inputs["right_dist"].unsqueeze(1))
 
-        global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
-        masked_global_context_features = torch.mul(spc_mask_vec, global_context_features)
+        global_context_features = self.bert4global(text_bert_indices)[
+            "last_hidden_state"
+        ]
+        masked_global_context_features = torch.mul(
+            spc_mask_vec, global_context_features
+        )
 
         # # --------------------------------------------------- #
         lcf_features = torch.mul(masked_global_context_features, lcf_matrix)
@@ -74,17 +87,29 @@ class SSW_T(nn.Module):
         right_lcf_features = right_dist * self.encoder_right(right_lcf_features)
         # # --------------------------------------------------- #
 
-        if 'lr' == self.opt.window or 'rl' == self.opt.window:
+        if "lr" == self.opt.window or "rl" == self.opt.window:
             if self.opt.eta >= 0:
                 cat_features = torch.cat(
-                    (lcf_features, self.opt.eta * left_lcf_features, (1 - self.opt.eta) * right_lcf_features), -1)
+                    (
+                        lcf_features,
+                        self.opt.eta * left_lcf_features,
+                        (1 - self.opt.eta) * right_lcf_features,
+                    ),
+                    -1,
+                )
             else:
-                cat_features = torch.cat((left_lcf_features, lcf_features, right_lcf_features), -1)
+                cat_features = torch.cat(
+                    (left_lcf_features, lcf_features, right_lcf_features), -1
+                )
             sent_out = self.linear_window_3h(cat_features)
-        elif 'l' == self.opt.window:
-            sent_out = self.linear_window_2h(torch.cat((lcf_features, left_lcf_features), -1))
-        elif 'r' == self.opt.window:
-            sent_out = self.linear_window_2h(torch.cat((lcf_features, right_lcf_features), -1))
+        elif "l" == self.opt.window:
+            sent_out = self.linear_window_2h(
+                torch.cat((lcf_features, left_lcf_features), -1)
+            )
+        elif "r" == self.opt.window:
+            sent_out = self.linear_window_2h(
+                torch.cat((lcf_features, right_lcf_features), -1)
+            )
         else:
             sent_out = lcf_features
 
@@ -96,6 +121,6 @@ class SSW_T(nn.Module):
         sent_logits = self.sent_dense(sent_out)
         if polarity is not None:
             sent_loss = self.classification_criterion(sent_logits, polarity)
-            return {'logits': sent_logits, 'hidden_state': sent_out, 'loss': sent_loss}
+            return {"logits": sent_logits, "hidden_state": sent_out, "loss": sent_loss}
         else:
-            return {'logits': sent_logits, 'hidden_state': sent_out}
+            return {"logits": sent_logits, "hidden_state": sent_out}

@@ -9,7 +9,7 @@ import os
 
 from pyabsa import APCCheckpointManager, ABSADatasetList, available_checkpoints
 
-os.environ['PYTHONIOENCODING'] = 'UTF8'
+os.environ["PYTHONIOENCODING"] = "UTF8"
 
 # checkpoint_map = available_checkpoints(from_local=True)
 
@@ -24,11 +24,12 @@ os.environ['PYTHONIOENCODING'] = 'UTF8'
 #     'I have had my computer for 2 weeks already and it [ASP]works[ASP] perfectly . !sent! Positive',
 #     'And I may be the only one but I am really liking [ASP]Windows 8[ASP] . !sent! Positive',
 # ]
-sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='english',
-                                                                auto_device=True,  # Use CUDA if available
-                                                                offline=False,
-                                                                cal_perplexity=True,
-                                                                )
+sent_classifier = APCCheckpointManager.get_sentiment_classifier(
+    checkpoint="english",
+    auto_device=True,  # Use CUDA if available
+    offline=False,
+    cal_perplexity=True,
+)
 
 # text = 'everything is always cooked to perfection , the [ASP]service[ASP] is excellent , the [ASP]decor[ASP] cool and understated . !sent! 1 1'
 # sent_classifier.infer(text, print_result=True)
@@ -39,9 +40,10 @@ sent_classifier = APCCheckpointManager.get_sentiment_classifier(checkpoint='engl
 #     result = sent_classifier.infer(ex, print_result=True)
 
 inference_sets = ABSADatasetList.English
-results = sent_classifier.batch_infer(target_file=inference_sets,
-                                      print_result=True,
-                                      save_result=True,
-                                      ignore_error=False,
-                                      )
+results = sent_classifier.batch_infer(
+    target_file=inference_sets,
+    print_result=True,
+    save_result=True,
+    ignore_error=False,
+)
 # print(results)

@@ -7,31 +7,34 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 
-__version__ = '1.16.27'
+__version__ = "1.16.28"
 
-__name__ = 'pyabsa'
+__name__ = "pyabsa"
 
 from termcolor import colored
 from update_checker import UpdateChecker
 
 from pyabsa.functional.trainer import APCTrainer, ATEPCTrainer, TCTrainer, TADTrainer
-from pyabsa.core.apc.models import (APCModelList,
-                                    BERTBaselineAPCModelList,
-                                    GloVeAPCModelList)
-from pyabsa.core.tc.models import (GloVeTCModelList,
-                                   BERTTCModelList)
-from pyabsa.core.tad.models import (GloVeTADModelList,
-                                    BERTTADModelList)
+from pyabsa.core.apc.models import (
+    APCModelList,
+    BERTBaselineAPCModelList,
+    GloVeAPCModelList,
+)
+from pyabsa.core.tc.models import GloVeTCModelList, BERTTCModelList
+from pyabsa.core.tad.models import GloVeTADModelList, BERTTADModelList
 from pyabsa.core.atepc.models import ATEPCModelList
 
-from pyabsa.functional import (TCCheckpointManager,
-                               TADCheckpointManager,
-                               APCCheckpointManager,
-                               ATEPCCheckpointManager,
-                               )
-from pyabsa.functional.checkpoint.checkpoint_manager import (APCCheckpointManager,
-                                                             ATEPCCheckpointManager,
-                                                             available_checkpoints)
+from pyabsa.functional import (
+    TCCheckpointManager,
+    TADCheckpointManager,
+    APCCheckpointManager,
+    ATEPCCheckpointManager,
+)
+from pyabsa.functional.checkpoint.checkpoint_manager import (
+    APCCheckpointManager,
+    ATEPCCheckpointManager,
+    available_checkpoints,
+)
 from pyabsa.functional.dataset import ABSADatasetList, TCDatasetList, AdvTCDatasetList
 from pyabsa.functional.config import APCConfigManager
 from pyabsa.functional.config import ATEPCConfigManager
@@ -49,7 +52,12 @@ check_result = checker.check(__name__, __version__)
 
 if check_result:
     print(check_result)
-    print(colored('PyABSA INFO: The PyABSA >= 2.0.0 version contains breaking changes, '
-                  'if you want to use the training and inference scripts (in demos directory), '
-                  'please do not upgrade to the >= 2.0.0 version', 'red'))
+    print(
+        colored(
+            "PyABSA INFO: The PyABSA >= 2.0.0 version contains breaking changes, "
+            "if you want to use the training and inference scripts (in demos directory), "
+            "please do not upgrade to the >= 2.0.0 version",
+            "red",
+        )
+    )
     check_update_log()

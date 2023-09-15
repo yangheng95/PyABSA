@@ -5,14 +5,16 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from pyabsa.core.atepc.models import (lcfs_atepc,
-                                      lcfs_atepc_large,
-                                      lcf_atepc,
-                                      fast_lcfs_atepc,
-                                      lcf_template_atepc,
-                                      lcf_atepc_large,
-                                      fast_lcf_atepc,
-                                      bert_base_atepc)
+from pyabsa.core.atepc.models import (
+    lcfs_atepc,
+    lcfs_atepc_large,
+    lcf_atepc,
+    fast_lcfs_atepc,
+    lcf_template_atepc,
+    lcf_atepc_large,
+    fast_lcf_atepc,
+    bert_base_atepc,
+)
 
 
 class ATEPCModelList:

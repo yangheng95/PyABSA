@@ -13,16 +13,16 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath(".."))
 
 # -- Project information -----------------------------------------------------
 
-project = 'PyABSA'
-copyright = '2022, Heng Yang'
-author = 'Heng Yang'
+project = "PyABSA"
+copyright = "2022, Heng Yang"
+author = "Heng Yang"
 
 # The full version, including alpha/beta/rc tags
-release = '1.16.16'
+release = "1.16.16"
 
 # -- General configuration ---------------------------------------------------
 
@@ -43,10 +43,10 @@ extensions = [
     "recommonmark",
     "sphinx_markdown_tables",
     "IPython.sphinxext.ipython_console_highlighting",
-    'autoapi.extension'
+    "autoapi.extension",
 ]
-autoapi_type = 'python'
-autoapi_dirs = ['../pyabsa']
+autoapi_type = "python"
+autoapi_dirs = ["../pyabsa"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = []

@@ -13,7 +13,7 @@ from pyabsa.network.sa_encoder import Encoder
 
 
 class FAST_LCF_BERT(nn.Module):
-    inputs = ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec']
+    inputs = ["text_bert_indices", "text_raw_bert_indices", "lcf_vec"]
 
     def __init__(self, bert, opt):
         super(FAST_LCF_BERT, self).__init__()
@@ -29,12 +29,14 @@ class FAST_LCF_BERT(nn.Module):
 
     def forward(self, inputs):
         if self.opt.use_bert_spc:
-            text_bert_indices = inputs['text_bert_indices']
+            text_bert_indices = inputs["text_bert_indices"]
         else:
-            text_bert_indices = inputs['text_raw_bert_indices']
-        text_local_indices = inputs['text_raw_bert_indices']
-        lcf_matrix = inputs['lcf_vec'].unsqueeze(2)
-        global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
+            text_bert_indices = inputs["text_raw_bert_indices"]
+        text_local_indices = inputs["text_raw_bert_indices"]
+        lcf_matrix = inputs["lcf_vec"].unsqueeze(2)
+        global_context_features = self.bert4global(text_bert_indices)[
+            "last_hidden_state"
+        ]
 
         # LCF layer
         lcf_features = torch.mul(global_context_features, lcf_matrix)
@@ -46,4 +48,4 @@ class FAST_LCF_BERT(nn.Module):
         cat_features = self.bert_SA_(cat_features)
         pooled_out = self.bert_pooler(cat_features)
         dense_out = self.dense(pooled_out)
-        return {'logits': dense_out, 'hidden_state': pooled_out}
+        return {"logits": dense_out, "hidden_state": pooled_out}

@@ -6,7 +6,12 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 
-from pyabsa import APCTrainer, APCConfigManager, BERTBaselineAPCModelList, ABSADatasetList
+from pyabsa import (
+    APCTrainer,
+    APCConfigManager,
+    BERTBaselineAPCModelList,
+    ABSADatasetList,
+)
 
 apc_config_english = APCConfigManager.get_apc_config_bert_baseline()
 apc_config_english.model = BERTBaselineAPCModelList.ASGCN_BERT
@@ -22,29 +27,33 @@ apc_config_english.similarity_threshold = 1
 apc_config_english.cross_validate_fold = -1  # disable cross_validate
 
 laptop14 = ABSADatasetList.Laptop14
-sent_classifier = APCTrainer(config=apc_config_english,
-                             dataset=laptop14,  # train set and test set will be automatically detected
-                             checkpoint_save_mode=1,  # None to avoid save model
-                             auto_device=True  # automatic choose CUDA or CPU
-                             ).train()
+sent_classifier = APCTrainer(
+    config=apc_config_english,
+    dataset=laptop14,  # train set and test set will be automatically detected
+    checkpoint_save_mode=1,  # None to avoid save model
+    auto_device=True,  # automatic choose CUDA or CPU
+).train()
 
 Restaurant14 = ABSADatasetList.Restaurant14
-sent_classifier = APCTrainer(config=apc_config_english,
-                             dataset=Restaurant14,  # train set and test set will be automatically detected
-                             checkpoint_save_mode=1,  # None to avoid save model
-                             auto_device=True  # automatic choose CUDA or CPU
-                             ).train()
+sent_classifier = APCTrainer(
+    config=apc_config_english,
+    dataset=Restaurant14,  # train set and test set will be automatically detected
+    checkpoint_save_mode=1,  # None to avoid save model
+    auto_device=True,  # automatic choose CUDA or CPU
+).train()
 
 Restaurant15 = ABSADatasetList.Restaurant15
-sent_classifier = APCTrainer(config=apc_config_english,
-                             dataset=Restaurant15,  # train set and test set will be automatically detected
-                             checkpoint_save_mode=1,  # None to avoid save model
-                             auto_device=True  # automatic choose CUDA or CPU
-                             ).train()
+sent_classifier = APCTrainer(
+    config=apc_config_english,
+    dataset=Restaurant15,  # train set and test set will be automatically detected
+    checkpoint_save_mode=1,  # None to avoid save model
+    auto_device=True,  # automatic choose CUDA or CPU
+).train()
 
 Restaurant16 = ABSADatasetList.Restaurant16
-sent_classifier = APCTrainer(config=apc_config_english,
-                             dataset=Restaurant16,  # train set and test set will be automatically detected
-                             checkpoint_save_mode=1,  # None to avoid save model
-                             auto_device=True  # automatic choose CUDA or CPU
-                             ).train()
+sent_classifier = APCTrainer(
+    config=apc_config_english,
+    dataset=Restaurant16,  # train set and test set will be automatically detected
+    checkpoint_save_mode=1,  # None to avoid save model
+    auto_device=True,  # automatic choose CUDA or CPU
+).train()

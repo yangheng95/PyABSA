@@ -19,8 +19,9 @@ apc_config_english.max_seq_len = 80
 apc_config_english.cross_validate_fold = 5
 
 laptop14 = ABSADatasetList.Laptop14
-sent_classifier = Trainer(config=apc_config_english,
-                          dataset=laptop14,
-                          checkpoint_save_mode=True,
-                          auto_device=True
-                          ).load_trained_model()
+sent_classifier = Trainer(
+    config=apc_config_english,
+    dataset=laptop14,
+    checkpoint_save_mode=True,
+    auto_device=True,
+).load_trained_model()

@@ -7,4 +7,4 @@
 
 from pyabsa import make_ABSA_dataset
 
-make_ABSA_dataset(dataset_name_or_path='test.xml.dat.inference', checkpoint='english')
+make_ABSA_dataset(dataset_name_or_path="test.xml.dat.inference", checkpoint="english")

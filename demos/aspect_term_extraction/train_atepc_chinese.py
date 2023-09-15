@@ -18,7 +18,7 @@ from pyabsa.functional import ATEPCConfigManager
 atepc_config_chinese = ATEPCConfigManager.get_atepc_config_chinese()
 atepc_config_chinese.model = ATEPCModelList.FAST_LCF_ATEPC
 atepc_config_chinese.evaluate_begin = 0
-atepc_config_chinese.pretrained_bert = 'bert-base-chinese'
+atepc_config_chinese.pretrained_bert = "bert-base-chinese"
 # atepc_config_chinese.pretrained_bert = 'microsoft/mdeberta-v3-base'
 atepc_config_chinese.log_step = -1
 atepc_config_chinese.l2reg = 1e-5
@@ -29,8 +29,9 @@ atepc_config_chinese.cache_dataset = False
 
 chinese_sets = ABSADatasetList.Chinese
 
-aspect_extractor = Trainer(config=atepc_config_chinese,
-                           dataset=chinese_sets,
-                           checkpoint_save_mode=1,
-                           auto_device=True
-                           ).load_trained_model()
+aspect_extractor = Trainer(
+    config=atepc_config_chinese,
+    dataset=chinese_sets,
+    checkpoint_save_mode=1,
+    auto_device=True,
+).load_trained_model()

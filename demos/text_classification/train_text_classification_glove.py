@@ -20,8 +20,9 @@ classification_config_english.log_step = 5
 classification_config_english.l2reg = 0.0001
 
 SST2 = TCDatasetList.SST2
-sent_classifier = Trainer(config=classification_config_english,
-                          dataset=SST2,
-                          checkpoint_save_mode=1,
-                          auto_device=True
-                          ).load_trained_model()
+sent_classifier = Trainer(
+    config=classification_config_english,
+    dataset=SST2,
+    checkpoint_save_mode=1,
+    auto_device=True,
+).load_trained_model()

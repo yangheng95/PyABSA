@@ -8,10 +8,11 @@
 
 from pyabsa import load_sentiment_classifier, APCCheckpointManager
 
-model_path = APCCheckpointManager.get_checkpoint('Chinese')
-sent_classifier = load_sentiment_classifier(checkpoint=model_path,
-                                            auto_device=True,  # Use CUDA if available
-                                            )
+model_path = APCCheckpointManager.get_checkpoint("Chinese")
+sent_classifier = load_sentiment_classifier(
+    checkpoint=model_path,
+    auto_device=True,  # Use CUDA if available
+)
 # The default loading device is CPU， if auto_device=True will load model on CUDA if any
 # you can load the model to CPU manually
 sent_classifier.cpu()
@@ -20,4 +21,4 @@ sent_classifier.cpu()
 sent_classifier.cuda()
 
 # # load the model to CPU or CUDA, like cpu, cuda:0, cuda:1, main.
-sent_classifier.to('cuda:0')
+sent_classifier.to("cuda:0")

@@ -14,7 +14,7 @@ from pyabsa.network.sa_encoder import Encoder
 
 
 class FAST_LCF_BERT_ATT(nn.Module):
-    inputs = ['text_bert_indices', 'text_raw_bert_indices', 'lcf_vec']
+    inputs = ["text_bert_indices", "text_raw_bert_indices", "lcf_vec"]
 
     def __init__(self, bert, opt):
         super(FAST_LCF_BERT_ATT, self).__init__()
@@ -27,16 +27,18 @@ class FAST_LCF_BERT_ATT(nn.Module):
         self.bert_SA_ = Encoder(bert.config, opt)
         self.bert_pooler = BertPooler(bert.config)
         self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
-        print('{} is a test model!'.format(self.__class__.__name__))
+        print("{} is a test model!".format(self.__class__.__name__))
 
     def forward(self, inputs):
         if self.opt.use_bert_spc:
-            text_bert_indices = inputs['text_bert_indices']
+            text_bert_indices = inputs["text_bert_indices"]
         else:
-            text_bert_indices = inputs['text_raw_bert_indices']
-        text_local_indices = inputs['text_raw_bert_indices']
-        lcf_matrix = inputs['lcf_vec'].unsqueeze(2)
-        global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
+            text_bert_indices = inputs["text_raw_bert_indices"]
+        text_local_indices = inputs["text_raw_bert_indices"]
+        lcf_matrix = inputs["lcf_vec"].unsqueeze(2)
+        global_context_features = self.bert4global(text_bert_indices)[
+            "last_hidden_state"
+        ]
 
         # LCF layer
         lcf_features = torch.mul(global_context_features, lcf_matrix)
@@ -44,10 +46,14 @@ class FAST_LCF_BERT_ATT(nn.Module):
 
         alpha_mat = torch.matmul(lcf_features, global_context_features.transpose(1, 2))
         alpha = F.softmax(alpha_mat.sum(1, keepdim=True), dim=2)
-        lcf_att_features = torch.matmul(alpha, global_context_features).squeeze(1)  # batch_size x 2*hidden_dim
+        lcf_att_features = torch.matmul(alpha, global_context_features).squeeze(
+            1
+        )  # batch_size x 2*hidden_dim
         global_features = self.bert_pooler(global_context_features)
         lcf_features = self.bert_pooler(lcf_features)
-        out = self.linear3(torch.cat((global_features, lcf_att_features, lcf_features), dim=-1))
+        out = self.linear3(
+            torch.cat((global_features, lcf_att_features, lcf_features), dim=-1)
+        )
 
         dense_out = self.dense(out)
-        return {'logits': dense_out, 'hidden_state': out}
+        return {"logits": dense_out, "hidden_state": out}

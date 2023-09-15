@@ -8,4 +8,6 @@
 from pyabsa.utils.file_utils import convert_apc_set_to_atepc_set
 from pyabsa.functional import ABSADatasetList
 
-convert_apc_set_to_atepc_set('integrated_datasets')  # for custom datasets, absolute path recommended for this function
+convert_apc_set_to_atepc_set(
+    "integrated_datasets"
+)  # for custom datasets, absolute path recommended for this function

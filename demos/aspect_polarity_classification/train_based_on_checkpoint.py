@@ -22,12 +22,13 @@ apc_config_english.l2reg = 0.0001
 apc_config_english.dynamic_truncate = True
 apc_config_english.srd_alignment = True
 
-checkpoint_path = APCCheckpointManager.get_checkpoint('english')
+checkpoint_path = APCCheckpointManager.get_checkpoint("english")
 SemEval = ABSADatasetList.SemEval
 
-sent_classifier = Trainer(config=apc_config_english,
-                          dataset=SemEval,
-                          from_checkpoint=checkpoint_path,
-                          checkpoint_save_mode=1,
-                          auto_device=True
-                          ).load_trained_model()
+sent_classifier = Trainer(
+    config=apc_config_english,
+    dataset=SemEval,
+    from_checkpoint=checkpoint_path,
+    checkpoint_save_mode=1,
+    auto_device=True,
+).load_trained_model()

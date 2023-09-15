@@ -15,8 +15,6 @@ config = APCConfigManager.get_apc_config_base()
 
 multilingual = ABSADatasetList.Multilingual
 
-sent_classifier = APCTrainer(config=config,
-                             dataset=multilingual,
-                             checkpoint_save_mode=1,
-                             auto_device=True
-                             ).load_trained_model()
+sent_classifier = APCTrainer(
+    config=config, dataset=multilingual, checkpoint_save_mode=1, auto_device=True
+).load_trained_model()

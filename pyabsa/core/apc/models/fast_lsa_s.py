@@ -11,7 +11,13 @@ from pyabsa.network.sa_encoder import Encoder
 
 
 class FAST_LSA_S(nn.Module):
-    inputs = ['text_bert_indices', 'spc_mask_vec', 'lcfs_vec', 'left_lcfs_vec', 'right_lcfs_vec']
+    inputs = [
+        "text_bert_indices",
+        "spc_mask_vec",
+        "lcfs_vec",
+        "left_lcfs_vec",
+        "right_lcfs_vec",
+    ]
 
     def __init__(self, bert, opt):
         super(FAST_LSA_S, self).__init__()
@@ -34,14 +40,18 @@ class FAST_LSA_S(nn.Module):
         self.dense = nn.Linear(opt.embed_dim, opt.polarities_dim)
 
     def forward(self, inputs):
-        text_bert_indices = inputs['text_bert_indices']
-        spc_mask_vec = inputs['spc_mask_vec'].unsqueeze(2)
-        lcf_matrix = inputs['lcfs_vec'].unsqueeze(2)
-        left_lcf_matrix = inputs['left_lcfs_vec'].unsqueeze(2)
-        right_lcf_matrix = inputs['right_lcfs_vec'].unsqueeze(2)
+        text_bert_indices = inputs["text_bert_indices"]
+        spc_mask_vec = inputs["spc_mask_vec"].unsqueeze(2)
+        lcf_matrix = inputs["lcfs_vec"].unsqueeze(2)
+        left_lcf_matrix = inputs["left_lcfs_vec"].unsqueeze(2)
+        right_lcf_matrix = inputs["right_lcfs_vec"].unsqueeze(2)
 
-        global_context_features = self.bert4global(text_bert_indices)['last_hidden_state']
-        masked_global_context_features = torch.mul(spc_mask_vec, global_context_features)
+        global_context_features = self.bert4global(text_bert_indices)[
+            "last_hidden_state"
+        ]
+        masked_global_context_features = torch.mul(
+            spc_mask_vec, global_context_features
+        )
 
         # # --------------------------------------------------- #
         lcf_features = torch.mul(global_context_features, lcf_matrix)
@@ -54,15 +64,21 @@ class FAST_LSA_S(nn.Module):
         right_lcf_features = self.encoder_right(right_lcf_features)
         # # --------------------------------------------------- #
 
-        if 'lr' == self.opt.window or 'rl' == self.opt.window:
-            cat_features = torch.cat((lcf_features, left_lcf_features, right_lcf_features), -1)
+        if "lr" == self.opt.window or "rl" == self.opt.window:
+            cat_features = torch.cat(
+                (lcf_features, left_lcf_features, right_lcf_features), -1
+            )
             sent_out = self.linear_window_3h(cat_features)
-        elif 'l' == self.opt.window:
-            sent_out = self.linear_window_2h(torch.cat((lcf_features, self.eta1 * left_lcf_features), -1))
-        elif 'r' == self.opt.window:
-            sent_out = self.linear_window_2h(torch.cat((lcf_features, self.eta2 * right_lcf_features), -1))
+        elif "l" == self.opt.window:
+            sent_out = self.linear_window_2h(
+                torch.cat((lcf_features, self.eta1 * left_lcf_features), -1)
+            )
+        elif "r" == self.opt.window:
+            sent_out = self.linear_window_2h(
+                torch.cat((lcf_features, self.eta2 * right_lcf_features), -1)
+            )
         else:
-            raise KeyError('Invalid parameter:', self.opt.window)
+            raise KeyError("Invalid parameter:", self.opt.window)
 
         sent_out = torch.cat((global_context_features, sent_out), -1)
         sent_out = self.post_linear(sent_out)
@@ -71,4 +87,4 @@ class FAST_LSA_S(nn.Module):
         sent_out = self.bert_pooler(sent_out)
         dense_out = self.dense(sent_out)
 
-        return {'logits': dense_out, 'hidden_state': sent_out}
+        return {"logits": dense_out, "hidden_state": sent_out}

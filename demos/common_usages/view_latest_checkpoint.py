@@ -9,4 +9,4 @@ from pyabsa import available_checkpoints
 
 # checkpoint_map = available_checkpoints()
 # checkpoint_map = available_checkpoints(from_local=True)
-checkpoint_map = available_checkpoints('ATEPC', show_ckpts=True)
+checkpoint_map = available_checkpoints("ATEPC", show_ckpts=True)

@@ -10,12 +10,16 @@ from ..layers.dynamic_rnn import DynamicLSTM
 
 
 class TADLSTM(nn.Module):
-    inputs = ['text_indices']
+    inputs = ["text_indices"]
 
     def __init__(self, embedding_matrix, opt):
         super(TADLSTM, self).__init__()
-        self.embed = nn.Embedding.from_pretrained(torch.tensor(embedding_matrix, dtype=torch.float))
-        self.lstm = DynamicLSTM(opt.embed_dim, opt.hidden_dim, num_layers=1, batch_first=True)
+        self.embed = nn.Embedding.from_pretrained(
+            torch.tensor(embedding_matrix, dtype=torch.float)
+        )
+        self.lstm = DynamicLSTM(
+            opt.embed_dim, opt.hidden_dim, num_layers=1, batch_first=True
+        )
         self.dense1 = nn.Linear(opt.hidden_dim, opt.class_dim)
         self.dense2 = nn.Linear(opt.hidden_dim, opt.adv_det_dim)
         self.dense2 = nn.Linear(opt.hidden_dim, opt.class_dim)

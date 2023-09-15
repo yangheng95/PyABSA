@@ -8,14 +8,14 @@ from ..layers.dynamic_rnn import DynamicLSTM
 
 
 class Absolute_Position_Embedding(nn.Module):
-    def __init__(self, opt, size=None, mode='sum'):
+    def __init__(self, opt, size=None, mode="sum"):
         self.opt = opt
         self.size = size  # 必须为偶数
         self.mode = mode
         super(Absolute_Position_Embedding, self).__init__()
 
     def forward(self, x, pos_inx):
-        if (self.size is None) or (self.mode == 'sum'):
+        if (self.size is None) or (self.mode == "sum"):
             self.size = int(x.size(-1))
         batch_size, seq_len = x.size()[0], x.size()[1]
         weight = self.weight_matrix(pos_inx, batch_size, seq_len).to(self.opt.device)
@@ -37,7 +37,6 @@ class Absolute_Position_Embedding(nn.Module):
 
 
 class TNet_LF_BERT_Unit(nn.Module):
-
     def __init__(self, bert, opt):
         super(TNet_LF_BERT_Unit, self).__init__()
         self.embed = bert
@@ -47,18 +46,34 @@ class TNet_LF_BERT_Unit(nn.Module):
         C = opt.polarities_dim  # 分类数目
         L = opt.max_seq_len
         HD = opt.hidden_dim
-        self.lstm1 = DynamicLSTM(opt.embed_dim, opt.hidden_dim, num_layers=1, batch_first=True, bidirectional=True)
-        self.lstm2 = DynamicLSTM(opt.embed_dim, opt.hidden_dim, num_layers=1, batch_first=True, bidirectional=True)
+        self.lstm1 = DynamicLSTM(
+            opt.embed_dim,
+            opt.hidden_dim,
+            num_layers=1,
+            batch_first=True,
+            bidirectional=True,
+        )
+        self.lstm2 = DynamicLSTM(
+            opt.embed_dim,
+            opt.hidden_dim,
+            num_layers=1,
+            batch_first=True,
+            bidirectional=True,
+        )
         self.convs3 = nn.Conv1d(2 * HD, 50, 3, padding=1)
         self.fc1 = nn.Linear(4 * HD, 2 * HD)
         self.fc = nn.Linear(50, C)
 
     def forward(self, inputs):
-        text_raw_indices, aspect_indices, aspect_in_text = inputs[0], inputs[1], inputs[2]
+        text_raw_indices, aspect_indices, aspect_in_text = (
+            inputs[0],
+            inputs[1],
+            inputs[2],
+        )
         feature_len = torch.sum(text_raw_indices != 0, dim=-1)
         aspect_len = torch.sum(aspect_indices != 0, dim=-1)
-        feature = self.embed(text_raw_indices)['last_hidden_state']
-        aspect = self.embed(aspect_indices)['last_hidden_state']
+        feature = self.embed(text_raw_indices)["last_hidden_state"]
+        aspect = self.embed(aspect_indices)["last_hidden_state"]
         v, (_, _) = self.lstm1(feature, feature_len)
         e, (_, _) = self.lstm2(aspect, aspect_len)
         v = v.transpose(1, 2)
@@ -84,13 +99,13 @@ class TNet_LF_BERT_Unit(nn.Module):
 
 class TNet_LF_BERT(nn.Module):
     inputs = [
-        'text_bert_indices',
-        'aspect_indices',
-        'aspect_boundary',
-        'left_aspect_indices',
-        'left_aspect_boundary',
-        'right_aspect_indices',
-        'right_aspect_boundary',
+        "text_bert_indices",
+        "aspect_indices",
+        "aspect_boundary",
+        "left_aspect_indices",
+        "left_aspect_boundary",
+        "right_aspect_indices",
+        "right_aspect_boundary",
     ]
 
     def __init__(self, bert, opt):
@@ -106,17 +121,44 @@ class TNet_LF_BERT(nn.Module):
         self.dense = nn.Linear(50, self.opt.polarities_dim)
 
     def forward(self, inputs):
-        res = {'logits': None}
+        res = {"logits": None}
         if self.opt.lsa:
             cat_feat = torch.cat(
-                (self.asgcn_left([inputs['text_bert_indices'], inputs['left_aspect_indices'], inputs['left_aspect_boundary']]),
-                 self.asgcn_central([inputs['text_bert_indices'], inputs['aspect_indices'], inputs['aspect_boundary']]),
-                 self.asgcn_right([inputs['text_bert_indices'], inputs['right_aspect_indices'], inputs['right_aspect_boundary']])),
-                -1)
+                (
+                    self.asgcn_left(
+                        [
+                            inputs["text_bert_indices"],
+                            inputs["left_aspect_indices"],
+                            inputs["left_aspect_boundary"],
+                        ]
+                    ),
+                    self.asgcn_central(
+                        [
+                            inputs["text_bert_indices"],
+                            inputs["aspect_indices"],
+                            inputs["aspect_boundary"],
+                        ]
+                    ),
+                    self.asgcn_right(
+                        [
+                            inputs["text_bert_indices"],
+                            inputs["right_aspect_indices"],
+                            inputs["right_aspect_boundary"],
+                        ]
+                    ),
+                ),
+                -1,
+            )
             cat_feat = self.dropout(cat_feat)
-            res['logits'] = self.linear(cat_feat)
+            res["logits"] = self.linear(cat_feat)
         else:
-            cat_feat = self.asgcn_central([inputs['text_bert_indices'], inputs['aspect_indices'], inputs['aspect_boundary']])
+            cat_feat = self.asgcn_central(
+                [
+                    inputs["text_bert_indices"],
+                    inputs["aspect_indices"],
+                    inputs["aspect_boundary"],
+                ]
+            )
             cat_feat = self.dropout(cat_feat)
-            res['logits'] = self.dense(cat_feat)
+            res["logits"] = self.dense(cat_feat)
         return res

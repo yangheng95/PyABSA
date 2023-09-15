@@ -19,28 +19,34 @@ from pyabsa.utils.pyabsa_utils import check_and_fix_labels, TransformerConnectio
 class Tokenizer4Pretraining:
     def __init__(self, max_seq_len, opt):
         try:
-            self.tokenizer = AutoTokenizer.from_pretrained(opt.pretrained_bert,
-                                                           do_lower_case='uncased' in opt.pretrained_bert)
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                opt.pretrained_bert, do_lower_case="uncased" in opt.pretrained_bert
+            )
         except ValueError as e:
             raise TransformerConnectionError()
 
         self.max_seq_len = max_seq_len
 
-    def text_to_sequence(self, text, reverse=False, padding='post', truncating='post'):
+    def text_to_sequence(self, text, reverse=False, padding="post", truncating="post"):
         # sequence = self.tokenizer.convert_tokens_to_ids(self.tokenizer.tokenize(text))
         # if len(sequence) == 0:
         #     sequence = [0]
         # if reverse:
         #     sequence = sequence[::-1]
         # return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
-        return self.tokenizer.encode(text, truncation=True, padding='max_length', max_length=self.max_seq_len,
-                                     return_tensors='pt')
+        return self.tokenizer.encode(
+            text,
+            truncation=True,
+            padding="max_length",
+            max_length=self.max_seq_len,
+            return_tensors="pt",
+        )
 
 
 class BERTTCDataset(Dataset):
     bert_baseline_input_colses = {
-        'bert': ['text_bert_indices'],
-        'huggingfaceencoder': ['text_bert_indices'],
+        "bert": ["text_bert_indices"],
+        "huggingfaceencoder": ["text_bert_indices"],
     }
 
     def __init__(self, dataset_list, tokenizer, opt):
@@ -50,24 +56,27 @@ class BERTTCDataset(Dataset):
 
         label_set = set()
 
-        for i in tqdm.tqdm(range(len(lines)), postfix='preparing dataloader...'):
-            line = lines[i].strip().split('$LABEL$')
+        for i in tqdm.tqdm(range(len(lines)), postfix="preparing dataloader..."):
+            line = lines[i].strip().split("$LABEL$")
             text, label = line[0], line[1]
             text = text.strip()
             label = label.strip()
             text_indices = tokenizer.text_to_sequence(
-                '{} {} {}'.format(tokenizer.tokenizer.cls_token, text, tokenizer.tokenizer.sep_token))
+                "{} {} {}".format(
+                    tokenizer.tokenizer.cls_token, text, tokenizer.tokenizer.sep_token
+                )
+            )
 
             data = {
-                'text_bert_indices': text_indices[0],
-                'label': label,
+                "text_bert_indices": text_indices[0],
+                "label": label,
             }
 
             label_set.add(label)
 
             all_data.append(data)
 
-        check_and_fix_labels(label_set, 'label', all_data, opt)
+        check_and_fix_labels(label_set, "label", all_data, opt)
         opt.polarities_dim = len(label_set)
 
         self.data = all_data

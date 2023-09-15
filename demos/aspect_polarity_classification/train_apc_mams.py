@@ -26,8 +26,9 @@ apc_config_english.dynamic_truncate = True
 apc_config_english.srd_alignment = True
 
 Laptop14 = ABSADatasetList.MAMS
-sent_classifier = Trainer(config=apc_config_english,
-                          dataset=Laptop14,
-                          checkpoint_save_mode=1,
-                          auto_device=True
-                          ).load_trained_model()
+sent_classifier = Trainer(
+    config=apc_config_english,
+    dataset=Laptop14,
+    checkpoint_save_mode=1,
+    auto_device=True,
+).load_trained_model()

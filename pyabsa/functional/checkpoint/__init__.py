@@ -5,8 +5,9 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
-from .checkpoint_manager import (APCCheckpointManager,
-                                 ATEPCCheckpointManager,
-                                 TCCheckpointManager,
-                                 TADCheckpointManager
-                                 )
+from .checkpoint_manager import (
+    APCCheckpointManager,
+    ATEPCCheckpointManager,
+    TCCheckpointManager,
+    TADCheckpointManager,
+)

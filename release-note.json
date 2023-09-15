@@ -1,4 +1,7 @@
 {
+  "1.16.26-28": {
+    "1": "Minor fixes"
+  },
   "1.16.25": {
     "1": "Improves stability of dataset search, this is the final version of the 1.16.x release"
   },

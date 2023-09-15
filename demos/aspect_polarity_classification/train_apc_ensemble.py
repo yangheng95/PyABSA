@@ -10,7 +10,7 @@
 ########################################################################################################################
 import os
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '1,2,3'
+os.environ["CUDA_VISIBLE_DEVICES"] = "1,2,3"
 
 from pyabsa.functional import Trainer
 from pyabsa.functional import APCConfigManager
@@ -20,13 +20,13 @@ from pyabsa.functional import APCModelList
 apc_config_english = APCConfigManager.get_apc_config_english()
 apc_config_english.model = [APCModelList.FAST_LSA_S, APCModelList.FAST_LSA_T]
 # apc_config_english.model = [APCModelList.FAST_LCF_BERT]
-apc_config_english.lcf = 'cdw'
+apc_config_english.lcf = "cdw"
 apc_config_english.similarity_threshold = 1
 apc_config_english.max_seq_len = 80
 
 apc_config_english.dropout = 0.5
 apc_config_english.log_step = 50
-apc_config_english.pretrained_bert = 'yangheng/deberta-v3-base-absa-v1.1'
+apc_config_english.pretrained_bert = "yangheng/deberta-v3-base-absa-v1.1"
 apc_config_english.num_epoch = 15
 apc_config_english.batch_size = 16
 apc_config_english.evaluate_begin = 2
@@ -36,10 +36,11 @@ apc_config_english.cross_validate_fold = -1  # disable cross_validate
 # apc_config_english.use_syntax_based_SRD = True
 
 Dataset = ABSADatasetList.Restaurant14
-sent_classifier = Trainer(config=apc_config_english,
-                          dataset=Dataset,  # train set and test set will be automatically detected
-                          checkpoint_save_mode=1,  # =None to avoid save model
-                          # auto_device=True  # automatic choose CUDA or CPU
-                          auto_device='allcuda'  # automatic choose CUDA or CPU
-                          # auto_device='cuda:2'  # automatic choose CUDA or CPU
-                          ).load_trained_model()
+sent_classifier = Trainer(
+    config=apc_config_english,
+    dataset=Dataset,  # train set and test set will be automatically detected
+    checkpoint_save_mode=1,  # =None to avoid save model
+    # auto_device=True  # automatic choose CUDA or CPU
+    auto_device="allcuda"  # automatic choose CUDA or CPU
+    # auto_device='cuda:2'  # automatic choose CUDA or CPU
+).load_trained_model()

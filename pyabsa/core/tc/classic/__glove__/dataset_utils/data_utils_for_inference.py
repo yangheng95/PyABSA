@@ -10,17 +10,19 @@ from torch.utils.data import Dataset
 from pyabsa.core.apc.dataset_utils.apc_utils import load_apc_datasets, LABEL_PADDING
 
 
-def pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating='post', value=0):
+def pad_and_truncate(
+    sequence, maxlen, dtype="int64", padding="post", truncating="post", value=0
+):
     x = (np.ones(maxlen) * value).astype(dtype)
-    if truncating == 'pre':
+    if truncating == "pre":
         trunc = sequence[-maxlen:]
     else:
         trunc = sequence[:maxlen]
     trunc = np.asarray(trunc, dtype=dtype)
-    if padding == 'post':
-        x[:len(trunc)] = trunc
+    if padding == "post":
+        x[: len(trunc)] = trunc
     else:
-        x[-len(trunc):] = trunc
+        x[-len(trunc) :] = trunc
     return x
 
 
@@ -42,25 +44,26 @@ class Tokenizer(object):
                 self.idx2word[self.idx] = word
                 self.idx += 1
 
-    def text_to_sequence(self, text, reverse=False, padding='post', truncating='post'):
+    def text_to_sequence(self, text, reverse=False, padding="post", truncating="post"):
         if self.lower:
             text = text.lower()
         words = text.split()
         unknownidx = len(self.word2idx) + 1
-        sequence = [self.word2idx[w] if w in self.word2idx else unknownidx for w in words]
+        sequence = [
+            self.word2idx[w] if w in self.word2idx else unknownidx for w in words
+        ]
         if len(sequence) == 0:
             sequence = [0]
         if reverse:
             sequence = sequence[::-1]
-        return pad_and_truncate(sequence, self.max_seq_len, padding=padding, truncating=truncating)
+        return pad_and_truncate(
+            sequence, self.max_seq_len, padding=padding, truncating=truncating
+        )
 
 
 class GloVeTCDataset(Dataset):
-
     def __init__(self, tokenizer, opt):
-        self.glove_input_colses = {
-            'lstm': ['text_indices']
-        }
+        self.glove_input_colses = {"lstm": ["text_indices"]}
 
         self.tokenizer = tokenizer
         self.opt = opt
@@ -73,7 +76,6 @@ class GloVeTCDataset(Dataset):
         self.process_data(self.parse_sample(text), ignore_error=ignore_error)
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
-
         lines = load_apc_datasets(infer_file)
         samples = []
         for sample in lines:
@@ -85,46 +87,48 @@ class GloVeTCDataset(Dataset):
         all_data = []
 
         if len(samples) > 100:
-            it = tqdm.tqdm(samples, postfix='building word indices...')
+            it = tqdm.tqdm(samples, postfix="building word indices...")
         else:
             it = samples
 
         for ex_id, text in enumerate(it):
             try:
                 # handle for empty lines in inference dataset
-                if text is None or '' == text.strip():
-                    raise RuntimeError('Invalid Input!')
+                if text is None or "" == text.strip():
+                    raise RuntimeError("Invalid Input!")
 
-                if '!ref!' in text:
-                    text, label = text.split('!ref!')[0].strip(), text.split('!ref!')[1].strip()
+                if "!ref!" in text:
+                    text, label = (
+                        text.split("!ref!")[0].strip(),
+                        text.split("!ref!")[1].strip(),
+                    )
                     label = int(label) if label else LABEL_PADDING
-                    text = text.replace('[PADDING]', '')
+                    text = text.replace("[PADDING]", "")
 
                     if label < 0:
                         raise RuntimeError(
-                            'Invalid label detected, only please label the sentiment between {0, N-1} '
-                            '(assume there are N types of labels.)')
+                            "Invalid label detected, only please label the sentiment between {0, N-1} "
+                            "(assume there are N types of labels.)"
+                        )
                 else:
                     label = LABEL_PADDING
 
                 text_indices = self.tokenizer.text_to_sequence(text)
 
                 data = {
-                    'ex_id': ex_id,
-
-                    'text_indices': text_indices
-                    if 'text_indices' in self.opt.model.inputs else 0,
-
-                    'text_raw': text,
-
-                    'label': label,
+                    "ex_id": ex_id,
+                    "text_indices": text_indices
+                    if "text_indices" in self.opt.model.inputs
+                    else 0,
+                    "text_raw": text,
+                    "label": label,
                 }
 
                 all_data.append(data)
 
             except Exception as e:
                 if ignore_error:
-                    print('Ignore error while processing:', text)
+                    print("Ignore error while processing:", text)
                 else:
                     raise e
 
