@@ -9,10 +9,10 @@
 import time
 from typing import Union
 
-from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
 from torch import cuda
 
 from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
+from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
 
 
 class InferenceModel:
@@ -80,10 +80,13 @@ class InferenceModel:
         for k, v in kwargs.items():
             self.config[k] = v
 
-        # set default values for label indices
-        self.config.label_to_index["-100"] = -100
-        self.config.label_to_index[""] = -100
-        self.config.index_to_label[-100] = ""
+        try:
+            # set default values for label indices
+            self.config.label_to_index["-100"] = -100
+            self.config.label_to_index[""] = -100
+            self.config.index_to_label[-100] = ""
+        except Exception as e:
+            pass
 
         self.infer_dataloader = None
 

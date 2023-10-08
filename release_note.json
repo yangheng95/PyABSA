@@ -1,4 +1,7 @@
 ﻿{
+  "2.3.4": {
+    "1": "Fix Unexpected key(s) in state_dict: \"{Model_Name}.embeddings.position_ids\"."
+  },
   "2.3.3": {
     "1": "Fix ASGCN-BERT"
   },

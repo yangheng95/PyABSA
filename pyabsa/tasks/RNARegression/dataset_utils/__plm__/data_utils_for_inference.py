@@ -12,8 +12,8 @@ import tqdm
 from torch.utils.data import Dataset
 
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
-from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
+from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.utils.pyabsa_utils import fprint
 
 
@@ -49,20 +49,9 @@ class BERTRNARDataset(Dataset):
                 if text is None or "" == text.strip():
                     raise RuntimeError("Invalid Input!")
 
-                line = (
-                    text.strip().split("\t")
-                    if "\t" in text
-                    else text.strip().split(",")
-                )
+                seq, label = text.strip().split("$LABEL$")
+
                 try:
-                    _, label, r1r2_label, r1r3_label, r2r3_label, seq = (
-                        line[0],
-                        line[1],
-                        line[2],
-                        line[3],
-                        line[4],
-                        line[5],
-                    )
                     label = float(label.strip())
 
                     # r1r2_label = float(r1r2_label.strip())
@@ -76,7 +65,8 @@ class BERTRNARDataset(Dataset):
                             * (self.config.max_seq_len * 2) : (x + 1)
                             * (self.config.max_seq_len * 2)
                         ]
-                        rna_indices = self.tokenizer.text_to_sequence(_seq)
+                        # rna_indices = self.tokenizer.text_to_sequence(_seq)
+                        rna_indices = self.tokenizer.convert_tokens_to_ids(list(seq))
 
                         data = {
                             "ex_id": torch.tensor(ex_id, dtype=torch.long),

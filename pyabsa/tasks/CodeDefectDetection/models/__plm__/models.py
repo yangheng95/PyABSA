@@ -1,9 +1,9 @@
+import logging
+
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from imblearn.over_sampling import SMOTE
-import numpy as np
-
 from transformers import (
     RobertaConfig,
     RobertaModel,
@@ -15,7 +15,6 @@ from transformers import (
     T5ForConditionalGeneration,
     T5Tokenizer,
 )
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -280,8 +279,8 @@ class DefectModel(nn.Module):
 
         logits1 = self.classifier1(vec)
         logits2 = self.classifier2(vec)
-        prob = nn.functional.softmax(logits1)
-        c_prob = nn.functional.softmax(logits2)
+        prob = nn.functional.softmax(logits1, dim=-1)
+        c_prob = nn.functional.softmax(logits2, dim=-1)
 
         if labels is not None:
             loss_fct1 = nn.CrossEntropyLoss()

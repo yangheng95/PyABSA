@@ -4,7 +4,7 @@
 # author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-
+import math
 import os
 import shutil
 import time
@@ -28,19 +28,16 @@ from transformers import AutoModel, AutoTokenizer
 
 from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
-from pyabsa.utils.file_utils.file_utils import save_model
-from ..dataset_utils.__classic__.data_utils_for_training import GloVeRNARDataset
-from ..dataset_utils.__plm__.data_utils_for_training import BERTRNARDataset
-from ..models import GloVeRNARModelList, BERTRNARModelList
-from pyabsa.utils.pyabsa_utils import init_optimizer, fprint
-
-import pytorch_warmup as warmup
-
 from pyabsa.framework.tokenizer_class.tokenizer_class import (
     Tokenizer,
     build_embedding_matrix,
     PretrainedTokenizer,
 )
+from pyabsa.utils.file_utils.file_utils import save_model
+from pyabsa.utils.pyabsa_utils import init_optimizer, fprint
+from ..dataset_utils.__classic__.data_utils_for_training import GloVeRNARDataset
+from ..dataset_utils.__plm__.data_utils_for_training import BERTRNARDataset
+from ..models import GloVeRNARModelList, BERTRNARModelList
 
 
 class RNARTrainingInstructor(BaseTrainingInstructor):
@@ -246,7 +243,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
 
     def _train_and_evaluate(self, criterion):
         global_step = 0
-        max_fold_r2 = -torch.inf
+        max_fold_r2 = math.inf
         save_path = "{0}/{1}_{2}".format(
             self.config.model_path_to_save,
             self.config.model_name,
@@ -306,7 +303,6 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                     loss = outputs["r2"]
                 else:
                     loss = criterion(outputs.view(-1), targets)
-                    print(outputs.view(-1))
 
                 losses.append(loss.item())
                 if self.config.use_amp and self.scaler:
@@ -333,8 +329,8 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
 
                         self.config.metrics_of_this_checkpoint["r2"] = test_r2
 
-                        if test_r2 > max_fold_r2:
-                            if test_r2 > max_fold_r2:
+                        if test_r2 < max_fold_r2:
+                            if test_r2 < max_fold_r2:
                                 patience = self.config.patience - 1
                                 max_fold_r2 = test_r2
 
@@ -676,17 +672,19 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                 all_targets = torch.cat((all_targets, t_targets), 0)
 
         r2 = metrics.r2_score(t_targets.cpu().numpy(), sen_outputs.cpu().numpy())
-
+        mse = metrics.mean_squared_error(
+            t_targets.cpu().numpy(), sen_outputs.cpu().numpy()
+        )
         from scipy.stats import spearmanr
 
         # 使用scipy库计算斯皮尔曼相关系数
         correlation, p_value = spearmanr(
             t_targets.cpu().numpy(), sen_outputs.cpu().numpy()
         )
-        print("斯皮尔曼相关系数:", correlation)
-        print("p_value:", p_value)
+        # print("斯皮尔曼相关系数:", correlation)
+        # print("p_value:", p_value)
 
-        return r2
+        return mse
 
     def run(self):
         # Loss and Optimizer

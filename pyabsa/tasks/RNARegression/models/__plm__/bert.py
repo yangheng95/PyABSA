@@ -26,11 +26,14 @@ class BERT_MLP(nn.Module):
             self.sigmoid = nn.Sigmoid()
         else:
             self.sigmoid = None
+        self.tanh = nn.Tanh()
 
     def forward(self, inputs):
         text_raw_indices = inputs[0]
         last_hidden_state = self.bert(text_raw_indices)["last_hidden_state"]
         pooled_out = self.pooler(last_hidden_state)
+        pooled_out = self.dropout(pooled_out)
+        pooled_out = self.tanh(pooled_out)
         out = self.dense(pooled_out)
         if self.sigmoid:
             out = self.sigmoid(out)

@@ -5,20 +5,17 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
+import json
 import os
 import pickle
-
-import json
 from collections import OrderedDict
 from pathlib import Path
 from typing import Union, List
 
-import numpy as np
 import torch
 import torch.nn.functional as F
 import tqdm
 from findfile import find_file, find_cwd_dir
-from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from termcolor import colored
 from torch.utils.data import DataLoader, SequentialSampler, TensorDataset
 from transformers import AutoTokenizer, AutoModel
@@ -29,7 +26,9 @@ from pyabsa.framework.flag_class.flag_template import (
     DeviceTypeOption,
 )
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
-from ..models import ATEPCModelList
+from pyabsa.utils.data_utils.dataset_item import DatasetItem
+from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
+from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint
 from ..dataset_utils.__lcf__.atepc_utils import (
     load_atepc_inference_datasets,
     process_iob_tags,
@@ -40,8 +39,7 @@ from ..dataset_utils.__lcf__.data_utils_for_inference import (
     convert_apc_examples_to_features,
 )
 from ..dataset_utils.__lcf__.data_utils_for_training import split_aspect
-from pyabsa.utils.data_utils.dataset_item import DatasetItem
-from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint
+from ..models import ATEPCModelList
 
 
 class AspectExtractor(InferenceModel):
@@ -646,7 +644,8 @@ class AspectExtractor(InferenceModel):
                         sent = int(torch.argmax(i_apc_logits, -1))
                     result = {}
                     probs = [
-                        float(x) for x in F.softmax(i_apc_logits).cpu().numpy().tolist()
+                        float(x)
+                        for x in F.softmax(i_apc_logits, dim=-1).cpu().numpy().tolist()
                     ]
                     apc_id = i_batch * self.config.eval_batch_size + i
                     result["sentence"] = " ".join(all_tokens[apc_id])

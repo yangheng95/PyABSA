@@ -6,24 +6,26 @@
 # Copyright (C) 2021. All Rights Reserved.
 import random
 
+from pyabsa import AspectPolarityClassification, ModelSaveOption
+
 ########################################################################################################################
 #                    train and evaluate on your own apc_datasets (need train and test apc_datasets)                    #
 ########################################################################################################################
 
-from pyabsa import AspectPolarityClassification, ModelSaveOption
-
 config = AspectPolarityClassification.APCConfigManager.get_apc_config_english()
 config.evaluate_begin = 0
 config.num_epoch = 1
-config.max_seq_len = 80
+config.max_seq_len = 160
 config.log_step = -1
 config.dropout = 0
 config.l2reg = 1e-5
+config.cache_dataset = False
 config.seed = random.randint(0, 10000)
 config.model = AspectPolarityClassification.BERTBaselineAPCModelList.ASGCN_BERT
 # configuration_class.spacy_model = 'zh_core_web_sm'
 # chinese_sets = ABSADatasetList.Chinese
-chinese_sets = AspectPolarityClassification.APCDatasetList.Laptop14
+chinese_sets = AspectPolarityClassification.APCDatasetList.ARTS_Laptop14
+# chinese_sets = AspectPolarityClassification.APCDatasetList.ARTS_Restaurant14
 # chinese_sets = ABSADatasetList.MOOC
 sent_classifier = AspectPolarityClassification.APCTrainer(
     config=config,

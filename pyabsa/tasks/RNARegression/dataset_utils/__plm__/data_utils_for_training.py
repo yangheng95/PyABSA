@@ -11,8 +11,8 @@ import torch
 import tqdm
 
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
-from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
+from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 
 
 class BERTRNARDataset(PyABSADataset):
@@ -45,11 +45,6 @@ class BERTRNARDataset(PyABSADataset):
                 )
                 label = float(label.strip())
 
-                # r1r2_label = float(r1r2_label.strip())
-                # r1r3_label = float(r1r3_label.strip())
-                # r2r3_label = float(r2r3_label.strip())
-                # if len(seq) > 2 * config.max_seq_len:
-                #     continue
                 for x in range(len(seq) // (self.config.max_seq_len * 2) + 1):
                     _seq = seq[
                         x
@@ -66,9 +61,6 @@ class BERTRNARDataset(PyABSADataset):
                         "ex_id": torch.tensor(ex_id, dtype=torch.long),
                         "text_indices": torch.tensor(rna_indices, dtype=torch.long),
                         "label": torch.tensor(label, dtype=torch.float32),
-                        # 'r1r2_label': torch.tensor(r1r2_label, dtype=torch.float32),
-                        # 'r1r3_label': torch.tensor(r1r3_label, dtype=torch.float32),
-                        # 'r2r3_label': torch.tensor(r2r3_label, dtype=torch.float32),
                     }
 
                     all_data.append(data)
@@ -76,9 +68,12 @@ class BERTRNARDataset(PyABSADataset):
             except Exception as e:
                 rna_seq, label = lines[i].strip().split("$LABEL$")
                 label = float(label.strip())
-                rna_indices = self.tokenizer.text_to_sequence(
-                    rna_seq, padding="do_not_pad"
+                rna_indices = self.tokenizer.convert_tokens_to_ids(
+                    list(rna_seq.strip())
                 )
+                # rna_indices = self.tokenizer.text_to_sequence(
+                #     rna_seq, padding="do_not_pad"
+                # )
 
                 rna_indices = pad_and_truncate(
                     rna_indices,

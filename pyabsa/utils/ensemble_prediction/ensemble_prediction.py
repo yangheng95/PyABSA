@@ -228,7 +228,9 @@ class VoteEnsemblePredictor:
                 for key, value in result.items():
                     if key not in batch_results[i]:
                         batch_results[i][key] = []
-                    for _ in range(self.weights[self.checkpoints.index(ckpt)]):
+                    for _ in range(
+                        self.weights[list(self.predictors.keys()).index(ckpt)]
+                    ):
                         batch_results[i][key].append(value)
 
         ensemble_results = []
