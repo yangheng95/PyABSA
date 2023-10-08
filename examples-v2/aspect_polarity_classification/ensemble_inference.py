@@ -4,6 +4,9 @@ import findfile
 import tqdm
 from sklearn import metrics
 from sklearn.metrics import classification_report
+from pyabsa import AspectPolarityClassification as APC
+from pyabsa.utils import VoteEnsemblePredictor
+import warnings
 
 warnings.filterwarnings("ignore")
 
@@ -30,7 +33,7 @@ def ensemble_performance(dataset, print_result=False):
         result = ensemble_predict(apc_classifiers, text, print_result)
         pred.append(result)
         gold.append(text.split("$LABEL$")[-1].strip())
-    fprint(classification_report(gold, pred, digits=4))
+    print(classification_report(gold, pred, digits=4))
 
 
 if __name__ == "__main__":
@@ -62,7 +65,7 @@ if __name__ == "__main__":
     for key, files in dataset_file_dict.items():
         text_classifiers = {}
 
-        fprint(f"Ensemble inference")
+        print(f"Ensemble inference")
         lines = []
         if isinstance(files, str):
             files = [files]

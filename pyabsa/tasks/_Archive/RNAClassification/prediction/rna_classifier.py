@@ -10,19 +10,18 @@ import numpy as np
 import torch
 import tqdm
 from findfile import find_file, find_cwd_dir
+from sklearn import metrics
 from termcolor import colored
 from torch.utils.data import DataLoader
 from transformers import AutoModel
 
-from sklearn import metrics
-
 from pyabsa import TaskCodeOption, LabelPaddingOption, DeviceTypeOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
-from ..models import BERTRNACModelList, GloVeRNACModelList
-from ..dataset_utils.data_utils_for_inference import GloVeRNACInferenceDataset
-from ..dataset_utils.data_utils_for_inference import BERTRNACInferenceDataset
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint, rprint
+from ..dataset_utils.data_utils_for_inference import BERTRNACInferenceDataset
+from ..dataset_utils.data_utils_for_inference import GloVeRNACInferenceDataset
+from ..models import BERTRNACModelList, GloVeRNACModelList
 
 
 class RNAClassifier(InferenceModel):
@@ -88,7 +87,8 @@ class RNAClassifier(InferenceModel):
                             self.model.load_state_dict(
                                 torch.load(
                                     state_dict_path, map_location=DeviceTypeOption.CPU
-                                )
+                                ),
+                                strict=False,
                             )
                         elif model_path:
                             self.model = torch.load(
@@ -108,7 +108,8 @@ class RNAClassifier(InferenceModel):
                             self.model.load_state_dict(
                                 torch.load(
                                     state_dict_path, map_location=DeviceTypeOption.CPU
-                                )
+                                ),
+                                strict=False,
                             )
 
                 self.tokenizer = self.config.tokenizer

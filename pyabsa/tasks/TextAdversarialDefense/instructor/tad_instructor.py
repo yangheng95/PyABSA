@@ -11,6 +11,7 @@ import time
 
 import numpy as np
 import pandas
+import pytorch_warmup as warmup
 import torch
 import torch.nn as nn
 from findfile import find_file
@@ -26,20 +27,18 @@ from torch.utils.data import (
 from tqdm import tqdm
 from transformers import AutoModel
 
-import pytorch_warmup as warmup
-
 from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
-from ..dataset_utils.__classic__.data_utils_for_training import GloVeTADDataset
-from ..dataset_utils.__plm__.data_utils_for_training import BERTTADDataset
-from ..models import BERTTADModelList, GloVeTADModelList
-from pyabsa.utils.file_utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import init_optimizer, fprint
 from pyabsa.framework.tokenizer_class.tokenizer_class import (
     PretrainedTokenizer,
     Tokenizer,
     build_embedding_matrix,
 )
+from pyabsa.utils.file_utils.file_utils import save_model
+from pyabsa.utils.pyabsa_utils import init_optimizer, fprint
+from ..dataset_utils.__classic__.data_utils_for_training import GloVeTADDataset
+from ..dataset_utils.__plm__.data_utils_for_training import BERTTADDataset
+from ..models import BERTTADModelList, GloVeTADModelList
 
 
 class TADTrainingInstructor(BaseTrainingInstructor):
@@ -155,7 +154,7 @@ class TADTrainingInstructor(BaseTrainingInstructor):
     def reload_model_state_dict(self, ckpt="./init_state_dict.bin"):
         if os.path.exists(ckpt):
             self.model.load_state_dict(
-                torch.load(find_file(ckpt, or_key=[".bin", "state_dict"]))
+                torch.load(find_file(ckpt, or_key=[".bin", "state_dict"])), strict=False
             )
 
     def prepare_dataloader(self, train_set):

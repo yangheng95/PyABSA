@@ -64,7 +64,7 @@ def build_or_load_gen_model(args):
 
     if args.load_model_path is not None:
         logger.info("Reload model from {}".format(args.load_model_path))
-        model.load_state_dict(torch.load(args.load_model_path))
+        model.load_state_dict(torch.load(args.load_model_path), strict=False)
 
     return config, model, tokenizer
 

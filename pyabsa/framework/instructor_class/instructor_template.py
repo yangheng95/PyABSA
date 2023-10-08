@@ -114,11 +114,13 @@ class BaseTrainingInstructor:
         if os.path.exists(ckpt):
             if hasattr(self.model, "module"):
                 self.model.module.load_state_dict(
-                    torch.load(find_file(ckpt, or_key=[".bin", "state_dict"]))
+                    torch.load(find_file(ckpt, or_key=[".bin", "state_dict"])),
+                    strict=False,
                 )
             else:
                 self.model.load_state_dict(
-                    torch.load(find_file(ckpt, or_key=[".bin", "state_dict"]))
+                    torch.load(find_file(ckpt, or_key=[".bin", "state_dict"])),
+                    strict=False,
                 )
 
     def load_cache_dataset(self, **kwargs):
@@ -449,13 +451,15 @@ class BaseTrainingInstructor:
                         and self.config.device == DeviceTypeOption.ALL_CUDA
                     ):
                         self.model.module.load_state_dict(
-                            torch.load(state_dict_path[0])
+                            torch.load(state_dict_path[0]),
+                            strict=False,
                         )
                     else:
                         self.model.load_state_dict(
                             torch.load(
                                 state_dict_path[0], map_location=self.config.device
-                            )
+                            ),
+                            strict=False,
                         )
                     self.model.config = self.config
                     self.model.to(self.config.device)

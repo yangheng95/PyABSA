@@ -7,7 +7,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 
 __name__ = "pyabsa"
-__version__ = "2.3.4"
+__version__ = "2.3.4rc0"
 
 
 from pyabsa.utils.notification_utils.notification_utils import (

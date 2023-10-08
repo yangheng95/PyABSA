@@ -155,7 +155,8 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
     def reload_model(self, ckpt="./init_state_dict.bin"):
         if os.path.exists(ckpt):
             self.model.load_state_dict(
-                torch.load(find_file(ckpt, or_key=[".bin", "state_dict"]))
+                torch.load(find_file(ckpt, or_key=[".bin", "state_dict"])),
+                strict=False,
             )
 
     def _prepare_dataloader(self):

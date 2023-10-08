@@ -11,6 +11,7 @@ import time
 
 import numpy
 import numpy as np
+import pytorch_warmup as warmup
 import torch
 import torch.nn as nn
 from findfile import find_file
@@ -28,20 +29,17 @@ from transformers import AutoModel, AutoTokenizer
 
 from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
-from pyabsa.networks.losses.R2Loss import R2Loss
-from pyabsa.utils.file_utils.file_utils import save_model
-from ..dataset_utils.__classic__.data_utils_for_training import GloVeProteinRDataset
-from ..dataset_utils.__plm__.data_utils_for_training import BERTProteinRDataset
-from ..models import GloVeProteinRModelList, BERTProteinRModelList
-from pyabsa.utils.pyabsa_utils import init_optimizer, fprint
-
-import pytorch_warmup as warmup
-
 from pyabsa.framework.tokenizer_class.tokenizer_class import (
     Tokenizer,
     build_embedding_matrix,
     PretrainedTokenizer,
 )
+from pyabsa.networks.losses.R2Loss import R2Loss
+from pyabsa.utils.file_utils.file_utils import save_model
+from pyabsa.utils.pyabsa_utils import init_optimizer, fprint
+from ..dataset_utils.__classic__.data_utils_for_training import GloVeProteinRDataset
+from ..dataset_utils.__plm__.data_utils_for_training import BERTProteinRDataset
+from ..models import GloVeProteinRModelList, BERTProteinRModelList
 
 
 class ProteinRTrainingInstructor(BaseTrainingInstructor):
@@ -157,7 +155,7 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
     def reload_model(self, ckpt="./init_state_dict.bin"):
         if os.path.exists(ckpt):
             self.model.load_state_dict(
-                torch.load(find_file(ckpt, or_key=[".bin", "state_dict"]))
+                torch.load(find_file(ckpt, or_key=[".bin", "state_dict"])), strict=False
             )
 
     def _prepare_dataloader(self):
