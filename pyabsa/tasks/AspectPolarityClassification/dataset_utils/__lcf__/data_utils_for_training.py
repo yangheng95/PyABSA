@@ -82,12 +82,12 @@ class ABSADataset(PyABSADataset):
             lcfs_cdm_vec = prepared_inputs["lcfs_cdm_vec"]
             lcfs_vec = prepared_inputs["lcfs_vec"]
 
-            if validate_absa_example(text_raw, aspect, polarity, self.config):
-                continue
+            # if validate_absa_example(text_raw, aspect, polarity, self.config):
+            #     continue
 
             if (
-                self.config.model_name == "dlcf_dca_bert"
-                or self.config.model_name == "dlcfs_dca_bert"
+                    self.config.model_name == "dlcf_dca_bert"
+                    or self.config.model_name == "dlcfs_dca_bert"
             ):
                 configure_dlcf_spacy_model(self.config)
                 prepared_inputs = prepare_input_for_dlcf_dca(

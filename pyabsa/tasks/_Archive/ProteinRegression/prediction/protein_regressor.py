@@ -12,19 +12,18 @@ import numpy as np
 import torch
 import tqdm
 from findfile import find_file, find_cwd_dir
+from sklearn import metrics
 from termcolor import colored
 from torch.utils.data import DataLoader
 from transformers import AutoModel, AutoTokenizer
 
-from sklearn import metrics
-
 from pyabsa import TaskCodeOption, LabelPaddingOption, DeviceTypeOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
+from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
+from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint
 from ..dataset_utils.__classic__.data_utils_for_inference import GloVeProteinRDataset
 from ..dataset_utils.__plm__.data_utils_for_inference import BERTProteinRDataset
 from ..models import BERTProteinRModelList, GloVeProteinRModelList
-from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
-from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint
 
 
 class ProteinRegressor(InferenceModel):
@@ -90,7 +89,8 @@ class ProteinRegressor(InferenceModel):
                             self.model.load_state_dict(
                                 torch.load(
                                     state_dict_path, map_location=DeviceTypeOption.CPU
-                                )
+                                ),
+                                strict=False,
                             )
                         elif model_path:
                             self.model = torch.load(
@@ -128,7 +128,7 @@ class ProteinRegressor(InferenceModel):
                 )
 
             if not hasattr(
-                GloVeProteinRModelList, self.config.model.__name__
+                    GloVeProteinRModelList, self.config.model.__name__
             ) and not hasattr(BERTProteinRModelList, self.config.model.__name__):
                 raise KeyError(
                     "The checkpoint you are loading is not from classifier model."
@@ -164,12 +164,12 @@ class ProteinRegressor(InferenceModel):
                 fprint(">>> {0}: {1}".format(arg, getattr(self.config, arg)))
 
     def batch_predict(
-        self,
-        target_file=None,
-        print_result=True,
-        save_result=False,
-        ignore_error=True,
-        **kwargs
+            self,
+            target_file=None,
+            print_result=True,
+            save_result=False,
+            ignore_error=True,
+            **kwargs
     ):
         """
         Predict from a file of sentences.
@@ -210,11 +210,11 @@ class ProteinRegressor(InferenceModel):
         )
 
     def predict(
-        self,
-        text: Union[str, list] = None,
-        print_result=True,
-        ignore_error=True,
-        **kwargs
+            self,
+            text: Union[str, list] = None,
+            print_result=True,
+            ignore_error=True,
+            **kwargs
     ):
         """
         Predict from a sentence or a list of sentences.
@@ -356,9 +356,9 @@ class ProteinRegressor(InferenceModel):
                     text_printing = result["text"][:]
                     if result["ref_label"] != LabelPaddingOption.LABEL_PADDING:
                         if (
-                            abs(result["label"] - result["ref_label"])
-                            / result["ref_label"]
-                            <= 0.2
+                                abs(result["label"] - result["ref_label"])
+                                / result["ref_label"]
+                                <= 0.2
                         ):
                             text_info = colored(
                                 "#{}\t -> <{}(ref:{})>\t".format(

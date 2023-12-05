@@ -10,7 +10,7 @@
 import numpy as np
 import tqdm
 
-from pyabsa import LabelPaddingOption
+from pyabsa.framework.flag_class.flag_template import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.pyabsa_utils import validate_absa_example, fprint
 from .classic_glove_apc_utils import build_sentiment_window
@@ -63,8 +63,8 @@ class GloVeABSAInferenceDataset(ABSAInferenceDataset):
                 text = text_left + " " + aspect + " " + text_right
 
                 if (
-                    validate_absa_example(text, aspect, polarity, self.config)
-                    or not aspect
+                        validate_absa_example(text, aspect, polarity, self.config)
+                        or not aspect
                 ):
                     continue
 
@@ -106,11 +106,11 @@ class GloVeABSAInferenceDataset(ABSAInferenceDataset):
                     "constant",
                 )
                 dependency_graph = dependency_graph[
-                    :, range(0, self.config.max_seq_len)
-                ]
+                                   :, range(0, self.config.max_seq_len)
+                                   ]
                 dependency_graph = dependency_graph[
-                    range(0, self.config.max_seq_len), :
-                ]
+                                   range(0, self.config.max_seq_len), :
+                                   ]
 
                 aspect_begin = np.count_nonzero(
                     self.tokenizer.text_to_sequence(text_left)

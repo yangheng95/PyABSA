@@ -1,4 +1,5 @@
 import autocuda
+import sklearn
 import torch
 from pyabsa.framework.checkpoint_class.checkpoint_template import CheckpointManager
 from torch.utils.data import DataLoader
@@ -32,6 +33,7 @@ class T5Generator:
 
         self.tokenizer = AutoTokenizer.from_pretrained(checkpoint)
         self.model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint)
+        self.model.config.max_length = 128
         self.data_collator = DataCollatorForSeq2Seq(self.tokenizer)
         self.device = autocuda.auto_cuda()
         self.model.to(self.device)
@@ -40,7 +42,7 @@ class T5Generator:
         """
         Udf to tokenize the input dataset.
         """
-        model_inputs = self.tokenizer(sample["text"], max_length=256, truncation=True)
+        model_inputs = self.tokenizer(sample["text"], max_length=1024, truncation=True)
         labels = self.tokenizer(sample["labels"], max_length=128, truncation=True)
         model_inputs["labels"] = labels["input_ids"]
         return model_inputs
@@ -94,7 +96,7 @@ class T5Generator:
         ate_outputs = self.tokenizer.batch_decode(
             ate_outputs, skip_special_tokens=True
         )[0]
-        result["aspect"] = [asp.strip() for asp in ate_outputs.split(",")]
+        result["aspect"] = [asp.strip() for asp in ate_outputs.split("|")]
 
         # APC inference
         inputs = self.tokenizer(
@@ -106,7 +108,7 @@ class T5Generator:
         apc_outputs = self.tokenizer.batch_decode(
             apc_outputs, skip_special_tokens=True
         )[0]
-        result["sentiment"] = [sent.strip() for sent in apc_outputs.split(",")]
+        result["polarity"] = [sent.strip() for sent in apc_outputs.split("|")]
 
         # Opinion inference
         inputs = self.tokenizer(
@@ -118,7 +120,7 @@ class T5Generator:
         op_outputs = self.tokenizer.batch_decode(op_outputs, skip_special_tokens=True)[
             0
         ]
-        result["opinion"] = [op.strip() for op in op_outputs.split(",")]
+        result["opinion"] = [op.strip() for op in op_outputs.split("|")]
 
         # Category inference
         inputs = self.tokenizer(
@@ -130,33 +132,34 @@ class T5Generator:
         cat_outputs = self.tokenizer.batch_decode(
             cat_outputs, skip_special_tokens=True
         )[0]
-        result["category"] = [cat.strip() for cat in cat_outputs.split(",")]
+        result["category"] = [cat.strip() for cat in cat_outputs.split("|")]
         ensemble_result = {
             "text": text,
             "Quadruples": [
                 {
-                    "Aspect": asp,
-                    "Sentiment": sent.partition(":")[2],
-                    "Opinion": op.partition(":")[2],
-                    "Category": cat.partition(":")[2],
+                    "aspect": asp,
+                    "polarity": sent.partition(":")[2],
+                    "opinion": op.partition(":")[2],
+                    "category": cat.partition(":")[2],
                 }
                 for asp, sent, op, cat in zip(
                     result["aspect"],
-                    result["sentiment"],
+                    result["polarity"],
                     result["opinion"],
                     result["category"],
                 )
             ],
         }
+        print(ensemble_result)
         return ensemble_result
 
     def get_labels(
-        self,
-        tokenized_dataset,
-        trained_model_path=None,
-        predictor=None,
-        batch_size=4,
-        sample_set="train",
+            self,
+            tokenized_dataset,
+            trained_model_path=None,
+            predictor=None,
+            batch_size=4,
+            sample_set="train",
     ):
         """
         Get the predictions from the trained model.
@@ -206,113 +209,56 @@ class T5Generator:
         aspect_f1 = f1_score(true_aspects, pred_aspects, average="macro")
         return aspect_p, aspect_r, aspect_f1
 
-    def get_classic_metrics(self, y_true, y_pred):
-        total_pred = 0
-        total_gt = 0
-        tp = 1e-6
-        for gt, pred in zip(y_true, y_pred):
-            print(gt)
-            print(pred)
-
-            gt_list = gt.split(", ")
-            pred_list = pred.split(", ")
-            total_pred += len(pred_list)
-            total_gt += len(gt_list)
-            for gt_val in gt_list:
-                for pred_val in pred_list:
-                    gt_val = gt_val.replace(" ", "")
-                    pred_val = pred_val.replace(" ", "")
-                    if pred_val.strip().lower() == gt_val.strip().lower():
-                        tp += 1
-        p = tp / total_pred
-        r = tp / total_gt
-        return {"precision": p, "recall": r, "f1": 2 * p * r / (p + r)}
-
     # def get_classic_metrics(self, y_true, y_pred):
-    #
-    #     tp = 1e-6
+    #     valid_gts = []
+    #     valid_preds = []
     #     for gt, pred in zip(y_true, y_pred):
-    #         print(gt)
-    #         print(pred)
-    #         if pred.strip().lower() == gt.strip().lower():
-    #             tp += 1
-    #     p = tp / len(y_true)
-    #     r = tp / len(y_true)
-    #     return {"precision": p, "recall": r, "f1": 2 * p * r / (p + r)}
+    #         gt_list = gt.split("|")
+    #         pred_list = pred.split("|")
+    #         while gt_list:
+    #             gt_val = gt_list[-1].strip().lower()
+    #             for pred_val in pred_list:
+    #                 pred_val = pred_val.strip().lower()
+    #                 gt_key, _, gt_label = gt_val.partition(":")
+    #                 pred_key, _, pred_label = pred_val.partition(":")
+    #                 if gt_key.startswith(pred_key):
+    #                     if gt_label:
+    #                         valid_gts.append(gt_label)
+    #                     else:
+    #                         break
+    #                     if pred_label:
+    #                         valid_preds.append(pred_label)
+    #                     else:
+    #                         valid_preds.append("")
+    #                     break
+    #
+    #             gt_list.pop()
+    #
+    #     report = sklearn.metrics.classification_report(valid_gts, valid_preds)
+    #     print(report)
+    #     accuracy = sklearn.metrics.accuracy_score(valid_gts, valid_preds)
+    #     precision = precision_score(valid_gts, valid_preds, average="macro")
+    #     recall = recall_score(valid_gts, valid_preds, average="macro")
+    #     f1 = f1_score(valid_gts, valid_preds, average="macro")
+    #
+    #     return {
+    #         "accuracy": accuracy,
+    #         "precision": precision,
+    #         "recall": recall,
+    #         "f1": f1,
+    #     }
 
-    def get_metrics(self, y_true, y_pred):
-        total_pred = 1e-6
-        total_gt = 1e-6
-        true_aspects = []
-        pred_aspects = []
-        true_opinions = []
-        pred_opinions = []
-        true_sentiments = []
-        pred_sentiments = []
-        true_categories = []
-        pred_categories = []
-        for gt, pred in zip(y_true, y_pred):
-            gt_list, _, _ = gt.partition("<EndOfAnswer>")
-            pred_list, _, _ = pred.partition("<EndOfAnswer>")
-            gt_list = gt_list.split(",")
-            pred_list = pred_list.split(",")
-            total_pred += len(pred_list)
-            total_gt += len(gt_list)
-
-            for gt_val, pred_val in zip(gt_list, pred_list):
-                try:
-                    true_aspects.append(gt_val[0])
-                    pred_aspects.append(pred_val[0])
-                except Exception as e:
-                    pred_aspects.append("NULL")
-
-                try:
-                    true_opinions.append(gt_val[1])
-                    pred_opinions.append(pred_val[1])
-                except Exception as e:
-                    pred_opinions.append("NULL")
-
-                try:
-                    true_sentiments.append(gt_val[2])
-                    pred_sentiments.append(pred_val[2])
-                except Exception as e:
-                    pred_sentiments.append("NULL")
-
-                try:
-                    true_categories.append(gt_val[3])
-                    pred_categories.append(pred_val[3])
-                except Exception as e:
-                    pred_categories.append("NULL")
-
-        aspect_p, aspect_r, aspect_f1 = self.get_aspect_metrics(
-            true_aspects, pred_aspects
-        )
-        opinion_p, opinion_r, opinion_f1 = self.get_aspect_metrics(
-            true_opinions, pred_opinions
-        )
-        sentiment_p, sentiment_r, sentiment_f1 = self.get_aspect_metrics(
-            true_sentiments, pred_sentiments
-        )
-        category_p, category_r, category_f1 = self.get_aspect_metrics(
-            true_categories, pred_categories
-        )
-
+    def get_classic_metrics(self, y_true, y_pred):
+        for i in range(len(y_true)):
+            y_true[i] = y_true[i].replace(" ", "")
+            y_pred[i] = y_pred[i].replace(" ", "")
+            print(y_true[i])
+            print(y_pred[i])
         return {
-            "avg_precision": (aspect_p + opinion_p + sentiment_p + category_p) / 4,
-            "avg_recall": (aspect_r + opinion_r + sentiment_r + category_r) / 4,
-            "avg_f1": (aspect_f1 + opinion_f1 + sentiment_f1 + category_f1) / 4,
-            "aspect_p": aspect_p,
-            "aspect_r": aspect_r,
-            "aspect_f1": aspect_f1,
-            "opinion_p": opinion_p,
-            "opinion_r": opinion_r,
-            "opinion_f1": opinion_f1,
-            "sentiment_p": sentiment_p,
-            "sentiment_r": sentiment_r,
-            "sentiment_f1": sentiment_f1,
-            "category_p": category_p,
-            "category_r": category_r,
-            "category_f1": category_f1,
+            "accuracy": accuracy_score(y_true, y_pred),
+            "precision": precision_score(y_true, y_pred, average="macro"),
+            "recall": recall_score(y_true, y_pred, average="macro"),
+            "f1": f1_score(y_true, y_pred, average="macro"),
         }
 
 
@@ -331,7 +277,7 @@ class T5Classifier:
         Udf to tokenize the input dataset.
         """
         sample["input_ids"] = self.tokenizer(
-            sample["text"], max_length=256, truncation=True
+            sample["text"], max_length=1024, truncation=True
         ).input_ids
         sample["labels"] = self.tokenizer(
             sample["labels"], max_length=128, truncation=True
@@ -369,7 +315,7 @@ class T5Classifier:
         return trainer
 
     def get_labels(
-        self, tokenized_dataset, predictor=None, batch_size=4, sample_set="train"
+            self, tokenized_dataset, predictor=None, batch_size=4, sample_set="train"
     ):
         """
         Get the predictions from the trained model.

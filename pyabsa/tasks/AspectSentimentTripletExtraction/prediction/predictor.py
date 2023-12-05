@@ -14,7 +14,7 @@ from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from torch import nn
 from tqdm import tqdm
 
-from pyabsa import DeviceTypeOption
+from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
 
 from pyabsa.utils.pyabsa_utils import fprint, set_device, print_args
 
@@ -81,8 +81,10 @@ class AspectSentimentTripletExtractor(InferenceModel):
                         )
                         self.model.load_state_dict(
                             torch.load(
-                                state_dict_path, map_location=torch.device("cpu")
-                            )
+                                state_dict_path,
+                                map_location=torch.device("cpu"),
+                            ),
+                            strict=False,
                         )
                     elif model_path:
                         self.model = torch.load(
@@ -100,7 +102,7 @@ class AspectSentimentTripletExtractor(InferenceModel):
                     "Fail to load the model from {}! "
                     "Please make sure the version of checkpoint and PyABSA are compatible."
                     " Try to remove he checkpoint and download again"
-                    " \nException: {} ".format(e, checkpoint)
+                    " \nException: {} ".format(checkpoint, e)
                 )
 
         self.dataset = ASTEInferenceDataset(self.config, self.tokenizer)
@@ -108,12 +110,12 @@ class AspectSentimentTripletExtractor(InferenceModel):
         self.__post_init__(**kwargs)
 
     def batch_infer(
-        self,
-        target_file=None,
-        print_result=True,
-        save_result=False,
-        ignore_error=True,
-        **kwargs
+            self,
+            target_file=None,
+            print_result=True,
+            save_result=False,
+            ignore_error=True,
+            **kwargs
     ):
         """
         A deprecated version of batch_predict method.
@@ -152,12 +154,12 @@ class AspectSentimentTripletExtractor(InferenceModel):
         )
 
     def batch_predict(
-        self,
-        target_file=None,
-        print_result=True,
-        save_result=False,
-        ignore_error=True,
-        **kwargs
+            self,
+            target_file=None,
+            print_result=True,
+            save_result=False,
+            ignore_error=True,
+            **kwargs
     ):
         """
         Predict the sentiment from a file of sentences.
@@ -189,11 +191,11 @@ class AspectSentimentTripletExtractor(InferenceModel):
         )
 
     def predict(
-        self,
-        text: Union[str, list] = None,
-        print_result=True,
-        ignore_error=True,
-        **kwargs
+            self,
+            text: Union[str, list] = None,
+            print_result=True,
+            ignore_error=True,
+            **kwargs
     ):
         """
         Predict the sentiment from a sentence or a list of sentences.
@@ -208,7 +210,15 @@ class AspectSentimentTripletExtractor(InferenceModel):
         else:
             raise RuntimeError("Please specify your datasets path!")
         if isinstance(text, str):
-            return self._run_prediction(print_result=print_result, **kwargs)[0]
+            try:
+                return self._run_prediction(print_result=print_result, **kwargs)[0]
+            except Exception as e:
+                return {
+                    "text": text,
+                    "Triplets": "[]",
+                    "error": str(e),
+                    "error_type": "RuntimeError",
+                }
         else:
             return self._run_prediction(print_result=print_result, **kwargs)
 
@@ -277,10 +287,10 @@ class AspectSentimentTripletExtractor(InferenceModel):
                             asp_head, asp_tail, opn_head, opn_tail, polarity = triplet
                             triplet = {
                                 "Aspect": " ".join(
-                                    sentences[j].split()[asp_head : asp_tail + 1]
+                                    sentences[j].split()[asp_head: asp_tail + 1]
                                 ),
                                 "Opinion": " ".join(
-                                    sentences[j].split()[opn_head : opn_tail + 1]
+                                    sentences[j].split()[opn_head: opn_tail + 1]
                                 ),
                                 "Polarity": self.config.index_to_label[polarity],
                             }
@@ -300,10 +310,10 @@ class AspectSentimentTripletExtractor(InferenceModel):
                         asp_head, asp_tail, opn_head, opn_tail, polarity = triplet
                         triplet = {
                             "Aspect": " ".join(
-                                sentences[j].split()[asp_head : asp_tail + 1]
+                                sentences[j].split()[asp_head: asp_tail + 1]
                             ),
                             "Opinion": " ".join(
-                                sentences[j].split()[opn_head : opn_tail + 1]
+                                sentences[j].split()[opn_head: opn_tail + 1]
                             ),
                             "Polarity": self.config.index_to_label[polarity],
                         }

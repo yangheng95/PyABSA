@@ -16,7 +16,7 @@ from transformers.models.bert.modeling_bert import (
     BertPooler,
 )
 
-from pyabsa import LabelPaddingOption
+from pyabsa.framework.flag_class.flag_template import LabelPaddingOption
 from pyabsa.networks.sa_encoder import Encoder
 
 
@@ -47,7 +47,7 @@ class LCF_ATEPC_LARGE(nn.Module):
         labels = labels.detach().cpu().numpy()
         for text_i in range(len(labels)):
             sep_index = np.argmax((labels[text_i] == self.num_labels - 1))
-            labels[text_i][sep_index + 1 :] = 0
+            labels[text_i][sep_index + 1:] = 0
         return torch.tensor(labels).to(self.bert4global.device)
 
     def get_ids_for_local_context_extractor(self, text_indices):
@@ -55,20 +55,20 @@ class LCF_ATEPC_LARGE(nn.Module):
         text_ids = text_indices.detach().cpu().numpy()
         for text_i in range(len(text_ids)):
             sep_index = np.argmax((text_ids[text_i] == self.config.sep_indices))
-            text_ids[text_i][sep_index + 1 :] = 0
+            text_ids[text_i][sep_index + 1:] = 0
         return torch.tensor(text_ids).to(self.bert4global.device)
 
     def forward(
-        self,
-        input_ids_spc,
-        token_type_ids=None,
-        attention_mask=None,
-        labels=None,
-        polarity=None,
-        valid_ids=None,
-        attention_mask_label=None,
-        lcf_cdm_vec=None,
-        lcf_cdw_vec=None,
+            self,
+            input_ids_spc,
+            token_type_ids=None,
+            attention_mask=None,
+            labels=None,
+            polarity=None,
+            valid_ids=None,
+            attention_mask_label=None,
+            lcf_cdm_vec=None,
+            lcf_cdw_vec=None,
     ):
         lcf_cdm_vec = lcf_cdm_vec.unsqueeze(2) if lcf_cdm_vec is not None else None
         lcf_cdw_vec = lcf_cdw_vec.unsqueeze(2) if lcf_cdw_vec is not None else None

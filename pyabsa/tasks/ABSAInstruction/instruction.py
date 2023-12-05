@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: instruction.py
 # time: 15/03/2023
-# author: yangheng <hy345@exeter.ac.uk>
+# author: HENG YANG <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95
 # huggingface: https://huggingface.co/yangheng
 # google scholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
@@ -31,12 +31,12 @@ Definition: The input are sentences about a product or service. The task is to e
 example 1-
 input: I charge it at night and skip taking the cord with me because of the good battery life.
 {self.eos_instruction}
-battery life, cord
+aspect:battery life|aspect:cord
 
 example 2-
 input: Great food, good size menu, great service and an unpretensious setting.
 {self.eos_instruction}
-food, menu, service, setting
+aspect:food|aspect:menu|aspect:service|aspect:setting
 
 Now extract aspects from the following example:
 input: """
@@ -64,13 +64,13 @@ example 1-
 input: I charge it at night and skip taking the cord with me because of the good battery life.
 The aspects are: battery life, cord
 {self.eos_instruction}
-battery life:positive, cord:positive
+battery life:positive|cord:positive
 
 example 2-
 input: Great food, good size menu, great service and an unpretensious setting.
 The aspects are: food, menu, service, setting
 {self.eos_instruction}
-food:positive, menu:positive, service:positive, setting:positive
+food:positive|menu:positive|service:positive|setting:positive
     
 Now predict aspect sentiments from the following example:
 
@@ -85,10 +85,10 @@ input: """
 
     def prepare_input(self, input_text, aspects):
         return (
-            self.bos_instruction
-            + input_text
-            + f"The aspects are: {aspects}"
-            + self.eos_instruction
+                self.bos_instruction
+                + input_text
+                + f"The aspects are: {aspects}"
+                + self.eos_instruction
         )
 
 
@@ -103,13 +103,13 @@ example 1-
 input: I charge it at night and skip taking the cord with me because of the good battery life.
 The aspects are: battery life, cord
 {self.eos_instruction}
-battery life:good, cord:NULL
+battery life:good|cord:NULL
     
 example 2-
 input: Great food, good size menu, great service and an unpretensious setting.
 The aspects are: food, menu, service, setting
 {self.eos_instruction}
-food:great, menu:good, service:great, setting:unpretensious
+food:great|menu:good|service:great|setting:unpretensious
 
 Now extract opinions for the following example:
 input:"""
@@ -123,10 +123,10 @@ input:"""
 
     def prepare_input(self, input_text, aspects):
         return (
-            self.bos_instruction
-            + input_text
-            + f"The aspects are: {aspects}"
-            + self.eos_instruction
+                self.bos_instruction
+                + input_text
+                + f"The aspects are: {aspects}"
+                + self.eos_instruction
         )
 
 
@@ -141,11 +141,11 @@ example 1-
 input: I charge it at night and skip taking the cord with me because of the good battery life.
 The aspects are: battery life, cord
 {self.eos_instruction}
-battery life:POWER_SUPPLY#GENERAL, cord:NULL
+battery life:POWER_SUPPLY#GENERAL|cord:NULL
 
 example 2-
 input: Great food, good size menu, great service and an unpretensious setting.
-The aspects are: food, menu, service, setting
+The aspects are: food:FOOD#QUALITY| menu:RESTAURANT#GENERAL|service:SERVICE#GENERAL|setting:SERVICE#GENERAL
 {self.eos_instruction}
 food:FOOD#QUALITY, menu:RESTAURANT#GENERAL, service:SERVICE#GENERAL, setting:SERVICE#GENERAL
 
@@ -161,8 +161,8 @@ input: """
 
     def prepare_input(self, input_text, aspects):
         return (
-            self.bos_instruction
-            + input_text
-            + f"The aspects are: {aspects}"
-            + self.eos_instruction
+                self.bos_instruction
+                + input_text
+                + f"The aspects are: {aspects}"
+                + self.eos_instruction
         )

@@ -9,7 +9,12 @@
 
 from typing import Union
 
-from pyabsa import DeviceTypeOption, ModelSaveOption, TaskCodeOption, TaskNameOption
+from pyabsa.framework.flag_class.flag_template import (
+    DeviceTypeOption,
+    ModelSaveOption,
+    TaskCodeOption,
+    TaskNameOption,
+)
 from pyabsa.framework.trainer_class.trainer_template import Trainer
 from ..configuration.apc_configuration import APCConfigManager
 from ..prediction.sentiment_classifier import SentimentClassifier
@@ -18,14 +23,14 @@ from ..instructor.apc_instructor import APCTrainingInstructor
 
 class APCTrainer(Trainer):
     def __init__(
-        self,
-        config: APCConfigManager = None,
-        dataset=None,
-        from_checkpoint: str = None,
-        checkpoint_save_mode: int = ModelSaveOption.SAVE_MODEL_STATE_DICT,
-        auto_device: Union[bool, str] = DeviceTypeOption.AUTO,
-        path_to_save=None,
-        load_aug=False,
+            self,
+            config: APCConfigManager = None,
+            dataset=None,
+            from_checkpoint: str = None,
+            checkpoint_save_mode: int = ModelSaveOption.SAVE_MODEL_STATE_DICT,
+            auto_device: Union[bool, str] = DeviceTypeOption.AUTO,
+            path_to_save=None,
+            load_aug=False,
     ):
         """
         Init a trainer for trainer a APC, ATEPC, TC or TAD model, after trainer,

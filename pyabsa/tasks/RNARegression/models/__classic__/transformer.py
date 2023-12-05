@@ -29,14 +29,14 @@ class Transformer(nn.Module):
         self.classifier = nn.Linear(self.config.hidden_dim, self.config.output_dim)
 
     def forward(
-        self,
-        input_ids,
-        attention_mask=None,
-        token_type_ids=None,
-        position_ids=None,
-        head_mask=None,
-        inputs_embeds=None,
-        labels=None,
+            self,
+            input_ids,
+            attention_mask=None,
+            token_type_ids=None,
+            position_ids=None,
+            head_mask=None,
+            inputs_embeds=None,
+            labels=None,
     ):
         transformer_outputs = self.transformer(
             input_ids=input_ids,

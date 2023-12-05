@@ -53,7 +53,7 @@ def syntax_distance_alignment(tokens, dist, max_seq_len, tokenizer):
 
                     text = text[1:]
                     dep_dist = dep_dist[1:]
-                    bert_tokens = bert_tokens[len(tmp_tokens) :]
+                    bert_tokens = bert_tokens[len(tmp_tokens):]
                 else:
                     text = text[1:]
                     bert_tokens = bert_tokens[1:]
@@ -109,7 +109,7 @@ def prepare_input_for_apc(config, tokenizer, text_left, text_right, aspect):
 
     text_raw = text_left + " " + aspect + " " + text_right
     text_spc = (
-        bos_token + " " + text_raw + " " + eos_token + " " + aspect + " " + eos_token
+            bos_token + " " + text_raw + " " + eos_token + " " + aspect + " " + eos_token
     )
     text_indices = text_to_sequence(tokenizer, text_spc, config.max_seq_len)
     text_raw_bert_indices = text_to_sequence(
@@ -186,7 +186,7 @@ def get_syntax_distance(text_raw, aspect, tokenizer, config):
 
 
 def get_lca_ids_and_cdm_vec(
-    config, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None
+        config, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None
 ):
     SRD = config.SRD
     cdm_vec = np.zeros((config.max_seq_len), dtype=np.int64)
@@ -206,7 +206,7 @@ def get_lca_ids_and_cdm_vec(
 
 
 def get_cdw_vec(
-    config, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None
+        config, bert_spc_indices, aspect_indices, aspect_begin, syntactical_dist=None
 ):
     SRD = config.SRD
     cdw_vec = np.zeros((config.max_seq_len), dtype=np.float32)
@@ -246,15 +246,15 @@ def build_spc_mask_vec(config, text_ids):
 
 
 def build_sentiment_window(
-    examples, tokenizer, similarity_threshold, input_demands=None
+        examples, tokenizer, similarity_threshold, input_demands=None
 ):
     copy_side_aspect("left", examples[0], examples[0], examples, input_demands)
     for idx in range(1, len(examples)):
         if is_similar(
-            examples[idx - 1]["text_indices"],
-            examples[idx]["text_indices"],
-            tokenizer=None,
-            similarity_threshold=similarity_threshold,
+                examples[idx - 1]["text_indices"],
+                examples[idx]["text_indices"],
+                tokenizer=None,
+                similarity_threshold=similarity_threshold,
         ):
             copy_side_aspect(
                 "right", examples[idx - 1], examples[idx], examples, input_demands

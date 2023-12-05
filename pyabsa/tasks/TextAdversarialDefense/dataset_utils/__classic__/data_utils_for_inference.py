@@ -7,7 +7,6 @@
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
 
-import numpy as np
 import tqdm
 from torch.utils.data import Dataset
 
@@ -26,7 +25,10 @@ class GloVeTADInferenceDataset(Dataset):
         return [text]
 
     def prepare_infer_sample(self, text: str, ignore_error):
-        self.process_data(self.parse_sample(text), ignore_error=ignore_error)
+        if isinstance(text, list):
+            self.process_data(text, ignore_error=ignore_error)
+        else:
+            self.process_data(self.parse_sample(text), ignore_error=ignore_error)
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
         lines = load_dataset_from_file(infer_file, config=self.config)

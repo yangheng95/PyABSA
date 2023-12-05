@@ -10,19 +10,18 @@ import numpy as np
 import torch
 import tqdm
 from findfile import find_file, find_cwd_dir
+from sklearn import metrics
 from termcolor import colored
 from torch.utils.data import DataLoader
 from transformers import AutoModel
 
-from sklearn import metrics
-
 from pyabsa import TaskCodeOption, LabelPaddingOption, DeviceTypeOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
-from ..models import BERTRNACModelList, GloVeRNACModelList
-from ..dataset_utils.data_utils_for_inference import GloVeRNACInferenceDataset
-from ..dataset_utils.data_utils_for_inference import BERTRNACInferenceDataset
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
 from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint, rprint
+from ..dataset_utils.data_utils_for_inference import BERTRNACInferenceDataset
+from ..dataset_utils.data_utils_for_inference import GloVeRNACInferenceDataset
+from ..models import BERTRNACModelList, GloVeRNACModelList
 
 
 class RNAClassifier(InferenceModel):
@@ -88,7 +87,8 @@ class RNAClassifier(InferenceModel):
                             self.model.load_state_dict(
                                 torch.load(
                                     state_dict_path, map_location=DeviceTypeOption.CPU
-                                )
+                                ),
+                                strict=False,
                             )
                         elif model_path:
                             self.model = torch.load(
@@ -108,7 +108,8 @@ class RNAClassifier(InferenceModel):
                             self.model.load_state_dict(
                                 torch.load(
                                     state_dict_path, map_location=DeviceTypeOption.CPU
-                                )
+                                ),
+                                strict=False,
                             )
 
                 self.tokenizer = self.config.tokenizer
@@ -125,7 +126,7 @@ class RNAClassifier(InferenceModel):
                 )
 
             if not hasattr(
-                GloVeRNACModelList, self.config.model.__name__
+                    GloVeRNACModelList, self.config.model.__name__
             ) and not hasattr(BERTRNACModelList, self.config.model.__name__):
                 raise KeyError(
                     "The checkpoint you are loading is not from classifier model."
@@ -161,12 +162,12 @@ class RNAClassifier(InferenceModel):
                 fprint(">>> {0}: {1}".format(arg, getattr(self.config, arg)))
 
     def batch_predict(
-        self,
-        target_file=None,
-        print_result=True,
-        save_result=False,
-        ignore_error=True,
-        **kwargs
+            self,
+            target_file=None,
+            print_result=True,
+            save_result=False,
+            ignore_error=True,
+            **kwargs
     ):
         """
         Runs inference on a batch of data.
@@ -468,7 +469,7 @@ class RNAClassifier(InferenceModel):
                 digits=4,
                 target_names=[
                     self.config.index_to_label[x]
-                    for x in sorted(self.config.index_to_label.keys())
+                    for x in sorted(self.config.index_to_label.keys()) if x != -100
                 ],
             )
             fprint(
@@ -483,7 +484,7 @@ class RNAClassifier(InferenceModel):
                 t_targets_all,
                 np.argmax(t_outputs_all, -1),
                 labels=[
-                    self.config.label_to_index[x] for x in self.config.label_to_index
+                    self.config.label_to_index[x] for x in self.config.label_to_index if x != '-100' and x != ''
                 ],
             )
             fprint(

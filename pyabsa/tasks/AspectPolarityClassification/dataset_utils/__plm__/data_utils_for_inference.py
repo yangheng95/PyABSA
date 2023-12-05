@@ -6,7 +6,7 @@
 import numpy as np
 import tqdm
 
-from pyabsa import LabelPaddingOption
+from pyabsa.framework.flag_class.flag_template import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.pyabsa_utils import validate_absa_example, fprint
 from .classic_bert_apc_utils import prepare_input_for_apc, build_sentiment_window
@@ -58,8 +58,8 @@ class BERTABSAInferenceDataset(ABSAInferenceDataset):
                 # polarity = int(polarity)
 
                 if (
-                    validate_absa_example(text, aspect, polarity, self.config)
-                    or not aspect
+                        validate_absa_example(text, aspect, polarity, self.config)
+                        or not aspect
                 ):
                     continue
 
@@ -113,11 +113,11 @@ class BERTABSAInferenceDataset(ABSAInferenceDataset):
                 )
 
                 dependency_graph = dependency_graph[
-                    :, range(0, self.config.max_seq_len)
-                ]
+                                   :, range(0, self.config.max_seq_len)
+                                   ]
                 dependency_graph = dependency_graph[
-                    range(0, self.config.max_seq_len), :
-                ]
+                                   range(0, self.config.max_seq_len), :
+                                   ]
 
                 data = {
                     "ex_id": ex_id,

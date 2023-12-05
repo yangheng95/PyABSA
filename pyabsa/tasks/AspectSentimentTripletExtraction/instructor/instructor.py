@@ -388,8 +388,8 @@ class ASTETrainingInstructor(BaseTrainingInstructor):
                                 )
 
                                 if (
-                                    joint_f1
-                                    > self.config.max_test_metrics["max_apc_test_f1"]
+                                        joint_f1
+                                        > self.config.max_test_metrics["max_apc_test_f1"]
                                 ):
                                     self.config.max_test_metrics[
                                         "max_apc_test_f1"
@@ -488,7 +488,7 @@ class ASTETrainingInstructor(BaseTrainingInstructor):
         self.config.max_test_metrics = {"max_apc_test_acc": 0, "max_apc_test_f1": 0}
 
         for f, (train_dataloader, valid_dataloader) in enumerate(
-            zip(self.train_dataloaders, self.valid_dataloaders)
+                zip(self.train_dataloaders, self.valid_dataloaders)
         ):
             patience = self.config.patience + self.config.evaluate_begin
             if self.config.log_step < 0:
@@ -548,9 +548,9 @@ class ASTETrainingInstructor(BaseTrainingInstructor):
                     targets = sample_batched["polarity"].to(self.config.device)
 
                     if (
-                        isinstance(outputs, dict)
-                        and "loss" in outputs
-                        and outputs["loss"] != 0
+                            isinstance(outputs, dict)
+                            and "loss" in outputs
+                            and outputs["loss"] != 0
                     ):
                         loss = outputs["loss"]
                     else:
@@ -592,7 +592,7 @@ class ASTETrainingInstructor(BaseTrainingInstructor):
 
                                 if self.config.model_path_to_save:
                                     if not os.path.exists(
-                                        self.config.model_path_to_save
+                                            self.config.model_path_to_save
                                     ):
                                         os.makedirs(self.config.model_path_to_save)
                                     if save_path:
@@ -611,19 +611,19 @@ class ASTETrainingInstructor(BaseTrainingInstructor):
                                     )
 
                                     if (
-                                        test_acc
-                                        > self.config.max_test_metrics[
-                                            "max_apc_test_acc"
-                                        ]
+                                            test_acc
+                                            > self.config.max_test_metrics[
+                                        "max_apc_test_acc"
+                                    ]
                                     ):
                                         self.config.max_test_metrics[
                                             "max_apc_test_acc"
                                         ] = test_acc
                                     if (
-                                        f1
-                                        > self.config.max_test_metrics[
-                                            "max_apc_test_f1"
-                                        ]
+                                            f1
+                                            > self.config.max_test_metrics[
+                                        "max_apc_test_f1"
+                                    ]
                                     ):
                                         self.config.max_test_metrics[
                                             "max_apc_test_f1"
@@ -644,8 +644,8 @@ class ASTETrainingInstructor(BaseTrainingInstructor):
                             )
                             iterator.set_postfix_str(postfix)
                         if (
-                            self.config.save_mode
-                            and epoch >= self.config.evaluate_begin
+                                self.config.save_mode
+                                and epoch >= self.config.evaluate_begin
                         ):
                             save_model(
                                 self.config,
@@ -820,7 +820,7 @@ class ASTETrainingInstructor(BaseTrainingInstructor):
                         p
                         for n, p in self.model.named_parameters()
                         if not any(nd in n for nd in no_decay)
-                        and any(nd in n for nd in diff_part)
+                           and any(nd in n for nd in diff_part)
                     ],
                     "weight_decay": self.config.l2reg,
                     "lr": self.config.learning_rate,
@@ -830,7 +830,7 @@ class ASTETrainingInstructor(BaseTrainingInstructor):
                         p
                         for n, p in self.model.named_parameters()
                         if any(nd in n for nd in no_decay)
-                        and any(nd in n for nd in diff_part)
+                           and any(nd in n for nd in diff_part)
                     ],
                     "weight_decay": 0.0,
                     "lr": self.config.learning_rate,
@@ -840,7 +840,7 @@ class ASTETrainingInstructor(BaseTrainingInstructor):
                         p
                         for n, p in self.model.named_parameters()
                         if not any(nd in n for nd in no_decay)
-                        and not any(nd in n for nd in diff_part)
+                           and not any(nd in n for nd in diff_part)
                     ],
                     "weight_decay": self.config.l2reg,
                     "lr": 1e-3,
@@ -850,7 +850,7 @@ class ASTETrainingInstructor(BaseTrainingInstructor):
                         p
                         for n, p in self.model.named_parameters()
                         if any(nd in n for nd in no_decay)
-                        and not any(nd in n for nd in diff_part)
+                           and not any(nd in n for nd in diff_part)
                     ],
                     "weight_decay": 0.0,
                     "lr": 1e-3,

@@ -10,7 +10,6 @@
 import tqdm
 from torch.utils.data import Dataset
 
-from pyabsa import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
@@ -28,7 +27,10 @@ class BERTCDDInferenceDataset(Dataset):
         return [text]
 
     def prepare_infer_sample(self, text: str, ignore_error):
-        self.process_data(self.parse_sample(text), ignore_error=ignore_error)
+        if isinstance(text, list):
+            self.process_data(text, ignore_error=ignore_error)
+        else:
+            self.process_data(self.parse_sample(text), ignore_error=ignore_error)
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
         lines = load_dataset_from_file(infer_file, config=self.config)
@@ -122,10 +124,10 @@ class BERTCDDInferenceDataset(Dataset):
             #     print((x + 1) * (self.config.max_seq_len - 2) // 2 + (self.config.max_seq_len - 2) // 2)
             for x in range(len(code_ids) // (self.config.max_seq_len - 2) + 1):
                 _code_ids = code_ids[
-                    x
-                    * (self.config.max_seq_len - 2) : (x + 1)
-                    * (self.config.max_seq_len - 2)
-                ]
+                            x
+                            * (self.config.max_seq_len - 2): (x + 1)
+                                                             * (self.config.max_seq_len - 2)
+                            ]
                 _code_ids = pad_and_truncate(
                     _code_ids,
                     self.config.max_seq_len - 2,

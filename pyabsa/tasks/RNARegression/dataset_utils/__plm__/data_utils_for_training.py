@@ -11,8 +11,8 @@ import torch
 import tqdm
 
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
-from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
+from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 
 
 class BERTRNARDataset(PyABSADataset):
@@ -27,7 +27,7 @@ class BERTRNARDataset(PyABSADataset):
         all_data = []
 
         for ex_id, i in enumerate(
-            tqdm.tqdm(range(len(lines)), desc="preparing dataloader")
+                tqdm.tqdm(range(len(lines)), desc="preparing dataloader")
         ):
             line = (
                 lines[i].strip().split("\t")
@@ -45,17 +45,12 @@ class BERTRNARDataset(PyABSADataset):
                 )
                 label = float(label.strip())
 
-                # r1r2_label = float(r1r2_label.strip())
-                # r1r3_label = float(r1r3_label.strip())
-                # r2r3_label = float(r2r3_label.strip())
-                # if len(seq) > 2 * config.max_seq_len:
-                #     continue
                 for x in range(len(seq) // (self.config.max_seq_len * 2) + 1):
                     _seq = seq[
-                        x
-                        * (self.config.max_seq_len * 2) : (x + 1)
-                        * (self.config.max_seq_len * 2)
-                    ]
+                           x
+                           * (self.config.max_seq_len * 2): (x + 1)
+                                                            * (self.config.max_seq_len * 2)
+                           ]
                     rna_indices = self.tokenizer.text_to_sequence(_seq)
                     rna_indices = pad_and_truncate(
                         rna_indices,
@@ -66,24 +61,20 @@ class BERTRNARDataset(PyABSADataset):
                         "ex_id": torch.tensor(ex_id, dtype=torch.long),
                         "text_indices": torch.tensor(rna_indices, dtype=torch.long),
                         "label": torch.tensor(label, dtype=torch.float32),
-                        # 'r1r2_label': torch.tensor(r1r2_label, dtype=torch.float32),
-                        # 'r1r3_label': torch.tensor(r1r3_label, dtype=torch.float32),
-                        # 'r2r3_label': torch.tensor(r2r3_label, dtype=torch.float32),
                     }
 
                     all_data.append(data)
 
             except Exception as e:
-                exon1, intron, exon2, label = line[0], line[1], line[2], line[3]
+                rna_seq, label = lines[i].strip().split("$LABEL$")
                 label = float(label.strip())
-                seq = exon1 + intron + exon2
-                exon1_ids = self.tokenizer.text_to_sequence(exon1, padding="do_not_pad")
-                intron_ids = self.tokenizer.text_to_sequence(
-                    intron, padding="do_not_pad"
+                # rna_indices = self.tokenizer.convert_tokens_to_ids(
+                #     list(rna_seq.strip())
+                # )
+                rna_indices = self.tokenizer.text_to_sequence(
+                    rna_seq, padding="do_not_pad"
                 )
-                exon2_ids = self.tokenizer.text_to_sequence(exon2, padding="do_not_pad")
 
-                rna_indices = exon1_ids + intron_ids + exon2_ids
                 rna_indices = pad_and_truncate(
                     rna_indices,
                     self.config.max_seq_len,

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # file: data_utils.py
 # time: 15/03/2023
-# author: yangheng <hy345@exeter.ac.uk>
+# author: HENG YANG <hy345@exeter.ac.uk>
 # github: https://github.com/yangheng95
 # huggingface: https://huggingface.co/yangheng
 # google scholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
@@ -11,7 +11,6 @@ import json
 
 import findfile
 import pandas as pd
-from datasets import DatasetDict, Dataset
 
 from .instruction import (
     ATEInstruction,
@@ -23,12 +22,12 @@ from .instruction import (
 
 class InstructDatasetLoader:
     def __init__(
-        self,
-        train_df_id,
-        test_df_id,
-        train_df_ood=None,
-        test_df_ood=None,
-        sample_size=1,
+            self,
+            train_df_id,
+            test_df_id,
+            train_df_ood=None,
+            test_df_ood=None,
+            sample_size=1,
     ):
         self.train_df_id = train_df_id.sample(frac=sample_size, random_state=1999)
         self.test_df_id = test_df_id
@@ -53,30 +52,38 @@ class InstructDatasetLoader:
             for asp in _aspects:
                 if asp.strip() not in aspects:
                     aspects.append(asp.strip())
-            aspects = ", ".join(aspects)
-            alldata.append(
-                {"text": ate_instructor.prepare_input(data["text"]), "labels": aspects}
-            )
+            aspects = "|".join(aspects)
 
-            opinions = ", ".join(
+            polarities = []
+            _polarities = [
+                "{}:{}".format(label["aspect"], label["polarity"])
+                for label in data["labels"]
+            ]
+            for pol in _polarities:
+                if pol not in polarities:
+                    polarities.append(pol)
+            polarities = "|".join(polarities)
+
+            opinions = "|".join(
                 [
                     "{}:{}".format(label["aspect"], label["opinion"])
                     for label in data["labels"]
                 ]
             )
-            alldata.append(
-                {
-                    "text": op_instructor.prepare_input(data["text"], aspects),
-                    "labels": opinions,
-                }
-            )
 
-            polarities = ", ".join(
+            categories = "|".join(
                 [
-                    "{}:{}".format(label["aspect"], label["polarity"])
+                    "{}:{}".format(label["aspect"], label["category"])
                     for label in data["labels"]
                 ]
             )
+
+            # ATE task
+            alldata.append(
+                {"text": ate_instructor.prepare_input(data["text"]), "labels": aspects}
+            )
+
+            # APC task
             alldata.append(
                 {
                     "text": apc_instructor.prepare_input(data["text"], aspects),
@@ -84,25 +91,29 @@ class InstructDatasetLoader:
                 }
             )
 
-            categories = ", ".join(
-                [
-                    "{}:{}".format(
-                        label["aspect"], label["category"].replace("NULL", "")
-                    )
-                    for label in data["labels"]
-                ]
-            )
+            # Opinion task
             alldata.append(
                 {
-                    "text": cat_instructor.prepare_input(data["text"], aspects),
-                    "labels": categories,
+                    "text": op_instructor.prepare_input(data["text"], aspects),
+                    "labels": opinions,
                 }
             )
-            # print(alldata[-1]['labels'])
+
+            # Category task
+            if "NULL" not in categories:
+                alldata.append(
+                    {
+                        "text": cat_instructor.prepare_input(data["text"], aspects),
+                        "labels": categories,
+                    }
+                )
+
         alldata = pd.DataFrame(alldata)
         return alldata
 
     def create_datasets(self, tokenize_function):
+        from datasets import DatasetDict, Dataset
+
         """
         Create the training and test dataset as huggingface datasets format.
         """
@@ -163,6 +174,7 @@ def read_json(data_path, data_type="train"):
 
     files = findfile.find_files(data_path, [data_type, ".jsonl"], exclude_key=[".txt"])
     for f in files:
+        print(f)
         with open(f, "r", encoding="utf8") as fin:
             for line in fin:
                 data.append(json.loads(line))

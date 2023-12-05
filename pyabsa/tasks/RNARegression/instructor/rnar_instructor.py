@@ -4,7 +4,7 @@
 # author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
-
+import math
 import os
 import shutil
 import time
@@ -26,21 +26,18 @@ from torch.utils.data import (
 from tqdm import tqdm
 from transformers import AutoModel, AutoTokenizer
 
-from pyabsa import DeviceTypeOption
+from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
-from pyabsa.utils.file_utils.file_utils import save_model
-from ..dataset_utils.__classic__.data_utils_for_training import GloVeRNARDataset
-from ..dataset_utils.__plm__.data_utils_for_training import BERTRNARDataset
-from ..models import GloVeRNARModelList, BERTRNARModelList
-from pyabsa.utils.pyabsa_utils import init_optimizer, fprint
-
-import pytorch_warmup as warmup
-
 from pyabsa.framework.tokenizer_class.tokenizer_class import (
     Tokenizer,
     build_embedding_matrix,
     PretrainedTokenizer,
 )
+from pyabsa.utils.file_utils.file_utils import save_model
+from pyabsa.utils.pyabsa_utils import init_optimizer, fprint
+from ..dataset_utils.__classic__.data_utils_for_training import GloVeRNARDataset
+from ..dataset_utils.__plm__.data_utils_for_training import BERTRNARDataset
+from ..models import GloVeRNARModelList, BERTRNARModelList
 
 
 class RNARTrainingInstructor(BaseTrainingInstructor):
@@ -100,7 +97,9 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                 )
 
             try:
-                self.bert = AutoModel.from_pretrained(self.config.pretrained_bert)
+                self.bert = AutoModel.from_pretrained(
+                    self.config.pretrained_bert, ignore_mismatched_sizes=True
+                )
             except ValueError as e:
                 fprint("Init pretrained model failed, exception: {}".format(e))
 
@@ -156,7 +155,8 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
     def reload_model(self, ckpt="./init_state_dict.bin"):
         if os.path.exists(ckpt):
             self.model.load_state_dict(
-                torch.load(find_file(ckpt, or_key=[".bin", "state_dict"]))
+                torch.load(find_file(ckpt, or_key=[".bin", "state_dict"])),
+                strict=False,
             )
 
     def _prepare_dataloader(self):
@@ -227,24 +227,24 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                         shuffle=False,
                     )
 
-    def _train(self, criterion):
-        self._prepare_dataloader()
-
-        if self.config.warmup_step >= 0:
-            self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
-                self.optimizer,
-                T_max=len(self.train_dataloaders[0]) * self.config.num_epoch,
-            )
-            self.warmup_scheduler = warmup.UntunedLinearWarmup(self.optimizer)
-
-        if len(self.valid_dataloaders) > 1:
-            return self._k_fold_train_and_evaluate(criterion)
-        else:
-            return self._train_and_evaluate(criterion)
+    # def _train(self, criterion):
+    #     self._prepare_dataloader()
+    #
+    #     if self.config.warmup_step >= 0:
+    #         self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+    #             self.optimizer,
+    #             T_max=len(self.train_dataloaders[0]) * self.config.num_epoch,
+    #         )
+    #         self.warmup_scheduler = warmup.UntunedLinearWarmup(self.optimizer)
+    #
+    #     if len(self.valid_dataloaders) > 1:
+    #         return self._k_fold_train_and_evaluate(criterion)
+    #     else:
+    #         return self._train_and_evaluate(criterion)
 
     def _train_and_evaluate(self, criterion):
         global_step = 0
-        max_fold_r2 = -torch.inf
+        max_fold_r2 = math.inf
         save_path = "{0}/{1}_{2}".format(
             self.config.model_path_to_save,
             self.config.model_name,
@@ -330,8 +330,8 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
 
                         self.config.metrics_of_this_checkpoint["r2"] = test_r2
 
-                        if test_r2 > max_fold_r2:
-                            if test_r2 > max_fold_r2:
+                        if test_r2 < max_fold_r2:
+                            if test_r2 < max_fold_r2:
                                 patience = self.config.patience - 1
                                 max_fold_r2 = test_r2
 
@@ -353,8 +353,8 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                                 )
 
                                 if (
-                                    test_r2
-                                    < self.config.max_test_metrics["max_test_r2"]
+                                        test_r2
+                                        < self.config.max_test_metrics["max_test_r2"]
                                 ):
                                     self.config.max_test_metrics[
                                         "max_test_r2"
@@ -447,7 +447,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
         self.config.max_test_metrics = {"max_test_r2": 0}
 
         for f, (train_dataloader, valid_dataloader) in enumerate(
-            zip(self.train_dataloaders, self.valid_dataloaders)
+                zip(self.train_dataloaders, self.valid_dataloaders)
         ):
             patience = self.config.patience + self.config.evaluate_begin
             if self.config.log_step < 0:
@@ -535,7 +535,7 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
 
                                 if self.config.model_path_to_save:
                                     if not os.path.exists(
-                                        self.config.model_path_to_save
+                                            self.config.model_path_to_save
                                     ):
                                         os.makedirs(self.config.model_path_to_save)
                                     if save_path:
@@ -553,8 +553,8 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                                     )
 
                                     if (
-                                        test_r2
-                                        < self.config.max_test_metrics["max_test_r2"]
+                                            test_r2
+                                            < self.config.max_test_metrics["max_test_r2"]
                                     ):
                                         self.config.max_test_metrics[
                                             "max_test_r2"
@@ -571,8 +571,8 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                                 epoch, loss.item(), test_r2, max_fold_r2
                             )
                         if (
-                            self.config.save_mode
-                            and epoch >= self.config.evaluate_begin
+                                self.config.save_mode
+                                and epoch >= self.config.evaluate_begin
                         ):
                             save_model(
                                 self.config,
@@ -673,7 +673,19 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
                 all_targets = torch.cat((all_targets, t_targets), 0)
 
         r2 = metrics.r2_score(t_targets.cpu().numpy(), sen_outputs.cpu().numpy())
-        return r2
+        mse = metrics.mean_squared_error(
+            t_targets.cpu().numpy(), sen_outputs.cpu().numpy()
+        )
+        from scipy.stats import spearmanr
+
+        # 使用scipy库计算斯皮尔曼相关系数
+        correlation, p_value = spearmanr(
+            t_targets.cpu().numpy(), sen_outputs.cpu().numpy()
+        )
+        # print("斯皮尔曼相关系数:", correlation)
+        # print("p_value:", p_value)
+
+        return mse
 
     def run(self):
         # Loss and Optimizer

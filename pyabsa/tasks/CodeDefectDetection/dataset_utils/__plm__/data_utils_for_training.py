@@ -38,7 +38,7 @@ class BERTCDDDataset(PyABSADataset):
         c_label_set = set()
 
         for ex_id, line in enumerate(
-            tqdm.tqdm(natural_examples, desc="preparing dataloader")
+                tqdm.tqdm(natural_examples, desc="preparing dataloader")
         ):
             code_src, label = line.strip().split("$LABEL$")
             if "$FEATURE$" in code_src:
@@ -82,10 +82,10 @@ class BERTCDDDataset(PyABSADataset):
 
             for _ in range(self.config.get("noise_instance_num", 0)):
                 for ex_id, line in enumerate(
-                    tqdm.tqdm(
-                        corrupt_examples,
-                        desc="preparing corrupted code dataloader for training set",
-                    )
+                        tqdm.tqdm(
+                            corrupt_examples,
+                            desc="preparing corrupted code dataloader for training set",
+                        )
                 ):
                     code_src, label = line.strip().split("$LABEL$")
                     if label == "0":
@@ -149,10 +149,10 @@ class BERTCDDDataset(PyABSADataset):
             #     print((x + 1) * (self.config.max_seq_len - 2) // 2 + (self.config.max_seq_len - 2) // 2)
             for x in range(len(code_ids) // (self.config.max_seq_len - 2) + 1):
                 _code_ids = code_ids[
-                    x
-                    * (self.config.max_seq_len - 2) : (x + 1)
-                    * (self.config.max_seq_len - 2)
-                ]
+                            x
+                            * (self.config.max_seq_len - 2): (x + 1)
+                                                             * (self.config.max_seq_len - 2)
+                            ]
                 _code_ids = pad_and_truncate(
                     _code_ids,
                     self.config.max_seq_len - 2,

@@ -9,7 +9,7 @@ from typing import Union, List
 
 import numpy as np
 
-from pyabsa import LabelPaddingOption
+from pyabsa.framework.flag_class.flag_template import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from torch.utils.data import Dataset
@@ -180,8 +180,8 @@ class ABSAInferenceDataset(Dataset):
                 lcfs_vec = prepared_inputs["lcfs_vec"]
 
                 if (
-                    self.config.model_name == "dlcf_dca_bert"
-                    or self.config.model_name == "dlcfs_dca_bert"
+                        self.config.model_name == "dlcf_dca_bert"
+                        or self.config.model_name == "dlcfs_dca_bert"
                 ):
                     configure_dlcf_spacy_model(self.config)
                     prepared_inputs = prepare_input_for_dlcf_dca(

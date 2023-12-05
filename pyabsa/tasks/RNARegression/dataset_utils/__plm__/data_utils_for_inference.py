@@ -12,8 +12,8 @@ import tqdm
 from torch.utils.data import Dataset
 
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
-from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
+from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.utils.pyabsa_utils import fprint
 
 
@@ -27,7 +27,10 @@ class BERTRNARDataset(Dataset):
         return [text]
 
     def prepare_infer_sample(self, text: str, ignore_error):
-        self.process_data(self.parse_sample(text), ignore_error=ignore_error)
+        if isinstance(text, list):
+            self.process_data(text, ignore_error=ignore_error)
+        else:
+            self.process_data(self.parse_sample(text), ignore_error=ignore_error)
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
         lines = load_dataset_from_file(infer_file, config=self.config)
@@ -49,20 +52,9 @@ class BERTRNARDataset(Dataset):
                 if text is None or "" == text.strip():
                     raise RuntimeError("Invalid Input!")
 
-                line = (
-                    text.strip().split("\t")
-                    if "\t" in text
-                    else text.strip().split(",")
-                )
+                seq, label = text.strip().split("$LABEL$")
+
                 try:
-                    _, label, r1r2_label, r1r3_label, r2r3_label, seq = (
-                        line[0],
-                        line[1],
-                        line[2],
-                        line[3],
-                        line[4],
-                        line[5],
-                    )
                     label = float(label.strip())
 
                     # r1r2_label = float(r1r2_label.strip())
@@ -72,11 +64,12 @@ class BERTRNARDataset(Dataset):
                     #     continue
                     for x in range(len(seq) // (self.config.max_seq_len * 2) + 1):
                         _seq = seq[
-                            x
-                            * (self.config.max_seq_len * 2) : (x + 1)
-                            * (self.config.max_seq_len * 2)
-                        ]
-                        rna_indices = self.tokenizer.text_to_sequence(_seq)
+                               x
+                               * (self.config.max_seq_len * 2): (x + 1)
+                                                                * (self.config.max_seq_len * 2)
+                               ]
+                        # rna_indices = self.tokenizer.text_to_sequence(_seq)
+                        rna_indices = self.tokenizer.convert_tokens_to_ids(list(seq))
 
                         data = {
                             "ex_id": torch.tensor(ex_id, dtype=torch.long),
@@ -90,20 +83,12 @@ class BERTRNARDataset(Dataset):
                         all_data.append(data)
 
                 except Exception as e:
-                    exon1, intron, exon2, label = line[0], line[1], line[2], line[3]
-                    label = float(label.strip())
-                    seq = exon1 + intron + exon2
-                    exon1_ids = self.tokenizer.text_to_sequence(
-                        exon1, padding="do_not_pad"
-                    )
-                    intron_ids = self.tokenizer.text_to_sequence(
-                        intron, padding="do_not_pad"
-                    )
-                    exon2_ids = self.tokenizer.text_to_sequence(
-                        exon2, padding="do_not_pad"
-                    )
+                    rna_seq, _, label = text.strip().partition("$LABEL$")
 
-                    rna_indices = exon1_ids + intron_ids + exon2_ids
+                    label = float(label.strip())
+                    rna_indices = self.tokenizer.text_to_sequence(
+                        rna_seq, padding="do_not_pad"
+                    )
                     rna_indices = pad_and_truncate(
                         rna_indices,
                         self.config.max_seq_len,

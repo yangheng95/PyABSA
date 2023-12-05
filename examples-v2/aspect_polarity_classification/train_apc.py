@@ -22,31 +22,23 @@ models = [
     APC.APCModelList.BERT_SPC_V2,
 ]
 
-datasets = DatasetItem(
-    [
-        APC.APCDatasetList.Laptop14,
-        APC.APCDatasetList.Restaurant14,
-        APC.APCDatasetList.Restaurant15,
-        APC.APCDatasetList.Restaurant16,
-        APC.APCDatasetList.MAMS,
-    ]
-)
 
 for dataset in [
     APC.APCDatasetList.Laptop14,
     APC.APCDatasetList.Restaurant14,
     APC.APCDatasetList.Restaurant15,
     APC.APCDatasetList.Restaurant16,
-    # APCDatasetList.MAMS
+    APC.APCDatasetList.MAMS,
 ]:
     for model in [
-        APC.APCModelList.FAST_LSA_T_V2,
-        APC.APCModelList.FAST_LSA_S_V2,
+        # APC.APCModelList.FAST_LSA_T_V2,
+        # APC.APCModelList.FAST_LSA_S_V2,
         APC.APCModelList.BERT_SPC_V2,
         # APC.APCModelList.BERT_SPC
     ]:
         for pretrained_bert in [
-            "microsoft/deberta-v3-base",
+            # "microsoft/deberta-v3-base",
+            "bert-base-uncased",
             # 'roberta-base',
             # 'microsoft/deberta-v3-large',
         ]:
@@ -57,16 +49,17 @@ for dataset in [
             config.evaluate_begin = 0
             config.max_seq_len = 80
             config.num_epoch = 30
-            config.log_step = 5
-            # config.log_step = -1
+            # config.log_step = 5
+            config.log_step = -1
+            config.patience = 999
             config.dropout = 0.5
-            config.eta = -1
+            config.eta = 1
             config.eta_lr = 0.001
             # config.lcf = 'fusion'
             config.cache_dataset = False
             config.l2reg = 1e-8
-            config.learning_rate = 1e-5
-            config.use_amp = True
+            config.learning_rate = 2e-5
+            config.use_amp = False
             config.use_bert_spc = True
             config.lsa = True
             config.use_torch_compile = False
@@ -78,6 +71,7 @@ for dataset in [
                 # from_checkpoint='english',
                 checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
                 # checkpoint_save_mode=ModelSaveOption.DO_NOT_SAVE_MODEL,
+                path_to_save=f"checkpoints/{pretrained_bert}",
                 auto_device=DeviceTypeOption.AUTO,
             )
             trainer.load_trained_model()

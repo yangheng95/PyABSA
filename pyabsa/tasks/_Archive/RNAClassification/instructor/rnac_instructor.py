@@ -20,7 +20,7 @@ from torch import cuda
 from tqdm import tqdm
 from transformers import AutoModel, AutoTokenizer
 
-from pyabsa import DeviceTypeOption
+from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from pyabsa.utils.file_utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import init_optimizer, fprint, rprint
@@ -190,8 +190,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                                 )
 
                                 if (
-                                    test_acc
-                                    > self.config.max_test_metrics["max_test_acc"]
+                                        test_acc
+                                        > self.config.max_test_metrics["max_test_acc"]
                                 ):
                                     self.config.max_test_metrics[
                                         "max_test_acc"
@@ -309,7 +309,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         self.config.max_test_metrics = {"max_test_acc": 0, "max_test_f1": 0}
 
         for f, (train_dataloader, valid_dataloader) in enumerate(
-            zip(self.train_dataloaders, self.valid_dataloaders)
+                zip(self.train_dataloaders, self.valid_dataloaders)
         ):
             patience = self.config.patience + self.config.evaluate_begin
             if self.config.log_step < 0:
@@ -389,8 +389,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                     # evaluate if test set is available
                     if global_step % self.config.log_step == 0:
                         if (
-                            self.valid_dataloader
-                            and epoch >= self.config.evaluate_begin
+                                self.valid_dataloader
+                                and epoch >= self.config.evaluate_begin
                         ):
                             test_acc, f1 = self._evaluate_acc_f1(valid_dataloader)
 
@@ -407,7 +407,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
 
                                 if self.config.model_path_to_save:
                                     if not os.path.exists(
-                                        self.config.model_path_to_save
+                                            self.config.model_path_to_save
                                     ):
                                         os.makedirs(self.config.model_path_to_save)
                                     if save_path:
@@ -426,8 +426,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                                     )
 
                                     if (
-                                        test_acc
-                                        > self.config.max_test_metrics["max_test_acc"]
+                                            test_acc
+                                            > self.config.max_test_metrics["max_test_acc"]
                                     ):
                                         self.config.max_test_metrics[
                                             "max_test_acc"
@@ -450,8 +450,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                             )
                             iterator.set_postfix_str(postfix)
                         if (
-                            self.config.save_mode
-                            and epoch >= self.config.evaluate_begin
+                                self.config.save_mode
+                                and epoch >= self.config.evaluate_begin
                         ):
                             save_model(
                                 self.config,
@@ -587,7 +587,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 digits=4,
                 target_names=[
                     self.config.index_to_label[x]
-                    for x in sorted(self.config.index_to_label.keys())
+                    for x in sorted(self.config.index_to_label.keys()) if x != -100
                 ],
             )
             fprint(
@@ -602,7 +602,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 t_targets_all.cpu(),
                 torch.argmax(t_outputs_all.cpu(), -1),
                 labels=[
-                    self.config.label_to_index[x] for x in self.config.label_to_index
+                    self.config.label_to_index[x] for x in self.config.label_to_index if x != '-100' and x != ''
                 ],
             )
             fprint(

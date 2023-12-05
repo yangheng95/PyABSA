@@ -18,12 +18,11 @@ from sklearn import metrics
 from torch import cuda
 from tqdm import tqdm
 
-from pyabsa import DeviceTypeOption
+from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
 from pyabsa.framework.instructor_class.instructor_template import BaseTrainingInstructor
 from ..dataset_utils.__classic__.data_utils_for_training import GloVeCDDDataset
 from ..dataset_utils.__plm__.data_utils_for_training import BERTCDDDataset
 from ..models import GloVeCDDModelList, BERTCDDModelList
-
 
 from pyabsa.utils.file_utils.file_utils import save_model
 from pyabsa.utils.pyabsa_utils import init_optimizer, fprint, rprint
@@ -48,7 +47,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
         torch.manual_seed(self.config.seed)
         torch.cuda.manual_seed(self.config.seed)
 
-        self.config.inputs = self.model.inputs
+        self.config.inputs_cols = self.model.inputs_cols
 
         self.config.device = torch.device(self.config.device)
 
@@ -148,7 +147,8 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
     def reload_model(self, ckpt="./init_state_dict.bin"):
         if os.path.exists(ckpt):
             self.model.load_state_dict(
-                torch.load(find_file(ckpt, or_key=[".bin", "state_dict"]))
+                torch.load(find_file(ckpt, or_key=[".bin", "state_dict"])),
+                strict=False,
             )
 
     def _train_and_evaluate(self, criterion):
@@ -203,7 +203,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 self.optimizer.zero_grad()
                 inputs = [
                     sample_batched[col].to(self.config.device)
-                    for col in self.config.inputs
+                    for col in self.config.inputs_cols
                 ]
                 if self.config.use_amp:
                     with torch.cuda.amp.autocast():
@@ -269,17 +269,18 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                                     except:
                                         # logger.info('Can not remove sub-optimal trained model:', save_path)
                                         pass
-                                save_path = "{0}/{1}_{2}_acc_{3}_f1_{4}/".format(
+                                save_path = "{0}/{1}_{2}_{3}_acc_{4}_f1_{5}/".format(
                                     self.config.model_path_to_save,
                                     self.config.model_name,
                                     self.config.dataset_name,
+                                    self.config.pretrained_bert,
                                     round(test_acc * 100, 2),
                                     round(f1 * 100, 2),
                                 )
 
                                 if (
-                                    test_acc
-                                    > self.config.max_test_metrics["max_test_acc"]
+                                        test_acc
+                                        > self.config.max_test_metrics["max_test_acc"]
                                 ):
                                     self.config.max_test_metrics[
                                         "max_test_acc"
@@ -291,11 +292,12 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                                     self.config, self.model, self.tokenizer, save_path
                                 )
 
-                        postfix = "Dev Acc:{:>.2f}(max:{:>.2f}) Dev F1:{:>.2f}(max:{:>.2f})".format(
+                        postfix = "Dev Acc:{:>.2f}(max:{:>.2f}) Dev F1:{:>.2f}(max:{:>.2f}), Dev AUC:{:>.2f}".format(
                             test_acc * 100,
                             max_fold_acc * 100,
                             f1 * 100,
                             max_fold_f1 * 100,
+                            round(f1 * 100, 2),
                         )
                         iterator.set_postfix_str(postfix)
                     elif self.config.save_mode and epoch >= self.config.evaluate_begin:
@@ -416,7 +418,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
         losses = []
 
         for f, (train_dataloader, valid_dataloader) in enumerate(
-            zip(self.train_dataloaders, self.valid_dataloaders)
+                zip(self.train_dataloaders, self.valid_dataloaders)
         ):
             patience = self.config.patience + self.config.evaluate_begin
             if self.config.log_step < 0:
@@ -466,7 +468,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                     self.optimizer.zero_grad()
                     inputs = [
                         sample_batched[col].to(self.config.device)
-                        for col in self.config.inputs
+                        for col in self.config.inputs_cols
                     ]
                     with torch.cuda.amp.autocast():
                         if self.config.use_amp:
@@ -517,7 +519,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
 
                                 if self.config.model_path_to_save:
                                     if not os.path.exists(
-                                        self.config.model_path_to_save
+                                            self.config.model_path_to_save
                                     ):
                                         os.makedirs(self.config.model_path_to_save)
                                     if save_path:
@@ -527,17 +529,20 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                                         except:
                                             # logger.info('Can not remove sub-optimal trained model:', save_path)
                                             pass
-                                    save_path = "{0}/{1}_{2}_acc_{3}_f1_{4}/".format(
-                                        self.config.model_path_to_save,
-                                        self.config.model_name,
-                                        self.config.dataset_name,
-                                        round(test_acc * 100, 2),
-                                        round(f1 * 100, 2),
+                                    save_path = (
+                                        "{0}/{1}_{2}_{3}_acc_{4}_f1_{5}/".format(
+                                            self.config.model_path_to_save,
+                                            self.config.model_name,
+                                            self.config.dataset_name,
+                                            self.config.pretrained_bert,
+                                            round(test_acc * 100, 2),
+                                            round(f1 * 100, 2),
+                                        )
                                     )
 
                                     if (
-                                        test_acc
-                                        > self.config.max_test_metrics["max_test_acc"]
+                                            test_acc
+                                            > self.config.max_test_metrics["max_test_acc"]
                                     ):
                                         self.config.max_test_metrics[
                                             "max_test_acc"
@@ -560,8 +565,8 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                             )
                             iterator.set_postfix_str(postfix)
                         if (
-                            self.config.save_mode
-                            and epoch >= self.config.evaluate_begin
+                                self.config.save_mode
+                                and epoch >= self.config.evaluate_begin
                         ):
                             save_model(
                                 self.config,
@@ -683,7 +688,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
             for t_batch, t_sample_batched in enumerate(test_dataloader):
                 t_inputs = [
                     t_sample_batched[col].to(self.config.device)
-                    for col in self.config.inputs
+                    for col in self.config.inputs_cols
                 ]
                 t_targets = t_sample_batched["label"].to(self.config.device)
                 t_c_targets = t_sample_batched["corrupt_label"].to(self.config.device)
@@ -760,7 +765,6 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
             torch.softmax(t_outputs_all.cpu(), -1)[:, 1],
             labels=list(range(self.config.output_dim)),
             average=self.config.get("auc_average", "macro"),
-            multi_class="ovo",
         )
         if self.config.args.get("show_metric", False):
             report = metrics.classification_report(
@@ -781,16 +785,16 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 "\n---------------------------- Classification Report ----------------------------\n"
             )
 
-            # report = metrics.confusion_matrix(
-            #     t_targets_all.cpu(),
-            #     torch.argmax(t_outputs_all.cpu(), -1),
-            #     labels=[
-            #         self.config.label_to_index[x] for x in self.config.label_to_index
-            #     ],
-            # )
-            # fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
-            # rprint(report)
-            # fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
+            report = metrics.confusion_matrix(
+                t_targets_all.cpu(),
+                torch.argmax(t_outputs_all.cpu(), -1),
+                labels=[
+                    self.config.label_to_index[x] for x in self.config.label_to_index if x != '-100' and x != ''
+                ],
+            )
+            fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
+            rprint(report)
+            fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
 
             report = metrics.classification_report(
                 t_c_targets_all.cpu(),

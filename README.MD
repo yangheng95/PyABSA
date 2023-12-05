@@ -1,4 +1,4 @@
-# [PyABSA - Open Framework for Aspect-based Sentiment Analysis](https://arxiv.org/pdf/2208.01368)
+# PyABSA - Open Framework for Aspect-based Sentiment Analysis ([paper](https://dl.acm.org/doi/abs/10.1145/3583780.3614752))
 
 ![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg)
 [![PyPI](https://img.shields.io/pypi/v/pyabsa)](https://pypi.org/project/pyabsa/)
@@ -6,7 +6,6 @@
 [![Downloads](https://pepy.tech/badge/pyabsa/month)](https://pepy.tech/project/pyabsa)
 ![License](https://img.shields.io/pypi/l/pyabsa?logo=PyABSA)
 [![Documentation Status](https://readthedocs.org/projects/pyabsa/badge/?version=v2)](https://pyabsa.readthedocs.io/en/v2/?badge=v2)
-
 
 [![total views](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_views.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
 [![total views per week](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_views_per_week.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
@@ -21,8 +20,10 @@ information and project address in your works, products and publications, etc.
 
 ## Try our demos on Huggingface Space
 
-Apart from the [paper](https://arxiv.org/pdf/2208.01368), there are two new features in PyABSA: Aspect sentiment triplet extraction and Aspect quadruple extraction.
+Apart from the [paper](https://arxiv.org/pdf/2208.01368), there are two new features in PyABSA: Aspect sentiment triplet
+extraction and Aspect quadruple extraction.
 We have deployed the demos on Huggingface Space, you can try them online.
+
 - **[Aspect sentiment quadruple extraction](https://huggingface.co/spaces/yangheng/PyABSA) (English) New feature**
 - **[Aspect sentiment triplet extraction](https://huggingface.co/spaces/yangheng/PyABSA) (English) New feature**
 - [(Gradio) Aspect term extraction & sentiment classification](https://huggingface.co/spaces/Gradio-Blocks/Multilingual-Aspect-Based-Sentiment-Analysis) (
@@ -35,6 +36,7 @@ We have deployed the demos on Huggingface Space, you can try them online.
   Chinese, etc.）
 
 ## Usage Examples
+
 We have prepared many examples for different tasks. Please refer to [Examples](./examples-v2) for more usage examples.
 
 ## Installation
@@ -88,6 +90,7 @@ print(atepc_result)
 
 
 ```
+
 ### Aspect-based sentiment analysis
 
 ```python3
@@ -118,7 +121,9 @@ apc_result = classifier.batch_predict(target_file=inference_source,  #
 print(apc_result)
 
 ```
+
 ## Dataset Annotation and Model Training
+
 please refer to the documentation: [PyABSA Documentation](https://pyabsa.readthedocs.io/en/v2/).
 If you have any questions about the docs, please feel free to raise an issue. Also, you can join to improve the docs.
 
@@ -156,6 +161,7 @@ If you are looking for the original proposal of local context focus, here are so
 [here](https://github.com/yangheng95/PyABSA/tree/release/demos/documents).
 
 ## Citation
+
 ```bibtex
 @article{YangL22,
   author    = {Heng Yang and
@@ -173,6 +179,7 @@ If you are looking for the original proposal of local context focus, here are so
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 ```
+
 ## Contribution
 
 This repository is developed and maintained by HENG YANG ([yangheng95@GitHub](https://github.com/yangheng95)),
@@ -191,8 +198,6 @@ many ways, including:
 - Create an example script in a particular situation (Such as specify a SpaCy model, pretrained-bert type, some
   hyper-parameters)
 - Star this repository to keep it active
-
-
 
 ## License
 

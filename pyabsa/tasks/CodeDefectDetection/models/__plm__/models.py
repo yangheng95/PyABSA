@@ -1,9 +1,9 @@
+import logging
+
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from imblearn.over_sampling import SMOTE
-import numpy as np
-
 from transformers import (
     RobertaConfig,
     RobertaModel,
@@ -15,7 +15,6 @@ from transformers import (
     T5ForConditionalGeneration,
     T5Tokenizer,
 )
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +64,7 @@ def build_or_load_gen_model(args):
 
     if args.load_model_path is not None:
         logger.info("Reload model from {}".format(args.load_model_path))
-        model.load_state_dict(torch.load(args.load_model_path))
+        model.load_state_dict(torch.load(args.load_model_path), strict=False)
 
     return config, model, tokenizer
 
@@ -173,7 +172,7 @@ class ClassBalanceCE(nn.Module):
         super(ClassBalanceCE, self).__init__(para_dict)
         self.beta = self.para_dict["cfg"].LOSS.ClassBalanceCE.BETA
         self.class_balanced_weight = np.array(
-            [(1 - self.beta) / (1 - self.beta**N) for N in self.num_class_list]
+            [(1 - self.beta) / (1 - self.beta ** N) for N in self.num_class_list]
         )
         self.class_balanced_weight = torch.FloatTensor(
             self.class_balanced_weight
@@ -262,8 +261,8 @@ class DefectModel(nn.Module):
     def get_roberta_vec(self, source_ids):
         attention_mask = source_ids.ne(self.tokenizer.pad_token_id)
         vec = self.encoder(input_ids=source_ids, attention_mask=attention_mask)[0][
-            :, 0, :
-        ]
+              :, 0, :
+              ]
         return vec
 
     def forward(self, source_ids=None, labels=None, corrupt_labels=None):
@@ -280,8 +279,8 @@ class DefectModel(nn.Module):
 
         logits1 = self.classifier1(vec)
         logits2 = self.classifier2(vec)
-        prob = nn.functional.softmax(logits1)
-        c_prob = nn.functional.softmax(logits2)
+        prob = nn.functional.softmax(logits1, dim=-1)
+        c_prob = nn.functional.softmax(logits2, dim=-1)
 
         if labels is not None:
             loss_fct1 = nn.CrossEntropyLoss()
@@ -315,14 +314,14 @@ class Seq2Seq(nn.Module):
     """
 
     def __init__(
-        self,
-        encoder,
-        decoder,
-        config,
-        beam_size=None,
-        max_length=None,
-        sos_id=None,
-        eos_id=None,
+            self,
+            encoder,
+            decoder,
+            config,
+            beam_size=None,
+            max_length=None,
+            sos_id=None,
+            eos_id=None,
     ):
         super(Seq2Seq, self).__init__()
         self.encoder = encoder
@@ -355,18 +354,18 @@ class Seq2Seq(nn.Module):
         )
 
     def forward(
-        self,
-        source_ids=None,
-        source_mask=None,
-        target_ids=None,
-        target_mask=None,
-        args=None,
+            self,
+            source_ids=None,
+            source_mask=None,
+            target_ids=None,
+            target_mask=None,
+            args=None,
     ):
         outputs = self.encoder(source_ids, attention_mask=source_mask)
         encoder_output = outputs[0].permute([1, 0, 2]).contiguous()
         if target_ids is not None:
             attn_mask = -1e4 * (
-                1 - self.bias[: target_ids.shape[1], : target_ids.shape[1]]
+                    1 - self.bias[: target_ids.shape[1], : target_ids.shape[1]]
             )
             tgt_embeddings = (
                 self.encoder.embeddings(target_ids).permute([1, 0, 2]).contiguous()
@@ -398,8 +397,8 @@ class Seq2Seq(nn.Module):
             preds = []
             zero = torch.cuda.LongTensor(1).fill_(0)
             for i in range(source_ids.shape[0]):
-                context = encoder_output[:, i : i + 1]
-                context_mask = source_mask[i : i + 1, :]
+                context = encoder_output[:, i: i + 1]
+                context_mask = source_mask[i: i + 1, :]
                 beam = Beam(self.beam_size, self.sos_id, self.eos_id)
                 input_ids = beam.getCurrentState()
                 context = context.repeat(1, self.beam_size, 1)
@@ -408,7 +407,7 @@ class Seq2Seq(nn.Module):
                     if beam.done():
                         break
                     attn_mask = -1e4 * (
-                        1 - self.bias[: input_ids.shape[1], : input_ids.shape[1]]
+                            1 - self.bias[: input_ids.shape[1], : input_ids.shape[1]]
                     )
                     tgt_embeddings = (
                         self.encoder.embeddings(input_ids)
