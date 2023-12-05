@@ -128,7 +128,7 @@ class ProteinRegressor(InferenceModel):
                 )
 
             if not hasattr(
-                GloVeProteinRModelList, self.config.model.__name__
+                    GloVeProteinRModelList, self.config.model.__name__
             ) and not hasattr(BERTProteinRModelList, self.config.model.__name__):
                 raise KeyError(
                     "The checkpoint you are loading is not from classifier model."
@@ -164,12 +164,12 @@ class ProteinRegressor(InferenceModel):
                 fprint(">>> {0}: {1}".format(arg, getattr(self.config, arg)))
 
     def batch_predict(
-        self,
-        target_file=None,
-        print_result=True,
-        save_result=False,
-        ignore_error=True,
-        **kwargs
+            self,
+            target_file=None,
+            print_result=True,
+            save_result=False,
+            ignore_error=True,
+            **kwargs
     ):
         """
         Predict from a file of sentences.
@@ -210,11 +210,11 @@ class ProteinRegressor(InferenceModel):
         )
 
     def predict(
-        self,
-        text: Union[str, list] = None,
-        print_result=True,
-        ignore_error=True,
-        **kwargs
+            self,
+            text: Union[str, list] = None,
+            print_result=True,
+            ignore_error=True,
+            **kwargs
     ):
         """
         Predict from a sentence or a list of sentences.
@@ -356,9 +356,9 @@ class ProteinRegressor(InferenceModel):
                     text_printing = result["text"][:]
                     if result["ref_label"] != LabelPaddingOption.LABEL_PADDING:
                         if (
-                            abs(result["label"] - result["ref_label"])
-                            / result["ref_label"]
-                            <= 0.2
+                                abs(result["label"] - result["ref_label"])
+                                / result["ref_label"]
+                                <= 0.2
                         ):
                             text_info = colored(
                                 "#{}\t -> <{}(ref:{})>\t".format(

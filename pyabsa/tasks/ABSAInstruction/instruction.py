@@ -85,10 +85,10 @@ input: """
 
     def prepare_input(self, input_text, aspects):
         return (
-            self.bos_instruction
-            + input_text
-            + f"The aspects are: {aspects}"
-            + self.eos_instruction
+                self.bos_instruction
+                + input_text
+                + f"The aspects are: {aspects}"
+                + self.eos_instruction
         )
 
 
@@ -123,10 +123,10 @@ input:"""
 
     def prepare_input(self, input_text, aspects):
         return (
-            self.bos_instruction
-            + input_text
-            + f"The aspects are: {aspects}"
-            + self.eos_instruction
+                self.bos_instruction
+                + input_text
+                + f"The aspects are: {aspects}"
+                + self.eos_instruction
         )
 
 
@@ -161,8 +161,8 @@ input: """
 
     def prepare_input(self, input_text, aspects):
         return (
-            self.bos_instruction
-            + input_text
-            + f"The aspects are: {aspects}"
-            + self.eos_instruction
+                self.bos_instruction
+                + input_text
+                + f"The aspects are: {aspects}"
+                + self.eos_instruction
         )

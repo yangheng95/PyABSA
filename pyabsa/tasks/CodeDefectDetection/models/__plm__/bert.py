@@ -46,8 +46,8 @@ class BERT_MLP(nn.Module):
             self.loss_fct1 = nn.CrossEntropyLoss()
             self.loss_fct2 = nn.CrossEntropyLoss()
         elif (
-            self.config.get("loss_fn", "CrossEntropyLoss")
-            == "ClassBalanceCrossEntropyLoss"
+                self.config.get("loss_fn", "CrossEntropyLoss")
+                == "ClassBalanceCrossEntropyLoss"
         ):
             fprint("Using ClassBalanceCrossEntropyLoss")
             self.loss_fct1 = ClassBalanceCrossEntropyLoss()
@@ -98,8 +98,8 @@ class BERT_MLP(nn.Module):
     def get_roberta_vec(self, source_ids):
         attention_mask = source_ids.ne(self.tokenizer.pad_token_id)
         vec = self.encoder(input_ids=source_ids, attention_mask=attention_mask)[0][
-            :, 0, :
-        ]
+              :, 0, :
+              ]
         return vec
 
     def forward(self, inputs):

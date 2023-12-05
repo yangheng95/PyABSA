@@ -126,7 +126,7 @@ class RNAClassifier(InferenceModel):
                 )
 
             if not hasattr(
-                GloVeRNACModelList, self.config.model.__name__
+                    GloVeRNACModelList, self.config.model.__name__
             ) and not hasattr(BERTRNACModelList, self.config.model.__name__):
                 raise KeyError(
                     "The checkpoint you are loading is not from classifier model."
@@ -162,12 +162,12 @@ class RNAClassifier(InferenceModel):
                 fprint(">>> {0}: {1}".format(arg, getattr(self.config, arg)))
 
     def batch_predict(
-        self,
-        target_file=None,
-        print_result=True,
-        save_result=False,
-        ignore_error=True,
-        **kwargs
+            self,
+            target_file=None,
+            print_result=True,
+            save_result=False,
+            ignore_error=True,
+            **kwargs
     ):
         """
         Predict from a file of sentences.
@@ -204,11 +204,11 @@ class RNAClassifier(InferenceModel):
         )
 
     def predict(
-        self,
-        text: Union[str, list] = None,
-        print_result=True,
-        ignore_error=True,
-        **kwargs
+            self,
+            text: Union[str, list] = None,
+            print_result=True,
+            ignore_error=True,
+            **kwargs
     ):
         """
         Predict from a sentence or a list of sentences.
@@ -383,7 +383,7 @@ class RNAClassifier(InferenceModel):
                 digits=4,
                 target_names=[
                     self.config.index_to_label[x]
-                    for x in sorted(self.config.index_to_label.keys())
+                    for x in sorted(self.config.index_to_label.keys()) if x != -100
                 ],
             )
             fprint(
@@ -398,7 +398,7 @@ class RNAClassifier(InferenceModel):
                 t_targets_all,
                 np.argmax(t_outputs_all, -1),
                 labels=[
-                    self.config.label_to_index[x] for x in self.config.label_to_index
+                    self.config.label_to_index[x] for x in self.config.label_to_index if x != '-100' and x != ''
                 ],
             )
             fprint(

@@ -154,12 +154,12 @@ class T5Generator:
         return ensemble_result
 
     def get_labels(
-        self,
-        tokenized_dataset,
-        trained_model_path=None,
-        predictor=None,
-        batch_size=4,
-        sample_set="train",
+            self,
+            tokenized_dataset,
+            trained_model_path=None,
+            predictor=None,
+            batch_size=4,
+            sample_set="train",
     ):
         """
         Get the predictions from the trained model.
@@ -315,7 +315,7 @@ class T5Classifier:
         return trainer
 
     def get_labels(
-        self, tokenized_dataset, predictor=None, batch_size=4, sample_set="train"
+            self, tokenized_dataset, predictor=None, batch_size=4, sample_set="train"
     ):
         """
         Get the predictions from the trained model.

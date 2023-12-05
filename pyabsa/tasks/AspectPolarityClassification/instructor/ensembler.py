@@ -90,9 +90,9 @@ class APCEnsembler(nn.Module):
             )
 
             if (
-                load_dataset
-                and os.path.exists(cache_path)
-                and not self.config.overwrite_cache
+                    load_dataset
+                    and os.path.exists(cache_path)
+                    and not self.config.overwrite_cache
             ):
                 fprint(colored("Loading dataset cache: {}".format(cache_path), "green"))
                 with open(cache_path, mode="rb") as f_cache:
@@ -133,9 +133,9 @@ class APCEnsembler(nn.Module):
                     exit(-1)
 
                 if (
-                    load_dataset
-                    and not os.path.exists(cache_path)
-                    or self.config.overwrite_cache
+                        load_dataset
+                        and not os.path.exists(cache_path)
+                        or self.config.overwrite_cache
                 ):
                     self.train_set = (
                         ABSADataset(self.config, self.tokenizer, dataset_type="train")
@@ -167,9 +167,9 @@ class APCEnsembler(nn.Module):
                 )
 
                 if (
-                    load_dataset
-                    and not os.path.exists(cache_path)
-                    or self.config.overwrite_cache
+                        load_dataset
+                        and not os.path.exists(cache_path)
+                        or self.config.overwrite_cache
                 ):
                     self.train_set = (
                         BERTBaselineABSADataset(
@@ -225,9 +225,9 @@ class APCEnsembler(nn.Module):
                 )
 
                 if (
-                    load_dataset
-                    and not os.path.exists(cache_path)
-                    or self.config.overwrite_cache
+                        load_dataset
+                        and not os.path.exists(cache_path)
+                        or self.config.overwrite_cache
                 ):
                     self.train_set = (
                         GloVeABSADataset(
@@ -262,9 +262,9 @@ class APCEnsembler(nn.Module):
                 self.config.embedding_matrix = self.embedding_matrix
 
             if (
-                self.config.cache_dataset
-                and not os.path.exists(cache_path)
-                and not self.config.overwrite_cache
+                    self.config.cache_dataset
+                    and not os.path.exists(cache_path)
+                    and not self.config.overwrite_cache
             ):
                 fprint(
                     colored(

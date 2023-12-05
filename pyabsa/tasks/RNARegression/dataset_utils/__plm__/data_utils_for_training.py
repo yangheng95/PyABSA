@@ -27,7 +27,7 @@ class BERTRNARDataset(PyABSADataset):
         all_data = []
 
         for ex_id, i in enumerate(
-            tqdm.tqdm(range(len(lines)), desc="preparing dataloader")
+                tqdm.tqdm(range(len(lines)), desc="preparing dataloader")
         ):
             line = (
                 lines[i].strip().split("\t")
@@ -47,10 +47,10 @@ class BERTRNARDataset(PyABSADataset):
 
                 for x in range(len(seq) // (self.config.max_seq_len * 2) + 1):
                     _seq = seq[
-                        x
-                        * (self.config.max_seq_len * 2) : (x + 1)
-                        * (self.config.max_seq_len * 2)
-                    ]
+                           x
+                           * (self.config.max_seq_len * 2): (x + 1)
+                                                            * (self.config.max_seq_len * 2)
+                           ]
                     rna_indices = self.tokenizer.text_to_sequence(_seq)
                     rna_indices = pad_and_truncate(
                         rna_indices,
@@ -68,12 +68,12 @@ class BERTRNARDataset(PyABSADataset):
             except Exception as e:
                 rna_seq, label = lines[i].strip().split("$LABEL$")
                 label = float(label.strip())
-                rna_indices = self.tokenizer.convert_tokens_to_ids(
-                    list(rna_seq.strip())
-                )
-                # rna_indices = self.tokenizer.text_to_sequence(
-                #     rna_seq, padding="do_not_pad"
+                # rna_indices = self.tokenizer.convert_tokens_to_ids(
+                #     list(rna_seq.strip())
                 # )
+                rna_indices = self.tokenizer.text_to_sequence(
+                    rna_seq, padding="do_not_pad"
+                )
 
                 rna_indices = pad_and_truncate(
                     rna_indices,

@@ -26,13 +26,13 @@ class InputExample(object):
     """A single training_tutorials/test example for simple sequence classification."""
 
     def __init__(
-        self,
-        guid,
-        text_a,
-        text_b=None,
-        IOB_label=None,
-        aspect_label=None,
-        polarity=None,
+            self,
+            guid,
+            text_a,
+            text_b=None,
+            IOB_label=None,
+            aspect_label=None,
+            polarity=None,
     ):
         """Constructs a InputExample.
 
@@ -57,17 +57,17 @@ class InputFeatures(object):
     """A single set of features of raw_data."""
 
     def __init__(
-        self,
-        input_ids_spc,
-        input_mask,
-        segment_ids,
-        label_id,
-        polarity=None,
-        valid_ids=None,
-        label_mask=None,
-        tokens=None,
-        lcf_cdm_vec=None,
-        lcf_cdw_vec=None,
+            self,
+            input_ids_spc,
+            input_mask,
+            segment_ids,
+            label_id,
+            polarity=None,
+            valid_ids=None,
+            label_mask=None,
+            tokens=None,
+            lcf_cdm_vec=None,
+            lcf_cdw_vec=None,
     ):
         self.input_ids_spc = input_ids_spc
         self.input_mask = input_mask
@@ -120,33 +120,33 @@ def readfile(filename):
                 # for more IOB labels support, but can not split cases in some particular conditions, e.g., (B,I,E,O)
                 for p_idx in range(len(p) - 1):
                     if (
-                        p[p_idx] != p[p_idx + 1]
-                        and p[p_idx] != str(LabelPaddingOption.SENTIMENT_PADDING)
-                        and p[p_idx + 1] != str(LabelPaddingOption.SENTIMENT_PADDING)
+                            p[p_idx] != p[p_idx + 1]
+                            and p[p_idx] != str(LabelPaddingOption.SENTIMENT_PADDING)
+                            and p[p_idx + 1] != str(LabelPaddingOption.SENTIMENT_PADDING)
                     ) or (
-                        p[p_idx] != str(LabelPaddingOption.SENTIMENT_PADDING)
-                        and p[p_idx + 1] == str(LabelPaddingOption.SENTIMENT_PADDING)
+                            p[p_idx] != str(LabelPaddingOption.SENTIMENT_PADDING)
+                            and p[p_idx + 1] == str(LabelPaddingOption.SENTIMENT_PADDING)
                     ):
-                        _p = p[: p_idx + 1] + polarity_padding[p_idx + 1 :]
-                        p = polarity_padding[: p_idx + 1] + p[p_idx + 1 :]
+                        _p = p[: p_idx + 1] + polarity_padding[p_idx + 1:]
+                        p = polarity_padding[: p_idx + 1] + p[p_idx + 1:]
                         prepared_data.append((s, t, _p))
             else:
                 for t_idx in range(1, len(t)):
                     # for 3 IOB label (B, I, O)
                     if p[t_idx - 1] != str(
-                        LabelPaddingOption.SENTIMENT_PADDING
+                            LabelPaddingOption.SENTIMENT_PADDING
                     ) and split_aspect(t[t_idx - 1], t[t_idx]):
                         _p = p[:t_idx] + polarity_padding[t_idx:]
                         p = polarity_padding[:t_idx] + p[t_idx:]
                         prepared_data.append((s, t, _p))
 
                     if (
-                        p[t_idx] != str(LabelPaddingOption.SENTIMENT_PADDING)
-                        and t_idx == len(t) - 1
-                        and split_aspect(t[t_idx])
+                            p[t_idx] != str(LabelPaddingOption.SENTIMENT_PADDING)
+                            and t_idx == len(t) - 1
+                            and split_aspect(t[t_idx])
                     ):
-                        _p = p[: t_idx + 1] + polarity_padding[t_idx + 1 :]
-                        p = polarity_padding[: t_idx + 1] + p[t_idx + 1 :]
+                        _p = p[: t_idx + 1] + polarity_padding[t_idx + 1:]
+                        p = polarity_padding[: t_idx + 1] + p[t_idx + 1:]
                         prepared_data.append((s, t, _p))
 
     return prepared_data
@@ -282,7 +282,7 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, config=None):
     features = []
     polarities_set = set()
     for ex_index, example in enumerate(
-        tqdm.tqdm(examples, desc="convert examples to features")
+            tqdm.tqdm(examples, desc="convert examples to features")
     ):
         text_tokens = example.text_a[:]
         aspect_tokens = example.text_b[:]
@@ -290,8 +290,8 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, config=None):
         aspect_label = example.aspect_label
         polarity = example.polarity
         if (
-            polarity != LabelPaddingOption.SENTIMENT_PADDING
-            or int(polarity) != LabelPaddingOption.SENTIMENT_PADDING
+                polarity != LabelPaddingOption.SENTIMENT_PADDING
+                or int(polarity) != LabelPaddingOption.SENTIMENT_PADDING
         ):  # bad case handle in Chinese atepc_datasets
             polarities_set.add(polarity)  # ignore samples without polarities
         tokens = []
@@ -299,7 +299,7 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, config=None):
         valid = []
         label_mask = []
         enum_tokens = (
-            [bos_token] + text_tokens + [eos_token] + aspect_tokens + [eos_token]
+                [bos_token] + text_tokens + [eos_token] + aspect_tokens + [eos_token]
         )
         IOB_label = [bos_token] + IOB_label + [eos_token] + aspect_label + [eos_token]
 
@@ -332,9 +332,9 @@ def convert_examples_to_features(examples, max_seq_len, tokenizer, config=None):
                     valid.append(1)
                 else:
                     valid.append(0)
-        tokens = tokens[0 : min(len(tokens), max_seq_len - 2)]
-        labels = labels[0 : min(len(labels), max_seq_len - 2)]
-        valid = valid[0 : min(len(valid), max_seq_len - 2)]
+        tokens = tokens[0: min(len(tokens), max_seq_len - 2)]
+        labels = labels[0: min(len(labels), max_seq_len - 2)]
+        valid = valid[0: min(len(valid), max_seq_len - 2)]
         # segment_ids = [0] * len(example.text_a[:]) + [1] * (max_seq_len - len([0] * len(example.text_a[:])))
         # segment_ids = segment_ids[:max_seq_len]
 

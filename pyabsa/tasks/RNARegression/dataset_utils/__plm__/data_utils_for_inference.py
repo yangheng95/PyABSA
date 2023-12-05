@@ -27,7 +27,10 @@ class BERTRNARDataset(Dataset):
         return [text]
 
     def prepare_infer_sample(self, text: str, ignore_error):
-        self.process_data(self.parse_sample(text), ignore_error=ignore_error)
+        if isinstance(text, list):
+            self.process_data(text, ignore_error=ignore_error)
+        else:
+            self.process_data(self.parse_sample(text), ignore_error=ignore_error)
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
         lines = load_dataset_from_file(infer_file, config=self.config)
@@ -61,10 +64,10 @@ class BERTRNARDataset(Dataset):
                     #     continue
                     for x in range(len(seq) // (self.config.max_seq_len * 2) + 1):
                         _seq = seq[
-                            x
-                            * (self.config.max_seq_len * 2) : (x + 1)
-                            * (self.config.max_seq_len * 2)
-                        ]
+                               x
+                               * (self.config.max_seq_len * 2): (x + 1)
+                                                                * (self.config.max_seq_len * 2)
+                               ]
                         # rna_indices = self.tokenizer.text_to_sequence(_seq)
                         rna_indices = self.tokenizer.convert_tokens_to_ids(list(seq))
 

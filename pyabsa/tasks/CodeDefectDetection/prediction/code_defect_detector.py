@@ -126,7 +126,7 @@ class CodeDefectDetector(InferenceModel):
                 )
 
             if not hasattr(
-                GloVeCDDModelList, self.config.model.__name__
+                    GloVeCDDModelList, self.config.model.__name__
             ) and not hasattr(BERTCDDModelList, self.config.model.__name__):
                 raise KeyError(
                     "The checkpoint and PyABSA you are loading is not from classifier model."
@@ -162,12 +162,12 @@ class CodeDefectDetector(InferenceModel):
                 fprint(">>> {0}: {1}".format(arg, getattr(self.config, arg)))
 
     def batch_infer(
-        self,
-        target_file=None,  # A file containing text inputs to perform inference on
-        print_result=True,  # Whether to print the result of each prediction
-        save_result=False,  # Whether to save the result of each prediction
-        ignore_error=True,  # Whether to ignore errors encountered during inference
-        **kwargs  # Additional keyword arguments to be passed to batch_predict method
+            self,
+            target_file=None,  # A file containing text inputs to perform inference on
+            print_result=True,  # Whether to print the result of each prediction
+            save_result=False,  # Whether to save the result of each prediction
+            ignore_error=True,  # Whether to ignore errors encountered during inference
+            **kwargs  # Additional keyword arguments to be passed to batch_predict method
     ):
         """
         Perform batch inference on a given target file.
@@ -191,11 +191,11 @@ class CodeDefectDetector(InferenceModel):
         )
 
     def infer(
-        self,
-        text: Union[str, list] = None,  # The text inputs to perform inference on
-        print_result=True,  # Whether to print the result of each prediction
-        ignore_error=True,  # Whether to ignore errors encountered during inference
-        **kwargs  # Additional keyword arguments to be passed to predict method
+            self,
+            text: Union[str, list] = None,  # The text inputs to perform inference on
+            print_result=True,  # Whether to print the result of each prediction
+            ignore_error=True,  # Whether to ignore errors encountered during inference
+            **kwargs  # Additional keyword arguments to be passed to predict method
     ):
         """
         Perform inference on a given text input.
@@ -214,12 +214,12 @@ class CodeDefectDetector(InferenceModel):
         )
 
     def batch_predict(
-        self,
-        target_file=None,
-        print_result=True,
-        save_result=False,
-        ignore_error=True,
-        **kwargs
+            self,
+            target_file=None,
+            print_result=True,
+            save_result=False,
+            ignore_error=True,
+            **kwargs
     ):
         """
         Predict from a file of labelences.
@@ -256,11 +256,11 @@ class CodeDefectDetector(InferenceModel):
         )
 
     def predict(
-        self,
-        text: Union[str, list] = None,
-        print_result=True,
-        ignore_error=True,
-        **kwargs
+            self,
+            text: Union[str, list] = None,
+            print_result=True,
+            ignore_error=True,
+            **kwargs
     ):
         """
         Predict from a labelence or a list of labelences.
@@ -398,8 +398,8 @@ class CodeDefectDetector(InferenceModel):
                     else:
                         real_label = "N.A."
                     if (
-                        real_label != LabelPaddingOption.LABEL_PADDING
-                        and real_label != str(LabelPaddingOption.LABEL_PADDING)
+                            real_label != LabelPaddingOption.LABEL_PADDING
+                            and real_label != str(LabelPaddingOption.LABEL_PADDING)
                     ):
                         n_labeled += 1
 
@@ -494,7 +494,7 @@ class CodeDefectDetector(InferenceModel):
                 digits=4,
                 target_names=[
                     self.config.index_to_label[x]
-                    for x in sorted(self.config.index_to_label.keys())
+                    for x in sorted(self.config.index_to_label.keys()) if x != -100
                 ],
             )
             fprint(
@@ -509,7 +509,7 @@ class CodeDefectDetector(InferenceModel):
                 targets_all,
                 np.argmax(t_outputs_all, -1),
                 labels=[
-                    self.config.label_to_index[x] for x in self.config.label_to_index
+                    self.config.label_to_index[x] for x in self.config.label_to_index if x != '-100' and x != ''
                 ],
             )
             fprint(
@@ -540,7 +540,7 @@ class CodeDefectDetector(InferenceModel):
                 c_targets_all,
                 np.argmax(t_c_outputs_all, -1),
                 labels=[
-                    self.config.label_to_index[x] for x in self.config.label_to_index
+                    self.config.label_to_index[x] for x in self.config.label_to_index if x != '-100' and x != ''
                 ],
             )
             fprint(

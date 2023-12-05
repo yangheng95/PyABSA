@@ -29,7 +29,7 @@ class GloVeRNARDataset(PyABSADataset):
         label_set = set()
 
         for ex_id, i in enumerate(
-            tqdm.tqdm(range(len(lines)), desc="preparing dataloader")
+                tqdm.tqdm(range(len(lines)), desc="preparing dataloader")
         ):
             line = (
                 lines[i].strip().split("\t")
@@ -56,10 +56,10 @@ class GloVeRNARDataset(PyABSADataset):
                 #     _seq = seq[x * (config.max_seq_len * 2):(x + 1) * (config.max_seq_len * 2)]
                 for x in range(len(seq) // (self.config.max_seq_len * 3) + 1):
                     _seq = seq[
-                        x
-                        * (self.config.max_seq_len * 3) : (x + 1)
-                        * (self.config.max_seq_len * 3)
-                    ]
+                           x
+                           * (self.config.max_seq_len * 3): (x + 1)
+                                                            * (self.config.max_seq_len * 3)
+                           ]
                     rna_indices = self.tokenizer.text_to_sequence(_seq)
                     rna_indices = pad_and_truncate(
                         rna_indices,

@@ -352,8 +352,8 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
                                 )
 
                                 if (
-                                    test_r2
-                                    < self.config.max_test_metrics["max_test_r2"]
+                                        test_r2
+                                        < self.config.max_test_metrics["max_test_r2"]
                                 ):
                                     self.config.max_test_metrics[
                                         "max_test_r2"
@@ -446,7 +446,7 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
         self.config.max_test_metrics = {"max_test_r2": 0}
 
         for f, (train_dataloader, valid_dataloader) in enumerate(
-            zip(self.train_dataloaders, self.valid_dataloaders)
+                zip(self.train_dataloaders, self.valid_dataloaders)
         ):
             patience = self.config.patience + self.config.evaluate_begin
             if self.config.log_step < 0:
@@ -536,7 +536,7 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
 
                                 if self.config.model_path_to_save:
                                     if not os.path.exists(
-                                        self.config.model_path_to_save
+                                            self.config.model_path_to_save
                                     ):
                                         os.makedirs(self.config.model_path_to_save)
                                     if save_path:
@@ -554,8 +554,8 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
                                     )
 
                                     if (
-                                        test_r2
-                                        < self.config.max_test_metrics["max_test_r2"]
+                                            test_r2
+                                            < self.config.max_test_metrics["max_test_r2"]
                                     ):
                                         self.config.max_test_metrics[
                                             "max_test_r2"
@@ -572,8 +572,8 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
                                 epoch, loss.item(), test_r2, max_fold_r2
                             )
                         if (
-                            self.config.save_mode
-                            and epoch >= self.config.evaluate_begin
+                                self.config.save_mode
+                                and epoch >= self.config.evaluate_begin
                         ):
                             save_model(
                                 self.config,

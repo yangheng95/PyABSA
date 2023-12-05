@@ -22,12 +22,12 @@ from .instruction import (
 
 class InstructDatasetLoader:
     def __init__(
-        self,
-        train_df_id,
-        test_df_id,
-        train_df_ood=None,
-        test_df_ood=None,
-        sample_size=1,
+            self,
+            train_df_id,
+            test_df_id,
+            train_df_ood=None,
+            test_df_ood=None,
+            sample_size=1,
     ):
         self.train_df_id = train_df_id.sample(frac=sample_size, random_state=1999)
         self.test_df_id = test_df_id

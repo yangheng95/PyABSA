@@ -58,8 +58,8 @@ class BERTABSAInferenceDataset(ABSAInferenceDataset):
                 # polarity = int(polarity)
 
                 if (
-                    validate_absa_example(text, aspect, polarity, self.config)
-                    or not aspect
+                        validate_absa_example(text, aspect, polarity, self.config)
+                        or not aspect
                 ):
                     continue
 
@@ -113,11 +113,11 @@ class BERTABSAInferenceDataset(ABSAInferenceDataset):
                 )
 
                 dependency_graph = dependency_graph[
-                    :, range(0, self.config.max_seq_len)
-                ]
+                                   :, range(0, self.config.max_seq_len)
+                                   ]
                 dependency_graph = dependency_graph[
-                    range(0, self.config.max_seq_len), :
-                ]
+                                   range(0, self.config.max_seq_len), :
+                                   ]
 
                 data = {
                     "ex_id": ex_id,

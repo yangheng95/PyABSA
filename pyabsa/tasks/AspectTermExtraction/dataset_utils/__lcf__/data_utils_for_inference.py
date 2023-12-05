@@ -21,13 +21,13 @@ class InputExample(object):
     """A single training_tutorials/test example for simple sequence classification."""
 
     def __init__(
-        self,
-        guid,
-        text_a,
-        text_b=None,
-        IOB_label=None,
-        aspect_label=None,
-        polarity=None,
+            self,
+            guid,
+            text_a,
+            text_b=None,
+            IOB_label=None,
+            aspect_label=None,
+            polarity=None,
     ):
         """Constructs a InputExample.
 
@@ -52,19 +52,19 @@ class InputFeatures(object):
     """A single set of features of raw_data."""
 
     def __init__(
-        self,
-        input_ids_spc,
-        input_mask,
-        segment_ids,
-        label_id,
-        aspect=None,
-        positions=None,
-        polarity=None,
-        valid_ids=None,
-        label_mask=None,
-        tokens=None,
-        lcf_cdm_vec=None,
-        lcf_cdw_vec=None,
+            self,
+            input_ids_spc,
+            input_mask,
+            segment_ids,
+            label_id,
+            aspect=None,
+            positions=None,
+            polarity=None,
+            valid_ids=None,
+            label_mask=None,
+            tokens=None,
+            lcf_cdm_vec=None,
+            lcf_cdw_vec=None,
     ):
         self.input_ids_spc = input_ids_spc
         self.aspect = aspect
@@ -161,7 +161,7 @@ class ATEPCProcessor:
 
 
 def convert_ate_examples_to_features(
-    examples, label_list, max_seq_len, tokenizer, config=None
+        examples, label_list, max_seq_len, tokenizer, config=None
 ):
     """Loads a raw_data file into a list of `InputBatch`s."""
 
@@ -185,7 +185,7 @@ def convert_ate_examples_to_features(
         valid = []
         label_mask = []
         enum_tokens = (
-            [bos_token] + text_tokens + [eos_token] + aspect_tokens + [eos_token]
+                [bos_token] + text_tokens + [eos_token] + aspect_tokens + [eos_token]
         )
         IOB_label = [bos_token] + IOB_label + [eos_token] + aspect_label + [eos_token]
 
@@ -200,9 +200,9 @@ def convert_ate_examples_to_features(
                     valid.append(1)
                 else:
                     valid.append(0)
-        tokens = tokens[0 : min(len(tokens), max_seq_len - 2)]
-        labels = labels[0 : min(len(labels), max_seq_len - 2)]
-        valid = valid[0 : min(len(valid), max_seq_len - 2)]
+        tokens = tokens[0: min(len(tokens), max_seq_len - 2)]
+        labels = labels[0: min(len(labels), max_seq_len - 2)]
+        valid = valid[0: min(len(valid), max_seq_len - 2)]
         # segment_ids = [0] * len(example.text_a[:]) + [1] * (max_seq_len - len([0] * len(example.text_a[:])))
         # segment_ids = segment_ids[:max_seq_len]
 
@@ -249,7 +249,7 @@ def convert_ate_examples_to_features(
 
 
 def convert_apc_examples_to_features(
-    examples, label_list, max_seq_len, tokenizer, config=None
+        examples, label_list, max_seq_len, tokenizer, config=None
 ):
     """Loads a raw_data file into a list of `InputBatch`s."""
 
@@ -271,9 +271,9 @@ def convert_apc_examples_to_features(
         # aspect_label = example.aspect_label
         aspect_label = ["B-ASP"] * len(aspect_tokens)
         polarity = (
-            [LabelPaddingOption.SENTIMENT_PADDING]
-            + example.polarity
-            + [LabelPaddingOption.SENTIMENT_PADDING]
+                [LabelPaddingOption.SENTIMENT_PADDING]
+                + example.polarity
+                + [LabelPaddingOption.SENTIMENT_PADDING]
         )
         positions = np.where(np.array(polarity) > 0)[0].tolist()
         tokens = []
@@ -281,7 +281,7 @@ def convert_apc_examples_to_features(
         valid = []
         label_mask = []
         enum_tokens = (
-            [bos_token] + text_tokens + [eos_token] + aspect_tokens + [eos_token]
+                [bos_token] + text_tokens + [eos_token] + aspect_tokens + [eos_token]
         )
         IOB_label = [bos_token] + IOB_label + [eos_token] + aspect_label + [eos_token]
         enum_tokens = enum_tokens[:max_seq_len]
@@ -318,11 +318,11 @@ def convert_apc_examples_to_features(
                     valid.append(1)
                 else:
                     valid.append(0)
-        tokens = tokens[0 : min(len(tokens), max_seq_len - 2)]
-        labels = labels[0 : min(len(labels), max_seq_len - 2)]
-        valid = valid[0 : min(len(valid), max_seq_len - 2)]
+        tokens = tokens[0: min(len(tokens), max_seq_len - 2)]
+        labels = labels[0: min(len(labels), max_seq_len - 2)]
+        valid = valid[0: min(len(valid), max_seq_len - 2)]
         segment_ids = [0] * len(example.text_a[:]) + [1] * (
-            max_seq_len - len([0] * len(example.text_a[:]))
+                max_seq_len - len([0] * len(example.text_a[:]))
         )
         segment_ids = segment_ids[:max_seq_len]
         label_ids = []

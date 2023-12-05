@@ -31,14 +31,14 @@ for dataset in [
     APC.APCDatasetList.MAMS,
 ]:
     for model in [
-        APC.APCModelList.FAST_LSA_T_V2,
-        APC.APCModelList.FAST_LSA_S_V2,
+        # APC.APCModelList.FAST_LSA_T_V2,
+        # APC.APCModelList.FAST_LSA_S_V2,
         APC.APCModelList.BERT_SPC_V2,
         # APC.APCModelList.BERT_SPC
     ]:
         for pretrained_bert in [
-            "microsoft/deberta-v3-base",
-            # "bert-base-uncased",
+            # "microsoft/deberta-v3-base",
+            "bert-base-uncased",
             # 'roberta-base',
             # 'microsoft/deberta-v3-large',
         ]:
@@ -47,7 +47,7 @@ for dataset in [
             config.pretrained_bert = pretrained_bert
             # config.pretrained_bert = 'roberta-base'
             config.evaluate_begin = 0
-            config.max_seq_len = 512
+            config.max_seq_len = 80
             config.num_epoch = 30
             # config.log_step = 5
             config.log_step = -1

@@ -7,14 +7,13 @@
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
 
-import torch
 import tqdm
 from torch.utils.data import Dataset
 
 from pyabsa import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
-from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
+from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from pyabsa.utils.pyabsa_utils import fprint
 
 
@@ -29,7 +28,10 @@ class BERTRNACInferenceDataset(Dataset):
         return [text]
 
     def prepare_infer_sample(self, text: str, ignore_error):
-        self.process_data(self.parse_sample(text), ignore_error=ignore_error)
+        if isinstance(text, list):
+            self.process_data(text, ignore_error=ignore_error)
+        else:
+            self.process_data(self.parse_sample(text), ignore_error=ignore_error)
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
         lines = load_dataset_from_file(infer_file, config=self.config)

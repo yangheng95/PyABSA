@@ -39,7 +39,13 @@ def ensemble_performance(dataset, print_result=False):
 if __name__ == "__main__":
     # Training the models before ensemble inference, take Laptop14 as an example
 
-    for dataset in [Laptop14, Restaurant14, Restaurant15, Restaurant16, MAMS]:
+    for dataset in [
+        APC.APCDatasetList.Laptop14,
+        APC.APCDatasetList.Restaurant14,
+        APC.APCDatasetList.Restaurant15,
+        APC.APCDatasetList.Restaurant16,
+        APC.APCDatasetList.MAMS
+    ]:
         # Training
         pass
     # Ensemble inference
