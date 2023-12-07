@@ -163,20 +163,30 @@ If you are looking for the original proposal of local context focus, here are so
 ## Citation
 
 ```bibtex
-@article{YangL22,
-  author    = {Heng Yang and
-               Ke Li},
-  title     = {PyABSA: Open Framework for Aspect-based Sentiment Analysis},
-  journal   = {CoRR},
-  volume    = {abs/2208.01368},
-  year      = {2022},
-  url       = {https://doi.org/10.48550/arXiv.2208.01368},
-  doi       = {10.48550/arXiv.2208.01368},
-  eprinttype = {arXiv},
-  eprint    = {2208.01368},
-  timestamp = {Tue, 08 Nov 2022 21:46:32 +0100},
-  biburl    = {https://dblp.org/rec/journals/corr/abs-2208-01368.bib},
-  bibsource = {dblp computer science bibliography, https://dblp.org}
+@inproceedings{YangZL23,
+  author       = {Heng Yang and
+                  Chen Zhang and
+                  Ke Li},
+  editor       = {Ingo Frommholz and
+                  Frank Hopfgartner and
+                  Mark Lee and
+                  Michael Oakes and
+                  Mounia Lalmas and
+                  Min Zhang and
+                  Rodrygo L. T. Santos},
+  title        = {PyABSA: {A} Modularized Framework for Reproducible Aspect-based Sentiment
+                  Analysis},
+  booktitle    = {Proceedings of the 32nd {ACM} International Conference on Information
+                  and Knowledge Management, {CIKM} 2023, Birmingham, United Kingdom,
+                  October 21-25, 2023},
+  pages        = {5117--5122},
+  publisher    = {{ACM}},
+  year         = {2023},
+  url          = {https://doi.org/10.1145/3583780.3614752},
+  doi          = {10.1145/3583780.3614752},
+  timestamp    = {Thu, 23 Nov 2023 13:25:05 +0100},
+  biburl       = {https://dblp.org/rec/conf/cikm/0008ZL23.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
 }
 ```
 
