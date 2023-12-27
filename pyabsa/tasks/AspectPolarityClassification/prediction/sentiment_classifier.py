@@ -134,12 +134,12 @@ class SentimentClassifier(InferenceModel):
         self.__post_init__(**kwargs)
 
     def batch_infer(
-            self,
-            target_file=None,
-            print_result=True,
-            save_result=False,
-            ignore_error=True,
-            **kwargs
+        self,
+        target_file=None,
+        print_result=True,
+        save_result=False,
+        ignore_error=True,
+        **kwargs
     ):
         """
         A deprecated version of batch_predict method.
@@ -178,12 +178,12 @@ class SentimentClassifier(InferenceModel):
         )
 
     def batch_predict(
-            self,
-            target_file=None,
-            print_result=True,
-            save_result=False,
-            ignore_error=True,
-            **kwargs
+        self,
+        target_file=None,
+        print_result=True,
+        save_result=False,
+        ignore_error=True,
+        **kwargs
     ):
         """
         Predict the sentiment from a file of sentences.
@@ -220,11 +220,11 @@ class SentimentClassifier(InferenceModel):
         )
 
     def predict(
-            self,
-            text: Union[str, list] = None,
-            print_result=True,
-            ignore_error=True,
-            **kwargs
+        self,
+        text: Union[str, list] = None,
+        print_result=True,
+        ignore_error=True,
+        **kwargs
     ):
         """
         Predict the sentiment from a sentence or a list of sentences.
@@ -253,7 +253,7 @@ class SentimentClassifier(InferenceModel):
         for result in results:
             # Check if the final_res list is not empty and if the previous result has the same input text as the current result
             if final_res and "".join(final_res[-1]["text"].split()) == "".join(
-                    result["text"].split()
+                result["text"].split()
             ):
                 # If the input texts match, append the aspect, sentiment, confidence, probabilities, reference sentiment,
                 # reference check, and perplexity to the corresponding lists in the previous result
@@ -398,8 +398,8 @@ class SentimentClassifier(InferenceModel):
                     text_printing = result["text"]
                     for i in range(len(result["aspect"])):
                         if (
-                                result["ref_sentiment"][i]
-                                != LabelPaddingOption.SENTIMENT_PADDING
+                            result["ref_sentiment"][i]
+                            != LabelPaddingOption.SENTIMENT_PADDING
                         ):
                             if result["sentiment"][i] == result["ref_sentiment"][i]:
                                 aspect_info = colored(
@@ -460,7 +460,8 @@ class SentimentClassifier(InferenceModel):
                     digits=4,
                     target_names=[
                         self.config.index_to_label[x]
-                        for x in sorted(self.config.index_to_label.keys()) if x != -100
+                        for x in sorted(self.config.index_to_label.keys())
+                        if x != -100
                     ],
                 )
                 fprint(

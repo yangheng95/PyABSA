@@ -9,6 +9,7 @@
 from typing import List
 
 import numpy as np
+
 from pyabsa.tasks.AspectPolarityClassification import SentimentClassifier
 
 
@@ -39,7 +40,7 @@ class VoteEnsemblePredictor:
 
         assert len(predictors) > 0, "Checkpoints should not be empty"
 
-        numeric_agg_methods = {
+        self.numeric_agg_methods = {
             "average": np.mean,
             "mean": np.mean,
             "max": np.max,
@@ -48,21 +49,21 @@ class VoteEnsemblePredictor:
             "mode": lambda x: max(set(x), key=x.count),
             "sum": np.sum,
         }
-        str_agg_methods = {
+        self.str_agg_methods = {
             "max_vote": lambda x: max(set(x), key=x.count),
             "min_vote": lambda x: min(set(x), key=x.count),
             "vote": lambda x: max(set(x), key=x.count),
             "mode": lambda x: max(set(x), key=x.count),
         }
         assert (
-            numeric_agg in numeric_agg_methods
-        ), "numeric_agg should be either: " + str(numeric_agg_methods.keys())
-        assert str_agg in str_agg_methods, "str_agg should be either max or vote" + str(
-            str_agg_methods.keys()
-        )
+            numeric_agg in self.numeric_agg_methods
+        ), "numeric_agg should be either: " + str(self.numeric_agg_methods.keys())
+        assert (
+            str_agg in self.str_agg_methods
+        ), "str_agg should be either max or vote" + str(self.str_agg_methods.keys())
 
-        self.numeric_agg = numeric_agg_methods[numeric_agg]
-        self.str_agg = str_agg_methods[str_agg]
+        self.numeric_agg_func = numeric_agg
+        self.str_agg = self.str_agg_methods[str_agg]
 
         if isinstance(predictors, dict):
             self.checkpoints = list(predictors.keys())
@@ -74,6 +75,16 @@ class VoteEnsemblePredictor:
             raise NotImplementedError(
                 "Only support dict type for checkpoints and weights"
             )
+
+    def numeric_agg(self, result: list):
+        """
+        Aggregate a list of numeric values.
+
+        :param result: a list of numeric values
+        :return: the aggregated value
+        """
+        res = np.stack([np.array(x) for x in result])
+        return self.numeric_agg_methods[self.numeric_agg_func](res, axis=0)
 
     def __ensemble(self, result: dict):
         """

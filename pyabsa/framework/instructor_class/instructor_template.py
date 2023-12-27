@@ -11,15 +11,14 @@ import math
 import os
 import pickle
 import random
-
 import re
 from hashlib import sha256
 
 import numpy
+import pytorch_warmup as warmup
 import torch
 from findfile import find_file, find_files
 from termcolor import colored
-
 from torch.utils.data import (
     DataLoader,
     random_split,
@@ -30,9 +29,6 @@ from torch.utils.data import (
 from transformers import BertModel
 
 from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
-
-import pytorch_warmup as warmup
-
 from pyabsa.framework.sampler_class.imblanced_sampler import ImbalancedDatasetSampler
 from pyabsa.utils.pyabsa_utils import print_args, fprint
 
@@ -241,16 +237,6 @@ class BaseTrainingInstructor:
                     pin_memory=True,
                 )
 
-            # Set up the testing dataloader
-            if self.test_set and not self.test_dataloader:
-                test_sampler = SequentialSampler(self.test_set)
-                self.test_dataloader = DataLoader(
-                    dataset=self.test_set,
-                    batch_size=self.config.batch_size,
-                    sampler=test_sampler,
-                    pin_memory=True,
-                )
-
         # Cross-validation
         else:
             split_dataset = self.train_set
@@ -289,6 +275,16 @@ class BaseTrainingInstructor:
                         sampler=val_sampler,
                     )
                 )
+
+        # Set up the testing dataloader
+        if self.test_set and not self.test_dataloader:
+            test_sampler = SequentialSampler(self.test_set)
+            self.test_dataloader = DataLoader(
+                dataset=self.test_set,
+                batch_size=self.config.batch_size,
+                sampler=test_sampler,
+                pin_memory=True,
+            )
 
     def _prepare_env(self):
         """

@@ -13,15 +13,15 @@ from pyabsa.networks.sa_encoder import Encoder
 
 
 def weight_distrubute_local(
-        bert_local_out, depend_weight, depended_weight, depend_vec, depended_vec, config
+    bert_local_out, depend_weight, depended_weight, depend_vec, depended_vec, config
 ):
     bert_local_out2 = torch.zeros_like(bert_local_out)
     depend_vec2 = torch.mul(depend_vec, depend_weight.unsqueeze(2))
     depended_vec2 = torch.mul(depended_vec, depended_weight.unsqueeze(2))
     bert_local_out2 = (
-            bert_local_out2
-            + torch.mul(bert_local_out, depend_vec2)
-            + torch.mul(bert_local_out, depended_vec2)
+        bert_local_out2
+        + torch.mul(bert_local_out, depend_vec2)
+        + torch.mul(bert_local_out, depended_vec2)
     )
     for j in range(depend_weight.size()[0]):
         bert_local_out2[j][0] = bert_local_out[j][0]
@@ -113,13 +113,13 @@ class DLCFS_DCA_BERT(nn.Module):
             weight_sum = depend_weight[i].item() + depended_weight[i].item()
             if weight_sum != 0:
                 depend_weight[i] = (
-                                           2 * depend_weight[i] / weight_sum
-                                   ) ** self.config.dca_p
+                    2 * depend_weight[i] / weight_sum
+                ) ** self.config.dca_p
                 if depend_weight[i] > 2:
                     depend_weight[i] = 2
                 depended_weight[i] = (
-                                             2 * depended_weight[i] / weight_sum
-                                     ) ** self.config.dca_p
+                    2 * depended_weight[i] / weight_sum
+                ) ** self.config.dca_p
                 if depended_weight[i] > 2:
                     depended_weight[i] = 2
             else:

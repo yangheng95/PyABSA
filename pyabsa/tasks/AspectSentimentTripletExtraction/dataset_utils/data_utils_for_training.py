@@ -271,11 +271,11 @@ class ASTEDataset(PyABSADataset):
 
     def get_vocabs(self):
         if (
-                self.config.get("syn_post_vocab") is None
-                and self.config.get("postag_vocab") is None
-                and self.config.get("deprel_vocab") is None
-                and self.config.get("syn_post_vocab") is None
-                and self.config.get("token_vocab") is None
+            self.config.get("syn_post_vocab") is None
+            and self.config.get("postag_vocab") is None
+            and self.config.get("deprel_vocab") is None
+            and self.config.get("syn_post_vocab") is None
+            and self.config.get("token_vocab") is None
         ):
             token_counter = Counter(self.all_tokens)
             deprel_counter = Counter(self.all_deprel)

@@ -279,8 +279,8 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                                 )
 
                                 if (
-                                        test_acc
-                                        > self.config.max_test_metrics["max_test_acc"]
+                                    test_acc
+                                    > self.config.max_test_metrics["max_test_acc"]
                                 ):
                                     self.config.max_test_metrics[
                                         "max_test_acc"
@@ -418,7 +418,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
         losses = []
 
         for f, (train_dataloader, valid_dataloader) in enumerate(
-                zip(self.train_dataloaders, self.valid_dataloaders)
+            zip(self.train_dataloaders, self.valid_dataloaders)
         ):
             patience = self.config.patience + self.config.evaluate_begin
             if self.config.log_step < 0:
@@ -519,7 +519,7 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
 
                                 if self.config.model_path_to_save:
                                     if not os.path.exists(
-                                            self.config.model_path_to_save
+                                        self.config.model_path_to_save
                                     ):
                                         os.makedirs(self.config.model_path_to_save)
                                     if save_path:
@@ -541,8 +541,8 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                                     )
 
                                     if (
-                                            test_acc
-                                            > self.config.max_test_metrics["max_test_acc"]
+                                        test_acc
+                                        > self.config.max_test_metrics["max_test_acc"]
                                     ):
                                         self.config.max_test_metrics[
                                             "max_test_acc"
@@ -565,8 +565,8 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                             )
                             iterator.set_postfix_str(postfix)
                         if (
-                                self.config.save_mode
-                                and epoch >= self.config.evaluate_begin
+                            self.config.save_mode
+                            and epoch >= self.config.evaluate_begin
                         ):
                             save_model(
                                 self.config,
@@ -789,12 +789,18 @@ class CDDTrainingInstructor(BaseTrainingInstructor):
                 t_targets_all.cpu(),
                 torch.argmax(t_outputs_all.cpu(), -1),
                 labels=[
-                    self.config.label_to_index[x] for x in self.config.label_to_index if x != '-100' and x != ''
+                    self.config.label_to_index[x]
+                    for x in self.config.label_to_index
+                    if x != "-100" and x != ""
                 ],
             )
-            fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
+            fprint(
+                "\n---------------------------- Confusion Matrix ----------------------------\n"
+            )
             rprint(report)
-            fprint('\n---------------------------- Confusion Matrix ----------------------------\n')
+            fprint(
+                "\n---------------------------- Confusion Matrix ----------------------------\n"
+            )
 
             report = metrics.classification_report(
                 t_c_targets_all.cpu(),

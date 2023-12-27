@@ -22,7 +22,7 @@ class RNACDataset(PyABSADataset):
         all_data = []
 
         for ex_id, data in enumerate(
-                tqdm.tqdm(dataset_dict[self.dataset_type], desc="preparing dataloader")
+            tqdm.tqdm(dataset_dict[self.dataset_type], desc="preparing dataloader")
         ):
             exon1, intron, exon2, label = (
                 data["exon1"],
@@ -60,7 +60,7 @@ class RNACDataset(PyABSADataset):
         label_set = set()
 
         for ex_id, i in enumerate(
-                tqdm.tqdm(range(len(lines)), desc="preparing dataloader")
+            tqdm.tqdm(range(len(lines)), desc="preparing dataloader")
         ):
             text, _, label = lines[i].strip().partition("$LABEL$")
             label = label.strip() if label else LabelPaddingOption.LABEL_PADDING

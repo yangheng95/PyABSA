@@ -7,9 +7,10 @@
 # ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
 # Copyright (C) 2022. All Rights Reserved.
 
+from .configuration.configuration import ASTEConfigManager
+from .dataset_utils.dataset_list import ASTEDatasetList
+from .models import ASTEModelList
+from .prediction.predictor import AspectSentimentTripletExtractor
+
 # for Aspect-sentiment-triplet-extraction
 from .trainer.trainer import ASTETrainer
-from .configuration.configuration import ASTEConfigManager
-from .models import ASTEModelList
-from .dataset_utils.dataset_list import ASTEDatasetList
-from .prediction.predictor import AspectSentimentTripletExtractor

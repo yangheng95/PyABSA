@@ -180,8 +180,8 @@ class ABSAInferenceDataset(Dataset):
                 lcfs_vec = prepared_inputs["lcfs_vec"]
 
                 if (
-                        self.config.model_name == "dlcf_dca_bert"
-                        or self.config.model_name == "dlcfs_dca_bert"
+                    self.config.model_name == "dlcf_dca_bert"
+                    or self.config.model_name == "dlcfs_dca_bert"
                 ):
                     configure_dlcf_spacy_model(self.config)
                     prepared_inputs = prepare_input_for_dlcf_dca(

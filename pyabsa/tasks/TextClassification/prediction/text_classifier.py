@@ -128,7 +128,7 @@ class TextClassifier(InferenceModel):
                 )
 
             if not hasattr(
-                    GloVeTCModelList, self.config.model.__name__
+                GloVeTCModelList, self.config.model.__name__
             ) and not hasattr(BERTTCModelList, self.config.model.__name__):
                 raise KeyError(
                     "The checkpoint and PyABSA you are loading is not from classifier model."
@@ -164,13 +164,13 @@ class TextClassifier(InferenceModel):
                 fprint(">>> {0}: {1}".format(arg, getattr(self.config, arg)))
 
     def batch_infer(
-            self,
-            target_file=None,
-            print_result=True,
-            save_result=False,
-            ignore_error=True,
-            defense: str = None,
-            **kwargs
+        self,
+        target_file=None,
+        print_result=True,
+        save_result=False,
+        ignore_error=True,
+        defense: str = None,
+        **kwargs
     ):
         """
         Batch predicts the sentiment of a target file using the model.
@@ -192,12 +192,12 @@ class TextClassifier(InferenceModel):
         )
 
     def infer(
-            self,
-            text: Union[str, list] = None,
-            print_result=True,
-            ignore_error=True,
-            defense: str = None,
-            **kwargs
+        self,
+        text: Union[str, list] = None,
+        print_result=True,
+        ignore_error=True,
+        defense: str = None,
+        **kwargs
     ):
         """
         Predicts the sentiment of a text using the model.
@@ -217,12 +217,12 @@ class TextClassifier(InferenceModel):
         )
 
     def batch_predict(
-            self,
-            target_file=None,
-            print_result=True,
-            save_result=False,
-            ignore_error=True,
-            **kwargs
+        self,
+        target_file=None,
+        print_result=True,
+        save_result=False,
+        ignore_error=True,
+        **kwargs
     ):
         """
         Predict from a file of sentences.
@@ -259,11 +259,11 @@ class TextClassifier(InferenceModel):
         )
 
     def predict(
-            self,
-            text: Union[str, list] = None,
-            print_result=True,
-            ignore_error=True,
-            **kwargs
+        self,
+        text: Union[str, list] = None,
+        print_result=True,
+        ignore_error=True,
+        **kwargs
     ):
         """
         Predict from a sentence or a list of sentences.
@@ -347,8 +347,8 @@ class TextClassifier(InferenceModel):
                     else:
                         real_sent = "N.A."
                     if (
-                            real_sent != LabelPaddingOption.LABEL_PADDING
-                            and real_sent != str(LabelPaddingOption.LABEL_PADDING)
+                        real_sent != LabelPaddingOption.LABEL_PADDING
+                        and real_sent != str(LabelPaddingOption.LABEL_PADDING)
                     ):
                         n_labeled += 1
 
@@ -440,7 +440,8 @@ class TextClassifier(InferenceModel):
                 digits=4,
                 target_names=[
                     self.config.index_to_label[x]
-                    for x in sorted(self.config.index_to_label.keys()) if x != -100
+                    for x in sorted(self.config.index_to_label.keys())
+                    if x != -100
                 ],
             )
             fprint(
@@ -455,7 +456,9 @@ class TextClassifier(InferenceModel):
                 t_targets_all,
                 np.argmax(t_outputs_all, -1),
                 labels=[
-                    self.config.label_to_index[x] for x in self.config.label_to_index if x != '-100' and x != ''
+                    self.config.label_to_index[x]
+                    for x in self.config.label_to_index
+                    if x != "-100" and x != ""
                 ],
             )
             fprint(

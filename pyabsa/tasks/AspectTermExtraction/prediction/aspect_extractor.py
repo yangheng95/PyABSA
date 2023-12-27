@@ -116,13 +116,13 @@ class AspectExtractor(InferenceModel):
                                         self.config.pretrained_bert.split("/")[-1]
                                     ),
                                     do_lower_case="uncased"
-                                                  in self.config.pretrained_bert,
+                                    in self.config.pretrained_bert,
                                 )
                             else:
                                 self.tokenizer = AutoTokenizer.from_pretrained(
                                     self.config.pretrained_bert,
                                     do_lower_case="uncased"
-                                                  in self.config.pretrained_bert,
+                                    in self.config.pretrained_bert,
                                 )
                         except ValueError:
                             self.tokenizer = pickle.load(f)
@@ -173,7 +173,7 @@ class AspectExtractor(InferenceModel):
             for item1, item2 in zip(results["extraction_res"], results["polarity_res"]):
                 cur_example_id = item1[3]
                 assert (
-                        cur_example_id == item2["example_id"]
+                    cur_example_id == item2["example_id"]
                 ), "ate and apc results should be same ordered"
                 if pre_example_id is None or cur_example_id != pre_example_id:
                     merged_results[cur_example_id] = {
@@ -219,12 +219,12 @@ class AspectExtractor(InferenceModel):
         return final_res
 
     def extract_aspect(
-            self,
-            inference_source: Union[List[Path], list, str],
-            save_result=True,
-            print_result=True,
-            pred_sentiment=True,
-            **kwargs
+        self,
+        inference_source: Union[List[Path], list, str],
+        save_result=True,
+        print_result=True,
+        pred_sentiment=True,
+        **kwargs
     ):
         """
         Extract aspects and their corresponding polarities from a list of input files.
@@ -245,12 +245,12 @@ class AspectExtractor(InferenceModel):
         )
 
     def predict(
-            self,
-            text: Union[str, List[str]],
-            save_result=True,
-            print_result=True,
-            pred_sentiment=True,
-            **kwargs
+        self,
+        text: Union[str, List[str]],
+        save_result=True,
+        print_result=True,
+        pred_sentiment=True,
+        **kwargs
     ):
         """
         Args:
@@ -269,12 +269,12 @@ class AspectExtractor(InferenceModel):
             )
 
     def batch_predict(
-            self,
-            target_file: Union[List[Path], list, str],
-            save_result=True,
-            print_result=True,
-            pred_sentiment=True,
-            **kwargs
+        self,
+        target_file: Union[List[Path], list, str],
+        save_result=True,
+        print_result=True,
+        pred_sentiment=True,
+        **kwargs
     ):
         """
         Args:
@@ -329,7 +329,7 @@ class AspectExtractor(InferenceModel):
                 for ex_id, r in enumerate(results):
                     colored_text = r["sentence"][:]
                     for aspect, sentiment, confidence in zip(
-                            r["aspect"], r["sentiment"], r["confidence"]
+                        r["aspect"], r["sentiment"], r["confidence"]
                     ):
                         if sentiment.upper() == "POSITIVE":
                             colored_aspect = colored(
@@ -433,13 +433,13 @@ class AspectExtractor(InferenceModel):
         else:
             it = self.infer_dataloader
         for i_batch, (
-                input_ids_spc,
-                segment_ids,
-                input_mask,
-                label_ids,
-                polarity,
-                valid_ids,
-                l_mask,
+            input_ids_spc,
+            segment_ids,
+            input_mask,
+            label_ids,
+            polarity,
+            valid_ids,
+            l_mask,
         ) in enumerate(it):
             input_ids_spc = input_ids_spc.to(self.config.device)
             segment_ids = segment_ids.to(self.config.device)
@@ -474,7 +474,7 @@ class AspectExtractor(InferenceModel):
                     if j == 0:
                         continue
                     elif len(pred_iobs) == len(
-                            all_tokens[i + (self.config.eval_batch_size * i_batch)]
+                        all_tokens[i + (self.config.eval_batch_size * i_batch)]
                     ):
                         break
                     else:
@@ -483,7 +483,7 @@ class AspectExtractor(InferenceModel):
                 ate_result = []
                 polarity = []
                 for t, l in zip(
-                        all_tokens[i + (self.config.eval_batch_size * i_batch)], pred_iobs
+                    all_tokens[i + (self.config.eval_batch_size * i_batch)], pred_iobs
                 ):
                     ate_result.append("{}({})".format(t, l))
                     if "ASP" in l:
@@ -500,7 +500,7 @@ class AspectExtractor(InferenceModel):
                 pred_iobs = process_iob_tags(pred_iobs)
                 for idx in range(1, len(polarity)):
                     if polarity[idx - 1] != str(
-                            LabelPaddingOption.SENTIMENT_PADDING
+                        LabelPaddingOption.SENTIMENT_PADDING
                     ) and split_aspect(pred_iobs[idx - 1], pred_iobs[idx]):
                         _polarity = polarity[:idx] + POLARITY_PADDING[idx:]
                         polarity = POLARITY_PADDING[:idx] + polarity[idx:]
@@ -514,12 +514,12 @@ class AspectExtractor(InferenceModel):
                         )
 
                     if (
-                            polarity[idx] != str(LabelPaddingOption.SENTIMENT_PADDING)
-                            and idx == len(polarity) - 1
-                            and split_aspect(pred_iobs[idx])
+                        polarity[idx] != str(LabelPaddingOption.SENTIMENT_PADDING)
+                        and idx == len(polarity) - 1
+                        and split_aspect(pred_iobs[idx])
                     ):
-                        _polarity = polarity[: idx + 1] + POLARITY_PADDING[idx + 1:]
-                        polarity = POLARITY_PADDING[: idx + 1] + polarity[idx + 1:]
+                        _polarity = polarity[: idx + 1] + POLARITY_PADDING[idx + 1 :]
+                        polarity = POLARITY_PADDING[: idx + 1] + polarity[idx + 1 :]
                         extraction_res.append(
                             (
                                 all_tokens[i + (self.config.eval_batch_size * i_batch)],
@@ -633,9 +633,9 @@ class AspectExtractor(InferenceModel):
                 )
                 for i, i_apc_logits in enumerate(apc_logits):
                     if (
-                            "index_to_label" in self.config.args
-                            and int(i_apc_logits.argmax(axis=-1))
-                            in self.config.index_to_label
+                        "index_to_label" in self.config.args
+                        and int(i_apc_logits.argmax(axis=-1))
+                        in self.config.index_to_label
                     ):
                         sent = self.config.index_to_label.get(
                             int(i_apc_logits.argmax(axis=-1))

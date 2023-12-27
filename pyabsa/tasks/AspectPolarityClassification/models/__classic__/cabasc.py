@@ -74,8 +74,8 @@ class Cabasc(nn.Module):
                     memory[i][idx] *= attn_l[i][idx]
                 elif idx < aspect_end:
                     memory[i][idx] *= (
-                                              attn_l[i][idx] + attn_r[i][idx - aspect_start]
-                                      ) / 2
+                        attn_l[i][idx] + attn_r[i][idx - aspect_start]
+                    ) / 2
                 else:
                     memory[i][idx] *= attn_r[i][idx - aspect_start]
 

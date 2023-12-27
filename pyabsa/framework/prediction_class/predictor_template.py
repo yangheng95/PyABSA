@@ -9,10 +9,10 @@
 import time
 from typing import Union
 
-from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
 from torch import cuda
 
-from pyabsa import TaskCodeOption, DeviceTypeOption
+import pyabsa
+from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
 
 
 class InferenceModel:
@@ -57,10 +57,10 @@ class InferenceModel:
         """
         Sets the device to CPU for performing inference.
         """
-        self.config.device = DeviceTypeOption.CPU
-        self.model.to(DeviceTypeOption.CPU)
+        self.config.device = pyabsa.DeviceTypeOption.CPU
+        self.model.to(pyabsa.DeviceTypeOption.CPU)
         if hasattr(self, "MLM"):
-            self.MLM.to(DeviceTypeOption.CPU)
+            self.MLM.to(pyabsa.DeviceTypeOption.CPU)
 
     def cuda(self, device="cuda:0"):
         """

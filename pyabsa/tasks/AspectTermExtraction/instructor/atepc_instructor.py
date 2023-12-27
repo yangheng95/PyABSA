@@ -205,12 +205,12 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                 self.test_set = None
 
         self.num_train_optimization_steps = (
-                int(
-                    len(self.train_set)
-                    / self.config.batch_size
-                    / self.config.gradient_accumulation_steps
-                )
-                * self.config.num_epoch
+            int(
+                len(self.train_set)
+                / self.config.batch_size
+                / self.config.gradient_accumulation_steps
+            )
+            * self.config.num_epoch
         )
 
         train_sampler = RandomSampler(self.train_set)
@@ -348,7 +348,7 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                 ate_loss_weight = self.config.args.get("ate_loss_weight", 1.0)
 
                 loss = (
-                        loss_ate + ate_loss_weight * loss_apc
+                    loss_ate + ate_loss_weight * loss_apc
                 )  # the optimal weight of loss may be different according to dataset
 
                 sum_loss += loss.item()
@@ -394,31 +394,31 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                         self.config.metrics_of_this_checkpoint["ate_f1"] = ate_result
 
                         if (
-                                apc_result["apc_test_acc"]
-                                > self.config.max_test_metrics["max_apc_test_acc"]
-                                or apc_result["apc_test_f1"]
-                                > self.config.max_test_metrics["max_apc_test_f1"]
-                                or ate_result
-                                > self.config.max_test_metrics["max_ate_test_f1"]
+                            apc_result["apc_test_acc"]
+                            > self.config.max_test_metrics["max_apc_test_acc"]
+                            or apc_result["apc_test_f1"]
+                            > self.config.max_test_metrics["max_apc_test_f1"]
+                            or ate_result
+                            > self.config.max_test_metrics["max_ate_test_f1"]
                         ):
                             patience = self.config.patience - 1
                             if (
-                                    apc_result["apc_test_acc"]
-                                    > self.config.max_test_metrics["max_apc_test_acc"]
+                                apc_result["apc_test_acc"]
+                                > self.config.max_test_metrics["max_apc_test_acc"]
                             ):
                                 self.config.max_test_metrics[
                                     "max_apc_test_acc"
                                 ] = apc_result["apc_test_acc"]
                             if (
-                                    apc_result["apc_test_f1"]
-                                    > self.config.max_test_metrics["max_apc_test_f1"]
+                                apc_result["apc_test_f1"]
+                                > self.config.max_test_metrics["max_apc_test_f1"]
                             ):
                                 self.config.max_test_metrics[
                                     "max_apc_test_f1"
                                 ] = apc_result["apc_test_f1"]
                             if (
-                                    ate_result
-                                    > self.config.max_test_metrics["max_ate_test_f1"]
+                                ate_result
+                                > self.config.max_test_metrics["max_ate_test_f1"]
                             ):
                                 self.config.max_test_metrics[
                                     "max_ate_test_f1"
@@ -698,7 +698,8 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                         torch.argmax(test_polarities_all, -1).cpu(),
                         target_names=[
                             self.config.index_to_label[x]
-                            for x in sorted(self.config.index_to_label.keys()) if x != -100
+                            for x in sorted(self.config.index_to_label.keys())
+                            if x != -100
                         ],
                     )
                     fprint(
@@ -739,11 +740,11 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
             )
 
         self.config.batch_size = (
-                self.config.batch_size // self.config.gradient_accumulation_steps
+            self.config.batch_size // self.config.gradient_accumulation_steps
         )
 
         if self.config.model_path_to_save and not os.path.exists(
-                self.config.model_path_to_save
+            self.config.model_path_to_save
         ):
             os.makedirs(self.config.model_path_to_save)
 

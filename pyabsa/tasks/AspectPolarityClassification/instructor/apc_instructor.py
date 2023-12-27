@@ -126,9 +126,9 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                 targets = sample_batched["polarity"].to(self.config.device)
 
                 if (
-                        isinstance(outputs, dict)
-                        and "loss" in outputs
-                        and outputs["loss"] != 0
+                    isinstance(outputs, dict)
+                    and "loss" in outputs
+                    and outputs["loss"] != 0
                 ):
                     loss = outputs["loss"]
                 else:
@@ -191,8 +191,8 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                                 )
 
                                 if (
-                                        test_acc
-                                        > self.config.max_test_metrics["max_apc_test_acc"]
+                                    test_acc
+                                    > self.config.max_test_metrics["max_apc_test_acc"]
                                 ):
                                     self.config.max_test_metrics[
                                         "max_apc_test_acc"
@@ -343,7 +343,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
         self.config.max_test_metrics = {"max_apc_test_acc": 0, "max_apc_test_f1": 0}
 
         for f, (train_dataloader, valid_dataloader) in enumerate(
-                zip(self.train_dataloaders, self.valid_dataloaders)
+            zip(self.train_dataloaders, self.valid_dataloaders)
         ):
             patience = self.config.patience + self.config.evaluate_begin
             if self.config.log_step < 0:
@@ -403,9 +403,9 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                     targets = sample_batched["polarity"].to(self.config.device)
 
                     if (
-                            isinstance(outputs, dict)
-                            and "loss" in outputs
-                            and outputs["loss"] != 0
+                        isinstance(outputs, dict)
+                        and "loss" in outputs
+                        and outputs["loss"] != 0
                     ):
                         loss = outputs["loss"]
                     else:
@@ -447,7 +447,7 @@ class APCTrainingInstructor(BaseTrainingInstructor):
 
                                 if self.config.model_path_to_save:
                                     if not os.path.exists(
-                                            self.config.model_path_to_save
+                                        self.config.model_path_to_save
                                     ):
                                         os.makedirs(self.config.model_path_to_save)
                                     if save_path:
@@ -466,19 +466,19 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                                     )
 
                                     if (
-                                            test_acc
-                                            > self.config.max_test_metrics[
-                                        "max_apc_test_acc"
-                                    ]
+                                        test_acc
+                                        > self.config.max_test_metrics[
+                                            "max_apc_test_acc"
+                                        ]
                                     ):
                                         self.config.max_test_metrics[
                                             "max_apc_test_acc"
                                         ] = test_acc
                                     if (
-                                            f1
-                                            > self.config.max_test_metrics[
-                                        "max_apc_test_f1"
-                                    ]
+                                        f1
+                                        > self.config.max_test_metrics[
+                                            "max_apc_test_f1"
+                                        ]
                                     ):
                                         self.config.max_test_metrics[
                                             "max_apc_test_f1"
@@ -499,8 +499,8 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                             )
                             iterator.set_postfix_str(postfix)
                         if (
-                                self.config.save_mode
-                                and epoch >= self.config.evaluate_begin
+                            self.config.save_mode
+                            and epoch >= self.config.evaluate_begin
                         ):
                             save_model(
                                 self.config,
@@ -647,7 +647,8 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                     torch.argmax(t_outputs_all.cpu(), -1),
                     target_names=[
                         self.config.index_to_label[x]
-                        for x in sorted(self.config.index_to_label.keys()) if x != -100
+                        for x in sorted(self.config.index_to_label.keys())
+                        if x != -100
                     ],
                 )
             )
