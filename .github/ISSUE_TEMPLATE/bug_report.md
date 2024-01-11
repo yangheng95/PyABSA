@@ -1,5 +1,5 @@
 ---
-name: Bug report
+name: Bug report or Code Questions (Only issues about code with enough context information can be resolved)
 about: Create a report to help us improve
 title: ''
 labels: bug
