@@ -1,12 +1,12 @@
 [
   {
     "referrer": "github.com",
-    "count": 766,
-    "uniques": 102
+    "count": 757,
+    "uniques": 98
   },
   {
     "referrer": "Google",
-    "count": 720,
+    "count": 737,
     "uniques": 99
   },
   {
@@ -16,7 +16,7 @@
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 200,
+    "count": 198,
     "uniques": 39
   },
   {
@@ -32,7 +32,7 @@
   {
     "referrer": "youtube.com",
     "count": 124,
-    "uniques": 15
+    "uniques": 16
   },
   {
     "referrer": "arxiv.org",
@@ -40,9 +40,9 @@
     "uniques": 4
   },
   {
-    "referrer": "cn.bing.com",
-    "count": 50,
-    "uniques": 12
+    "referrer": "gradio-blocks-multilingual-aspect-based-sentimen-c04f821.hf.space",
+    "count": 55,
+    "uniques": 6
   },
   {
     "referrer": "DuckDuckGo",
