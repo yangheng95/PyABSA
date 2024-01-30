@@ -1,52 +1,52 @@
 [
   {
-    "referrer": "Google",
-    "count": 647,
-    "uniques": 103
+    "referrer": "github.com",
+    "count": 688,
+    "uniques": 67
   },
   {
-    "referrer": "github.com",
-    "count": 645,
-    "uniques": 76
+    "referrer": "Google",
+    "count": 649,
+    "uniques": 101
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 298,
-    "uniques": 36
+    "count": 300,
+    "uniques": 38
   },
   {
     "referrer": "huggingface.co",
-    "count": 230,
-    "uniques": 40
-  },
-  {
-    "referrer": "pyabsa.readthedocs.io",
-    "count": 152,
-    "uniques": 19
+    "count": 245,
+    "uniques": 37
   },
   {
     "referrer": "yangheng-pyabsa.hf.space",
-    "count": 139,
+    "count": 147,
     "uniques": 11
   },
   {
-    "referrer": "reddit.com",
+    "referrer": "pyabsa.readthedocs.io",
+    "count": 135,
+    "uniques": 18
+  },
+  {
+    "referrer": "link.zhihu.com",
     "count": 31,
-    "uniques": 7
+    "uniques": 5
+  },
+  {
+    "referrer": "reddit.com",
+    "count": 30,
+    "uniques": 6
   },
   {
     "referrer": "youtube.com",
-    "count": 24,
-    "uniques": 14
+    "count": 22,
+    "uniques": 13
   },
   {
     "referrer": "statics.teams.cdn.office.net",
     "count": 18,
     "uniques": 2
-  },
-  {
-    "referrer": "hf-mirror.com",
-    "count": 15,
-    "uniques": 1
   }
 ]
