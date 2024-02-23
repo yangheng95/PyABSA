@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-# file: rnac_instructor.py
-# time: 03/11/2022 19:46
+# file: classifier_instructor.py
+# time: 2021/4/22 0022
 # author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
-# GScholar: https://scholar.google.com/citations?user=NPq5a_0AAAAJ&hl=en
-# ResearchGate: https://www.researchgate.net/profile/Heng-Yang-17/research
-# Copyright (C) 2022. All Rights Reserved.
-
+# Copyright (C) 2021. All Rights Reserved.
+import math
 import os
 import shutil
 import time
@@ -15,8 +13,16 @@ import numpy
 import numpy as np
 import torch
 import torch.nn as nn
+from findfile import find_file
 from sklearn import metrics
 from torch import cuda
+from torch.utils.data import (
+    DataLoader,
+    random_split,
+    ConcatDataset,
+    RandomSampler,
+    SequentialSampler,
+)
 from tqdm import tqdm
 from transformers import AutoModel, AutoTokenizer
 
@@ -28,20 +34,13 @@ from pyabsa.framework.tokenizer_class.tokenizer_class import (
     PretrainedTokenizer,
 )
 from pyabsa.utils.file_utils.file_utils import save_model
-from pyabsa.utils.pyabsa_utils import init_optimizer, fprint, rprint
-from ..dataset_utils.data_utils_for_training import BERTRNACDataset
-from ..dataset_utils.data_utils_for_training import GloVeRNACDataset
-from ..models import GloVeRNACModelList, BERTRNACModelList
+from pyabsa.utils.pyabsa_utils import init_optimizer, fprint
+from ..dataset_utils.__classic__.data_utils_for_training import GloVeRNARDataset
+from ..dataset_utils.__plm__.data_utils_for_training import BERTRNARDataset
+from ..models import GloVeRNARModelList, BERTRNARModelList
 
 
-class RNACTrainingInstructor(BaseTrainingInstructor):
-    def __init__(self, config):
-        super().__init__(config)
-
-        self._load_dataset_and_prepare_dataloader()
-
-        self._init_misc()
-
+class RNARTrainingInstructor(BaseTrainingInstructor):
     def _init_misc(self):
         # use DataParallel for trainer if device count larger than 1
         if self.config.auto_device == DeviceTypeOption.ALL_CUDA:
@@ -59,7 +58,10 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
         self.train_dataloaders = []
         self.valid_dataloaders = []
 
-        torch.save(self.model.state_dict(), "./init_state_dict.bin")
+        if os.path.exists("./init_state_dict.bin"):
+            os.remove("./init_state_dict.bin")
+        if self.config.cross_validate_fold > 0:
+            torch.save(self.model.state_dict(), "./init_state_dict.bin")
 
         self.config.device = torch.device(self.config.device)
         if self.config.device.type == DeviceTypeOption.CUDA:
@@ -72,10 +74,177 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
     def _cache_or_load_dataset(self):
         pass
 
+    def _evaluate_acc_f1(self, test_dataloader):
+        pass
+
+    def _load_dataset_and_prepare_dataloader(self):
+        self.config.inputs_cols = self.config.model.inputs
+
+        cache_path = self.load_cache_dataset()
+
+        # init BERT-based model and dataset
+        if hasattr(BERTRNARModelList, self.config.model.__name__):
+            self.tokenizer = PretrainedTokenizer(self.config)
+            if not os.path.exists(cache_path) or self.config.overwrite_cache:
+                self.train_set = BERTRNARDataset(
+                    self.config, self.tokenizer, dataset_type="train"
+                )
+                self.test_set = BERTRNARDataset(
+                    self.config, self.tokenizer, dataset_type="test"
+                )
+                self.valid_set = BERTRNARDataset(
+                    self.config, self.tokenizer, dataset_type="valid"
+                )
+
+            try:
+                self.bert = AutoModel.from_pretrained(
+                    self.config.pretrained_bert, ignore_mismatched_sizes=True
+                )
+            except ValueError as e:
+                fprint("Init pretrained model failed, exception: {}".format(e))
+
+            # init the model behind the construction of datasets in case of updating output_dim
+            self.model = self.config.model(self.bert, self.config).to(
+                self.config.device
+            )
+
+        elif hasattr(GloVeRNARModelList, self.config.model.__name__):
+            # init GloVe-based model and dataset
+            self.tokenizer = Tokenizer.build_tokenizer(
+                config=self.config,
+                cache_path="{0}_tokenizer.dat".format(
+                    os.path.basename(self.config.dataset_name)
+                ),
+                pre_tokenizer=AutoTokenizer.from_pretrained(
+                    self.config.pretrained_bert
+                ),
+            )
+            self.embedding_matrix = build_embedding_matrix(
+                config=self.config,
+                tokenizer=self.tokenizer,
+                cache_path="{0}_{1}_embedding_matrix.dat".format(
+                    str(self.config.embed_dim),
+                    os.path.basename(self.config.dataset_name),
+                ),
+            )
+            self.train_set = GloVeRNARDataset(
+                self.config, self.tokenizer, dataset_type="train"
+            )
+            self.test_set = GloVeRNARDataset(
+                self.config, self.tokenizer, dataset_type="test"
+            )
+            self.valid_set = GloVeRNARDataset(
+                self.config, self.tokenizer, dataset_type="valid"
+            )
+
+            self.model = self.config.model(self.embedding_matrix, self.config).to(
+                self.config.device
+            )
+            self.config.embedding_matrix = self.embedding_matrix
+
+        self.config.tokenizer = self.tokenizer
+        self.save_cache_dataset(cache_path)
+
+    def __init__(self, config):
+        super().__init__(config)
+
+        self._load_dataset_and_prepare_dataloader()
+
+        self._init_misc()
+
+    def reload_model(self, ckpt="./init_state_dict.bin"):
+        if os.path.exists(ckpt):
+            self.model.load_state_dict(
+                torch.load(find_file(ckpt, or_key=[".bin", "state_dict"])),
+                strict=False,
+            )
+
+    def _prepare_dataloader(self):
+        if self.config.cross_validate_fold < 1:
+            train_sampler = RandomSampler(
+                self.train_set if not self.train_set else self.train_set
+            )
+            self.train_dataloaders.append(
+                DataLoader(
+                    dataset=self.train_set,
+                    batch_size=self.config.batch_size,
+                    sampler=train_sampler,
+                    pin_memory=True,
+                )
+            )
+            if self.test_set:
+                self.test_dataloader = DataLoader(
+                    dataset=self.test_set,
+                    batch_size=self.config.batch_size,
+                    shuffle=False,
+                )
+
+            if self.valid_set:
+                self.valid_dataloader = DataLoader(
+                    dataset=self.valid_set,
+                    batch_size=self.config.batch_size,
+                    shuffle=False,
+                )
+        else:
+            split_dataset = self.train_set
+            len_per_fold = len(split_dataset) // self.config.cross_validate_fold + 1
+            folds = random_split(
+                split_dataset,
+                tuple(
+                    [len_per_fold] * (self.config.cross_validate_fold - 1)
+                    + [
+                        len(split_dataset)
+                        - len_per_fold * (self.config.cross_validate_fold - 1)
+                    ]
+                ),
+            )
+
+            for f_idx in range(self.config.cross_validate_fold):
+                train_set = ConcatDataset(
+                    [x for i, x in enumerate(folds) if i != f_idx]
+                )
+                val_set = folds[f_idx]
+                train_sampler = RandomSampler(train_set if not train_set else train_set)
+                val_sampler = SequentialSampler(val_set if not val_set else val_set)
+                self.train_dataloaders.append(
+                    DataLoader(
+                        dataset=train_set,
+                        batch_size=self.config.batch_size,
+                        sampler=train_sampler,
+                    )
+                )
+                self.valid_dataloaders.append(
+                    DataLoader(
+                        dataset=val_set,
+                        batch_size=self.config.batch_size,
+                        sampler=val_sampler,
+                    )
+                )
+                if self.test_set:
+                    self.test_dataloader = DataLoader(
+                        dataset=self.test_set,
+                        batch_size=self.config.batch_size,
+                        shuffle=False,
+                    )
+
+    # def _train(self, criterion):
+    #     self._prepare_dataloader()
+    #
+    #     if self.config.warmup_step >= 0:
+    #         self.lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+    #             self.optimizer,
+    #             T_max=len(self.train_dataloaders[0]) * self.config.num_epoch,
+    #         )
+    #         self.warmup_scheduler = warmup.UntunedLinearWarmup(self.optimizer)
+    #
+    #     if len(self.valid_dataloaders) > 1:
+    #         return self._k_fold_train_and_evaluate(criterion)
+    #     else:
+    #         return self._train_and_evaluate(criterion)
+
     def _train_and_evaluate(self, criterion):
         global_step = 0
-        max_fold_acc = 0
-        max_fold_f1 = 0
+        max_fold_r2 = math.inf
         save_path = "{0}/{1}_{2}".format(
             self.config.model_path_to_save,
             self.config.model_name,
@@ -84,8 +253,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
 
         losses = []
 
-        self.config.metrics_of_this_checkpoint = {"acc": 0, "f1": 0}
-        self.config.max_test_metrics = {"max_test_acc": 0, "max_test_f1": 0}
+        self.config.metrics_of_this_checkpoint = {"r2": 0}
+        self.config.max_test_metrics = {"max_test_r2": 0}
 
         self.logger.info(
             "***** Running training for {} *****".format(self.config.task_name)
@@ -112,7 +281,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
 
         for epoch in range(self.config.num_epoch):
             patience -= 1
-            description = "Epoch:{} | Loss:{}".format(epoch, 0)
+            description = "Epoch:{} | Loss: {}".format(epoch, 0)
             iterator = tqdm(self.train_dataloaders[0], desc=description)
             for i_batch, sample_batched in enumerate(iterator):
                 global_step += 1
@@ -123,7 +292,6 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                     sample_batched[col].to(self.config.device)
                     for col in self.config.inputs_cols
                 ]
-
                 if self.config.use_amp:
                     with torch.cuda.amp.autocast():
                         outputs = self.model(inputs)
@@ -133,9 +301,9 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 targets = sample_batched["label"].to(self.config.device)
 
                 if isinstance(outputs, dict) and "loss" in outputs:
-                    loss = outputs["loss"]
+                    loss = outputs["r2"]
                 else:
-                    loss = criterion(outputs, targets)
+                    loss = criterion(outputs.view(-1), targets)
 
                 losses.append(loss.item())
                 if self.config.use_amp and self.scaler:
@@ -154,61 +322,51 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 if global_step % self.config.log_step == 0:
                     if self.test_dataloader and epoch >= self.config.evaluate_begin:
                         if self.valid_dataloader:
-                            test_acc, f1 = self._evaluate_acc_f1(self.valid_dataloader)
+                            test_r2 = self._evaluate_r2(
+                                self.valid_dataloader, criterion
+                            )
                         else:
-                            test_acc, f1 = self._evaluate_acc_f1(self.test_dataloader)
+                            test_r2 = self._evaluate_r2(self.test_dataloader, criterion)
 
-                        self.config.metrics_of_this_checkpoint["acc"] = test_acc
-                        self.config.metrics_of_this_checkpoint["f1"] = f1
+                        self.config.metrics_of_this_checkpoint["r2"] = test_r2
 
-                        if test_acc > max_fold_acc or f1 > max_fold_f1:
-                            if test_acc > max_fold_acc:
+                        if test_r2 < max_fold_r2:
+                            if test_r2 < max_fold_r2:
                                 patience = self.config.patience - 1
-                                max_fold_acc = test_acc
-
-                            if f1 > max_fold_f1:
-                                max_fold_f1 = f1
-                                patience = self.config.patience - 1
+                                max_fold_r2 = test_r2
 
                             if self.config.model_path_to_save:
                                 if not os.path.exists(self.config.model_path_to_save):
                                     os.makedirs(self.config.model_path_to_save)
-                                if save_path:
+                                if save_path and self.config.save_last_ckpt_only:
                                     try:
                                         shutil.rmtree(save_path)
                                         # logger.info('Remove sub-optimal trained model:', save_path)
                                     except:
                                         # logger.info('Can not remove sub-optimal trained model:', save_path)
                                         pass
-                                save_path = "{0}/{1}_{2}_acc_{3}_f1_{4}/".format(
+                                save_path = "{0}/{1}_{2}_r2_{3}/".format(
                                     self.config.model_path_to_save,
                                     self.config.model_name,
                                     self.config.dataset_name,
-                                    round(test_acc * 100, 2),
-                                    round(f1 * 100, 2),
+                                    round(test_r2, 4),
                                 )
 
                                 if (
-                                    test_acc
-                                    > self.config.max_test_metrics["max_test_acc"]
+                                    test_r2
+                                    < self.config.max_test_metrics["max_test_r2"]
                                 ):
                                     self.config.max_test_metrics[
-                                        "max_test_acc"
-                                    ] = test_acc
-                                if f1 > self.config.max_test_metrics["max_test_f1"]:
-                                    self.config.max_test_metrics["max_test_f1"] = f1
+                                        "max_test_r2"
+                                    ] = test_r2
 
                                 save_model(
                                     self.config, self.model, self.tokenizer, save_path
                                 )
 
-                        postfix = "Dev Acc:{:>.2f}(max:{:>.2f}) Dev F1:{:>.2f}(max:{:>.2f})".format(
-                            test_acc * 100,
-                            max_fold_acc * 100,
-                            f1 * 100,
-                            max_fold_f1 * 100,
+                        description = "Epoch:{} | Loss:{:.4f} | Dev R2 Score:{:.4f}(max:{:.4f})".format(
+                            epoch, loss.item(), test_r2, max_fold_r2
                         )
-                        iterator.set_postfix_str(postfix)
                     elif self.config.save_mode and epoch >= self.config.evaluate_begin:
                         save_model(
                             self.config,
@@ -237,25 +395,16 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 + self.config.dataset_name
                 + "-"
                 + self.config.pretrained_bert,
-                "Max-Test-Acc w/o Valid Set",
-                max_fold_acc * 100,
-            )
-            self.config.MV.log_metric(
-                self.config.model_name
-                + "-"
-                + self.config.dataset_name
-                + "-"
-                + self.config.pretrained_bert,
-                "Max-Test-F1 w/o Valid Set",
-                max_fold_f1 * 100,
+                "Max-Test-R2-Score w/o Valid Set",
+                max_fold_r2,
             )
 
         if self.valid_dataloader:
             fprint(
                 "Loading best model: {} and evaluating on test set ".format(save_path)
             )
-            self._reload_model_state_dict(save_path)
-            max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
+            self.reload_model(find_file(save_path, ".state_dict"))
+            max_fold_r2 = self._evaluate_r2(self.test_dataloader, criterion)
 
             self.config.MV.log_metric(
                 self.config.model_name
@@ -263,17 +412,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 + self.config.dataset_name
                 + "-"
                 + self.config.pretrained_bert,
-                "Max-Test-Acc",
-                max_fold_acc * 100,
-            )
-            self.config.MV.log_metric(
-                self.config.model_name
-                + "-"
-                + self.config.dataset_name
-                + "-"
-                + self.config.pretrained_bert,
-                "Max-Test-F1",
-                max_fold_f1 * 100,
+                "Max-Test-R2-Score",
+                max_fold_r2,
             )
 
         self.logger.info(self.config.MV.summary(no_print=True))
@@ -296,16 +436,15 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             return self.model, self.config, self.tokenizer
 
     def _k_fold_train_and_evaluate(self, criterion):
-        fold_test_acc = []
-        fold_test_f1 = []
+        fold_test_r2 = []
 
         save_path_k_fold = ""
-        max_fold_acc_k_fold = 0
+        max_fold_r2_k_fold = 0
 
         losses = []
 
-        self.config.metrics_of_this_checkpoint = {"acc": 0, "f1": 0}
-        self.config.max_test_metrics = {"max_test_acc": 0, "max_test_f1": 0}
+        self.config.metrics_of_this_checkpoint = {"r2": 0}
+        self.config.max_test_metrics = {"max_test_r2": 0}
 
         for f, (train_dataloader, valid_dataloader) in enumerate(
             zip(self.train_dataloaders, self.valid_dataloaders)
@@ -338,8 +477,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                     )
                 )
             global_step = 0
-            max_fold_acc = 0
-            max_fold_f1 = 0
+            max_fold_r2 = 0
             save_path = "{0}/{1}_{2}".format(
                 self.config.model_path_to_save,
                 self.config.model_name,
@@ -358,20 +496,19 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                         sample_batched[col].to(self.config.device)
                         for col in self.config.inputs_cols
                     ]
-                    if self.config.use_amp:
-                        with torch.cuda.amp.autocast():
+                    with torch.cuda.amp.autocast():
+                        if self.config.use_amp:
+                            with torch.cuda.amp.autocast():
+                                outputs = self.model(inputs)
+                        else:
                             outputs = self.model(inputs)
-                    else:
-                        outputs = self.model(inputs)
 
                     targets = sample_batched["label"].to(self.config.device)
 
                     if isinstance(outputs, dict) and "loss" in outputs:
                         loss = outputs["loss"]
                     else:
-                        loss = criterion(outputs, targets)
-
-                    losses.append(loss.item())
+                        loss = criterion(outputs.view(-1), targets)
 
                     if self.config.use_amp and self.scaler:
                         self.scaler.scale(loss).backward()
@@ -387,22 +524,14 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
 
                     # evaluate if test set is available
                     if global_step % self.config.log_step == 0:
-                        if (
-                            self.valid_dataloader
-                            and epoch >= self.config.evaluate_begin
-                        ):
-                            test_acc, f1 = self._evaluate_acc_f1(valid_dataloader)
+                        if self.test_dataloader and epoch >= self.config.evaluate_begin:
+                            test_r2 = self._evaluate_r2(valid_dataloader, criterion)
 
-                            self.config.metrics_of_this_checkpoint["acc"] = test_acc
-                            self.config.metrics_of_this_checkpoint["f1"] = f1
-                            if test_acc > max_fold_acc or f1 > max_fold_f1:
-                                if test_acc > max_fold_acc:
+                            self.config.metrics_of_this_checkpoint["r2"] = test_r2
+                            if test_r2 > max_fold_r2:
+                                if test_r2 > max_fold_r2:
                                     patience = self.config.patience - 1
-                                    max_fold_acc = test_acc
-
-                                if f1 > max_fold_f1:
-                                    max_fold_f1 = f1
-                                    patience = self.config.patience - 1
+                                    max_fold_r2 = test_r2
 
                                 if self.config.model_path_to_save:
                                     if not os.path.exists(
@@ -416,23 +545,20 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                                         except:
                                             # logger.info('Can not remove sub-optimal trained model:', save_path)
                                             pass
-                                    save_path = "{0}/{1}_{2}_acc_{3}_f1_{4}/".format(
+                                    save_path = "{0}/{1}_{2}_r2_{3}/".format(
                                         self.config.model_path_to_save,
                                         self.config.model_name,
                                         self.config.dataset_name,
-                                        round(test_acc * 100, 2),
-                                        round(f1 * 100, 2),
+                                        round(test_r2, 4),
                                     )
 
                                     if (
-                                        test_acc
-                                        > self.config.max_test_metrics["max_test_acc"]
+                                        test_r2
+                                        < self.config.max_test_metrics["max_test_r2"]
                                     ):
                                         self.config.max_test_metrics[
-                                            "max_test_acc"
-                                        ] = test_acc
-                                    if f1 > self.config.max_test_metrics["max_test_f1"]:
-                                        self.config.max_test_metrics["max_test_f1"] = f1
+                                            "max_test_r2"
+                                        ] = test_r2
 
                                     save_model(
                                         self.config,
@@ -441,13 +567,9 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                                         save_path,
                                     )
 
-                            postfix = "Dev Acc:{:>.2f}(max:{:>.2f}) Dev F1:{:>.2f}(max:{:>.2f})".format(
-                                test_acc * 100,
-                                max_fold_acc * 100,
-                                f1 * 100,
-                                max_fold_f1 * 100,
+                            description = "Epoch:{} | Loss:{:.4f} | Dev R2 Score:{:>.2f}(max:{:>.2f})".format(
+                                epoch, loss.item(), test_r2, max_fold_r2
                             )
-                            iterator.set_postfix_str(postfix)
                         if (
                             self.config.save_mode
                             and epoch >= self.config.evaluate_begin
@@ -473,29 +595,23 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 if patience == 0:
                     break
 
-            max_fold_acc, max_fold_f1 = self._evaluate_acc_f1(self.test_dataloader)
-            if max_fold_acc > max_fold_acc_k_fold:
+            max_fold_r2 = self._evaluate_r2(self.test_dataloader, criterion)
+            if max_fold_r2 > max_fold_r2_k_fold:
                 save_path_k_fold = save_path
-            fold_test_acc.append(max_fold_acc)
-            fold_test_f1.append(max_fold_f1)
+            fold_test_r2.append(max_fold_r2)
 
             self.config.MV.log_metric(
                 self.config.model_name,
-                "Fold{}-Max-Valid-Acc".format(f),
-                max_fold_acc * 100,
-            )
-            self.config.MV.log_metric(
-                self.config.model_name,
-                "Fold{}-Max-Valid-F1".format(f),
-                max_fold_f1 * 100,
+                "Fold{}-Max-Valid-R2-Score".format(f),
+                max_fold_r2,
             )
 
             # self.logger.info(self.config.MV.summary(no_print=True))
             self.logger.info(self.config.MV.raw_summary(no_print=True))
-            self._reload_model_state_dict("./init_state_dict.bin")
+            if os.path.exists("./init_state_dict.bin"):
+                self.reload_model()
 
-        max_test_acc = numpy.max(fold_test_acc)
-        max_test_f1 = numpy.mean(fold_test_f1)
+        max_test_r2 = numpy.max(fold_test_r2)
 
         self.config.MV.log_metric(
             self.config.model_name
@@ -503,17 +619,8 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             + self.config.dataset_name
             + "-"
             + self.config.pretrained_bert,
-            "Max-Test-Acc",
-            max_test_acc * 100,
-        )
-        self.config.MV.log_metric(
-            self.config.model_name
-            + "-"
-            + self.config.dataset_name
-            + "-"
-            + self.config.pretrained_bert,
-            "Max-Test-F1",
-            max_test_f1 * 100,
+            "Max-Test-R2-Score",
+            max_test_r2,
         )
 
         if self.config.cross_validate_fold > 0:
@@ -521,7 +628,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             self.logger.info(self.config.MV.raw_summary(no_print=True))
         # self.config.MV.summary()
 
-        self._reload_model_state_dict(save_path_k_fold)
+        self.reload_model(save_path_k_fold)
 
         if self.valid_dataloader or self.config.save_mode:
             del self.train_dataloaders
@@ -532,7 +639,7 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             time.sleep(3)
             return save_path_k_fold
         else:
-            # direct return model if do not evaluate
+            # direct return model if you do not evaluate
             if self.config.model_path_to_save:
                 save_path_k_fold = "{0}/{1}/".format(
                     self.config.model_path_to_save,
@@ -546,11 +653,12 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
             time.sleep(3)
             return self.model, self.config, self.tokenizer
 
-    def _evaluate_acc_f1(self, test_dataloader):
+    def _evaluate_r2(self, test_dataloader, criterion):
         # switch model to evaluation mode
         self.model.eval()
-        n_test_correct, n_test_total = 0, 0
-        t_targets_all, t_outputs_all = None, None
+        all_targets = torch.tensor([], dtype=torch.float32).to(self.config.device)
+        all_outputs = torch.tensor([], dtype=torch.float32).to(self.config.device)
+
         with torch.no_grad():
             for t_batch, t_sample_batched in enumerate(test_dataloader):
                 t_inputs = [
@@ -560,128 +668,27 @@ class RNACTrainingInstructor(BaseTrainingInstructor):
                 t_targets = t_sample_batched["label"].to(self.config.device)
 
                 sen_outputs = self.model(t_inputs)
-                n_test_correct += (
-                    (torch.argmax(sen_outputs, -1) == t_targets).sum().item()
-                )
-                n_test_total += len(sen_outputs)
 
-                if t_targets_all is None:
-                    t_targets_all = t_targets
-                    t_outputs_all = sen_outputs
-                else:
-                    t_targets_all = torch.cat((t_targets_all, t_targets), dim=0)
-                    t_outputs_all = torch.cat((t_outputs_all, sen_outputs), dim=0)
+                all_outputs = torch.cat((all_outputs, sen_outputs), 0)
+                all_targets = torch.cat((all_targets, t_targets), 0)
 
-        test_acc = n_test_correct / n_test_total
-        f1 = metrics.f1_score(
-            t_targets_all.cpu(),
-            torch.argmax(t_outputs_all.cpu(), -1),
-            labels=list(range(self.config.output_dim)),
-            average=self.config.get("f1_average", "macro"),
+        r2 = metrics.r2_score(all_targets.cpu().numpy(), all_outputs.cpu().numpy())
+        rmse = metrics.mean_squared_error(
+            all_targets.cpu().numpy(), all_outputs.cpu().numpy()
         )
-        if self.config.args.get("show_metric", False):
-            report = metrics.classification_report(
-                t_targets_all.cpu(),
-                torch.argmax(t_outputs_all.cpu(), -1),
-                digits=4,
-                target_names=[
-                    self.config.index_to_label[x]
-                    for x in sorted(self.config.index_to_label.keys())
-                    if x != -100
-                ],
-            )
-            fprint(
-                "\n---------------------------- Classification Report ----------------------------\n"
-            )
-            rprint(report)
-            fprint(
-                "\n---------------------------- Classification Report ----------------------------\n"
-            )
+        from scipy.stats import spearmanr
 
-            report = metrics.confusion_matrix(
-                t_targets_all.cpu(),
-                torch.argmax(t_outputs_all.cpu(), -1),
-                labels=[
-                    self.config.label_to_index[x]
-                    for x in self.config.label_to_index
-                    if x != "-100" and x != ""
-                ],
-            )
-            fprint(
-                "\n---------------------------- Confusion Matrix ----------------------------\n"
-            )
-            rprint(report)
-            fprint(
-                "\n---------------------------- Confusion Matrix ----------------------------\n"
-            )
-
-        return test_acc, f1
-
-    def _load_dataset_and_prepare_dataloader(self):
-        self.config.inputs_cols = self.config.model.inputs
-
-        cache_path = self.load_cache_dataset()
-        # init BERT-based model and dataset
-        if hasattr(BERTRNACModelList, self.config.model.__name__):
-            self.tokenizer = PretrainedTokenizer(self.config)
-            if not os.path.exists(cache_path) or self.config.overwrite_cache:
-                self.train_set = BERTRNACDataset(
-                    self.config, self.tokenizer, dataset_type="train"
-                )
-                self.test_set = BERTRNACDataset(
-                    self.config, self.tokenizer, dataset_type="test"
-                )
-                self.valid_set = BERTRNACDataset(
-                    self.config, self.tokenizer, dataset_type="valid"
-                )
-            try:
-                self.bert = AutoModel.from_pretrained(
-                    self.config.pretrained_bert, trust_remote_code=True
-                )
-            except ValueError as e:
-                fprint("Init pretrained model failed, exception: {}".format(e))
-
-            # init the model behind the construction of datasets in case of updating output_dim
-            self.model = self.config.model(self.bert, self.config).to(
-                self.config.device
-            )
-
-        elif hasattr(GloVeRNACModelList, self.config.model.__name__):
-            # init GloVe-based model and dataset
-            self.tokenizer = Tokenizer.build_tokenizer(
-                config=self.config,
-                cache_path="{0}_tokenizer.dat".format(
-                    os.path.basename(self.config.dataset_name)
-                ),
-                pre_tokenizer=AutoTokenizer.from_pretrained(
-                    self.config.pretrained_bert
-                ),
-            )
-            self.embedding_matrix = build_embedding_matrix(
-                config=self.config,
-                tokenizer=self.tokenizer,
-                cache_path="{0}_{1}_embedding_matrix.dat".format(
-                    str(self.config.embed_dim),
-                    os.path.basename(self.config.dataset_name),
-                ),
-            )
-            self.train_set = GloVeRNACDataset(
-                self.config, self.tokenizer, dataset_type="train"
-            )
-            self.test_set = GloVeRNACDataset(
-                self.config, self.tokenizer, dataset_type="test"
-            )
-            self.valid_set = GloVeRNACDataset(
-                self.config, self.tokenizer, dataset_type="valid"
-            )
-
-            self.model = self.config.model(self.embedding_matrix, self.config).to(
-                self.config.device
-            )
-
-        self.save_cache_dataset(cache_path)
+        # 使用scipy库计算斯皮尔曼相关系数
+        correlation, p_value = spearmanr(
+            all_targets.cpu().numpy(), all_outputs.cpu().numpy()
+        )
+        print("斯皮尔曼相关系数:", correlation, "p_value:", p_value)
+        print("r2:", r2)
+        print("mse:", rmse)
+        return rmse
 
     def run(self):
         # Loss and Optimizer
-        criterion = nn.CrossEntropyLoss()
+        # criterion = nn.CrossEntropyLoss()
+        criterion = nn.MSELoss()
         return self._train(criterion)

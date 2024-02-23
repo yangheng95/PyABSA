@@ -213,7 +213,12 @@ class AspectExtractor(InferenceModel):
         else:
             for item in sentence_res:
                 final_res.append(
-                    {"sentence": " ".join(item[0]), "IOB": item[1], "tokens": item[0]}
+                    {
+                        "sentence": " ".join(item[0]),
+                        "IOB": item[1],
+                        "tokens": item[0],
+                        "aspect": item[3],
+                    }
                 )
 
         return final_res
@@ -305,6 +310,24 @@ class AspectExtractor(InferenceModel):
 
         if target_file:
             extraction_res, sentence_res = self._extract(target_file)
+            if not pred_sentiment:
+                filtered_res = []
+                for i, res in enumerate(extraction_res):
+                    bio_tags = res[1]
+                    aspect = []
+                    for idx, tag in enumerate(bio_tags):
+                        if "B-ASP" in tag:
+                            aspect.append(res[0][idx])
+                        elif "I-ASP" in tag and aspect:
+                            aspect[-1] += " " + res[0][idx]
+                    if not filtered_res:
+                        filtered_res.append((res[0], aspect, res[2], res[3]))
+                    else:
+                        if filtered_res[-1][0] != res[0]:
+                            filtered_res.append((res[0], res[1], res[2], aspect))
+                        else:
+                            filtered_res[-1][1].extend(aspect)
+                extraction_res = filtered_res
             results["extraction_res"] = extraction_res
             if pred_sentiment:
                 results["polarity_res"] = self._run_prediction(

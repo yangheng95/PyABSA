@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-# file: rna_classifier.py
+# file: rna_regressor.py
 # author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # Copyright (C) 2020. All Rights Reserved.
 import json
 import os
 import pickle
+from typing import Union
 
 import numpy as np
 import torch
@@ -17,22 +18,25 @@ from transformers import AutoModel
 
 from pyabsa import TaskCodeOption, LabelPaddingOption, DeviceTypeOption
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
+from pyabsa.framework.tokenizer_class.tokenizer_class import (
+    PretrainedTokenizer,
+)
 from pyabsa.utils.data_utils.dataset_manager import detect_infer_dataset
-from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint, rprint
-from ..dataset_utils.data_utils_for_inference import BERTRNACInferenceDataset
-from ..dataset_utils.data_utils_for_inference import GloVeRNACInferenceDataset
-from ..models import BERTRNACModelList, GloVeRNACModelList
+from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint
+from ..dataset_utils.__classic__.data_utils_for_inference import GloVeRNARDataset
+from ..dataset_utils.__plm__.data_utils_for_inference import BERTRNARDataset
+from ..models import BERTRNARModelList, GloVeRNARModelList
 
 
-class RNAClassifier(InferenceModel):
-    task_code = TaskCodeOption.RNASequenceClassification
+class RNARegressor(InferenceModel):
+    task_code = TaskCodeOption.RNASequenceRegression
 
-    def __init__(self, checkpoint=None, cal_perplexity=False, **kwargs):
+    def __init__(self, checkpoint=None, **kwargs):
         """
         from_train_model: load inference model from trained model
         """
 
-        super().__init__(checkpoint, cal_perplexity, **kwargs)
+        super(RNARegressor, self).__init__(checkpoint, **kwargs)
 
         # load from a trainer
         if self.checkpoint and not isinstance(self.checkpoint, str):
@@ -71,7 +75,7 @@ class RNAClassifier(InferenceModel):
                     set_device(self.config, self.config.auto_device)
 
                 if state_dict_path or model_path:
-                    if hasattr(BERTRNACModelList, self.config.model.__name__):
+                    if hasattr(BERTRNARModelList, self.config.model.__name__):
                         if state_dict_path:
                             if kwargs.get("offline", False):
                                 self.bert = AutoModel.from_pretrained(
@@ -81,7 +85,7 @@ class RNAClassifier(InferenceModel):
                                 )
                             else:
                                 self.bert = AutoModel.from_pretrained(
-                                    self.config.pretrained_bert, trust_remote_code=True
+                                    self.config.pretrained_bert
                                 )
                             self.model = self.config.model(self.bert, self.config)
                             self.model.load_state_dict(
@@ -94,9 +98,18 @@ class RNAClassifier(InferenceModel):
                             self.model = torch.load(
                                 model_path, map_location=DeviceTypeOption.CPU
                             )
+
+                        try:
+                            self.tokenizer = PretrainedTokenizer(
+                                config=self.config, **kwargs
+                            )
+                        except ValueError:
+                            if tokenizer_path:
+                                with open(tokenizer_path, mode="rb") as f:
+                                    self.tokenizer = pickle.load(f)
                     else:
-                        self.tokenizer = self.config.tokenizer
                         self.embedding_matrix = self.config.embedding_matrix
+                        self.tokenizer = self.config.tokenizer
                         if model_path:
                             self.model = torch.load(
                                 model_path, map_location=DeviceTypeOption.CPU
@@ -126,19 +139,17 @@ class RNAClassifier(InferenceModel):
                 )
 
             if not hasattr(
-                GloVeRNACModelList, self.config.model.__name__
-            ) and not hasattr(BERTRNACModelList, self.config.model.__name__):
+                GloVeRNARModelList, self.config.model.__name__
+            ) and not hasattr(BERTRNARModelList, self.config.model.__name__):
                 raise KeyError(
                     "The checkpoint you are loading is not from classifier model."
                 )
 
-        if hasattr(BERTRNACModelList, self.config.model.__name__):
-            self.dataset = BERTRNACInferenceDataset(
-                config=self.config, tokenizer=self.tokenizer
-            )
+        if hasattr(BERTRNARModelList, self.config.model.__name__):
+            self.dataset = BERTRNARDataset(config=self.config, tokenizer=self.tokenizer)
 
-        elif hasattr(GloVeRNACModelList, self.config.model.__name__):
-            self.dataset = GloVeRNACInferenceDataset(
+        elif hasattr(GloVeRNARModelList, self.config.model.__name__):
+            self.dataset = GloVeRNARDataset(
                 config=self.config, tokenizer=self.tokenizer
             )
 
@@ -170,22 +181,15 @@ class RNAClassifier(InferenceModel):
         **kwargs
     ):
         """
-        Runs inference on a batch of data.
-
-        Args:
-            - target_file: str or Path. Path to the target file.
-            - print_result: bool. Whether to print the result.
-            - save_result: bool. Whether to save the result.
-            - ignore_error: bool. Whether to ignore errors.
-            - kwargs: dict. Additional keyword arguments.
-
-        Returns:
-            - result: list. List of predictions.
+        Predict from a file of sentences.
+        param: target_file: the file path of the sentences to be predicted.
+        param: print_result: whether to print the result.
+        param: save_result: whether to save the result.
+        param: ignore_error: whether to ignore the error when predicting.
+        param: kwargs: other parameters.
         """
-        # Set batch size for inference.
         self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
 
-        # Set the save path for the result file.
         save_path = os.path.join(
             os.getcwd(),
             "{}.{}.result.json".format(
@@ -193,69 +197,58 @@ class RNAClassifier(InferenceModel):
             ),
         )
 
-        # Detect and prepare the dataset for inference.
         target_file = detect_infer_dataset(
-            target_file, task_code=TaskCodeOption.RNASequenceClassification
+            target_file, task_code=TaskCodeOption.RNASequenceRegression
         )
         if not target_file:
             raise FileNotFoundError("Can not find inference datasets!")
-        self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
 
-        # Create a data loader for inference.
+        self.dataset.prepare_infer_dataset(target_file, ignore_error=ignore_error)
         self.infer_dataloader = DataLoader(
             dataset=self.dataset,
             batch_size=self.config.eval_batch_size,
             pin_memory=True,
             shuffle=False,
         )
-
-        # Run the prediction and return the result.
         return self._run_prediction(
             save_path=save_path if save_result else None, print_result=print_result
         )
 
-    def predict(self, text: str = None, print_result=True, ignore_error=True, **kwargs):
+    def predict(
+        self,
+        text: Union[str, list] = None,
+        print_result=True,
+        ignore_error=True,
+        **kwargs
+    ):
         """
-        Runs inference on a single sample.
-
-        Args:
-            - text: str. The text to predict.
-            - print_result: bool. Whether to print the result.
-            - ignore_error: bool. Whether to ignore errors.
-            - kwargs: dict. Additional keyword arguments.
-
-        Returns:
-            - result: list. List of predictions.
+        Predict from a sentence or a list of sentences.
+        param: text: the sentence or a list of sentence to be predicted.
+        param: print_result: whether to print the result.
+        param: ignore_error: whether to ignore the error when predicting.
+        param: kwargs: other parameters.
         """
-        # Set batch size for inference.
         self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
-
-        # Detect and prepare the sample for inference.
+        self.infer_dataloader = DataLoader(
+            dataset=self.dataset, batch_size=self.config.eval_batch_size, shuffle=False
+        )
         if text:
             self.dataset.prepare_infer_sample(text, ignore_error=ignore_error)
         else:
             raise RuntimeError("Please specify your datasets path!")
-
-        # Create a data loader for inference.
-        self.infer_dataloader = DataLoader(
-            dataset=self.dataset, batch_size=self.config.eval_batch_size, shuffle=False
-        )
-        # Run the prediction and return the result.
-        if isinstance(text, list):
-            return self._run_prediction(print_result=print_result)
-        else:
+        if isinstance(text, str):
             return self._run_prediction(print_result=print_result)[0]
+        else:
+            return self._run_prediction(print_result=print_result)
 
     def _run_prediction(self, save_path=None, print_result=True):
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
 
         correct = {True: "Correct", False: "Wrong"}
         results = []
-
+        perplexity = "N.A."
         with torch.no_grad():
             self.model.eval()
-            n_correct = 0
-            n_labeled = 0
             n_total = 0
             t_targets_all, t_outputs_all = None, None
 
@@ -263,7 +256,11 @@ class RNAClassifier(InferenceModel):
                 it = tqdm.tqdm(self.infer_dataloader, desc="run inference")
             else:
                 it = self.infer_dataloader
-            for _, sample in enumerate(it):
+
+            pre_ex_id = 0
+            sum_val = []
+            cat_text = ""
+            for i_batch, sample in enumerate(it):
                 inputs = [
                     sample[col].to(self.config.device)
                     for col in self.config.inputs_cols
@@ -272,51 +269,13 @@ class RNAClassifier(InferenceModel):
 
                 outputs = self.model(inputs)
                 sen_logits = outputs
-                t_probs = torch.softmax(sen_logits, dim=-1)
 
-                if t_targets_all is None:
-                    t_targets_all = np.array(
-                        [
-                            self.config.label_to_index[x]
-                            if x in self.config.label_to_index
-                            else LabelPaddingOption.SENTIMENT_PADDING
-                            for x in sample["label"]
-                        ]
-                    )
-                    t_outputs_all = np.array(sen_logits.cpu()).astype(np.float32)
-                else:
-                    t_targets_all = np.concatenate(
-                        (
-                            t_targets_all,
-                            [
-                                self.config.label_to_index[x]
-                                if x in self.config.label_to_index
-                                else LabelPaddingOption.SENTIMENT_PADDING
-                                for x in sample["label"]
-                            ],
-                        ),
-                        axis=0,
-                    )
-                    t_outputs_all = np.concatenate(
-                        (
-                            t_outputs_all,
-                            np.array(sen_logits.cpu()).astype(np.float32),
-                        ),
-                        axis=0,
-                    )
-
-                for i, i_probs in enumerate(t_probs):
-                    sent = self.config.index_to_label[int(i_probs.argmax(axis=-1))]
-                    if sample["label"][i] != LabelPaddingOption.LABEL_PADDING:
-                        real_sent = sample["label"][i]
-                    else:
-                        real_sent = "N.A."
-                    if real_sent != LabelPaddingOption.LABEL_PADDING:
-                        n_labeled += 1
+                for i, i_probs in enumerate(sen_logits):
+                    pred_val = float(i_probs)
+                    real_val = float(sample["label"][i])
 
                     text_raw = sample["text_raw"][i]
-                    ex_id = sample["ex_id"][i]
-
+                    ex_id = int(sample["ex_id"][i])
                     if self.cal_perplexity:
                         ids = self.MLM_tokenizer(
                             text_raw,
@@ -332,44 +291,87 @@ class RNAClassifier(InferenceModel):
                     else:
                         perplexity = "N.A."
 
-                    results.append(
-                        {
-                            "ex_id": ex_id,
-                            "text": text_raw,
-                            "label": sent,
-                            "confidence": float(max(i_probs)),
-                            "probs": i_probs.cpu().numpy(),
-                            "ref_label": real_sent,
-                            "ref_check": correct[sent == real_sent]
-                            if real_sent != str(LabelPaddingOption.LABEL_PADDING)
-                            else "",
-                            "perplexity": perplexity,
-                        }
-                    )
-                    n_total += 1
+                    if ex_id == pre_ex_id:
+                        sum_val.append(pred_val)
+                        cat_text += text_raw
+                    elif len(it) != 1:
+                        results.append(
+                            {
+                                "ex_id": pre_ex_id,
+                                "text": cat_text,
+                                "label": np.median(sum_val),
+                                "ref_label": real_val,
+                                "perplexity": perplexity,
+                            }
+                        )
+                        n_total += 1
+                        pre_ex_id = ex_id
+                        sum_val = [pred_val]
+                        cat_text = text_raw
+
+                        t_targets_all = (
+                            torch.cat(
+                                (t_targets_all, torch.tensor([sample["label"][i]]))
+                            )
+                            if t_targets_all is not None
+                            else torch.tensor([sample["label"][i]])
+                        )
+                        t_outputs_all = (
+                            torch.cat(
+                                (t_outputs_all, torch.tensor([np.median(sum_val)]))
+                            )
+                            if t_outputs_all is not None
+                            else torch.tensor([np.median(sum_val)])
+                        )
+
+                results.append(
+                    {
+                        "ex_id": pre_ex_id,
+                        "text": cat_text,
+                        "label": np.median(sum_val),
+                        "ref_label": real_val,
+                        "perplexity": perplexity,
+                    }
+                )
+                pre_ex_id = ex_id
+                sum_val = [pred_val]
+                cat_text = text_raw
+                n_total += 1
+                t_targets_all = (
+                    torch.cat((t_targets_all, torch.tensor([sample["label"][i]])))
+                    if t_targets_all is not None
+                    else torch.tensor([sample["label"][i]])
+                )
+                t_outputs_all = (
+                    torch.cat((t_outputs_all, torch.tensor([np.median(sum_val)])))
+                    if t_outputs_all is not None
+                    else torch.tensor([np.median(sum_val)])
+                )
 
         try:
             if print_result:
                 for ex_id, result in enumerate(results):
                     text_printing = result["text"][:]
                     if result["ref_label"] != LabelPaddingOption.LABEL_PADDING:
-                        if result["label"] == result["ref_label"]:
+                        if (
+                            abs(result["label"] - result["ref_label"])
+                            / result["ref_label"]
+                            <= 0.2
+                        ):
                             text_info = colored(
-                                "#{}\t -> <{}(ref:{} confidence:{})>\t".format(
+                                "#{}\t -> <{}(ref:{})>\t".format(
                                     result["ex_id"],
                                     result["label"],
                                     result["ref_label"],
-                                    result["confidence"],
                                 ),
                                 "green",
                             )
                         else:
                             text_info = colored(
-                                "#{}\t -> <{}(ref:{}) confidence:{}>\t".format(
+                                "#{}\t -> <{}(ref:{})>\t".format(
                                     result["ex_id"],
                                     result["label"],
                                     result["ref_label"],
-                                    result["confidence"],
                                 ),
                                 "red",
                             )
@@ -384,7 +386,7 @@ class RNAClassifier(InferenceModel):
                         )
                     text_printing = text_info + text_printing
 
-                    fprint("Example :{}".format(text_printing))
+                    fprint("Example :{} ".format(text_printing))
             if save_path:
                 with open(save_path, "w", encoding="utf8") as fout:
                     json.dump(str(results), fout, ensure_ascii=False)
@@ -392,43 +394,22 @@ class RNAClassifier(InferenceModel):
         except Exception as e:
             fprint("Can not save result: {}, Exception: {}".format(text_raw, e))
 
-        if len(results) > 1 and print_result:
-            fprint("Total samples:{}".format(n_total))
-            fprint("Labeled samples:{}".format(n_labeled))
-
-            report = metrics.classification_report(
-                t_targets_all,
-                np.argmax(t_outputs_all, -1),
-                digits=4,
-                target_names=[
-                    self.config.index_to_label[x]
-                    for x in sorted(self.config.index_to_label.keys())
-                    if x != -100
-                ],
+        if len(results) > 1:
+            fprint(
+                "\n---------------------------- Regression Result ----------------------------\n"
             )
             fprint(
-                "\n---------------------------- Classification Report ----------------------------\n"
-            )
-            rprint(report)
-            fprint(
-                "\n---------------------------- Classification Report ----------------------------\n"
-            )
-
-            report = metrics.confusion_matrix(
-                t_targets_all,
-                np.argmax(t_outputs_all, -1),
-                labels=[
-                    self.config.label_to_index[x]
-                    for x in self.config.label_to_index
-                    if x != "-100" and x != ""
-                ],
+                "MSE: {}".format(
+                    metrics.mean_squared_error(t_targets_all.cpu(), t_outputs_all.cpu())
+                )
             )
             fprint(
-                "\n---------------------------- Confusion Matrix ----------------------------\n"
+                "R2: {}".format(
+                    metrics.r2_score(t_targets_all.cpu(), t_outputs_all.cpu())
+                )
             )
-            rprint(report)
             fprint(
-                "\n---------------------------- Confusion Matrix ----------------------------\n"
+                "\n---------------------------- Regression Result ----------------------------\n"
             )
 
         return results
@@ -437,5 +418,5 @@ class RNAClassifier(InferenceModel):
         self.dataset.all_data = []
 
 
-class Predictor(RNAClassifier):
+class Predictor(RNARegressor):
     pass

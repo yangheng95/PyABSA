@@ -52,7 +52,13 @@ class BERTRNACDataset(PyABSADataset):
             tqdm.tqdm(range(len(lines)), desc="preparing dataloader")
         ):
             text, _, label = lines[i].strip().partition("$LABEL$")
-            tokens = list(text)
+            # tokens = list(text)
+            tokens = (
+                [self.tokenizer.tokenizer.cls_token]
+                + self.tokenizer.tokenizer.tokenize(text)
+                + [self.tokenizer.tokenizer.eos_token]
+            )
+            # print(tokens)
             rna_indices = self.tokenizer.tokenizer.convert_tokens_to_ids(tokens)
 
             data = {
@@ -96,6 +102,7 @@ class BERTRNACDataset(PyABSADataset):
                         _rna_indices,
                         self.config.max_seq_len,
                         value=self.tokenizer.pad_token_id,
+                        padding="left",
                     )
 
                     data = {

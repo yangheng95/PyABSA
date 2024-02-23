@@ -98,7 +98,9 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
 
             try:
                 self.bert = AutoModel.from_pretrained(
-                    self.config.pretrained_bert, ignore_mismatched_sizes=True
+                    self.config.pretrained_bert,
+                    trust_remote_code=True,
+                    ignore_mismatched_sizes=True,
                 )
             except ValueError as e:
                 fprint("Init pretrained model failed, exception: {}".format(e))
@@ -330,8 +332,8 @@ class RNARTrainingInstructor(BaseTrainingInstructor):
 
                         self.config.metrics_of_this_checkpoint["r2"] = test_r2
 
-                        if test_r2 < max_fold_r2:
-                            if test_r2 < max_fold_r2:
+                        if test_r2 > max_fold_r2:
+                            if test_r2 > max_fold_r2:
                                 patience = self.config.patience - 1
                                 max_fold_r2 = test_r2
 
