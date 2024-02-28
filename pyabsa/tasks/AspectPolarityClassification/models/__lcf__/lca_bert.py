@@ -71,7 +71,7 @@ class LCA_BERT(nn.Module):
                 "logits": sent_logits,
                 "hidden_state": pooled_out,
                 "loss": (1 - self.config.sigma) * sent_loss
-                        + self.config.sigma * lcp_loss,
+                + self.config.sigma * lcp_loss,
             }
         else:
             return {"logits": sent_logits, "hidden_state": pooled_out}

@@ -19,12 +19,12 @@ class AliasedClassifier(InferenceModel):
         self.__post_init__(**kwargs)
 
     def batch_infer(
-            self,
-            target_file=None,
-            print_result=True,
-            save_result=False,
-            ignore_error=True,
-            **kwargs
+        self,
+        target_file=None,
+        print_result=True,
+        save_result=False,
+        ignore_error=True,
+        **kwargs
     ):
         """
         A deprecated version of batch_predict method.
@@ -63,12 +63,12 @@ class AliasedClassifier(InferenceModel):
         )
 
     def batch_predict(
-            self,
-            target_file=None,
-            print_result=True,
-            save_result=False,
-            ignore_error=True,
-            **kwargs
+        self,
+        target_file=None,
+        print_result=True,
+        save_result=False,
+        ignore_error=True,
+        **kwargs
     ):
         """
         Predict the sentiment from a file of sentences.
@@ -81,11 +81,11 @@ class AliasedClassifier(InferenceModel):
         raise NotImplementedError("Please implement this method in your subtask class!")
 
     def predict(
-            self,
-            text: Union[str, list] = None,
-            print_result=True,
-            ignore_error=True,
-            **kwargs
+        self,
+        text: Union[str, list] = None,
+        print_result=True,
+        ignore_error=True,
+        **kwargs
     ):
         """
         Predict the sentiment from a sentence or a list of sentences.
@@ -101,6 +101,7 @@ class AliasedClassifier(InferenceModel):
 
     def clear_input_samples(self):
         self.dataset.all_data = []
+
 
 # class Predictor(AliasedClassifier):
 #     pass

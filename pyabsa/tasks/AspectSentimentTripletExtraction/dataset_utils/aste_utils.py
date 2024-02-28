@@ -68,14 +68,14 @@ def get_evaluate_spans(tags, length, token_range):
 
 class Instance(object):
     def __init__(
-            self,
-            tokenizer,
-            sentence_pack,
-            post_vocab,
-            deprel_vocab,
-            postag_vocab,
-            synpost_vocab,
-            config,
+        self,
+        tokenizer,
+        sentence_pack,
+        post_vocab,
+        deprel_vocab,
+        postag_vocab,
+        synpost_vocab,
+        config,
     ):
         self.id = sentence_pack["id"]
         self.sentence = sentence_pack["sentence"]
@@ -119,11 +119,11 @@ class Instance(object):
             token_start = token_end
         assert self.length == self.token_range[-1][-1] + 2, "length error"
 
-        self.aspect_tags[self.length:] = -1
+        self.aspect_tags[self.length :] = -1
         self.aspect_tags[0] = -1
         self.aspect_tags[self.length - 1] = -1
 
-        self.opinion_tags[self.length:] = -1
+        self.opinion_tags[self.length :] = -1
         self.opinion_tags[0] = -1
         self.opinion_tags[self.length - 1] = -1
 
@@ -156,10 +156,10 @@ class Instance(object):
                     set_tag = 1 if i == l else 2
                     al, ar = self.token_range[i]
                     self.aspect_tags[al] = set_tag
-                    self.aspect_tags[al + 1: ar + 1] = -1
+                    self.aspect_tags[al + 1 : ar + 1] = -1
                     """mask positions of sub words"""
-                    self.tags[al + 1: ar + 1, :] = -1
-                    self.tags[:, al + 1: ar + 1] = -1
+                    self.tags[al + 1 : ar + 1, :] = -1
+                    self.tags[:, al + 1 : ar + 1] = -1
 
             """set tag for opinion"""
             for l, r in opinion_span:
@@ -178,9 +178,9 @@ class Instance(object):
                     set_tag = 1 if i == l else 2
                     pl, pr = self.token_range[i]
                     self.opinion_tags[pl] = set_tag
-                    self.opinion_tags[pl + 1: pr + 1] = -1
-                    self.tags[pl + 1: pr + 1, :] = -1
-                    self.tags[:, pl + 1: pr + 1] = -1
+                    self.opinion_tags[pl + 1 : pr + 1] = -1
+                    self.tags[pl + 1 : pr + 1, :] = -1
+                    self.tags[:, pl + 1 : pr + 1] = -1
 
             for al, ar in aspect_span:
                 for pl, pr in opinion_span:
@@ -188,7 +188,7 @@ class Instance(object):
                         for j in range(pl, pr + 1):
                             sal, sar = self.token_range[i]
                             spl, spr = self.token_range[j]
-                            self.tags[sal: sar + 1, spl: spr + 1] = -1
+                            self.tags[sal : sar + 1, spl : spr + 1] = -1
                             if config.task == "pair":
                                 if i > j:
                                     self.tags[spl][sal] = 7
@@ -315,7 +315,7 @@ class Instance(object):
 
 
 def load_data_instances(
-        sentence_packs, post_vocab, deprel_vocab, postag_vocab, synpost_vocab, config
+    sentence_packs, post_vocab, deprel_vocab, postag_vocab, synpost_vocab, config
 ):
     instances = list()
     tokenizer = BertTokenizer.from_pretrained(config.pretrained_bert)
@@ -368,13 +368,13 @@ def load_tokens(filename):
 
 class Metric:
     def __init__(
-            self,
-            config,
-            predictions,
-            goldens,
-            bert_lengths,
-            sen_lengths,
-            tokens_ranges,
+        self,
+        config,
+        predictions,
+        goldens,
+        bert_lengths,
+        sen_lengths,
+        tokens_ranges,
     ):
         self.config = config
         self.predictions = predictions
@@ -829,8 +829,8 @@ class DataIterator(object):
         word_pair_synpost = []
 
         for i in range(
-                index * self.config.batch_size,
-                min((index + 1) * self.config.batch_size, len(self.instances)),
+            index * self.config.batch_size,
+            min((index + 1) * self.config.batch_size, len(self.instances)),
         ):
             sentence_ids.append(self.instances[i].id)
             sentences.append(self.instances[i].sentence)

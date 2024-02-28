@@ -94,7 +94,7 @@ def prepare_input_for_atepc(config, tokenizer, text_left, text_right, aspect):
 
     text_raw = text_left + " " + aspect + " " + text_right
     text_spc = (
-            bos_token + " " + text_raw + " " + eos_token + " " + aspect + " " + eos_token
+        bos_token + " " + text_raw + " " + eos_token + " " + aspect + " " + eos_token
     )
 
     text_bert_tokens = tokenizer.tokenize(text_spc)

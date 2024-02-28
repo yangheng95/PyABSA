@@ -23,14 +23,14 @@ from ..instructor.tad_instructor import TADTrainingInstructor
 
 class TADTrainer(Trainer):
     def __init__(
-            self,
-            config: TADConfigManager = None,
-            dataset=None,
-            from_checkpoint: str = None,
-            checkpoint_save_mode: int = ModelSaveOption.SAVE_MODEL_STATE_DICT,
-            auto_device: Union[bool, str] = DeviceTypeOption.AUTO,
-            path_to_save=None,
-            load_aug=False,
+        self,
+        config: TADConfigManager = None,
+        dataset=None,
+        from_checkpoint: str = None,
+        checkpoint_save_mode: int = ModelSaveOption.SAVE_MODEL_STATE_DICT,
+        auto_device: Union[bool, str] = DeviceTypeOption.AUTO,
+        path_to_save=None,
+        load_aug=False,
     ):
         """
         Init a trainer for trainer a APC, ATEPC, TC or TAD model, after trainer,

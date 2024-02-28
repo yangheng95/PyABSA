@@ -23,14 +23,16 @@ aspect_extractor = ATEPC.AspectExtractor(
 # aspect_extractor = ATEPC.AspectExtractor('english', auto_device=DeviceTypeOption.AUTO)
 # aspect_extractor = ATEPC.AspectExtractor('chinese', auto_device=DeviceTypeOption.AUTO)
 
-inference_source = ATEPC.ATEPCDatasetList.Multilingual
+# inference_source = ATEPC.ATEPCDatasetList.Multilingual
+inference_source = ATEPC.ATEPCDatasetList.Laptop14
 atepc_result = aspect_extractor.batch_predict(
     inference_source,  #
     save_result=False,
     print_result=True,  # print the result
-    pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
+    # pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
+    pred_sentiment=False,  # Predict the sentiment of extracted aspect terms
     eval_batch_size=32,
 )
-
-while True:
-    aspect_extractor.predict(input("Please input a sentence: "))
+print(atepc_result)
+# while True:
+#     aspect_extractor.predict(input("Please input a sentence: "))

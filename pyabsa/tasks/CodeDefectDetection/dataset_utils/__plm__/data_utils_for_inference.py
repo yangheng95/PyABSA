@@ -124,10 +124,10 @@ class BERTCDDInferenceDataset(Dataset):
             #     print((x + 1) * (self.config.max_seq_len - 2) // 2 + (self.config.max_seq_len - 2) // 2)
             for x in range(len(code_ids) // (self.config.max_seq_len - 2) + 1):
                 _code_ids = code_ids[
-                            x
-                            * (self.config.max_seq_len - 2): (x + 1)
-                                                             * (self.config.max_seq_len - 2)
-                            ]
+                    x
+                    * (self.config.max_seq_len - 2) : (x + 1)
+                    * (self.config.max_seq_len - 2)
+                ]
                 _code_ids = pad_and_truncate(
                     _code_ids,
                     self.config.max_seq_len - 2,

@@ -210,7 +210,7 @@ class TADTextClassifier(InferenceModel):
                 )
 
             if not hasattr(
-                    GloVeTADModelList, self.config.model.__name__
+                GloVeTADModelList, self.config.model.__name__
             ) and not hasattr(BERTTADModelList, self.config.model.__name__):
                 raise KeyError(
                     "The checkpoint you are loading is not from classifier model."
@@ -245,13 +245,13 @@ class TADTextClassifier(InferenceModel):
                 fprint(">>> {0}: {1}".format(arg, getattr(self.config, arg)))
 
     def batch_infer(
-            self,
-            target_file=None,
-            print_result=True,
-            save_result=False,
-            ignore_error=True,
-            defense: str = None,
-            **kwargs
+        self,
+        target_file=None,
+        print_result=True,
+        save_result=False,
+        ignore_error=True,
+        defense: str = None,
+        **kwargs
     ):
         """
         Batch prediction on an input file.
@@ -271,12 +271,12 @@ class TADTextClassifier(InferenceModel):
         )
 
     def infer(
-            self,
-            text: Union[str, list] = None,
-            print_result=True,
-            ignore_error=True,
-            defense: str = None,
-            **kwargs
+        self,
+        text: Union[str, list] = None,
+        print_result=True,
+        ignore_error=True,
+        defense: str = None,
+        **kwargs
     ):
         """
         Perform prediction on a single text or a list of texts.
@@ -294,13 +294,13 @@ class TADTextClassifier(InferenceModel):
         )
 
     def batch_predict(
-            self,
-            target_file=None,
-            print_result=True,
-            save_result=False,
-            ignore_error=True,
-            defense: str = None,
-            **kwargs
+        self,
+        target_file=None,
+        print_result=True,
+        save_result=False,
+        ignore_error=True,
+        defense: str = None,
+        **kwargs
     ):
         """
         Predict from a file of sentences.
@@ -339,12 +339,12 @@ class TADTextClassifier(InferenceModel):
         )
 
     def predict(
-            self,
-            text: Union[str, list] = None,
-            print_result=True,
-            ignore_error=True,
-            defense: str = None,
-            **kwargs
+        self,
+        text: Union[str, list] = None,
+        print_result=True,
+        ignore_error=True,
+        defense: str = None,
+        **kwargs
     ):
         """
         Predict from a sentence or a list of sentences.
@@ -401,7 +401,7 @@ class TADTextClassifier(InferenceModel):
                 )
 
                 for i, (prob, advdet_prob, adv_tr_prob) in enumerate(
-                        zip(probs, advdet_probs, adv_tr_probs)
+                    zip(probs, advdet_probs, adv_tr_probs)
                 ):
                     text_raw = sample["text_raw"][i]
 
@@ -421,7 +421,7 @@ class TADTextClassifier(InferenceModel):
                     ref_adv_tr_label = (
                         int(sample["adv_train_label"][i])
                         if int(sample["adv_train_label"][i])
-                           in self.config.index_to_adv_train_label
+                        in self.config.index_to_adv_train_label
                         else ""
                     )
 
@@ -462,9 +462,9 @@ class TADTextClassifier(InferenceModel):
                         else ref_is_adv_label,
                         "ref_is_adv_check": correct[
                             pred_is_adv_label == ref_is_adv_label
-                            ]
+                        ]
                         if ref_is_adv_label != -100
-                           and isinstance(ref_is_adv_label, int)
+                        and isinstance(ref_is_adv_label, int)
                         else "",
                         "pred_adv_tr_label": self.config.index_to_label[
                             pred_adv_tr_label

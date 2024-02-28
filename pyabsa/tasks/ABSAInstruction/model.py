@@ -1,11 +1,10 @@
 import autocuda
-import sklearn
-import torch
-from pyabsa.framework.checkpoint_class.checkpoint_template import CheckpointManager
-from torch.utils.data import DataLoader
-from torch.nn.utils.rnn import pad_sequence
-from tqdm import tqdm
 import numpy as np
+import torch
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from torch.nn.utils.rnn import pad_sequence
+from torch.utils.data import DataLoader
+from tqdm import tqdm
 from transformers import (
     DataCollatorForSeq2Seq,
     AutoTokenizer,
@@ -15,7 +14,8 @@ from transformers import (
     Trainer,
     Seq2SeqTrainer,
 )
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+from pyabsa.framework.checkpoint_class.checkpoint_template import CheckpointManager
 from .instruction import (
     ATEInstruction,
     APCInstruction,
@@ -154,12 +154,12 @@ class T5Generator:
         return ensemble_result
 
     def get_labels(
-            self,
-            tokenized_dataset,
-            trained_model_path=None,
-            predictor=None,
-            batch_size=4,
-            sample_set="train",
+        self,
+        tokenized_dataset,
+        trained_model_path=None,
+        predictor=None,
+        batch_size=4,
+        sample_set="train",
     ):
         """
         Get the predictions from the trained model.
@@ -315,7 +315,7 @@ class T5Classifier:
         return trainer
 
     def get_labels(
-            self, tokenized_dataset, predictor=None, batch_size=4, sample_set="train"
+        self, tokenized_dataset, predictor=None, batch_size=4, sample_set="train"
     ):
         """
         Get the predictions from the trained model.

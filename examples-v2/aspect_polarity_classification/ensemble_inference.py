@@ -44,7 +44,7 @@ if __name__ == "__main__":
         APC.APCDatasetList.Restaurant14,
         APC.APCDatasetList.Restaurant15,
         APC.APCDatasetList.Restaurant16,
-        APC.APCDatasetList.MAMS
+        APC.APCDatasetList.MAMS,
     ]:
         # Training
         pass

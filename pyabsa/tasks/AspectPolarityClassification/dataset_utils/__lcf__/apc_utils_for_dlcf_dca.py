@@ -34,12 +34,12 @@ def prepare_input_for_dlcf_dca(config, tokenizer, text_left, text_right, aspect)
         # test code
         text_left = " ".join(
             text_left.split(" ")[
-            int(-(config.max_seq_len - len(aspect.split())) / 2) - 1:
+                int(-(config.max_seq_len - len(aspect.split())) / 2) - 1 :
             ]
         )
         text_right = " ".join(
             text_right.split(" ")[
-            : int((config.max_seq_len - len(aspect.split())) / 2) + 1
+                : int((config.max_seq_len - len(aspect.split())) / 2) + 1
             ]
         )
         bos_token = tokenizer.bos_token if tokenizer.bos_token else "[CLS]"
@@ -47,15 +47,15 @@ def prepare_input_for_dlcf_dca(config, tokenizer, text_left, text_right, aspect)
 
         text_raw = text_left + " " + aspect + " " + text_right
         text_spc = (
-                bos_token
-                + " "
-                + text_raw
-                + " "
-                + eos_token
-                + " "
-                + aspect
-                + " "
-                + eos_token
+            bos_token
+            + " "
+            + text_raw
+            + " "
+            + eos_token
+            + " "
+            + aspect
+            + " "
+            + eos_token
         )
         text_indices = text_to_sequence(tokenizer, text_spc, config.max_seq_len)
         aspect_bert_indices = text_to_sequence(tokenizer, aspect, config.max_seq_len)
@@ -119,12 +119,12 @@ def prepare_input_for_dlcf_dca(config, tokenizer, text_left, text_right, aspect)
 
 
 def get_dynamic_cdw_vec(
-        config,
-        max_dist,
-        bert_spc_indices,
-        aspect_indices,
-        aspect_begin,
-        syntactical_dist=None,
+    config,
+    max_dist,
+    bert_spc_indices,
+    aspect_indices,
+    aspect_begin,
+    syntactical_dist=None,
 ):
     # the function is used to set dynamic threshold and calculate cdm/cdw for DLCF_DCA_BERT
     a = config.dlcf_a
@@ -167,12 +167,12 @@ def get_dynamic_cdw_vec(
 
 
 def get_dynamic_cdm_vec(
-        config,
-        max_dist,
-        bert_spc_indices,
-        aspect_indices,
-        aspect_begin,
-        syntactical_dist=None,
+    config,
+    max_dist,
+    bert_spc_indices,
+    aspect_indices,
+    aspect_begin,
+    syntactical_dist=None,
 ):
     # the function is used to set dynamic threshold and calculate cdm/cdw for DLCF_DCA_BERT
     a = config.dlcf_a

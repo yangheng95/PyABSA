@@ -17,7 +17,7 @@ config.model = ATEPC.ATEPCModelList.FAST_LCF_ATEPC
 config.evaluate_begin = 0
 config.max_seq_len = 128
 config.batch_size = 16
-config.pretrained_bert = 'yangheng/deberta-v3-base-absa'
+config.pretrained_bert = "yangheng/deberta-v3-base-absa"
 # config.pretrained_bert = "microsoft/mdeberta-v3-base"
 config.log_step = -1
 config.l2reg = 1e-8
@@ -28,12 +28,13 @@ config.use_amp = False
 config.cache_dataset = True
 config.cross_validate_fold = -1
 
-chinese_sets = ATEPC.ATEPCDatasetList.Chinese_Zhang
+chinese_sets = ATEPC.ATEPCDatasetList.Laptop14
+# chinese_sets = ATEPC.ATEPCDatasetList.Chinese_Zhang
 # chinese_sets = ATEPC.ATEPCDatasetList.Multilingual
 
 aspect_extractor = ATEPC.ATEPCTrainer(
     config=config,
-    from_checkpoint="english",   # not necessary for most situations
+    # from_checkpoint="english",   # not necessary for most situations
     dataset=chinese_sets,
     checkpoint_save_mode=1,
     auto_device=True,

@@ -81,7 +81,7 @@ class RNAClassifier(InferenceModel):
                                 )
                             else:
                                 self.bert = AutoModel.from_pretrained(
-                                    self.config.pretrained_bert
+                                    self.config.pretrained_bert, trust_remote_code=True
                                 )
                             self.model = self.config.model(self.bert, self.config)
                             self.model.load_state_dict(
@@ -126,7 +126,7 @@ class RNAClassifier(InferenceModel):
                 )
 
             if not hasattr(
-                    GloVeRNACModelList, self.config.model.__name__
+                GloVeRNACModelList, self.config.model.__name__
             ) and not hasattr(BERTRNACModelList, self.config.model.__name__):
                 raise KeyError(
                     "The checkpoint you are loading is not from classifier model."
@@ -162,12 +162,12 @@ class RNAClassifier(InferenceModel):
                 fprint(">>> {0}: {1}".format(arg, getattr(self.config, arg)))
 
     def batch_predict(
-            self,
-            target_file=None,
-            print_result=True,
-            save_result=False,
-            ignore_error=True,
-            **kwargs
+        self,
+        target_file=None,
+        print_result=True,
+        save_result=False,
+        ignore_error=True,
+        **kwargs
     ):
         """
         Runs inference on a batch of data.
@@ -240,9 +240,11 @@ class RNAClassifier(InferenceModel):
         self.infer_dataloader = DataLoader(
             dataset=self.dataset, batch_size=self.config.eval_batch_size, shuffle=False
         )
-
         # Run the prediction and return the result.
-        return self._run_prediction(print_result=print_result)[0]
+        if isinstance(text, list):
+            return self._run_prediction(print_result=print_result)
+        else:
+            return self._run_prediction(print_result=print_result)[0]
 
     def _run_prediction(self, save_path=None, print_result=True):
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
@@ -261,9 +263,6 @@ class RNAClassifier(InferenceModel):
                 it = tqdm.tqdm(self.infer_dataloader, desc="run inference")
             else:
                 it = self.infer_dataloader
-
-            pred_labels = []
-            pre_ex_id = 0
             for _, sample in enumerate(it):
                 inputs = [
                     sample[col].to(self.config.device)
@@ -275,13 +274,44 @@ class RNAClassifier(InferenceModel):
                 sen_logits = outputs
                 t_probs = torch.softmax(sen_logits, dim=-1)
 
+                if t_targets_all is None:
+                    t_targets_all = np.array(
+                        [
+                            self.config.label_to_index[x]
+                            if x in self.config.label_to_index
+                            else LabelPaddingOption.SENTIMENT_PADDING
+                            for x in sample["label"]
+                        ]
+                    )
+                    t_outputs_all = np.array(sen_logits.cpu()).astype(np.float32)
+                else:
+                    t_targets_all = np.concatenate(
+                        (
+                            t_targets_all,
+                            [
+                                self.config.label_to_index[x]
+                                if x in self.config.label_to_index
+                                else LabelPaddingOption.SENTIMENT_PADDING
+                                for x in sample["label"]
+                            ],
+                        ),
+                        axis=0,
+                    )
+                    t_outputs_all = np.concatenate(
+                        (
+                            t_outputs_all,
+                            np.array(sen_logits.cpu()).astype(np.float32),
+                        ),
+                        axis=0,
+                    )
+
                 for i, i_probs in enumerate(t_probs):
-                    label = self.config.index_to_label[int(i_probs.argmax(axis=-1))]
+                    sent = self.config.index_to_label[int(i_probs.argmax(axis=-1))]
                     if sample["label"][i] != LabelPaddingOption.LABEL_PADDING:
-                        real_label = sample["label"][i]
+                        real_sent = sample["label"][i]
                     else:
-                        real_label = "N.A."
-                    if real_label != LabelPaddingOption.LABEL_PADDING:
+                        real_sent = "N.A."
+                    if real_sent != LabelPaddingOption.LABEL_PADDING:
                         n_labeled += 1
 
                     text_raw = sample["text_raw"][i]
@@ -302,118 +332,21 @@ class RNAClassifier(InferenceModel):
                     else:
                         perplexity = "N.A."
 
-                    if ex_id == pre_ex_id:
-                        pred_labels.append(label)
-                    elif len(it) != 1:
-                        results.append(
-                            {
-                                "ex_id": pre_ex_id,
-                                "text": text_raw,
-                                "label": max(pred_labels, key=pred_labels.count),
-                                "confidence": float(max(i_probs)),
-                                "probs": i_probs.cpu().numpy(),
-                                "ref_label": real_label,
-                                "ref_check": correct[label == real_label]
-                                if real_label != str(LabelPaddingOption.LABEL_PADDING)
-                                else "",
-                                "perplexity": perplexity,
-                            }
-                        )
-                        n_total += 1
-                        pre_ex_id = ex_id
-                        pred_labels = [label]
-
-                        t_targets_all = (
-                            torch.cat(
-                                (
-                                    t_targets_all,
-                                    torch.tensor(
-                                        [self.config.label_to_index[sample["label"][i]]]
-                                    ),
-                                )
-                            )
-                            if t_targets_all is not None
-                            else torch.tensor(
-                                [self.config.label_to_index[sample["label"][i]]]
-                            )
-                        )
-                        t_outputs_all = (
-                            torch.cat(
-                                (
-                                    t_outputs_all,
-                                    torch.tensor(
-                                        [
-                                            self.config.label_to_index[
-                                                max(pred_labels, key=pred_labels.count)
-                                            ]
-                                        ]
-                                    ),
-                                )
-                            )
-                            if t_outputs_all is not None
-                            else torch.tensor(
-                                [
-                                    self.config.label_to_index[
-                                        max(pred_labels, key=pred_labels.count)
-                                    ]
-                                ]
-                            )
-                        )
-
-                # fprint(pred_labels)
-
-                results.append(
-                    {
-                        "ex_id": pre_ex_id,
-                        "text": text_raw,
-                        "label": max(pred_labels, key=pred_labels.count),
-                        "confidence": float(max(i_probs)),
-                        "probs": i_probs.cpu().numpy(),
-                        "ref_label": real_label,
-                        "ref_check": correct[label == real_label]
-                        if real_label != str(LabelPaddingOption.LABEL_PADDING)
-                        else "",
-                        "perplexity": perplexity,
-                    }
-                )
-                n_total += 1
-                pre_ex_id = ex_id
-                pred_labels = [label]
-
-                t_targets_all = (
-                    torch.cat(
-                        (
-                            t_targets_all,
-                            torch.tensor(
-                                [self.config.label_to_index[sample["label"][i]]]
-                            ),
-                        )
+                    results.append(
+                        {
+                            "ex_id": ex_id,
+                            "text": text_raw,
+                            "label": sent,
+                            "confidence": float(max(i_probs)),
+                            "probs": i_probs.cpu().numpy(),
+                            "ref_label": real_sent,
+                            "ref_check": correct[sent == real_sent]
+                            if real_sent != str(LabelPaddingOption.LABEL_PADDING)
+                            else "",
+                            "perplexity": perplexity,
+                        }
                     )
-                    if t_targets_all is not None
-                    else torch.tensor([self.config.label_to_index[sample["label"][i]]])
-                )
-                t_outputs_all = (
-                    torch.cat(
-                        (
-                            t_outputs_all,
-                            torch.tensor(
-                                [
-                                    self.config.label_to_index[
-                                        max(pred_labels, key=pred_labels.count)
-                                    ]
-                                ]
-                            ),
-                        )
-                    )
-                    if t_outputs_all is not None
-                    else torch.tensor(
-                        [
-                            self.config.label_to_index[
-                                max(pred_labels, key=pred_labels.count)
-                            ]
-                        ]
-                    )
-                )
+                    n_total += 1
 
         try:
             if print_result:
@@ -459,7 +392,7 @@ class RNAClassifier(InferenceModel):
         except Exception as e:
             fprint("Can not save result: {}, Exception: {}".format(text_raw, e))
 
-        if len(results) > 1:
+        if len(results) > 1 and print_result:
             fprint("Total samples:{}".format(n_total))
             fprint("Labeled samples:{}".format(n_labeled))
 
@@ -469,7 +402,8 @@ class RNAClassifier(InferenceModel):
                 digits=4,
                 target_names=[
                     self.config.index_to_label[x]
-                    for x in sorted(self.config.index_to_label.keys()) if x != -100
+                    for x in sorted(self.config.index_to_label.keys())
+                    if x != -100
                 ],
             )
             fprint(
@@ -484,7 +418,9 @@ class RNAClassifier(InferenceModel):
                 t_targets_all,
                 np.argmax(t_outputs_all, -1),
                 labels=[
-                    self.config.label_to_index[x] for x in self.config.label_to_index if x != '-100' and x != ''
+                    self.config.label_to_index[x]
+                    for x in self.config.label_to_index
+                    if x != "-100" and x != ""
                 ],
             )
             fprint(

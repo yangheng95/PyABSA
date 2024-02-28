@@ -22,6 +22,10 @@ class TaskNameOption(dict):
         "tad": "Text Adversarial Defense",
         "rnac": "RNA Sequence Classification",
         "rnar": "RNA Sequence Regression",
+        "pr": "Protein Sequence Regression",
+        "cdd": "Code Defect Detection",
+        "acos": "Aspect Category Opinion Sentiment Triplet Extraction",
+        "universal_sentiment_analysis": "Universal Sentiment Analysis",
         "APC": "Aspect-based Sentiment Classification",
         "ATEPC": "Aspect Term Extraction and Polarity Classification",
         "ASTE": "Aspect Sentiment Triple Extraction",
@@ -31,6 +35,8 @@ class TaskNameOption(dict):
         "RNAR": "RNA Sequence Regression",
         "PR": "Protein Sequence Regression",
         "CDD": "Code Defect Detection",
+        "ACOS": "Aspect Category Opinion Sentiment Triplet Extraction",
+        "USA": "Universal Sentiment Analysis",
     }
 
     def __init__(self):
@@ -60,6 +66,8 @@ class TaskCodeOption:
     RNASequenceRegression = "RNAR"
     ProteinSequenceRegression = "PR"
     CodeDefectDetection = "CDD"
+    Aspect_Category_Opinion_Sentiment_Triplet_Extraction = "ACOS"
+    Universal_Sentiment_Analysis = "USA"
 
 
 class LabelPaddingOption:

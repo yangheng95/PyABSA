@@ -60,10 +60,10 @@ class GloVeProteinRDataset(Dataset):
 
                 for x in range(len(seq) // (self.config.max_seq_len * 2) + 1):
                     _seq = seq[
-                           x
-                           * (self.config.max_seq_len * 2): (x + 1)
-                                                            * (self.config.max_seq_len * 2)
-                           ]
+                        x
+                        * (self.config.max_seq_len * 2) : (x + 1)
+                        * (self.config.max_seq_len * 2)
+                    ]
                     protein_indices = self.tokenizer.text_to_sequence(_seq)
                     protein_indices = pad_and_truncate(
                         protein_indices,

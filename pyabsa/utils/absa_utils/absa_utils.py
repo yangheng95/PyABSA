@@ -11,7 +11,7 @@ import os
 
 import findfile
 
-from pyabsa import LabelPaddingOption, TaskCodeOption
+import pyabsa
 from pyabsa.tasks.AspectTermExtraction.dataset_utils.__lcf__.atepc_utils import (
     simple_split_text,
 )
@@ -38,7 +38,7 @@ def generate_inference_set_for_apc(dataset_path):
         [
             "dataset",
             "train",
-            TaskCodeOption.Aspect_Polarity_Classification,
+            pyabsa.TaskCodeOption.Aspect_Polarity_Classification,
             dataset_name,
         ],
         exclude_key=[".inference", "readme"],
@@ -47,7 +47,7 @@ def generate_inference_set_for_apc(dataset_path):
         [
             "dataset",
             "valid",
-            TaskCodeOption.Aspect_Polarity_Classification,
+            pyabsa.TaskCodeOption.Aspect_Polarity_Classification,
             dataset_name,
         ],
         exclude_key=[".inference", "readme"],
@@ -56,7 +56,7 @@ def generate_inference_set_for_apc(dataset_path):
         [
             "dataset",
             "test",
-            TaskCodeOption.Aspect_Polarity_Classification,
+            pyabsa.TaskCodeOption.Aspect_Polarity_Classification,
             dataset_name,
         ],
         exclude_key=[".inference", "readme"],
@@ -170,7 +170,7 @@ def assemble_aspects(fname, use_tokenizer=False):
     # Group sentences with similar aspects and generate samples with the corresponding aspect labels and polarities
     def unify_same_samples(same_samples):
         text = same_samples[0][0].replace("$T$", same_samples[0][1])
-        polarities = [LabelPaddingOption.SENTIMENT_PADDING] * len(text.split())
+        polarities = [pyabsa.LabelPaddingOption.SENTIMENT_PADDING] * len(text.split())
         tags = ["O"] * len(text.split())
         samples = []
         for sample in same_samples:
@@ -288,12 +288,12 @@ def convert_apc_set_to_atepc_set(path, use_tokenizer=False):
     elif os.path.exists(path):
         files = findfile.find_files(
             path,
-            ["dataset", TaskCodeOption.Aspect_Polarity_Classification],
+            ["dataset", pyabsa.TaskCodeOption.Aspect_Polarity_Classification],
             exclude_key=[".inference", "readme"],
         )
     else:
         files = findfile.find_cwd_files(
-            [path, "dataset", TaskCodeOption.Aspect_Polarity_Classification],
+            [path, "dataset", pyabsa.TaskCodeOption.Aspect_Polarity_Classification],
             exclude_key=[".inference", "readme"],
         )
 

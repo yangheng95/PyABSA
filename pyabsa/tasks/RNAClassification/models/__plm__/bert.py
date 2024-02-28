@@ -31,6 +31,7 @@ class BERT_MLP(nn.Module):
         text_raw_indices = inputs[0]
         last_hidden_state = self.bert(text_raw_indices)["last_hidden_state"]
         pooled_out = self.pooler(last_hidden_state)
+        pooled_out = self.dropout(pooled_out)
         out = self.dense(pooled_out)
         if self.sigmoid:
             out = self.sigmoid(out)

@@ -183,7 +183,15 @@ class PretrainedTokenizer:
             - None
         """
         self.config = config
-        self.tokenizer = AutoTokenizer.from_pretrained(config.pretrained_bert, **kwargs)
+        try:
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                config.pretrained_bert, trust_remote_code=True, **kwargs
+            )
+        except:
+            # try to load use_fast=False
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                config.pretrained_bert, use_fast=False, trust_remote_code=True, **kwargs
+            )
         self.max_seq_len = self.config.max_seq_len
         self.pad_token_id = self.tokenizer.pad_token_id
         self.unk_token_id = self.tokenizer.unk_token_id
@@ -394,19 +402,35 @@ def pad_and_truncate(sequence, max_seq_len, value, **kwargs):
     Returns:
         np.ndarray or list: The padded or truncated sequence, as a list or numpy array, depending on the type of the input sequence.
     """
-    if isinstance(sequence, ndarray):
-        sequence = list(sequence)
-        if len(sequence) > max_seq_len:
-            sequence = sequence[:max_seq_len]
+    padding = kwargs.pop("padding", "right")
+    if padding == "right":
+        if isinstance(sequence, ndarray):
+            sequence = list(sequence)
+            if len(sequence) > max_seq_len:
+                sequence = sequence[:max_seq_len]
+            else:
+                sequence = sequence + [value] * (max_seq_len - len(sequence))
+            return np.array(sequence)
         else:
-            sequence = sequence + [value] * (max_seq_len - len(sequence))
-        return np.array(sequence)
-    else:
-        if len(sequence) > max_seq_len:
-            sequence = sequence[:max_seq_len]
+            if len(sequence) > max_seq_len:
+                sequence = sequence[:max_seq_len]
+            else:
+                sequence = sequence + [value] * (max_seq_len - len(sequence))
+            return sequence
+    elif padding == "left":
+        if isinstance(sequence, ndarray):
+            sequence = list(sequence)
+            if len(sequence) > max_seq_len:
+                sequence = sequence[-max_seq_len:]
+            else:
+                sequence = [value] * (max_seq_len - len(sequence)) + sequence
+            return np.array(sequence)
         else:
-            sequence = sequence + [value] * (max_seq_len - len(sequence))
-        return sequence
+            if len(sequence) > max_seq_len:
+                sequence = sequence[-max_seq_len:]
+            else:
+                sequence = [value] * (max_seq_len - len(sequence)) + sequence
+            return sequence
 
 
 def _load_word_vec(path, word2idx=None, embed_dim=300):

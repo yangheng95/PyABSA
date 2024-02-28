@@ -99,7 +99,7 @@ class GraphConvLayer(nn.Module):
 
 class Biaffine(nn.Module):
     def __init__(
-            self, config, in1_features, in2_features, out_features, bias=(True, True)
+        self, config, in1_features, in2_features, out_features, bias=(True, True)
     ):
         super(Biaffine, self).__init__()
         self.config = config
@@ -239,16 +239,16 @@ class EMCGCN(torch.nn.Module):
         # Apply softmax to weight probabilities and mask padded tokens
         biaffine_edge_softmax = F.softmax(biaffine_edge, dim=-1) * tensor_masks
         word_pair_post_emb_softmax = (
-                F.softmax(word_pair_post_emb, dim=-1) * tensor_masks
+            F.softmax(word_pair_post_emb, dim=-1) * tensor_masks
         )
         word_pair_deprel_emb_softmax = (
-                F.softmax(word_pair_deprel_emb, dim=-1) * tensor_masks
+            F.softmax(word_pair_deprel_emb, dim=-1) * tensor_masks
         )
         word_pair_postag_emb_softmax = (
-                F.softmax(word_pair_postag_emb, dim=-1) * tensor_masks
+            F.softmax(word_pair_postag_emb, dim=-1) * tensor_masks
         )
         word_pair_synpost_emb_softmax = (
-                F.softmax(word_pair_synpost_emb, dim=-1) * tensor_masks
+            F.softmax(word_pair_synpost_emb, dim=-1) * tensor_masks
         )
 
         # Create identity matrix for self-loop connections
@@ -256,11 +256,11 @@ class EMCGCN(torch.nn.Module):
         for _ in range(batch):
             self_loop.append(torch.eye(seq))
         self_loop = (
-                torch.stack(self_loop)
-                .to(self.config.device)
-                .unsqueeze(1)
-                .expand(batch, 5 * self.config.output_dim, seq, seq)
-                * tensor_masks.permute(0, 3, 1, 2).contiguous()
+            torch.stack(self_loop)
+            .to(self.config.device)
+            .unsqueeze(1)
+            .expand(batch, 5 * self.config.output_dim, seq, seq)
+            * tensor_masks.permute(0, 3, 1, 2).contiguous()
         )
 
         # Concatenate weight probabilities

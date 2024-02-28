@@ -10,10 +10,7 @@
 import os
 
 import findfile
-
 from termcolor import colored
-
-from pyabsa import LabelPaddingOption
 
 from pyabsa.tasks.AspectTermExtraction.prediction.aspect_extractor import (
     AspectExtractor,
@@ -36,6 +33,7 @@ def make_ABSA_dataset(dataset_name_or_path, checkpoint="english"):
     :param checkpoint: Which checkpoint to use. Basically, You can select from {'multilingual', 'english', 'chinese'}, Default is 'english'.
     :return:
     """
+    from pyabsa import LabelPaddingOption
 
     if os.path.isdir(dataset_name_or_path):
         fs = findfile.find_files(

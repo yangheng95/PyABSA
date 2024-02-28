@@ -9,6 +9,7 @@
 # Copyright (C) 2021. All Rights Reserved.
 import os
 import time
+import warnings
 from pathlib import Path
 from typing import Union
 
@@ -19,20 +20,15 @@ from torch import cuda
 from transformers import AutoConfig
 
 from pyabsa import __version__ as PyABSAVersion
-from ..configuration_class.config_verification import config_check
-from ..dataset_class.dataset_dict_class import DatasetDict
-
-from ..flag_class.flag_template import DeviceTypeOption, ModelSaveOption
-from ..configuration_class.configuration_template import ConfigManager
-
 from pyabsa.utils.logger.logger import get_logger
-
 from pyabsa.utils.pyabsa_utils import set_device, fprint
+from ..configuration_class.config_verification import config_check
+from ..configuration_class.configuration_template import ConfigManager
+from ..dataset_class.dataset_dict_class import DatasetDict
+from ..flag_class.flag_template import DeviceTypeOption, ModelSaveOption
 from ...utils.check_utils import query_local_datasets_version
 from ...utils.data_utils.dataset_item import DatasetItem
 from ...utils.data_utils.dataset_manager import detect_dataset
-
-import warnings
 
 warnings.filterwarnings("once")
 
@@ -59,10 +55,13 @@ def init_config(config):
     # if using a pretrained BERT model, set hidden_dim and embed_dim from the model's configuration
     if config.get("pretrained_bert", None):
         try:
-            pretrain_config = AutoConfig.from_pretrained(config.pretrained_bert)
+            pretrain_config = AutoConfig.from_pretrained(
+                config.pretrained_bert, trust_remote_code=True
+            )
             config.hidden_dim = pretrain_config.hidden_size
             config.embed_dim = pretrain_config.hidden_size
-        except:
+        except Exception as e:
+            print(e)
             pass
     # if hidden_dim or embed_dim are not set, use default values of 768
     elif not config.get("hidden_dim", None) or not config.get("embed_dim", None):

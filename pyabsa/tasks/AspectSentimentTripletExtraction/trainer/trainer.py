@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# file: apc_trainer.py
+# file: aste_trainer.py
 # time: 02/11/2022 21:34
 # author: YANG, HENG <hy345@exeter.ac.uk> (杨恒)
 # github: https://github.com/yangheng95
@@ -17,20 +17,20 @@ from pyabsa.framework.flag_class.flag_template import (
 )
 from pyabsa.framework.trainer_class.trainer_template import Trainer
 from ..configuration.configuration import ASTEConfigManager
-from ..prediction.predictor import AspectSentimentTripletExtractor
 from ..instructor.instructor import ASTETrainingInstructor
+from ..prediction.predictor import AspectSentimentTripletExtractor
 
 
 class ASTETrainer(Trainer):
     def __init__(
-            self,
-            config: ASTEConfigManager = None,
-            dataset=None,
-            from_checkpoint: str = None,
-            checkpoint_save_mode: int = ModelSaveOption.SAVE_MODEL_STATE_DICT,
-            auto_device: Union[bool, str] = DeviceTypeOption.AUTO,
-            path_to_save=None,
-            load_aug=False,
+        self,
+        config: ASTEConfigManager = None,
+        dataset=None,
+        from_checkpoint: str = None,
+        checkpoint_save_mode: int = ModelSaveOption.SAVE_MODEL_STATE_DICT,
+        auto_device: Union[bool, str] = DeviceTypeOption.AUTO,
+        path_to_save=None,
+        load_aug=False,
     ):
         """
         Init a trainer for trainer a APC, ATEPC, TC or TAD model, after trainer,
