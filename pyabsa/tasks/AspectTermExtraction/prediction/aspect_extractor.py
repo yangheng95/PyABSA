@@ -211,13 +211,17 @@ class AspectExtractor(InferenceModel):
                     }
                 )
         else:
-            for item in sentence_res:
+            for item1, item2 in zip(sentence_res, results["extraction_res"]):
                 final_res.append(
                     {
-                        "sentence": " ".join(item[0]),
-                        "IOB": item[1],
-                        "tokens": item[0],
-                        "aspect": item[3],
+                        "sentence": " ".join(item2[0]),
+                        "IOB": item2[1],
+                        "tokens": item1[0],
+                        "aspect": item2[3],
+                        "position": [],
+                        "sentiment": [],
+                        "probs": [],
+                        "confidence": [],
                     }
                 )
 
@@ -292,7 +296,7 @@ class AspectExtractor(InferenceModel):
 
         self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
 
-        results = {"extraction_res": OrderedDict(), "polarity_res": OrderedDict()}
+        results = {"extraction_res": None, "polarity_res": None}
         if isinstance(target_file, DatasetItem) or isinstance(target_file, str):
             # using integrated inference dataset
             inference_set = detect_infer_dataset(
@@ -321,7 +325,7 @@ class AspectExtractor(InferenceModel):
                         elif "I-ASP" in tag and aspect:
                             aspect[-1] += " " + res[0][idx]
                     if not filtered_res:
-                        filtered_res.append((res[0], aspect, res[2], res[3]))
+                        filtered_res.append((res[0], aspect, res[2], aspect))
                     else:
                         if filtered_res[-1][0] != res[0]:
                             filtered_res.append((res[0], res[1], res[2], aspect))

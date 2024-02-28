@@ -33,6 +33,6 @@ atepc_result = aspect_extractor.batch_predict(
     pred_sentiment=False,  # Predict the sentiment of extracted aspect terms
     eval_batch_size=32,
 )
-
-while True:
-    aspect_extractor.predict(input("Please input a sentence: "))
+print(atepc_result)
+# while True:
+#     aspect_extractor.predict(input("Please input a sentence: "))

@@ -451,7 +451,8 @@ class BaseTrainingInstructor:
                         self.model.load_state_dict(
                             torch.load(
                                 state_dict_path[0], map_location=self.config.device
-                            )
+                            ),
+                            strict=False,
                         )
                     self.model.config = self.config
                     self.model.to(self.config.device)
