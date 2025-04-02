@@ -1,37 +1,37 @@
 [
   {
     "referrer": "Google",
-    "count": 214,
-    "uniques": 70
+    "count": 193,
+    "uniques": 62
   },
   {
     "referrer": "github.com",
-    "count": 126,
-    "uniques": 36
+    "count": 170,
+    "uniques": 38
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 97,
-    "uniques": 22
+    "count": 107,
+    "uniques": 23
   },
   {
     "referrer": "huggingface.co",
-    "count": 77,
+    "count": 80,
     "uniques": 30
   },
   {
     "referrer": "Bing",
-    "count": 74,
-    "uniques": 8
+    "count": 73,
+    "uniques": 7
   },
   {
     "referrer": "pyabsa.readthedocs.io",
-    "count": 42,
-    "uniques": 13
+    "count": 34,
+    "uniques": 11
   },
   {
     "referrer": "chatgpt.com",
-    "count": 33,
+    "count": 32,
     "uniques": 11
   },
   {
