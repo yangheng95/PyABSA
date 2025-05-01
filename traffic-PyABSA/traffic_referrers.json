@@ -1,13 +1,13 @@
 [
   {
     "referrer": "Google",
-    "count": 415,
-    "uniques": 76
+    "count": 451,
+    "uniques": 73
   },
   {
     "referrer": "github.com",
-    "count": 310,
-    "uniques": 39
+    "count": 296,
+    "uniques": 37
   },
   {
     "referrer": "link.zhihu.com",
@@ -15,29 +15,29 @@
     "uniques": 11
   },
   {
+    "referrer": "Bing",
+    "count": 114,
+    "uniques": 14
+  },
+  {
     "referrer": "pyabsa.readthedocs.io",
     "count": 109,
     "uniques": 16
   },
   {
-    "referrer": "Bing",
-    "count": 91,
-    "uniques": 13
-  },
-  {
     "referrer": "chatgpt.com",
-    "count": 78,
-    "uniques": 26
+    "count": 77,
+    "uniques": 28
   },
   {
     "referrer": "huggingface.co",
-    "count": 72,
-    "uniques": 32
+    "count": 71,
+    "uniques": 31
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 72,
-    "uniques": 22
+    "count": 69,
+    "uniques": 19
   },
   {
     "referrer": "cn.bing.com",
@@ -46,7 +46,7 @@
   },
   {
     "referrer": "pypi.org",
-    "count": 22,
-    "uniques": 1
+    "count": 26,
+    "uniques": 2
   }
 ]
