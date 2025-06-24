@@ -1,52 +1,52 @@
 [
   {
     "referrer": "Google",
-    "count": 116,
-    "uniques": 45
+    "count": 149,
+    "uniques": 44
   },
   {
     "referrer": "github.com",
-    "count": 102,
+    "count": 113,
     "uniques": 32
   },
   {
     "referrer": "paperswithcode.com",
-    "count": 87,
+    "count": 75,
+    "uniques": 17
+  },
+  {
+    "referrer": "chatgpt.com",
+    "count": 73,
     "uniques": 22
   },
   {
     "referrer": "pyabsa.readthedocs.io",
-    "count": 61,
-    "uniques": 12
+    "count": 54,
+    "uniques": 10
   },
   {
     "referrer": "Bing",
-    "count": 61,
+    "count": 46,
     "uniques": 9
   },
   {
-    "referrer": "chatgpt.com",
-    "count": 58,
-    "uniques": 20
-  },
-  {
     "referrer": "huggingface.co",
-    "count": 37,
-    "uniques": 22
-  },
-  {
-    "referrer": "youtube.com",
-    "count": 17,
-    "uniques": 6
+    "count": 32,
+    "uniques": 19
   },
   {
     "referrer": "reddit.com",
-    "count": 17,
-    "uniques": 4
+    "count": 16,
+    "uniques": 3
   },
   {
-    "referrer": "arxiv.org",
-    "count": 8,
-    "uniques": 2
+    "referrer": "youtube.com",
+    "count": 15,
+    "uniques": 6
+  },
+  {
+    "referrer": "forum.freecodecamp.org",
+    "count": 6,
+    "uniques": 3
   }
 ]
