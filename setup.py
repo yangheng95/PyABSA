@@ -5,10 +5,11 @@
 # github: https://github.com/yangheng95
 # Copyright (C) 2021. All Rights Reserved.
 
+from pathlib import Path
+
 from setuptools import setup, find_packages
 
 from pyabsa import __name__, __version__
-from pathlib import Path
 
 cwd = Path(__file__).parent
 long_description = (cwd / "README.md").read_text(encoding="utf8")
@@ -22,6 +23,7 @@ extras["docs"] = [
     "sphinx-rtd-theme",
     "sphinx-markdown-tables",
     "sphinx-copybutton",
+    "piccolo_theme",
 ]
 # Packages required for formatting code & running tests.
 extras["test"] = [
@@ -40,19 +42,17 @@ extras["deploy"] = [
 ]
 
 
-extras["tensorflow"] = [
-    "tensorflow",
-    "tensorflow_hub",
-    "tensorflow_text",
-    "tensorboardX",
-    "tensorflow-estimator",
-]
+# extras["tensorflow"] = [
+#     "tensorflow",
+#     "tensorflow_hub",
+#     "tensorflow_text",
+#     "tensorboardX",
+#     "tensorflow-estimator",
+# ]
 
-extras["optional"] = [
-    "sentence_transformers",
-    "tensorflow",
-    "tensorflow_hub",
-]
+# extras["optional"] = [
+#     "sentence_transformers",
+# ]
 
 # For developers, install development tools along with all optional dependencies.
 extras["dev"] = (
@@ -74,7 +74,7 @@ setup(
     # Author details
     author="Yang, Heng",
     author_email="hy345@exeter.ac.uk",
-    python_requires=">=3.8",
+    python_requires=">=3.10",
     packages=find_packages(),
     include_package_data=True,
     exclude_package_date={"": [".gitignore"]},
@@ -96,9 +96,15 @@ setup(
         "gitpython",  # need git installed in your OS
         "transformers>=4.18.0",
         "torch>=1.0.0",
-        "sentencepiece",
-        "protobuf<4.0.0",
         "pandas",
+    ],
+    classifiers=[
+        "Intended Audience :: Production/Research",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3.12",
+        "Operating System :: OS Independent",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     extras_require=extras,
 )

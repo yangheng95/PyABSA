@@ -5,6 +5,8 @@ sphinx-autobuild
 sphinx-copybutton
 sphinx-markdown-tables
 sphinx-rtd-theme
+sphinx-design
+myst-parser
 sphinxcontrib-applehelp
 sphinxcontrib-devhelp
 sphinxcontrib-htmlhelp
@@ -41,5 +43,5 @@ termcolor
 gitpython
 transformers
 torch
-sentencepiece
 pyabsa
+piccolo_theme

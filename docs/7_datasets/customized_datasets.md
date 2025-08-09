@@ -1,129 +1,323 @@
-﻿ABSA datasets for [PyABSA](https://github.com/yangheng95/PyABSA)
---------------------------------------------------------------
+﻿# Working with Datasets
 
-[![total views](https://raw.githubusercontent.com/yangheng95/ABSADatasets/traffic/total_views.svg)](https://github.com/yangheng95/ABSADatasets/tree/traffic#-total-traffic-data-badge)
-[![total views per week](https://raw.githubusercontent.com/yangheng95/ABSADatasets/traffic/total_views_per_week.svg)](https://github.com/yangheng95/ABSADatasets/tree/traffic#-total-traffic-data-badge)
-[![total clones](https://raw.githubusercontent.com/yangheng95/ABSADatasets/traffic/total_clones.svg)](https://github.com/yangheng95/ABSADatasets/tree/traffic#-total-traffic-data-badge)
-[![total clones per week](https://raw.githubusercontent.com/yangheng95/ABSADatasets/traffic/total_clones_per_week.svg)](https://github.com/yangheng95/ABSADatasets/tree/traffic#-total-traffic-data-badge)
+PyABSA provides a comprehensive system for working with datasets, supporting both built-in benchmark datasets and custom
+data. This guide covers everything you need to know about preparing, loading, and using datasets effectively.
 
-### To augment your datasets, please refer to [BoostTextAugmentation](https://github.com/yangheng95/BoostTextAugmentation)
+## Built-in Datasets
 
-### Auto-annoate your datasets via PyABSA!
+PyABSA includes access to standard benchmark datasets that are commonly used in ABSA research. These datasets are
+automatically downloaded and cached when you first use them.
 
-There is an experimental feature which allows you to auto-build APC dataset and ATEPC datasets, see the usage here:
+### Available Dataset Categories
 
-```python3 
-from pyabsa import make_ABSA_dataset 
-# refer to the comments in this function for detailed usage
-make_ABSA_dataset(dataset_name_or_path='integrated_datasets/review', checkpoint='english')
+#### Aspect Polarity Classification (APC)
+
+```python
+from pyabsa import AspectPolarityClassification as APC
+
+# Popular benchmark datasets
+dataset = APC.APCDatasetList.Restaurant14
+dataset = APC.APCDatasetList.Laptop14
+dataset = APC.APCDatasetList.Restaurant15
+dataset = APC.APCDatasetList.Restaurant16
+
+# Multilingual datasets
+dataset = APC.APCDatasetList.Multilingual
 ```
 
-### Contribute (prepare) your dataset to ABSADatasets to use it in PyABSA
+#### Aspect Term Extraction (ATE)
 
-We hope you can share your custom dataset or an available public dataset. If you are willing to, please follow the
-instruction to process your data and open a PR.
+```python
+from pyabsa import AspectTermExtraction as ATE
 
-### Format your dataset to use it in PyABSA
-
-- Format your APC dataset according to our dataset format. (**Recommended. Once you finished this step, we can help you
-  to finish other steps**)
-  ![image](https://user-images.githubusercontent.com/51735130/136219441-c3e9b4e2-6e31-4d32-b6c3-a66788b179f6.png)
-
-- Generate the inference dataset for APC / ATEPC task (**Optional**. The example is
-  available [here](https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_polarity_classification/generate_inference_set.py))
-- Convert the APC dataset to ATEPC dataset, and move the transformed ATEPC datasets from apc_dataset to corresponding
-  atepc_datasets. (**Optional**. The example is
-  available [here](https://github.com/yangheng95/PyABSA/blob/release/demos/aspect_term_extraction/convert_apc_set_to_atepc_set.py) )
-- Register your dataset in PyABSA. (**Optional**.
-  Register [here](https://github.com/yangheng95/PyABSA/blob/302da1e4b2292cdbc5b9c712862e623c427132b8/pyabsa/functional/dataset/dataset_manager.py#L37))
-
-### Important: Rename your dataset filename before use it in PyABSA
-
-It is recommended to assign an id for your dataset, which will avoid some potential problem (e.g., dataset mis-loading)
-while PyABSA detects the dataset.
-Merging your datasets into ABSADatasets, please keep the id remained.
-
-- For a custom APC dataset, its name should be **{id}.{dataset name}.{type}.dat.apc**,
-
-```tree
-datasets
-├── apc_datasets
-│     ├── 101.restaurant
-│     │    ├── restaurant.train.dat.apc  # train_dataset
-│     │    ├── restaurant.test.dat.apc  # test_dataset
-│     │    └── restaurant.valid.dat.apc  # valid_dataset, dev set are not recognized in PyASBA, please rename dev-set to valid-set
-│     └── others
-├── atepc_datasets
+# Standard ATE datasets
+dataset = ATE.ATEDatasetList.Restaurant14
+dataset = ATE.ATEDatasetList.Laptop14
 ```
 
-- ATEPC dataset files should be **{id}.{dataset name}.{type}.dat.atepc**,
-  e.g.,
+#### Aspect Sentiment Triplet Extraction (ASTE)
 
-```tree
-datasets
-├── 101.restaurant
-│    ├── restaurant.train.dat.atepc  # train_dataset
-│    ├── restaurant.test.dat.atepc  # test_dataset
-│    └── restaurant.valid.dat.atepc  # valid_dataset, dev set are not recognized in PyASBA, please rename dev-set to valid-set
-└── others
+```python
+from pyabsa import AspectSentimentTripletExtraction as ASTE
+
+# ASTE benchmark datasets
+dataset = ASTE.ASTEDatasetList.Restaurant14
+dataset = ASTE.ASTEDatasetList.Restaurant15
+dataset = ASTE.ASTEDatasetList.Restaurant16
 ```
 
-I prepare a demo custom APC/ATEPC dataset which is based on third-party annotated Yelp dataset. Iif you got problem in
-dataset renaming, please put your data into the prepared dataset files.
-Check [datasets/apc_datasets/100.CustomDataset](https://github.com/yangheng95/ABSADatasets/tree/v2.0/datasets/apc_datasets/100.CustomDataset)
-and [datasets/atepc_datasets/100.CustomDataset](https://github.com/yangheng95/ABSADatasets/tree/v2.0/datasets/atepc_datasets/100.CustomDataset) to view or rewrite the custom
-dataset.
+### Using Built-in Datasets
 
-Then, use the {id}.{dataset name} to locate your dataset, e.g., `dataset = '101.restaurant'`
+```python
+# Simply pass the dataset to your trainer
+trainer = APC.APCTrainer(
+    config=config,
+    dataset=APC.APCDatasetList.Restaurant14,
+    auto_device=DeviceTypeOption.AUTO
+)
+```
 
+## Custom Dataset Preparation
 
-### Need to Annotate Your Own Dataset?
+To use your own datasets, you need to follow specific formatting conventions that PyABSA expects.
 
-- A Stand-alone browser based tool to help process data for the training
-  set. [here](https://github.com/yangheng95/ABSADatasets/tree/v1.2/DPT)
-  ![image1](https://user-images.githubusercontent.com/4684417/139701633-d77a009b-1a12-4ef2-9663-37d2d36e1af1.JPG)
+### Data Format Specifications
 
-  Once data saved, 3 files will be created:
+#### For Aspect Polarity Classification (APC)
 
-    1. a CSV file training set for classic sentiment analysis
-    2. a TXT file training set for PyABSA
-    3. a JSON file for saving unfinished work
+Each line should contain a sentence with marked aspects followed by sentiment labels:
 
-## Notice
+```
+[sentence with marked aspects] $LABEL$ [sentiment1, sentiment2, ...]
+```
 
-All datasets provided are for research only, we do not hold any Copyright of any datasets. These datasets follow their
-original licenses (if any).
+**Example:**
 
-## Datasets source:
+```
+The [B-ASP]food[E-ASP] was excellent, but the [B-ASP]service[E-ASP] was terrible. $LABEL$ Positive, Negative
+```
 
-MAMS https://github.com/siat-nlp/MAMS-for-ABSA
+**Aspect Marking Rules:**
 
-SemEval 2014: https://alt.qcri.org/semeval2014/task4/index.php?id=data-and-tools
+- Use `[B-ASP]` to mark the beginning of an aspect term
+- Use `[E-ASP]` to mark the end of an aspect term
+- Multiple aspects in one sentence are supported
 
-SemEval 2015: https://alt.qcri.org/semeval2015/task12/index.php?id=data-and-tools
+**Sentiment Labels:**
 
-SemEval 2016: https://alt.qcri.org/semeval2016/task5/index.php?id=data-and-tools
+- `Positive` or `1` for positive sentiment
+- `Negative` or `-1` for negative sentiment
+- `Neutral` or `0` for neutral sentiment
 
-Chinese: https://www.sciencedirect.com/science/article/abs/pii/S0950705118300972?via%3Dihub
+#### For Aspect Term Extraction (ATE)
 
-Shampoo: [brightgems@GitHub](https://github.com/brightgems/ABSADatasets)
+Format is similar but without sentiment labels:
 
-MOOC: [jmc-123@GitHub](https://github.com/jmc-123/ABSADatasets) with GPL License
+```
+The [B-ASP]food[E-ASP] was excellent, but the [B-ASP]service[E-ASP] was terrible. $LABEL$
+```
 
-Twitter: https://dl.acm.org/doi/10.5555/2832415.2832437
+#### For Aspect Sentiment Triplet Extraction (ASTE)
 
-Television & TShirt: https://github.com/rajdeep345/ABSA-Reproducibility
+Uses BIO tagging for aspects and opinions:
 
-Yelp: [WeiLi9811@GitHub](https://github.com/WeiLi9811)
+```
+The food was excellent , but the service was terrible . $LABEL$ B-ASP I-ASP O B-OP O O B-ASP I-ASP O B-OP O
+```
 
-SemEval2016Task5: [YaxinCui@GitHub](https://github.com/YaxinCui/ABSADataset)
+### File Organization
 
-- Arabic Hotel Reviews
-- Dutch Restaurant Reviews
-- English Restaurant Reviews
-- French Restaurant Reviews
-- Russian Restaurant Reviews
-- Spanish Restaurant Reviews
-- Turkish Restaurant Reviews
+Organize your dataset files using this structure:
 
-English-MOOC github: [aparnavalli@GitHub](https://github.com/aparnavalli)
+```
+my_dataset/
+├── train.dat.apc         # Training data
+├── test.dat.apc          # Test data
+├── valid.dat.apc         # Validation data (optional)
+└── readme.txt            # Dataset description (optional)
+```
+
+**File Naming Conventions:**
+
+- Training files: `train.dat.[task]` (e.g., `train.dat.apc`, `train.dat.ate`)
+- Test files: `test.dat.[task]`
+- Validation files: `valid.dat.[task]` (optional)
+
+### Loading Custom Datasets
+
+#### Method 1: Direct Path
+
+```python
+from pyabsa import AspectPolarityClassification as APC
+
+# Point to your dataset directory
+dataset_path = "path/to/my_dataset"
+
+trainer = APC.APCTrainer(
+    config=config,
+    dataset=dataset_path,
+    auto_device=DeviceTypeOption.AUTO
+)
+```
+
+#### Method 2: Using DatasetItem
+
+```python
+from pyabsa.utils.data_utils.dataset_item import DatasetItem
+
+# Create a dataset item
+my_dataset = DatasetItem(
+    dataset_name="MyCustomDataset",
+    dataset_path="path/to/my_dataset"
+)
+
+trainer = APC.APCTrainer(
+    config=config,
+    dataset=my_dataset,
+    auto_device=DeviceTypeOption.AUTO
+)
+```
+
+## Data Preprocessing and Validation
+
+### Automatic Data Validation
+
+PyABSA automatically validates your dataset format when loading:
+
+```python
+# The framework will check for:
+# - Correct file naming
+# - Valid data format
+# - Consistent labeling
+# - Missing files
+```
+
+### Manual Data Validation
+
+You can validate your dataset before training:
+
+```python
+from pyabsa.utils.data_utils import validate_dataset
+
+# Validate your dataset format
+is_valid, errors = validate_dataset("path/to/my_dataset", task="apc")
+
+if not is_valid:
+    print("Dataset validation errors:")
+    for error in errors:
+        print(f"- {error}")
+```
+
+## Data Augmentation
+
+PyABSA supports automatic data augmentation to improve model robustness:
+
+### Enabling Augmentation
+
+```python
+# Enable augmentation during training
+config.load_aug = True
+
+# Or specify augmentation parameters
+config.augmentation_ratio = 0.2  # Augment 20% of training data
+config.augmentation_methods = ["synonym", "back_translation"]
+```
+
+### Custom Augmentation
+
+```python
+from pyabsa.augmentation import TextAugmentation
+
+# Create custom augmentation pipeline
+augmenter = TextAugmentation(
+    methods=["synonym_replacement", "random_insertion"],
+    ratio=0.15
+)
+
+# Apply to your dataset
+augmented_data = augmenter.augment_dataset("path/to/dataset")
+```
+
+## Advanced Dataset Features
+
+### Multi-language Support
+
+```python
+# Specify language for your dataset
+config.language = "en"  # English
+config.language = "zh"  # Chinese
+config.language = "multilingual"  # Multi-language
+
+# Use appropriate tokenizer
+config.pretrained_bert = "bert-base-multilingual-cased"
+```
+
+### Handling Imbalanced Data
+
+```python
+# Enable class balancing
+config.balance_classes = True
+
+# Use weighted loss
+config.use_class_weights = True
+
+# Oversample minority classes
+config.oversample_ratio = 2.0
+```
+
+### Cross-domain Datasets
+
+```python
+# Training on multiple domains
+config.cross_domain_training = True
+config.domain_adaptation = True
+
+# Specify source and target domains
+config.source_domain = "restaurant"
+config.target_domain = "laptop"
+```
+
+## Best Practices
+
+### Data Quality Guidelines
+
+1. **Consistent Labeling**: Ensure sentiment labels are consistent across your dataset
+2. **Balanced Distribution**: Aim for balanced sentiment distribution when possible
+3. **Quality Control**: Review a sample of your data manually before training
+4. **Sufficient Size**: Use at least 1000 examples for training, more for better performance
+
+### Performance Optimization
+
+```python
+# Cache processed datasets for faster loading
+config.cache_dataset = True
+
+# Use multiple workers for data loading
+config.num_workers = 4
+
+# Enable dataset preprocessing
+config.preprocess_data = True
+```
+
+### Error Handling
+
+```python
+# Handle missing files gracefully
+config.ignore_error = True
+
+# Skip malformed examples
+config.skip_errors = True
+
+# Log data loading issues
+config.verbose_data_loading = True
+```
+
+## Troubleshooting Common Issues
+
+### Format Errors
+
+**Problem**: "Invalid data format" error  
+**Solution**: Check that aspects are properly marked with `[B-ASP]` and `[E-ASP]` tags
+
+**Problem**: "Missing label separator" error  
+**Solution**: Ensure each line contains `$LABEL$` separator
+
+### Loading Errors
+
+**Problem**: "Dataset not found" error  
+**Solution**: Verify file paths and naming conventions
+
+**Problem**: "Empty dataset" error  
+**Solution**: Check that data files contain actual content
+
+### Performance Issues
+
+**Problem**: Slow data loading  
+**Solution**: Enable `cache_dataset=True` and increase `num_workers`
+
+**Problem**: Out of memory during data loading  
+**Solution**: Reduce `max_seq_len` or `train_batch_size`
+
+For additional help with dataset issues, check
+the [PyABSA GitHub repository](https://github.com/yangheng95/PyABSA/issues) or refer to the example datasets in the
+`examples-v2` directory.

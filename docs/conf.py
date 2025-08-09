@@ -1,110 +1,152 @@
-# Configuration file for the Sphinx documentation builder.
-#
-# This file only contains a selection of the most common options. For a full
-# list see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
-
 # -- Path setup --------------------------------------------------------------
-
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-#
 import os
 import sys
-from pyabsa import __version__ as pyabsa_version
+import re
+from pathlib import Path
 
-sys.path.insert(0, os.path.abspath("../"))
+# Prevent heavy imports and side effects during docs build
+os.environ["PYABSA_DOCS"] = "1"
+
+# Resolve version without importing the package
+try:
+    from importlib.metadata import version as _pkg_version  # Python 3.8+
+except Exception:  # pragma: no cover
+    try:
+        from importlib_metadata import version as _pkg_version  # backport
+    except Exception:
+        _pkg_version = None
+
+def _get_pyabsa_version():
+    # 1) Environment override
+    env_v = os.environ.get("PYABSA_DOCS_VERSION")
+    if env_v:
+        return env_v
+    # 2) Try installed distribution
+    if _pkg_version is not None:
+        try:
+            return _pkg_version("pyabsa")
+        except Exception:
+            pass
+    # 3) Parse from source file without importing
+    init_path = Path(__file__).parent.parent / "pyabsa" / "__init__.py"
+    try:
+        text = init_path.read_text(encoding="utf-8")
+        m = re.search(r"__version__\s*=\s*['\"]([^'\"]+)['\"]", text)
+        if m:
+            return m.group(1)
+    except Exception:
+        pass
+    return "0.0.0"
+
+sys.path.insert(0, os.path.abspath("../")) 
 
 # -- Project information -----------------------------------------------------
 project = "PyABSA"
-copyright = "2022, Heng Yang"
 author = "Yang, Heng"
-
-# The full version, including alpha/beta/rc tags
-release = pyabsa_version
-
-# Set master doc to `index.rst`.
+copyright = "2022, Heng Yang"
+release = _get_pyabsa_version()
 master_doc = "index"
 
 # -- General configuration ---------------------------------------------------
-
-# Add any Sphinx extension module names here, as strings. They can be
-# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
-# ones.
 extensions = [
-    "sphinx.ext.viewcode",
     "sphinx.ext.autodoc",
     "sphinx.ext.inheritance_diagram",
     "sphinx.ext.autosummary",
     "sphinx.ext.napoleon",
     "autoapi.extension",
-    "sphinx_rtd_theme",
+    # "autodoc2",
+    "myst_parser",
+    "piccolo_theme",
     "sphinx_copybutton",
-    # Enable .ipynb doc files
     "nbsphinx",
-    # Enable .md doc files
-    "recommonmark",
     "sphinx_markdown_tables",
+    "sphinx_design",
     "IPython.sphinxext.ipython_console_highlighting",
 ]
+
 autosummary_generate = True
-
-autoapi_type = "python"
-autoapi_dirs = ["../pyabsa"]
-
-# Add any paths that contain templates here, relative to this directory.
-templates_path = []
-
-# List of patterns, relative to source directory, that match files and
-# directories to ignore when looking for source files.
-# This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["_build", "**.ipynb_checkpoints"]
+nbsphinx_execute = "never"
 
-# Mock expensive textattack imports. Docs imports are in `docs/requirements.txt`.
-autodoc_mock_imports = []
-
-# Output file base name for HTML help builder.
-htmlhelp_basename = "PyABASA_documentation"
-
-# -- Options for HTML output -------------------------------------------------
-
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
-#
-
-html_theme = "sphinx_rtd_theme"
-html_theme_options = {
-    "collapse_navigation": True,
-    "sticky_navigation": True,
-    "navigation_depth": 5,
-    "logo_only": False,
-    "style_nav_header_background": "transparent",
-    "analytics_id": "G-TC6R5H0R74",
-}
-
-html_static_path = ["_static"]
-html_css_files = [
-    "css/custom.css",
+# Avoid importing heavy optional dependencies during autodoc
+autodoc_mock_imports = [
+    "torch",
+    "transformers",
+    "metric_visualizer",
+    "termcolor",
+    "requests",
+    "spacy",
+    "thinc",
+    "cupy",
+    "sklearn",
+    "numpy",
+    "scipy",
+    "pandas",
+    "tqdm",
+    "matplotlib",
 ]
 
-html_sidebars = {
-    "**": ["globaltoc.html", "relations.html", "sourcelink.html", "searchbox.html"]
+# ===== AutoAPI configuration =====
+autoapi_type = "python"
+autoapi_dirs = ["../pyabsa"]
+autoapi_ignore = [
+    "**/__pycache__/**",
+    "**/tests/**",
+    "**/_Archive/**",
+    "**/dev/**",
+]
+autoapi_root = "autoapi"
+autoapi_add_toctree_entry = True
+autoapi_keep_files = False
+autoapi_member_order = "bysource"
+autoapi_options = [
+    "members",
+    "undoc-members",
+    "private-members",
+    "special-members",
+    "show-inheritance",
+    "show-module-summary",
+]
+
+# ===== 传统autodoc配置 =====
+# 启用autodoc扩展
+autodoc_default_options = {
+    'members': True,
+    'member-order': 'bysource',
+    'special-members': '__init__',
+    'undoc-members': True,
+    'exclude-members': '__weakref__'
 }
 
-# Path to favicon.
+# 如果你的 docstring 里是传统的 :param: 风格，启用 fieldlist 兼容
+myst_enable_extensions = ["fieldlist"]
+
+# 仅文档化公开 API（遵循 __all__），可选；按需放开
+autodoc2_module_all_regexes = [r"pyabsa\..*"]
+
+# 如果有第三方类型注解老是 “reference target not found”，建议配 intersphinx
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3", {}),
+    "torch": ("https://pytorch.org/docs/stable", {}),
+    "transformers": ("https://huggingface.co/docs/transformers/main/en", {}),
+}
+
+# -- HTML --------------------------------------------------------------------
+language = "en"
+html_theme = "piccolo_theme"
+html_theme_options = {
+    # Keep minimal options; theme provides clean defaults
+    # You can set repository links, analytics, etc., here if needed
+}
+
 html_favicon = "favicon.png"
-
-# Don't show module names in front of class names.
+html_static_path = ["_static"]
+html_css_files = [
+    "custom.css",
+]
 add_module_names = True
-
-# Sort members by group
 autodoc_member_order = "groupwise"
 
-# -- Options for Sphinx Copy Button-------------------------------------------------
-
-# Exclude the prompt symbol ">>>" when copying text
+# 复制按钮
 copybutton_prompt_text = ">>> "
-
-# Specify Line Continuation Character so that all the entire Line is copied
 copybutton_line_continuation_character = "\\"

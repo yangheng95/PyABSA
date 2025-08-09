@@ -1,0 +1,69 @@
+/* PyABSA custom blue theme tweaks */
+:root {
+  --pyabsa-primary: #0d6efd;
+  --pyabsa-primary-600: #0b5ed7;
+  --pyabsa-bg-soft: #f5f9ff;
+  --pyabsa-border: #e2e8f0;
+
+  /* sphinx-design primary color */
+  --sd-color-primary: var(--pyabsa-primary);
+}
+
+/* Widen content and improve typography */
+.wy-nav-content {
+  max-width: 1200px;
+}
+.rst-content {
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+/* Top bars and search background */
+.wy-side-nav-search,
+.wy-nav-top {
+  background: var(--pyabsa-primary);
+}
+
+/* Link and hover accents */
+.rst-content a,
+.wy-menu-vertical a {
+  color: var(--pyabsa-primary);
+}
+.wy-menu-vertical a:hover {
+  background-color: var(--pyabsa-bg-soft);
+}
+
+/* Cards polish (sphinx-design) */
+.sd-card {
+  border: 1px solid var(--pyabsa-border);
+  box-shadow: 0 1px 2px rgba(13, 110, 253, 0.05);
+}
+.sd-card:hover {
+  border-color: var(--pyabsa-primary);
+  box-shadow: 0 3px 12px rgba(13, 110, 253, 0.15);
+}
+
+/* Hero section on homepage */
+.rst-content .hero {
+  padding: 2.2rem 2rem;
+  margin: 0 0 1.2rem 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(13,110,253,0.08), rgba(13,110,253,0.02));
+  border: 1px solid var(--pyabsa-border);
+}
+.rst-content .hero h1,
+.rst-content .hero h2,
+.rst-content .hero p {
+  margin-top: 0.2rem;
+}
+.rst-content .hero .buttons a.button {
+  display: inline-block;
+  margin-right: 0.6rem;
+}
+
+/* Section headings spacing */
+.rst-content h1,
+.rst-content h2 {
+  margin-top: 1.2rem;
+}
+

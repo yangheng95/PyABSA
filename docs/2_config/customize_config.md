@@ -1,121 +1,259 @@
-﻿PyABSA Configurations
-=====================
+﻿# Configuration Guide
 
-### Introduction
-PyABSA provides a set of configurations to customize the behavior of PyABSA. 
-You can customize the configurations by modifying the configuration object.
-A configuration object is a Namespace object that contains a set of attributes.
-If you are not sure if a configuration contains a certain attribute,
-you can use the following code to check the attributes of a configuration object:
+PyABSA provides a flexible configuration system that allows you to customize every aspect of model training, evaluation,
+and inference. This guide explains how to work with configurations effectively.
+
+## Understanding Configuration Objects
+
+Configuration objects in PyABSA are Python namespace objects that contain all the parameters needed for a specific task.
+They provide default values that work well out of the box, but can be easily customized for your specific needs.
+
+### Checking Available Attributes
+
+To see what attributes are available in a configuration object, you can use:
 
 ```python
+# Check if an attribute exists
 config.get('attribute_name', None)
+
+# Print all attributes (for debugging)
+print(vars(config))
 ```
 
-To set or get the value of an attribute, you can use the following code:
+### Setting and Getting Values
+
+Configuration attributes can be accessed and modified like regular Python object attributes:
 
 ```python
-config.attribute_name = value
-print(config.attribute_name)
+# Set a value
+config.learning_rate = 1e-5
+
+# Get a value
+print(config.learning_rate)
+
+# Set any custom attribute
+config.my_custom_parameter = "custom_value"
 ```
-You can set any variable in the configuration object as long as it is a valid Python variable name.
 
-### Default Configurations
+## Getting Configuration Objects
 
-```python3
+Each task in PyABSA provides a configuration manager with pre-defined templates.
 
-from pyabsa import AspectTermExtraction as ATE
+### Aspect Polarity Classification (APC)
+
+```python
 from pyabsa import AspectPolarityClassification as APC
 
-# for example, these are the default values of the configuration, you can change them to your own values
-# you can refer to the task-specific configuration in pyabsa.tasks.*.configuration.*config.py for more details
-# if you are developing based on the pyabsa, you can set any value you want. e.g. config.my_parameter = 'my_parameter'
-
-transformers_based_config = {'model': ATE.ATEPCModelList.LCF_ATEPC,
-                             # model class, check available models in APCModelList, ATEPCModelList and TCModelList,
-                             'optimizer': "adamw",  # Optimizer class and str are both acceptable (from pytorch)
-                             'learning_rate': 0.00003,
-                             # The default learning of transformers-based models generally ranges in [1e-5, 5e-5]
-                             'pretrained_bert': "yangheng/deberta-v3-base-absa-v1.1",
-                             # The pretrained_bert accepts model from the Huggingface Hub or local model, which use the AutoModel implementation
-                             'cache_dataset': True,
-                             # Don't cache the dataset in development, changing a param in the config probably triggers new caching process
-                             'overwrite_cache': False,  # Overwrite the cache if exists
-                             'use_amp': False,  # Use automatic mixed precision training
-                             'glove_or_word2vec_path': None,
-                             # The path of glove or word2vec file, if None, download the glove-840B embedding file from the Internet
-                             'warmup_step': -1,  # Default to not use warmup_step, this is an experimental feature
-                             'use_bert_spc': False,
-                             # Use [CLS] + Context + [SEP] + aspect +[SEP] input format , which is helpful in ABSA
-                             'show_metric': False,
-                             # Display classification report during/after training, e.g., to see precision, recall, f1-score
-                             'max_seq_len': 80,
-                             # The max text  input length in modeling, longer texts will be truncated
-                             'patience': 5,  # The patience tells trainer to stop in the `patience`  of epochs
-                             'SRD': 3,
-                             # This param is for local context focus mechanism, you don't need to change this param generally
-                             'use_syntax_based_SRD': False,
-                             # This parameter use syntax-based SRD in all models involving LCF mechanism
-                             'lcf': "cdw",  # Type of LCF mechanism, accepts 'cdm' and 'cdw'
-                             'window': "lr",  # This param only effects in LSA-models, refer to the paper of LSA
-                             'dropout': 0.5,  # Refer to the original paper of dropout
-                             'l2reg': 0.000001,
-                             # This param is related to specific model, you need try some values to find the best setting
-                             'num_epoch': 10,  # If you have enough, please set it to 30-40
-                             'batch_size': 16,  # If you have enough, please set it to 32 or 64
-                             'initializer': 'xavier_uniform_',  # No used in transformers-based models
-                             'seed': 52,  # This param accepts a integer or a list/set of integers
-                             'output_dim': 2,
-                             # The output dimension of the model, 2 for binary classification, 3 for ternary classification
-                             'log_step': 50,  # alias for evaluate_steps. Accepts -1 (means evaluate every epoch) or an integer
-                             'gradient_accumulation_steps': 1,  # Unused
-                             'dynamic_truncate': True,
-                             # This param applies a aspect-centered truncation instead of head truncation
-                             'srd_alignment': True,
-                             # for srd_alignment, try to align the tree nodes of syntax (SpaCy) and tokenization (transformers)
-                             'evaluate_begin': 0  # No evaluation until epoch 'evaluate_begin', aims at saving time
-                             }
-
-glove_based_config = {'model': APC.APCModelList.FAST_LSA_T_V2,
-                      # model class, check available models in APCModelList, ATEPCModelList and TCModelList,
-                      'optimizer': "",
-                      'learning_rate': 0.00002,
-                      'cache_dataset': True,
-                      'warmup_step': -1,
-                      'deep_ensemble': False,
-                      'use_bert_spc': True,
-                      'max_seq_len': 80,
-                      'patience': 99999,
-                      'SRD': 3,
-                      'dlcf_a': 2,  # the a in dlcf_dca_bert
-                      'dca_p': 1,  # the p in dlcf_dca_bert
-                      'dca_layer': 3,  # the layer in dlcf_dca_bert
-                      'use_syntax_based_SRD': False,
-                      'sigma': 0.3,
-                      'lcf': "cdw",
-                      'lsa': False,
-                      'window': "lr",
-                      'eta': -1,
-                      'eta_lr': 0.01,
-                      'dropout': 0,
-                      'l2reg': 0.000001,
-                      'num_epoch': 10,
-                      'batch_size': 16,
-                      'initializer': 'xavier_uniform_',
-                      'seed': 52,
-                      'output_dim': 3,
-                      'log_step': 10,
-                      'dynamic_truncate': True,
-                      'srd_alignment': True,  # for srd_alignment
-                      'evaluate_begin': 0,
-                      'similarity_threshold': 1,  # disable same text check for different examples
-                      'cross_validate_fold': -1,
-                      'use_amp': False,
-                      'overwrite_cache': False,
-                      'glove_or_word2vec_path': None,
-                      # The path of glove or word2vec file, if None, download the glove-840B embedding file from the Internet
-                      'show_metric': False,
-                      # Display classification report during/after training, e.g., to see precision, recall, f1-score
-                      }
-
+# Get default configurations for different languages
+config_english = APC.APCConfigManager.get_apc_config_english()
+config_chinese = APC.APCConfigManager.get_apc_config_chinese()
+config_multilingual = APC.APCConfigManager.get_apc_config_multilingual()
 ```
+
+### Text Classification
+
+```python
+from pyabsa import TextClassification as TC
+
+# Get default text classification configuration
+config = TC.TCConfigManager.get_tc_config_english()
+```
+
+### Aspect Term Extraction (ATE)
+
+```python
+from pyabsa import AspectTermExtraction as ATE
+
+# Get default ATE configuration
+config = ATE.ATEConfigManager.get_ate_config_english()
+```
+
+## Common Configuration Parameters
+
+Here are the most frequently used configuration parameters across different tasks:
+
+### Model and Architecture
+
+```python
+# Choose the model architecture
+config.model = APC.APCModelList.FAST_LSA_T_V2
+
+# Set the pre-trained backbone model
+config.pretrained_bert = 'microsoft/deberta-v3-base'
+
+# Maximum sequence length
+config.max_seq_len = 80
+```
+
+### Training Parameters
+
+```python
+# Training epochs
+config.num_epoch = 10
+
+# When to start evaluation during training
+config.evaluate_begin = 2
+
+# Learning rate
+config.learning_rate = 1e-5
+
+# L2 regularization
+config.l2reg = 1e-8
+
+# Dropout rate
+config.dropout = 0.5
+
+# Batch size
+config.train_batch_size = 16
+config.eval_batch_size = 32
+
+# Random seed for reproducibility
+config.seed = 42
+```
+
+### Performance Optimization
+
+```python
+# Use Automatic Mixed Precision for faster training
+config.use_amp = True
+
+# Cache dataset in memory for faster data loading
+config.cache_dataset = True
+
+# Number of workers for data loading
+config.num_workers = 4
+
+# Device selection (auto-detected by default)
+config.device = 'cuda'  # or 'cpu'
+```
+
+### Logging and Saving
+
+```python
+# How often to print training logs
+config.log_step = 100
+
+# Model saving options
+config.model_path_to_save = './checkpoints'
+
+# Whether to save the model state dict only
+config.save_mode = 1  # 0: full model, 1: state dict only
+```
+
+## Advanced Configuration Examples
+
+### Fine-tuning a Pre-trained Model
+
+```python
+from pyabsa import AspectPolarityClassification as APC
+
+config = APC.APCConfigManager.get_apc_config_english()
+
+# Use a more powerful backbone
+config.pretrained_bert = 'microsoft/deberta-v3-large'
+
+# Adjust learning rate for large models
+config.learning_rate = 5e-6
+
+# Increase max sequence length for longer texts
+config.max_seq_len = 128
+
+# Use gradient accumulation for large batch effects
+config.gradient_accumulation_steps = 2
+```
+
+### Training for High Performance
+
+```python
+# Configuration for achieving best possible results
+config.num_epoch = 20
+config.evaluate_begin = 5
+config.learning_rate = 1e-5
+config.l2reg = 1e-8
+config.dropout = 0.1
+
+# Enable data augmentation
+config.load_aug = True
+
+# Use ensemble during evaluation
+config.use_ensemble_inference = True
+```
+
+### Fast Prototyping Configuration
+
+```python
+# Configuration for quick experimentation
+config.num_epoch = 3
+config.evaluate_begin = 1
+config.max_seq_len = 64
+config.train_batch_size = 32
+config.cache_dataset = True
+config.use_amp = True
+```
+
+## Task-Specific Configurations
+
+### For Aspect Term Extraction
+
+```python
+from pyabsa import AspectTermExtraction as ATE
+
+config = ATE.ATEConfigManager.get_ate_config_english()
+
+# ATE-specific parameters
+config.window_size = 5  # Context window for aspect detection
+config.use_syntax_based_srd = True  # Use syntax-based semantic relative distance
+```
+
+### For Text Classification
+
+```python
+from pyabsa import TextClassification as TC
+
+config = TC.TCConfigManager.get_tc_config_english()
+
+# TC-specific parameters
+config.use_bert_spc = True  # Use BERT for sentence pair classification
+config.class_dim = 3  # Number of classes in your classification task
+```
+
+## Saving and Loading Configurations
+
+You can save your custom configurations for later use:
+
+```python
+import pickle
+
+# Save configuration
+with open('my_config.pkl', 'wb') as f:
+    pickle.dump(config, f)
+
+# Load configuration
+with open('my_config.pkl', 'rb') as f:
+    loaded_config = pickle.load(f)
+```
+
+## Best Practices
+
+1. **Start with defaults**: Use the pre-defined configuration templates as starting points
+2. **Incremental changes**: Modify one parameter at a time to understand its impact
+3. **Document changes**: Keep track of which parameters you've modified
+4. **Reproducibility**: Always set a fixed seed for reproducible results
+5. **Validation**: Test your configuration on a small dataset first
+
+## Troubleshooting
+
+### Common Issues
+
+- **Out of memory**: Reduce `train_batch_size`, `max_seq_len`, or enable `use_amp`
+- **Slow training**: Enable `cache_dataset`, increase `num_workers`, or use `use_amp`
+- **Poor performance**: Try different `learning_rate`, increase `num_epoch`, or use a better `pretrained_bert`
+
+### Getting Help
+
+If you encounter issues with configurations, check:
+
+1. The parameter spelling and type
+2. Compatibility between different parameters
+3. Hardware limitations (GPU memory, CPU cores)
+4. The PyABSA GitHub issues for similar problems

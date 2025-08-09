@@ -1,42 +1,76 @@
-﻿Citation
---------
+﻿# Citing PyABSA
 
-You can cite this repo (or papers) or attach the author information in your work.
+If you use PyABSA in your research or commercial projects, please cite our work. Your citation is a valuable
+acknowledgment of our efforts and supports the continued development of the framework.
+
+## Main Framework Citation
+
+For general use of the PyABSA framework, please cite our main paper:
 
 ```bibtex
-@misc{YangL2022,
-    title = {PyABSA: Open Framework for Aspect-based Sentiment Analysis},
-    author = {Yang, Heng and Li, Ke},
-    doi = {10.48550/ARXIV.2208.01368},
-    url = {https://arxiv.org/abs/2208.01368},
-    keywords = {Computation and Language (cs.CL), FOS: Computer and information sciences, FOS: Computer and information sciences},
-    publisher = {arXiv},
-    year = {2022},
-    copyright = {arXiv.org perpetual, non-exclusive license}
+@misc{yang2023pyabsa,
+    title = {PyABSA: A Modularized Framework for Reproducible Aspect-based Sentiment Analysis},
+    author = {Heng Yang and Ke Li},
+    year = {2023},
+    eprint = {2208.01368},
+    archivePrefix = {arXiv},
+    primaryClass = {cs.CL}
 }
 ```
 
+## Model-Specific Citations
 
-This repository was first used to host ABSA research code.
-It is now an open source framework that supports a variety of tasks. 
+PyABSA integrates state-of-the-art models from various research papers. If you use a specific model, we encourage you to
+cite the original paper to give due credit to the researchers who developed it.
 
-PyABSA currently contains model implementations of the following papers, 
-If you use any of the following papers, please cite them.
+### Aspect Polarity Classification Models
 
-### Aspect sentiment polarity classification models
-1. [Back to Reality: Leveraging Pattern-driven Modeling to Enable Affordable Sentiment Dependency Learning](https://arxiv.org/abs/2110.08604) (
-   e.g., Fast-LSA, 2020)
-2. [Learning for target-dependent sentiment based on local context-aware embedding](https://link.springer.com/article/10.1007/s11227-021-04047-1) (
-   e.g., LCA-Net, 2020)
-3. [LCF: A Local Context Focus Mechanism for Aspect-Based Sentiment Classification](https://www.mdpi.com/2076-3417/9/16/3389) (
-   e.g., LCF-BERT, 2019)
+#### Fast-LSA Series
 
+```bibtex
+@article{Yang2021FastLSA,
+    title = {Back to Reality: Leveraging Pattern-driven Modeling to Enable Affordable Sentiment Dependency Learning},
+    author = {Yang, Heng and Zeng, Biqing and Yang, Jianhao and Song, Youwei and Xu, Ruyang},
+    journal = {arXiv preprint arXiv:2110.08604},
+    year = {2021},
+    url = {https://arxiv.org/abs/2110.08604}
+}
+```
 
+#### LCF-BERT
 
-### Aspect sentiment polarity classification & Aspect term extraction models
+```bibtex
+@inproceedings{zeng-etal-2019-lcf,
+    title = "{LCF}: A Local Context Focus Mechanism for Aspect-Based Sentiment Classification",
+    author = "Zeng, Biqing  and
+      Yang, Heng  and
+      Xu, Ruyang  and
+      Song, Youwei  and
+      Zha, Zhaopeng",
+    booktitle = "Proceedings of the 2019 International Conference on Natural Language Processing and Chinese Computing",
+    month = oct,
+    year = "2019",
+    address = "Dunhuang, China",
+    publisher = "Springer",
+    url = "https://aclanthology.org/2019.nlcc-1.1",
+    pages = "1--13"
+}
+```
 
-1. [A multi-task learning model for Chinese-oriented aspect polarity classification and aspect term extraction](https://www.sciencedirect.com/science/article/pii/S0925231220312534)] (
-   e.g., Fast-LCF-ATEPC, 2020)
-2. [(Arxiv) A multi-task learning model for Chinese-oriented aspect polarity classification and aspect term extraction](https://arxiv.org/pdf/1912.07976.pdf)
+### Aspect Term Extraction Models
 
+#### T-SCSA
 
+```bibtex
+@article{zeng2019scsa,
+    title = {SCSA: A novel supervised and clustering-based sentiment analysis method for aspect-level and sentence-level texts},
+    author = {Zeng, Biqing and Yang, Heng and Song, Youwei and Xu, Ruyang and Zha, Zhaopeng},
+    journal = {IEEE Access},
+    volume = {7},
+    pages = {175034--175044},
+    year = {2019},
+    publisher = {IEEE}
+}
+```
+
+We appreciate your support in acknowledging the work that makes PyABSA possible.

@@ -1,88 +1,109 @@
 PyABSA Documentation
 =======================================
 
+PyABSA is an open-source framework focusing on Aspect-Based Sentiment Analysis (ABSA) and related tasks, providing end-to-end capabilities for training, inference, augmentation, and visualization.
+
+.. grid:: 1 1 2 2
+   :gutter: 2
+
+   .. grid-item-card:: Getting Started
+      :link: 0_intro/introduction
+      :link-type: doc
+      :class-card: sd-shadow-sm
+
+      Learn the goals, scope, and typical use cases of PyABSA.
+
+      - Installation
+      - Quick start
+      - FAQ
+
+   .. grid-item-card:: User Guide
+      :link: 2_config/customize_config
+      :link-type: doc
+      :class-card: sd-shadow-sm
+
+      Configuration, data, annotation, and visualization.
+
+      - Supported tasks and data formats
+      - Customizing configuration
+      - Datasets and annotation
+      - Metrics visualization
+
+   .. grid-item-card:: Advanced Topics
+      :link: 5_augmentation/absc
+      :link-type: doc
+      :class-card: sd-shadow-sm
+
+      Improve performance and robustness.
+
+      - Text augmentation
+      - Adversarial robustness
+      - BPE and pretraining
+
+   .. grid-item-card:: Tutorials & Demos
+      :link: 6_tutorials/Aspect_Sentiment_Classification
+      :link-type: doc
+      :class-card: sd-shadow-sm
+
+      Reproduce and get started quickly with notebooks.
+
+      - Classification / Extraction / Triplet
+      - Flask inference demos
 
 .. toctree::
-   :maxdepth: 6
-   :caption: Introduction
+   :maxdepth: 2
+   :caption: Getting started
 
-    Introduction <0_intro/introduction.md>
-    Installation <0_intro/installation.md>
-
-
-.. toctree::
-   :maxdepth: 6
-   :caption: Quick-Start
-    Create (Annotate) Your Own Dataset <1_quick_start/annotate.md>
-    Aspect-based Sentiment Classification <1_quick_start/absc.md>
-    Aspect Term Extraction <1_quick_start/ate.md>
-    Aspect Term Extraction and Sentiment Classification <1_quick_start/atesc.md>
-    Adversarial Defense for Text Classification <1_quick_start/adversarial.md>
-    Training BPE Tokenizer and Word2Vec Embedding <1_quick_start/bpe.md>
-    Text Auto-augmentation <1_quick_start/autoaug.md>
+   0_intro/introduction.md
+   0_intro/installation.md
 
 .. toctree::
-   :maxdepth: 6
-   :caption: Configuration
+   :maxdepth: 2
+   :caption: Quick start
 
-    Customize Configuration <2_config/customize_config.md>
-
-.. toctree::
-   :maxdepth: 6
-   :caption: Deploy Demo
-
-    Aspect-based Sentiment Classification <3_inference/APC_flask_demo.ipynb>
-    Aspect Sentiment Triplet Extraction <3_inference/ASTE_flask_demo.ipynb>
-    Aspect Term Extraction and Sentiment Classification <3_inference/ATEPC_flask_demo.ipynb>
+   1_quick_start/absc.md
+   1_quick_start/ate.md
+   1_quick_start/atesc.md
+   1_quick_start/annotate.md
+   1_quick_start/adversarial.md
+   1_quick_start/autoaug.md
+   1_quick_start/bpe.md
 
 .. toctree::
-   :maxdepth: 6
-   :caption: Model Training
+   :maxdepth: 2
+   :caption: User guide
 
-    Aspect-based Sentiment Classification <4_training/absc.md>
-    Aspect Term Extraction <4_training/ate.md>
-    Aspect Term Extraction and Sentiment Classification <4_training/atesc.md>
-
-
-.. toctree::
-   :maxdepth: 6
-   :caption: Text Auto-augmentation
-
-    Aspect-based Sentiment Classification <5_augmentation/absc.md>
-    Text Classification <5_augmentation/text_classification.md>
+   8_supported_tasks/tasks.md
+   2_config/customize_config.md
+   7_datasets/customized_datasets.md
+   6_tutorials/metrics_visualization.md
 
 .. toctree::
-   :maxdepth: 6
-   :caption: Tutorials
+   :maxdepth: 2
+   :caption: Tutorials and notebooks
 
-    Metrics Visualization <6_tutorials/metrics_visualization.md>
-    Aspect-based Sentiment Classification <6_tutorials/Aspect_Sentiment_Classification.ipynb>
-    Aspect Term Extraction and Sentiment Classification <6_tutorials/Aspect_Term_Extraction.ipynb>
-    Aspect Sentiment Triplet Extraction <6_tutorials/Aspect_Sentiment_Triplet_Extraction.ipynb>
-
-.. toctree::
-   :maxdepth: 6
-   :caption: Integrated Datasets
-
-    Customized Datasets <7_datasets/customized_datasets.md>
-
+   6_tutorials/Aspect_Sentiment_Classification.ipynb
+   6_tutorials/Aspect_Term_Extraction.ipynb
+   6_tutorials/Aspect_Sentiment_Triplet_Extraction.ipynb
+   3_inference/APC_flask_demo.ipynb
+   3_inference/ASTE_flask_demo.ipynb
+   3_inference/ATEPC_flask_demo.ipynb
 
 .. toctree::
-   :maxdepth: 6
-   :caption: Supported Tasks
+   :maxdepth: 2
+   :caption: Advanced topics
 
-    Supported Tasks <8_supported_tasks/tasks.md>
-
+   5_augmentation/absc.md
+   5_augmentation/text_classification.md
 
 .. toctree::
-   :maxdepth: 6
+   :maxdepth: 2
+   :caption: API reference
+
+   api
+
+.. toctree::
+   :maxdepth: 1
    :caption: Citation
 
-    Citation <9_citation/citation.md>
-
-Contents
---------
-
-.. toctree::
-
-   PyABSA <autoapi/pyabsa>
+   9_citation/citation.md

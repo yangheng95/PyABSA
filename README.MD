@@ -1,215 +1,305 @@
-# PyABSA - Open Framework for Aspect-based Sentiment Analysis ([paper](https://dl.acm.org/doi/abs/10.1145/3583780.3614752))
+# PyABSA: A Modularized Framework for Reproducible Aspect-based Sentiment Analysis
 
-![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg)
-[![PyPI](https://img.shields.io/pypi/v/pyabsa)](https://pypi.org/project/pyabsa/)
-[![Downloads](https://pepy.tech/badge/pyabsa)](https://pepy.tech/project/pyabsa)
-[![Downloads](https://pepy.tech/badge/pyabsa/month)](https://pepy.tech/project/pyabsa)
-![License](https://img.shields.io/pypi/l/pyabsa?logo=PyABSA)
-[![Documentation Status](https://readthedocs.org/projects/pyabsa/badge/?version=v2)](https://pyabsa.readthedocs.io/en/v2/?badge=v2)
+[![PyPI](https://img.shields.io/pypi/v/pyabsa.svg)](https://pypi.org/project/pyabsa/)
+[![Paper](https://img.shields.io/badge/CIKM-2023-blue)](https://dl.acm.org/doi/10.1145/3583780.3614752)
+[![Views/Week](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_views_per_week.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
+[![Clones/Week](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_clones_per_week.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
+[![License](https://img.shields.io/pypi/l/pyabsa.svg)](./LICENSE)
 
-[![total views](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_views.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
-[![total views per week](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_views_per_week.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
-[![total clones](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_clones.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
-[![total clones per week](https://raw.githubusercontent.com/yangheng95/PyABSA/traffic/total_clones_per_week.svg)](https://github.com/yangheng95/PyABSA/tree/traffic#-total-traffic-data-badge)
+**PyABSA** is a **modular, reproducible** framework for **Aspect-based Sentiment Analysis (ABSA)** — from research to
+production.
+It unifies training/evaluation/inference across ABSA subtasks, ships with ready-to-use checkpoints, and offers dataset
+tooling and metric visualization.
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/back-to-reality-leveraging-pattern-driven/aspect-based-sentiment-analysis-on-semeval)](https://paperswithcode.com/sota/aspect-based-sentiment-analysis-on-semeval?p=back-to-reality-leveraging-pattern-driven)
+- 📄 **Paper**: CIKM 2023 [[ACM DL]](https://dl.acm.org/doi/10.1145/3583780.3614752)
+- 📚 **Docs**: https://pyabsa.readthedocs.io/
+- 🧪 **Examples**: [`examples-v2/`](./examples-v2)
+- 🧰 **Dataset hub**: [ABSADatasets](https://github.com/yangheng95/ABSADatasets)
+- 🌐 **Online demos**: see links below
 
-**Hi, there!** Please star this repo if it helps you! Each Star helps PyABSA go further, many thanks. PyABSA is a free
-and open-source tool for everyone, but please do not forget to attach the (informal or formal) author
-information and project address in your works, products and publications, etc.
+---
 
-## Try our demos on Huggingface Space
+## Getting Started
 
-Apart from the [paper](https://arxiv.org/pdf/2208.01368), there are two new features in PyABSA: Aspect sentiment triplet
-extraction and Aspect quadruple extraction.
-We have deployed the demos on Huggingface Space, you can try them online.
+Welcome to PyABSA! This guide will walk you through the initial steps to get you up and running with the framework.
 
-- **[Aspect sentiment quadruple extraction](https://huggingface.co/spaces/yangheng/PyABSA) (English) New feature**
-- **[Aspect sentiment triplet extraction](https://huggingface.co/spaces/yangheng/PyABSA) (English) New feature**
-- [(Gradio) Aspect term extraction & sentiment classification](https://huggingface.co/spaces/Gradio-Blocks/Multilingual-Aspect-Based-Sentiment-Analysis) (
-  English, Chinese, Arabic, Dutch, French, Russian, Spanish, Turkish, etc.)
-- [(Prototype) Aspect term extraction & sentiment classification](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC) (
-  English,
-  Chinese, Arabic, Dutch, French, Russian, Spanish, Turkish, etc.)
-- [方面术语提取和情感分类](https://huggingface.co/spaces/yangheng/PyABSA-ATEPC-Chinese) （中文, etc.）
-- [Aspect-based sentiment classification (Multilingual)](https://huggingface.co/spaces/yangheng/PyABSA-APC) （English,
-  Chinese, etc.）
+### Prerequisites
 
-## Usage Examples
+Make sure you have Python 3.8 or later installed on your system. You can check your Python version by running:
 
-We have prepared many examples for different tasks. Please refer to [Examples](./examples-v2) for more usage examples.
+`python --version`
+
+### Installation
+
+For a straightforward installation, you can use pip:
+
+`pip install -U pyabsa`
+
+This command installs the core components of PyABSA. For more advanced features like text augmentation and
+visualization, you may need to install additional dependencies.
+
+### Your First Code
+
+After installation, you can start using PyABSA with just a few lines of code. Here’s a simple example to get you
+started:
+
+```python3
+from pyabsa import AspectTermExtraction as ATEPC
+```
+
+```python3
+# Initialize the aspect extractor
+aspect_extractor = ATEPC.AspectExtractor('multilingual', auto_device=True)
+```
+
+
+```python3
+# Perform aspect extraction on a sample sentence
+result = aspect_extractor.predict(
+    ['I love this movie, it is so great!'],
+    save_result=True,
+    print_result=True
+)
+```
+
+---
+
+## Features at a Glance
+
+- **Unified API** for training / evaluation / inference across ABSA tasks
+- **Model Zoo** with `available_checkpoints()` and auto-download
+- **Visualization** for evaluation metrics
+- **Human-in-the-loop** dataset annotation helpers
+- **Text augmentation** for classification & adversarial defense
+- Automatic device selection; simple CPU/GPU switching
+
+> See the [Introduction](https://pyabsa.readthedocs.io/en/latest/0_intro/introduction.html#features) for the full
+> feature list.
+
+---
+
+## Supported Tasks
+
+| Task                                                         | What it does                                                | Python API entry                                                  | Demo                                                                                                    |
+|--------------------------------------------------------------|-------------------------------------------------------------|-------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
+| **APC** (Aspect Polarity Classification)                     | Classify sentiment for a given aspect                       | `pyabsa.AspectPolarityClassification`                             | [Multilingual APC (HF Space)](https://huggingface.co/spaces/yangheng/PyABSA-APC)                        |
+| **ATEPC** (Aspect Term Extraction & Polarity Classification) | Extract aspect terms and their sentiment                    | `pyabsa.AspectTermExtraction`                                     | [ATEPC (HF Space)](https://huggingface.co/spaces/yangheng/Multilingual-Aspect-Based-Sentiment-Analysis) |
+| **ASTE** (Aspect Sentiment Triplet Extraction)               | Extract *(aspect, opinion, sentiment)* triplets             | `pyabsa.AspectSentimentTripletExtraction`                         | [Triplet Extraction (HF Space)](https://huggingface.co/spaces/yangheng/PyABSA)                          |
+| **ASQP / ACOS**                                              | Extract *(aspect, category, opinion, sentiment)* quadruples | `pyabsa.AspectCategoryOpinionSentimentTripletExtraction`          | [Quadruple Extraction (HF Space)](https://huggingface.co/spaces/yangheng/PyABSA)                        |
+| **Others**                                                   | Text classification, adversarial defense, etc.              | `pyabsa.TextClassification`, `pyabsa.TextAdversarialDefense`, ... | –                                                                                                       |
+
+> Full list and
+>
+tutorials: [Supported Tasks](https://pyabsa.readthedocs.io/en/latest/0_intro/introduction.html) · [Tutorials](https://pyabsa.readthedocs.io/en/latest/3_tutorials/index.html)
+
+---
 
 ## Installation
 
-### install via pip
-
-To use PyABSA, install the latest version from pip or source code:
+PyPI (recommended):
 
 ```bash
 pip install -U pyabsa
 ```
 
-### install via source
+From source (latest mainline):
 
 ```bash
 git clone https://github.com/yangheng95/PyABSA --depth=1
-cd PyABSA 
+cd PyABSA
 python setup.py install
 ```
 
-## Quick-Start
+**Requirements**: Python **>= 3.8**; PyTorch and Transformers will be installed as dependencies. For advanced/optional
+dependencies (augmentation, visualization, demos), see
+the [Installation guide](https://pyabsa.readthedocs.io/en/latest/1_installation/index.html).
 
-### Extract aspect terms and classify sentiments
+---
 
-```python3
+## Quickstart
+
+### 1) Extract aspect terms and classify their sentiments (ATEPC)
+
+```python
 from pyabsa import AspectTermExtraction as ATEPC, available_checkpoints
 
-# you can view all available checkpoints by calling available_checkpoints()
-checkpoint_map = available_checkpoints()
+# View available checkpoints (local + remote)
+print(available_checkpoints())
 
-aspect_extractor = ATEPC.AspectExtractor('multilingual',
-                                         auto_device=True,  # False means load model on CPU
-                                         cal_perplexity=True,
-                                         )
+aspect_extractor = ATEPC.AspectExtractor(
+    'multilingual',
+    auto_device=True,  # False -> force CPU
+    cal_perplexity=True
+)
 
-# instance inference
-aspect_extractor.predict(['I love this movie, it is so great!'],
-                         save_result=True,
-                         print_result=True,  # print the result
-                         ignore_error=True,  # ignore the error when the model cannot predict the input
-                         )
+# Single instance
+aspect_extractor.predict(
+    ['I love this movie, it is so great!'],
+    save_result=True,
+    print_result=True,
+    ignore_error=True
+)
 
+# Batch inference from a built-in dataset
 inference_source = ATEPC.ATEPCDatasetList.Restaurant16
-atepc_result = aspect_extractor.batch_predict(target_file=inference_source,  #
-                                              save_result=True,
-                                              print_result=True,  # print the result
-                                              pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
-                                              )
-
-print(atepc_result)
-
-
+result = aspect_extractor.batch_predict(
+    target_file=inference_source,
+    save_result=True,
+    print_result=True,
+    pred_sentiment=True
+)
+print(result)
 ```
 
-### Aspect-based sentiment analysis
+### 2) Aspect-based sentiment classification (APC)
 
-```python3
+```python
 from pyabsa import AspectPolarityClassification as APC, available_checkpoints
 
-# you can view all available checkpoints by calling available_checkpoints()
-checkpoint_map = available_checkpoints(show_ckpts=True)
+print(available_checkpoints(show_ckpts=True))
 
-classifier = APC.SentimentClassifier('multilingual',
-                                     auto_device=True,  # False means load model on CPU
-                                     cal_perplexity=True,
-                                     )
+classifier = APC.SentimentClassifier(
+    'multilingual',
+    auto_device=True,
+    cal_perplexity=True
+)
 
-# instance inference
-classifier.predict(['I love this movie, it is so great!'],
-                   save_result=True,
-                   print_result=True,  # print the result
-                   ignore_error=True,  # ignore the error when the model cannot predict the input
-                   )
+classifier.predict(
+    ['I love this movie, it is so great!'],
+    save_result=True,
+    print_result=True,
+    ignore_error=True
+)
 
 inference_source = APC.APCDatasetList.Laptop14
-apc_result = classifier.batch_predict(target_file=inference_source,  #
-                                      save_result=True,
-                                      print_result=True,  # print the result
-                                      pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
-                                      )
-
+apc_result = classifier.batch_predict(
+    target_file=inference_source,
+    save_result=True,
+    print_result=True,
+    pred_sentiment=True
+)
 print(apc_result)
-
 ```
 
-## Dataset Annotation and Model Training
+> More examples (training, evaluation, visualization, deployment): see [`examples-v2/`](./examples-v2)
+> and [Tutorials](https://pyabsa.readthedocs.io/en/latest/3_tutorials/index.html).
 
-please refer to the documentation: [PyABSA Documentation](https://pyabsa.readthedocs.io/en/v2/).
-If you have any questions about the docs, please feel free to raise an issue. Also, you can join to improve the docs.
+---
 
-## Notice
+## Model Zoo & Checkpoints
 
-This repository is based on our papers for ABSA research. Here are the papers that you can cite or refer to for your
-implementations:
+- List all available checkpoints:
+  ```python
+  from pyabsa import available_checkpoints
+  print(available_checkpoints())
+  ```
+- PyABSA resolves checkpoints across local/remote registries and auto-downloads when needed. See the docs for *
+  *CheckpointManager** and **API Reference**.
 
-<details>
-<summary>
-Aspect sentiment polarity classification models
-</summary>
+---
 
-1. [Back to Reality: Leveraging Pattern-driven Modeling to Enable Affordable Sentiment Dependency Learning](https://arxiv.org/abs/2110.08604) (
-   e.g., Fast-LSA, 2020)
-2. [Learning for target-dependent sentiment based on local context-aware embedding](https://link.springer.com/article/10.1007/s11227-021-04047-1) (
-   e.g., LCA-Net, 2020)
-3. [LCF: A Local Context Focus Mechanism for Aspect-Based Sentiment Classification](https://www.mdpi.com/2076-3417/9/16/3389) (
-   e.g., LCF-BERT, 2019)
+## Datasets
 
-</details>
+- Public & community-contributed datasets: **[ABSADatasets](https://github.com/yangheng95/ABSADatasets)**
+- To prepare your own datasets (format, semi-automatic annotation, naming conventions), see **Integrated Datasets** and
+  **Notice** in the docs.
+- You can also use built-in dataset enums (e.g., `APC.APCDatasetList.Laptop14`, `ATEPC.ATEPCDatasetList.Restaurant16`)
+  to run quick experiments.
 
-<details>
-<summary>
-Aspect sentiment polarity classification & Aspect term extraction models
-</summary>
+---
 
-1. [A multi-task learning model for Chinese-oriented aspect polarity classification and aspect term extraction](https://www.sciencedirect.com/science/article/pii/S0925231220312534)] (
-   e.g., Fast-LCF-ATEPC, 2020)
-2. [(Arxiv) A multi-task learning model for Chinese-oriented aspect polarity classification and aspect term extraction](https://arxiv.org/pdf/1912.07976.pdf)
+## Documentation
 
-</details>
+- Overview & features: [Introduction](https://pyabsa.readthedocs.io/en/latest/0_intro/introduction.html)
+- Installation & optional components: [Installation](https://pyabsa.readthedocs.io/en/latest/1_installation/index.html)
+- Task tutorials (train/infer/deploy): [Tutorials](https://pyabsa.readthedocs.io/en/latest/3_tutorials/index.html)
+- API Reference: [API Reference](https://pyabsa.readthedocs.io/en/latest/4_api_reference/index.html)
 
-If you are looking for the original proposal of local context focus, here are some introduction at
-[here](https://github.com/yangheng95/PyABSA/tree/release/demos/documents).
+---
+
+## Roadmap (indicative)
+
+- Python 3.13 compatibility verification and wheels
+- Extended dataset templates & validators
+- Streamlined model registry and checkpoint metadata
+- Better Hugging Face integration (Spaces & model cards)
+- Optional plugins: advanced augmentation, evaluation dashboards
+
+> Have a suggestion? Please open a GitHub Discussion or Issue.
+
+---
+
+## Known Limitations
+
+- `v2` introduced breaking API changes; older scripts may need updates.
+- Some checkpoints require a one-time download at first use.
+- GPU is optional but recommended for training and large-scale inference.
+- Certain advanced features have extra dependencies; see the Installation guide.
+
+---
 
 ## Citation
 
+If you use PyABSA in your research or products, please cite:
+
+**CIKM 2023**
+
 ```bibtex
 @inproceedings{YangZL23,
-  author       = {Heng Yang and
-                  Chen Zhang and
-                  Ke Li},
-  editor       = {Ingo Frommholz and
-                  Frank Hopfgartner and
-                  Mark Lee and
-                  Michael Oakes and
-                  Mounia Lalmas and
-                  Min Zhang and
-                  Rodrygo L. T. Santos},
-  title        = {PyABSA: {A} Modularized Framework for Reproducible Aspect-based Sentiment
-                  Analysis},
-  booktitle    = {Proceedings of the 32nd {ACM} International Conference on Information
-                  and Knowledge Management, {CIKM} 2023, Birmingham, United Kingdom,
-                  October 21-25, 2023},
-  pages        = {5117--5122},
-  publisher    = {{ACM}},
-  year         = {2023},
-  url          = {https://doi.org/10.1145/3583780.3614752},
-  doi          = {10.1145/3583780.3614752},
-  timestamp    = {Thu, 23 Nov 2023 13:25:05 +0100},
-  biburl       = {https://dblp.org/rec/conf/cikm/0008ZL23.bib},
-  bibsource    = {dblp computer science bibliography, https://dblp.org}
+    author = {Heng Yang and Chen Zhang and Ke Li},
+    title = {PyABSA: A Modularized Framework for Reproducible Aspect-based Sentiment Analysis},
+    booktitle = {Proceedings of the 32nd ACM International Conference on Information and Knowledge Management (CIKM 2023)},
+    pages = {5117--5122},
+    year = {2023},
+    doi = {10.1145/3583780.3614752}
 }
 ```
 
-## Contribution
+**arXiv 2022 (optional)**
 
-This repository is developed and maintained by HENG YANG ([yangheng95@GitHub](https://github.com/yangheng95)),
-with great contribution from community researchers.
-We expect that you can help us improve this project, and your contributions are welcome. You can make a contribution in
-many ways, including:
+```bibtex
+@article{YangL22,
+    author = {Heng Yang and Ke Li},
+    title = {PyABSA: Open Framework for Aspect-based Sentiment Analysis},
+    journal = {CoRR},
+    volume = {abs/2208.01368},
+    year = {2022},
+    doi = {10.48550/arXiv.2208.01368}
+}
+```
 
-- Share your custom dataset in PyABSA and [ABSADatasets](https://github.com/yangheng95/ABSADatasets)
-- Integrates your models in PyABSA. (You can share your models whether it is or not based on PyABSA. if you are
-  interested, we will help you)
-- Raise a bug report while you use PyABSA or review the code (PyABSA is a individual project driven by enthusiasm so
-  your help is needed)
-- Give us some advice about feature design/refactor (You can advise to improve some feature)
-- Correct/Rewrite some error-messages or code comment (The comments are not written by native english speaker, you can
-  help us improve documents)
-- Create an example script in a particular situation (Such as specify a SpaCy model, pretrained-bert type, some
-  hyper-parameters)
-- Star this repository to keep it active
+---
+
+## Contributing
+
+Contributions are welcome! You can:
+
+- Share custom datasets via [ABSADatasets](https://github.com/yangheng95/ABSADatasets)
+- Integrate your models (with or without PyABSA base—we can help adapt)
+- Report bugs, improve messages & docs, or add example scripts
+- Propose features or refactors
+
+**Guidelines**
+
+- Use Python 3.8+; please run at least one GPU and one CPU pass for examples before submitting.
+- Keep changes reproducible (seeds, configs) and scoped.
+- In PR description, summarize motivation and impact.
+
+---
+
+## Community and Support
+
+Join our community to stay updated, ask questions, and contribute to the project.
+
+- **GitHub Discussions**: For questions, feature requests, and discussions.
+- **Issue Tracker**: To report bugs and track issues.
+- **Contributing**: We welcome contributions! Please see our contributing guidelines for more details.
+
+---
 
 ## License
 
-PyABSA is released under MIT licence, please cite this repo (or papers) or attach the author information in your work
-(repository, blog, product, etc.)
+MIT License © PyABSA contributors
+
+---
+

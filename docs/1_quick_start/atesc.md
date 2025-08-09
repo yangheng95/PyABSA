@@ -1,72 +1,126 @@
-﻿Aspect Term Extraction and Classification
-=========================================
+﻿# Aspect Term Extraction and Sentiment Classification (ATESC)
 
-### Inference
+This guide demonstrates how to perform both Aspect Term Extraction and Sentiment Classification (ATESC) in a single step
+using PyABSA. You'll learn how to use pre-trained models for inference and how to train your own models.
 
-```python3
+## Inference with Pre-trained Models
+
+PyABSA's pre-trained models can extract aspect terms and classify their sentiment simultaneously. Here’s how to get
+started.
+
+### Loading an Extractor
+
+First, import the necessary components and load an aspect extractor. PyABSA will automatically download the required
+checkpoint if it's not available locally.
+
+```python
 from pyabsa import AspectTermExtraction as ATEPC
 
-# checkpoint_map = available_checkpoints(from_local=False)
-
-
-aspect_extractor = ATEPC.AspectExtractor('multilingual',
-                                         auto_device=True,  # False means load model on CPU
-                                         cal_perplexity=True,
-                                         )
-
-inference_source = ATEPC.ATEPCDatasetList.SemEval
-atepc_result = aspect_extractor.batch_predict(target_file=inference_source,  #
-                                              save_result=True,
-                                              print_result=True,  # print the result
-                                              pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
-                                              )
-
-print(atepc_result)
-
-
+# Load a pre-trained aspect extractor
+aspect_extractor = ATEPC.AspectExtractor('multilingual')
 ```
 
-### Train a model of aspect term extraction
+### Running Predictions
 
+Once the extractor is loaded, you can use it to extract aspect terms and their corresponding sentiments from a sentence.
 
-```python3
-import random
+```python
+# Extract aspects and sentiments from a single sentence
+aspect_extractor.predict(
+    'The food was good, but the service was terrible.'
+)
+```
 
+You can also run predictions on a batch of sentences:
+
+```python
+# Extract aspects and sentiments from multiple sentences
+examples = [
+    'The food was good, but the service was terrible.',
+    'The screen is amazing, but the battery life is short.'
+]
+aspect_extractor.predict(examples)
+```
+
+### Batch Prediction on a Dataset
+
+For larger datasets, you can use the `batch_predict` method. By default, it performs both aspect extraction and
+sentiment classification.
+
+```python
+# Use a built-in dataset for batch prediction
+inference_set = ATEPC.ATEPCDatasetList.SemEval
+
+# Set pred_sentiment to True to perform both extraction and classification
+results = aspect_extractor.batch_predict(
+    target_file=inference_set,
+    print_result=True,
+    save_result=True,
+    pred_sentiment=True,
+)
+```
+
+## Training a New Model
+
+You can also train your own ATESC model using PyABSA. Here’s a simple example to get you started.
+
+### Configuring the Training
+
+First, set up the configuration for your model. You can choose a model architecture, a pre-trained BERT model, and other
+hyperparameters.
+
+```python
 from pyabsa import AspectTermExtraction as ATEPC
+from pyabsa import ModelSaveOption, DeviceTypeOption
 
+# Get a configuration template
 config = ATEPC.ATEPCConfigManager.get_atepc_config_english()
+
+# Set the model and BERT checkpoint
 config.model = ATEPC.ATEPCModelList.FAST_LCF_ATEPC
-config.evaluate_begin = 0
-config.max_seq_len = 512
-config.pretrained_bert = 'yangheng/deberta-v3-base-absa'
+config.pretrained_bert = 'microsoft/deberta-v3-base'
+
+# Set training hyperparameters
+config.num_epoch = 5
+config.evaluate_begin = 2
+config.max_seq_len = 80
+config.log_step = 100
+config.dropout = 0.5
+config.learning_rate = 1e-5
 config.l2reg = 1e-8
-config.seed = random.randint(1, 100)
-config.use_bert_spc = True
-config.use_amp = False
 config.cache_dataset = False
+config.use_amp = True
+config.seed = 42
+```
 
-chinese_sets = ATEPC.ATEPCDatasetList.Multilingual
+### Starting the Training
 
-aspect_extractor = ATEPC.ATEPCTrainer(config=config,
-                                      dataset=chinese_sets,
-                                      checkpoint_save_mode=1,
-                                      auto_device=True
-                                      ).load_trained_model()
+Next, choose a dataset and start the training process. PyABSA will handle the data loading, training loop, and
+evaluation.
 
-atepc_examples = ['But the staff was so nice to us .',
-                  'But the staff was so horrible to us .',
-                  r'Not only was the food outstanding , but the little ` perks \' were great .',
-                  'It took half an hour to get our check , which was perfect since we could sit , have drinks and talk !',
-                  'It was pleasantly uncrowded , the service was delightful , the garden adorable , '
-                  'the food -LRB- from appetizers to entrees -RRB- was delectable .',
-                  'How pretentious and inappropriate for MJ Grill to claim that it provides power lunch and dinners !'
-                  ]
-aspect_extractor.batch_predict(target_file=atepc_examples,  #
-                               save_result=True,
-                               print_result=True,  # print the result
-                               pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
-                               )
+```python
+# Choose a dataset
+dataset = ATEPC.ATEPCDatasetList.Laptop14
 
+# Start the training
+trainer = ATEPC.ATEPCTrainer(
+    config=config,
+    dataset=dataset,
+    checkpoint_save_mode=ModelSaveOption.SAVE_MODEL_STATE_DICT,
+    auto_device=DeviceTypeOption.AUTO,
+)
+```
 
+### Using Your Trained Model
 
+After training, you can load your model from the checkpoint and use it for inference, just like you would with a
+pre-trained model.
+
+```python
+# The trained model is saved in the "checkpoints" directory
+# You can load it by providing the path to the checkpoint
+my_extractor = ATEPC.AspectExtractor('checkpoints/fast_lcf_atepc_Laptop14_acc_..._f1_...')
+
+# Now you can use your own model for predictions
+my_extractor.predict('The screen is amazing, but the battery life is short.')
 ```
