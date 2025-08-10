@@ -83,9 +83,9 @@ result = aspect_extractor.predict(
 | Task                                                         | What it does                                                | Python API entry                                                  | Demo                                                                                                    |
 |--------------------------------------------------------------|-------------------------------------------------------------|-------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
 | **APC** (Aspect Polarity Classification)                     | Classify sentiment for a given aspect                       | `pyabsa.AspectPolarityClassification`                             | [Multilingual APC (HF Space)](https://huggingface.co/spaces/yangheng/PyABSA-APC)                        |
-| **ATEPC** (Aspect Term Extraction & Polarity Classification) | Extract aspect terms and their sentiment                    | `pyabsa.AspectTermExtraction`                                     | [ATEPC (HF Space)](Gradio-Blocks/Multilingual-Aspect-Based-Sentiment-Analysis)                          |
-| **ASTE** (Aspect Sentiment Triplet Extraction)               | Extract *(aspect, opinion, sentiment)* triplets             | `pyabsa.AspectSentimentTripletExtraction`                         | [Triplet Extraction (HF Space)](Gradio-Blocks/Multilingual-Aspect-Based-Sentiment-Analysis)             |
-| **ASQP / ACOS**                                              | Extract *(aspect, category, opinion, sentiment)* quadruples | `pyabsa.AspectCategoryOpinionSentimentTripletExtraction`          | [Quadruple Extraction (HF Space)](Gradio-Blocks/Multilingual-Aspect-Based-Sentiment-Analysis)           |
+| **ATEPC** (Aspect Term Extraction & Polarity Classification) | Extract aspect terms and their sentiment                    | `pyabsa.AspectTermExtraction`                                     | [ATEPC (HF Space)](https://huggingface.co/spaces/Gradio-Blocks/Multilingual-Aspect-Based-Sentiment-Analysis)                          |
+| **ASTE** (Aspect Sentiment Triplet Extraction)               | Extract *(aspect, opinion, sentiment)* triplets             | `pyabsa.AspectSentimentTripletExtraction`                         | [Triplet Extraction (HF Space)](https://huggingface.co/spaces/Gradio-Blocks/Multilingual-Aspect-Based-Sentiment-Analysis)             |
+| **ASQP / ACOS**                                              | Extract *(aspect, category, opinion, sentiment)* quadruples | `pyabsa.AspectCategoryOpinionSentimentTripletExtraction`          | [Quadruple Extraction (HF Space)](https://huggingface.co/spaces/Gradio-Blocks/Multilingual-Aspect-Based-Sentiment-Analysis)           |
 | **Others**                                                   | Text classification, adversarial defense, etc.              | `pyabsa.TextClassification`, `pyabsa.TextAdversarialDefense`, ... | –                                                                                                       |
 
 > Full list and
@@ -302,5 +302,6 @@ Join our community to stay updated, ask questions, and contribute to the project
 MIT License © PyABSA contributors
 
 ---
+
 
 
