@@ -29,9 +29,8 @@ atepc_result = aspect_extractor.batch_predict(
     inference_source,  #
     save_result=False,
     print_result=True,  # print the result
-    # pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
-    pred_sentiment=False,  # Predict the sentiment of extracted aspect terms
-    eval_batch_size=32,
+    pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
+    # pred_sentiment=False,  # Predict the sentiment of extracted aspect terms
 )
 print(atepc_result)
 # while True:

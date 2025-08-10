@@ -43,9 +43,28 @@ from ..models import ATEPCModelList
 
 
 class AspectExtractor(InferenceModel):
+    """Predictor for Aspect Term Extraction and (optional) Polarity Classification.
+
+    Loads an ATEPC checkpoint and provides utilities to extract aspect terms
+    from text, with optional sentiment classification for extracted aspects
+    depending on the configured model/task. Supports single-text and batch
+    inference and can auto-detect dataset files for inference.
+    """
     task_code = TaskCodeOption.Aspect_Term_Extraction_and_Classification
 
     def __init__(self, checkpoint=None, **kwargs):
+        """Initialize the ATEPC aspect extractor from a trained checkpoint.
+
+        Args:
+            checkpoint: Path to a checkpoint directory or a tuple returned
+                by the trainer (model, config, tokenizer).
+            **kwargs: Optional keyword arguments such as `auto_device`,
+                `offline`, and `verbose`.
+
+        Raises:
+            RuntimeError: If the checkpoint cannot be loaded.
+            ValueError: If an unsupported fine-tuned checkpoint is provided.
+        """
         # load from a trainer
         super().__init__(checkpoint, task_code=self.task_code, **kwargs)
 
@@ -87,15 +106,29 @@ class AspectExtractor(InferenceModel):
                 if state_dict_path or model_path:
                     if state_dict_path:
                         if kwargs.get("offline", False):
-                            self.bert = AutoModel.from_pretrained(
-                                find_cwd_dir(
-                                    self.config.pretrained_bert.split("/")[-1]
-                                ),
-                            )
+                            try:
+                                self.bert = AutoModel.from_pretrained(
+                                    find_cwd_dir(
+                                        self.config.pretrained_bert.split("/")[-1]
+                                    ),
+                                    trust_remote_code=True,
+                                )
+                            except Exception:
+                                self.bert = AutoModel.from_pretrained(
+                                    find_cwd_dir(
+                                        self.config.pretrained_bert.split("/")[-1]
+                                    )
+                                )
                         else:
-                            self.bert = AutoModel.from_pretrained(
-                                self.config.pretrained_bert,
-                            )
+                            try:
+                                self.bert = AutoModel.from_pretrained(
+                                    self.config.pretrained_bert,
+                                    trust_remote_code=True,
+                                )
+                            except Exception:
+                                self.bert = AutoModel.from_pretrained(
+                                    self.config.pretrained_bert,
+                                )
 
                         self.model = self.config.model(self.bert, self.config)
                         self.model.load_state_dict(
@@ -111,19 +144,41 @@ class AspectExtractor(InferenceModel):
                     with open(tokenizer_path, mode="rb") as f:
                         try:
                             if kwargs.get("offline", False):
-                                self.tokenizer = AutoTokenizer.from_pretrained(
-                                    find_cwd_dir(
-                                        self.config.pretrained_bert.split("/")[-1]
-                                    ),
-                                    do_lower_case="uncased"
-                                    in self.config.pretrained_bert,
-                                )
+                                try:
+                                    self.tokenizer = AutoTokenizer.from_pretrained(
+                                        find_cwd_dir(
+                                            self.config.pretrained_bert.split("/")[-1]
+                                        ),
+                                        do_lower_case="uncased"
+                                        in self.config.pretrained_bert,
+                                        trust_remote_code=True,
+                                    )
+                                except Exception:
+                                    self.tokenizer = AutoTokenizer.from_pretrained(
+                                        find_cwd_dir(
+                                            self.config.pretrained_bert.split("/")[-1]
+                                        ),
+                                        do_lower_case="uncased"
+                                        in self.config.pretrained_bert,
+                                        trust_remote_code=True,
+                                        use_fast=False,
+                                    )
                             else:
-                                self.tokenizer = AutoTokenizer.from_pretrained(
-                                    self.config.pretrained_bert,
-                                    do_lower_case="uncased"
-                                    in self.config.pretrained_bert,
-                                )
+                                try:
+                                    self.tokenizer = AutoTokenizer.from_pretrained(
+                                        self.config.pretrained_bert,
+                                        do_lower_case="uncased"
+                                        in self.config.pretrained_bert,
+                                        trust_remote_code=True,
+                                    )
+                                except Exception:
+                                    self.tokenizer = AutoTokenizer.from_pretrained(
+                                        self.config.pretrained_bert,
+                                        do_lower_case="uncased"
+                                        in self.config.pretrained_bert,
+                                        trust_remote_code=True,
+                                        use_fast=False,
+                                    )
                         except ValueError:
                             self.tokenizer = pickle.load(f)
 

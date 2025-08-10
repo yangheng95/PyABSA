@@ -17,7 +17,11 @@ from transformers import AutoModel
 
 from sklearn import metrics
 
-from pyabsa import TaskCodeOption, LabelPaddingOption, DeviceTypeOption
+from pyabsa.framework.flag_class.flag_template import (
+    TaskCodeOption,
+    LabelPaddingOption,
+    DeviceTypeOption,
+)
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
 from ..dataset_utils.__plm__.data_utils_for_inference import BERTTCInferenceDataset
 from ..models import BERTTCModelList, GloVeTCModelList
@@ -27,11 +31,28 @@ from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint, rprint
 
 
 class TextClassifier(InferenceModel):
+    """High-level predictor for Text Classification.
+
+    Loads a trained text classification checkpoint (BERT-based or GloVe-based)
+    and provides convenient inference APIs for single sentences and batch
+    datasets. When gold labels are present, evaluation metrics are printed.
+    """
     task_code = TaskCodeOption.Text_Classification
 
     def __init__(self, checkpoint=None, cal_perplexity=False, **kwargs):
-        """
-        from_train_model: load inference model from trained model
+        """Initialize the text classifier from a trained checkpoint.
+
+        Args:
+            checkpoint: Path to a checkpoint directory or a tuple returned by
+                the trainer (model, config, tokenizer).
+            cal_perplexity: Whether to compute masked-LM perplexity for inputs
+                if the underlying model/tokenizer support it.
+            **kwargs: Optional keyword arguments such as `auto_device`,
+                `offline`, and `verbose`.
+
+        Raises:
+            RuntimeError: If the checkpoint cannot be loaded.
+            KeyError: If the checkpoint is incompatible with text classifiers.
         """
 
         super().__init__(checkpoint, task_code=self.task_code, **kwargs)
@@ -172,15 +193,18 @@ class TextClassifier(InferenceModel):
         defense: str = None,
         **kwargs
     ):
-        """
-        Batch predicts the sentiment of a target file using the model.
-        :param target_file: The path to the target file.
-        :param print_result: Whether to print the result.
-        :param save_result: Whether to save the result.
-        :param ignore_error: Whether to ignore errors and continue.
-        :param defense: The adversarial defense to apply to the input text.
-        :param **kwargs: Additional keyword arguments.
-        :return: The predicted sentiment labels.
+        """Deprecated alias of `batch_predict`.
+
+        Args:
+            target_file: Path to the input file or directory.
+            print_result: Whether to print formatted results.
+            save_result: Whether to save JSON results.
+            ignore_error: Skip malformed lines instead of raising errors.
+            defense: Optional adversarial defense strategy.
+            **kwargs: Additional inference options.
+
+        Returns:
+            List[dict]: Prediction results.
         """
         return self.batch_predict(
             target_file=target_file,
@@ -199,14 +223,17 @@ class TextClassifier(InferenceModel):
         defense: str = None,
         **kwargs
     ):
-        """
-        Predicts the sentiment of a text using the model.
-        :param text: The input text.
-        :param print_result: Whether to print the result.
-        :param ignore_error: Whether to ignore errors and continue.
-        :param defense: The adversarial defense to apply to the input text.
-        :param **kwargs: Additional keyword arguments.
-        :return: The predicted sentiment labels.
+        """Deprecated alias of `predict` for single or multiple inputs.
+
+        Args:
+            text: A string or list of strings to infer.
+            print_result: Whether to print formatted results.
+            ignore_error: Skip malformed inputs instead of raising errors.
+            defense: Optional adversarial defense strategy.
+            **kwargs: Additional inference options.
+
+        Returns:
+            dict or List[dict]: Prediction results.
         """
         return self.predict(
             text=text,
@@ -224,13 +251,17 @@ class TextClassifier(InferenceModel):
         ignore_error=True,
         **kwargs
     ):
-        """
-        Predict from a file of sentences.
-        param: target_file: the file path of the sentences to be predicted.
-        param: print_result: whether to print the result.
-        param: save_result: whether to save the result.
-        param: ignore_error: whether to ignore the error when predicting.
-        param: kwargs: other parameters.
+        """Run text classification inference on a dataset file or directory.
+
+        Args:
+            target_file: Path to a file or directory containing inputs.
+            print_result: Print formatted results to stdout.
+            save_result: Save JSON results to the working directory.
+            ignore_error: Skip malformed lines instead of raising errors.
+            **kwargs: Additional options, e.g., `eval_batch_size`.
+
+        Returns:
+            List[dict]: Inference results.
         """
         self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
 
@@ -265,12 +296,17 @@ class TextClassifier(InferenceModel):
         ignore_error=True,
         **kwargs
     ):
-        """
-        Predict from a sentence or a list of sentences.
-        param: text: the sentence or a list of sentence to be predicted.
-        param: print_result: whether to print the result.
-        param: ignore_error: whether to ignore the error when predicting.
-        param: kwargs: other parameters.
+        """Predict labels for a string or a list of strings.
+
+        Args:
+            text: Single text or a list of texts to classify.
+            print_result: Print formatted results to stdout.
+            ignore_error: Skip malformed inputs instead of raising errors.
+            **kwargs: Additional options, e.g., `eval_batch_size`.
+
+        Returns:
+            dict or List[dict]: A single result for string input, otherwise a
+            list of results.
         """
         self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
         self.infer_dataloader = DataLoader(
@@ -286,6 +322,20 @@ class TextClassifier(InferenceModel):
             return self._run_prediction(print_result=print_result)
 
     def _run_prediction(self, save_path=None, print_result=True):
+        """Internal prediction loop for text classification.
+
+        Executes the model over `self.infer_dataloader`, collects logits,
+        computes predictions, and optionally prints and saves results. When
+        reference labels are present, prints a classification report and
+        confusion matrix.
+
+        Args:
+            save_path: Optional path to save JSON results.
+            print_result: Whether to print formatted results to stdout.
+
+        Returns:
+            List[dict]: Inference results.
+        """
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
 
         correct = {True: "Correct", False: "Wrong"}
@@ -472,6 +522,7 @@ class TextClassifier(InferenceModel):
         return results
 
     def clear_input_samples(self):
+        """Clear any previously prepared inference samples/dataset cache."""
         self.dataset.all_data = []
 
 

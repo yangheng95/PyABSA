@@ -29,6 +29,20 @@ from .apc_utils_for_dlcf_dca import (
 
 
 def parse_sample(text):
+    """Parse a raw APC input line into standardized samples.
+
+    Handles both [B-ASP]... [E-ASP] and legacy [ASP] markers, and supports
+    optional inline gold labels appended after `$LABEL$`. If no aspect is
+    provided, inserts a synthetic `Global Sentiment` aspect for sentence-level
+    prediction.
+
+    Args:
+        text: Raw input line.
+
+    Returns:
+        List[str]: One or more normalized samples each containing a single
+        `[ASP]...` span and an optional `$LABEL$` suffix.
+    """
     if "[B-ASP]" not in text and "[ASP]" not in text:
         # if '[B-ASP]' not in text or '[E-ASP]' not in text:
         text = " [B-ASP]Global Sentiment[E-ASP] " + text
@@ -98,6 +112,12 @@ def parse_sample(text):
 
 
 class ABSAInferenceDataset(Dataset):
+    """Inference dataset for APC models using LCF-style inputs.
+
+    Converts parsed samples into model-ready tensors according to the
+    configured input columns and augments them with local context focus
+    vectors when required by the model.
+    """
     def __init__(self, config, tokenizer):
         configure_spacy_model(config)
         self.tokenizer = tokenizer
@@ -105,6 +125,7 @@ class ABSAInferenceDataset(Dataset):
         self.data = []
 
     def prepare_infer_sample(self, text: Union[str, List[str]], ignore_error=True):
+        """Build an in-memory dataset from a string or list of strings."""
         if isinstance(text, str):
             self.process_data(parse_sample(text), ignore_error=ignore_error)
         elif isinstance(text, list):
@@ -114,6 +135,7 @@ class ABSAInferenceDataset(Dataset):
             self.process_data(examples, ignore_error=ignore_error)
 
     def prepare_infer_dataset(self, infer_file, ignore_error):
+        """Load and parse an on-disk inference file or directory."""
         lines = load_dataset_from_file(infer_file, config=self.config)
         samples = []
         for sample in lines:
@@ -122,6 +144,11 @@ class ABSAInferenceDataset(Dataset):
         self.process_data(samples, ignore_error)
 
     def process_data(self, samples, ignore_error=True):
+        """Tokenize, index, and build model inputs for APC inference.
+
+        Populates fields such as `text_indices`, `aspect_bert_indices`, LCF
+        vectors, and optional gold labels when present in input.
+        """
         all_data = []
         label_set = set()
         ex_id = 0

@@ -19,6 +19,11 @@ from ..__lcf__.data_utils_for_inference import ABSAInferenceDataset
 
 
 class GloVeABSAInferenceDataset(ABSAInferenceDataset):
+    """Inference dataset for classic GloVe-based APC models.
+
+    Prepares integer-indexed sequences for context/aspect inputs and builds
+    optional dependency graphs and boundaries used by classic architectures.
+    """
     def __init__(self, config, tokenizer):
         self.config = config
         self.tokenizer = tokenizer
@@ -28,6 +33,7 @@ class GloVeABSAInferenceDataset(ABSAInferenceDataset):
         self.data = []
 
     def process_data(self, samples, ignore_error=True):
+        """Tokenize, index, and construct tensors for GloVe APC inference."""
         all_data = []
 
         if len(samples) > 100:

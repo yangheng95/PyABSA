@@ -12,7 +12,25 @@ import requests
 from termcolor import colored
 from update_checker import parse_version, UpdateChecker
 
-from pyabsa import __version__ as current_version
+try:
+    # Avoid importing top-level pyabsa at import time to prevent circular imports
+    from importlib.metadata import version as _pkg_version
+except Exception:  # pragma: no cover
+    try:
+        from importlib_metadata import version as _pkg_version
+    except Exception:
+        _pkg_version = None
+
+try:
+    current_version = _pkg_version("pyabsa") if _pkg_version else None
+except Exception:
+    current_version = None
+if not current_version:
+    # Fallback when running from source without package metadata
+    try:
+        from .. import __version__ as current_version  # type: ignore
+    except Exception:
+        current_version = "0.0.0"
 from pyabsa.utils.exception_utils.exception_utils import time_out
 from pyabsa.utils.pyabsa_utils import fprint
 

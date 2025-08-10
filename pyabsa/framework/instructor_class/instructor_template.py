@@ -124,15 +124,25 @@ class BaseTrainingInstructor:
         :return: The path to the cache file if it exists. Otherwise, return None.
         """
         # Generate the hash tag for the cache file
-        config_str = re.sub(
-            r"<.*?>",
-            "",
-            str(
-                sorted(
-                    [str(self.config.args[k]) for k in self.config.args if k != "seed"]
-                )
-            ),
-        )
+        # Exclude non-serializable/heavy objects when hashing for dataset cache
+        excluded_keys = {
+            "seed",
+            "tokenizer",
+            "embedding_matrix",
+            "bert",
+            "logger",
+            "MV",
+        }
+        safe_items = []
+        for k in sorted(self.config.args.keys()):
+            if k in excluded_keys:
+                continue
+            v = self.config.args[k]
+            if isinstance(v, (str, int, float, bool)) or v is None:
+                safe_items.append(f"{k}={v}")
+            else:
+                safe_items.append(f"{k}={type(v).__name__}")
+        config_str = re.sub(r"<.*?>", "", str(safe_items))
         hash_tag = sha256(config_str.encode()).hexdigest()
 
         # Construct the path to the cache file
@@ -166,19 +176,24 @@ class BaseTrainingInstructor:
         :return: The path to the saved cache file.
         """
         if cache_path is None:
-            config_str = re.sub(
-                r"<.*?>",
-                "",
-                str(
-                    sorted(
-                        [
-                            str(self.config.args[k])
-                            for k in self.config.args
-                            if k != "seed"
-                        ]
-                    )
-                ),
-            )
+            excluded_keys = {
+                "seed",
+                "tokenizer",
+                "embedding_matrix",
+                "bert",
+                "logger",
+                "MV",
+            }
+            safe_items = []
+            for k in sorted(self.config.args.keys()):
+                if k in excluded_keys:
+                    continue
+                v = self.config.args[k]
+                if isinstance(v, (str, int, float, bool)) or v is None:
+                    safe_items.append(f"{k}={v}")
+                else:
+                    safe_items.append(f"{k}={type(v).__name__}")
+            config_str = re.sub(r"<.*?>", "", str(safe_items))
             hash_tag = sha256(config_str.encode()).hexdigest()
             cache_path = "{}.{}.dataset.{}.cache".format(
                 self.config.model_name, self.config.dataset_name, hash_tag

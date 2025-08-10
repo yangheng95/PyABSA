@@ -8,7 +8,6 @@
 # Copyright (C) 2022. All Rights Reserved.
 import json
 import os
-from distutils.version import StrictVersion
 from typing import Union, Dict, Any
 
 import requests
@@ -17,9 +16,28 @@ from findfile import find_files, find_cwd_files, find_cwd_dir
 from packaging import version
 from pyabsa.framework.flag_class import TaskCodeOption
 from termcolor import colored
-from pyabsa import __version__ as current_version, PyABSAMaterialHostAddress
 from pyabsa.utils.file_utils.file_utils import unzip_checkpoint
 from pyabsa.utils.pyabsa_utils import fprint
+from pyabsa.framework.flag_class.flag_template import (
+    PyABSAMaterialHostAddress,
+)
+import sys
+try:  # Prefer installed package metadata to avoid importing top-level pyabsa
+    from importlib.metadata import version as _pkg_version  # Python 3.8+
+except Exception:  # pragma: no cover
+    try:
+        from importlib_metadata import version as _pkg_version  # backport
+    except Exception:
+        _pkg_version = None
+
+try:
+    current_version = _pkg_version("pyabsa") if _pkg_version else None
+except Exception:
+    current_version = None
+
+if not current_version:
+    # Fallback to whatever is already loaded in sys.modules without re-importing
+    current_version = getattr(sys.modules.get("pyabsa"), "__version__", "0.0.0")
 
 
 def parse_checkpoint_info(t_checkpoint_map, task_code, show_ckpts=False):
@@ -56,9 +74,9 @@ def parse_checkpoint_info(t_checkpoint_map, task_code, show_ckpts=False):
             min_ver = c_version
             max_ver = ""
         max_ver = max_ver if max_ver else "N.A."
-        if max_ver == "N.A." or StrictVersion(min_ver) <= StrictVersion(
+        if max_ver == "N.A." or version.parse(min_ver) <= version.parse(
             current_version
-        ) <= StrictVersion(max_ver):
+        ) <= version.parse(max_ver):
             if show_ckpts:
                 fprint("-" * 100)
                 fprint("Checkpoint Name: {}".format(checkpoint_name))

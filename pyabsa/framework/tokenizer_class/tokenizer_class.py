@@ -187,11 +187,19 @@ class PretrainedTokenizer:
             self.tokenizer = AutoTokenizer.from_pretrained(
                 config.pretrained_bert, trust_remote_code=True, **kwargs
             )
-        except:
-            # try to load use_fast=False
-            self.tokenizer = AutoTokenizer.from_pretrained(
-                config.pretrained_bert, use_fast=False, trust_remote_code=True, **kwargs
-            )
+        except Exception:
+            # try to load use_fast=False or without trust_remote_code
+            try:
+                self.tokenizer = AutoTokenizer.from_pretrained(
+                    config.pretrained_bert,
+                    use_fast=False,
+                    trust_remote_code=True,
+                    **kwargs
+                )
+            except Exception:
+                self.tokenizer = AutoTokenizer.from_pretrained(
+                    config.pretrained_bert, use_fast=False, **kwargs
+                )
         self.max_seq_len = self.config.max_seq_len
         self.pad_token_id = self.tokenizer.pad_token_id
         self.unk_token_id = self.tokenizer.unk_token_id
@@ -303,14 +311,32 @@ class PretrainedTokenizer:
             text (str): Text to be encoded.
             **kwargs: Additional arguments to be passed to the tokenizer.
         """
-        return self.tokenizer.encode_plus(
-            text,
-            truncation=kwargs.pop("truncation", True),
-            padding=kwargs.pop("padding", "max_length"),
-            max_length=kwargs.pop("max_length", self.max_seq_len),
-            return_tensors=kwargs.pop("return_tensors", None),
-            **kwargs
-        )
+        # Remove legacy args that are no longer in transformers to avoid AttributeError
+        kwargs.pop("split_special_tokens", None)
+        kwargs.pop("special_tokens_map", None)
+        try:
+            return self.tokenizer.encode_plus(
+                text,
+                truncation=kwargs.pop("truncation", True),
+                padding=kwargs.pop("padding", "max_length"),
+                max_length=kwargs.pop("max_length", self.max_seq_len),
+                return_tensors=kwargs.pop("return_tensors", None),
+                **kwargs
+            )
+        except Exception:
+            # Manual fallback that avoids encode_plus internals
+            add_special = kwargs.pop("add_special_tokens", True)
+            tokens = self.tokenizer.tokenize(text)
+            input_ids = self.tokenizer.convert_tokens_to_ids(tokens)
+            if add_special:
+                if self.cls_token_id is not None:
+                    input_ids = [self.cls_token_id] + input_ids
+                if self.sep_token_id is not None:
+                    input_ids = input_ids + [self.sep_token_id]
+            if kwargs.pop("truncation", True):
+                max_len = kwargs.pop("max_length", self.max_seq_len)
+                input_ids = input_ids[:max_len]
+            return {"input_ids": input_ids}
 
     def encode(self, text, **kwargs):
         """
@@ -323,14 +349,31 @@ class PretrainedTokenizer:
         Returns:
             torch.Tensor: Encoded sequence of token IDs.
         """
-        return self.tokenizer.encode(
-            text,
-            truncation=kwargs.pop("truncation", True),
-            padding=kwargs.pop("padding", "max_length"),
-            max_length=kwargs.pop("max_length", self.max_seq_len),
-            return_tensors=kwargs.pop("return_tensors", None),
-            **kwargs
-        )
+        kwargs.pop("split_special_tokens", None)
+        kwargs.pop("special_tokens_map", None)
+        try:
+            return self.tokenizer.encode(
+                text,
+                truncation=kwargs.pop("truncation", True),
+                padding=kwargs.pop("padding", "max_length"),
+                max_length=kwargs.pop("max_length", self.max_seq_len),
+                return_tensors=kwargs.pop("return_tensors", None),
+                **kwargs
+            )
+        except Exception:
+            # Manual fallback
+            add_special = kwargs.pop("add_special_tokens", True)
+            tokens = self.tokenizer.tokenize(text)
+            ids = self.tokenizer.convert_tokens_to_ids(tokens)
+            if add_special:
+                if self.cls_token_id is not None:
+                    ids = [self.cls_token_id] + ids
+                if self.sep_token_id is not None:
+                    ids = ids + [self.sep_token_id]
+            if kwargs.pop("truncation", True):
+                max_len = kwargs.pop("max_length", self.max_seq_len)
+                ids = ids[:max_len]
+            return ids
 
     def decode(self, sequence, **kwargs):
         # Decode the given sequence to its corresponding text using the tokenizer

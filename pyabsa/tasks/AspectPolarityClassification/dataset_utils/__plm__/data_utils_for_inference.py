@@ -15,6 +15,12 @@ from ..__lcf__.data_utils_for_inference import ABSAInferenceDataset
 
 
 class BERTABSAInferenceDataset(ABSAInferenceDataset):
+    """Inference dataset for BERT-baseline APC models.
+
+    Adapts tokenization and inputs for classic BERT APC architectures,
+    building fields such as `text_indices`, `aspect_indices`, and
+    `dependency_graph` when required.
+    """
     def __init__(self, config, tokenizer):
         configure_spacy_model(config)
 
@@ -23,6 +29,7 @@ class BERTABSAInferenceDataset(ABSAInferenceDataset):
         self.data = []
 
     def process_data(self, samples, ignore_error=True):
+        """Tokenize, index, and construct tensors for BERT APC inference."""
         all_data = []
 
         if len(samples) > 100:

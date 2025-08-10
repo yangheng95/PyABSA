@@ -34,6 +34,11 @@ from pyabsa.framework.tokenizer_class.tokenizer_class import (
 
 
 def model_pool_check(models):
+    """Ensure all models in the ensemble belong to the same APC family.
+
+    Mixing LCF-, BERT-baseline-, and GloVe-based models is not supported
+    because their input conventions and output heads differ.
+    """
     set1 = set([model for model in models if hasattr(APCModelList, model.__name__)])
     set2 = set(
         [model for model in models if hasattr(BERTBaselineAPCModelList, model.__name__)]
@@ -46,6 +51,12 @@ def model_pool_check(models):
 
 
 class APCEnsembler(nn.Module):
+    """Thin wrapper to build datasets/tokenizers and ensemble APC models.
+
+    - Merges `inputs` requirements across models into `config.inputs_cols`
+    - Lazily builds tokenizer/encoder and datasets as needed
+    - Supports concatenation or mean-averaging of logits for ensembling
+    """
     def __init__(self, config, load_dataset=True, **kwargs):
         super(APCEnsembler, self).__init__()
         self.config = config
@@ -71,19 +82,26 @@ class APCEnsembler(nn.Module):
         self.valid_dataloader = None
 
         for i in range(len(models)):
-            config_str = re.sub(
-                r"<.*?>",
-                "",
-                str(
-                    sorted(
-                        [
-                            str(self.config.args[k])
-                            for k in self.config.args
-                            if k != "seed"
-                        ]
-                    )
-                ),
-            )
+            # Build a stable hash that excludes non-serializable/heavy objects
+            excluded_keys = {
+                "seed",
+                "tokenizer",
+                "embedding_matrix",
+                "bert",
+                "logger",
+                "MV",
+            }
+            safe_items = []
+            for k in sorted(self.config.args.keys()):
+                if k in excluded_keys:
+                    continue
+                v = self.config.args[k]
+                # Avoid invoking complex __repr__ on objects
+                if isinstance(v, (str, int, float, bool)) or v is None:
+                    safe_items.append(f"{k}={v}")
+                else:
+                    safe_items.append(f"{k}={type(v).__name__}")
+            config_str = re.sub(r"<.*?>", "", str(safe_items))
             hash_tag = sha256(config_str.encode()).hexdigest()
             cache_path = "{}.{}.dataset.{}.cache".format(
                 self.config.model_name, self.config.dataset_name, hash_tag
@@ -106,30 +124,69 @@ class APCEnsembler(nn.Module):
                     config.args_call_count.update(self.config.args_call_count)
             if hasattr(APCModelList, models[i].__name__):
                 try:
-                    if kwargs.get("offline", False):
-                        self.tokenizer = AutoTokenizer.from_pretrained(
-                            find_cwd_dir(self.config.pretrained_bert.split("/")[-1]),
-                            do_lower_case="uncased" in self.config.pretrained_bert,
-                        )
-                        self.bert = (
-                            AutoModel.from_pretrained(
-                                find_cwd_dir(self.config.pretrained_bert.split("/")[-1])
+                    # Only build tokenizer when needed for dataset building
+                    if load_dataset:
+                        if kwargs.get("offline", False):
+                            pretrained_root = find_cwd_dir(
+                                self.config.pretrained_bert.split("/")[-1]
                             )
-                            if not self.bert
-                            else self.bert
-                        )  # share the underlying bert between models
-                    else:
-                        self.tokenizer = AutoTokenizer.from_pretrained(
-                            self.config.pretrained_bert,
-                            do_lower_case="uncased" in self.config.pretrained_bert,
-                        )
-                        self.bert = (
-                            AutoModel.from_pretrained(self.config.pretrained_bert)
-                            if not self.bert
-                            else self.bert
-                        )
-                except ValueError as e:
-                    fprint("Init pretrained model failed, exception: {}".format(e))
+                            try:
+                                self.tokenizer = AutoTokenizer.from_pretrained(
+                                    pretrained_root,
+                                    do_lower_case="uncased"
+                                    in self.config.pretrained_bert,
+                                    trust_remote_code=True,
+                                )
+                            except Exception:
+                                self.tokenizer = AutoTokenizer.from_pretrained(
+                                    pretrained_root,
+                                    do_lower_case="uncased"
+                                    in self.config.pretrained_bert,
+                                    trust_remote_code=True,
+                                    use_fast=False,
+                                )
+                        else:
+                            try:
+                                self.tokenizer = AutoTokenizer.from_pretrained(
+                                    self.config.pretrained_bert,
+                                    do_lower_case="uncased"
+                                    in self.config.pretrained_bert,
+                                    trust_remote_code=True,
+                                )
+                            except Exception:
+                                self.tokenizer = AutoTokenizer.from_pretrained(
+                                    self.config.pretrained_bert,
+                                    do_lower_case="uncased"
+                                    in self.config.pretrained_bert,
+                                    trust_remote_code=True,
+                                    use_fast=False,
+                                )
+
+                    if not self.bert:
+                        if kwargs.get("offline", False):
+                            pretrained_root = find_cwd_dir(
+                                self.config.pretrained_bert.split("/")[-1]
+                            )
+                            try:
+                                self.bert = AutoModel.from_pretrained(
+                                    pretrained_root, trust_remote_code=True
+                                )
+                            except Exception:
+                                self.bert = AutoModel.from_pretrained(pretrained_root)
+                        else:
+                            try:
+                                self.bert = AutoModel.from_pretrained(
+                                    self.config.pretrained_bert,
+                                    trust_remote_code=True,
+                                )
+                            except Exception:
+                                self.bert = AutoModel.from_pretrained(
+                                    self.config.pretrained_bert
+                                )
+                except Exception as e:
+                    fprint(
+                        "Init pretrained model failed, exception: {}".format(e)
+                    )
                     exit(-1)
 
                 if (
@@ -160,11 +217,15 @@ class APCEnsembler(nn.Module):
                     if not self.tokenizer
                     else self.tokenizer
                 )
-                self.bert = (
-                    AutoModel.from_pretrained(self.config.pretrained_bert)
-                    if not self.bert
-                    else self.bert
-                )
+                if not self.bert:
+                    try:
+                        self.bert = AutoModel.from_pretrained(
+                            self.config.pretrained_bert, trust_remote_code=True
+                        )
+                    except Exception:
+                        self.bert = AutoModel.from_pretrained(
+                            self.config.pretrained_bert
+                        )
 
                 if (
                     load_dataset

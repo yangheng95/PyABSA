@@ -11,7 +11,10 @@ import os
 
 import findfile
 
-import pyabsa
+from pyabsa.framework.flag_class.flag_template import (
+    TaskCodeOption,
+    LabelPaddingOption,
+)
 from pyabsa.tasks.AspectTermExtraction.dataset_utils.__lcf__.atepc_utils import (
     simple_split_text,
 )
@@ -38,7 +41,7 @@ def generate_inference_set_for_apc(dataset_path):
         [
             "dataset",
             "train",
-            pyabsa.TaskCodeOption.Aspect_Polarity_Classification,
+            TaskCodeOption.Aspect_Polarity_Classification,
             dataset_name,
         ],
         exclude_key=[".inference", "readme"],
@@ -47,7 +50,7 @@ def generate_inference_set_for_apc(dataset_path):
         [
             "dataset",
             "valid",
-            pyabsa.TaskCodeOption.Aspect_Polarity_Classification,
+            TaskCodeOption.Aspect_Polarity_Classification,
             dataset_name,
         ],
         exclude_key=[".inference", "readme"],
@@ -56,7 +59,7 @@ def generate_inference_set_for_apc(dataset_path):
         [
             "dataset",
             "test",
-            pyabsa.TaskCodeOption.Aspect_Polarity_Classification,
+            TaskCodeOption.Aspect_Polarity_Classification,
             dataset_name,
         ],
         exclude_key=[".inference", "readme"],
@@ -135,7 +138,14 @@ def assemble_aspects(fname, use_tokenizer=False):
     if use_tokenizer:
         from transformers import AutoTokenizer
 
-        tokenizer = AutoTokenizer.from_pretrained("microsoft/deberta-v3-base")
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(
+            "microsoft/deberta-v3-base", trust_remote_code=True
+        )
+    except Exception:
+        tokenizer = AutoTokenizer.from_pretrained(
+            "microsoft/deberta-v3-base", use_fast=False, trust_remote_code=True
+        )
 
     # Open and read the input file
     fin = open(fname, "r", encoding="utf-8", newline="\n", errors="ignore")
@@ -170,7 +180,7 @@ def assemble_aspects(fname, use_tokenizer=False):
     # Group sentences with similar aspects and generate samples with the corresponding aspect labels and polarities
     def unify_same_samples(same_samples):
         text = same_samples[0][0].replace("$T$", same_samples[0][1])
-        polarities = [pyabsa.LabelPaddingOption.SENTIMENT_PADDING] * len(text.split())
+        polarities = [LabelPaddingOption.SENTIMENT_PADDING] * len(text.split())
         tags = ["O"] * len(text.split())
         samples = []
         for sample in same_samples:
@@ -288,12 +298,12 @@ def convert_apc_set_to_atepc_set(path, use_tokenizer=False):
     elif os.path.exists(path):
         files = findfile.find_files(
             path,
-            ["dataset", pyabsa.TaskCodeOption.Aspect_Polarity_Classification],
+            ["dataset", TaskCodeOption.Aspect_Polarity_Classification],
             exclude_key=[".inference", "readme"],
         )
     else:
         files = findfile.find_cwd_files(
-            [path, "dataset", pyabsa.TaskCodeOption.Aspect_Polarity_Classification],
+            [path, "dataset", TaskCodeOption.Aspect_Polarity_Classification],
             exclude_key=[".inference", "readme"],
         )
 

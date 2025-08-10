@@ -16,7 +16,11 @@ from termcolor import colored
 from torch.utils.data import DataLoader
 from transformers import AutoModel
 
-from pyabsa import TaskCodeOption, LabelPaddingOption, DeviceTypeOption
+from pyabsa.framework.flag_class.flag_template import (
+    TaskCodeOption,
+    LabelPaddingOption,
+    DeviceTypeOption,
+)
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
 from pyabsa.framework.tokenizer_class.tokenizer_class import (
     PretrainedTokenizer,

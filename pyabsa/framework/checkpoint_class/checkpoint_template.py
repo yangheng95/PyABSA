@@ -13,7 +13,7 @@ from typing import Union
 from findfile import find_file
 from termcolor import colored
 
-from pyabsa import TaskCodeOption
+from pyabsa.framework.flag_class.flag_template import TaskCodeOption
 from pyabsa.framework.checkpoint_class.checkpoint_utils import (
     available_checkpoints,
     download_checkpoint,

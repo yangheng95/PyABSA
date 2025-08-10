@@ -2,7 +2,13 @@ import torch
 import torch.nn
 import torch.nn as nn
 import torch.nn.functional as F
-from transformers import AutoModel, AutoTokenizer
+from transformers import (
+    AutoModel,
+    AutoTokenizer,
+    DebertaV2Tokenizer,
+    RobertaTokenizer,
+    BertTokenizer,
+)
 
 
 # Redistributed under the Apache License, Version 2.0 (the "License");
@@ -150,9 +156,35 @@ class EMCGCN(torch.nn.Module):
         super(EMCGCN, self).__init__()
         self.config = config
         # Pretrained BERT model
-        self.bert = AutoModel.from_pretrained(config.pretrained_bert)
+        try:
+            self.bert = AutoModel.from_pretrained(
+                config.pretrained_bert, trust_remote_code=True
+            )
+        except Exception:
+            self.bert = AutoModel.from_pretrained(config.pretrained_bert)
         # Tokenizer
-        self.tokenizer = AutoTokenizer.from_pretrained(config.pretrained_bert)
+        pretrained_lower = str(config.pretrained_bert).lower()
+        try:
+            if "deberta" in pretrained_lower:
+                self.tokenizer = DebertaV2Tokenizer.from_pretrained(
+                    config.pretrained_bert, use_fast=False, trust_remote_code=True
+                )
+            elif "roberta" in pretrained_lower:
+                self.tokenizer = RobertaTokenizer.from_pretrained(
+                    config.pretrained_bert, use_fast=False, trust_remote_code=True
+                )
+            elif "bert" in pretrained_lower:
+                self.tokenizer = BertTokenizer.from_pretrained(
+                    config.pretrained_bert, use_fast=False, trust_remote_code=True
+                )
+            else:
+                self.tokenizer = AutoTokenizer.from_pretrained(
+                    config.pretrained_bert, trust_remote_code=True, use_fast=False
+                )
+        except Exception:
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                config.pretrained_bert, use_fast=False
+            )
         # Dropout layer
         self.dropout_output = torch.nn.Dropout(config.emb_dropout)
 

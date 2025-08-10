@@ -17,7 +17,7 @@ sent_classifier = APC.SentimentClassifier("multilingual", max_seq_len=512)
 # sent_classifier = APC.SentimentClassifier('chinese')
 
 examples = [
-    "The [B-ASP]food[E-ASP] was good, but the [B-ASP]service[E-ASP] was terrible. $LABEL$ Positive, Negative",
+    "The [B-ASP]food[E-ASP] was good, but the [B-ASP]service[E-ASP] was terrible. $LABEL$ Positive, Negative", # if you pass $LABEL$ in the end of the sentence, it will only be used for prediction checking
     "The [B-ASP]food[E-ASP] was terrible, but the [B-ASP]service[E-ASP] was good. $LABEL$ Negative, Positive",
     "The [B-ASP]food[E-ASP] was so-so, and the [B-ASP]service[E-ASP] was terrible. $LABEL$ Neutral, Negative",
 ]

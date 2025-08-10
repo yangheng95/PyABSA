@@ -21,6 +21,7 @@ from pyabsa.utils.pyabsa_utils import fprint, set_device, print_args
 from pyabsa.framework.flag_class import TaskCodeOption
 
 from pyabsa.framework.prediction_class.predictor_template import InferenceModel
+from transformers import AutoTokenizer
 from pyabsa.tasks.AspectSentimentTripletExtraction.dataset_utils.data_utils_for_inference import (
     ASTEInferenceDataset,
 )
@@ -31,9 +32,26 @@ from pyabsa.tasks.AspectSentimentTripletExtraction.dataset_utils.aste_utils impo
 
 
 class AspectSentimentTripletExtractor(InferenceModel):
+    """Predictor for Aspect Sentiment Triplet Extraction (ASTE).
+
+    Loads an ASTE checkpoint and provides utilities to extract aspect-opinion
+    pairs and their sentiments from text, supporting both single-text and
+    file-based batch prediction. When gold annotations exist in the input,
+    the predictor can also compute reference triplets for comparison.
+    """
     task_code = TaskCodeOption.Aspect_Sentiment_Triplet_Extraction
 
     def __init__(self, checkpoint=None, **kwargs):
+        """Initialize the ASTE predictor from a trained checkpoint.
+
+        Args:
+            checkpoint: Path to a checkpoint directory or a tuple
+                returned by the trainer.
+            **kwargs: Optional args such as `auto_device` and `verbose`.
+
+        Raises:
+            RuntimeError: If the checkpoint cannot be loaded.
+        """
         super().__init__(checkpoint, task_code=self.task_code, **kwargs)
 
         # load from a trainer
@@ -92,6 +110,23 @@ class AspectSentimentTripletExtractor(InferenceModel):
                         )
 
                 self.tokenizer = self.config.tokenizer
+                # Backward-compat: rebuild tokenizer if missing or incompatible with current transformers
+                try:
+                    # quick capability check
+                    _ = getattr(self.tokenizer, "encode")
+                except Exception:
+                    self.tokenizer = None
+                if self.tokenizer is None:
+                    try:
+                        self.tokenizer = AutoTokenizer.from_pretrained(
+                            self.config.pretrained_bert, trust_remote_code=True
+                        )
+                    except Exception:
+                        self.tokenizer = AutoTokenizer.from_pretrained(
+                            self.config.pretrained_bert,
+                            use_fast=False,
+                            trust_remote_code=True,
+                        )
 
                 if kwargs.get("verbose", False):
                     fprint("Config used in Training:")
@@ -117,17 +152,17 @@ class AspectSentimentTripletExtractor(InferenceModel):
         ignore_error=True,
         **kwargs
     ):
-        """
-        A deprecated version of batch_predict method.
+        """Deprecated alias of `batch_predict` for file-based inference.
 
         Args:
-            target_file (str): the path to the target file for inference
-            print_result (bool): whether to print the result
-            save_result (bool): whether to save the result
-            ignore_error (bool): whether to ignore the error
+            target_file: Path to the input file or directory.
+            print_result: Whether to print results (kept for parity).
+            save_result: Whether to save results (kept for parity).
+            ignore_error: Skip malformed lines instead of raising.
+            **kwargs: Additional inference options.
 
         Returns:
-            result (dict): a dictionary of the results
+            List[dict]: Extracted triplets and optional references.
         """
         return self.batch_predict(
             target_file=target_file,
@@ -138,16 +173,16 @@ class AspectSentimentTripletExtractor(InferenceModel):
         )
 
     def infer(self, text: str = None, print_result=True, ignore_error=True, **kwargs):
-        """
-        A deprecated version of the predict method.
+        """Deprecated alias of `predict` for a single string input.
 
         Args:
-            text (str): the text to predict
-            print_result (bool): whether to print the result
-            ignore_error (bool): whether to ignore the error
+            text: Input sentence to extract triplets from.
+            print_result: Whether to print results (kept for parity).
+            ignore_error: Skip parsing errors.
+            **kwargs: Additional inference options.
 
         Returns:
-            result (dict): a dictionary of the results
+            dict: Prediction result for the input text, or an error dict.
         """
         return self.predict(
             text=text, print_result=print_result, ignore_error=ignore_error, **kwargs
@@ -161,13 +196,17 @@ class AspectSentimentTripletExtractor(InferenceModel):
         ignore_error=True,
         **kwargs
     ):
-        """
-        Predict the sentiment from a file of sentences.
-        param: target_file: the file path of the sentences to be predicted.
-        param: print_result: whether to print the result.
-        param: save_result: whether to save the result.
-        param: ignore_error: whether to ignore the error when predicting.
-        param: kwargs: other parameters.
+        """Run ASTE inference on a dataset file or directory.
+
+        Args:
+            target_file: Path to a file or directory to infer.
+            print_result: Whether to print results (kept for parity).
+            save_result: Whether to save results (kept for parity).
+            ignore_error: Skip malformed lines instead of raising errors.
+            **kwargs: Additional inference options, e.g., `eval_batch_size`.
+
+        Returns:
+            List[dict]: Extracted triplets and optional references.
         """
         self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
 
@@ -197,12 +236,16 @@ class AspectSentimentTripletExtractor(InferenceModel):
         ignore_error=True,
         **kwargs
     ):
-        """
-        Predict the sentiment from a sentence or a list of sentences.
-        param: text: the sentence to be predicted.
-        param: print_result: whether to print the result.
-        param: ignore_error: whether to ignore the error when predicting.
-        param: kwargs: other parameters.
+        """Extract aspect-opinion-sentiment triplets from text.
+
+        Args:
+            text: A single string or list of strings.
+            print_result: Whether to print results (kept for parity).
+            ignore_error: Skip parsing errors.
+            **kwargs: Additional inference options.
+
+        Returns:
+            dict or List[dict]: Single or batched ASTE results.
         """
         self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
         if text:
@@ -223,11 +266,29 @@ class AspectSentimentTripletExtractor(InferenceModel):
             return self._run_prediction(print_result=print_result, **kwargs)
 
     def _run_prediction(self, save_path=None, print_result=True, **kwargs):
+        """Internal ASTE inference loop.
+
+        Iterates over prepared features, runs the model, decodes the tag
+        sequences into triplets via `Metric`, and returns structured
+        outputs. If golden labels exist, also parses and returns reference
+        triplets under the "True Triplets" field.
+
+        Args:
+            save_path: Optional result output path (kept for parity).
+            print_result: Whether to print intermediate results.
+            **kwargs: Additional control flags.
+
+        Returns:
+            List[dict]: Extracted triplets for each input sample.
+        """
         self.model.eval()
         all_results = []
         with torch.no_grad():
             data_loader = DataIterator(
-                self.dataset.convert_examples_to_features(), self.config
+                self.dataset.convert_examples_to_features(
+                    ignore_error=kwargs.get("ignore_error", True)
+                ),
+                self.config,
             )
             if len(self.dataset) > 1:
                 it = tqdm(data_loader, desc="Predicting")
@@ -331,6 +392,7 @@ class AspectSentimentTripletExtractor(InferenceModel):
             return all_results
 
     def clear_input_samples(self):
+        """Clear any previously prepared ASTE inference samples."""
         self.dataset.all_data = []
 
 

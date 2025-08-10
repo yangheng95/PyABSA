@@ -32,7 +32,13 @@ def get_mlm_and_tokenizer(model, config):
             base_model = child.base_model
             break
 
-    pretrained_config = AutoConfig.from_pretrained(config.pretrained_bert)
+    # Backward-compat for HF config changes
+    try:
+        pretrained_config = AutoConfig.from_pretrained(
+            config.pretrained_bert, trust_remote_code=True
+        )
+    except Exception:
+        pretrained_config = AutoConfig.from_pretrained(config.pretrained_bert)
     if "deberta-v3" in config.pretrained_bert:
         MLM = DebertaV2ForMaskedLM(pretrained_config)
         MLM.deberta = base_model
@@ -43,4 +49,13 @@ def get_mlm_and_tokenizer(model, config):
         MLM = BertForMaskedLM(pretrained_config)
         MLM.bert = base_model
 
-    return MLM, AutoTokenizer.from_pretrained(config.pretrained_bert)
+    # Tokenizer fallback for fast/remote code issues
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(
+            config.pretrained_bert, trust_remote_code=True
+        )
+    except Exception:
+        tokenizer = AutoTokenizer.from_pretrained(
+            config.pretrained_bert, use_fast=False, trust_remote_code=True
+        )
+    return MLM, tokenizer

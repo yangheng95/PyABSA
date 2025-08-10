@@ -231,9 +231,16 @@ class Instance(object):
                     self.token_range[self.head[i] - 1] if self.head[i] != 0 else (0, 0)
                 )
                 for k in range(s, e + 1):
-                    self.word_pair_deprel[j][k] = deprel_vocab.stoi.get(self.deprel[i])
-                    self.word_pair_deprel[k][j] = deprel_vocab.stoi.get(self.deprel[i])
-                    self.word_pair_deprel[j][j] = deprel_vocab.stoi.get("self")
+                    # Use unknown index fallback to avoid None assignment
+                    self.word_pair_deprel[j][k] = deprel_vocab.stoi.get(
+                        self.deprel[i], deprel_vocab.unk_index
+                    )
+                    self.word_pair_deprel[k][j] = deprel_vocab.stoi.get(
+                        self.deprel[i], deprel_vocab.unk_index
+                    )
+                    self.word_pair_deprel[j][j] = deprel_vocab.stoi.get(
+                        "self", deprel_vocab.unk_index
+                    )
 
         """3. generate POS tag index of the word pair"""
         self.word_pair_pos = torch.zeros(config.max_seq_len, config.max_seq_len).long()
@@ -243,8 +250,10 @@ class Instance(object):
                 s, e = self.token_range[j][0], self.token_range[j][1]
                 for row in range(start, end + 1):
                     for col in range(s, e + 1):
+                        # Fall back to unk_index for unseen POS tag pairs
                         self.word_pair_pos[row][col] = postag_vocab.stoi.get(
-                            tuple(sorted([self.postag[i], self.postag[j]]))
+                            tuple(sorted([self.postag[i], self.postag[j]])),
+                            postag_vocab.unk_index,
                         )
 
         """4. generate synpost index of the word pair"""

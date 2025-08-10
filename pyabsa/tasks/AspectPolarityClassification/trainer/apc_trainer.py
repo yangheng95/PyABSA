@@ -22,6 +22,13 @@ from ..instructor.apc_instructor import APCTrainingInstructor
 
 
 class APCTrainer(Trainer):
+    """Trainer entry point for Aspect Polarity Classification (APC).
+
+    This wrapper connects configuration, datasets and the APC training
+    instructor. After initialization, it triggers the standard training
+    pipeline and exposes `load_trained_model()` (in the base trainer) to
+    obtain a ready-to-use `SentimentClassifier` for inference.
+    """
     def __init__(
         self,
         config: APCConfigManager = None,
@@ -32,22 +39,23 @@ class APCTrainer(Trainer):
         path_to_save=None,
         load_aug=False,
     ):
-        """
-        Init a trainer for trainer a APC, ATEPC, TC or TAD model, after trainer,
-        you need to call load_trained_model() to get the trained model for inference.
+        """Initialize the APC training workflow.
 
-        :param config: PyABSA.config.ConfigManager
-        :param dataset: Dataset name, or a dataset_manager path, or a list of dataset_manager paths
-        :param from_checkpoint: A checkpoint path to train based on
-        :param checkpoint_save_mode: Save trained model to checkpoint,
-                                     "checkpoint_save_mode=1" to save the state_dict,
-                                     "checkpoint_save_mode=2" to save the whole model,
-                                     "checkpoint_save_mode=3" to save the fine-tuned BERT,
-                                     otherwise avoid saving checkpoint but return the trained model after trainer
-        :param auto_device: True or False, otherwise 'allcuda', 'cuda:1', 'cpu' works
-        :param path_to_save=None: Specify path to save checkpoints
-        :param load_aug=False: Load the available augmentation dataset if any
+        Args:
+            config: An `APCConfigManager` instance describing model, tokenizer
+                and training hyperparameters.
+            dataset: Dataset name, directory path, `DatasetItem`, or list of
+                such entries; see docs for supported formats.
+            from_checkpoint: Optional checkpoint path to resume training.
+            checkpoint_save_mode: One of `ModelSaveOption.*` controlling what
+                to save (state_dict, entire model, or fine-tuned PLM).
+            auto_device: Device selection strategy or explicit device string.
+            path_to_save: Directory to save checkpoints and logs.
+            load_aug: Whether to load available augmentation datasets.
 
+        Notes:
+            After training, call `load_trained_model()` to obtain an
+            inference-ready `SentimentClassifier`.
         """
         super(APCTrainer, self).__init__(
             config=config,

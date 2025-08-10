@@ -10,7 +10,7 @@
 import tqdm
 from torch.utils.data import Dataset
 
-from pyabsa import LabelPaddingOption
+from pyabsa.framework.flag_class.flag_template import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.framework.tokenizer_class.tokenizer_class import pad_and_truncate
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file

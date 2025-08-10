@@ -14,6 +14,7 @@ from findfile import find_file
 from sklearn import metrics
 from termcolor import colored
 from torch.utils.data import DataLoader
+from transformers import AutoTokenizer
 
 from pyabsa.framework.flag_class.flag_template import (
     LabelPaddingOption,
@@ -35,9 +36,42 @@ from pyabsa.utils.pyabsa_utils import set_device, print_args, fprint, rprint
 
 
 class SentimentClassifier(InferenceModel):
+    """High-level predictor for Aspect Polarity Classification (APC).
+
+    This class loads a trained APC checkpoint and provides convenient
+    inference APIs for single-sentence and batch predictions. It supports
+    checkpoints produced by different APC model families (e.g., LCF-based,
+    BERT-baseline, GloVe-based) and automatically builds the corresponding
+    inference dataset and tokenizer from the checkpoint configuration.
+
+    Typical usage:
+
+    - Load from a checkpoint directory containing `.config`, `.tokenizer`,
+      and either `.state_dict` or `.model` files
+    - Call `predict(text)` for a string or list of strings with marked aspect
+      terms, or `batch_predict(file_path)` for a dataset file
+
+    The returned results include predicted sentiment, confidence, and
+    probabilities; optionally, when reference labels exist in the input,
+    evaluation metrics are printed.
+    """
+
     task_code = TaskCodeOption.Aspect_Polarity_Classification
 
     def __init__(self, checkpoint=None, **kwargs):
+        """Initialize the APC predictor from a trained checkpoint.
+
+        Args:
+            checkpoint: Path to a checkpoint directory or a tuple returned
+                by the trainer containing (model, config, tokenizer).
+            **kwargs: Optional keyword arguments, e.g.,
+                - auto_device: whether to automatically select device
+                - verbose: whether to print training-time configuration
+
+        Raises:
+            RuntimeError: If the checkpoint cannot be loaded or is
+                incompatible with the current PyABSA version.
+        """
         super().__init__(checkpoint, task_code=self.task_code, **kwargs)
 
         # load from a trainer
@@ -95,6 +129,18 @@ class SentimentClassifier(InferenceModel):
                         )
 
                 self.tokenizer = self.config.tokenizer
+                if not self.tokenizer:
+                    # Backward-compat: rebuild tokenizer if missing from older checkpoints
+                    try:
+                        self.tokenizer = AutoTokenizer.from_pretrained(
+                            self.config.pretrained_bert, trust_remote_code=True
+                        )
+                    except Exception:
+                        self.tokenizer = AutoTokenizer.from_pretrained(
+                            self.config.pretrained_bert,
+                            use_fast=False,
+                            trust_remote_code=True,
+                        )
 
                 if kwargs.get("verbose", False):
                     fprint("Config used in Training:")
@@ -141,17 +187,18 @@ class SentimentClassifier(InferenceModel):
         ignore_error=True,
         **kwargs
     ):
-        """
-        A deprecated version of batch_predict method.
+        """Deprecated alias of `batch_predict`.
 
         Args:
-            target_file (str): the path to the target file for inference
-            print_result (bool): whether to print the result
-            save_result (bool): whether to save the result
-            ignore_error (bool): whether to ignore the error
+            target_file: Path to the input file or directory.
+            print_result: Whether to print formatted results to stdout.
+            save_result: Whether to save JSON results to disk.
+            ignore_error: Skip malformed lines instead of raising errors.
+            **kwargs: Additional inference options such as `eval_batch_size`.
 
         Returns:
-            result (dict): a dictionary of the results
+            List[dict]: Inference results; when labels exist, also prints
+            summary metrics.
         """
         return self.batch_predict(
             target_file=target_file,
@@ -162,16 +209,16 @@ class SentimentClassifier(InferenceModel):
         )
 
     def infer(self, text: str = None, print_result=True, ignore_error=True, **kwargs):
-        """
-        A deprecated version of the predict method.
+        """Deprecated alias of `predict` for a single text input.
 
         Args:
-            text (str): the text to predict
-            print_result (bool): whether to print the result
-            ignore_error (bool): whether to ignore the error
+            text: The input sentence with marked aspect terms.
+            print_result: Whether to print formatted results to stdout.
+            ignore_error: Skip parsing errors instead of raising.
+            **kwargs: Additional inference options such as `eval_batch_size`.
 
         Returns:
-            result (dict): a dictionary of the results
+            dict: The prediction result for the given text.
         """
         return self.predict(
             text=text, print_result=print_result, ignore_error=ignore_error, **kwargs
@@ -185,13 +232,22 @@ class SentimentClassifier(InferenceModel):
         ignore_error=True,
         **kwargs
     ):
-        """
-        Predict the sentiment from a file of sentences.
-        param: target_file: the file path of the sentences to be predicted.
-        param: print_result: whether to print the result.
-        param: save_result: whether to save the result.
-        param: ignore_error: whether to ignore the error when predicting.
-        param: kwargs: other parameters.
+        """Run APC inference on a dataset file or directory.
+
+        The function detects valid APC inference files under the given path
+        and performs batched prediction. When gold labels are present in the
+        input, overall metrics (accuracy, classification report, confusion
+        matrix) are printed.
+
+        Args:
+            target_file: Path to a file or directory containing APC data.
+            print_result: Print formatted results to stdout.
+            save_result: Save JSON results to the working directory.
+            ignore_error: Skip malformed lines instead of raising errors.
+            **kwargs: Additional options, e.g., `eval_batch_size`.
+
+        Returns:
+            List[dict]: Inference results, one entry per input example.
         """
         self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
 
@@ -226,12 +282,20 @@ class SentimentClassifier(InferenceModel):
         ignore_error=True,
         **kwargs
     ):
-        """
-        Predict the sentiment from a sentence or a list of sentences.
-        param: text: the sentence to be predicted.
-        param: print_result: whether to print the result.
-        param: ignore_error: whether to ignore the error when predicting.
-        param: kwargs: other parameters.
+        """Predict aspect sentiments for a string or a list of strings.
+
+        Each input sentence should contain aspect terms annotated with the
+        expected markers used by the selected APC dataset format.
+
+        Args:
+            text: A single string or list of strings to infer.
+            print_result: Print formatted results to stdout.
+            ignore_error: Skip parsing errors instead of raising.
+            **kwargs: Additional options, e.g., `eval_batch_size`.
+
+        Returns:
+            dict or List[dict]: A single result when `text` is a string,
+            otherwise a list of results.
         """
         self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
         self.infer_dataloader = DataLoader(
@@ -247,7 +311,18 @@ class SentimentClassifier(InferenceModel):
             return self._run_prediction(print_result=print_result, **kwargs)
 
     def merge_results(self, results):
-        """merge APC results have the same input text"""
+        """Merge per-aspect predictions belonging to the same input text.
+
+        The inference loop emits one record per aspect term. This utility
+        consolidates multiple aspect records that originate from the same
+        sentence into a single entry with list fields.
+
+        Args:
+            results: Flat list of per-aspect prediction records.
+
+        Returns:
+            List[dict]: Merged results with per-text aggregation.
+        """
         final_res = []
         # Loop through each result in the list of results
         for result in results:
@@ -286,6 +361,22 @@ class SentimentClassifier(InferenceModel):
         return final_res
 
     def _run_prediction(self, save_path=None, print_result=True, **kwargs):
+        """Internal prediction loop shared by `predict` and `batch_predict`.
+
+        Executes the model in evaluation mode over `self.infer_dataloader`,
+        collects raw logits, derives sentiments and confidences, and
+        optionally prints and saves results. When reference labels are
+        available, it also reports accuracy, classification report and
+        confusion matrix.
+
+        Args:
+            save_path: Optional file path to save JSON results.
+            print_result: Whether to print formatted results to stdout.
+            **kwargs: Additional control flags (e.g., `merge_results`).
+
+        Returns:
+            List[dict]: Inference results for all samples.
+        """
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
 
         correct = {True: "Correct", False: "Wrong"}
@@ -494,6 +585,7 @@ class SentimentClassifier(InferenceModel):
         return results
 
     def clear_input_samples(self):
+        """Clear any previously prepared inference samples/dataset cache."""
         self.dataset.all_data = []
 
 

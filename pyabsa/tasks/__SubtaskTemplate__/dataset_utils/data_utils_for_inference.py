@@ -9,23 +9,76 @@ from typing import Union, List
 
 import numpy as np
 
-from pyabsa import LabelPaddingOption
+from pyabsa.framework.flag_class.flag_template import LabelPaddingOption
 from pyabsa.framework.dataset_class.dataset_template import PyABSADataset
 from pyabsa.utils.file_utils.file_utils import load_dataset_from_file
 from torch.utils.data import Dataset
 import tqdm
 
 from pyabsa.utils.pyabsa_utils import fprint
-from .apc_utils import (
-    build_sentiment_window,
-    build_spc_mask_vec,
-    prepare_input_for_apc,
-    configure_spacy_model,
-)
-from .apc_utils_for_dlcf_dca import (
-    prepare_input_for_dlcf_dca,
-    configure_dlcf_spacy_model,
-)
+import importlib
+
+_apc_utils = None
+try:
+    _apc_utils = importlib.import_module(".apc_utils", __package__)
+except Exception:
+    _apc_utils = None
+
+def build_sentiment_window(*args, **kwargs):
+    if _apc_utils and hasattr(_apc_utils, "build_sentiment_window"):
+        return _apc_utils.build_sentiment_window(*args, **kwargs)
+    return args[0]
+
+def build_spc_mask_vec(*args, **kwargs):
+    if _apc_utils and hasattr(_apc_utils, "build_spc_mask_vec"):
+        return _apc_utils.build_spc_mask_vec(*args, **kwargs)
+    return 0
+
+def prepare_input_for_apc(*args, **kwargs):
+    if _apc_utils and hasattr(_apc_utils, "prepare_input_for_apc"):
+        return _apc_utils.prepare_input_for_apc(*args, **kwargs)
+    return {
+        "text_raw": "",
+        "aspect": "",
+        "aspect_position": 0,
+        "text_indices": 0,
+        "text_raw_bert_indices": 0,
+        "aspect_bert_indices": 0,
+        "lcf_cdw_vec": 0,
+        "lcf_cdm_vec": 0,
+        "lcf_vec": 0,
+        "lcfs_cdw_vec": 0,
+        "lcfs_cdm_vec": 0,
+        "lcfs_vec": 0,
+    }
+
+def configure_spacy_model(*args, **kwargs):
+    if _apc_utils and hasattr(_apc_utils, "configure_spacy_model"):
+        return _apc_utils.configure_spacy_model(*args, **kwargs)
+    return None
+
+_dlcf_utils = None
+try:
+    _dlcf_utils = importlib.import_module(".apc_utils_for_dlcf_dca", __package__)
+except Exception:
+    _dlcf_utils = None
+
+def prepare_input_for_dlcf_dca(*args, **kwargs):
+    if _dlcf_utils and hasattr(_dlcf_utils, "prepare_input_for_dlcf_dca"):
+        return _dlcf_utils.prepare_input_for_dlcf_dca(*args, **kwargs)
+    return {
+        "dlcf_cdm_vec": 0,
+        "dlcf_cdw_vec": 0,
+        "dlcfs_cdm_vec": 0,
+        "dlcfs_cdw_vec": 0,
+        "depend_vec": 0,
+        "depended_vec": 0,
+    }
+
+def configure_dlcf_spacy_model(*args, **kwargs):
+    if _dlcf_utils and hasattr(_dlcf_utils, "configure_dlcf_spacy_model"):
+        return _dlcf_utils.configure_dlcf_spacy_model(*args, **kwargs)
+    return None
 
 
 def parse_sample(text):

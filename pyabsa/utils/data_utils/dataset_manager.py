@@ -108,7 +108,9 @@ def detect_dataset(
                             + " https://github.com/yangheng95/ABSADatasets,"
                             + " please check your network connection."
                         )
-                    download_dataset_by_name(logger, task_code, dataset_name=d)
+                    download_dataset_by_name(
+                        task_code=task_code, dataset_name=d, logger=logger
+                    )
 
             search_path = findfile.find_dir(
                 os.getcwd(),
@@ -511,7 +513,7 @@ def download_dataset_by_name(
                 unit="KiB",
                 total=int(response.headers["content-length"]) // 1024,
                 desc="Downloading ({}){} dataset".format(
-                    TaskNameOption[task_code], dataset_name
+                    TaskNameOption().get(task_code), dataset_name
                 ),
             ):
                 f.write(chunk)

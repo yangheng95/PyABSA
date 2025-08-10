@@ -22,6 +22,13 @@ from ..prediction.predictor import USAPredictor
 
 
 class USATrainer(Trainer):
+    """Trainer entry point for Universal Sentiment Analysis (USA).
+
+    Orchestrates the training of the sequence-to-sequence USA model via the
+    task-specific training instructor. After initialization, it launches the
+    standard training routine; use `load_trained_model()` to obtain a
+    `USAPredictor` for inference.
+    """
     def __init__(
         self,
         config: USAConfigManager = None,
@@ -32,22 +39,20 @@ class USATrainer(Trainer):
         path_to_save=None,
         load_aug=False,
     ):
-        """
-        Init a trainer for trainer a APC, ATEPC, TC or TAD model, after trainer,
-        you need to call load_trained_model() to get the trained model for inference.
+        """Initialize the USA training workflow.
 
-        :param config: PyABSA.config.ConfigManager
-        :param dataset: Dataset name, or a dataset_manager path, or a list of dataset_manager paths
-        :param from_checkpoint: A checkpoint path to train based on
-        :param checkpoint_save_mode: Save trained model to checkpoint,
-                                     "checkpoint_save_mode=1" to save the state_dict,
-                                     "checkpoint_save_mode=2" to save the whole model,
-                                     "checkpoint_save_mode=3" to save the fine-tuned BERT,
-                                     otherwise avoid saving checkpoint but return the trained model after trainer
-        :param auto_device: True or False, otherwise 'allcuda', 'cuda:1', 'cpu' works
-        :param path_to_save=None: Specify path to save checkpoints
-        :param load_aug=False: Load the available augmentation dataset if any
+        Args:
+            config: A `USAConfigManager` describing model and trainer options.
+            dataset: Dataset name, directory path, `DatasetItem`, or list.
+            from_checkpoint: Optional checkpoint to resume training.
+            checkpoint_save_mode: What to save after/between epochs.
+            auto_device: Device strategy or explicit device string.
+            path_to_save: Directory for checkpoints.
+            load_aug: Whether to include augmentation datasets.
 
+        Notes:
+            After training, call `load_trained_model()` to obtain a
+            `USAPredictor` for inference.
         """
         super(USATrainer, self).__init__(
             config=config,

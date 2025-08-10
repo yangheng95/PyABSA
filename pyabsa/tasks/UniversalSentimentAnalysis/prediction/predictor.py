@@ -22,9 +22,25 @@ from pyabsa.utils.pyabsa_utils import fprint, set_device
 
 
 class USAPredictor(InferenceModel):
+    """Predictor for Universal Sentiment Analysis (sequence-to-sequence).
+
+    Loads a generative model checkpoint and runs decoding over inputs to
+    obtain structured sentiment outputs defined by the USA task design.
+    Provides single-text and batch prediction convenience methods and
+    dataset auto-detection for file-based inference.
+    """
     task_code = TaskCodeOption.Universal_Sentiment_Analysis
 
     def __init__(self, checkpoint=None, **kwargs):
+        """Initialize the USA predictor from a trained checkpoint.
+
+        Args:
+            checkpoint: Path to a checkpoint directory.
+            **kwargs: Optional keyword arguments, e.g., `auto_device`.
+
+        Raises:
+            RuntimeError: If the checkpoint cannot be loaded.
+        """
         super().__init__(checkpoint, task_code=self.task_code, **kwargs)
 
         # load from a trainer
@@ -81,17 +97,17 @@ class USAPredictor(InferenceModel):
         ignore_error=True,
         **kwargs
     ):
-        """
-        A deprecated version of batch_predict method.
+        """Deprecated alias of `batch_predict`.
 
         Args:
-            target_file (str): the path to the target file for inference
-            print_result (bool): whether to print the result
-            save_result (bool): whether to save the result
-            ignore_error (bool): whether to ignore the error
+            target_file: Path to the input file or directory.
+            print_result: Whether to print the result (kept for parity).
+            save_result: Whether to save predictions (kept for parity).
+            ignore_error: Skip malformed lines instead of raising errors.
+            **kwargs: Additional inference options.
 
         Returns:
-            result (dict): a dictionary of the results
+            List[str]: Decoded outputs.
         """
         return self.batch_predict(
             target_file=target_file,
@@ -102,16 +118,17 @@ class USAPredictor(InferenceModel):
         )
 
     def infer(self, text: str = None, print_result=True, ignore_error=True, **kwargs):
-        """
-        A deprecated version of the predict method.
+        """Deprecated alias of `predict` for a single string.
 
         Args:
-            text (str): the text to predict
-            print_result (bool): whether to print the result
-            ignore_error (bool): whether to ignore the error
+            text: The input text to decode.
+            print_result: Unused; kept for API compatibility.
+            ignore_error: Skip parsing errors.
+            **kwargs: Additional inference options.
 
         Returns:
-            result (dict): a dictionary of the results
+            dict: On success, the decoded string is returned via
+            `predict`; on error, a dict describing the error is returned.
         """
         return self.predict(
             text=text, print_result=print_result, ignore_error=ignore_error, **kwargs
@@ -125,13 +142,17 @@ class USAPredictor(InferenceModel):
         ignore_error=True,
         **kwargs
     ):
-        """
-        Predict the sentiment from a file of sentences.
-        param: target_file: the file path of the sentences to be predicted.
-        param: print_result: whether to print the result.
-        param: save_result: whether to save the result.
-        param: ignore_error: whether to ignore the error when predicting.
-        param: kwargs: other parameters.
+        """Run USA inference on a dataset file or directory.
+
+        Args:
+            target_file: Path to a file or directory to infer.
+            print_result: Unused; kept for API compatibility.
+            save_result: Unused; kept for API compatibility.
+            ignore_error: Skip malformed lines instead of raising errors.
+            **kwargs: Additional inference options, e.g., `eval_batch_size`.
+
+        Returns:
+            List[str]: Decoded outputs for all inputs.
         """
         self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
 
@@ -161,12 +182,17 @@ class USAPredictor(InferenceModel):
         ignore_error=True,
         **kwargs
     ):
-        """
-        Predict the sentiment from a sentence or a list of sentences.
-        param: text: the sentence to be predicted.
-        param: print_result: whether to print the result.
-        param: ignore_error: whether to ignore the error when predicting.
-        param: kwargs: other parameters.
+        """Decode sentiment outputs for a string or list of strings.
+
+        Args:
+            text: Single input or a list of inputs.
+            print_result: Unused; kept for API compatibility.
+            ignore_error: Skip malformed inputs.
+            **kwargs: Additional inference options.
+
+        Returns:
+            str or List[str]: A single decoded string for single input,
+            otherwise a list of decoded strings.
         """
         self.config.eval_batch_size = kwargs.get("eval_batch_size", 32)
         if text:
@@ -187,6 +213,19 @@ class USAPredictor(InferenceModel):
             return self._run_prediction(print_result=print_result, **kwargs)
 
     def _run_prediction(self, save_path=None, print_result=True, **kwargs):
+        """Internal decoding loop for the USA generative model.
+
+        Prepares a dataloader over tokenized inputs, generates output
+        sequences on the configured device, and decodes them to strings.
+
+        Args:
+            save_path: Unused; kept for API compatibility.
+            print_result: Unused; kept for API compatibility.
+            **kwargs: Additional generation options.
+
+        Returns:
+            List[str]: Decoded outputs for the current dataset split.
+        """
         self.model.model.eval()
         all_results = []
         with torch.no_grad():

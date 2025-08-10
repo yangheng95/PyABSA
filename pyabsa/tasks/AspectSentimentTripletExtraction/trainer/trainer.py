@@ -22,6 +22,13 @@ from ..prediction.predictor import AspectSentimentTripletExtractor
 
 
 class ASTETrainer(Trainer):
+    """Trainer entry point for Aspect Sentiment Triplet Extraction (ASTE).
+
+    Coordinates configuration, datasets, and the ASTE training instructor.
+    After initialization, it launches the standard training routine. Use
+    `load_trained_model()` to obtain an `AspectSentimentTripletExtractor`
+    for inference.
+    """
     def __init__(
         self,
         config: ASTEConfigManager = None,
@@ -32,22 +39,20 @@ class ASTETrainer(Trainer):
         path_to_save=None,
         load_aug=False,
     ):
-        """
-        Init a trainer for trainer a APC, ATEPC, TC or TAD model, after trainer,
-        you need to call load_trained_model() to get the trained model for inference.
+        """Initialize the ASTE training workflow.
 
-        :param config: PyABSA.config.ConfigManager
-        :param dataset: Dataset name, or a dataset_manager path, or a list of dataset_manager paths
-        :param from_checkpoint: A checkpoint path to train based on
-        :param checkpoint_save_mode: Save trained model to checkpoint,
-                                     "checkpoint_save_mode=1" to save the state_dict,
-                                     "checkpoint_save_mode=2" to save the whole model,
-                                     "checkpoint_save_mode=3" to save the fine-tuned BERT,
-                                     otherwise avoid saving checkpoint but return the trained model after trainer
-        :param auto_device: True or False, otherwise 'allcuda', 'cuda:1', 'cpu' works
-        :param path_to_save=None: Specify path to save checkpoints
-        :param load_aug=False: Load the available augmentation dataset if any
+        Args:
+            config: An `ASTEConfigManager` describing model and trainer options.
+            dataset: Dataset name, directory path, `DatasetItem`, or list.
+            from_checkpoint: Optional checkpoint path to resume training.
+            checkpoint_save_mode: What to save after/between epochs.
+            auto_device: Device strategy or explicit device string.
+            path_to_save: Directory to store checkpoints.
+            load_aug: Whether to include augmentation datasets.
 
+        Notes:
+            After training, call `load_trained_model()` to obtain an
+            `AspectSentimentTripletExtractor` for inference.
         """
         super(ASTETrainer, self).__init__(
             config=config,

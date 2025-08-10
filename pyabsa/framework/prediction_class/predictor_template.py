@@ -11,7 +11,7 @@ from typing import Union
 
 from torch import cuda
 
-import pyabsa
+from pyabsa.framework.flag_class.flag_template import DeviceTypeOption
 from pyabsa.utils.text_utils.mlm import get_mlm_and_tokenizer
 
 
@@ -57,10 +57,10 @@ class InferenceModel:
         """
         Sets the device to CPU for performing inference.
         """
-        self.config.device = pyabsa.DeviceTypeOption.CPU
-        self.model.to(pyabsa.DeviceTypeOption.CPU)
+        self.config.device = DeviceTypeOption.CPU
+        self.model.to(DeviceTypeOption.CPU)
         if hasattr(self, "MLM"):
-            self.MLM.to(pyabsa.DeviceTypeOption.CPU)
+            self.MLM.to(DeviceTypeOption.CPU)
 
     def cuda(self, device="cuda:0"):
         """
