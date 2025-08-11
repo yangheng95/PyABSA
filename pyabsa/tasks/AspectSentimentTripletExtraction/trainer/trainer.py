@@ -29,6 +29,7 @@ class ASTETrainer(Trainer):
     `load_trained_model()` to obtain an `AspectSentimentTripletExtractor`
     for inference.
     """
+
     def __init__(
         self,
         config: ASTEConfigManager = None,

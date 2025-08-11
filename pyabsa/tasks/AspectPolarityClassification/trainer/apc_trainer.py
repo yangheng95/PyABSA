@@ -29,6 +29,7 @@ class APCTrainer(Trainer):
     pipeline and exposes `load_trained_model()` (in the base trainer) to
     obtain a ready-to-use `SentimentClassifier` for inference.
     """
+
     def __init__(
         self,
         config: APCConfigManager = None,

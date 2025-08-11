@@ -355,9 +355,11 @@ class CodeDefectDetector(InferenceModel):
                 if targets_all is None:
                     targets_all = np.array(
                         [
-                            self.config.label_to_index[x]
-                            if x in self.config.label_to_index
-                            else LabelPaddingOption.LABEL_PADDING
+                            (
+                                self.config.label_to_index[x]
+                                if x in self.config.label_to_index
+                                else LabelPaddingOption.LABEL_PADDING
+                            )
                             for x in targets
                         ]
                     )
@@ -367,9 +369,11 @@ class CodeDefectDetector(InferenceModel):
                         (
                             targets_all,
                             [
-                                self.config.label_to_index[x]
-                                if x in self.config.label_to_index
-                                else LabelPaddingOption.LABEL_PADDING
+                                (
+                                    self.config.label_to_index[x]
+                                    if x in self.config.label_to_index
+                                    else LabelPaddingOption.LABEL_PADDING
+                                )
                                 for x in targets
                             ],
                         ),
@@ -382,9 +386,11 @@ class CodeDefectDetector(InferenceModel):
                 if c_targets_all is None:
                     c_targets_all = np.array(
                         [
-                            self.config.label_to_index[x]
-                            if x in self.config.label_to_index
-                            else LabelPaddingOption.LABEL_PADDING
+                            (
+                                self.config.label_to_index[x]
+                                if x in self.config.label_to_index
+                                else LabelPaddingOption.LABEL_PADDING
+                            )
                             for x in c_targets
                         ]
                     )
@@ -436,9 +442,12 @@ class CodeDefectDetector(InferenceModel):
                                 "corrupt_ref_label": c_targets[i],
                                 "corrupt_confidence": float(max(c_logits[i])),
                                 "ref_label": real_label,
-                                "ref_check": correct[label == real_label]
-                                if real_label != str(LabelPaddingOption.LABEL_PADDING)
-                                else "",
+                                "ref_check": (
+                                    correct[label == real_label]
+                                    if real_label
+                                    != str(LabelPaddingOption.LABEL_PADDING)
+                                    else ""
+                                ),
                                 "perplexity": perplexity,
                             }
                         )

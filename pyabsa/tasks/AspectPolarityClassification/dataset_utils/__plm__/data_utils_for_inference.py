@@ -21,6 +21,7 @@ class BERTABSAInferenceDataset(ABSAInferenceDataset):
     building fields such as `text_indices`, `aspect_indices`, and
     `dependency_graph` when required.
     """
+
     def __init__(self, config, tokenizer):
         configure_spacy_model(config)
 
@@ -128,34 +129,48 @@ class BERTABSAInferenceDataset(ABSAInferenceDataset):
 
                 data = {
                     "ex_id": ex_id,
-                    "text_indices": text_indices
-                    if "text_indices" in self.config.inputs_cols
-                    else 0,
-                    "context_indices": context_indices
-                    if "context_indices" in self.config.inputs_cols
-                    else 0,
-                    "left_indices": left_indices
-                    if "left_indices" in self.config.inputs_cols
-                    else 0,
-                    "left_with_aspect_indices": left_with_aspect_indices
-                    if "left_with_aspect_indices" in self.config.inputs_cols
-                    else 0,
-                    "right_indices": right_indices
-                    if "right_indices" in self.config.inputs_cols
-                    else 0,
-                    "right_with_aspect_indices": right_with_aspect_indices
-                    if "right_with_aspect_indices" in self.config.inputs_cols
-                    else 0,
-                    "aspect_indices": aspect_indices
-                    if "aspect_indices" in self.config.inputs_cols
-                    else 0,
-                    "aspect_boundary": aspect_boundary
-                    if "aspect_boundary" in self.config.inputs_cols
-                    else 0,
+                    "text_indices": (
+                        text_indices if "text_indices" in self.config.inputs_cols else 0
+                    ),
+                    "context_indices": (
+                        context_indices
+                        if "context_indices" in self.config.inputs_cols
+                        else 0
+                    ),
+                    "left_indices": (
+                        left_indices if "left_indices" in self.config.inputs_cols else 0
+                    ),
+                    "left_with_aspect_indices": (
+                        left_with_aspect_indices
+                        if "left_with_aspect_indices" in self.config.inputs_cols
+                        else 0
+                    ),
+                    "right_indices": (
+                        right_indices
+                        if "right_indices" in self.config.inputs_cols
+                        else 0
+                    ),
+                    "right_with_aspect_indices": (
+                        right_with_aspect_indices
+                        if "right_with_aspect_indices" in self.config.inputs_cols
+                        else 0
+                    ),
+                    "aspect_indices": (
+                        aspect_indices
+                        if "aspect_indices" in self.config.inputs_cols
+                        else 0
+                    ),
+                    "aspect_boundary": (
+                        aspect_boundary
+                        if "aspect_boundary" in self.config.inputs_cols
+                        else 0
+                    ),
                     "aspect_position": aspect_position,
-                    "dependency_graph": dependency_graph
-                    if "dependency_graph" in self.config.inputs_cols
-                    else 0,
+                    "dependency_graph": (
+                        dependency_graph
+                        if "dependency_graph" in self.config.inputs_cols
+                        else 0
+                    ),
                     "text_raw": text,
                     "aspect": aspect,
                     "polarity": polarity,

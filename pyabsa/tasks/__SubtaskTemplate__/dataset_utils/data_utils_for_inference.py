@@ -24,15 +24,18 @@ try:
 except Exception:
     _apc_utils = None
 
+
 def build_sentiment_window(*args, **kwargs):
     if _apc_utils and hasattr(_apc_utils, "build_sentiment_window"):
         return _apc_utils.build_sentiment_window(*args, **kwargs)
     return args[0]
 
+
 def build_spc_mask_vec(*args, **kwargs):
     if _apc_utils and hasattr(_apc_utils, "build_spc_mask_vec"):
         return _apc_utils.build_spc_mask_vec(*args, **kwargs)
     return 0
+
 
 def prepare_input_for_apc(*args, **kwargs):
     if _apc_utils and hasattr(_apc_utils, "prepare_input_for_apc"):
@@ -52,16 +55,19 @@ def prepare_input_for_apc(*args, **kwargs):
         "lcfs_vec": 0,
     }
 
+
 def configure_spacy_model(*args, **kwargs):
     if _apc_utils and hasattr(_apc_utils, "configure_spacy_model"):
         return _apc_utils.configure_spacy_model(*args, **kwargs)
     return None
+
 
 _dlcf_utils = None
 try:
     _dlcf_utils = importlib.import_module(".apc_utils_for_dlcf_dca", __package__)
 except Exception:
     _dlcf_utils = None
+
 
 def prepare_input_for_dlcf_dca(*args, **kwargs):
     if _dlcf_utils and hasattr(_dlcf_utils, "prepare_input_for_dlcf_dca"):
@@ -74,6 +80,7 @@ def prepare_input_for_dlcf_dca(*args, **kwargs):
         "depend_vec": 0,
         "depended_vec": 0,
     }
+
 
 def configure_dlcf_spacy_model(*args, **kwargs):
     if _dlcf_utils and hasattr(_dlcf_utils, "configure_dlcf_spacy_model"):
@@ -260,47 +267,51 @@ class ABSAInferenceDataset(Dataset):
                     "lca_ids": lcf_vec,
                     # the lca indices are the same as the refactored CDM (lcf != CDW or Fusion) lcf vec
                     "lcf_vec": lcf_vec if "lcf_vec" in self.config.inputs_cols else 0,
-                    "lcf_cdw_vec": lcf_cdw_vec
-                    if "lcf_cdw_vec" in self.config.inputs_cols
-                    else 0,
-                    "lcf_cdm_vec": lcf_cdm_vec
-                    if "lcf_cdm_vec" in self.config.inputs_cols
-                    else 0,
-                    "lcfs_vec": lcfs_vec
-                    if "lcfs_vec" in self.config.inputs_cols
-                    else 0,
-                    "lcfs_cdw_vec": lcfs_cdw_vec
-                    if "lcfs_cdw_vec" in self.config.inputs_cols
-                    else 0,
-                    "lcfs_cdm_vec": lcfs_cdm_vec
-                    if "lcfs_cdm_vec" in self.config.inputs_cols
-                    else 0,
-                    "dlcf_vec": dlcf_vec
-                    if "dlcf_vec" in self.config.inputs_cols
-                    else 0,
-                    "dlcfs_vec": dlcfs_vec
-                    if "dlcfs_vec" in self.config.inputs_cols
-                    else 0,
-                    "depend_vec": depend_vec
-                    if "depend_vec" in self.config.inputs_cols
-                    else 0,
-                    "depended_vec": depended_vec
-                    if "depended_vec" in self.config.inputs_cols
-                    else 0,
-                    "spc_mask_vec": build_spc_mask_vec(
-                        self.config, text_raw_bert_indices
-                    )
-                    if "spc_mask_vec" in self.config.inputs_cols
-                    else 0,
-                    "text_indices": text_indices
-                    if "text_indices" in self.config.inputs_cols
-                    else 0,
-                    "aspect_bert_indices": aspect_bert_indices
-                    if "aspect_bert_indices" in self.config.inputs_cols
-                    else 0,
-                    "text_raw_bert_indices": text_raw_bert_indices
-                    if "text_raw_bert_indices" in self.config.inputs_cols
-                    else 0,
+                    "lcf_cdw_vec": (
+                        lcf_cdw_vec if "lcf_cdw_vec" in self.config.inputs_cols else 0
+                    ),
+                    "lcf_cdm_vec": (
+                        lcf_cdm_vec if "lcf_cdm_vec" in self.config.inputs_cols else 0
+                    ),
+                    "lcfs_vec": (
+                        lcfs_vec if "lcfs_vec" in self.config.inputs_cols else 0
+                    ),
+                    "lcfs_cdw_vec": (
+                        lcfs_cdw_vec if "lcfs_cdw_vec" in self.config.inputs_cols else 0
+                    ),
+                    "lcfs_cdm_vec": (
+                        lcfs_cdm_vec if "lcfs_cdm_vec" in self.config.inputs_cols else 0
+                    ),
+                    "dlcf_vec": (
+                        dlcf_vec if "dlcf_vec" in self.config.inputs_cols else 0
+                    ),
+                    "dlcfs_vec": (
+                        dlcfs_vec if "dlcfs_vec" in self.config.inputs_cols else 0
+                    ),
+                    "depend_vec": (
+                        depend_vec if "depend_vec" in self.config.inputs_cols else 0
+                    ),
+                    "depended_vec": (
+                        depended_vec if "depended_vec" in self.config.inputs_cols else 0
+                    ),
+                    "spc_mask_vec": (
+                        build_spc_mask_vec(self.config, text_raw_bert_indices)
+                        if "spc_mask_vec" in self.config.inputs_cols
+                        else 0
+                    ),
+                    "text_indices": (
+                        text_indices if "text_indices" in self.config.inputs_cols else 0
+                    ),
+                    "aspect_bert_indices": (
+                        aspect_bert_indices
+                        if "aspect_bert_indices" in self.config.inputs_cols
+                        else 0
+                    ),
+                    "text_raw_bert_indices": (
+                        text_raw_bert_indices
+                        if "text_raw_bert_indices" in self.config.inputs_cols
+                        else 0
+                    ),
                     "polarity": polarity,
                 }
 

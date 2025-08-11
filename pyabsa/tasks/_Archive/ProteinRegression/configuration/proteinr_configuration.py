@@ -58,7 +58,7 @@ _proteinr_config_base = {
     "output_dim": 3,
     "log_step": 10,
     "evaluate_begin": 0,
-    "cross_validate_fold": -1
+    "cross_validate_fold": -1,
     # split train and test datasets into 5 folds and repeat 3 trainer
 }
 
@@ -81,7 +81,7 @@ _proteinr_config_english = {
     "output_dim": 3,
     "log_step": 10,
     "evaluate_begin": 0,
-    "cross_validate_fold": -1
+    "cross_validate_fold": -1,
     # split train and test datasets into 5 folds and repeat 3 trainer
 }
 
@@ -104,7 +104,7 @@ _proteinr_config_multilingual = {
     "output_dim": 3,
     "log_step": 10,
     "evaluate_begin": 0,
-    "cross_validate_fold": -1
+    "cross_validate_fold": -1,
     # split train and test datasets into 5 folds and repeat 3 trainer
 }
 
@@ -127,7 +127,7 @@ _proteinr_config_chinese = {
     "output_dim": 3,
     "log_step": 10,
     "evaluate_begin": 0,
-    "cross_validate_fold": -1
+    "cross_validate_fold": -1,
     # split train and test datasets into 5 folds and repeat 3 trainer
 }
 

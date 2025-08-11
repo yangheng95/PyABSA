@@ -265,9 +265,11 @@ class RNAClassifier(InferenceModel):
                 if t_targets_all is None:
                     t_targets_all = np.array(
                         [
-                            self.config.label_to_index[x]
-                            if x in self.config.label_to_index
-                            else LabelPaddingOption.SENTIMENT_PADDING
+                            (
+                                self.config.label_to_index[x]
+                                if x in self.config.label_to_index
+                                else LabelPaddingOption.SENTIMENT_PADDING
+                            )
                             for x in sample["label"]
                         ]
                     )
@@ -277,9 +279,11 @@ class RNAClassifier(InferenceModel):
                         (
                             t_targets_all,
                             [
-                                self.config.label_to_index[x]
-                                if x in self.config.label_to_index
-                                else LabelPaddingOption.SENTIMENT_PADDING
+                                (
+                                    self.config.label_to_index[x]
+                                    if x in self.config.label_to_index
+                                    else LabelPaddingOption.SENTIMENT_PADDING
+                                )
                                 for x in sample["label"]
                             ],
                         ),
@@ -325,9 +329,11 @@ class RNAClassifier(InferenceModel):
                             "confidence": float(max(i_probs)),
                             "probs": i_probs.cpu().numpy(),
                             "ref_label": real_sent,
-                            "ref_check": correct[sent == real_sent]
-                            if real_sent != str(LabelPaddingOption.LABEL_PADDING)
-                            else "",
+                            "ref_check": (
+                                correct[sent == real_sent]
+                                if real_sent != str(LabelPaddingOption.LABEL_PADDING)
+                                else ""
+                            ),
                             "perplexity": perplexity,
                         }
                     )

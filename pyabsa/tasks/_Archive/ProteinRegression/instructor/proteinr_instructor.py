@@ -355,9 +355,9 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
                                     test_r2
                                     < self.config.max_test_metrics["max_test_r2"]
                                 ):
-                                    self.config.max_test_metrics[
-                                        "max_test_r2"
-                                    ] = test_r2
+                                    self.config.max_test_metrics["max_test_r2"] = (
+                                        test_r2
+                                    )
 
                                 save_model(
                                     self.config, self.model, self.tokenizer, save_path
@@ -557,9 +557,9 @@ class ProteinRTrainingInstructor(BaseTrainingInstructor):
                                         test_r2
                                         < self.config.max_test_metrics["max_test_r2"]
                                     ):
-                                        self.config.max_test_metrics[
-                                            "max_test_r2"
-                                        ] = test_r2
+                                        self.config.max_test_metrics["max_test_r2"] = (
+                                            test_r2
+                                        )
 
                                     save_model(
                                         self.config,

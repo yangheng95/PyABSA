@@ -66,9 +66,11 @@ class GloVeTCInferenceDataset(Dataset):
 
                 data = {
                     "ex_id": ex_id,
-                    "text_indices": text_indices
-                    if "text_indices" in self.config.model.inputs
-                    else 0,
+                    "text_indices": (
+                        text_indices
+                        if "text_indices" in self.config.model.inputs
+                        else 0
+                    ),
                     "text_raw": text,
                     "label": label,
                 }

@@ -16,6 +16,7 @@ except Exception:  # pragma: no cover
     except Exception:
         _pkg_version = None
 
+
 def _get_pyabsa_version():
     # 1) Environment override
     env_v = os.environ.get("PYABSA_DOCS_VERSION")
@@ -38,7 +39,8 @@ def _get_pyabsa_version():
         pass
     return "0.0.0"
 
-sys.path.insert(0, os.path.abspath("../")) 
+
+sys.path.insert(0, os.path.abspath("../"))
 
 # -- Project information -----------------------------------------------------
 project = "PyABSA"
@@ -111,11 +113,11 @@ autoapi_options = [
 # ===== 传统autodoc配置 =====
 # 启用autodoc扩展
 autodoc_default_options = {
-    'members': True,
-    'member-order': 'bysource',
-    'special-members': '__init__',
-    'undoc-members': True,
-    'exclude-members': '__weakref__'
+    "members": True,
+    "member-order": "bysource",
+    "special-members": "__init__",
+    "undoc-members": True,
+    "exclude-members": "__weakref__",
 }
 
 # 如果你的 docstring 里是传统的 :param: 风格，启用 fieldlist 兼容

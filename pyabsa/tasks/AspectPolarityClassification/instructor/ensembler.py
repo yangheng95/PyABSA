@@ -57,6 +57,7 @@ class APCEnsembler(nn.Module):
     - Lazily builds tokenizer/encoder and datasets as needed
     - Supports concatenation or mean-averaging of logits for ensembling
     """
+
     def __init__(self, config, load_dataset=True, **kwargs):
         super(APCEnsembler, self).__init__()
         self.config = config
@@ -184,9 +185,7 @@ class APCEnsembler(nn.Module):
                                     self.config.pretrained_bert
                                 )
                 except Exception as e:
-                    fprint(
-                        "Init pretrained model failed, exception: {}".format(e)
-                    )
+                    fprint("Init pretrained model failed, exception: {}".format(e))
                     exit(-1)
 
                 if (
@@ -255,9 +254,11 @@ class APCEnsembler(nn.Module):
                     )
                 self.models.append(
                     models[i](
-                        copy.deepcopy(self.bert)
-                        if self.config.deep_ensemble
-                        else self.bert,
+                        (
+                            copy.deepcopy(self.bert)
+                            if self.config.deep_ensemble
+                            else self.bert
+                        ),
                         self.config,
                     )
                 )
@@ -314,9 +315,11 @@ class APCEnsembler(nn.Module):
 
                 self.models.append(
                     models[i](
-                        copy.deepcopy(self.embedding_matrix)
-                        if self.config.deep_ensemble
-                        else self.embedding_matrix,
+                        (
+                            copy.deepcopy(self.embedding_matrix)
+                            if self.config.deep_ensemble
+                            else self.embedding_matrix
+                        ),
                         self.config,
                     )
                 )

@@ -48,7 +48,14 @@ def print_args(config, logger=None):
     args = [key for key in sorted(config.args.keys())]
     for arg in args:
         # skip heavy/non-serializable objects
-        if arg in {"dataset", "dataset_dict", "embedding_matrix", "tokenizer", "MV", "logger"}:
+        if arg in {
+            "dataset",
+            "dataset_dict",
+            "embedding_matrix",
+            "tokenizer",
+            "MV",
+            "logger",
+        }:
             continue
         else:
             if logger:

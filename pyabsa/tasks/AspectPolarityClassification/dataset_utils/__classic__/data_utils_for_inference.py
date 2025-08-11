@@ -24,6 +24,7 @@ class GloVeABSAInferenceDataset(ABSAInferenceDataset):
     Prepares integer-indexed sequences for context/aspect inputs and builds
     optional dependency graphs and boundaries used by classic architectures.
     """
+
     def __init__(self, config, tokenizer):
         self.config = config
         self.tokenizer = tokenizer
@@ -130,37 +131,51 @@ class GloVeABSAInferenceDataset(ABSAInferenceDataset):
 
                 data = {
                     "ex_id": ex_id,
-                    "text_indices": text_indices
-                    if "text_indices" in self.config.inputs_cols
-                    else 0,
-                    "context_indices": context_indices
-                    if "context_indices" in self.config.inputs_cols
-                    else 0,
-                    "left_indices": left_indices
-                    if "left_indices" in self.config.inputs_cols
-                    else 0,
-                    "left_with_aspect_indices": left_with_aspect_indices
-                    if "left_with_aspect_indices" in self.config.inputs_cols
-                    else 0,
-                    "right_indices": right_indices
-                    if "right_indices" in self.config.inputs_cols
-                    else 0,
-                    "right_with_aspect_indices": right_with_aspect_indices
-                    if "right_with_aspect_indices" in self.config.inputs_cols
-                    else 0,
-                    "aspect_indices": aspect_indices
-                    if "aspect_indices" in self.config.inputs_cols
-                    else 0,
-                    "aspect_len": aspect_len
-                    if "aspect_len" in self.config.inputs_cols
-                    else 0,
-                    "aspect_boundary": aspect_boundary
-                    if "aspect_boundary" in self.config.inputs_cols
-                    else 0,
+                    "text_indices": (
+                        text_indices if "text_indices" in self.config.inputs_cols else 0
+                    ),
+                    "context_indices": (
+                        context_indices
+                        if "context_indices" in self.config.inputs_cols
+                        else 0
+                    ),
+                    "left_indices": (
+                        left_indices if "left_indices" in self.config.inputs_cols else 0
+                    ),
+                    "left_with_aspect_indices": (
+                        left_with_aspect_indices
+                        if "left_with_aspect_indices" in self.config.inputs_cols
+                        else 0
+                    ),
+                    "right_indices": (
+                        right_indices
+                        if "right_indices" in self.config.inputs_cols
+                        else 0
+                    ),
+                    "right_with_aspect_indices": (
+                        right_with_aspect_indices
+                        if "right_with_aspect_indices" in self.config.inputs_cols
+                        else 0
+                    ),
+                    "aspect_indices": (
+                        aspect_indices
+                        if "aspect_indices" in self.config.inputs_cols
+                        else 0
+                    ),
+                    "aspect_len": (
+                        aspect_len if "aspect_len" in self.config.inputs_cols else 0
+                    ),
+                    "aspect_boundary": (
+                        aspect_boundary
+                        if "aspect_boundary" in self.config.inputs_cols
+                        else 0
+                    ),
                     "aspect_position": np.array(list(aspect_position)),
-                    "dependency_graph": dependency_graph
-                    if "dependency_graph" in self.config.inputs_cols
-                    else 0,
+                    "dependency_graph": (
+                        dependency_graph
+                        if "dependency_graph" in self.config.inputs_cols
+                        else 0
+                    ),
                     "text_raw": text,
                     "aspect": aspect,
                     "polarity": polarity,

@@ -161,7 +161,7 @@ _usa_config_multilingual = {
     "srd_alignment": True,  # for srd_alignment
     "evaluate_begin": 0,
     "similarity_threshold": 1,  # disable same text check for different examples
-    "cross_validate_fold": -1
+    "cross_validate_fold": -1,
     # split train and test datasets into 5 folds and repeat 3 trainer
 }
 

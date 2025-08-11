@@ -29,6 +29,7 @@ class USAPredictor(InferenceModel):
     Provides single-text and batch prediction convenience methods and
     dataset auto-detection for file-based inference.
     """
+
     task_code = TaskCodeOption.Universal_Sentiment_Analysis
 
     def __init__(self, checkpoint=None, **kwargs):

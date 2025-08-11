@@ -391,9 +391,9 @@ class ASTETrainingInstructor(BaseTrainingInstructor):
                                     joint_f1
                                     > self.config.max_test_metrics["max_apc_test_f1"]
                                 ):
-                                    self.config.max_test_metrics[
-                                        "max_apc_test_f1"
-                                    ] = joint_f1
+                                    self.config.max_test_metrics["max_apc_test_f1"] = (
+                                        joint_f1
+                                    )
 
                                 save_model(
                                     self.config, self.model, self.tokenizer, save_path

@@ -38,7 +38,7 @@ def simple_split_text(text):
         "\u0800-\u4e00",  # Japanese
         "\uac00-\ud7a3",  # Korean
         "\u0e00-\u0e7f",  # Thai
-        "\u1000-\u109F",  # Myanmar
+        "\u1000-\u109f",  # Myanmar
     ]
     # latin_lan = ([re.match(lan, text) for lan in non_latin_unicode])
     latin_lan = [re.findall("[{}]".format(lan), text) for lan in non_latin_unicode]

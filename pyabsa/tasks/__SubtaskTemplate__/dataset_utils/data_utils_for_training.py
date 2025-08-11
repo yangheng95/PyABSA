@@ -113,39 +113,45 @@ class ABSADataset(PyABSADataset):
                 "aspect_position": aspect_position,
                 "lca_ids": lcf_vec,  # the lca indices are the same as the refactored CDM (lcf != CDW or Fusion) lcf vec
                 "lcf_vec": lcf_vec if "lcf_vec" in self.config.inputs_cols else 0,
-                "lcf_cdw_vec": lcf_cdw_vec
-                if "lcf_cdw_vec" in self.config.inputs_cols
-                else 0,
-                "lcf_cdm_vec": lcf_cdm_vec
-                if "lcf_cdm_vec" in self.config.inputs_cols
-                else 0,
+                "lcf_cdw_vec": (
+                    lcf_cdw_vec if "lcf_cdw_vec" in self.config.inputs_cols else 0
+                ),
+                "lcf_cdm_vec": (
+                    lcf_cdm_vec if "lcf_cdm_vec" in self.config.inputs_cols else 0
+                ),
                 "lcfs_vec": lcfs_vec if "lcfs_vec" in self.config.inputs_cols else 0,
-                "lcfs_cdw_vec": lcfs_cdw_vec
-                if "lcfs_cdw_vec" in self.config.inputs_cols
-                else 0,
-                "lcfs_cdm_vec": lcfs_cdm_vec
-                if "lcfs_cdm_vec" in self.config.inputs_cols
-                else 0,
+                "lcfs_cdw_vec": (
+                    lcfs_cdw_vec if "lcfs_cdw_vec" in self.config.inputs_cols else 0
+                ),
+                "lcfs_cdm_vec": (
+                    lcfs_cdm_vec if "lcfs_cdm_vec" in self.config.inputs_cols else 0
+                ),
                 "dlcf_vec": dlcf_vec if "dlcf_vec" in self.config.inputs_cols else 0,
                 "dlcfs_vec": dlcfs_vec if "dlcfs_vec" in self.config.inputs_cols else 0,
-                "depend_vec": depend_vec
-                if "depend_vec" in self.config.inputs_cols
-                else 0,
-                "depended_vec": depended_vec
-                if "depended_vec" in self.config.inputs_cols
-                else 0,
-                "spc_mask_vec": build_spc_mask_vec(self.config, text_raw_bert_indices)
-                if "spc_mask_vec" in self.config.inputs_cols
-                else 0,
-                "text_indices": text_indices
-                if "text_indices" in self.config.inputs_cols
-                else 0,
-                "aspect_bert_indices": aspect_bert_indices
-                if "aspect_bert_indices" in self.config.inputs_cols
-                else 0,
-                "text_raw_bert_indices": text_raw_bert_indices
-                if "text_raw_bert_indices" in self.config.inputs_cols
-                else 0,
+                "depend_vec": (
+                    depend_vec if "depend_vec" in self.config.inputs_cols else 0
+                ),
+                "depended_vec": (
+                    depended_vec if "depended_vec" in self.config.inputs_cols else 0
+                ),
+                "spc_mask_vec": (
+                    build_spc_mask_vec(self.config, text_raw_bert_indices)
+                    if "spc_mask_vec" in self.config.inputs_cols
+                    else 0
+                ),
+                "text_indices": (
+                    text_indices if "text_indices" in self.config.inputs_cols else 0
+                ),
+                "aspect_bert_indices": (
+                    aspect_bert_indices
+                    if "aspect_bert_indices" in self.config.inputs_cols
+                    else 0
+                ),
+                "text_raw_bert_indices": (
+                    text_raw_bert_indices
+                    if "text_raw_bert_indices" in self.config.inputs_cols
+                    else 0
+                ),
                 "polarity": polarity,
             }
             ex_id += 1

@@ -22,6 +22,7 @@ from pyabsa.framework.flag_class.flag_template import (
     PyABSAMaterialHostAddress,
 )
 import sys
+
 try:  # Prefer installed package metadata to avoid importing top-level pyabsa
     from importlib.metadata import version as _pkg_version  # Python 3.8+
 except Exception:  # pragma: no cover

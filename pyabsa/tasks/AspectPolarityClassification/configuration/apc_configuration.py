@@ -168,7 +168,7 @@ _apc_config_multilingual = {
     "srd_alignment": True,  # for srd_alignment
     "evaluate_begin": 0,
     "similarity_threshold": 1,  # disable same text check for different examples
-    "cross_validate_fold": -1
+    "cross_validate_fold": -1,
     # split train and test datasets into 5 folds and repeat 3 trainer
 }
 
@@ -259,7 +259,7 @@ _apc_config_bert_baseline = {
     "evaluate_begin": 0,
     "dynamic_truncate": True,
     "similarity_threshold": 1,  # disable same text check for different examples
-    "cross_validate_fold": -1
+    "cross_validate_fold": -1,
     # split train and test datasets into 5 folds and repeat 3 trainer
 }
 

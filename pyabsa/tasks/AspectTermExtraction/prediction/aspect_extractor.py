@@ -50,6 +50,7 @@ class AspectExtractor(InferenceModel):
     depending on the configured model/task. Supports single-text and batch
     inference and can auto-detect dataset files for inference.
     """
+
     task_code = TaskCodeOption.Aspect_Term_Extraction_and_Classification
 
     def __init__(self, checkpoint=None, **kwargs):

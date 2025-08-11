@@ -39,6 +39,7 @@ class AspectSentimentTripletExtractor(InferenceModel):
     file-based batch prediction. When gold annotations exist in the input,
     the predictor can also compute reference triplets for comparison.
     """
+
     task_code = TaskCodeOption.Aspect_Sentiment_Triplet_Extraction
 
     def __init__(self, checkpoint=None, **kwargs):

@@ -162,7 +162,7 @@ _aste_config_multilingual = {
     "srd_alignment": True,  # for srd_alignment
     "evaluate_begin": 0,
     "similarity_threshold": 1,  # disable same text check for different examples
-    "cross_validate_fold": -1
+    "cross_validate_fold": -1,
     # split train and test datasets into 5 folds and repeat 3 trainer
 }
 
@@ -207,43 +207,43 @@ _aste_config_chinese = {
 class ASTEConfigManager(ConfigManager):
     def __init__(self, args, **kwargs):
         """
-        Available Params:   {'model': None,
-                            'optimizer': "",
-                            'learning_rate': 0.00002,
-    'pretrained_bert': "bert-base-uncased",
-                            'cache_dataset': True,
-                            'warmup_step': -1,
-                            'deep_ensemble': False,
-                            'patience': 99999,
-                            'use_bert_spc': True,
-                            'max_seq_len': 80,
-                            'SRD': 3,
-                            'lsa': False,
-                            'dlcf_a': 2,  # the a in dlcf_dca_bert
-                            'dca_p': 1,  # the p in dlcf_dca_bert
-                            'dca_layer': 3,  # the layer in dlcf_dca_bert
-                            'use_syntax_based_SRD': False,
-                            'sigma': 0.3,
-                            'lcf': "cdw",
-                            'window': "lr",
-                            'eta': 1,
-                            'eta_lr': 0.1,
-                            'dropout': 0,
-                            'l2reg': 0.000001,
-                            'num_epoch': 10,
-                            'batch_size': 16,
-                            'initializer': 'xavier_uniform_',
-                            'seed': {52, 214}
-                            'output_dim': 3,
-                            'log_step': 10,
-                            'dynamic_truncate': True,
-                            'srd_alignment': True,  # for srd_alignment
-                            'evaluate_begin': 0,
-                            'similarity_threshold': 1,  # disable same text check for different examples
-                            'cross_validate_fold': -1   # split train and test datasets into 5 folds and repeat 3 trainer
-                            }
-        :param args:
-        :param kwargs:
+            Available Params:   {'model': None,
+                                'optimizer': "",
+                                'learning_rate': 0.00002,
+        'pretrained_bert': "bert-base-uncased",
+                                'cache_dataset': True,
+                                'warmup_step': -1,
+                                'deep_ensemble': False,
+                                'patience': 99999,
+                                'use_bert_spc': True,
+                                'max_seq_len': 80,
+                                'SRD': 3,
+                                'lsa': False,
+                                'dlcf_a': 2,  # the a in dlcf_dca_bert
+                                'dca_p': 1,  # the p in dlcf_dca_bert
+                                'dca_layer': 3,  # the layer in dlcf_dca_bert
+                                'use_syntax_based_SRD': False,
+                                'sigma': 0.3,
+                                'lcf': "cdw",
+                                'window': "lr",
+                                'eta': 1,
+                                'eta_lr': 0.1,
+                                'dropout': 0,
+                                'l2reg': 0.000001,
+                                'num_epoch': 10,
+                                'batch_size': 16,
+                                'initializer': 'xavier_uniform_',
+                                'seed': {52, 214}
+                                'output_dim': 3,
+                                'log_step': 10,
+                                'dynamic_truncate': True,
+                                'srd_alignment': True,  # for srd_alignment
+                                'evaluate_begin': 0,
+                                'similarity_threshold': 1,  # disable same text check for different examples
+                                'cross_validate_fold': -1   # split train and test datasets into 5 folds and repeat 3 trainer
+                                }
+            :param args:
+            :param kwargs:
         """
         super().__init__(args, **kwargs)
 

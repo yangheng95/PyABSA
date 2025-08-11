@@ -448,27 +448,31 @@ class TADTextClassifier(InferenceModel):
                         "label": self.config.index_to_label[pred_label],
                         "probs": prob.cpu().numpy(),
                         "confidence": float(max(prob)),
-                        "ref_label": self.config.index_to_label[ref_label]
-                        if isinstance(ref_label, int)
-                        else ref_label,
-                        "ref_label_check": correct[pred_label == ref_label]
-                        if ref_label != -100
-                        else "",
+                        "ref_label": (
+                            self.config.index_to_label[ref_label]
+                            if isinstance(ref_label, int)
+                            else ref_label
+                        ),
+                        "ref_label_check": (
+                            correct[pred_label == ref_label]
+                            if ref_label != -100
+                            else ""
+                        ),
                         "is_fixed": False,
                         "is_adv_label": self.config.index_to_is_adv[pred_is_adv_label],
                         "is_adv_probs": advdet_prob.cpu().numpy(),
                         "is_adv_confidence": float(max(advdet_prob)),
-                        "ref_is_adv_label": self.config.index_to_is_adv[
-                            ref_is_adv_label
-                        ]
-                        if isinstance(ref_is_adv_label, int)
-                        else ref_is_adv_label,
-                        "ref_is_adv_check": correct[
-                            pred_is_adv_label == ref_is_adv_label
-                        ]
-                        if ref_is_adv_label != -100
-                        and isinstance(ref_is_adv_label, int)
-                        else "",
+                        "ref_is_adv_label": (
+                            self.config.index_to_is_adv[ref_is_adv_label]
+                            if isinstance(ref_is_adv_label, int)
+                            else ref_is_adv_label
+                        ),
+                        "ref_is_adv_check": (
+                            correct[pred_is_adv_label == ref_is_adv_label]
+                            if ref_is_adv_label != -100
+                            and isinstance(ref_is_adv_label, int)
+                            else ""
+                        ),
                         "pred_adv_tr_label": self.config.index_to_label[
                             pred_adv_tr_label
                         ],
@@ -521,9 +525,9 @@ class TADTextClassifier(InferenceModel):
                                 if ref_label != -100
                                 else ""
                             )
-                            result[
-                                "restored_text"
-                            ] = res.perturbed_result.attacked_text.text
+                            result["restored_text"] = (
+                                res.perturbed_result.attacked_text.text
+                            )
                             result["is_fixed"] = True
                         except Exception as e:
                             fprint(

@@ -63,7 +63,9 @@ class APCTrainingInstructor(BaseTrainingInstructor):
         NonTrainable_params = 0
 
         for param in self.model.parameters():
-            mulValue = numpy.prod(param.size())  # 使用numpy prod接口计算参数数组所有元素之积
+            mulValue = numpy.prod(
+                param.size()
+            )  # 使用numpy prod接口计算参数数组所有元素之积
             Total_params += mulValue  # 总参数量
             if param.requires_grad:
                 Trainable_params += mulValue  # 可训练参数量
@@ -194,9 +196,9 @@ class APCTrainingInstructor(BaseTrainingInstructor):
                                     test_acc
                                     > self.config.max_test_metrics["max_apc_test_acc"]
                                 ):
-                                    self.config.max_test_metrics[
-                                        "max_apc_test_acc"
-                                    ] = test_acc
+                                    self.config.max_test_metrics["max_apc_test_acc"] = (
+                                        test_acc
+                                    )
                                 if f1 > self.config.max_test_metrics["max_apc_test_f1"]:
                                     self.config.max_test_metrics["max_apc_test_f1"] = f1
 

@@ -29,6 +29,7 @@ class USATrainer(Trainer):
     standard training routine; use `load_trained_model()` to obtain a
     `USAPredictor` for inference.
     """
+
     def __init__(
         self,
         config: USAConfigManager = None,

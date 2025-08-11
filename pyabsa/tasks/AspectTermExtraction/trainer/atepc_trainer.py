@@ -28,6 +28,7 @@ class ATEPCTrainer(Trainer):
     After initialization, it launches the training routine. Use
     `load_trained_model()` to obtain an `AspectExtractor` for inference.
     """
+
     def __init__(
         self,
         config: ATEPCConfigManager = None,

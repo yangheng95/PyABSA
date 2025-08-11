@@ -29,6 +29,7 @@ class TCTrainer(Trainer):
     pipeline. Use `load_trained_model()` to obtain a `TextClassifier` for
     inference.
     """
+
     def __init__(
         self,
         config: TCConfigManager = None,

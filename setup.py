@@ -55,11 +55,7 @@ extras["deploy"] = [
 # ]
 
 # For developers, install development tools along with all optional dependencies.
-extras["dev"] = (
-    extras["docs"]
-    + extras["test"]
-    + extras["deploy"]
-)
+extras["dev"] = extras["docs"] + extras["test"] + extras["deploy"]
 
 setup(
     name=__name__,

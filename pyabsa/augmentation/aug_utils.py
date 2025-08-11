@@ -196,9 +196,11 @@ def __ids_mask_instance(ids, tokenizer, noise_level, **kwargs):
     ids = (
         [ids[0]]
         + [
-            mask_token_id
-            if random.random() < noise_level and _id != tokenizer.eos_token_id
-            else _id
+            (
+                mask_token_id
+                if random.random() < noise_level and _id != tokenizer.eos_token_id
+                else _id
+            )
             for _id in ids[1:-1]
         ]
         + [ids[-1]]
@@ -219,9 +221,11 @@ def __ids_random__instance(ids, tokenizer, noise_level, **kwargs):
     ids = (
         [ids[0]]
         + [
-            random.randint(0, tokenizer.vocab_size)
-            if random.random() < noise_level and _id != tokenizer.eos_token_id
-            else _id
+            (
+                random.randint(0, tokenizer.vocab_size)
+                if random.random() < noise_level and _id != tokenizer.eos_token_id
+                else _id
+            )
             for _id in ids[1:-1]
         ]
         + [ids[-1]]

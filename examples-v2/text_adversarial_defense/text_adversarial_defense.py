@@ -105,10 +105,10 @@ attack_recipes = {
 for attacker in ["pwws", "bae", "textfooler"]:
     for dataset in ["agnews10k", "amazon", "sst2"]:
         if "tad-{}".format(dataset) not in tad_classifiers:
-            tad_classifiers[
-                "tad-{}".format(dataset)
-            ] = TADCheckpointManager.get_tad_text_classifier(
-                "tad-{}".format(dataset).upper()
+            tad_classifiers["tad-{}".format(dataset)] = (
+                TADCheckpointManager.get_tad_text_classifier(
+                    "tad-{}".format(dataset).upper()
+                )
             )
 
         sent_attackers["tad-{}{}".format(dataset, attacker)] = SentAttacker(

@@ -63,9 +63,11 @@ class PyABSADataset(Dataset):
             )
             self.data = self.covert_to_tensor(self.data)
         self.data = self.data[
-            : self.config.get("data_num", None)
-            if self.config.get("data_num", None)
-            else None
+            : (
+                self.config.get("data_num", None)
+                if self.config.get("data_num", None)
+                else None
+            )
         ]
         if self.config.get("verbose", True):
             self.config.logger.info(

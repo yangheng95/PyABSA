@@ -14,13 +14,10 @@ gitpython  # need git installed in your OS
 transformers
 torch>1.0.0
 sentencepiece
-protobuf<4.0.0
 pandas
 gensim
 pyabsa[dev]
 git+https://github.com/yangheng95/TextAttack
-tensorflow
-tensorflow_hub
 nlpaug
 arxiv
 tokenizers

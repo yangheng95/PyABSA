@@ -357,12 +357,12 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                                 test_adv_tr_f1,
                             ) = self._evaluate_acc_f1(self.test_dataloader)
 
-                        self.config.metrics_of_this_checkpoint[
-                            "max_cls_test_acc"
-                        ] = test_label_acc
-                        self.config.metrics_of_this_checkpoint[
-                            "max_cls_test_f1"
-                        ] = test_label_f1
+                        self.config.metrics_of_this_checkpoint["max_cls_test_acc"] = (
+                            test_label_acc
+                        )
+                        self.config.metrics_of_this_checkpoint["max_cls_test_f1"] = (
+                            test_label_f1
+                        )
                         self.config.metrics_of_this_checkpoint[
                             "max_adv_det_test_acc"
                         ] = test_adv_det_acc
@@ -372,9 +372,9 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                         self.config.metrics_of_this_checkpoint[
                             "max_adv_tr_test_acc"
                         ] = test_adv_tr_acc
-                        self.config.metrics_of_this_checkpoint[
-                            "max_adv_tr_test_f1"
-                        ] = test_adv_tr_f1
+                        self.config.metrics_of_this_checkpoint["max_adv_tr_test_f1"] = (
+                            test_adv_tr_f1
+                        )
 
                         if (
                             test_label_acc > max_label_fold_acc
@@ -437,16 +437,16 @@ class TADTrainingInstructor(BaseTrainingInstructor):
                                     test_label_acc
                                     > self.config.max_test_metrics["max_cls_test_acc"]
                                 ):
-                                    self.config.max_test_metrics[
-                                        "max_cls_test_acc"
-                                    ] = test_label_acc
+                                    self.config.max_test_metrics["max_cls_test_acc"] = (
+                                        test_label_acc
+                                    )
                                 if (
                                     test_label_f1
                                     > self.config.max_test_metrics["max_cls_test_f1"]
                                 ):
-                                    self.config.max_test_metrics[
-                                        "max_cls_test_f1"
-                                    ] = test_label_f1
+                                    self.config.max_test_metrics["max_cls_test_f1"] = (
+                                        test_label_f1
+                                    )
 
                                 if (
                                     test_adv_det_acc

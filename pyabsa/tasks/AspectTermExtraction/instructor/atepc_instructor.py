@@ -406,23 +406,23 @@ class ATEPCTrainingInstructor(BaseTrainingInstructor):
                                 apc_result["apc_test_acc"]
                                 > self.config.max_test_metrics["max_apc_test_acc"]
                             ):
-                                self.config.max_test_metrics[
-                                    "max_apc_test_acc"
-                                ] = apc_result["apc_test_acc"]
+                                self.config.max_test_metrics["max_apc_test_acc"] = (
+                                    apc_result["apc_test_acc"]
+                                )
                             if (
                                 apc_result["apc_test_f1"]
                                 > self.config.max_test_metrics["max_apc_test_f1"]
                             ):
-                                self.config.max_test_metrics[
-                                    "max_apc_test_f1"
-                                ] = apc_result["apc_test_f1"]
+                                self.config.max_test_metrics["max_apc_test_f1"] = (
+                                    apc_result["apc_test_f1"]
+                                )
                             if (
                                 ate_result
                                 > self.config.max_test_metrics["max_ate_test_f1"]
                             ):
-                                self.config.max_test_metrics[
-                                    "max_ate_test_f1"
-                                ] = ate_result
+                                self.config.max_test_metrics["max_ate_test_f1"] = (
+                                    ate_result
+                                )
 
                             if self.config.model_path_to_save:
                                 # if save_path:

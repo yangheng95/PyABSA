@@ -276,9 +276,9 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                                     test_acc
                                     > self.config.max_test_metrics["max_test_acc"]
                                 ):
-                                    self.config.max_test_metrics[
-                                        "max_test_acc"
-                                    ] = test_acc
+                                    self.config.max_test_metrics["max_test_acc"] = (
+                                        test_acc
+                                    )
                                 if f1 > self.config.max_test_metrics["max_test_f1"]:
                                     self.config.max_test_metrics["max_test_f1"] = f1
 
@@ -509,9 +509,9 @@ class TCTrainingInstructor(BaseTrainingInstructor):
                                         test_acc
                                         > self.config.max_test_metrics["max_test_acc"]
                                     ):
-                                        self.config.max_test_metrics[
-                                            "max_test_acc"
-                                        ] = test_acc
+                                        self.config.max_test_metrics["max_test_acc"] = (
+                                            test_acc
+                                        )
                                     if f1 > self.config.max_test_metrics["max_test_f1"]:
                                         self.config.max_test_metrics["max_test_f1"] = f1
 

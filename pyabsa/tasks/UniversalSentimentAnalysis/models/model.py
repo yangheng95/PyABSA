@@ -95,9 +95,11 @@ class GenerationModel:
             self.model,
             args,
             train_dataset=tokenized_datasets["train"],
-            eval_dataset=tokenized_datasets["test"]
-            if tokenized_datasets.get("test") is not None
-            else None,
+            eval_dataset=(
+                tokenized_datasets["test"]
+                if tokenized_datasets.get("test") is not None
+                else None
+            ),
             tokenizer=self.config.tokenizer,
             data_collator=self.data_collator,
         )
