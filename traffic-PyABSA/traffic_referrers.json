@@ -1,18 +1,13 @@
 [
   {
     "referrer": "Google",
-    "count": 105,
-    "uniques": 18
+    "count": 75,
+    "uniques": 11
   },
   {
     "referrer": "github.com",
-    "count": 23,
-    "uniques": 10
-  },
-  {
-    "referrer": "huggingface.co",
-    "count": 11,
-    "uniques": 6
+    "count": 13,
+    "uniques": 4
   },
   {
     "referrer": "chatgpt.com",
@@ -20,9 +15,9 @@
     "uniques": 5
   },
   {
-    "referrer": "linkedin.com",
-    "count": 5,
-    "uniques": 1
+    "referrer": "huggingface.co",
+    "count": 9,
+    "uniques": 4
   },
   {
     "referrer": "Bing",
@@ -45,7 +40,12 @@
     "uniques": 1
   },
   {
-    "referrer": "tongyi.com",
+    "referrer": "pyabsa.readthedocs.io",
+    "count": 1,
+    "uniques": 1
+  },
+  {
+    "referrer": "gitee.com",
     "count": 1,
     "uniques": 1
   }
