@@ -536,7 +536,7 @@ class SentimentClassifier(InferenceModel):
                     fprint("Example {}: {}".format(ex_id, text_printing))
             if save_path:
                 with open(save_path, "w", encoding="utf8") as fout:
-                    json.dump(str(results), fout, ensure_ascii=False)
+                    json.dump(results, fout, ensure_ascii=False)
                     fprint("inference result saved in: {}".format(save_path))
         except Exception as e:
             fprint("Can not save result: {}, Exception: {}".format(text_raw, e))
