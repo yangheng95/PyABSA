@@ -1,12 +1,7 @@
 {
-  "count": 83,
-  "uniques": 56,
+  "count": 92,
+  "uniques": 65,
   "clones": [
-    {
-      "timestamp": "2025-12-04T00:00:00Z",
-      "count": 8,
-      "uniques": 5
-    },
     {
       "timestamp": "2025-12-05T00:00:00Z",
       "count": 14,
@@ -36,6 +31,11 @@
       "timestamp": "2025-12-10T00:00:00Z",
       "count": 13,
       "uniques": 9
+    },
+    {
+      "timestamp": "2025-12-11T00:00:00Z",
+      "count": 17,
+      "uniques": 14
     }
   ]
 }
