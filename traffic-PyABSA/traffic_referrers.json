@@ -1,13 +1,13 @@
 [
   {
     "referrer": "Google",
-    "count": 301,
-    "uniques": 68
+    "count": 326,
+    "uniques": 71
   },
   {
     "referrer": "github.com",
-    "count": 92,
-    "uniques": 29
+    "count": 124,
+    "uniques": 32
   },
   {
     "referrer": "chatgpt.com",
@@ -36,13 +36,13 @@
   },
   {
     "referrer": "huggingface.co",
-    "count": 20,
-    "uniques": 5
+    "count": 22,
+    "uniques": 7
   },
   {
     "referrer": "Bing",
     "count": 13,
-    "uniques": 6
+    "uniques": 7
   },
   {
     "referrer": "link.zhihu.com",
