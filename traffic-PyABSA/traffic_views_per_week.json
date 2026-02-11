@@ -1,5 +1,36 @@
 {
-  "count": 0,
-  "uniques": 0,
-  "views": []
+  "count": 272,
+  "uniques": 98,
+  "views": [
+    {
+      "timestamp": "2026-02-04T00:00:00Z",
+      "count": 109,
+      "uniques": 23
+    },
+    {
+      "timestamp": "2026-02-05T00:00:00Z",
+      "count": 72,
+      "uniques": 22
+    },
+    {
+      "timestamp": "2026-02-06T00:00:00Z",
+      "count": 27,
+      "uniques": 14
+    },
+    {
+      "timestamp": "2026-02-07T00:00:00Z",
+      "count": 17,
+      "uniques": 11
+    },
+    {
+      "timestamp": "2026-02-08T00:00:00Z",
+      "count": 9,
+      "uniques": 6
+    },
+    {
+      "timestamp": "2026-02-09T00:00:00Z",
+      "count": 38,
+      "uniques": 22
+    }
+  ]
 }
