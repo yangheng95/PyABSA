@@ -1,13 +1,13 @@
 [
   {
     "referrer": "github.com",
-    "count": 111,
-    "uniques": 34
+    "count": 102,
+    "uniques": 29
   },
   {
     "referrer": "Google",
-    "count": 99,
-    "uniques": 47
+    "count": 90,
+    "uniques": 43
   },
   {
     "referrer": "youtube.com",
@@ -16,13 +16,8 @@
   },
   {
     "referrer": "Bing",
-    "count": 28,
+    "count": 15,
     "uniques": 10
-  },
-  {
-    "referrer": "claude.ai",
-    "count": 16,
-    "uniques": 1
   },
   {
     "referrer": "chatgpt.com",
@@ -31,13 +26,13 @@
   },
   {
     "referrer": "pyabsa.readthedocs.io",
-    "count": 12,
-    "uniques": 7
+    "count": 10,
+    "uniques": 6
   },
   {
     "referrer": "huggingface.co",
-    "count": 10,
-    "uniques": 6
+    "count": 6,
+    "uniques": 4
   },
   {
     "referrer": "DuckDuckGo",
@@ -48,5 +43,10 @@
     "referrer": "doubao.com",
     "count": 4,
     "uniques": 1
+  },
+  {
+    "referrer": "link.springer.com",
+    "count": 3,
+    "uniques": 2
   }
 ]
