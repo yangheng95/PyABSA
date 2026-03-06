@@ -2,14 +2,14 @@
   {
     "path": "/yangheng95/PyABSA",
     "title": "yangheng95/PyABSA: Sentiment Analysis, Text Classification, Text Augmentation...",
-    "count": 208,
-    "uniques": 124
+    "count": 210,
+    "uniques": 122
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2/examples-v2",
     "title": "PyABSA/examples-v2 at v2 · yangheng95/PyABSA",
-    "count": 30,
-    "uniques": 12
+    "count": 31,
+    "uniques": 13
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2/pyabsa",
@@ -36,16 +36,16 @@
     "uniques": 3
   },
   {
+    "path": "/yangheng95/PyABSA/issues/421",
+    "title": "Warning for Python 3.14 user that encounter error type infer on regex · Issue...",
+    "count": 15,
+    "uniques": 15
+  },
+  {
     "path": "/yangheng95/PyABSA/tree/release/demos/aspect_term_extraction",
     "title": "PyABSA/demos/aspect_term_extraction at release · yangheng95/PyABSA",
     "count": 15,
     "uniques": 1
-  },
-  {
-    "path": "/yangheng95/PyABSA/issues/421",
-    "title": "Warning for Python 3.14 user that encounter error type infer on regex · Issue...",
-    "count": 13,
-    "uniques": 13
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2/pyabsa/tasks",
