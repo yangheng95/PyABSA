@@ -363,7 +363,7 @@ class CodeDefectDetector(InferenceModel):
                             for x in targets
                         ]
                     )
-                    t_outputs_all = np.array(logits.cpu()).astype(np.float32)
+                    t_outputs_all = logits.cpu().detach().numpy().astype(np.float32)
                 else:
                     targets_all = np.concatenate(
                         (
@@ -380,7 +380,7 @@ class CodeDefectDetector(InferenceModel):
                         axis=0,
                     )
                     t_outputs_all = np.concatenate(
-                        (t_outputs_all, np.array(logits.cpu()).astype(np.float32)),
+                        (t_outputs_all, logits.cpu().detach().numpy().astype(np.float32)),
                         axis=0,
                     )
                 if c_targets_all is None:
@@ -394,7 +394,7 @@ class CodeDefectDetector(InferenceModel):
                             for x in c_targets
                         ]
                     )
-                    t_c_outputs_all = np.array(c_logits.cpu()).astype(np.float32)
+                    t_c_outputs_all = c_logits.cpu().detach().numpy().astype(np.float32)
 
                 for i, i_probs in enumerate(t_probs):
                     label = self.config.index_to_label[int(i_probs.argmax(axis=-1))]

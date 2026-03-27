@@ -374,7 +374,7 @@ class TextClassifier(InferenceModel):
                             for x in sample["label"]
                         ]
                     )
-                    t_outputs_all = np.array(sen_logits.cpu()).astype(np.float32)
+                    t_outputs_all = sen_logits.cpu().detach().numpy().astype(np.float32)
                 else:
                     t_targets_all = np.concatenate(
                         (
@@ -391,7 +391,7 @@ class TextClassifier(InferenceModel):
                         axis=0,
                     )
                     t_outputs_all = np.concatenate(
-                        (t_outputs_all, np.array(sen_logits.cpu()).astype(np.float32)),
+                        (t_outputs_all, sen_logits.cpu().detach().numpy().astype(np.float32)),
                         axis=0,
                     )
 

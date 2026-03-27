@@ -35,7 +35,13 @@ class ABSADataset(PyABSADataset):
             self.config.dataset_file[self.dataset_type], config=self.config
         )
 
-        if len(lines) % 3 != 0 or len(lines) == 0:
+        # Ensure lines count is a multiple of 3 (text / aspect / polarity per sample).
+        # When data_num truncates raw lines to a non-multiple of 3, drop the trailing
+        # incomplete record so the 3-line loop below never goes out of bounds.
+        if len(lines) % 3 != 0:
+            lines = lines[: (len(lines) // 3) * 3]
+
+        if len(lines) == 0:
             fprint(
                 colored(
                     "ERROR: one or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.",

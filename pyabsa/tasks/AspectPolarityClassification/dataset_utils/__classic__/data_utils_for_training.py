@@ -35,6 +35,11 @@ class GloVeABSADataset(PyABSADataset):
         lines = load_dataset_from_file(
             self.config.dataset_file[self.dataset_type], config=self.config
         )
+
+        # Ensure lines count is a multiple of 3 (text / aspect / polarity per sample)
+        if len(lines) % 3 != 0:
+            lines = lines[: (len(lines) // 3) * 3]
+
         all_data = []
         label_set = set()
 
@@ -54,7 +59,7 @@ class GloVeABSADataset(PyABSADataset):
 
         ex_id = 0
 
-        if len(lines) % 3 != 0 or len(lines) == 0:
+        if len(lines) == 0:
             fprint(
                 colored(
                     "ERROR: one or more datasets are corrupted, make sure the number of lines in a dataset should be multiples of 3.",
