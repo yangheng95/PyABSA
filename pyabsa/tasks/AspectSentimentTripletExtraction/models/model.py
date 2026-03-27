@@ -7,7 +7,6 @@ from transformers import (
     AutoTokenizer,
     DebertaV2Tokenizer,
     RobertaTokenizer,
-    BertTokenizer,
 )
 
 
@@ -171,10 +170,6 @@ class EMCGCN(torch.nn.Module):
                 )
             elif "roberta" in pretrained_lower:
                 self.tokenizer = RobertaTokenizer.from_pretrained(
-                    config.pretrained_bert, use_fast=False, trust_remote_code=True
-                )
-            elif "bert" in pretrained_lower:
-                self.tokenizer = BertTokenizer.from_pretrained(
                     config.pretrained_bert, use_fast=False, trust_remote_code=True
                 )
             else:

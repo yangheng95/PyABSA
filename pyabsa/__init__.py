@@ -11,9 +11,6 @@ import os
 __name__ = "pyabsa"
 __version__ = "2.4.3"
 
-# Prefer slow tokenizers to avoid incompatibilities when loading legacy checkpoints
-os.environ.setdefault("TRANSFORMERS_NO_FAST_TOKENIZER", "1")
-
 
 # for compatibility of v1.x
 from pyabsa.framework.checkpoint_class.checkpoint_template import (

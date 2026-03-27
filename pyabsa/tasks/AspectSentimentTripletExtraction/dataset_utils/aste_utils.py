@@ -15,7 +15,7 @@ import torch
 from collections import OrderedDict, defaultdict
 
 from sklearn import metrics
-from transformers import BertTokenizer
+from transformers import AutoTokenizer
 
 label = ["N", "B-A", "I-A", "A", "B-O", "I-O", "O", "Negative", "Neutral", "Positive"]
 
@@ -327,7 +327,7 @@ def load_data_instances(
     sentence_packs, post_vocab, deprel_vocab, postag_vocab, synpost_vocab, config
 ):
     instances = list()
-    tokenizer = BertTokenizer.from_pretrained(config.pretrained_bert)
+    tokenizer = AutoTokenizer.from_pretrained(config.pretrained_bert, use_fast=False)
     for sentence_pack in sentence_packs:
         instances.append(
             Instance(
