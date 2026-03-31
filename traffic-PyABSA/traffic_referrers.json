@@ -1,28 +1,28 @@
 [
   {
     "referrer": "Google",
-    "count": 83,
-    "uniques": 36
+    "count": 82,
+    "uniques": 35
   },
   {
     "referrer": "github.com",
-    "count": 72,
-    "uniques": 32
+    "count": 60,
+    "uniques": 29
+  },
+  {
+    "referrer": "Bing",
+    "count": 22,
+    "uniques": 3
+  },
+  {
+    "referrer": "chatgpt.com",
+    "count": 21,
+    "uniques": 8
   },
   {
     "referrer": "doubao.com",
     "count": 21,
     "uniques": 3
-  },
-  {
-    "referrer": "Bing",
-    "count": 21,
-    "uniques": 2
-  },
-  {
-    "referrer": "chatgpt.com",
-    "count": 17,
-    "uniques": 6
   },
   {
     "referrer": "youtube.com",
