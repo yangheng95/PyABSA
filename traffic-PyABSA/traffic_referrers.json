@@ -1,32 +1,22 @@
 [
   {
     "referrer": "Google",
-    "count": 140,
-    "uniques": 46
+    "count": 144,
+    "uniques": 48
   },
   {
     "referrer": "github.com",
     "count": 60,
-    "uniques": 23
+    "uniques": 24
   },
   {
-    "referrer": "doubao.com",
-    "count": 22,
+    "referrer": "huggingface.co",
+    "count": 10,
     "uniques": 4
   },
   {
     "referrer": "Bing",
-    "count": 20,
-    "uniques": 3
-  },
-  {
-    "referrer": "huggingface.co",
-    "count": 11,
-    "uniques": 5
-  },
-  {
-    "referrer": "youtube.com",
-    "count": 8,
+    "count": 7,
     "uniques": 3
   },
   {
@@ -45,8 +35,18 @@
     "uniques": 4
   },
   {
+    "referrer": "doubao.com",
+    "count": 6,
+    "uniques": 2
+  },
+  {
     "referrer": "Baidu",
     "count": 5,
     "uniques": 1
+  },
+  {
+    "referrer": "youtube.com",
+    "count": 4,
+    "uniques": 2
   }
 ]
