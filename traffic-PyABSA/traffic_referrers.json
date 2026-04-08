@@ -1,13 +1,13 @@
 [
   {
     "referrer": "Google",
-    "count": 144,
-    "uniques": 48
+    "count": 146,
+    "uniques": 49
   },
   {
     "referrer": "github.com",
-    "count": 60,
-    "uniques": 24
+    "count": 58,
+    "uniques": 22
   },
   {
     "referrer": "huggingface.co",
@@ -16,11 +16,11 @@
   },
   {
     "referrer": "Bing",
-    "count": 7,
-    "uniques": 3
+    "count": 8,
+    "uniques": 4
   },
   {
-    "referrer": "chatgpt.com",
+    "referrer": "youtube.com",
     "count": 7,
     "uniques": 3
   },
@@ -35,6 +35,11 @@
     "uniques": 4
   },
   {
+    "referrer": "chatgpt.com",
+    "count": 6,
+    "uniques": 2
+  },
+  {
     "referrer": "doubao.com",
     "count": 6,
     "uniques": 2
@@ -43,10 +48,5 @@
     "referrer": "Baidu",
     "count": 5,
     "uniques": 1
-  },
-  {
-    "referrer": "youtube.com",
-    "count": 4,
-    "uniques": 2
   }
 ]
