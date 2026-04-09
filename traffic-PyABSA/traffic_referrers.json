@@ -1,37 +1,37 @@
 [
   {
     "referrer": "Google",
-    "count": 146,
-    "uniques": 49
+    "count": 143,
+    "uniques": 42
   },
   {
     "referrer": "github.com",
-    "count": 58,
-    "uniques": 22
-  },
-  {
-    "referrer": "huggingface.co",
-    "count": 10,
-    "uniques": 4
+    "count": 46,
+    "uniques": 23
   },
   {
     "referrer": "Bing",
+    "count": 16,
+    "uniques": 9
+  },
+  {
+    "referrer": "huggingface.co",
+    "count": 9,
+    "uniques": 4
+  },
+  {
+    "referrer": "claude.ai",
+    "count": 9,
+    "uniques": 1
+  },
+  {
+    "referrer": "doubao.com",
     "count": 8,
     "uniques": 4
   },
   {
     "referrer": "youtube.com",
-    "count": 7,
-    "uniques": 3
-  },
-  {
-    "referrer": "claude.ai",
-    "count": 7,
-    "uniques": 1
-  },
-  {
-    "referrer": "pyabsa.readthedocs.io",
-    "count": 6,
+    "count": 8,
     "uniques": 4
   },
   {
@@ -40,8 +40,8 @@
     "uniques": 2
   },
   {
-    "referrer": "doubao.com",
-    "count": 6,
+    "referrer": "statics.teams.cdn.office.net",
+    "count": 5,
     "uniques": 2
   },
   {
