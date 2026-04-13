@@ -9,7 +9,7 @@
 import os
 
 __name__ = "pyabsa"
-__version__ = "2.4.3"
+__version__ = "2.5.0"
 
 # Prefer slow tokenizers to avoid incompatibilities when loading legacy checkpoints
 os.environ.setdefault("TRANSFORMERS_NO_FAST_TOKENIZER", "1")

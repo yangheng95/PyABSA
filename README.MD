@@ -188,13 +188,35 @@ print(apc_result)
 
 ## Model Zoo & Checkpoints
 
-- List all available checkpoints:
+Since **2.5.0**, PyABSA distributes checkpoints and datasets via native Hugging Face Hub
+**Model / Dataset repos** through `huggingface_hub` (`snapshot_download` /
+`hf_hub_download`). The legacy zip-on-Space mechanism has been removed.
+
+- List all available checkpoints (index is fetched from the HF Hub):
   ```python
   from pyabsa import available_checkpoints
-  print(available_checkpoints())
+  from pyabsa import TaskCodeOption
+  print(available_checkpoints(TaskCodeOption.Aspect_Polarity_Classification))
   ```
-- PyABSA resolves checkpoints across local/remote registries and auto-downloads when needed. See the docs for *
-  *CheckpointManager** and **API Reference**.
+- The index repo is `yangheng/pyabsa-index` by default; override with the
+  `PYABSA_INDEX_REPO` environment variable to point at a private mirror.
+- Each checkpoint lives in its own HF Model repo
+  (`yangheng/pyabsa-<task>-<name>`) and is resolved into the standard HF
+  cache. Datasets follow the same pattern as HF Dataset repos
+  (`yangheng/pyabsa-<task>-<dataset>`).
+
+### Publishing your own checkpoints / datasets
+
+Run `huggingface-cli login` (or set `HF_TOKEN`), then use the bundled CLI:
+
+```bash
+pyabsa-upload-ckpt  ./my_trained_ckpt  --repo yangheng/pyabsa-apc-english --revision v2.5.0
+pyabsa-upload-data  ./laptop14_dataset --repo yangheng/pyabsa-apc-laptop14
+pyabsa-index-update ./checkpoints.json   # schema_version: 2
+```
+
+The Python API is in `pyabsa.utils.hf_upload`
+(`publish_checkpoint`, `publish_dataset`, `update_index`).
 
 ---
 
@@ -219,10 +241,9 @@ print(apc_result)
 
 ## Roadmap (indicative)
 
-- Python 3.13 compatibility verification and wheels
+- Wheels for Python 3.13 (current build verified on 3.13)
 - Extended dataset templates & validators
-- Streamlined model registry and checkpoint metadata
-- Better Hugging Face integration (Spaces & model cards)
+- Migrate remaining checkpoints to HF Model repos under the new index
 - Optional plugins: advanced augmentation, evaluation dashboards
 
 > Have a suggestion? Please open a GitHub Discussion or Issue.

@@ -5,11 +5,14 @@ recommended to use a virtual environment.
 
 ## Prerequisites
 
-- Python 3.8+
-- PyTorch 1.10.0+
-- Transformers 4.0.0+
+- Python 3.10+
+- PyTorch 2.0.0+
+- Transformers 4.44.0 – 5.x
+- huggingface_hub 0.23.0+
 
-PyABSA will automatically install the required versions of PyTorch and Transformers.
+PyABSA will automatically install the required versions of PyTorch, Transformers and
+huggingface_hub. The Hub client is required because checkpoints and datasets are
+distributed via native Hugging Face Model / Dataset repos since 2.5.0.
 
 ## Setting up a Virtual Environment
 
@@ -62,10 +65,28 @@ immediately available in your environment.
 To make sure PyABSA is installed correctly, run the following command:
 
 ```bash
-python -c "from pyabsa import available_checkpoints; print(available_checkpoints())"
+python -c "from pyabsa import available_checkpoints, TaskCodeOption; \
+           print(available_checkpoints(TaskCodeOption.Aspect_Polarity_Classification))"
 ```
 
-A successful installation will print a list of available checkpoints.
+A successful installation will fetch the checkpoint index from the
+Hugging Face Hub (`yangheng/pyabsa-index` by default; override via the
+`PYABSA_INDEX_REPO` env var) and print a dict of available checkpoint
+entries.
+
+## Publishing checkpoints / datasets
+
+PyABSA ships three console scripts that wrap the official `huggingface_hub`
+SDK so contributors can push artefacts to the Hub without any custom
+hosting:
+
+```bash
+huggingface-cli login                 # one-time auth (or set HF_TOKEN)
+
+pyabsa-upload-ckpt  ./local_ckpt --repo <user>/pyabsa-<task>-<name>
+pyabsa-upload-data  ./local_data --repo <user>/pyabsa-<task>-<dataset>
+pyabsa-index-update ./checkpoints.json    # publish a schema-v2 index
+```
 
 ## Optional Dependencies
 

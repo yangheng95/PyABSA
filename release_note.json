@@ -1,4 +1,10 @@
 ﻿{
+  "2.5.0": {
+    "1": "Migrate checkpoint and dataset distribution to native HF Hub Models/Datasets repos via huggingface_hub (snapshot_download / hf_hub_download). Index now lives in 'yangheng/pyabsa-index' (schema v2). Add CLI: pyabsa-upload-ckpt / pyabsa-upload-data / pyabsa-index-update.",
+    "2": "Drop legacy HF Space zip-based checkpoint/dataset distribution and schema v1 index. checkpoints with 'Checkpoint File' / 'Available Version' fields are no longer supported.",
+    "3": "Apply BPE alignment fix in ATEPC aspect extraction (see GH PR #420) and JSON serialization fix in all predictor classes (see GH PR #419).",
+    "4": "Bump dependencies: transformers>=4.44,<6.0, torch>=2.0, python>=3.10. Migrate TrainingArguments(evaluation_strategy=...) to eval_strategy for transformers 5.x compatibility."
+  },
   "2.4.3": {
     "1": "Minor Bug fixes"
   },
