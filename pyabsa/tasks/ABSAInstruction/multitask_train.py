@@ -71,7 +71,7 @@ id_ds, id_tokenized_ds, ood_ds, ood_tokenzed_ds = loader.create_datasets(
 # Training arguments
 training_args = {
     "output_dir": model_out_path,
-    "evaluation_strategy": "epoch",
+    "eval_strategy": "epoch",
     "save_strategy": "epoch",
     "learning_rate": 5e-5,
     "per_device_train_batch_size": 16,

@@ -68,7 +68,7 @@ setup(
     # Author details
     author="Yang, Heng",
     author_email="hy345@exeter.ac.uk",
-    python_requires="<3.11, >=3.10",
+    python_requires=">=3.10",
     packages=find_packages(),
     include_package_data=True,
     exclude_package_date={"": [".gitignore"]},
@@ -88,8 +88,9 @@ setup(
         "pytorch_warmup",
         "termcolor",
         "gitpython",  # need git installed in your OS
-        "transformers<4.30.0",
-        "torch>=1.0.0",
+        "transformers>=4.44.0,<6.0.0",
+        "torch>=2.0.0",
+        "huggingface_hub>=0.23.0",
         "pandas",
         "sentencepiece",
     ],
@@ -97,9 +98,18 @@ setup(
         "Intended Audience :: Production/Research",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "Operating System :: OS Independent",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     extras_require=extras,
+    entry_points={
+        "console_scripts": [
+            "pyabsa-upload-ckpt=pyabsa.utils.hf_upload:_cli_publish_checkpoint",
+            "pyabsa-upload-data=pyabsa.utils.hf_upload:_cli_publish_dataset",
+            "pyabsa-index-update=pyabsa.utils.hf_upload:_cli_update_index",
+        ],
+    },
 )

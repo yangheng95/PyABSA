@@ -11,8 +11,9 @@ tqdm
 pytorch_warmup
 termcolor
 gitpython  # need git installed in your OS
-transformers
-torch>1.0.0
+transformers>=4.44.0,<6.0.0
+torch>=2.0.0
+huggingface_hub>=0.23.0
 sentencepiece
 pandas
 gensim
