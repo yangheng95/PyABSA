@@ -9,13 +9,10 @@ import os
 import shutil
 import tempfile
 import time
-import zipfile
 from typing import Union
 
 import git
 import findfile
-import requests
-import tqdm
 
 from termcolor import colored
 
@@ -25,7 +22,6 @@ from pyabsa.augmentation import (
 )
 from pyabsa.framework.flag_class import (
     TaskCodeOption,
-    PyABSAMaterialHostAddress,
     TaskNameOption,
 )
 from pyabsa.utils.check_utils.dataset_version_check import check_datasets_version
@@ -497,42 +493,23 @@ def download_dataset_by_name(
 
     if logger:
         logger.info("Start {} downloading".format(dataset_name))
-    url = (
-        PyABSAMaterialHostAddress
-        + "resolve/main/integrated_datasets/{}_datasets.{}.zip".format(
-            task_code, dataset_name
-        ).lower()
+
+    # Datasets live in `yangheng/pyabsa-<task>-<dataset>` HF Dataset repos.
+    # The legacy zip-on-Space distribution was removed in pyabsa 2.5.0.
+    from pyabsa.framework.checkpoint_class.hf_checkpoint_utils import (
+        download_dataset_from_hub,
     )
 
-    try:  # from Huggingface Space
-        response = requests.get(url, stream=True)
-        save_path = dataset_name.lower() + ".zip"
-        with open(save_path, "wb") as f:
-            for chunk in tqdm.tqdm(
-                response.iter_content(chunk_size=1024),
-                unit="KiB",
-                total=int(response.headers["content-length"]) // 1024,
-                desc="Downloading ({}){} dataset".format(
-                    TaskNameOption().get(task_code), dataset_name
-                ),
-            ):
-                f.write(chunk)
-        with zipfile.ZipFile(save_path, "r") as zip_ref:
-            zip_ref.extractall(os.getcwd())
-
-    except Exception as e:
-        if logger:
-            logger.info(
-                "Exception: {}. Fail to download dataset from {}. Please check your connection".format(
-                    e, url
-                )
-            )
-        else:
-            fprint(
-                colored(
-                    "Exception: {}. Fail to download dataset from {}. Please check your connection".format(
-                        e, url
-                    ),
-                    "red",
-                )
-            )
+    hub_repo_id = "yangheng/pyabsa-{}-{}".format(
+        str(task_code).lower(), str(dataset_name).lower()
+    )
+    local_dir = download_dataset_from_hub(hub_repo_id)
+    fprint(
+        colored(
+            "Downloaded ({}) {} dataset from HF Hub repo '{}' -> {}".format(
+                TaskNameOption().get(task_code), dataset_name, hub_repo_id, local_dir
+            ),
+            "green",
+        )
+    )
+    return local_dir

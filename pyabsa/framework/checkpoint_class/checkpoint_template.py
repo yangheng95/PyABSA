@@ -55,35 +55,31 @@ class CheckpointManager:
             ```
         """
         if isinstance(checkpoint, str) or isinstance(checkpoint, Path):
-            # directly load checkpoint from local path
+            # 1) Local path or local .zip — handle without touching the Hub.
             if os.path.exists(checkpoint):
+                if isinstance(checkpoint, str) and checkpoint.endswith(".zip"):
+                    return unzip_checkpoint(checkpoint)
                 return checkpoint
 
+            # 2) Treat as a checkpoint name registered in the Hub index.
             try:
-                self._get_remote_checkpoint(checkpoint, task_code)
+                resolved = self._get_remote_checkpoint(checkpoint, task_code)
+                if resolved:
+                    return resolved
             except Exception as e:
                 fprint(
-                    "No checkpoint found in Model Hub for task: {}".format(checkpoint)
+                    "No checkpoint found in Model Hub for '{}': {}".format(
+                        checkpoint, e
+                    )
                 )
 
-            if find_file(os.getcwd(), [checkpoint, task_code, ".config"]):
-                # load checkpoint from current working directory with task specified
-                checkpoint_config = find_file(
-                    os.getcwd(), [checkpoint, task_code, ".config"]
-                )
-            else:
-                # load checkpoint from current working directory without task specified
-                checkpoint_config = find_file(os.getcwd(), [checkpoint, ".config"])
-
+            # 3) Last-ditch: maybe a .config file already exists in cwd from an
+            # earlier manual download.
+            checkpoint_config = find_file(
+                os.getcwd(), [str(checkpoint), task_code, ".config"]
+            ) or find_file(os.getcwd(), [str(checkpoint), ".config"])
             if checkpoint_config:
-                # locate the checkpoint directory
                 checkpoint = os.path.dirname(checkpoint_config)
-            elif isinstance(checkpoint, str) and checkpoint.endswith(".zip"):
-                checkpoint = unzip_checkpoint(
-                    checkpoint
-                    if os.path.exists(checkpoint)
-                    else find_file(os.getcwd(), checkpoint)
-                )
 
         return checkpoint
 
