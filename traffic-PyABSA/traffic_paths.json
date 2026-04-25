@@ -2,26 +2,26 @@
   {
     "path": "/yangheng95/PyABSA",
     "title": "Overview",
-    "count": 252,
-    "uniques": 145
+    "count": 248,
+    "uniques": 144
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2/pyabsa",
     "title": "/tree/v2/pyabsa",
-    "count": 40,
-    "uniques": 14
+    "count": 41,
+    "uniques": 15
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2",
     "title": "/tree/v2",
-    "count": 35,
-    "uniques": 15
+    "count": 34,
+    "uniques": 14
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2/pyabsa/tasks",
     "title": "/tree/v2/pyabsa/tasks",
-    "count": 23,
-    "uniques": 6
+    "count": 22,
+    "uniques": 5
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2/pyabsa/tasks/AspectTermExtraction",
@@ -42,21 +42,21 @@
     "uniques": 1
   },
   {
+    "path": "/yangheng95/PyABSA/tree/v2/docs",
+    "title": "/tree/v2/docs",
+    "count": 12,
+    "uniques": 9
+  },
+  {
     "path": "/yangheng95/PyABSA/blob/v2/pyabsa/tasks/AspectTermExtraction/prediction/aspect_extractor.py",
     "title": "/blob/v2/pyabsa/tasks/AspectTermExtraction/prediction/aspect_extractor.py",
     "count": 12,
     "uniques": 1
   },
   {
-    "path": "/yangheng95/PyABSA/tree/v2/examples-v2",
-    "title": "/tree/v2/examples-v2",
+    "path": "/yangheng95/PyABSA/issues",
+    "title": "/issues",
     "count": 11,
-    "uniques": 10
-  },
-  {
-    "path": "/yangheng95/PyABSA/tree/v2/docs",
-    "title": "/tree/v2/docs",
-    "count": 11,
-    "uniques": 8
+    "uniques": 6
   }
 ]

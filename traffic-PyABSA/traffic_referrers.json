@@ -1,13 +1,13 @@
 [
   {
     "referrer": "Google",
-    "count": 156,
-    "uniques": 47
+    "count": 149,
+    "uniques": 46
   },
   {
     "referrer": "github.com",
-    "count": 63,
-    "uniques": 28
+    "count": 64,
+    "uniques": 26
   },
   {
     "referrer": "chatgpt.com",
@@ -26,13 +26,13 @@
   },
   {
     "referrer": "doubao.com",
-    "count": 18,
+    "count": 14,
     "uniques": 4
   },
   {
     "referrer": "huggingface.co",
-    "count": 12,
-    "uniques": 4
+    "count": 13,
+    "uniques": 5
   },
   {
     "referrer": "youtube.com",
