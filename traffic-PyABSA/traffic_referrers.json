@@ -1,18 +1,18 @@
 [
   {
     "referrer": "Google",
-    "count": 135,
+    "count": 108,
     "uniques": 40
   },
   {
     "referrer": "github.com",
-    "count": 58,
+    "count": 57,
     "uniques": 25
   },
   {
     "referrer": "chatgpt.com",
     "count": 57,
-    "uniques": 7
+    "uniques": 8
   },
   {
     "referrer": "huggingface.co",
@@ -36,8 +36,8 @@
   },
   {
     "referrer": "youtube.com",
-    "count": 12,
-    "uniques": 10
+    "count": 11,
+    "uniques": 9
   },
   {
     "referrer": "yandex.ru",
@@ -45,8 +45,8 @@
     "uniques": 1
   },
   {
-    "referrer": "claude.ai",
+    "referrer": "reddit.com",
     "count": 3,
-    "uniques": 1
+    "uniques": 3
   }
 ]
