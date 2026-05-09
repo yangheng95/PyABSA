@@ -2,17 +2,12 @@
   {
     "referrer": "Google",
     "count": 92,
-    "uniques": 25
+    "uniques": 27
   },
   {
     "referrer": "github.com",
-    "count": 51,
-    "uniques": 19
-  },
-  {
-    "referrer": "huggingface.co",
-    "count": 20,
-    "uniques": 4
+    "count": 44,
+    "uniques": 16
   },
   {
     "referrer": "pyabsa.readthedocs.io",
@@ -20,13 +15,18 @@
     "uniques": 6
   },
   {
-    "referrer": "youtube.com",
-    "count": 3,
-    "uniques": 2
+    "referrer": "huggingface.co",
+    "count": 19,
+    "uniques": 3
   },
   {
     "referrer": "Bing",
-    "count": 2,
+    "count": 4,
+    "uniques": 3
+  },
+  {
+    "referrer": "youtube.com",
+    "count": 3,
     "uniques": 2
   },
   {
@@ -35,17 +35,17 @@
     "uniques": 2
   },
   {
-    "referrer": "reddit.com",
-    "count": 2,
-    "uniques": 2
-  },
-  {
-    "referrer": "search.brave.com",
-    "count": 2,
-    "uniques": 2
-  },
-  {
     "referrer": "arxiv.org",
+    "count": 1,
+    "uniques": 1
+  },
+  {
+    "referrer": "chat.aihuoya.com",
+    "count": 1,
+    "uniques": 1
+  },
+  {
+    "referrer": "chatgpt.com",
     "count": 1,
     "uniques": 1
   }
