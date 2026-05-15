@@ -2,26 +2,38 @@
   {
     "path": "/yangheng95/PyABSA",
     "title": "Overview",
-    "count": 133,
-    "uniques": 79
+    "count": 128,
+    "uniques": 78
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2",
     "title": "/tree/v2",
-    "count": 24,
-    "uniques": 7
+    "count": 25,
+    "uniques": 8
   },
   {
     "path": "/yangheng95/PyABSA/issues",
     "title": "/issues",
-    "count": 23,
+    "count": 19,
     "uniques": 10
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2/pyabsa",
     "title": "/tree/v2/pyabsa",
-    "count": 13,
+    "count": 14,
+    "uniques": 9
+  },
+  {
+    "path": "/yangheng95/pyabsa",
+    "title": "Overview",
+    "count": 8,
     "uniques": 8
+  },
+  {
+    "path": "/yangheng95/PyABSA/tree/v2/pyabsa/tasks",
+    "title": "/tree/v2/pyabsa/tasks",
+    "count": 8,
+    "uniques": 6
   },
   {
     "path": "/yangheng95/PyABSA/tree/release",
@@ -36,22 +48,10 @@
     "uniques": 3
   },
   {
-    "path": "/yangheng95/pyabsa",
-    "title": "Overview",
+    "path": "/yangheng95/PyABSA/blob/release/demos/aspect_term_extraction/train_atepc_chinese.py",
+    "title": "/blob/release/demos/aspect_term_extraction/train_atepc_chinese.py",
     "count": 7,
-    "uniques": 7
-  },
-  {
-    "path": "/yangheng95/PyABSA/tree/v2/examples-v2",
-    "title": "/tree/v2/examples-v2",
-    "count": 7,
-    "uniques": 5
-  },
-  {
-    "path": "/yangheng95/PyABSA/tree/v2/pyabsa/tasks",
-    "title": "/tree/v2/pyabsa/tasks",
-    "count": 7,
-    "uniques": 5
+    "uniques": 2
   },
   {
     "path": "/yangheng95/PyABSA/tree/release/pyabsa",
