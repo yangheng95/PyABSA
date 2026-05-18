@@ -2,8 +2,8 @@
   {
     "path": "/yangheng95/PyABSA",
     "title": "Overview",
-    "count": 116,
-    "uniques": 75
+    "count": 118,
+    "uniques": 73
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2",
@@ -14,8 +14,8 @@
   {
     "path": "/yangheng95/PyABSA/issues",
     "title": "/issues",
-    "count": 19,
-    "uniques": 9
+    "count": 16,
+    "uniques": 8
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2/pyabsa",
@@ -30,6 +30,18 @@
     "uniques": 11
   },
   {
+    "path": "/yangheng95/PyABSA/blob/release/demos/aspect_term_extraction/train_atepc_chinese.py",
+    "title": "/blob/release/demos/aspect_term_extraction/train_atepc_chinese.py",
+    "count": 11,
+    "uniques": 3
+  },
+  {
+    "path": "/yangheng95/PyABSA/blob/v2/README.MD",
+    "title": "/blob/v2/README.MD",
+    "count": 10,
+    "uniques": 5
+  },
+  {
     "path": "/yangheng95/PyABSA/tree/release",
     "title": "/tree/release",
     "count": 9,
@@ -42,21 +54,9 @@
     "uniques": 3
   },
   {
-    "path": "/yangheng95/PyABSA/blob/release/demos/aspect_term_extraction/train_atepc_chinese.py",
-    "title": "/blob/release/demos/aspect_term_extraction/train_atepc_chinese.py",
-    "count": 9,
-    "uniques": 2
-  },
-  {
-    "path": "/yangheng95/PyABSA/blob/release/demos/aspect_term_extraction/extract_aspects_chinese.py",
-    "title": "/blob/release/demos/aspect_term_extraction/extract_aspects_chinese.py",
-    "count": 8,
-    "uniques": 3
-  },
-  {
     "path": "/yangheng95/PyABSA/tree/release/demos",
     "title": "/tree/release/demos",
-    "count": 7,
-    "uniques": 3
+    "count": 8,
+    "uniques": 4
   }
 ]
