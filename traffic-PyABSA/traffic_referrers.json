@@ -1,13 +1,13 @@
 [
   {
     "referrer": "github.com",
-    "count": 163,
-    "uniques": 14
+    "count": 166,
+    "uniques": 15
   },
   {
     "referrer": "Google",
-    "count": 41,
-    "uniques": 17
+    "count": 29,
+    "uniques": 18
   },
   {
     "referrer": "Bing",
@@ -15,19 +15,19 @@
     "uniques": 7
   },
   {
+    "referrer": "huggingface.co",
+    "count": 8,
+    "uniques": 4
+  },
+  {
     "referrer": "chatgpt.com",
     "count": 7,
     "uniques": 4
   },
   {
-    "referrer": "huggingface.co",
-    "count": 7,
-    "uniques": 3
-  },
-  {
     "referrer": "pyabsa.readthedocs.io",
-    "count": 7,
-    "uniques": 3
+    "count": 6,
+    "uniques": 2
   },
   {
     "referrer": "Yahoo",
@@ -45,7 +45,7 @@
     "uniques": 2
   },
   {
-    "referrer": "youtube.com",
+    "referrer": "sorryios.ai",
     "count": 2,
     "uniques": 1
   }
