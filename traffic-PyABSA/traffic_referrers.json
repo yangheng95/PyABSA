@@ -1,18 +1,18 @@
 [
   {
     "referrer": "github.com",
-    "count": 166,
-    "uniques": 15
+    "count": 167,
+    "uniques": 16
   },
   {
     "referrer": "Google",
-    "count": 29,
-    "uniques": 18
+    "count": 26,
+    "uniques": 17
   },
   {
     "referrer": "Bing",
-    "count": 19,
-    "uniques": 7
+    "count": 20,
+    "uniques": 8
   },
   {
     "referrer": "huggingface.co",
