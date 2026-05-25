@@ -1,18 +1,23 @@
 [
   {
     "referrer": "github.com",
-    "count": 209,
-    "uniques": 20
+    "count": 191,
+    "uniques": 22
   },
   {
     "referrer": "Google",
-    "count": 22,
-    "uniques": 18
+    "count": 21,
+    "uniques": 17
+  },
+  {
+    "referrer": "link.zhihu.com",
+    "count": 12,
+    "uniques": 2
   },
   {
     "referrer": "Bing",
     "count": 11,
-    "uniques": 6
+    "uniques": 5
   },
   {
     "referrer": "huggingface.co",
@@ -30,22 +35,17 @@
     "uniques": 2
   },
   {
-    "referrer": "Yahoo",
-    "count": 3,
-    "uniques": 1
-  },
-  {
     "referrer": "claude.ai",
     "count": 3,
     "uniques": 1
   },
   {
-    "referrer": "sorryios.ai",
+    "referrer": "link.gitcode.com",
     "count": 2,
     "uniques": 1
   },
   {
-    "referrer": "youtube.com",
+    "referrer": "sorryios.ai",
     "count": 2,
     "uniques": 1
   }
