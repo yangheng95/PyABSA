@@ -1,13 +1,13 @@
 [
   {
     "referrer": "github.com",
-    "count": 90,
+    "count": 89,
     "uniques": 21
   },
   {
     "referrer": "Google",
-    "count": 24,
-    "uniques": 19
+    "count": 21,
+    "uniques": 17
   },
   {
     "referrer": "chatgpt.com",
@@ -31,8 +31,8 @@
   },
   {
     "referrer": "huggingface.co",
-    "count": 3,
-    "uniques": 3
+    "count": 2,
+    "uniques": 2
   },
   {
     "referrer": "confluence.walmart.com",
@@ -45,8 +45,8 @@
     "uniques": 1
   },
   {
-    "referrer": "sorryios.ai",
-    "count": 2,
+    "referrer": "4dcd06fc.isolation.zscaler.com",
+    "count": 1,
     "uniques": 1
   }
 ]
