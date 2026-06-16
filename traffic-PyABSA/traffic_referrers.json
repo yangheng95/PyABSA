@@ -15,14 +15,14 @@
     "uniques": 8
   },
   {
-    "referrer": "arxiv.org",
-    "count": 2,
+    "referrer": "Bing",
+    "count": 4,
     "uniques": 2
   },
   {
-    "referrer": "Bing",
+    "referrer": "arxiv.org",
     "count": 2,
-    "uniques": 1
+    "uniques": 2
   },
   {
     "referrer": "link.zhihu.com",
