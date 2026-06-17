@@ -3,13 +3,19 @@
     "path": "/yangheng95/PyABSA",
     "title": "Overview",
     "count": 75,
-    "uniques": 51
+    "uniques": 53
   },
   {
     "path": "/yangheng95/pyabsa",
     "title": "Overview",
-    "count": 29,
-    "uniques": 19
+    "count": 33,
+    "uniques": 23
+  },
+  {
+    "path": "/yangheng95/PyABSA/issues",
+    "title": "/issues",
+    "count": 9,
+    "uniques": 7
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2/examples-v2",
@@ -18,28 +24,22 @@
     "uniques": 5
   },
   {
-    "path": "/yangheng95/PyABSA/issues",
-    "title": "/issues",
-    "count": 6,
-    "uniques": 6
-  },
-  {
     "path": "/yangheng95/PyABSA/tree/v2/pyabsa",
     "title": "/tree/v2/pyabsa",
     "count": 6,
     "uniques": 5
   },
   {
-    "path": "/yangheng95/PyABSA/discussions",
-    "title": "/discussions",
-    "count": 6,
-    "uniques": 4
-  },
-  {
     "path": "/yangheng95/PyABSA/tree/v2",
     "title": "/tree/v2",
     "count": 6,
     "uniques": 4
+  },
+  {
+    "path": "/yangheng95/PyABSA/discussions",
+    "title": "/discussions",
+    "count": 5,
+    "uniques": 3
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2/examples-v2/aspect_opinion_sentiment_category_extraction",
