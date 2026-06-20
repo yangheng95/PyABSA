@@ -1,28 +1,23 @@
 [
   {
     "referrer": "github.com",
-    "count": 97,
-    "uniques": 19
+    "count": 84,
+    "uniques": 16
   },
   {
     "referrer": "Google",
-    "count": 42,
-    "uniques": 32
-  },
-  {
-    "referrer": "chatgpt.com",
-    "count": 18,
-    "uniques": 9
+    "count": 38,
+    "uniques": 30
   },
   {
     "referrer": "Bing",
-    "count": 16,
+    "count": 25,
     "uniques": 5
   },
   {
-    "referrer": "arxiv.org",
-    "count": 2,
-    "uniques": 2
+    "referrer": "chatgpt.com",
+    "count": 16,
+    "uniques": 8
   },
   {
     "referrer": "huggingface.co",
@@ -32,6 +27,11 @@
   {
     "referrer": "link.zhihu.com",
     "count": 2,
+    "uniques": 1
+  },
+  {
+    "referrer": "arxiv.org",
+    "count": 1,
     "uniques": 1
   },
   {
