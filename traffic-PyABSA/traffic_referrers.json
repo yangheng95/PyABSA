@@ -1,8 +1,8 @@
 [
   {
     "referrer": "github.com",
-    "count": 95,
-    "uniques": 12
+    "count": 94,
+    "uniques": 13
   },
   {
     "referrer": "Bing",
@@ -11,13 +11,18 @@
   },
   {
     "referrer": "Google",
-    "count": 28,
-    "uniques": 23
+    "count": 29,
+    "uniques": 24
   },
   {
     "referrer": "chatgpt.com",
-    "count": 16,
-    "uniques": 8
+    "count": 13,
+    "uniques": 6
+  },
+  {
+    "referrer": "arxiv.org",
+    "count": 5,
+    "uniques": 2
   },
   {
     "referrer": "link.zhihu.com",
@@ -33,11 +38,6 @@
     "referrer": "youtube.com",
     "count": 2,
     "uniques": 2
-  },
-  {
-    "referrer": "arxiv.org",
-    "count": 1,
-    "uniques": 1
   },
   {
     "referrer": "confluence.walmart.com",
