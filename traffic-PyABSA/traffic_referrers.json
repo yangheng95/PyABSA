@@ -5,14 +5,19 @@
     "uniques": 13
   },
   {
-    "referrer": "Google",
-    "count": 34,
-    "uniques": 26
+    "referrer": "Bing",
+    "count": 41,
+    "uniques": 8
   },
   {
-    "referrer": "Bing",
-    "count": 34,
-    "uniques": 6
+    "referrer": "Google",
+    "count": 38,
+    "uniques": 30
+  },
+  {
+    "referrer": "chatgpt.com",
+    "count": 8,
+    "uniques": 4
   },
   {
     "referrer": "huggingface.co",
@@ -28,11 +33,6 @@
     "referrer": "arxiv.org",
     "count": 5,
     "uniques": 2
-  },
-  {
-    "referrer": "chatgpt.com",
-    "count": 3,
-    "uniques": 3
   },
   {
     "referrer": "youtube.com",
