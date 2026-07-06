@@ -6,8 +6,8 @@
   },
   {
     "referrer": "Google",
-    "count": 35,
-    "uniques": 26
+    "count": 36,
+    "uniques": 27
   },
   {
     "referrer": "Bing",
@@ -21,8 +21,8 @@
   },
   {
     "referrer": "chatgpt.com",
-    "count": 10,
-    "uniques": 5
+    "count": 11,
+    "uniques": 6
   },
   {
     "referrer": "DuckDuckGo",
@@ -41,7 +41,7 @@
   },
   {
     "referrer": "arxiv.org",
-    "count": 5,
+    "count": 6,
     "uniques": 2
   },
   {
