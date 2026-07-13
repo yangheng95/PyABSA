@@ -2,20 +2,14 @@
   {
     "path": "/yangheng95/PyABSA",
     "title": "Overview",
-    "count": 77,
-    "uniques": 51
+    "count": 74,
+    "uniques": 50
   },
   {
     "path": "/yangheng95/pyabsa",
     "title": "Overview",
-    "count": 33,
-    "uniques": 28
-  },
-  {
-    "path": "/yangheng95/PyABSA/issues",
-    "title": "/issues",
-    "count": 8,
-    "uniques": 7
+    "count": 35,
+    "uniques": 29
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2",
@@ -30,22 +24,16 @@
     "uniques": 4
   },
   {
-    "path": "/yangheng95/PyABSA/blob/v2/README.MD",
-    "title": "/blob/v2/README.MD",
+    "path": "/yangheng95/PyABSA/issues",
+    "title": "/issues",
     "count": 6,
-    "uniques": 4
+    "uniques": 5
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2/pyabsa",
     "title": "/tree/v2/pyabsa",
     "count": 6,
     "uniques": 3
-  },
-  {
-    "path": "/yangheng95/PyABSA/releases",
-    "title": "/releases",
-    "count": 5,
-    "uniques": 2
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2.5.0",
@@ -56,6 +44,18 @@
   {
     "path": "/yangheng95/PyABSA/blob/v2/examples-v2/aspect_polarity_classification/Aspect_Sentiment_Classification.ipynb",
     "title": "/blob/v2/examples-v2/aspect_polarity_classification/Aspect_Sentiment_Classification.ipynb",
+    "count": 4,
+    "uniques": 4
+  },
+  {
+    "path": "/yangheng95/PyABSA/issues/189",
+    "title": "/issues/189",
+    "count": 4,
+    "uniques": 4
+  },
+  {
+    "path": "/yangheng95/PyABSA/tree/v2/docs",
+    "title": "/tree/v2/docs",
     "count": 4,
     "uniques": 4
   }

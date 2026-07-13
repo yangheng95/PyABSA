@@ -1,12 +1,12 @@
 [
   {
     "referrer": "github.com",
-    "count": 36,
-    "uniques": 16
+    "count": 35,
+    "uniques": 15
   },
   {
     "referrer": "Google",
-    "count": 27,
+    "count": 28,
     "uniques": 23
   },
   {
@@ -31,8 +31,8 @@
   },
   {
     "referrer": "pyabsa.readthedocs.io",
-    "count": 9,
-    "uniques": 4
+    "count": 5,
+    "uniques": 3
   },
   {
     "referrer": "pypi.org",
@@ -40,13 +40,13 @@
     "uniques": 1
   },
   {
-    "referrer": "arxiv.org",
+    "referrer": "tcn56mosepef.feishu.cn",
     "count": 2,
     "uniques": 1
   },
   {
-    "referrer": "tcn56mosepef.feishu.cn",
-    "count": 2,
+    "referrer": "arxiv.org",
+    "count": 1,
     "uniques": 1
   }
 ]
