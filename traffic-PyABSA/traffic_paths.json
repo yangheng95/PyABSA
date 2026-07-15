@@ -2,14 +2,14 @@
   {
     "path": "/yangheng95/PyABSA",
     "title": "Overview",
-    "count": 71,
+    "count": 74,
     "uniques": 47
   },
   {
     "path": "/yangheng95/pyabsa",
     "title": "Overview",
-    "count": 33,
-    "uniques": 27
+    "count": 30,
+    "uniques": 25
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2",
@@ -18,22 +18,22 @@
     "uniques": 6
   },
   {
+    "path": "/yangheng95/PyABSA/tree/v2/pyabsa",
+    "title": "/tree/v2/pyabsa",
+    "count": 7,
+    "uniques": 4
+  },
+  {
     "path": "/yangheng95/PyABSA/tree/v2/examples-v2",
     "title": "/tree/v2/examples-v2",
-    "count": 8,
-    "uniques": 4
+    "count": 7,
+    "uniques": 3
   },
   {
     "path": "/yangheng95/PyABSA/issues",
     "title": "/issues",
-    "count": 6,
-    "uniques": 5
-  },
-  {
-    "path": "/yangheng95/PyABSA/tree/v2/pyabsa",
-    "title": "/tree/v2/pyabsa",
-    "count": 6,
-    "uniques": 3
+    "count": 5,
+    "uniques": 4
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2.5.0",
@@ -54,9 +54,9 @@
     "uniques": 3
   },
   {
-    "path": "/yangheng95/PyABSA/releases",
-    "title": "/releases",
+    "path": "/yangheng95/PyABSA/tree/v2/docs",
+    "title": "/tree/v2/docs",
     "count": 4,
-    "uniques": 1
+    "uniques": 3
   }
 ]
