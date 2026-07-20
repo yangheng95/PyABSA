@@ -6,13 +6,13 @@
   },
   {
     "referrer": "chatgpt.com",
-    "count": 20,
-    "uniques": 8
+    "count": 19,
+    "uniques": 7
   },
   {
     "referrer": "Google",
     "count": 16,
-    "uniques": 14
+    "uniques": 13
   },
   {
     "referrer": "youtube.com",
@@ -40,12 +40,12 @@
     "uniques": 1
   },
   {
-    "referrer": "arxiv.org",
+    "referrer": "chat.qwen.ai",
     "count": 1,
     "uniques": 1
   },
   {
-    "referrer": "chat.qwen.ai",
+    "referrer": "confluence.tools.3stripes.net",
     "count": 1,
     "uniques": 1
   }
