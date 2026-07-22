@@ -2,14 +2,14 @@
   {
     "path": "/yangheng95/PyABSA",
     "title": "Overview",
-    "count": 70,
-    "uniques": 47
+    "count": 66,
+    "uniques": 48
   },
   {
     "path": "/yangheng95/pyabsa",
     "title": "Overview",
-    "count": 25,
-    "uniques": 20
+    "count": 26,
+    "uniques": 21
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2/examples-v2",
@@ -24,16 +24,16 @@
     "uniques": 2
   },
   {
+    "path": "/yangheng95/PyABSA/issues",
+    "title": "/issues",
+    "count": 6,
+    "uniques": 6
+  },
+  {
     "path": "/yangheng95/PyABSA/tree/v2/pyabsa/tasks",
     "title": "/tree/v2/pyabsa/tasks",
     "count": 5,
     "uniques": 3
-  },
-  {
-    "path": "/yangheng95/PyABSA/issues",
-    "title": "/issues",
-    "count": 4,
-    "uniques": 4
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2/pyabsa",
