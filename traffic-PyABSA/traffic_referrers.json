@@ -1,8 +1,8 @@
 [
   {
     "referrer": "github.com",
-    "count": 36,
-    "uniques": 14
+    "count": 33,
+    "uniques": 13
   },
   {
     "referrer": "Google",
@@ -25,6 +25,11 @@
     "uniques": 2
   },
   {
+    "referrer": "youtube.com",
+    "count": 2,
+    "uniques": 2
+  },
+  {
     "referrer": "dl.acm.org",
     "count": 1,
     "uniques": 1
@@ -36,11 +41,6 @@
   },
   {
     "referrer": "search.brave.com",
-    "count": 1,
-    "uniques": 1
-  },
-  {
-    "referrer": "youtube.com",
     "count": 1,
     "uniques": 1
   }
