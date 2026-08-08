@@ -2,20 +2,20 @@
   {
     "path": "/yangheng95/PyABSA",
     "title": "Overview",
-    "count": 47,
-    "uniques": 34
+    "count": 45,
+    "uniques": 33
   },
   {
     "path": "/yangheng95/pyabsa",
     "title": "Overview",
-    "count": 12,
-    "uniques": 11
+    "count": 17,
+    "uniques": 15
   },
   {
     "path": "/yangheng95/PyABSA/tree/v2/examples-v2",
     "title": "/tree/v2/examples-v2",
-    "count": 8,
-    "uniques": 4
+    "count": 7,
+    "uniques": 3
   },
   {
     "path": "/yangheng95/PyABSA/actions",
@@ -26,6 +26,12 @@
   {
     "path": "/yangheng95/PyABSA/tree/LC-ABSA/datasets/semeval15",
     "title": "/tree/LC-ABSA/datasets/semeval15",
+    "count": 3,
+    "uniques": 1
+  },
+  {
+    "path": "/yangheng95/PyABSA/tree/v2",
+    "title": "/tree/v2",
     "count": 3,
     "uniques": 1
   },
@@ -50,12 +56,6 @@
   {
     "path": "/yangheng95/PyABSA/issues/392",
     "title": "/issues/392",
-    "count": 2,
-    "uniques": 2
-  },
-  {
-    "path": "/yangheng95/PyABSA/tree/v2/examples-v2/aspect_sentiment_triplet_extration",
-    "title": "/tree/v2/examples-v2/aspect_sentiment_triplet_extration",
     "count": 2,
     "uniques": 2
   }
