@@ -1,8 +1,8 @@
 [
   {
     "referrer": "github.com",
-    "count": 66,
-    "uniques": 7
+    "count": 70,
+    "uniques": 9
   },
   {
     "referrer": "Google",
@@ -11,8 +11,8 @@
   },
   {
     "referrer": "Bing",
-    "count": 5,
-    "uniques": 3
+    "count": 9,
+    "uniques": 4
   },
   {
     "referrer": "reddit.com",
@@ -20,17 +20,12 @@
     "uniques": 2
   },
   {
-    "referrer": "claude.ai",
-    "count": 2,
-    "uniques": 1
-  },
-  {
     "referrer": "huggingface.co",
     "count": 2,
     "uniques": 1
   },
   {
-    "referrer": "pyabsa.readthedocs.io",
+    "referrer": "claude.ai",
     "count": 1,
     "uniques": 1
   },
