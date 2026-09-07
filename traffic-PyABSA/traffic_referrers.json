@@ -20,14 +20,14 @@
     "uniques": 1
   },
   {
-    "referrer": "huggingface.co",
-    "count": 3,
-    "uniques": 2
-  },
-  {
     "referrer": "pyabsa.readthedocs.io",
     "count": 2,
     "uniques": 2
+  },
+  {
+    "referrer": "huggingface.co",
+    "count": 2,
+    "uniques": 1
   },
   {
     "referrer": "search.brave.com",
