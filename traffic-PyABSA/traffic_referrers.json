@@ -6,13 +6,8 @@
   },
   {
     "referrer": "Google",
-    "count": 21,
-    "uniques": 17
-  },
-  {
-    "referrer": "chatgpt.com",
-    "count": 4,
-    "uniques": 3
+    "count": 22,
+    "uniques": 18
   },
   {
     "referrer": "link.zhihu.com",
@@ -20,14 +15,29 @@
     "uniques": 1
   },
   {
+    "referrer": "huggingface.co",
+    "count": 3,
+    "uniques": 2
+  },
+  {
+    "referrer": "Bing",
+    "count": 2,
+    "uniques": 2
+  },
+  {
+    "referrer": "chatgpt.com",
+    "count": 2,
+    "uniques": 2
+  },
+  {
     "referrer": "pyabsa.readthedocs.io",
     "count": 2,
     "uniques": 2
   },
   {
-    "referrer": "huggingface.co",
+    "referrer": "youtube.com",
     "count": 2,
-    "uniques": 1
+    "uniques": 2
   },
   {
     "referrer": "search.brave.com",
@@ -35,17 +45,7 @@
     "uniques": 1
   },
   {
-    "referrer": "Bing",
-    "count": 1,
-    "uniques": 1
-  },
-  {
     "referrer": "claude.ai",
-    "count": 1,
-    "uniques": 1
-  },
-  {
-    "referrer": "link.gitcode.com",
     "count": 1,
     "uniques": 1
   }
