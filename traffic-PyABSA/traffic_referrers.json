@@ -6,8 +6,8 @@
   },
   {
     "referrer": "Google",
-    "count": 18,
-    "uniques": 17
+    "count": 22,
+    "uniques": 18
   },
   {
     "referrer": "chatgpt.com",
@@ -15,12 +15,12 @@
     "uniques": 5
   },
   {
-    "referrer": "huggingface.co",
-    "count": 3,
-    "uniques": 3
+    "referrer": "youtube.com",
+    "count": 4,
+    "uniques": 4
   },
   {
-    "referrer": "youtube.com",
+    "referrer": "huggingface.co",
     "count": 3,
     "uniques": 3
   },
