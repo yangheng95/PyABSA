@@ -2,17 +2,17 @@
   {
     "referrer": "github.com",
     "count": 48,
-    "uniques": 16
+    "uniques": 15
   },
   {
     "referrer": "Google",
-    "count": 22,
-    "uniques": 18
+    "count": 20,
+    "uniques": 16
   },
   {
     "referrer": "chatgpt.com",
-    "count": 9,
-    "uniques": 5
+    "count": 10,
+    "uniques": 6
   },
   {
     "referrer": "youtube.com",
@@ -30,17 +30,17 @@
     "uniques": 1
   },
   {
+    "referrer": "yandex.ru",
+    "count": 2,
+    "uniques": 1
+  },
+  {
     "referrer": "Bing",
     "count": 1,
     "uniques": 1
   },
   {
     "referrer": "Yahoo",
-    "count": 1,
-    "uniques": 1
-  },
-  {
-    "referrer": "yandex.ru",
     "count": 1,
     "uniques": 1
   }
