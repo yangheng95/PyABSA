@@ -1,15 +1,35 @@
 {
-  "count": 74,
-  "uniques": 57,
+  "count": 169,
+  "uniques": 144,
   "views": [
-    {
-      "timestamp": "2026-09-22T00:00:00Z",
-      "count": 42,
-      "uniques": 31
-    },
     {
       "timestamp": "2026-09-23T00:00:00Z",
       "count": 32,
+      "uniques": 26
+    },
+    {
+      "timestamp": "2026-09-24T00:00:00Z",
+      "count": 34,
+      "uniques": 23
+    },
+    {
+      "timestamp": "2026-09-25T00:00:00Z",
+      "count": 33,
+      "uniques": 29
+    },
+    {
+      "timestamp": "2026-09-26T00:00:00Z",
+      "count": 22,
+      "uniques": 20
+    },
+    {
+      "timestamp": "2026-09-27T00:00:00Z",
+      "count": 21,
+      "uniques": 20
+    },
+    {
+      "timestamp": "2026-09-28T00:00:00Z",
+      "count": 27,
       "uniques": 26
     }
   ]
