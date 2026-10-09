@@ -1,33 +1,28 @@
 [
   {
     "referrer": "github.com",
-    "count": 28,
-    "uniques": 17
+    "count": 27,
+    "uniques": 15
   },
   {
     "referrer": "Google",
-    "count": 23,
+    "count": 22,
     "uniques": 15
   },
   {
     "referrer": "Bing",
-    "count": 14,
-    "uniques": 6
+    "count": 12,
+    "uniques": 5
   },
   {
     "referrer": "huggingface.co",
     "count": 6,
-    "uniques": 4
+    "uniques": 3
   },
   {
     "referrer": "youtube.com",
     "count": 3,
     "uniques": 3
-  },
-  {
-    "referrer": "yandex.ru",
-    "count": 2,
-    "uniques": 1
   },
   {
     "referrer": "arxiv.org",
@@ -46,6 +41,11 @@
   },
   {
     "referrer": "reddit.com",
+    "count": 1,
+    "uniques": 1
+  },
+  {
+    "referrer": "teams.public.onecdn.static.microsoft",
     "count": 1,
     "uniques": 1
   }
