@@ -1,36 +1,31 @@
 [
   {
-    "referrer": "github.com",
-    "count": 27,
-    "uniques": 15
-  },
-  {
     "referrer": "Google",
     "count": 22,
     "uniques": 15
   },
   {
+    "referrer": "github.com",
+    "count": 22,
+    "uniques": 14
+  },
+  {
     "referrer": "Bing",
-    "count": 12,
-    "uniques": 5
+    "count": 13,
+    "uniques": 6
   },
   {
     "referrer": "huggingface.co",
-    "count": 6,
-    "uniques": 3
-  },
-  {
-    "referrer": "youtube.com",
-    "count": 3,
-    "uniques": 3
-  },
-  {
-    "referrer": "arxiv.org",
-    "count": 1,
-    "uniques": 1
+    "count": 4,
+    "uniques": 2
   },
   {
     "referrer": "chatgpt.com",
+    "count": 2,
+    "uniques": 2
+  },
+  {
+    "referrer": "arxiv.org",
     "count": 1,
     "uniques": 1
   },
@@ -46,6 +41,11 @@
   },
   {
     "referrer": "teams.public.onecdn.static.microsoft",
+    "count": 1,
+    "uniques": 1
+  },
+  {
+    "referrer": "yandex.ru",
     "count": 1,
     "uniques": 1
   }
