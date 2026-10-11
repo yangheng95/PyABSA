@@ -1,17 +1,17 @@
 [
   {
-    "referrer": "Google",
-    "count": 22,
+    "referrer": "github.com",
+    "count": 24,
     "uniques": 15
   },
   {
-    "referrer": "github.com",
-    "count": 22,
+    "referrer": "Google",
+    "count": 21,
     "uniques": 14
   },
   {
     "referrer": "Bing",
-    "count": 13,
+    "count": 11,
     "uniques": 6
   },
   {
@@ -21,6 +21,11 @@
   },
   {
     "referrer": "chatgpt.com",
+    "count": 2,
+    "uniques": 2
+  },
+  {
+    "referrer": "reddit.com",
     "count": 2,
     "uniques": 2
   },
@@ -35,17 +40,12 @@
     "uniques": 1
   },
   {
-    "referrer": "reddit.com",
+    "referrer": "perplexity.ai",
     "count": 1,
     "uniques": 1
   },
   {
-    "referrer": "teams.public.onecdn.static.microsoft",
-    "count": 1,
-    "uniques": 1
-  },
-  {
-    "referrer": "yandex.ru",
+    "referrer": "pyabsa.readthedocs.io",
     "count": 1,
     "uniques": 1
   }
