@@ -1,8 +1,8 @@
 [
   {
     "referrer": "github.com",
-    "count": 21,
-    "uniques": 16
+    "count": 22,
+    "uniques": 17
   },
   {
     "referrer": "Google",
@@ -11,18 +11,13 @@
   },
   {
     "referrer": "perplexity.ai",
-    "count": 5,
+    "count": 6,
     "uniques": 5
   },
   {
     "referrer": "Bing",
-    "count": 4,
-    "uniques": 4
-  },
-  {
-    "referrer": "chatgpt.com",
-    "count": 1,
-    "uniques": 1
+    "count": 2,
+    "uniques": 2
   },
   {
     "referrer": "pyabsa.readthedocs.io",
