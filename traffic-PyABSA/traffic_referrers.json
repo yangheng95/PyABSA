@@ -6,13 +6,13 @@
   },
   {
     "referrer": "github.com",
-    "count": 19,
-    "uniques": 15
+    "count": 24,
+    "uniques": 17
   },
   {
     "referrer": "Google",
-    "count": 8,
-    "uniques": 5
+    "count": 9,
+    "uniques": 6
   },
   {
     "referrer": "perplexity.ai",
@@ -20,14 +20,14 @@
     "uniques": 5
   },
   {
-    "referrer": "Bing",
-    "count": 2,
+    "referrer": "huggingface.co",
+    "count": 3,
     "uniques": 2
   },
   {
-    "referrer": "huggingface.co",
+    "referrer": "Bing",
     "count": 2,
-    "uniques": 1
+    "uniques": 2
   },
   {
     "referrer": "youtube.com",
