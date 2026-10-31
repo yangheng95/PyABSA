@@ -1,23 +1,18 @@
 [
   {
     "referrer": "aocr.org",
-    "count": 30,
-    "uniques": 30
+    "count": 33,
+    "uniques": 33
   },
   {
     "referrer": "github.com",
-    "count": 30,
+    "count": 28,
     "uniques": 18
   },
   {
     "referrer": "Google",
-    "count": 13,
-    "uniques": 9
-  },
-  {
-    "referrer": "perplexity.ai",
-    "count": 5,
-    "uniques": 5
+    "count": 12,
+    "uniques": 10
   },
   {
     "referrer": "huggingface.co",
@@ -25,9 +20,19 @@
     "uniques": 4
   },
   {
+    "referrer": "perplexity.ai",
+    "count": 4,
+    "uniques": 4
+  },
+  {
     "referrer": "Bing",
-    "count": 2,
-    "uniques": 2
+    "count": 3,
+    "uniques": 3
+  },
+  {
+    "referrer": "pyabsa.readthedocs.io",
+    "count": 1,
+    "uniques": 1
   },
   {
     "referrer": "youtube.com",
