@@ -1,18 +1,18 @@
 [
   {
     "referrer": "github.com",
-    "count": 34,
-    "uniques": 20
+    "count": 33,
+    "uniques": 18
   },
   {
     "referrer": "Google",
-    "count": 19,
-    "uniques": 16
+    "count": 16,
+    "uniques": 14
   },
   {
     "referrer": "aocr.org",
-    "count": 10,
-    "uniques": 10
+    "count": 9,
+    "uniques": 9
   },
   {
     "referrer": "Bing",
@@ -21,8 +21,8 @@
   },
   {
     "referrer": "huggingface.co",
-    "count": 3,
-    "uniques": 3
+    "count": 2,
+    "uniques": 2
   },
   {
     "referrer": "claude.ai",
