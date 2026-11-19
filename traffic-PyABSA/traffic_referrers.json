@@ -1,18 +1,18 @@
 [
   {
     "referrer": "github.com",
-    "count": 23,
-    "uniques": 13
-  },
-  {
-    "referrer": "Google",
-    "count": 10,
-    "uniques": 10
+    "count": 18,
+    "uniques": 11
   },
   {
     "referrer": "Bing",
     "count": 10,
     "uniques": 4
+  },
+  {
+    "referrer": "Google",
+    "count": 9,
+    "uniques": 9
   },
   {
     "referrer": "aocr.org",
