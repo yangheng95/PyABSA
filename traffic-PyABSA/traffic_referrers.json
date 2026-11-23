@@ -6,8 +6,8 @@
   },
   {
     "referrer": "Google",
-    "count": 7,
-    "uniques": 7
+    "count": 8,
+    "uniques": 8
   },
   {
     "referrer": "Bing",
@@ -20,12 +20,12 @@
     "uniques": 2
   },
   {
-    "referrer": "dl.acm.org",
-    "count": 1,
-    "uniques": 1
+    "referrer": "huggingface.co",
+    "count": 2,
+    "uniques": 2
   },
   {
-    "referrer": "huggingface.co",
+    "referrer": "dl.acm.org",
     "count": 1,
     "uniques": 1
   },
